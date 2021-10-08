@@ -1,0 +1,80 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e563561e08b6a3642a487177f5cfbb37, type: 3}
+  m_Name: MSU-Manifest
+  m_EditorClassIdentifier: 
+  Data:
+  - {fileID: 114618118668942134}
+  - {fileID: 114907914323284656}
+  - {fileID: 114781230623049850}
+  identity: {fileID: 114618118668942134}
+--- !u!114 &114618118668942134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f22bb7fd1d3b56a48bc52f8e407901d6, type: 3}
+  m_Name: ManifestIdentity
+  m_EditorClassIdentifier: 
+  Errored: 0
+  ErrorMessage: 
+  StagingPaths:
+  - <ManifestPluginStaging>
+  Author: TeamMoonstorm
+  Name: TeamMoonstorm-MoonstormSharedUtils
+  Icon: {fileID: 2800000, guid: 7fa104ba2e59cc44fa5c5e5f3db0d6cf, type: 3}
+  Description: Utils used by TeamMoonstorm members.
+  Version: 0.2.1
+  Dependencies:
+  - {fileID: 11400000, guid: 6893422731aa6d67012f5f4d8209c304, type: 2}
+--- !u!114 &114781230623049850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17d1008b78cb6e846889b7778282fbef, type: 3}
+  m_Name: AssetBundleDefinitions
+  m_EditorClassIdentifier: 
+  Errored: 0
+  ErrorMessage: 
+  StagingPaths:
+  - <BuildPathAssets>
+  assetBundles:
+  - assetBundleName: msuassets
+    assets:
+    - {fileID: 102900000, guid: 0570538a4ad4d7f4c8b5aec4440734c0, type: 3}
+--- !u!114 &114907914323284656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b7e13dda513544419a89926bd12ad8a, type: 3}
+  m_Name: AssemblyDefinitions
+  m_EditorClassIdentifier: 
+  Errored: 0
+  ErrorMessage: 
+  StagingPaths:
+  - <BuildPath>
+  definitions:
+  - {fileID: 5897886265953266890, guid: 027c693fefcac6548859a0eec81eed3d, type: 3}

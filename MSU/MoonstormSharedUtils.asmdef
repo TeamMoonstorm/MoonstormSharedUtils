@@ -1,0 +1,23 @@
+{
+    "name": "MoonstormSharedUtils",
+    "references": [],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "HGUnityUtils.dll",
+        "BepInEx.dll",
+        "HGCSharpUtils.dll",
+        "MMHOOK_Assembly-CSharp.dll",
+        "R2API.dll",
+        "Stubbed.dll",
+        "DebugToolkit.dll",
+        "AspectAbilities.dll",
+        "MonoMod.Utils.dll",
+        "Mono.Cecil.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": []
+}
