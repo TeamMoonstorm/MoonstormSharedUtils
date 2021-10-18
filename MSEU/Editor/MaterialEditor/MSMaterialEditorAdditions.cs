@@ -29,7 +29,7 @@ namespace Moonstorm.EditorUtils
             {
                 if (GUILayout.Button("Upgrade to Real Shader"))
                 {
-                    MaterialUpgrader.Upgrade((Material)materialEditor.target);
+                    MaterialShaderUpgrader.Upgrade((Material)materialEditor.target);
                 }
             }
 

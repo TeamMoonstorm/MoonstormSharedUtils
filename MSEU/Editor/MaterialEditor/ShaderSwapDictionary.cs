@@ -10,12 +10,12 @@ using UnityEngine;
 namespace Moonstorm.EditorUtils
 {
     [InitializeOnLoad]
-    public static class ShaderDictionary
+    public static class ShaderSwapDictionary
     {
         public static Dictionary<Shader, Shader> realToStubbed = new Dictionary<Shader, Shader>();
         public static Dictionary<Shader, Shader> stubbedToReal = new Dictionary<Shader, Shader>();
 
-        static ShaderDictionary()
+        static ShaderSwapDictionary()
         {
             PopulateDictionary();
             if (realToStubbed.Count == 0 || stubbedToReal.Count == 0)

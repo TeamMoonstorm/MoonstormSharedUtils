@@ -46,7 +46,7 @@ namespace Moonstorm.EditorUtils.Pipelines
             if (materials.Length != 0)
             {
                 var count = SwapRealShadersForStubbed(materials);
-                Debug.Log($"Replaced a total of {count} stubbed shaders for real shaders.");
+                Debug.Log($"Replaced a total of {count} real shaders for stubbed shaders.");
             }
 
             AssetDatabase.SaveAssets();
@@ -161,7 +161,7 @@ namespace Moonstorm.EditorUtils.Pipelines
             if (materials.Length != 0)
             {
                 var count = RestoreMaterialShaders(materials);
-                Debug.Log($"Restored a total of {count} materials' shaders.");
+                Debug.Log($"Restored a total of {count} stubbed shaders to real shaders");
             }
         }
 
@@ -171,7 +171,7 @@ namespace Moonstorm.EditorUtils.Pipelines
             for(int i = 0; i < materials.Length; i++)
             {
                 var current = materials[i];
-                if(ShaderDictionary.realToStubbed.TryGetValue(current.shader, out Shader stubbed))
+                if(ShaderSwapDictionary.realToStubbed.TryGetValue(current.shader, out Shader stubbed))
                 {
                     count++;
                     current.shader = stubbed;
@@ -212,7 +212,7 @@ namespace Moonstorm.EditorUtils.Pipelines
             for (int i = 0; i < materials.Length; i++)
             {
                 var current = materials[i];
-                if (ShaderDictionary.stubbedToReal.TryGetValue(current.shader, out Shader stubbed))
+                if (ShaderSwapDictionary.stubbedToReal.TryGetValue(current.shader, out Shader stubbed))
                 {
                     count++;
                     current.shader = stubbed;

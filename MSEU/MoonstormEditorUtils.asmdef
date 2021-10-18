@@ -4,7 +4,8 @@
         "Unity.TextMeshPro",
         "Unity.Postprocessing.Runtime",
         "Wwise",
-        "ThunderKit.Core"
+        "ThunderKit.Core",
+        "MoonstormSharedUtils"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [
