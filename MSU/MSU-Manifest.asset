@@ -37,7 +37,7 @@ MonoBehaviour:
   Name: TeamMoonstorm-MoonstormSharedUtils
   Icon: {fileID: 2800000, guid: 7fa104ba2e59cc44fa5c5e5f3db0d6cf, type: 3}
   Description: Utils used by TeamMoonstorm members.
-  Version: 0.2.1
+  Version: 0.3.0
   Dependencies:
   - {fileID: 11400000, guid: 6893422731aa6d67012f5f4d8209c304, type: 2}
 --- !u!114 &114781230623049850

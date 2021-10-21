@@ -12,10 +12,15 @@ namespace Moonstorm
         /// </summary>
         public abstract ItemDef ItemDef { get; set; }
 
+        public static ItemDef itemDef;
         /// <summary>
         /// Initialize your item here
+        /// <para>Running base.Initialize() REQUIRED</para>
         /// </summary>
-        public virtual void Initialize() { }
+        public virtual void Initialize()
+        {
+            ItemDef = ItemDef;
+        }
 
         /// <summary>
         /// Add your item behavior here

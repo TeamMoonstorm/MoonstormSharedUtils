@@ -33,6 +33,19 @@ namespace Moonstorm
             }
         }
 
+        //This dictionary is used in the DynamicDescription system for getting the property of either ItemDef or EquipmentDef
+        internal static Dictionary<UnityEngine.Object, Type> AllPickups
+        {
+            get
+            {
+                Dictionary<UnityEngine.Object, Type> toReturn = new Dictionary<UnityEngine.Object, Type>();
+                return toReturn.Union(MoonstormItems.ToDictionary(k => (UnityEngine.Object)k.Key, v => v.Value.GetType()))
+                    .Union(MoonstormNonEliteEquipments.ToDictionary(k => (UnityEngine.Object)k.Key, v => v.Value.GetType()))
+                    .Union(MoonstormEquipments.ToDictionary(k => (UnityEngine.Object)k.Key, v => v.Value.GetType()))
+                    .ToDictionary(x => x.Key, y => y.Value);
+            }
+        }
+
         /// <summary>
         /// Dictionary of all the normal equipments loaded by Moonstorm Shared Utils
         /// </summary>
