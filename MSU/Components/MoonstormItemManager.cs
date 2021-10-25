@@ -1,7 +1,7 @@
 ﻿using RoR2;
 using System;
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
 
 namespace Moonstorm.Components
 {
@@ -24,15 +24,16 @@ namespace Moonstorm.Components
         {
             //It seems counter-intuitive to add an item behavior for something even if it has none of them, but the game actually destroys the behavior if there isn't one which is what we want and it doesn't add a component if it doesn't have any of the item
             foreach (var item in PickupModuleBase.MoonstormItems)
+            {
                 item.Value.AddBehavior(ref body, body.inventory.GetItemCount(item.Key.itemIndex));
-
+            }
             if (IsMSElite())
             {
-                if(eliteBehavior.model)
+                if (eliteBehavior.model)
                 {
                     eliteBehavior.model.UpdateOverlays(); //<-- not updating this will cause model.myEliteIndex to not be accurate.
                     body.RecalculateStats(); //<-- not updating recalcstats will cause isElite to be false IF it wasnt an elite before.
-                    foreach (var eliteDef in EliteModuleBase.LoadedEliteDefs)
+                    foreach (var eliteDef in EliteModuleBase.MoonstormElites)
                     {
                         if (body.isElite && eliteBehavior.model.myEliteIndex == eliteDef.eliteIndex)
                         {
@@ -47,11 +48,12 @@ namespace Moonstorm.Components
             }
             foreach (var equipment in PickupModuleBase.MoonstormEquipments)
             {
-                bool hasThisEquipment = body.inventory?.GetEquipmentIndex() == equipment.Key.equipmentIndex;
-                equipment.Value.AddBehavior(ref body, Convert.ToInt32(hasThisEquipment));
+                //This change broke me but it fixes a fucking error that points to MSUtil being in the Moonstorm.Utilities namespace despite being on Moonstorm namespace, WTF?
+                if (body.inventory?.GetEquipmentIndex() == equipment.Key.equipmentIndex)
+                {
+                    equipment.Value.AddBehavior(ref body, 1);
+                }
             }
-
-
             StartCoroutine(GetInterfaces());
         }
 
@@ -77,8 +79,12 @@ namespace Moonstorm.Components
         public bool IsMSElite()
         {
             foreach (var eliteEqp in PickupModuleBase.MoonstormEliteEquipments)
+            {
                 if (body.inventory?.GetEquipmentIndex() == eliteEqp.Key.equipmentIndex)
+                {
                     return true;
+                }
+            }
             return false;
         }
 

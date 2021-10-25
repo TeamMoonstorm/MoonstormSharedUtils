@@ -60,7 +60,7 @@ namespace Moonstorm.Components
                 if (!oldRamp)
                     return;
 
-                if(model.propertyStorage.GetTexture(EliteRampPropertyID) == oldRamp)
+                if (model.propertyStorage.GetTexture(EliteRampPropertyID) == oldRamp)
                 {
                     model.propertyStorage.Clear();
                 }

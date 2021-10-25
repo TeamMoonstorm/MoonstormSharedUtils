@@ -1,8 +1,4 @@
-﻿using Moonstorm.Utilities;
-using RoR2;
-using UnityEngine;
-
-namespace Moonstorm
+﻿namespace Moonstorm
 {
     /// <summary>
     /// A Content Base Class for initializing an Elite Equipment

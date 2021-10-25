@@ -1,40 +1,40 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Reflection;
-using UnityEngine;
 
-[AttributeUsage(AttributeTargets.Field)]
-public class ConfigurableField : Attribute
+namespace Moonstorm
 {
-    public string ConfigSection { get; set; }
-    public string ConfigName { get; set; }
-    public string ConfigDesc { get; set; }
-
-    public string GetSection(Type type)
+    [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
+    public class ConfigurableField : Attribute
     {
-        if(!string.IsNullOrEmpty(ConfigSection))
-        {
-            return ConfigSection;
-        }
-        return type.Name;
-    }
+        public string ConfigSection { get; set; }
+        public string ConfigName { get; set; }
+        public string ConfigDesc { get; set; }
 
-    public string GetName(FieldInfo field)
-    {
-        if(!string.IsNullOrEmpty(ConfigName))
+        public string GetSection(Type type)
         {
-            return ConfigName;
+            if (!string.IsNullOrEmpty(ConfigSection))
+            {
+                return ConfigSection;
+            }
+            return type.Name;
         }
-        return field.Name;
-    }
 
-    public string GetDescription()
-    {
-        if(!string.IsNullOrEmpty(ConfigDesc))
+        public string GetName(FieldInfo field)
         {
-            return ConfigDesc;
+            if (!string.IsNullOrEmpty(ConfigName))
+            {
+                return ConfigName;
+            }
+            return field.Name;
         }
-        return $"Configure this value";
+
+        public string GetDescription()
+        {
+            if (!string.IsNullOrEmpty(ConfigDesc))
+            {
+                return ConfigDesc;
+            }
+            return $"Configure this value";
+        }
     }
 }

@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using EntityStates;
+using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
 using UnityEditor;
-using EntityStates;
+using UnityEngine;
 
 namespace Moonstorm.EditorUtils.TreeDrawers
 {

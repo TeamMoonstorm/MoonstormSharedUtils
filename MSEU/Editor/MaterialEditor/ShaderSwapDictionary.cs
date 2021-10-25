@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
@@ -56,7 +53,7 @@ namespace Moonstorm.EditorUtils
             }
 
             var allCalmWaterShaders = (List<Shader>)Util.FindAssetsByType<Shader>("CalmWater");
-            for(int i = 0; i < allCalmWaterShaders.Count; i++)
+            for (int i = 0; i < allCalmWaterShaders.Count; i++)
             {
                 var current = allCalmWaterShaders[i];
 
@@ -64,7 +61,7 @@ namespace Moonstorm.EditorUtils
                 string realFileName;
 
                 Shader stubbed;
-                if(current.name.StartsWith("CalmWater/"))
+                if (current.name.StartsWith("CalmWater/"))
                 {
                     real = current;
                     realFileName = Path.GetFileName(AssetDatabase.GetAssetPath(real)).Replace(".asset", string.Empty);
@@ -76,7 +73,7 @@ namespace Moonstorm.EditorUtils
                                                  .Select(path => AssetDatabase.LoadAssetAtPath<Shader>(path))
                                                  .First();
 
-                    if(real && stubbed)
+                    if (real && stubbed)
                     {
                         stubbedToReal.Add(stubbed, real);
                         realToStubbed.Add(real, stubbed);

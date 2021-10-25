@@ -168,10 +168,10 @@ namespace Moonstorm.EditorUtils.Pipelines
         private int SwapRealShadersForStubbed(Material[] materials)
         {
             var count = 0;
-            for(int i = 0; i < materials.Length; i++)
+            for (int i = 0; i < materials.Length; i++)
             {
                 var current = materials[i];
-                if(ShaderSwapDictionary.realToStubbed.TryGetValue(current.shader, out Shader stubbed))
+                if (ShaderSwapDictionary.realToStubbed.TryGetValue(current.shader, out Shader stubbed))
                 {
                     count++;
                     current.shader = stubbed;

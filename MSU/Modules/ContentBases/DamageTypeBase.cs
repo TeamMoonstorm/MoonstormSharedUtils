@@ -5,7 +5,7 @@ namespace Moonstorm
     /// <summary>
     /// A Content Base Class for initializing a Damage Type
     /// </summary>
-    public abstract class DamageTypeBase
+    public abstract class DamageTypeBase : ContentBase
     {
         /// <summary>
         /// Your ModdedDamageType
@@ -17,11 +17,6 @@ namespace Moonstorm
         /// </summary>
         /// <returns>The ModdedDamageType asociated with this DamageTypeBase</returns>
         public abstract ModdedDamageType GetDamageType();
-
-        /// <summary>
-        /// Initialize your DamageType here
-        /// </summary>
-        public virtual void Initialize() { }
 
         /// <summary>
         /// Create logic with delegates here.

@@ -5,22 +5,12 @@ namespace Moonstorm
     /// <summary>
     /// A Content Base Class for initializing an Item
     /// </summary>
-    public abstract class ItemBase
+    public abstract class ItemBase : ContentBase
     {
         /// <summary>
         /// Your Item's ItemDef
         /// </summary>
         public abstract ItemDef ItemDef { get; set; }
-
-        public static ItemDef itemDef;
-        /// <summary>
-        /// Initialize your item here
-        /// <para>Running base.Initialize() REQUIRED</para>
-        /// </summary>
-        public virtual void Initialize()
-        {
-            ItemDef = ItemDef;
-        }
 
         /// <summary>
         /// Add your item behavior here

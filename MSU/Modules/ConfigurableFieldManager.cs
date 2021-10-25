@@ -1,11 +1,8 @@
-﻿using System;
+﻿using BepInEx.Configuration;
+using RoR2;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RoR2;
-using BepInEx.Configuration;
-using HG;
 using System.Reflection;
 using UnityEngine;
 
@@ -13,6 +10,8 @@ namespace Moonstorm
 {
     public static class ConfigurableFieldManager
     {
+        private static bool initialized = false;
+
         private static List<(Assembly, ConfigFile)> subscribedAssemblies = new List<(Assembly, ConfigFile)>();
 
         private static List<(List<Type>, ConfigFile)> typesToConfigure = new List<(List<Type>, ConfigFile)>();
@@ -20,40 +19,59 @@ namespace Moonstorm
         [SystemInitializer()]
         private static void Init()
         {
+            initialized = true;
+
+            MSULog.LogI($"Initializing ConfigurableFieldManager");
             RoR2Application.onLoad += ConfigureTypes;
         }
 
-        public static void AddMod(Assembly assembly, ConfigFile configFile)
+        public static void AddMod(ConfigFile configFile)
         {
-            List<Type> types = new List<Type>();
+            Assembly assembly = Assembly.GetCallingAssembly();
 
-            foreach(Type type in assembly.GetTypes())
+            if (!initialized)
             {
-                try
-                {
-                    var fields = type.GetFields(BindingFlags.Public | BindingFlags.Static)
-                                     .Where(field => field.GetCustomAttribute<ConfigurableField>() != null)
-                                     .ToList();
+                MSULog.LogI($"Adding mod {assembly.GetName().Name} to the configurable field manager");
+                List<Type> types = new List<Type>();
 
-                    if(fields.Count > 0)
+                foreach (Type type in assembly.GetTypes())
+                {
+                    try
                     {
-                        types.Add(type);
+                        var fields = type.GetFields(BindingFlags.Public | BindingFlags.Static)
+                                         .Where(field => field.GetCustomAttribute<ConfigurableField>() != null)
+                                         .ToList();
+
+                        if (fields.Count > 0)
+                        {
+                            types.Add(type);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        MSULog.LogE($"An Exception has Ocurred. {e}");
                     }
                 }
-                catch (Exception e)
+
+
+                if (types.Count > 0)
                 {
-                    MSULog.LogE($"An Exception has Ocurred. {e}");
+                    MSULog.LogD($"Found a total of {types.Count} with fields that have the {nameof(ConfigurableField)} attribute");
+                    (List<Type>, ConfigFile) tuple = (types, configFile);
+
+                    if (!typesToConfigure.Contains(tuple))
+                    {
+                        typesToConfigure.Add(tuple);
+                    }
+                }
+                else
+                {
+                    MSULog.LogW($"Found no types with fields that have the {nameof(ConfigurableField)} attribute within {assembly.GetName().Name}");
                 }
             }
-
-            if(types.Count > 0)
+            else
             {
-                (List<Type>, ConfigFile) tuple = (types, configFile);
-
-                if(!typesToConfigure.Contains(tuple))
-                {
-                    typesToConfigure.Add(tuple);
-                }
+                MSULog.LogW($"Cannot add {assembly.GetName().Name} to the List as the configurable field manager has already been initialized.");
             }
         }
 
@@ -63,9 +81,9 @@ namespace Moonstorm
             typesToConfigure.ForEach(type => count.AddRange(type.Item1));
             MSULog.LogI($"Configuring a total of {count.Count} Types.");
 
-            foreach(var (types, config) in typesToConfigure)
+            foreach (var (types, config) in typesToConfigure)
             {
-                foreach(Type type in types)
+                foreach (Type type in types)
                 {
                     try
                     {

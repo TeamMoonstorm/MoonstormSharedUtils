@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using static R2API.DamageAPI;
 
 namespace Moonstorm
@@ -20,13 +19,7 @@ namespace Moonstorm
         /// <summary>
         /// Returns all the DamageTypes loaded by MoonstormSharedUtils
         /// </summary>
-        public static ModdedDamageType[] ModdedDamageTypes
-        {
-            get
-            {
-                return MoonstormDamageTypes.Keys.ToArray();
-            }
-        }
+        public static ModdedDamageType[] ModdedDamageTypes { get => MoonstormDamageTypes.Keys.ToArray(); }
 
         [SystemInitializer]
         private static void HookInit()
@@ -43,12 +36,7 @@ namespace Moonstorm
         /// <returns>An IEnumerable of all your Assembly's DamageTypeBases</returns>
         public virtual IEnumerable<DamageTypeBase> InitializeDamageTypes()
         {
-            return GetType().Assembly.GetTypes()
-                .Where(type => !type.IsAbstract && type.IsSubclassOf(typeof(DamageTypeBase)))
-                .Where(type => !type.GetCustomAttributes(true)
-                                    .Select(obj => obj.GetType())
-                                    .Contains(typeof(DisabledContent)))
-                .Select(dtBase => (DamageTypeBase)Activator.CreateInstance(dtBase));
+            return GetContentClasses<DamageTypeBase>();
         }
 
         /// <summary>

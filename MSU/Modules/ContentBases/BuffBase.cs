@@ -5,19 +5,12 @@ namespace Moonstorm
     /// <summary>
     /// A Content Base Class for initializing a Buff
     /// </summary>
-    public abstract class BuffBase
+    public abstract class BuffBase : ContentBase
     {
         /// <summary>
         /// Your Buff's BuffDef
         /// </summary>
         public abstract BuffDef BuffDef { get; set; }
-
-        public BuffBase() { }
-
-        /// <summary>
-        /// Initialize your Buff
-        /// </summary>
-        public virtual void Initialize() { }
 
         /// <summary>
         /// Add an item behavior to your buff.

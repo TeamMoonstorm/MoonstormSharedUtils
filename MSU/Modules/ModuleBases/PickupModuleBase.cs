@@ -33,53 +33,27 @@ namespace Moonstorm
             }
         }
 
-        //This dictionary is used in the DynamicDescription system for getting the property of either ItemDef or EquipmentDef
-        internal static Dictionary<UnityEngine.Object, Type> AllPickups
-        {
-            get
-            {
-                Dictionary<UnityEngine.Object, Type> toReturn = new Dictionary<UnityEngine.Object, Type>();
-                return toReturn.Union(MoonstormItems.ToDictionary(k => (UnityEngine.Object)k.Key, v => v.Value.GetType()))
-                    .Union(MoonstormNonEliteEquipments.ToDictionary(k => (UnityEngine.Object)k.Key, v => v.Value.GetType()))
-                    .Union(MoonstormEquipments.ToDictionary(k => (UnityEngine.Object)k.Key, v => v.Value.GetType()))
-                    .ToDictionary(x => x.Key, y => y.Value);
-            }
-        }
-
         /// <summary>
         /// Dictionary of all the normal equipments loaded by Moonstorm Shared Utils
         /// </summary>
         public static readonly Dictionary<EquipmentDef, EquipmentBase> MoonstormNonEliteEquipments = new Dictionary<EquipmentDef, EquipmentBase>();
 
         /// <summary>
-        /// Dictionary of all the Elite Equipments loaded by Moonstorm Shared Utils
+        /// Dictionary of all the Elite Equipments loaded and initialized by Moonstorm Shared Utils
         /// </summary>
         public static readonly Dictionary<EquipmentDef, EliteEquipmentBase> MoonstormEliteEquipments = new Dictionary<EquipmentDef, EliteEquipmentBase>();
+
+        internal static readonly Dictionary<EquipmentDef, EliteEquipmentBase> nonInitializedEliteEquipments = new Dictionary<EquipmentDef, EliteEquipmentBase>();
 
         /// <summary>
         /// Returns all the ItemDefs inside MoonstormItems
         /// </summary>
-        public static ItemDef[] LoadedItemDefs
-        {
-            get
-            {
-                return MoonstormItems.Keys.ToArray();
-            }
-        }
+        public static ItemDef[] LoadedItemDefs { get => MoonstormItems.Keys.ToArray(); }
 
         /// <summary>
         /// Returns all the EquipmentDefs inside MoonstormEquipments and MoonstormEliteEquipments.
         /// </summary>
-        public static EquipmentDef[] LoadedEquipDefs
-        {
-            get
-            {
-                var toReturn = new List<EquipmentDef>();
-                MoonstormEquipments.Keys.ToList().ForEach(equip => toReturn.Add(equip));
-                MoonstormEliteEquipments.Keys.ToList().ForEach(eliteEquip => toReturn.Add(eliteEquip));
-                return toReturn.ToArray(); ;
-            }
-        }
+        public static EquipmentDef[] LoadedEquipDefs { get => MoonstormEquipments.Keys.ToList().Union(MoonstormEliteEquipments.Keys.ToList()).ToArray(); }
 
         [SystemInitializer(typeof(PickupCatalog))]
         private static void HookInit()
@@ -100,12 +74,7 @@ namespace Moonstorm
         public virtual IEnumerable<ItemBase> InitializeItems()
         {
             MSULog.LogD($"Getting the Items found inside {GetType().Assembly}...");
-            return GetType().Assembly.GetTypes()
-                           .Where(type => !type.IsAbstract && type.IsSubclassOf(typeof(ItemBase)))
-                           .Where(type => !type.GetCustomAttributes(true)
-                                    .Select(obj => obj.GetType())
-                                    .Contains(typeof(DisabledContent)))
-                           .Select(itemType => (ItemBase)Activator.CreateInstance(itemType));
+            return GetContentClasses<ItemBase>();
         }
 
         /// <summary>
@@ -135,12 +104,7 @@ namespace Moonstorm
         public virtual IEnumerable<EquipmentBase> InitializeEquipments()
         {
             MSULog.LogD($"Getting the Equipments found inside {GetType().Assembly}...");
-            return GetType().Assembly.GetTypes()
-                           .Where(type => !type.IsAbstract && type.IsSubclassOf(typeof(EquipmentBase)) && !type.IsSubclassOf(typeof(EliteEquipmentBase)))
-                           .Where(type => !type.GetCustomAttributes(true)
-                                    .Select(obj => obj.GetType())
-                                    .Contains(typeof(DisabledContent)))
-                           .Select(eqpType => (EquipmentBase)Activator.CreateInstance(eqpType));
+            return GetContentClasses<EquipmentBase>(typeof(EliteEquipmentBase));
         }
 
         /// <summary>
@@ -169,27 +133,19 @@ namespace Moonstorm
         public virtual IEnumerable<EliteEquipmentBase> InitializeEliteEquipments()
         {
             MSULog.LogD($"Getting the Elite Equipments found inside {GetType().Assembly}...");
-            return GetType().Assembly.GetTypes()
-                .Where(type => !type.IsAbstract && type.IsSubclassOf(typeof(EliteEquipmentBase)))
-                .Where(type => !type.GetCustomAttributes(true)
-                                    .Select(obj => obj.GetType())
-                                    .Contains(typeof(DisabledContent)))
-                .Select(eqpEliteType => (EliteEquipmentBase)Activator.CreateInstance(eqpEliteType));
+            return GetContentClasses<EliteEquipmentBase>();
         }
 
         /// <summary>
-        /// Adds an elite equipment to the moonstorm elite equipments dictionary.
+        /// Adds an elite equipment to the moonstorm non initialized elite equipments list.
         /// <para>Keep in mind that this does not completely initialize the elite.</para>
         /// <para>The rest is done in the EliteModuleBase</para>
         /// </summary>
         /// <param name="eliteEquip">The EliteEquipmentBase class</param>
-        /// <param name="eliteEquipmentDictionary">Optional, a dictionary for getting an EliteEquipmentDef by feeding it the corresponding EquipmentDef</param>
-        public void AddEliteEquipment(EliteEquipmentBase eliteEquip, Dictionary<EquipmentDef, EliteEquipmentBase> eliteEquipmentDictionary = null)
+        public void AddEliteEquipment(EliteEquipmentBase eliteEquip)
         {
-            MoonstormEliteEquipments.Add(eliteEquip.EquipmentDef, eliteEquip);
-            if(eliteEquipmentDictionary != null)
-                eliteEquipmentDictionary.Add(eliteEquip.EquipmentDef, eliteEquip);
-            MSULog.LogD($"Elite Equipment {eliteEquip.EquipmentDef} added to the Elite Equipment Dictionary.");
+            nonInitializedEliteEquipments.Add(eliteEquip.EquipmentDef, eliteEquip);
+            MSULog.LogD($"Added {typeof(EliteEquipmentBase).Name} to the Non Initialized Elite Equipments Dictionary.");
         }
         #endregion
 

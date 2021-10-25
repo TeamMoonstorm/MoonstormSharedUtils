@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
-using Moonstorm;
+﻿using UnityEditor;
 using UnityEngine;
 
 namespace Moonstorm.EditorUtils.Editors

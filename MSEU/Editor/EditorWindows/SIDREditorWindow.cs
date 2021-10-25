@@ -1,6 +1,5 @@
-﻿using Moonstorm;
+﻿using UnityEditor;
 using UnityEngine;
-using UnityEditor;
 
 namespace Moonstorm.EditorUtils.Editors
 {

@@ -8,7 +8,7 @@ namespace Moonstorm
     /// <para>If you want to initialize a survivor, you should look at SurvivorBase</para>
     /// <para>If you want to initialize a monster, you should look at MonsterBase</para>
     /// </summary>
-    public abstract class CharacterBase
+    public abstract class CharacterBase : ContentBase
     {
         /// <summary>
         /// The Body Prefab of your Character
@@ -23,7 +23,7 @@ namespace Moonstorm
         /// Initialize your Character here
         /// <para>calling base.Initialize() heavily reccomended.</para>
         /// </summary>
-        public void Initialize()
+        public override void Initialize()
         {
             ModifyPrefab();
             Hook();

@@ -1,11 +1,11 @@
 ﻿using Mono.Cecil.Cil;
 using MonoMod.Cil;
+using Moonstorm.Components;
 using RoR2;
 using RoR2.ContentManagement;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Moonstorm.Components;
 
 namespace Moonstorm
 {
@@ -19,26 +19,11 @@ namespace Moonstorm
         /// </summary>
         public static List<MSEliteDef> MoonstormElites = new List<MSEliteDef>();
 
-        //public static Dictionary<MSEliteDef, EliteEquipmentBase> MoonstormElites = new Dictionary<MSEliteDef, EliteEquipmentBase>();
-
-        /// <summary>
-        /// Returns all the loaded elites.
-        /// </summary>
-        public static MSEliteDef[] LoadedEliteDefs
-        {
-            get
-            {
-                return MoonstormElites.ToArray();
-            }
-        }
-
         [SystemInitializer(typeof(EliteCatalog))]
         public static void HookInit()
         {
             MSULog.LogI("Subscribing to delegates related to Elites.");
             IL.RoR2.CharacterModel.UpdateMaterials += AddEliteMaterial;
-
-            //On.RoR2.CombatDirector.Init += AddElites; Initializer literally runs this hook too late, lol. so i'm switching it to OnLoad
             RoR2Application.onLoad += AddElites;
         }
 
@@ -48,15 +33,16 @@ namespace Moonstorm
         /// <para>Requires the PickupModuleBase to be initialzed</para>
         /// </summary>
         /// <returns>An IEnumerable of all your Assembly's EliteEquipmentBases</returns>
-        public virtual IEnumerable<EliteEquipmentBase> InitializeEliteEquipments()
+        public virtual IEnumerable<EliteEquipmentBase> GetNonInitializedEliteEquipments()
         {
             MSULog.LogD($"Getting the Elites found inside {AssetBundle}...");
+
             var toReturn = new List<EliteEquipmentBase>();
             var eliteDefs = AssetBundle.LoadAllAssets<MSEliteDef>();
             foreach (MSEliteDef def in eliteDefs)
             {
                 EliteEquipmentBase equipment;
-                bool flag = PickupModuleBase.MoonstormEliteEquipments.TryGetValue(def.eliteEquipmentDef, out equipment);
+                bool flag = PickupModuleBase.nonInitializedEliteEquipments.TryGetValue(def.eliteEquipmentDef, out equipment);
                 if (flag)
                 {
                     toReturn.Add(equipment);
@@ -74,21 +60,23 @@ namespace Moonstorm
         /// <param name="equipDictionary">Optional, a Dictionary for getting an EquipmentBase by feeding it the corresponding EquipmentDef (You can cast the EqpBase into an EliteEquipmentBase)</param>
         public void AddElite(EliteEquipmentBase equip, SerializableContentPack contentPack, List<MSEliteDef> eliteList = null, Dictionary<EquipmentDef, EquipmentBase> equipDictionary = null)
         {
+            //Adding Equipmentdef to content pack
             HG.ArrayUtils.ArrayAppend(ref contentPack.equipmentDefs, equip.EquipmentDef);
             equip.Initialize();
             if (equipDictionary != null)
                 equipDictionary.Add(equip.EquipmentDef, equip);
-
             MSULog.LogD($"Equipment {equip.EquipmentDef} added to {contentPack.name}");
 
+            //Adding ElitteDef to contentpack
             equip.EliteDef.shaderEliteRampIndex = 0;
             HG.ArrayUtils.ArrayAppend(ref contentPack.eliteDefs, equip.EliteDef);
             MoonstormElites.Add(equip.EliteDef);
             if (equip.EliteDef.overlay)
                 BuffModuleBase.MoonstormOverlayMaterials.Add(equip.EquipmentDef.passiveBuffDef, equip.EliteDef.overlay);
-
             MSULog.LogD($"Elite {equip.EliteDef} added to {contentPack.name}");
 
+            //Adding elite equipment to dictionary.
+            PickupModuleBase.MoonstormEliteEquipments.Add(equip.EquipmentDef, equip);
         }
         #endregion
 
@@ -133,7 +121,7 @@ namespace Moonstorm
             c.EmitDelegate<Action<CharacterModel>>((model) =>
             {
                 var body = model.body;
-                if(body)
+                if (body)
                 {
                     body.GetComponent<MoonstormEliteBehavior>()?.UpdateShaderRamp();
                 }

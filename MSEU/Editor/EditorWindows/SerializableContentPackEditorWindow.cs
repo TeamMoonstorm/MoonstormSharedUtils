@@ -1,8 +1,5 @@
-﻿using EntityStates;
-using RoR2;
+﻿using RoR2.ContentManagement;
 using System.Linq;
-using RoR2.ContentManagement;
-using System;
 using UnityEditor;
 using UnityEngine;
 

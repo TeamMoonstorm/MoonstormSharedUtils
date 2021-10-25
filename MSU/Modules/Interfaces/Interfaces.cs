@@ -2,9 +2,6 @@
 using MonoMod.Cil;
 using RoR2;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 namespace Moonstorm
 {

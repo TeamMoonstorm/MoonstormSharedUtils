@@ -1,9 +1,6 @@
 ﻿using RoR2;
-using RoR2.ContentManagement;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using UnityEngine;
 
 namespace Moonstorm
@@ -39,7 +36,7 @@ namespace Moonstorm
         /// Initialize your ItemDisplays
         /// <para>calling base.Init() REQUIRED</para>
         /// </summary>
-        public virtual void Init()
+        public override void Init()
         {
             //Gotta populate the dictionary once
             if (!populatedDictionary)
@@ -178,19 +175,19 @@ namespace Moonstorm
         {
             List<string> toLog = new List<string>();
             toLog.Add("Loaded Item Display Prefabs\n---------------------------");
-            foreach(var kvp in moonstormItemDisplayPrefabs)
+            foreach (var kvp in moonstormItemDisplayPrefabs)
                 toLog.Add(kvp.Key);
 
             toLog.Add("Loaded Item Key Assets\n---------------------------");
-            foreach(var kvp in itemKeyAssets)
+            foreach (var kvp in itemKeyAssets)
                 toLog.Add(kvp.Key);
 
             toLog.Add("Loaded Equipment Key Assets\n---------------------------");
-            foreach(var kvp in equipKeyAssets)
+            foreach (var kvp in equipKeyAssets)
                 toLog.Add(kvp.Key);
 
             toLog.Add("Loaded Vanilla IDRS\n---------------------------");
-            foreach(var kvp in vanillaIDRS)
+            foreach (var kvp in vanillaIDRS)
                 toLog.Add(kvp.Key);
 
             MSULog.LogD(string.Join("\n", toLog));

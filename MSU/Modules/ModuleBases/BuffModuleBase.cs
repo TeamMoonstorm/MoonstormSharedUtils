@@ -4,7 +4,6 @@ using RoR2.ContentManagement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using UnityEngine;
 
 namespace Moonstorm
@@ -27,13 +26,7 @@ namespace Moonstorm
         /// <summary>
         /// Returns all the Buffs loaded by Moonstorm Shared Utils
         /// </summary>
-        public BuffDef[] LoadedBuffDefs
-        {
-            get
-            {
-                return MoonstormBuffs.Keys.ToArray();
-            }
-        }
+        public BuffDef[] LoadedBuffDefs { get => MoonstormBuffs.Keys.ToArray(); }
 
         [SystemInitializer(typeof(BuffCatalog))]
         private static void HookInit()
@@ -41,10 +34,6 @@ namespace Moonstorm
             MSULog.LogI("Subscribing to delegates related to buffs.");
             On.RoR2.CharacterBody.SetBuffCount += OnBuffsChanged;
             On.RoR2.CharacterModel.UpdateOverlays += AddBuffOverlay;
-        }
-
-        public override void Init()
-        {
         }
 
         #region Buffs
@@ -56,12 +45,7 @@ namespace Moonstorm
         public virtual IEnumerable<BuffBase> InitializeBuffs()
         {
             MSULog.LogD($"Getting the Buffs found inside {GetType().Assembly}...");
-            return GetType().Assembly.GetTypes()
-                           .Where(type => !type.IsAbstract && type.IsSubclassOf(typeof(BuffBase)))
-                           .Where(type => !type.GetCustomAttributes(true)
-                                               .Select(obj => obj.GetType())
-                                               .Contains(typeof(DisabledContent)))
-                           .Select(buffType => (BuffBase)Activator.CreateInstance(buffType));
+            return GetContentClasses<BuffBase>();
         }
 
         /// <summary>

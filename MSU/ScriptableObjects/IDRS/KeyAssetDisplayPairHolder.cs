@@ -1,9 +1,8 @@
-﻿using Moonstorm.Utilities;
-using RoR2;
+﻿using RoR2;
 using System;
 using System.Collections.Generic;
-using Object = UnityEngine.Object;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Moonstorm
 {

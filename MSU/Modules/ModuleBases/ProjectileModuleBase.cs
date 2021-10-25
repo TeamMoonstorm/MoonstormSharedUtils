@@ -3,7 +3,6 @@ using RoR2.ContentManagement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using UnityEngine;
 
 namespace Moonstorm
@@ -21,13 +20,7 @@ namespace Moonstorm
         /// <summary>
         /// Returns all the projectile game objects in MoonstormProjectiles.
         /// </summary>
-        public static GameObject[] LoadedProjectiles
-        {
-            get
-            {
-                return MoonstormProjectiles.Keys.ToArray();
-            }
-        }
+        public static GameObject[] LoadedProjectiles { get => MoonstormProjectiles.Keys.ToArray(); }
 
         [SystemInitializer(typeof(ProjectileCatalog))]
         private static void HookInit()
@@ -45,12 +38,7 @@ namespace Moonstorm
         public virtual IEnumerable<ProjectileBase> InitializeProjectiles()
         {
             MSULog.LogD($"Getting the Projectiles found inside {GetType().Assembly}...");
-            return GetType().Assembly.GetTypes()
-                .Where(type => !type.IsAbstract && type.IsSubclassOf(typeof(ProjectileBase)))
-                .Where(type => !type.GetCustomAttributes(true)
-                                    .Select(obj => obj.GetType())
-                                    .Contains(typeof(DisabledContent)))
-                .Select(projectileBase => (ProjectileBase)Activator.CreateInstance(projectileBase));
+            return GetContentClasses<ProjectileBase>();
         }
 
         /// <summary>

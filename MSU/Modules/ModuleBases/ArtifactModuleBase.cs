@@ -3,7 +3,6 @@ using RoR2.ContentManagement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace Moonstorm
 {
@@ -20,14 +19,7 @@ namespace Moonstorm
         /// <summary>
         /// Returns all the Artifacts loaded by Moonstorm Shared Utils
         /// </summary>
-        public ArtifactDef[] LoadedArtifactDefs
-        {
-            get
-            {
-                return
-                     MoonstormArtifacts.Keys.ToArray();
-            }
-        }
+        public ArtifactDef[] LoadedArtifactDefs { get => MoonstormArtifacts.Keys.ToArray(); }
 
         [SystemInitializer(typeof(ArtifactCatalog))]
         private static void HookInit()
@@ -44,12 +36,7 @@ namespace Moonstorm
         public virtual IEnumerable<ArtifactBase> InitializeArtifacts()
         {
             MSULog.LogD($"Getting the Artifacts found inside {GetType().Assembly}...");
-            return GetType().Assembly.GetTypes()
-                           .Where(type => !type.IsAbstract && type.IsSubclassOf(typeof(ArtifactBase)))
-                           .Where(type => !type.GetCustomAttributes(true)
-                                    .Select(obj => obj.GetType())
-                                    .Contains(typeof(DisabledContent)))
-                           .Select(artifactType => (ArtifactBase)Activator.CreateInstance(artifactType));
+            return GetContentClasses<ArtifactBase>();
         }
 
         /// <summary>

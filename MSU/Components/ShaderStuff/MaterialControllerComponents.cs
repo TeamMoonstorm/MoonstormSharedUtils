@@ -1586,7 +1586,7 @@ namespace Moonstorm.Components
             }
             private void GrabMaterialValues()
             {
-                if(material)
+                if (material)
                 {
                     _TintColor = material.GetColor("_TintColor");
                     _EmissionColor = material.GetColor("_EmissionColor");
@@ -1633,7 +1633,7 @@ namespace Moonstorm.Components
                 material.SetColor("_TintColor", _TintColor);
                 material.SetColor("_EmissionColor", _EmissionColor);
 
-                if(_MainTex)
+                if (_MainTex)
                 {
                     material.SetTexture("_MainTex", _MainTex);
                     material.SetTextureScale("_MainTex", _MainTexScale);
@@ -1643,9 +1643,9 @@ namespace Moonstorm.Components
                 {
                     material.SetTexture("_MainTex", null);
                 }
-                
+
                 material.SetFloat("_NormalStrength", _NormalStrength);
-                
+
                 if (_NormalTex)
                 {
                     material.SetTexture("_NormalTex", _NormalTex);
@@ -1655,7 +1655,7 @@ namespace Moonstorm.Components
                     material.SetTexture("_NormalTex", null);
                 }
 
-                if(_Cloud1Tex)
+                if (_Cloud1Tex)
                 {
                     material.SetTexture("_Cloud1Tex", _Cloud1Tex);
                     material.SetTextureScale("_Cloud1Tex", _Cloud1TexScale);
@@ -1666,7 +1666,7 @@ namespace Moonstorm.Components
                     material.SetTexture("_Cloud1Tex", null);
                 }
 
-                if(_Cloud2Tex)
+                if (_Cloud2Tex)
                 {
                     material.SetTexture("_Cloud2Tex", _Cloud2Tex);
                     material.SetTextureScale("_Cloud2Tex", _Cloud2TexScale);
@@ -1677,7 +1677,7 @@ namespace Moonstorm.Components
                     material.SetTexture("_Cloud2Tex", null);
                 }
 
-                if(_RemapTex)
+                if (_RemapTex)
                 {
                     material.SetTexture("_RemapTex", _RemapTex);
                     material.SetTextureScale("_RemapTex", _RemapTexScale);
@@ -1687,7 +1687,7 @@ namespace Moonstorm.Components
                 {
                     material.SetTexture("_RemapTex", null);
                 }
-                
+
                 material.SetVector("_CutoffScroll", _CutoffScroll);
                 material.SetFloat("_InvFade", _InvFade);
                 material.SetFloat("_AlphaBoost", _AlphaBoost);

@@ -1,8 +1,4 @@
-﻿using RoR2;
-using System.Linq;
-using System;
-using Moonstorm;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
 namespace Moonstorm.EditorUtils.Editors

@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace Moonstorm
 {
@@ -16,11 +15,7 @@ namespace Moonstorm
         /// </summary>
         public static List<CharacterBase> MoonstormCharacters = new List<CharacterBase>();
 
-        [SystemInitializer(new Type[]
-        {
-        typeof(BodyCatalog),
-        typeof(MasterCatalog)
-        })]
+        [SystemInitializer(new Type[] { typeof(BodyCatalog), typeof(MasterCatalog) })]
         private static void HookInit()
         {
             MSULog.LogI("Subscribing to delegates related to survivors & monsters.");
@@ -35,12 +30,7 @@ namespace Moonstorm
         public virtual IEnumerable<CharacterBase> InitializeCharacters()
         {
             MSULog.LogD($"Getting the Characters found inside {GetType().Assembly}...");
-            return GetType().Assembly.GetTypes()
-                .Where(type => !type.IsAbstract && type.IsSubclassOf(typeof(CharacterBase)))
-                .Where(type => !type.GetCustomAttributes(true)
-                                    .Select(obj => obj.GetType())
-                                    .Contains(typeof(DisabledContent)))
-                .Select(characterType => (CharacterBase)Activator.CreateInstance(characterType));
+            return GetContentClasses<CharacterBase>();
         }
 
         /// <summary>

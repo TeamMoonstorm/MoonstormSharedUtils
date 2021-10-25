@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using UnityEngine;
-using Object = UnityEngine.Object;
+﻿using System.Reflection;
 
 namespace Moonstorm
 {
@@ -33,5 +29,22 @@ namespace Moonstorm
         {
             return baseValue + (maxValue - baseValue) * (1 - 1 / (1 + additionalValue * (itemCount - 1)));
         }
+
+        #region extensions
+        public static bool IsNumber(this object value)
+        {
+            return value is sbyte
+                    || value is byte
+                    || value is short
+                    || value is ushort
+                    || value is int
+                    || value is uint
+                    || value is long
+                    || value is ulong
+                    || value is float
+                    || value is double
+                    || value is decimal;
+        }
+        #endregion
     }
 }

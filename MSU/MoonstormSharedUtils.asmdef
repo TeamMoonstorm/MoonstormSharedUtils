@@ -16,7 +16,8 @@
         "DebugToolkit.dll",
         "AspectAbilities.dll",
         "MonoMod.Utils.dll",
-        "Mono.Cecil.dll"
+        "Mono.Cecil.dll",
+        "Microsoft.CSharp.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": []

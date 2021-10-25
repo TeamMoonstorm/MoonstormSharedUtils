@@ -5,19 +5,12 @@ namespace Moonstorm
     /// <summary>
     /// A Content Base Class for initializing an Equipment
     /// </summary>
-    public abstract class EquipmentBase
+    public abstract class EquipmentBase : ContentBase
     {
         /// <summary>
         /// Your Equipment's EquipmentDef
         /// </summary>
         public abstract EquipmentDef EquipmentDef { get; set; }
-
-        /// <summary>
-        /// Initialize your Equipment Here
-        /// </summary>
-        public virtual void Initialize()
-        {
-        }
 
         /// <summary>
         /// Add an ItemBehavior here
