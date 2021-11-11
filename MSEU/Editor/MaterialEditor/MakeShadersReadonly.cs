@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using RoR2EditorKit;
 
 namespace Moonstorm.EditorUtils
 {

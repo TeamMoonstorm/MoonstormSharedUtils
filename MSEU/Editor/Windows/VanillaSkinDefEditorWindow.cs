@@ -1,20 +1,16 @@
 ﻿using UnityEditor;
 using UnityEngine;
+using RoR2EditorKit.Core.Windows;
 
-namespace Moonstorm.EditorUtils.Editors
+namespace Moonstorm.EditorUtils.EditorWindows
 {
     public class VanillaSkinDefEditorWindow : ExtendedEditorWindow
     {
-        string selectedArrayPath;
+        SerializedProperty selectedArrayProp;
+        string selectedArrayPropPath;
 
         string selectedArrayElementPath;
         SerializedProperty selectedArrayElementProperty;
-
-        public static void Open(VanillaSkinDef esc)
-        {
-            VanillaSkinDefEditorWindow window = GetWindow<VanillaSkinDefEditorWindow>("Serializable Content Pack Editor");
-            window.mainSerializedObject = new SerializedObject(esc);
-        }
 
         private void OnGUI()
         {
@@ -29,15 +25,19 @@ namespace Moonstorm.EditorUtils.Editors
             EditorGUILayout.BeginHorizontal(GUILayout.ExpandWidth(true));
             EditorGUILayout.BeginVertical("box", GUILayout.MaxWidth(300), GUILayout.ExpandHeight(true));
 
-            DrawButtonSidebar(arrays);
+            if(DrawButtonSidebar(arrays))
+            {
+                selectedArrayElementPath = string.Empty;
+                selectedArrayElementProperty = null;
+            }
 
             EditorGUILayout.EndVertical();
 
             EditorGUILayout.BeginVertical("box", GUILayout.ExpandHeight(true));
 
-            if (mainSelectedProperty != null)
+            if (selectedArrayProp != null)
             {
-                if (mainSelectedProperty.displayName == "Base Skins")
+                if (selectedArrayProp.displayName == "Base Skins")
                 {
                     DrawBaseSkins();
                 }
@@ -57,29 +57,30 @@ namespace Moonstorm.EditorUtils.Editors
             ApplyChanges();
         }
 
-        private void DrawButtonSidebar(string[] fieldNames)
+        private bool DrawButtonSidebar(string[] fieldNames)
         {
+            bool pressed = false;
             foreach (string field in fieldNames)
             {
                 if (GUILayout.Button(field))
                 {
-                    selectedArrayPath = mainSerializedObject.FindProperty(field).propertyPath;
+                    selectedArrayPropPath = mainSerializedObject.FindProperty(field).propertyPath;
+                    pressed = true;
                 }
             }
-            if (!string.IsNullOrEmpty(selectedArrayPath))
+            if (!string.IsNullOrEmpty(selectedArrayPropPath))
             {
-                mainSelectedProperty = mainSerializedObject.FindProperty(selectedArrayPath);
+                selectedArrayProp = mainSerializedObject.FindProperty(selectedArrayPropPath);
             }
+            return pressed;
         }
 
         private void DrawBaseSkins()
         {
-            mainCurrentProperty = mainSelectedProperty;
-
             EditorGUILayout.BeginHorizontal("box");
             EditorGUILayout.BeginVertical("box", GUILayout.MaxWidth(300));
 
-            DrawValueSidebar(mainCurrentProperty);
+            DrawValueSidebar(selectedArrayProp);
 
             EditorGUILayout.EndVertical();
             EditorGUILayout.EndHorizontal();
@@ -87,12 +88,10 @@ namespace Moonstorm.EditorUtils.Editors
 
         private void DrawSelectedArray()
         {
-            mainCurrentProperty = mainSelectedProperty;
-
             EditorGUILayout.BeginHorizontal("box");
             EditorGUILayout.BeginVertical("box", GUILayout.MaxWidth(150));
 
-            DrawButtonSidebar(mainCurrentProperty, ref selectedArrayElementPath, ref selectedArrayElementProperty);
+            DrawButtonSidebar(selectedArrayProp, ref selectedArrayElementPath, ref selectedArrayElementProperty);
 
             EditorGUILayout.EndVertical();
 

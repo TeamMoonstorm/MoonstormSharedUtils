@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using RoR2EditorKit;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using ThunderKit.Core.Attributes;
 using ThunderKit.Core.Data;
 using ThunderKit.Core.Manifests.Datums;
@@ -10,6 +13,8 @@ using ThunderKit.Core.Pipelines;
 using UnityEditor;
 using UnityEditor.Compilation;
 using UnityEngine;
+using UnityEngine.Networking;
+using Object = UnityEngine.Object;
 
 namespace Moonstorm.EditorUtils.Pipelines
 {
@@ -24,39 +29,60 @@ namespace Moonstorm.EditorUtils.Pipelines
 
         [PathReferenceResolver]
         public string BundleArtifactPath = "<AssetBundleStaging>";
-        public override void Execute(Pipeline pipeline)
+        public override Task Execute(Pipeline pipeline)
         {
             var excludedExtensions = new[] { ".dll", ".cs", ".meta" };
 
             AssetDatabase.SaveAssets();
 
-            var assetBundleDefs = pipeline.Datums.OfType<AssetBundleDefinitions>().ToArray();
+            var manifests = pipeline.Manifests;
+            var assetBundleDefIndices = new Dictionary<AssetBundleDefinitions, int>();
+            var assetBundleDefinitions = new List<AssetBundleDefinitions>();
+
+            for(int i = 0; i < manifests.Length; i++)
+            {
+                foreach(var abd in manifests[i].Data.OfType<AssetBundleDefinitions>())
+                {
+                    assetBundleDefinitions.Add(abd);
+                    assetBundleDefIndices.Add(abd, i);
+                }
+            }
+
+            var assetBundleDefs = assetBundleDefinitions.ToArray();
+            var hasValidBundles = assetBundleDefs.Any(abd => abd.assetBundles.Any(ab => !string.IsNullOrEmpty(ab.assetBundleName) && ab.assets.Any()));
+
+            if(!hasValidBundles)
+            {
+                var scriptPath = UnityWebRequest.EscapeURL(AssetDatabase.GetAssetPath(MonoScript.FromScriptableObject(this)));
+                pipeline.Log(LogLevel.Warning, $"No valid AssetBundleDefinitions defined, skipping [{nameof(SwapShadersAndStageAssetBundles)}](assetLink://{scriptPath}) Pipeline Job");
+                return Task.CompletedTask;
+            }
+
             var bundleArtifactPath = BundleArtifactPath.Resolve(pipeline, this);
             Directory.CreateDirectory(bundleArtifactPath);
 
-            var explicitAssets = assetBundleDefs.SelectMany(abd => abd.assetBundles)
-                                                .SelectMany(ab => ab.assets)
-                                                .ToArray();
 
-            Material[] allMaterials = Util.FindAssetsByType<Material>().ToArray();
+            var materials = GetAllMaterialsWithRealShaders();
 
-            Material[] materials = Util.FindAssetsByType<Material>()
-                                        .Where(material => material.shader.name.StartsWith("Hopoo Games"))
-                                        .ToArray();
             if (materials.Length != 0)
             {
                 var count = SwapRealShadersForStubbed(materials);
-                Debug.Log($"Replaced a total of {count} real shaders for stubbed shaders.");
+                pipeline.Log(LogLevel.Information, $"Replacing a total of {count} real shaders for stubbed shaders.");
             }
 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 
+            var explicitAssets = assetBundleDefs.SelectMany(abd => abd.assetBundles)
+                                                .SelectMany(ab => ab.assets)
+                                                .ToArray();
+
             var explicitAssetPaths = new List<string>();
             PopulateWithExplicitAssets(explicitAssets, explicitAssetPaths);
+
+            var defBuildDetails = new List<string>();
             var logBuilder = new StringBuilder();
             var builds = new AssetBundleBuild[assetBundleDefs.Sum(abd => abd.assetBundles.Length)];
-            logBuilder.AppendLine($"Defining {builds.Length} AssetBundleBuilds");
 
             var buildsIndex = 0;
             for (int defIndex = 0; defIndex < assetBundleDefs.Length; defIndex++)
@@ -66,6 +92,8 @@ namespace Moonstorm.EditorUtils.Pipelines
                 var assemblyFiles = playerAssemblies.Select(pa => pa.outputPath).ToArray();
                 var sourceFiles = playerAssemblies.SelectMany(pa => pa.sourceFiles).ToArray();
 
+                defBuildDetails.Clear();
+
                 for (int i = 0; i < assetBundleDef.assetBundles.Length; i++)
                 {
                     var def = assetBundleDef.assetBundles[i];
@@ -73,10 +101,6 @@ namespace Moonstorm.EditorUtils.Pipelines
                     var build = builds[buildsIndex];
 
                     var assets = new List<string>();
-
-                    logBuilder.AppendLine("--------------------------------------------------");
-                    logBuilder.AppendLine($"Defining bundle: {def.assetBundleName}");
-                    logBuilder.AppendLine();
 
                     var firstAsset = def.assets.FirstOrDefault(x => x is SceneAsset);
 
@@ -89,6 +113,7 @@ namespace Moonstorm.EditorUtils.Pipelines
                             .SelectMany(assetPath => AssetDatabase.GetDependencies(assetPath))
                             .Where(dap => !explicitAssetPaths.Contains(dap))
                             .ToArray();
+
                         assets.AddRange(dependencies);
                     }
 
@@ -104,14 +129,17 @@ namespace Moonstorm.EditorUtils.Pipelines
                     builds[buildsIndex] = build;
                     buildsIndex++;
 
-                    foreach (var asset in build.assetNames)
-                        logBuilder.AppendLine(asset);
+                    LogBundleDetails(logBuilder, build);
 
-                    logBuilder.AppendLine("--------------------------------------------------");
-                    logBuilder.AppendLine();
+                    defBuildDetails.Add(logBuilder.ToString());
+                    logBuilder.Clear();
                 }
+
+                var prevInd = pipeline.ManifestIndex;
+                pipeline.ManifestIndex = assetBundleDefIndices[assetBundleDef];
+                pipeline.Log(LogLevel.Information, $"Creating {assetBundleDef.assetBundles.Length} AssetBundles", defBuildDetails.ToArray());
+                pipeline.ManifestIndex = prevInd;
             }
-            Debug.Log(logBuilder.ToString());
 
             if (!simulate)
             {
@@ -154,17 +182,55 @@ namespace Moonstorm.EditorUtils.Pipelines
                 pipeline.ManifestIndex = -1;
             }
 
-            materials = Util.FindAssetsByType<Material>()
-                                        .Where(material => material.shader.name.StartsWith("StubbedShader"))
-                                        .ToArray();
+            materials = GetAllMaterialsWithStubbedShaders();
 
             if (materials.Length != 0)
             {
                 var count = RestoreMaterialShaders(materials);
-                Debug.Log($"Restored a total of {count} stubbed shaders to real shaders");
+                pipeline.Log(LogLevel.Information, $"Restored a total of {count} stubbed shaders for real shaders.");
             }
+            return Task.CompletedTask;
         }
 
+        private static void LogBundleDetails(StringBuilder logBuilder, AssetBundleBuild build)
+        {
+            logBuilder.AppendLine($"{build.assetBundleName}");
+            foreach (var asset in build.assetNames)
+            {
+                var name = Path.GetFileNameWithoutExtension(asset);
+                if (name.Length == 0) continue;
+                logBuilder.AppendLine($"[{name}](assetlink://{UnityWebRequest.EscapeURL(asset)})");
+                logBuilder.AppendLine();
+            }
+
+            logBuilder.AppendLine();
+        }
+
+        private Material[] GetAllMaterialsWithRealShaders()
+        {
+            List<Material> materials = new List<Material>();
+
+            return materials.Union(Util.FindAssetsByType<Material>()
+                                       .Where(material => material.shader.name.StartsWith("Hopoo Games")))
+                            .Union(Util.FindAssetsByType<Material>()
+                                       .Where(material => material.shader.name.StartsWith("CalmWater")))
+                            .Union(Util.FindAssetsByType<Material>()
+                                       .Where(material => material.shader.name.StartsWith("Decalicious")))
+                            .ToArray();
+        }
+
+        private Material[] GetAllMaterialsWithStubbedShaders()
+        {
+            List<Material> materials = new List<Material>();
+
+            return materials.Union(Util.FindAssetsByType<Material>()
+                                       .Where(material => material.shader.name.StartsWith("StubbedShader")))
+                            .Union(Util.FindAssetsByType<Material>()
+                                       .Where(material => material.shader.name.StartsWith("StubbedCalmWater")))
+                            .Union(Util.FindAssetsByType<Material>()
+                                       .Where(material => material.shader.name.StartsWith("StubbedDecalicious")))
+                            .ToArray();
+        }
         private int SwapRealShadersForStubbed(Material[] materials)
         {
             var count = 0;

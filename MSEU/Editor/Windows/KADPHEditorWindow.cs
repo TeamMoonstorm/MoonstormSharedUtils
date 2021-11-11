@@ -1,31 +1,32 @@
 ﻿using UnityEditor;
 using UnityEngine;
+using RoR2EditorKit.Core.Windows;
 
-namespace Moonstorm.EditorUtils.Editors
+namespace Moonstorm.EditorUtils.EditorWindows
 {
     public class KADPHEditorWindow : ExtendedEditorWindow
     {
         public Vector2 scrollPos = new Vector2();
-        public static void Open(KeyAssetDisplayPairHolder obj)
-        {
-            KADPHEditorWindow window = GetWindow<KADPHEditorWindow>("Key Asset Display Pair Holder Editor");
-            window.mainSerializedObject = new SerializedObject(obj);
-        }
+
+        private SerializedProperty mainProperty;
+
+        private string selectedKeyAssetPropPath;
+        private SerializedProperty selectedKeyAssetProp;
 
         private void OnGUI()
         {
-            mainCurrentProperty = mainSerializedObject.FindProperty("KeyAssetDisplayPairs");
+            mainProperty = mainSerializedObject.FindProperty("KeyAssetDisplayPairs");
 
             EditorGUILayout.BeginHorizontal(GUILayout.ExpandWidth(true));
             EditorGUILayout.BeginVertical("box", GUILayout.MaxWidth(150), GUILayout.ExpandHeight(true));
 
-            var tuple = DrawScrollableButtonSidebar(mainCurrentProperty, scrollPos, "keyAsset");
+            var tuple = DrawScrollableButtonSidebar(mainProperty, scrollPos, "keyAsset", ref selectedKeyAssetPropPath, ref selectedKeyAssetProp);
             scrollPos = tuple.Item1;
 
             EditorGUILayout.EndVertical();
 
             EditorGUILayout.BeginVertical("box", GUILayout.ExpandHeight(true));
-            if (mainSelectedProperty != null)
+            if (selectedKeyAssetProp != null)
             {
                 DrawSelectedKADP();
             }
@@ -41,14 +42,12 @@ namespace Moonstorm.EditorUtils.Editors
 
         private void DrawSelectedKADP()
         {
-            mainCurrentProperty = mainSelectedProperty;
-
             EditorGUILayout.BeginHorizontal("box");
             EditorGUILayout.BeginVertical("box", GUILayout.MaxWidth(500));
 
-            DrawField("keyAsset", true);
+            DrawField(selectedKeyAssetProp.FindPropertyRelative("keyAsset"), true);
 
-            DrawValueSidebar(mainCurrentProperty.FindPropertyRelative("displayPrefabs"));
+            DrawValueSidebar(selectedKeyAssetProp.FindPropertyRelative("displayPrefabs"));
 
             EditorGUILayout.EndVertical();
             EditorGUILayout.EndHorizontal();

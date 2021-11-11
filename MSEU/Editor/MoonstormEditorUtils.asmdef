@@ -1,0 +1,23 @@
+{
+    "name": "MoonstormEditorUtils",
+    "references": [
+        "ThunderKit.Core",
+        "MoonstormSharedUtils",
+        "RoR2EditorKit"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "Assembly-CSharp.dll",
+        "MoonstormSharedUtils.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "UNITY_EDITOR"
+    ]
+}

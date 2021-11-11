@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using RoR2EditorKit;
 
 namespace Moonstorm.EditorUtils
 {
@@ -80,23 +81,36 @@ namespace Moonstorm.EditorUtils
                     }
                 }
             }
-        }
-
-        /*private static List<Shader> FindAllShaders()
-        {
-            List<Shader> shaders = new List<Shader>();
-            string[] guids = AssetDatabase.FindAssets("hg t:Shader", null);
-            for (int i = 0; i < guids.Length; i++)
+            var allDecaliciousShaders = (List<Shader>)Util.FindAssetsByType<Shader>("Decalicious");
+            for (int i = 0; i < allDecaliciousShaders.Count; i++)
             {
-                string assetPath = AssetDatabase.GUIDToAssetPath(guids[i]);
-                Shader asset = AssetDatabase.LoadAssetAtPath<Shader>(assetPath);
-                if (asset != null)
+                var current = allDecaliciousShaders[i];
+
+                Shader real;
+                string realFileName;
+
+                Shader stubbed;
+
+                if(current.name.StartsWith("Decalicious/"))
                 {
-                    shaders.Add(asset);
+                    real = current;
+                    realFileName = Path.GetFileName(AssetDatabase.GetAssetPath(real)).Replace(".asset", string.Empty);
+
+                    stubbed = allDecaliciousShaders.Where(shader => shader.name != real.name)
+                                                   .Select(shader => AssetDatabase.GetAssetPath(shader))
+                                                   .Where(path => path.Contains(".shader"))
+                                                   .Where(path => path.Contains(realFileName))
+                                                   .Select(path => AssetDatabase.LoadAssetAtPath<Shader>(path))
+                                                   .First();
+
+                    if(real && stubbed)
+                    {
+                        stubbedToReal.Add(stubbed, real);
+                        realToStubbed.Add(real, stubbed);
+                    }
                 }
             }
-            return shaders;
-        }*/
+        }
     }
 }
 
