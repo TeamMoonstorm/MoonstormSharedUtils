@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using System;
 using static Moonstorm.KeyAssetDisplayPairHolder;
 using Object = UnityEngine.Object;
 
@@ -8,6 +9,7 @@ namespace Moonstorm.Utilities
     /// <summary>
     /// Utilities for handling item display rulesets from mods that do not use Thunderkit or MSU.
     /// </summary>
+    [Obsolete("The MSIDRS util class is no longer supported due to changes in the standard of item displays implementation on modded characters.")]
     public static class MSIDRSUtil
     {
         /// <summary>

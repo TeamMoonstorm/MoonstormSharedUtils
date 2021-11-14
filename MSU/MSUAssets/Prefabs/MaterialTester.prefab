@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2914918129317833218}
   - component: {fileID: 1673531740815745789}
   - component: {fileID: 1448367568132525196}
+  - component: {fileID: 114915085822471162}
   m_Layer: 0
   m_Name: MaterialTester
   m_TagString: Untagged
@@ -90,5 +91,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac7b3e366420599418ecc7cf3d32fed0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  renderer: {fileID: 1673531740815745789}
+  Renderer: {fileID: 1673531740815745789}
   material: {fileID: 0}
+--- !u!114 &114915085822471162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1384150782408771210}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52a44ac676c8ff547be985bc3a8ae891, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

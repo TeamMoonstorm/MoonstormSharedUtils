@@ -1,6 +1,8 @@
 {
     "name": "MoonstormSharedUtils",
-    "references": [],
+    "references": [
+        "Unity.Postprocessing.Runtime"
+    ],
     "optionalUnityReferences": [],
     "includePlatforms": [],
     "excludePlatforms": [],

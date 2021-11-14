@@ -64,16 +64,13 @@ namespace Moonstorm.Utilities
             var input0 = Input.GetKeyDown(ConfigLoader.InstantiateMaterialTester.Value);
             //add more if necessary
             #region materialTester
-            if (input0)
+            if (input0 && Run.instance)
             {
                 var position = Vector3.zero;
                 var quaternion = Quaternion.identity;
-                if (Run.instance)
-                {
-                    var inputBank = PlayerCharacterMasterController.instances[0].master.GetBodyObject().GetComponent<InputBankTest>();
-                    position = inputBank.aimOrigin + inputBank.aimDirection * 5;
-                    quaternion = Quaternion.LookRotation(inputBank.GetAimRay().direction, Vector3.up);
-                }
+                var inputBank = PlayerCharacterMasterController.instances[0].master.GetBodyObject().GetComponent<InputBankTest>();
+                position = inputBank.aimOrigin + inputBank.aimDirection * 5;
+                quaternion = Quaternion.LookRotation(inputBank.GetAimRay().direction, Vector3.up);
                 var materialTester = MoonstormSharedUtils.mainAssetBundle.LoadAsset<GameObject>("MaterialTester");
                 Instantiate(materialTester, position, quaternion);
             }

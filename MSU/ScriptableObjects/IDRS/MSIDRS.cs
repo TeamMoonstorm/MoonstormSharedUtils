@@ -102,7 +102,7 @@ namespace Moonstorm
         internal ItemDisplayRuleSet vanillaIDRS;
 
         [Space]
-        public List<KeyAssetRuleGroup> SS2KeyAssetRuleGroups = new List<KeyAssetRuleGroup>();
+        public List<KeyAssetRuleGroup> MSUKeyAssetRuleGroup = new List<KeyAssetRuleGroup>();
         public string VanillaIDRSKey;
 
         public void Awake()
@@ -123,7 +123,7 @@ namespace Moonstorm
         public ItemDisplayRuleSet.KeyAssetRuleGroup[] GetItemDisplayRules()
         {
             var keyAssetList = new List<RoR2.ItemDisplayRuleSet.KeyAssetRuleGroup>();
-            foreach (var SS2KeyAssetRuleGroup in SS2KeyAssetRuleGroups)
+            foreach (var SS2KeyAssetRuleGroup in MSUKeyAssetRuleGroup)
             {
                 var keyAssetGroup = new RoR2.ItemDisplayRuleSet.KeyAssetRuleGroup();
                 if (ItemDisplayModuleBase.itemKeyAssets.TryGetValue(SS2KeyAssetRuleGroup.keyAssetName.ToLowerInvariant(), out keyAssetGroup.keyAsset))

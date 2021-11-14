@@ -2,17 +2,25 @@
 using Moonstorm.Utilities;
 using System.IO;
 using UnityEngine;
-
+using R2API.Utils;
+using R2API;
+using RoR2.ContentManagement;
+using System.Collections;
 
 namespace Moonstorm
 {
     [BepInDependency("com.bepis.r2api", BepInDependency.DependencyFlags.HardDependency)]
     [BepInPlugin(GUID, MODNAME, VERSION)]
+    [R2APISubmoduleDependency(new string[]
+        {
+          nameof(ArtifactCodeAPI),
+          nameof(DamageAPI)
+        })]
     public class MoonstormSharedUtils : BaseUnityPlugin
     {
         public const string GUID = "com.TeamMoonstorm.MoonstormSharedUtils";
         public const string MODNAME = "Moonstorm Shared Utils";
-        public const string VERSION = "0.4.1";
+        public const string VERSION = "0.5.0";
 
         public static MoonstormSharedUtils instance;
         public static PluginInfo pluginInfo;
@@ -31,8 +39,55 @@ namespace Moonstorm
                 gameObject.AddComponent<MSUDebug>();
             }
             Patches.Init();
+            Events.Init();
             mainAssetBundle = AssetBundle.LoadFromFile(Path.Combine(assemblyDir, "msuassets"));
-
+			ContentPackProvider.serializedContentPack = mainAssetBundle.LoadAsset<SerializableContentPack>("ContentPack");
+			ContentPackProvider.Initialize();
         }
     }
+
+	public class ContentPackProvider : IContentPackProvider
+	{
+		public static SerializableContentPack serializedContentPack;
+		public static ContentPack contentPack;
+
+		public string identifier
+		{
+			get
+			{
+				//If I see this name while loading a mod I will make fun of you
+				return "Moonstorm";
+			}
+		}
+
+		internal static void Initialize()
+		{
+			contentPack = serializedContentPack.CreateContentPack();
+			ContentManager.collectContentPackProviders += AddCustomContent;
+		}
+
+		private static void AddCustomContent(ContentManager.AddContentPackProviderDelegate addContentPackProvider)
+		{
+			addContentPackProvider(new ContentPackProvider());
+		}
+
+		public IEnumerator LoadStaticContentAsync(LoadStaticContentAsyncArgs args)
+		{
+			args.ReportProgress(1f);
+			yield break;
+		}
+
+		public IEnumerator GenerateContentPackAsync(GetContentPackAsyncArgs args)
+		{
+			ContentPack.Copy(contentPack, args.output);
+			args.ReportProgress(1f);
+			yield break;
+		}
+
+		public IEnumerator FinalizeAsync(FinalizeAsyncArgs args)
+		{
+			args.ReportProgress(1f);
+			yield break;
+		}
+	}
 }

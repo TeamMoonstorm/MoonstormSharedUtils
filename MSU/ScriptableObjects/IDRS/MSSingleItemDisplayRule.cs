@@ -13,18 +13,18 @@ namespace Moonstorm
         [Serializable]
         public struct SingleKeyAssetRuleGroup
         {
-            public string VanillaIDRSKey;
+            public string vanillaIDRSKey;
 
-            public List<SingleItemDisplayRule> ItemDisplayRules;
+            public List<SingleItemDisplayRule> itemDisplayRules;
 
             internal ItemDisplayRuleSet vanillaIDRS;
             public bool isEmpty
             {
                 get
                 {
-                    if (ItemDisplayRules != null)
+                    if (itemDisplayRules != null)
                     {
-                        return ItemDisplayRules.Count == 0;
+                        return itemDisplayRules.Count == 0;
                     }
                     return true;
                 }
@@ -32,15 +32,15 @@ namespace Moonstorm
 
             public void AddDisplayRule(SingleItemDisplayRule itemDisplayRule)
             {
-                if (ItemDisplayRules == null)
+                if (itemDisplayRules == null)
                 {
-                    ItemDisplayRules = new List<SingleItemDisplayRule>();
+                    itemDisplayRules = new List<SingleItemDisplayRule>();
                 }
-                ItemDisplayRules.Add(itemDisplayRule);
+                itemDisplayRules.Add(itemDisplayRule);
             }
             public void FetchIDRS()
             {
-                if (ItemDisplayModuleBase.vanillaIDRS.TryGetValue(VanillaIDRSKey.ToLowerInvariant(), out var value))
+                if (ItemDisplayModuleBase.vanillaIDRS.TryGetValue(vanillaIDRSKey.ToLowerInvariant(), out var value))
                 {
                     if (value != null)
                     {
@@ -108,20 +108,20 @@ namespace Moonstorm
             }
         }
 
-        public string KeyAssetName;
+        public string keyAssetName;
         public string displayPrefabName;
 
         [Space]
-        public List<SingleKeyAssetRuleGroup> SingleItemDisplayRules = new List<SingleKeyAssetRuleGroup>();
+        public List<SingleKeyAssetRuleGroup> singleItemDisplayRules = new List<SingleKeyAssetRuleGroup>();
 
         public ItemDisplayRuleSet.KeyAssetRuleGroup Parse(int index)
         {
             var KeyAssetToReturn = new ItemDisplayRuleSet.KeyAssetRuleGroup();
-            if (ItemDisplayModuleBase.itemKeyAssets.TryGetValue(KeyAssetName.ToLowerInvariant(), out KeyAssetToReturn.keyAsset))
+            if (ItemDisplayModuleBase.itemKeyAssets.TryGetValue(keyAssetName.ToLowerInvariant(), out KeyAssetToReturn.keyAsset))
             {
                 KeyAssetToReturn.displayRuleGroup = new DisplayRuleGroup { rules = Array.Empty<RoR2.ItemDisplayRule>() };
             }
-            else if (ItemDisplayModuleBase.equipKeyAssets.TryGetValue(KeyAssetName.ToLowerInvariant(), out KeyAssetToReturn.keyAsset))
+            else if (ItemDisplayModuleBase.equipKeyAssets.TryGetValue(keyAssetName.ToLowerInvariant(), out KeyAssetToReturn.keyAsset))
             {
                 KeyAssetToReturn.displayRuleGroup = new DisplayRuleGroup { rules = Array.Empty<RoR2.ItemDisplayRule>() };
             }
@@ -129,9 +129,9 @@ namespace Moonstorm
             {
                 return new ItemDisplayRuleSet.KeyAssetRuleGroup { keyAsset = null };
             }
-            for (int i = 0; i < SingleItemDisplayRules[index].ItemDisplayRules.Count; i++)
+            for (int i = 0; i < singleItemDisplayRules[index].itemDisplayRules.Count; i++)
             {
-                SingleItemDisplayRule rule = SingleItemDisplayRules[index].ItemDisplayRules[i];
+                SingleItemDisplayRule rule = singleItemDisplayRules[index].itemDisplayRules[i];
                 rule.Parse();
                 var prefab = ItemDisplayModuleBase.LoadDisplay(displayPrefabName.ToLowerInvariant());
                 HG.ArrayUtils.ArrayAppend(ref KeyAssetToReturn.displayRuleGroup.rules, new RoR2.ItemDisplayRule

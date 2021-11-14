@@ -1,7 +1,10 @@
 ﻿using RoR2;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Moonstorm
 {
@@ -10,8 +13,6 @@ namespace Moonstorm
     /// </summary>
     public abstract class ItemDisplayModuleBase : ModuleBase
     {
-        private static bool populatedDictionary = false;
-
         internal static readonly Dictionary<string, GameObject> moonstormItemDisplayPrefabs = new Dictionary<string, GameObject>();
 
         internal static readonly Dictionary<string, ItemDisplayRuleSet> vanillaIDRS = new Dictionary<string, ItemDisplayRuleSet>();
@@ -25,55 +26,46 @@ namespace Moonstorm
         internal static readonly List<MSIDRS> moonstormItemDisplayRuleSets = new List<MSIDRS>();
 
 
-        [SystemInitializer(typeof(PickupCatalog))]
+        [SystemInitializer(typeof(PickupCatalog), typeof(BodyCatalog))]
         private static void HookInit()
         {
             MSULog.LogI("Subscribing to delegates related to ItemDisplays.");
+
+            PopulateFromBody("Commando");
+            PopulateFromBody("Croco");
+            PopulateFromBody("Mage");
+            PopulateFromBody("LunarExploder");
+
+            GetAllVanillaIDRS();
+
+            typeof(RoR2Content.Items)
+                .GetFields()
+                .ToList()
+                .ForEach(Field => itemKeyAssets.Add(Field.Name.ToLowerInvariant(), Field.GetValue(typeof(ItemDef)) as Object));
+
+            //this is stupid.
+            itemKeyAssets.Remove("burnnearby");
+
+            typeof(RoR2Content.Equipment)
+                .GetFields()
+                .ToList()
+                .ForEach(field => equipKeyAssets.Add(field.Name.ToLowerInvariant(), field.GetValue(typeof(EquipmentDef)) as Object));
+
             RoR2Application.onLoad += FinishIDRS;
         }
 
         /// <summary>
         /// Initialize your ItemDisplays
-        /// <para>calling base.Init() REQUIRED</para>
         /// </summary>
         public override void Init()
         {
-            //Gotta populate the dictionary once
-            if (!populatedDictionary)
-            {
-                populatedDictionary = true;
-
-                PopulateFromBody("Commando");
-                PopulateFromBody("LunarExploder");
-
-                PopulateVanillaIDRS();
-
-                typeof(RoR2Content.Items)
-                    .GetFields()
-                    .ToList()
-                    .ForEach(Field => itemKeyAssets.Add(Field.Name.ToLowerInvariant(), Field.GetValue(typeof(ItemDef)) as Object));
-
-                typeof(RoR2Content.Equipment)
-                    .GetFields()
-                    .ToList()
-                    .ForEach(field => equipKeyAssets.Add(field.Name.ToLowerInvariant(), field.GetValue(typeof(EquipmentDef)) as Object));
-            }
         }
 
         #region Methods
-        /// <summary>
-        /// Populates all your IDRS found in your Assetbundle.
-        /// </summary>
+        [Obsolete("Please remove it as it is no longer used")]
         public void PopulateVanillaIDRSFromAssetBundle()
         {
-            AssetBundle.LoadAllAssets<ItemDisplayRuleSet>()
-                       .ToList()
-                       .ForEach(IDRS =>
-                       {
-                           bool flag = vanillaIDRS.ContainsKey(IDRS.name.ToLowerInvariant());
-                           if (!flag)
-                               vanillaIDRS.Add(IDRS.name.ToLowerInvariant(), IDRS);
-                       });
+            MSULog.LogI($"The method of name {nameof(PopulateVanillaIDRSFromAssetBundle)} is deprecated, please remove it as it is no longer used.\nCalled From {Assembly.GetCallingAssembly().GetName().Name}");
         }
 
         /// <summary>
@@ -139,17 +131,23 @@ namespace Moonstorm
                         });
                     idrs.vanillaIDRS.GenerateRuntimeValues();
                 }
+                MSULog.LogD($"Finished appending values in {idrs}");
             }
             for (int i = 0; i < singleItemDisplayRules.Count; i++)
             {
                 var currentI = singleItemDisplayRules[i];
-                for (int j = 0; j < currentI.SingleItemDisplayRules.Count; j++)
+                for (int j = 0; j < currentI.singleItemDisplayRules.Count; j++)
                 {
-                    var currentJ = currentI.SingleItemDisplayRules[j];
+                    var currentJ = currentI.singleItemDisplayRules[j];
                     currentJ.FetchIDRS();
-                    for (int k = 0; k < currentJ.ItemDisplayRules.Count; k++)
+                    if(!currentJ.vanillaIDRS)
                     {
-                        var currentK = currentJ.ItemDisplayRules[k];
+                        MSULog.LogD($"Could not find IDRS or name {currentJ.vanillaIDRSKey} in the dictionary, skipping.");
+                        continue;
+                    }
+                    for (int k = 0; k < currentJ.itemDisplayRules.Count; k++)
+                    {
+                        var currentK = currentJ.itemDisplayRules[k];
                         var toAppend = currentI.Parse(j);
                         if (toAppend.keyAsset != null)
                         {
@@ -158,6 +156,7 @@ namespace Moonstorm
                     }
                     currentJ.vanillaIDRS.GenerateRuntimeValues();
                 }
+                MSULog.LogD($"Finished appending values in {currentI}");
             }
 
             //Clears the enumerables because they're no longer needed.
@@ -173,29 +172,77 @@ namespace Moonstorm
 
         private static void LogEverything()
         {
+            int amount = 0;
             List<string> toLog = new List<string>();
+            toLog.Add("(These keys are case insensitive.)");
             toLog.Add("Loaded Item Display Prefabs\n---------------------------");
             foreach (var kvp in moonstormItemDisplayPrefabs)
+            {
                 toLog.Add(kvp.Key);
-
+                amount++;
+            }
             toLog.Add("Loaded Item Key Assets\n---------------------------");
             foreach (var kvp in itemKeyAssets)
+            {
                 toLog.Add(kvp.Key);
+                amount++;
+            }
 
             toLog.Add("Loaded Equipment Key Assets\n---------------------------");
             foreach (var kvp in equipKeyAssets)
+            {
                 toLog.Add(kvp.Key);
+                amount++;
+            }
 
             toLog.Add("Loaded Vanilla IDRS\n---------------------------");
             foreach (var kvp in vanillaIDRS)
+            {
                 toLog.Add(kvp.Key);
+                amount++;
+            }
 
             MSULog.LogD(string.Join("\n", toLog));
+
+            MSULog.LogI($"Finished logging a total of {amount} related keys for the IDRS system.");
         }
 
+        private static void GetAllVanillaIDRS()
+        {
+            BodyCatalog.allBodyPrefabs
+                .ToList()
+                .ForEach(prefab =>
+                {
+                    var modelLocator = prefab.GetComponent<ModelLocator>();
+                    if (modelLocator)
+                    {
+                        var modelPrefab = modelLocator.modelTransform.gameObject;
+                        if (modelPrefab)
+                        {
+                            var charModel = modelPrefab.GetComponent<CharacterModel>();
+                            if (charModel)
+                            {
+                                var idrs = charModel.itemDisplayRuleSet;
+                                if (idrs)
+                                {
+                                    string key = idrs.name;
+                                    if(string.IsNullOrWhiteSpace(idrs.name) || string.IsNullOrEmpty(idrs.name))
+                                    {
+                                        key = $"idrs{prefab.name.Replace("Body", string.Empty)}";
+                                    }
+                                    bool flag = vanillaIDRS.ContainsKey(key.ToLowerInvariant());
+                                    if (!flag)
+                                    {
+                                        vanillaIDRS.Add(key.ToLowerInvariant(), idrs);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+        }
         private static void PopulateVanillaIDRS()
         {
-            List<ItemDisplayRuleSet> IDRSList = new List<ItemDisplayRuleSet>();
             Resources.LoadAll<GameObject>("Prefabs/CharacterBodies/")
                 .ToList()
                 .ForEach(GameObject =>

@@ -7,15 +7,15 @@ namespace Moonstorm.Components
     /// </summary>
     public class HGControllerFinder : MonoBehaviour
     {
-        public Renderer renderer;
+        public Renderer Renderer;
         public Material material;
 
         public void OnEnable()
         {
-            if (renderer && material)
+            if (Renderer && material)
             {
-                renderer.material = material;
-                renderer.sharedMaterials[0] = material;
+                Renderer.material = material;
+                Renderer.sharedMaterials[0] = material;
                 MaterialControllerComponents.MaterialController materialController = null;
                 switch (material.shader.name)
                 {
@@ -44,7 +44,7 @@ namespace Moonstorm.Components
                 if (materialController)
                 {
                     materialController.material = material;
-                    materialController.renderer = renderer;
+                    materialController.renderer = Renderer;
                     materialController.MaterialName = material.name;
                     Destroy(this);
                 }

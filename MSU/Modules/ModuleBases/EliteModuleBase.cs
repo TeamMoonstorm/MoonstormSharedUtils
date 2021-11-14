@@ -6,6 +6,7 @@ using RoR2.ContentManagement;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using R2API;
 
 namespace Moonstorm
 {

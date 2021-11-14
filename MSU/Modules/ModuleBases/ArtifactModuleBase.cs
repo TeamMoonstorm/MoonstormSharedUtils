@@ -3,6 +3,8 @@ using RoR2.ContentManagement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.Networking;
+using R2API;
 
 namespace Moonstorm
 {
@@ -25,7 +27,11 @@ namespace Moonstorm
         private static void HookInit()
         {
             MSULog.LogI("Subscribing to delegates related to artifacts.");
+            RunArtifactManager.onArtifactEnabledGlobal += OnArtifactEnabled;
+            RunArtifactManager.onArtifactDisabledGlobal += OnArtifactDisabled;
         }
+
+
 
         #region Artifacts
         /// <summary>
@@ -48,11 +54,41 @@ namespace Moonstorm
         public void AddArtifact(ArtifactBase artifact, SerializableContentPack contentPack, Dictionary<ArtifactDef, ArtifactBase> artifactDictionary = null)
         {
             artifact.Initialize();
+            
             HG.ArrayUtils.ArrayAppend(ref contentPack.artifactDefs, artifact.ArtifactDef);
+            if (artifact.ArtifactCode != null)
+                ArtifactCodeAPI.AddCode(artifact.ArtifactDef, artifact.ArtifactCode);
+
             MoonstormArtifacts.Add(artifact.ArtifactDef, artifact);
             if (artifactDictionary != null)
                 artifactDictionary.Add(artifact.ArtifactDef, artifact);
+
             MSULog.LogD($"Artifact {artifact.ArtifactDef} added to {contentPack.name}");
+        }
+        #endregion
+
+        #region Hooks
+        private static void OnArtifactEnabled([JetBrains.Annotations.NotNull] RunArtifactManager runArtifactManager, [JetBrains.Annotations.NotNull] ArtifactDef artifactDef)
+        {
+            foreach(var kvp in MoonstormArtifacts)
+            {
+                if(!(artifactDef != kvp.Key) && NetworkServer.active)
+                {
+                    MSULog.LogI($"Running OnArtifactEnabled() for artifact {kvp.Key.cachedName}");
+                    kvp.Value.OnArtifactEnabled();
+                }
+            }
+        }
+        private static void OnArtifactDisabled([JetBrains.Annotations.NotNull] RunArtifactManager runArtifactManager, [JetBrains.Annotations.NotNull] ArtifactDef artifactDef)
+        {
+            foreach(var kvp in MoonstormArtifacts)
+            {
+                if(!(artifactDef != kvp.Key))
+                {
+                    MSULog.LogI($"Running OnArtifactDisabled() for artifact {kvp.Key.cachedName}");
+                    kvp.Value.OnArtifactDisabled();
+                }
+            }
         }
         #endregion
     }

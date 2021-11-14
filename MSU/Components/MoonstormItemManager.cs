@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using System.Linq;
 
 namespace Moonstorm.Components
 {
@@ -11,6 +12,8 @@ namespace Moonstorm.Components
         private CharacterBody body;
         private MoonstormEliteBehavior eliteBehavior;
         IStatItemBehavior[] statItemBehaviors = Array.Empty<IStatItemBehavior>();
+
+        public ManagerExtension[] managerExtensions = Array.Empty<ManagerExtension>();
 
         void Awake()
         {
@@ -54,6 +57,10 @@ namespace Moonstorm.Components
                     equipment.Value.AddBehavior(ref body, 1);
                 }
             }
+
+            foreach (var extension in managerExtensions)
+                extension.CheckForItems();
+
             StartCoroutine(GetInterfaces());
         }
 
@@ -63,6 +70,10 @@ namespace Moonstorm.Components
             {
                 buffRef.Value.AddBehavior(ref body, body.GetBuffCount(buffRef.Key));
             }
+
+            foreach (var extension in managerExtensions)
+                extension.CheckForBuffs();
+
             StartCoroutine(GetInterfaces());
         }
 
@@ -74,6 +85,9 @@ namespace Moonstorm.Components
             statItemBehaviors = GetComponents<IStatItemBehavior>();
             body.healthComponent.onIncomingDamageReceivers = GetComponents<IOnIncomingDamageServerReceiver>();
             body.healthComponent.onTakeDamageReceivers = GetComponents<IOnTakeDamageServerReceiver>();
+
+            foreach (var extension in managerExtensions)
+                extension.GetInterfaces();
         }
 
         public bool IsMSElite()
@@ -97,6 +111,26 @@ namespace Moonstorm.Components
         {
             foreach (var statBehavior in statItemBehaviors)
                 statBehavior.RecalculateStatsEnd();
+        }
+
+        public T AddManagerExtension<T>() where T : ManagerExtension
+        {
+            T extension = gameObject.GetComponent<T>();
+            if (!extension)
+            {
+                extension = gameObject.AddComponent<T>();
+
+                extension.body = body;
+                extension.manager = this;
+
+                if (!managerExtensions.Contains(extension))
+                    HG.ArrayUtils.ArrayAppend(ref managerExtensions, extension);
+
+                extension.SetIndex(Array.IndexOf(managerExtensions, extension));
+
+                return extension;
+            }
+            return extension;
         }
     }
 }

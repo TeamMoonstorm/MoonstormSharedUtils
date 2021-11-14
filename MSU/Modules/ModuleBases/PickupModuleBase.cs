@@ -55,6 +55,8 @@ namespace Moonstorm
         /// </summary>
         public static EquipmentDef[] LoadedEquipDefs { get => MoonstormEquipments.Keys.ToList().Union(MoonstormEliteEquipments.Keys.ToList()).ToArray(); }
 
+        public static event Action<CharacterBody, MoonstormItemManager> onManagerAdded;
+        
         [SystemInitializer(typeof(PickupCatalog))]
         private static void HookInit()
         {
@@ -183,6 +185,7 @@ namespace Moonstorm
                 var itemManager = body.gameObject.AddComponent<MoonstormItemManager>();
                 itemManager.CheckForItems();
                 itemManager.CheckForBuffs();
+                PickupModuleBase.onManagerAdded?.Invoke(body, itemManager);
             }
         }
         #endregion
