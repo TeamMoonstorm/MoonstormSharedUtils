@@ -61,10 +61,15 @@ namespace Moonstorm
         private static void HookInit()
         {
             MSULog.LogI("Subscribing to delegates related to Items and Equipments.");
+
+            //Todo: Remove this
             On.RoR2.CharacterBody.RecalculateStats += OnRecalculateStats;
             On.RoR2.EquipmentSlot.PerformEquipmentAction += FireMoonstormEqp;
             CharacterBody.onBodyStartGlobal += AddManager;
+
+            R2API.RecalculateStatsAPI.GetStatCoefficients += OnGetStatCoefficients;
         }
+
 
         #region Items
 
@@ -152,7 +157,16 @@ namespace Moonstorm
         #endregion
 
         #region Hooks
-        //Only time we should do this
+        private static void OnGetStatCoefficients(CharacterBody body, R2API.RecalculateStatsAPI.StatHookEventArgs args)
+        {
+            var manager = body.GetComponent<MoonstormItemManager>();
+            if(manager)
+            {
+                manager.RunStatHookEventModifiers(body, args);
+            }
+        }
+
+        //Todo: Delete this 
         private static void OnRecalculateStats(On.RoR2.CharacterBody.orig_RecalculateStats orig, CharacterBody self)
         {
             var manager = self.GetComponent<MoonstormItemManager>();

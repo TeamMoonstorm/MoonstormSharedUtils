@@ -94,7 +94,7 @@ Some things to note...
 
 ## Changelog
 
-(Old Changelog can be found [here]())
+(Old Changelog can be found [here](https://github.com/TeamMoonstorm/MoonstormSharedUtils/blob/main/MSU/README_OLD.md))
 
 ### '0.5.1'
 * Fixed the Damn Readme file.

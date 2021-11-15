@@ -12,6 +12,7 @@ namespace Moonstorm.Components
         private CharacterBody body;
         private MoonstormEliteBehavior eliteBehavior;
         IStatItemBehavior[] statItemBehaviors = Array.Empty<IStatItemBehavior>();
+        IBodyStatArgModifier[] bodyStatArgModifiers = Array.Empty<IBodyStatArgModifier>();
 
         public ManagerExtension[] managerExtensions = Array.Empty<ManagerExtension>();
 
@@ -83,6 +84,7 @@ namespace Moonstorm.Components
         {
             yield return new WaitForEndOfFrame();
             statItemBehaviors = GetComponents<IStatItemBehavior>();
+            bodyStatArgModifiers = GetComponents<IBodyStatArgModifier>();
             body.healthComponent.onIncomingDamageReceivers = GetComponents<IOnIncomingDamageServerReceiver>();
             body.healthComponent.onTakeDamageReceivers = GetComponents<IOnTakeDamageServerReceiver>();
 
@@ -104,13 +106,29 @@ namespace Moonstorm.Components
 
         public void RunStatRecalculationsStart()
         {
-            foreach (var statBehavior in statItemBehaviors)
-                statBehavior.RecalculateStatsStart();
+            if (statItemBehaviors.Length > 0)
+            {
+                MSULog.LogI($"The IStatItemBehavior interface is deprecated, please use the IBodyStatArgModifier interface instead.");
+                foreach (var statBehavior in statItemBehaviors)
+                    statBehavior.RecalculateStatsStart();
+            }
         }
         public void RunStatRecalculationsEnd()
         {
-            foreach (var statBehavior in statItemBehaviors)
-                statBehavior.RecalculateStatsEnd();
+            if(statItemBehaviors.Length > 0)
+            {
+                MSULog.LogI($"The IStatItemBehavior interface is deprecated, please use the IBodyStatArgModifier interface instead.");
+                foreach (var statBehavior in statItemBehaviors)
+                    statBehavior.RecalculateStatsEnd();
+            }
+        }
+
+        public void RunStatHookEventModifiers(CharacterBody body, R2API.RecalculateStatsAPI.StatHookEventArgs args)
+        {
+            foreach(var statModifier in bodyStatArgModifiers)
+            {
+                statModifier.ModifyStatArguments(body, args);
+            }
         }
 
         public T AddManagerExtension<T>() where T : ManagerExtension
