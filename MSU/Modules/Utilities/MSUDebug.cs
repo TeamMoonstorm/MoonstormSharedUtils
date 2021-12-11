@@ -17,7 +17,7 @@ namespace Moonstorm.Utilities
 
         private void Start()
         {
-            #region mutemando
+            #region No Enemies
             //These just make testing faster
             if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("iHarbHD.DebugToolkit"))
             {

@@ -29,7 +29,7 @@ namespace EntityStates.Events
         {
             base.OnEnter();
             difficultyScalingValue = DifficultyCatalog.GetDifficultyDef(Run.instance.selectedDifficulty).scalingValue;
-            
+
             difficultyScaledDuration = Util.Remap(difficultyScalingValue, 1f, typhoonScaling, drizzleDuration, typhoonDuration);
 
             totalDuration = difficultyScaledDuration + warningDuration;

@@ -16,7 +16,6 @@
         "R2API.dll",
         "Stubbed.dll",
         "DebugToolkit.dll",
-        "AspectAbilities.dll",
         "MonoMod.Utils.dll",
         "Mono.Cecil.dll",
         "Microsoft.CSharp.dll"

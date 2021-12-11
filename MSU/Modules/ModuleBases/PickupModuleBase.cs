@@ -56,13 +56,12 @@ namespace Moonstorm
         public static EquipmentDef[] LoadedEquipDefs { get => MoonstormEquipments.Keys.ToList().Union(MoonstormEliteEquipments.Keys.ToList()).ToArray(); }
 
         public static event Action<CharacterBody, MoonstormItemManager> onManagerAdded;
-        
+
         [SystemInitializer(typeof(PickupCatalog))]
         private static void HookInit()
         {
             MSULog.LogI("Subscribing to delegates related to Items and Equipments.");
 
-            //Todo: Remove this
             On.RoR2.CharacterBody.RecalculateStats += OnRecalculateStats;
             On.RoR2.EquipmentSlot.PerformEquipmentAction += FireMoonstormEqp;
             CharacterBody.onBodyStartGlobal += AddManager;
@@ -160,13 +159,12 @@ namespace Moonstorm
         private static void OnGetStatCoefficients(CharacterBody body, R2API.RecalculateStatsAPI.StatHookEventArgs args)
         {
             var manager = body.GetComponent<MoonstormItemManager>();
-            if(manager)
+            if (manager)
             {
-                manager.RunStatHookEventModifiers(body, args);
+                manager.RunStatHookEventModifiers(args);
             }
         }
 
-        //Todo: Delete this 
         private static void OnRecalculateStats(On.RoR2.CharacterBody.orig_RecalculateStats orig, CharacterBody self)
         {
             var manager = self.GetComponent<MoonstormItemManager>();

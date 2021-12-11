@@ -1,8 +1,8 @@
-﻿using UnityEditor;
-using UnityEngine;
-using RoR2EditorKit.Core.Windows;
+﻿using RoR2EditorKit.Core.Windows;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
+using UnityEngine;
 
 namespace Moonstorm.EditorUtils.EditorWindows
 {
@@ -39,7 +39,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
             EditorGUILayout.BeginHorizontal(GUILayout.ExpandWidth(true));
             EditorGUILayout.BeginVertical("box", GUILayout.MaxWidth(150), GUILayout.ExpandHeight(true));
 
-            if(SwitchButton("Show Utilities", ref switchingBool))
+            if (SwitchButton("Show Utilities", ref switchingBool))
             {
                 flags = CreateMSIDRSWindow.MSIDRSFlags.None;
                 KADPH = null;
@@ -48,7 +48,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
             {
                 ShowUtilities();
             }
-            
+
             var tuple = DrawCustomSidebar(mainProperty, scrollPos);
             scrollPos = tuple.Item1;
 
@@ -89,7 +89,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
 
             GUILayout.Space(30);
 
-            if(SimpleButton("Delete This KeyAsset Element"))
+            if (SimpleButton("Delete This KeyAsset Element"))
             {
                 msidrs.MSUKeyAssetRuleGroup.RemoveAt(msidrs.MSUKeyAssetRuleGroup.FindIndex(x => x.keyAssetName == selectedKeyAssetProp.FindPropertyRelative("keyAssetName").stringValue));
                 selectedKeyAssetProp = null;
@@ -132,7 +132,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
                     propsInProperty.Add(prop);
                 }
 
-                if(!string.IsNullOrEmpty(searchFilter))
+                if (!string.IsNullOrEmpty(searchFilter))
                 {
                     propsInProperty = propsInProperty.Where(prop => prop.displayName.ToLowerInvariant().Contains(searchFilter.ToLowerInvariant())).ToList();
                 }
@@ -141,7 +141,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
                     {
                         string name = prop.displayName;
                         var rules = prop.FindPropertyRelative("rules");
-                        foreach(SerializedProperty p in rules)
+                        foreach (SerializedProperty p in rules)
                         {
                             var values = p.FindPropertyRelative("IDPHValues");
                             if (string.IsNullOrEmpty(values.stringValue))
@@ -175,13 +175,13 @@ namespace Moonstorm.EditorUtils.EditorWindows
         {
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.BeginVertical("box");
-            
+
             EditorGUILayout.LabelField("Add Key Assets In Bulk");
 
             flags = (CreateMSIDRSWindow.MSIDRSFlags)EditorGUILayout.EnumFlagsField("Vanilla Key Assets", flags);
             KADPH = (KeyAssetDisplayPairHolder)EditorGUILayout.ObjectField("Key Asset Display Pair Holder", KADPH, typeof(KeyAssetDisplayPairHolder), false);
 
-            if(SimpleButton("Add Selected Key Assets"))
+            if (SimpleButton("Add Selected Key Assets"))
             {
                 AddSelectedKeyAssets();
                 switchingBool = false;
@@ -211,14 +211,14 @@ namespace Moonstorm.EditorUtils.EditorWindows
 
         private void PopulateWithMissingWhites()
         {
-            foreach(var (keyAssset, display, ruleCount) in CreateMSIDRSWindow.FlagsToItemLists[CreateMSIDRSWindow.MSIDRSFlags.VanillaWhites])
+            foreach (var (keyAssset, display, ruleCount) in CreateMSIDRSWindow.FlagsToItemLists[CreateMSIDRSWindow.MSIDRSFlags.VanillaWhites])
             {
-                if(!msidrs.MSUKeyAssetRuleGroup.Any(x => x.keyAssetName == keyAssset))
+                if (!msidrs.MSUKeyAssetRuleGroup.Any(x => x.keyAssetName == keyAssset))
                 {
                     msidrs.MSUKeyAssetRuleGroup.Add(CreateMSIDRSWindow.CreateKARG(keyAssset, display, ruleCount));
                 }
             }
-            if(!msidrs.MSUKeyAssetRuleGroup.Any(x => x.keyAssetName == "Tooth"))
+            if (!msidrs.MSUKeyAssetRuleGroup.Any(x => x.keyAssetName == "Tooth"))
             {
                 var toothGroup = new MSIDRS.KeyAssetRuleGroup();
                 toothGroup.keyAssetName = "Tooth";
@@ -312,9 +312,9 @@ namespace Moonstorm.EditorUtils.EditorWindows
 
         private void PopulateWithMissingKADPH()
         {
-            foreach(var keyAssetDisplayPair in KADPH.KeyAssetDisplayPairs)
+            foreach (var keyAssetDisplayPair in KADPH.KeyAssetDisplayPairs)
             {
-                if(msidrs.MSUKeyAssetRuleGroup.Any(x => x.keyAssetName == keyAssetDisplayPair.keyAsset.name))
+                if (msidrs.MSUKeyAssetRuleGroup.Any(x => x.keyAssetName == keyAssetDisplayPair.keyAsset.name))
                 {
                     var keyAssetName = keyAssetDisplayPair.keyAsset.name;
                     var constructedName = $"{keyAssetName}DisplayPrefab_0";

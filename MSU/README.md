@@ -13,16 +13,19 @@
     - Key aspects of module bases include:
         - Easily add items to your contentpacks.
         - Handles the automatic use of ItemBehaviors.
+        - Handles most of the interaction between the game's systems and the content bases.
     - Module bases included are:
         - Artifact Module
         - Buff Module
         - Character Module
         - Damage Type Module (R2API Dependant)
         - Elite Module
+        - Interactable Module
         - Item Display Module
         - Items and Equipments Module
         - Projectile Module
-        - Stage Module
+        - Scene Module
+        - Unlockables Module
 
 - Content Bases
     - A Content base is what MSU uses to identify the type of content youre trying to add to the game. Theyre abstract by nature so you need to inherit from them to properly work.
@@ -35,42 +38,59 @@
         - Character
         - Damage Type
         - Equipment (& Elite Equipment)
+        - Interactable
         - Item
         - Monster
         - Projectile
         - Survivor
-        . Stages
+        - Scene
+        - Unlockable
 
 - Scriptable Object
     - MSU comes packaged with scriptable objects to either help the aid of content creation, or for the help of working alongside RoR2's Systems.
-    - Scriptable Object Included are:
-        - Vanilla Skin Def - Create a Skin for a vanilla character.
-        - Serializable Difficulty Def - Creates a Difficulty Def
-        - Monster Director Card & Monster Director Card Holder - Used for creation of monsters.
-        - EffectDef Holder - Used for creating EffectDefs in the editor and adding them to the content pack.
-        - String ItemDisplayRuleSet - Used for creating item display rules in the editor. all based off a system of strings and dictionaries. Creating a new display is as simple as writing the name of the key asset, and the display prefab. and you can even use the values from KEB's Item Display Placement Helper. as simple as copying them and pasting them in it's field.
-        - Single Item Display Rule - Similar to R2API's ability to create item displays for each character in an item. Create item display rules for any vanilla IDRS using strings.
-        - Key Asset Display Prefab Holder - Holds the Key Asset and their respective Display Prefab. used in the IDRS module.
-        - MSEliteDef - An improved version of the vanilla Elite Def. allows you to easily create either a tier 1 or tier 2 elite in the editor. including the ability to pre-set the Elite's Ramp, Overlay, Particles or Effects.
+    - Scriptable Object Included are split into 5 categories:
+        - General:
+            - EffectDefHolder - Used for creating EffectDefs in the editor and adding them to the content pack.
+            - MSUnlockableDef - Used alongside the Unlockable content class, the MSUnlockableDef not only works like a regular UnlockableDef, but also creates the AchievementDef associated to the UnlockableDef on runtime.
+            - SerializableDifficultyDef - A Serialized DifficultyDef, Implementation of the difficulty itself is done thru R2API's DifficultyAPI
+            - VanillaSkinDef - Creates a Skin for a vanilla character, avoids the needles implementation of doing a hook on SkinDef's awake.
+        - DirectorCards:
+            - MSInteractableDirectorCard - Used alongside the Interactable content class, the InteractableDirectorCard works as an extension of the InteractableSpawnCard and has special fields that allow for implementation of the interactable thru R2API's DirectorAPI.
+            - MSMonsterDirectorCard - Used for creating a Director Card for a Monster.
+            - MSMonsterdirectorCardHolder - Used for adding MSMonsterDirectorCards to scenes.
+            (Both MSMonsterdirectorCard and it's Holder are outdated and do not follow the same philosophy as the MSInteractableDirectorcard, expect an overhaul in the near future)
+        - Elites:
+            - MSAspectAbilityDataHolder - Holds data for MysticSword's Aspect Abilities, proper implementation is on the end user (LIT has an example on how to implement it.)
+            - MSEliteDef - An extended version of an EliteDef, the MSEliteDef has the ability to automatically set the Elite's ramp, automatically determine in which tier it spawns, what overlay materials to use and if it has an Effect that accompanies it (Like Tier2 Elites)
+        - Events:
+            - EventDirectorCard - A DirectorCard for MSU's EventDirector, holds information such as the identifier, likelyhood of spawning, event flags, required unlockables, and more.
+            - EventSceneDeck - A Holder for EventDirectorCards, allows the end user to add new events to specific scenes.
+        - IDRS:
+            - KeyAssetDisplayPairHolder - Used for handling the addition of key assets and display prefabs to the IDRS module.
+            - MSIDRS - A version of the IDRS that works in editor, Achieves this function by using Strings to represent key assets and display prefabs. an MSIDRS can be used to append new IDRS to ANY existing IDRS in game.
+            - MSSingleItemDisplayRule - A variation of the MSIDRS, the MSSIDR works by handling a single key asset and a single display prefab, and can add it to as many item display rule sets as wanted.
 
 - Components:
     - Item Manager - Takes care of managing the items made with MSU. automatically handling their ItemBehaviors.
     - Manager Extensions - Extend the ItemManager using Manager Extensions.
     - Moonstorm Item Display Helper - Used for the ItemDisplays module.
+    - DestroyOnEnable - Quite literally as it says, this component destroys it's parent game object as soon as its enabled.
+    - MoonstormEliteBehavior - Used for managing the MSEliteDef.
     - Comes pre-packaged with KomradeSpectre's HGController finder. modify in real time a material that uses hopoo's shaders with an inspector.
 
 - Utilities, Interfaces and Attributes:
     - Utilities:
-        - MSUtil - Contains for now a single method for checking wether or not a mod is installed.
-        - MSDebug - A MonoBehavior that gets attached to the base unity plugin. enabling this debug component causes changes that should facilitate the creation of mods.
+        - MSUtil - Contains a shorthand method for knowing if a mod is installed, and a method that creates InverseHyperbolicScaling (Courtesy of KomradeSpectre)
+        - MSUDebug - A MonoBehavior that gets attached to the base unity plugin. enabling this debug component causes changes that should facilitate the creation of mods.
             - Changes include:
                 - Connect to yourself with a second instance of RoR2.
-                - Muting commando by removing his skills (In case you need to do a lot of searching in a runtime inspector.)
-                - Automatic deployment of the no_enemies command from debug toolkit.
+                - Making huntress the default character instead of commando, since huntress doesnt shoot or attack when pressing M1 and having no enemies nearby (Useful if you need to do a lot of things in a Runtime inspector)
+                - Automatic deployment of the no_enemies command from debug toolkit, alongside removing the need to spawn via an escape pod
                 - Automatic addition of the Moonstorm Item Display Helper component to all the characterbodies found in the catalog.
                 - Spawning the Material Tester, which comes pre-packaged with the HGControllerFinder.
     - Interfaces:
-        - IStatItemBehavior - An interface that works alongside the ItemBehaviors. this Interface allows you to interact with RecalculateStats. Albeit only for the Begining portion and the end portion. if you want to interact in a more deeply level you should use recalcstatsAPI.
+        - IBodyStatArgModifier - An interface that works alongside the ItemBehaviors, its used for interacting with R2Api's RecalculateStatsAPI. which means most recalculate stats interaction should be done with this interface.
+        - IStatItemBehavior - An interface that works alongside the ItemBehaviors. this Interface allows you to interact with RecalculateStats. Albeit only for the Begining portion and the end portion. It's more or less useful for modifying stats that arent available in IBodyStatArgModifier or for getting values right after stat recalculation is finished.
         - IOnIncomingDamageOtherServerReceiver - An interface used to modify the incoming damage of soon to be Victims in the damage report, it is similar to the IOnIncomingDamage interface.
         - Provides a fix for IOnKilledOtherServerReceiver interface, it'll no longer run code twice in a row.
     - Attributes:
@@ -96,7 +116,35 @@ Some things to note...
 
 (Old Changelog can be found [here](https://github.com/TeamMoonstorm/MoonstormSharedUtils/blob/main/MSU/README_OLD.md))
 
+### '0.6.0'
+
+* Changes:
+    * MSU no longer has any kind of dependency on AspectAbilities
+    * MSU no longer handles the implementation of an aspect ability by itself
+    * Removed dependency on Microsoft.Csharp
+    * Event Director:
+        * No longer should gain negative amounts of credits on custom difficulties with indexes on the negatives.
+
+* Additions
+    * Interfaces:
+        * Added IBodyStatArgModifier Interface
+            * Used for interacting with R2Api's RecalculateStatsAPI
+    * Unlockables:
+        * Added an Unlockables Module
+        * Unlockables module handles the implementation of UnlockableDefs and the creation of AchievementDefs
+        * UnlockableDefs and Achievementdefs are made inside the MSUnlockableDef class
+        * Unlockables are registered inside UnlockableBase classes. the norm is also having it's related Achievement as a nested class
+        * Unlockables can have dependencies on other ContentBases
+        * If a dependency is not enabled, the unlockable will not be added to the game
+        * In case the dependency is a custom made content base, you can override OnFailedToCheck() method to handle it.
+    * Interactables:
+        * Added an Interactables Module
+        * Interactable Module handles the implementation of custom Interactables to the game
+        * Interactables are created from the MSInteractableDirectorCard, which itself inherits from the InteractableSpawnCard
+        * Interactablkes are automatically added to stages via DirectorAPI
+
 ### '0.5.1'
+
 * Fixed the Damn Readme file.
 
 * Changes:
@@ -111,6 +159,7 @@ Some things to note...
         * Deprecated as we're trying to change the standard on how modded IDRS are done
 
 ### '0.5.0'
+
 ~~* Additions:
     * Added Event system API (*Look, I normally don't do this, okay? I don't really know what else has been done , but this is Starstorm 2's Event API, forcefully ripped out and put in a place where YOU can use it. There is NO documentation. I don't even know if it works. But you can (probably) use it to do cool stuff!
      ...I hope Nebby forgives me for this one.)~~
@@ -174,19 +223,3 @@ Actual changelog:
     * Used for automatically creating config options for fields.
 * Added DynamicDescription attribute
     * Used for dynamically modifying the description of an item via the use of formatting, and provided fields.
-
-### '0.3.0'
-
-* Rewrote a lot of the Elite related code to allow for more pleasant and balanced behaviors.
-    * Fixed Elite Ramps not Reseting properly when grabbing an MSEliteEquipment and then grabbing a vanilla one.
-    * Added Tooltips for the MSEliteDef
-* Added an Opaque Cloud Remap runtime editor. (OCR are deprecated, ghor recommends using regular cloud remaps instead).
-* Projectiles with CharacterBody components now get added to the Serializable Content Pack's CharacterBody prefabs.
-* Added IOnIncomingDamageOtherServerReceiver
-    * Used to modify the incoming damage of soon to be Victims in the damage report, it is similar to the IOnIncomingDamage interface.
-* Almost all classes are now documented, However, MSU does not come with XML documentation yet.
-* Made MoonstormEditorUtils Dependant on MoonstormSharedUtils.
-* Changes to the IDRS System.
-    * The ItemDisplayPrefab scriptable object has been revamped to a key asset display pair holder.
-    * The KeyAssetDisplayPairHolder can be given to the IDRS module and it'll populate both the key asset dictionary and the display prefab dictionary.
-    * This can be used for external mods that dont directl depend on MSU to populate the item display dictionary. 

@@ -33,7 +33,7 @@ namespace Moonstorm
             {
                 MSULog.LogI($"Adding mod {assembly.GetName().Name} to the token modifier manager");
                 List<(FieldInfo, TokenModifier[])> allFieldsWithAttributes = new List<(FieldInfo, TokenModifier[])>();
-                foreach (Type type in assembly.GetTypes())
+                foreach (Type type in assembly.GetTypes().Where(type => type.GetCustomAttribute<DisabledContent>() == null))
                 {
                     try
                     {
@@ -164,14 +164,14 @@ namespace Moonstorm
         private static object[] GetFormattingFromList(List<(FieldInfo, TokenModifier[])> fieldAndModifiers)
         {
             object[] objectArray = new object[0];
-            foreach(var (field, modifiers) in fieldAndModifiers)
+            foreach (var (field, modifiers) in fieldAndModifiers)
             {
-                foreach(var modifier in modifiers)
+                foreach (var modifier in modifiers)
                 {
                     (object value, int index) formattingTuple = modifier.GetFormatting(field);
-                    if(formattingTuple.value != null)
+                    if (formattingTuple.value != null)
                     {
-                        if(objectArray.Length < formattingTuple.index + 1)
+                        if (objectArray.Length < formattingTuple.index + 1)
                         {
                             Array.Resize(ref objectArray, formattingTuple.index + 1);
                         }

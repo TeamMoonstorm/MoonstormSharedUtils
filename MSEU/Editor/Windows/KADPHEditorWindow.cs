@@ -1,6 +1,6 @@
-﻿using UnityEditor;
+﻿using RoR2EditorKit.Core.Windows;
+using UnityEditor;
 using UnityEngine;
-using RoR2EditorKit.Core.Windows;
 
 namespace Moonstorm.EditorUtils.EditorWindows
 {

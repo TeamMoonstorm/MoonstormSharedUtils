@@ -77,7 +77,34 @@ Moonstorm shared editor utils (Abreviated as MSEU) is a package of classes speci
 
 # Changelog
 
-'1.1.1'
+(Old Changelogs can be found [here]())
+
+# '1.2.0'
+
+* Updated to use RoR2EditorKit 0.2.3
+* Updated to use MSU 0.6.0
+
+* Added the following asset creators:
+    * MSUnlockableDef
+
+* Added the following inspectors:
+    * MSUnlockableDef
+    * MSInteractableDirectorCard
+
+* Added the following property drawers:
+    * AchievementStringAssetReference (MSunlockableDef)
+
+* Added DeployToFolders pipeline job
+    * Works as an iteratable version of the "Copy" pipeline job
+
+* Added the ability to downgrade or upgrade all the shaders in the project
+    * Found inside "Tools" menu item.
+
+# '1.1.2'
+
+* Fixed mod shipping with a duplicate assmebly definition
+
+# '1.1.1'
 
 * Updated to use RoR2EditorKit 0.1.4
 * MSIDRS Editor window now has a dictionary with the values that depend on its flags.
@@ -88,7 +115,7 @@ Moonstorm shared editor utils (Abreviated as MSEU) is a package of classes speci
 * Added the ability to add a missing IDRS to the SIDR editor window
 * Added the ability to delete a selected IDRS in the SIDR editor window
 
-'1.0.0'
+# '1.0.0'
 
 * Moved a lot of the code that made this work into RoR2EditorKit.
 * Added RoR2EditorKit as a dependency.
@@ -100,7 +127,7 @@ Moonstorm shared editor utils (Abreviated as MSEU) is a package of classes speci
     * ItemDisplayHolder
 * Added shader dictionary support for decalicious
 
-'0.1.0'
+# '0.1.0'
 * Added MSU as a Needed Dependency for the mod to work properly.
 * Added Editor Scripts for custom editor windows for the following types:
     * EntityStateConfigurations
@@ -112,9 +139,9 @@ Moonstorm shared editor utils (Abreviated as MSEU) is a package of classes speci
 * SwapShadersAndStageAssetBundles now fix any stubbed shaders that are found
 * Added CalmWater stubbed shaders.
 
-'0.0.1'
+# '0.0.1'
 * Real initial release
 
-'0.0.0'
+# '0.0.0'
 * Test release
 

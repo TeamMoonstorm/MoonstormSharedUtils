@@ -1,8 +1,8 @@
-﻿using UnityEditor;
-using UnityEngine;
-using RoR2EditorKit.Core.Windows;
+﻿using RoR2EditorKit.Core.Windows;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
+using UnityEngine;
 
 namespace Moonstorm.EditorUtils.EditorWindows
 {
@@ -39,13 +39,13 @@ namespace Moonstorm.EditorUtils.EditorWindows
             EditorGUILayout.BeginHorizontal(GUILayout.ExpandWidth(true));
             EditorGUILayout.BeginVertical("box", GUILayout.MaxWidth(150), GUILayout.ExpandHeight(true));
 
-            if(SwitchButton("Show Utilities", ref switchingBool))
+            if (SwitchButton("Show Utilities", ref switchingBool))
             {
                 flags = CreateSIDRSWindow.SIDRFlag.None;
                 idrsHolder = null;
             }
 
-            if(switchingBool)
+            if (switchingBool)
             {
                 ShowUtilities();
             }
@@ -93,7 +93,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
 
             GUILayout.Space(30);
 
-            if(SimpleButton("Delete This IDRS Element"))
+            if (SimpleButton("Delete This IDRS Element"))
             {
                 sidr.singleItemDisplayRules.RemoveAt(sidr.singleItemDisplayRules.FindIndex(x => x.vanillaIDRSKey == selectedIDRSProperty.FindPropertyRelative("vanillaIDRSKey").stringValue));
                 selectedIDRSProperty = null;
@@ -126,16 +126,16 @@ namespace Moonstorm.EditorUtils.EditorWindows
 
             scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition, false, true, GUILayout.Width(300));
 
-            if(property.arraySize != 0)
+            if (property.arraySize != 0)
             {
                 List<SerializedProperty> propsInProperty = new List<SerializedProperty>();
 
-                foreach(SerializedProperty prop in property)
+                foreach (SerializedProperty prop in property)
                 {
                     propsInProperty.Add(prop);
                 }
 
-                if(!string.IsNullOrEmpty(searchFilter))
+                if (!string.IsNullOrEmpty(searchFilter))
                 {
                     propsInProperty = propsInProperty.Where(prop => prop.displayName.ToLowerInvariant().Contains(searchFilter.ToLowerInvariant())).ToList();
                 }
@@ -145,16 +145,16 @@ namespace Moonstorm.EditorUtils.EditorWindows
                     {
                         string name = prop.displayName;
                         var rules = prop.FindPropertyRelative("itemDisplayRules");
-                        foreach(SerializedProperty p in rules)
+                        foreach (SerializedProperty p in rules)
                         {
                             var values = p.FindPropertyRelative("IDPHValues");
-                            if(string.IsNullOrEmpty(values.stringValue))
+                            if (string.IsNullOrEmpty(values.stringValue))
                             {
                                 name += " | NULL IDPHValues";
                                 break;
                             }
                         }
-                        if(SimpleButton(name))
+                        if (SimpleButton(name))
                         {
                             selectedIDRSPropPath = prop.propertyPath;
                             GUI.FocusControl(null);
@@ -185,7 +185,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
             flags = (CreateSIDRSWindow.SIDRFlag)EditorGUILayout.EnumFlagsField("Vanilla IDRS", flags);
             idrsHolder = (IDRSHolder)EditorGUILayout.ObjectField("IDRS Holder", idrsHolder, typeof(IDRSHolder), false);
 
-            if(SimpleButton("Add Selected IDRS"))
+            if (SimpleButton("Add Selected IDRS"))
             {
                 AddSelectedIDRS();
                 switchingBool = false;
@@ -201,7 +201,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
             if (flags.HasFlag(CreateSIDRSWindow.SIDRFlag.Enemies)) PopulateWithMissingEnemies();
             if (flags.HasFlag(CreateSIDRSWindow.SIDRFlag.Scavenger)) PopulateWithMissingScav();
 
-            if(idrsHolder)
+            if (idrsHolder)
             {
                 PopulateWithMissingIDRSHolder();
             }
@@ -211,9 +211,9 @@ namespace Moonstorm.EditorUtils.EditorWindows
 
         private void PopulateWithMissingSurvivors()
         {
-            foreach(string name in CreateSIDRSWindow.FlagsToIDRS[CreateSIDRSWindow.SIDRFlag.Survivors])
+            foreach (string name in CreateSIDRSWindow.FlagsToIDRS[CreateSIDRSWindow.SIDRFlag.Survivors])
             {
-                if(!sidr.singleItemDisplayRules.Any(x => x.vanillaIDRSKey == name))
+                if (!sidr.singleItemDisplayRules.Any(x => x.vanillaIDRSKey == name))
                 {
                     sidr.singleItemDisplayRules.Add(CreateSIDRSWindow.CreateSKARG(name, 1));
                 }

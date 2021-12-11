@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using RoR2EditorKit;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
-using RoR2EditorKit;
 
 namespace Moonstorm.EditorUtils
 {
@@ -91,7 +91,7 @@ namespace Moonstorm.EditorUtils
 
                 Shader stubbed;
 
-                if(current.name.StartsWith("Decalicious/"))
+                if (current.name.StartsWith("Decalicious/"))
                 {
                     real = current;
                     realFileName = Path.GetFileName(AssetDatabase.GetAssetPath(real)).Replace(".asset", string.Empty);
@@ -103,7 +103,7 @@ namespace Moonstorm.EditorUtils
                                                    .Select(path => AssetDatabase.LoadAssetAtPath<Shader>(path))
                                                    .First();
 
-                    if(real && stubbed)
+                    if (real && stubbed)
                     {
                         stubbedToReal.Add(stubbed, real);
                         realToStubbed.Add(real, stubbed);

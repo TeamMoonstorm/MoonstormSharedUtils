@@ -1,6 +1,6 @@
-﻿using UnityEditor;
+﻿using RoR2EditorKit.Core.Windows;
+using UnityEditor;
 using UnityEngine;
-using RoR2EditorKit.Core.Windows;
 
 namespace Moonstorm.EditorUtils.EditorWindows
 {
@@ -25,7 +25,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
             EditorGUILayout.BeginHorizontal(GUILayout.ExpandWidth(true));
             EditorGUILayout.BeginVertical("box", GUILayout.MaxWidth(300), GUILayout.ExpandHeight(true));
 
-            if(DrawButtonSidebar(arrays))
+            if (DrawButtonSidebar(arrays))
             {
                 selectedArrayElementPath = string.Empty;
                 selectedArrayElementProperty = null;

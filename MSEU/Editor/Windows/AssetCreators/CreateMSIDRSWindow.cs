@@ -1,13 +1,11 @@
-﻿using UnityEditor;
-using UnityEngine;
-using RoR2;
-using RoR2EditorKit.Core.Windows;
-using RoR2EditorKit.Common;
-using System;
+﻿using RoR2EditorKit.Common;
 using RoR2EditorKit.Core;
-using RoR2EditorKit;
-using Util = RoR2EditorKit.Util;
+using RoR2EditorKit.Core.Windows;
+using System;
 using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
+using Util = RoR2EditorKit.Util;
 
 namespace Moonstorm.EditorUtils.EditorWindows
 {
@@ -263,7 +261,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
                 if (flags.HasFlag(MSIDRSFlags.VanillaLunarEquipments)) PopulateWithLunarEquipments();
                 if (flags.HasFlag(MSIDRSFlags.VanillaElites)) PopulateWithEliteEquipments();
 
-                if(keyAssetsAndDisplayPairs)
+                if (keyAssetsAndDisplayPairs)
                 {
                     PopulateWithKADP();
                 }
@@ -282,7 +280,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
         {
             var list = msidrs.MSUKeyAssetRuleGroup;
 
-            foreach(var tuple in FlagsToItemLists[MSIDRSFlags.VanillaWhites])
+            foreach (var tuple in FlagsToItemLists[MSIDRSFlags.VanillaWhites])
             {
                 list.Add(CreateKARG(tuple.Item1, tuple.Item2, tuple.Item3));
             }
@@ -305,7 +303,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
         {
             var list = msidrs.MSUKeyAssetRuleGroup;
 
-            foreach(var tuple in FlagsToItemLists[MSIDRSFlags.VanillaGreens])
+            foreach (var tuple in FlagsToItemLists[MSIDRSFlags.VanillaGreens])
             {
                 list.Add(CreateKARG(tuple.Item1, tuple.Item2, tuple.Item3));
             }
@@ -388,10 +386,10 @@ namespace Moonstorm.EditorUtils.EditorWindows
         private void PopulateWithKADP()
         {
             var list = msidrs.MSUKeyAssetRuleGroup;
-            
-            foreach(var keyAssetDisplayPair in keyAssetsAndDisplayPairs.KeyAssetDisplayPairs)
+
+            foreach (var keyAssetDisplayPair in keyAssetsAndDisplayPairs.KeyAssetDisplayPairs)
             {
-                if(keyAssetDisplayPair.keyAsset && keyAssetDisplayPair.displayPrefabs.Count > 0)
+                if (keyAssetDisplayPair.keyAsset && keyAssetDisplayPair.displayPrefabs.Count > 0)
                 {
                     var keyAssetName = keyAssetDisplayPair.keyAsset.name;
                     var constructedName = $"{keyAssetName}DisplayPrefab_0";
@@ -405,7 +403,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
         {
             var ruleGroup = new MSIDRS.KeyAssetRuleGroup();
             ruleGroup.keyAssetName = keyAssetName;
-            for(int i = 0; i < ruleAmount; i++)
+            for (int i = 0; i < ruleAmount; i++)
             {
                 ruleGroup.AddDisplayRule(new MSIDRS.ItemDisplayRule
                 {

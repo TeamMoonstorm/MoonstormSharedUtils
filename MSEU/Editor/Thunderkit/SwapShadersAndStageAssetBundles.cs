@@ -1,5 +1,4 @@
 ﻿using RoR2EditorKit;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -39,9 +38,9 @@ namespace Moonstorm.EditorUtils.Pipelines
             var assetBundleDefIndices = new Dictionary<AssetBundleDefinitions, int>();
             var assetBundleDefinitions = new List<AssetBundleDefinitions>();
 
-            for(int i = 0; i < manifests.Length; i++)
+            for (int i = 0; i < manifests.Length; i++)
             {
-                foreach(var abd in manifests[i].Data.OfType<AssetBundleDefinitions>())
+                foreach (var abd in manifests[i].Data.OfType<AssetBundleDefinitions>())
                 {
                     assetBundleDefinitions.Add(abd);
                     assetBundleDefIndices.Add(abd, i);
@@ -51,7 +50,7 @@ namespace Moonstorm.EditorUtils.Pipelines
             var assetBundleDefs = assetBundleDefinitions.ToArray();
             var hasValidBundles = assetBundleDefs.Any(abd => abd.assetBundles.Any(ab => !string.IsNullOrEmpty(ab.assetBundleName) && ab.assets.Any()));
 
-            if(!hasValidBundles)
+            if (!hasValidBundles)
             {
                 var scriptPath = UnityWebRequest.EscapeURL(AssetDatabase.GetAssetPath(MonoScript.FromScriptableObject(this)));
                 pipeline.Log(LogLevel.Warning, $"No valid AssetBundleDefinitions defined, skipping [{nameof(SwapShadersAndStageAssetBundles)}](assetLink://{scriptPath}) Pipeline Job");
@@ -243,6 +242,7 @@ namespace Moonstorm.EditorUtils.Pipelines
                     current.shader = stubbed;
                 }
             }
+            AssetDatabase.SaveAssets();
             return count;
         }
 
@@ -284,6 +284,7 @@ namespace Moonstorm.EditorUtils.Pipelines
                     current.shader = stubbed;
                 }
             }
+            AssetDatabase.SaveAssets();
             return count;
         }
     }

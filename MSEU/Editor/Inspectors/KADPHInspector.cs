@@ -1,14 +1,14 @@
-﻿using UnityEditor;
-using UnityEditor.Callbacks;
-using UnityEngine;
+﻿using Moonstorm.EditorUtils.EditorWindows;
 using RoR2EditorKit.Core.Inspectors;
 using RoR2EditorKit.Core.Windows;
-using Moonstorm.EditorUtils.EditorWindows;
+using UnityEditor;
+using UnityEditor.Callbacks;
+using UnityEngine;
 
 namespace Moonstorm.EditorUtils.Inspectors
 {
     [CustomEditor(typeof(KeyAssetDisplayPairHolder))]
-    public class KADPHInspector : ExtendedInspector
+    public class KADPHInspector : ScriptableObjectInspector
     {
         [OnOpenAsset]
         public static bool OpenEditor(int instanceID, int line)

@@ -10,14 +10,32 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e563561e08b6a3642a487177f5cfbb37, type: 3}
-  m_Name: MSU-Manifest
+  m_Name: MoonstormSharededitorUtils
   m_EditorClassIdentifier: 
   Data:
-  - {fileID: 114618118668942134}
-  - {fileID: 114907914323284656}
-  - {fileID: 114781230623049850}
-  identity: {fileID: 114618118668942134}
---- !u!114 &114618118668942134
+  - {fileID: 114187923068012506}
+  - {fileID: 114130064652654158}
+  - {fileID: 114467634394828302}
+  identity: {fileID: 114187923068012506}
+--- !u!114 &114130064652654158
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0a82fec78ebc734d9ad1346cd40b5f9, type: 3}
+  m_Name: ThunderstoreData
+  m_EditorClassIdentifier: 
+  Errored: 0
+  ErrorMessage: 
+  ErrorStacktrace: 
+  StagingPaths:
+  - <ManifestStagingRoot>
+  url: https://github.com/TeamMoonstorm/MoonstormSharedUtils
+--- !u!114 &114187923068012506
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -33,13 +51,14 @@ MonoBehaviour:
   ErrorMessage: 
   ErrorStacktrace: 
   StagingPaths:
-  - <ManifestPluginStaging>
+  - <ManifestStagingRoot>
   Author: TeamMoonstorm
-  Name: TeamMoonstorm-MoonstormSharedUtils
-  Description: Utils used by TeamMoonstorm members.
-  Version: 0.6.0
+  Name: MoonstormSharedEditorUtils
+  Description: Editor Classes used by team members of TeamMoonstorm for Risk of Rain
+    2 Modding
+  Version: 1.2.0
   Dependencies: []
---- !u!114 &114781230623049850
+--- !u!114 &114467634394828302
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -48,34 +67,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 17d1008b78cb6e846889b7778282fbef, type: 3}
-  m_Name: AssetBundleDefinitions
+  m_Script: {fileID: 11500000, guid: 4b243ff405b33b94dbf5b6775dd9aa33, type: 3}
+  m_Name: Files
   m_EditorClassIdentifier: 
   Errored: 0
   ErrorMessage: 
   ErrorStacktrace: 
   StagingPaths:
-  - <BuildPathAssets>
-  assetBundles:
-  - assetBundleName: msuassets
-    assets:
-    - {fileID: 102900000, guid: 0570538a4ad4d7f4c8b5aec4440734c0, type: 3}
---- !u!114 &114907914323284656
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b7e13dda513544419a89926bd12ad8a, type: 3}
-  m_Name: AssemblyDefinitions
-  m_EditorClassIdentifier: 
-  Errored: 0
-  ErrorMessage: 
-  ErrorStacktrace: 
-  StagingPaths:
-  - <BuildPath>
-  definitions:
-  - {fileID: 5897886265953266890, guid: 027c693fefcac6548859a0eec81eed3d, type: 3}
+  - <ManifestStagingRoot>
+  files:
+  - {fileID: 102900000, guid: 071e77fdeac30b44e8eed0fd1cd25e4f, type: 3}
+  - {fileID: 102900000, guid: b2593f0767464ed4ebd5363479c3ac37, type: 3}
+  - {fileID: 4900000, guid: 45f0751962878d04b81dc3d9fd8df8c3, type: 3}
+  - {fileID: 2800000, guid: b4436cc7271d9f64da5496beb774571d, type: 3}

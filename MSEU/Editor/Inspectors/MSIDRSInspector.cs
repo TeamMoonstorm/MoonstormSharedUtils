@@ -1,19 +1,19 @@
-﻿using UnityEditor;
-using UnityEditor.Callbacks;
-using UnityEngine;
-using Moonstorm.EditorUtils.EditorWindows;
+﻿using Moonstorm.EditorUtils.EditorWindows;
 using RoR2EditorKit.Core.Inspectors;
 using RoR2EditorKit.Core.Windows;
+using UnityEditor;
+using UnityEditor.Callbacks;
+using UnityEngine;
 
 namespace Moonstorm.EditorUtils.Inspectors
 {
     [CustomEditor(typeof(MSIDRS))]
-    public class MSIDRSInspector : ExtendedInspector
+    public class MSIDRSInspector : ScriptableObjectInspector
     {
         [OnOpenAsset]
         public static bool OpenEditor(int instanceID, int line)
         {
-            if(Settings.InspectorSettings.GetOrCreateInspectorSetting(typeof(MSIDRSInspector)).isEnabled)
+            if (Settings.InspectorSettings.GetOrCreateInspectorSetting(typeof(MSIDRSInspector)).isEnabled)
             {
                 MSIDRS obj = EditorUtility.InstanceIDToObject(instanceID) as MSIDRS;
                 if (obj != null)

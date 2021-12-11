@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace Moonstorm.EditorUtils.EditorWindows
 {
@@ -117,10 +116,10 @@ namespace Moonstorm.EditorUtils.EditorWindows
             idrsHolder = (IDRSHolder)EditorGUILayout.ObjectField("IDRS Holder", idrsHolder, typeof(IDRSHolder), false);
             ruleAmount = EditorGUILayout.IntField("Amount of Rules", ruleAmount);
 
-            if(SimpleButton("Create SIDR"))
+            if (SimpleButton("Create SIDR"))
             {
                 var result = CreateSIDR();
-                if(result)
+                if (result)
                 {
                     Debug.Log($"Succesfully Creates SIDR {sidr.name}");
                     TryToClose();
@@ -147,7 +146,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
                 if (flags.HasFlag(SIDRFlag.Enemies)) PopulateWithEnemies();
                 if (flags.HasFlag(SIDRFlag.Scavenger)) PopulateWithScavenger();
 
-                if(idrsHolder)
+                if (idrsHolder)
                 {
                     PopulateWithIDRSHolder();
                 }
@@ -166,7 +165,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
         {
             var list = sidr.singleItemDisplayRules;
 
-            foreach(string name in FlagsToIDRS[SIDRFlag.Survivors])
+            foreach (string name in FlagsToIDRS[SIDRFlag.Survivors])
             {
                 list.Add(CreateSKARG(name, ruleAmount));
             }
@@ -204,7 +203,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
 
             foreach (IDRSHolder.IDRSStringAssetReference stringAssetRef in idrsHolder.IDRSStringAssetReferences)
             {
-                if(stringAssetRef.IDRS)
+                if (stringAssetRef.IDRS)
                 {
                     list.Add(CreateSKARG(stringAssetRef.IDRS.name, ruleAmount));
                 }

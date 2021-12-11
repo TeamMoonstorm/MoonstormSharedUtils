@@ -1,8 +1,8 @@
 ﻿using RoR2;
 using System;
 using System.Collections;
-using UnityEngine;
 using System.Linq;
+using UnityEngine;
 
 namespace Moonstorm.Components
 {
@@ -85,7 +85,7 @@ namespace Moonstorm.Components
             yield return new WaitForEndOfFrame();
             statItemBehaviors = GetComponents<IStatItemBehavior>();
             bodyStatArgModifiers = GetComponents<IBodyStatArgModifier>();
-            body.healthComponent.onIncomingDamageReceivers = GetComponents<IOnIncomingDamageServerReceiver>();
+            body.healthComponent.onIncomingDamageReceivers = GetComponents<RoR2.IOnIncomingDamageServerReceiver>();
             body.healthComponent.onTakeDamageReceivers = GetComponents<IOnTakeDamageServerReceiver>();
 
             foreach (var extension in managerExtensions)
@@ -106,28 +106,20 @@ namespace Moonstorm.Components
 
         public void RunStatRecalculationsStart()
         {
-            if (statItemBehaviors.Length > 0)
-            {
-                MSULog.LogI($"The IStatItemBehavior interface is deprecated, please use the IBodyStatArgModifier interface instead.");
-                foreach (var statBehavior in statItemBehaviors)
-                    statBehavior.RecalculateStatsStart();
-            }
+            foreach (var statBehavior in statItemBehaviors)
+                statBehavior.RecalculateStatsStart();
         }
         public void RunStatRecalculationsEnd()
         {
-            if(statItemBehaviors.Length > 0)
-            {
-                MSULog.LogI($"The IStatItemBehavior interface is deprecated, please use the IBodyStatArgModifier interface instead.");
-                foreach (var statBehavior in statItemBehaviors)
-                    statBehavior.RecalculateStatsEnd();
-            }
+            foreach (var statBehavior in statItemBehaviors)
+                statBehavior.RecalculateStatsEnd();
         }
 
-        public void RunStatHookEventModifiers(CharacterBody body, R2API.RecalculateStatsAPI.StatHookEventArgs args)
+        public void RunStatHookEventModifiers(R2API.RecalculateStatsAPI.StatHookEventArgs args)
         {
-            foreach(var statModifier in bodyStatArgModifiers)
+            foreach (var statModifier in bodyStatArgModifiers)
             {
-                statModifier.ModifyStatArguments(body, args);
+                statModifier.ModifyStatArguments(args);
             }
         }
 

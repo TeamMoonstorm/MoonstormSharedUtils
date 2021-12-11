@@ -19,7 +19,7 @@ namespace Moonstorm
                 return eventCards.Length;
             }
         }
-        
+
         public static bool HasAnyEventRegistered { get => loadedSceneDecks.Count > 0; }
 
         public static string[] eventNames = Array.Empty<string>();
@@ -161,7 +161,7 @@ namespace Moonstorm
 
         public WeightedSelection<EventDirectorCard> GenerateDirectorCardWeightedSelection()
         {
-            if(eventCards.Length > 0)
+            if (eventCards.Length > 0)
             {
                 WeightedSelection<EventDirectorCard> weightedSelection = new WeightedSelection<EventDirectorCard>(8);
                 foreach (EventDirectorCard directorCard in eventCards)

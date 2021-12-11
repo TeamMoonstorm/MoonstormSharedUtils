@@ -1,5 +1,4 @@
 ﻿using R2API;
-using RoR2;
 
 namespace Moonstorm
 {
@@ -11,8 +10,7 @@ namespace Moonstorm
         /// <summary>
         /// Modify the Recalculate Stats arguments
         /// </summary>
-        /// <param name="sender">The body that's being modified</param>
         /// <param name="args">The Stat Modifiers</param>
-        void ModifyStatArguments(CharacterBody sender, RecalculateStatsAPI.StatHookEventArgs args);
+        void ModifyStatArguments(RecalculateStatsAPI.StatHookEventArgs args);
     }
 }

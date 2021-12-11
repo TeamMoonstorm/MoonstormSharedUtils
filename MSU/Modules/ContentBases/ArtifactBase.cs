@@ -1,6 +1,5 @@
-﻿using RoR2;
-using UnityEngine.Networking;
-using R2API;
+﻿using R2API;
+using RoR2;
 
 namespace Moonstorm
 {

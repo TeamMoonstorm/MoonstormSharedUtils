@@ -1,11 +1,9 @@
-﻿using System;
-
-namespace Moonstorm
+﻿namespace Moonstorm
 {
     /// <summary>
     /// Interface used for RecalculateStats
+    /// <para>You should probably use IBodyStatArgModifier instead.</para>
     /// </summary>
-    [Obsolete("The IStatItemBehavior interface is deprecated, use IBodyStatArgModifier instead.")]
     public interface IStatItemBehavior
     {
         /// <summary>

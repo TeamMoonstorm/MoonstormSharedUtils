@@ -23,6 +23,8 @@ namespace Moonstorm.Components
         public EventDirectorCard LastAttemptedEventCard { get; set; }
         public EventDirectorCard LastSuccessfulEventCard { get; set; }
 
+        public float GetCurrentDifficultyScalingValue { get => DifficultyCatalog.GetDifficultyDef(Run.instance.selectedDifficulty).scalingValue; }
+
         private EventCardDeck eventCards;
 
         public static Vector2 random = new Vector2(15, 55);
@@ -65,7 +67,7 @@ namespace Moonstorm.Components
                     {
                         interval = rng.RangeFloat(random.x, random.y);
                         float runDifficulty = Run.instance.difficultyCoefficient;
-                        float runDifficultyCap = Run.instance.selectedDifficultyInternal * 5f;
+                        float runDifficultyCap = GetCurrentDifficultyScalingValue * 5f;
                         float add = rng.RangeFloat(runDifficulty * randomMin, runDifficultyCap);
                         //LogCore.LogM(add);
                         eventCredit += add;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Reflection;
 
 namespace Moonstorm
@@ -33,18 +34,18 @@ namespace Moonstorm
             else
             {
                 object fieldValue = fieldInfo.GetValue(null);
-                if (fieldValue != null && fieldValue.IsNumber())
+                if (fieldValue != null && IsNumber(fieldValue))
                 {
-                    switch(statType)
+                    switch (statType)
                     {
                         case StatTypes.Default:
                             valueForFormatting = fieldValue;
                             return (valueForFormatting, formatIndex);
                         case StatTypes.Percentage:
-                            valueForFormatting = ToPercent(fieldValue);
+                            valueForFormatting = ToPercent(CastToFloat(fieldValue));
                             return (valueForFormatting, formatIndex);
                         case StatTypes.DivideBy2:
-                            valueForFormatting = DivideBy2(fieldValue);
+                            valueForFormatting = DivideBy2(CastToFloat(fieldValue));
                             return (valueForFormatting, formatIndex);
                     }
                 }
@@ -56,14 +57,37 @@ namespace Moonstorm
             }
         }
 
-        private object ToPercent(dynamic obj)
+        private float CastToFloat(object obj)
         {
-            return obj * 100;
+            float value = Convert.ToSingle(obj, CultureInfo.InvariantCulture);
+            return value;
         }
 
-        private object DivideBy2(dynamic obj)
+        private object ToPercent(float number)
         {
-            return obj / 2;
+            float num = number * 100;
+            return num;
+        }
+
+        private object DivideBy2(float number)
+        {
+            float num = number / 2;
+            return num;
+        }
+
+        private static bool IsNumber(object value)
+        {
+            return value is sbyte
+                    || value is byte
+                    || value is short
+                    || value is ushort
+                    || value is int
+                    || value is uint
+                    || value is long
+                    || value is ulong
+                    || value is float
+                    || value is double
+                    || value is decimal;
         }
     }
 }

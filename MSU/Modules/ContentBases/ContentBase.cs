@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Moonstorm
+﻿namespace Moonstorm
 {
     /// <summary>
     /// A Class where all the other Content Base classes inherit from.

@@ -25,7 +25,8 @@ MonoBehaviour:
   equipmentDefs: []
   buffDefs: []
   eliteDefs: []
-  unlockableDefs: []
+  unlockableDefs:
+  - {fileID: 11400000, guid: f685c987812735f4ba846bf51cb66535, type: 2}
   survivorDefs: []
   artifactDefs: []
   surfaceDefs: []

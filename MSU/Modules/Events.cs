@@ -2,7 +2,6 @@
 using RoR2;
 using UnityEngine;
 using UnityEngine.Networking;
-using R2API;
 
 namespace Moonstorm
 {
@@ -16,7 +15,7 @@ namespace Moonstorm
 
         private static void AddEventDirector(SceneDirector obj)
         {
-            if(EventCatalog.HasAnyEventRegistered)
+            if (EventCatalog.HasAnyEventRegistered)
             {
                 if (Run.instance && SceneInfo.instance.countsAsStage && NetworkServer.active)
                 {

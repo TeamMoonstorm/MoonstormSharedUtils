@@ -34,7 +34,7 @@ namespace Moonstorm
                 MSULog.LogI($"Adding mod {assembly.GetName().Name} to the configurable field manager");
                 List<Type> types = new List<Type>();
 
-                foreach (Type type in assembly.GetTypes())
+                foreach (Type type in assembly.GetTypes().Where(type => type.GetCustomAttribute<DisabledContent>() == null))
                 {
                     try
                     {

@@ -1,10 +1,10 @@
-﻿using System;
+﻿using RoR2EditorKit;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
-using RoR2EditorKit;
 
 namespace Moonstorm.EditorUtils
 {

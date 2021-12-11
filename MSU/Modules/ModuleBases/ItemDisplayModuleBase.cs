@@ -140,7 +140,7 @@ namespace Moonstorm
                 {
                     var currentJ = currentI.singleItemDisplayRules[j];
                     currentJ.FetchIDRS();
-                    if(!currentJ.vanillaIDRS)
+                    if (!currentJ.vanillaIDRS)
                     {
                         MSULog.LogD($"Could not find IDRS or name {currentJ.vanillaIDRSKey} in the dictionary, skipping.");
                         continue;
@@ -226,7 +226,7 @@ namespace Moonstorm
                                 if (idrs)
                                 {
                                     string key = idrs.name;
-                                    if(string.IsNullOrWhiteSpace(idrs.name) || string.IsNullOrEmpty(idrs.name))
+                                    if (string.IsNullOrWhiteSpace(idrs.name) || string.IsNullOrEmpty(idrs.name))
                                     {
                                         key = $"idrs{prefab.name.Replace("Body", string.Empty)}";
                                     }

@@ -1,13 +1,12 @@
-﻿using UnityEditor;
-using UnityEngine;
-using RoR2;
-using RoR2EditorKit.Core.Windows;
+﻿using RoR2;
 using RoR2EditorKit.Common;
-using System;
 using RoR2EditorKit.Core;
-using RoR2EditorKit;
-using Util = RoR2EditorKit.Util;
+using RoR2EditorKit.Core.Windows;
+using System;
 using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
+using Util = RoR2EditorKit.Util;
 
 namespace Moonstorm.EditorUtils.EditorWindows
 {
@@ -99,7 +98,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
                 if (flags.HasFlag(ModdedBodiesFlags.RiskOfRuina)) PopulateWithRiskOfRuina();
                 if (flags.HasFlag(ModdedBodiesFlags.Paladin)) PopulateWithPaladin();
 
-                if(idrs.Count > 0)
+                if (idrs.Count > 0)
                 {
                     PopulateWithIDRS();
                 }
