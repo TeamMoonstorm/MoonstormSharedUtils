@@ -11,6 +11,7 @@ namespace Moonstorm
 {
     /// <summary>
     /// A Module Base for managing Items and Equipments.
+    /// <para>Automatically handles the ItemBehaviors of the items and Equipment's actions</para>
     /// </summary>
     public abstract class PickupModuleBase : ModuleBase
     {
@@ -55,6 +56,9 @@ namespace Moonstorm
         /// </summary>
         public static EquipmentDef[] LoadedEquipDefs { get => MoonstormEquipments.Keys.ToList().Union(MoonstormEliteEquipments.Keys.ToList()).ToArray(); }
 
+        /// <summary>
+        /// An event that runs once MSU adds the ItemManager to the Body
+        /// </summary>
         public static event Action<CharacterBody, MoonstormItemManager> onManagerAdded;
 
         [SystemInitializer(typeof(PickupCatalog))]
@@ -73,7 +77,7 @@ namespace Moonstorm
         #region Items
 
         /// <summary>
-        /// Finds all the ItemBase inherited classes in your assembly and creates instances for each found.
+        /// Finds all the ItemBase inheriting classes in your assembly and creates instances for each found.
         /// <para>Ignores classes with the "DisabledContent" attribute</para>
         /// </summary>
         /// <returns>An IEnumerable of all your Assembly's ItemBases</returns>
@@ -103,8 +107,9 @@ namespace Moonstorm
         #region Equipments
 
         /// <summary>
-        /// Finds all the EquipmentBase inherited classes in your assembly and creates an instance for each found.
+        /// Finds all the EquipmentBase inheriting classes in your assembly and creates an instance for each found.
         /// <para>Ignores classes with the DisabledContent Attribute</para>
+        /// <para>Exclude classes inheriting from EliteEquipmentBase</para>
         /// </summary>
         /// <returns>An IEnumerable of all your Assembly's EquipmentBases</returns>
         public virtual IEnumerable<EquipmentBase> InitializeEquipments()
@@ -132,7 +137,7 @@ namespace Moonstorm
 
         #region Elite Equipments
         /// <summary>
-        /// Finds all the EliteEquipmentBase inherited classes in your assembly and creates instances for each found.
+        /// Finds all the EliteEquipmentBase inheriting classes in your assembly and creates instances for each found.
         /// <para>Ignores classes with the DisabledContent attribute</para>
         /// </summary>
         /// <returns>An IEnumerable of all your Assembly's EliteEquipmentBases</returns>

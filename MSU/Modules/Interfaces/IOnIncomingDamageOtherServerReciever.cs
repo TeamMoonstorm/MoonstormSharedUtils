@@ -3,7 +3,8 @@
 namespace Moonstorm
 {
     /// <summary>
-    /// Interface for affecting the soon to be victim of a damageReport
+    /// Interface for modifying the Incoming damage of a soon to be victim.
+    /// <para>Should be used only in ItemBehaviors</para>
     /// </summary>
     public interface IOnIncomingDamageOtherServerReciever
     {

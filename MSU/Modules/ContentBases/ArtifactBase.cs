@@ -18,12 +18,14 @@ namespace Moonstorm
         /// </summary>
         public abstract ArtifactCode ArtifactCode { get; set; }
         /// <summary>
-        /// Unhook the delegates you hooked onto in "OnArtifactEnabled".
+        /// Unsubscribe from any Delegates or Events you subscribed before.
+        /// Ran when the artifact is disabled
         /// </summary>
         public abstract void OnArtifactDisabled();
 
         /// <summary>
-        /// Hook any delegates you need here
+        /// Subscribe from any Delegates or Events you need.
+        /// Ran when the artifact is enabled
         /// </summary>
         public abstract void OnArtifactEnabled();
     }

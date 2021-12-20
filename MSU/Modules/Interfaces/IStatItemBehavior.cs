@@ -2,7 +2,8 @@
 {
     /// <summary>
     /// Interface used for RecalculateStats
-    /// <para>You should probably use IBodyStatArgModifier instead.</para>
+    /// <para>Should only be used in ItemBehaviors</para>
+    /// <para>This interface is best for modifying stats not supported by IBodyStatArgModifier, or for getting the values of stats after recalculation is finished</para>
     /// </summary>
     public interface IStatItemBehavior
     {

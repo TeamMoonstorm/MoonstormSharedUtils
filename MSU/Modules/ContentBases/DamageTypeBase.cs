@@ -19,7 +19,7 @@ namespace Moonstorm
         public abstract ModdedDamageType GetDamageType();
 
         /// <summary>
-        /// Create logic with delegates here.
+        /// Subscribe to any needed Events or Delegates here to run your DamageType's logic
         /// </summary>
         public virtual void Delegates() { }
     }

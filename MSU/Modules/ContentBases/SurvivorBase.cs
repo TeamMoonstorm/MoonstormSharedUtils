@@ -8,7 +8,6 @@ namespace Moonstorm
     /// </summary>
     public abstract class SurvivorBase : CharacterBase
     {
-        //We don't actually do anything with this atm
         /// <summary>
         /// Your Survivor's survivorDef
         /// </summary>

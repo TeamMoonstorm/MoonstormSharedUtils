@@ -8,7 +8,7 @@ namespace Moonstorm
     public abstract class ProjectileBase : ContentBase
     {
         /// <summary>
-        /// Your Projectile Prefab
+        /// The prefab of your projectile.
         /// </summary>
         public abstract GameObject ProjectilePrefab { get; set; }
     }

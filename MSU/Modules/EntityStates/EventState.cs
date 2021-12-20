@@ -6,17 +6,32 @@ using UnityEngine.Networking;
 
 namespace EntityStates.Events
 {
+    /// <summary>
+    /// A generic EventState where all events inherit from
+    /// </summary>
     public abstract class EventState : EntityState
     {
+        /// <summary>
+        /// The EventDirectorCard tied to this Event
+        /// </summary>
         [SerializeField]
         public EventDirectorCard eventCard;
-        /// <summary>This should be the duration on Rainstorm.</summary>
+        /// <summary>How long this event lasts in Drizzle</summary>
         [SerializeField]
         public float drizzleDuration = 30f;
+        /// <summary>
+        /// The max duration of this event
+        /// </summary>
         [SerializeField]
         public float typhoonDuration = 90f;
+        /// <summary>
+        /// The amount of time between the warning message and when the event starts
+        /// </summary>
         [SerializeField]
         public float warningDuration = 15f;
+        /// <summary>
+        /// Max scaling used for the events
+        /// </summary>
         public static float typhoonScaling = 3.5f;
 
         public virtual bool overrideTimer => false;

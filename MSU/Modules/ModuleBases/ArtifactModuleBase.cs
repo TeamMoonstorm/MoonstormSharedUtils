@@ -9,6 +9,7 @@ namespace Moonstorm
 {
     /// <summary>
     /// A Module Base for Managing Artifacts
+    /// <para>Automatically handles logic for dynamically hooking and unhooking your artifact's functionalities</para>
     /// </summary>
     public abstract class ArtifactModuleBase : ModuleBase
     {
@@ -34,7 +35,7 @@ namespace Moonstorm
 
         #region Artifacts
         /// <summary>
-        /// Finds all the ArtifactBase inherited classes in your assembly and creates instances for each found
+        /// Finds all the ArtifactBase inheriting classes in your assembly and creates instances for each found
         /// <para>Ignores classes with the "DisabledContent" attribute</para>
         /// </summary>
         /// <returns>An IEnumerable of all your Assembly's ArtifactBases</returns>

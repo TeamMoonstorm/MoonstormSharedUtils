@@ -78,7 +78,7 @@
     - MoonstormEliteBehavior - Used for managing the MSEliteDef.
     - Comes pre-packaged with KomradeSpectre's HGController finder. modify in real time a material that uses hopoo's shaders with an inspector.
 
-- Utilities, Interfaces and Attributes:
+- Utilities, Interfaces and Attributes and More:
     - Utilities:
         - MSUtil - Contains a shorthand method for knowing if a mod is installed, and a method that creates InverseHyperbolicScaling (Courtesy of KomradeSpectre)
         - MSUDebug - A MonoBehavior that gets attached to the base unity plugin. enabling this debug component causes changes that should facilitate the creation of mods.
@@ -97,6 +97,11 @@
         - DisabledContent - Put this attribute on top of a content base inheriting class, and MSU will not load it nor add it to the content pack.
         - TokenModifier - Put this attribute on top of a field that is public & static, give it a token to modify, a stat type, and a formatting index, and MSU will format said token with the values in the field, this can be used so configurable values are always in sync between ingame and config file. a guide on doing this can be found [here](https://github.com/TeamMoonstorm/MoonstormSharedUtils/wiki/%5BTokenModifier%5D). You'll need to submit your mod to the TokenModifierManager via "TokenModifierManager.AddMod(Assembly)"
         - ConfigurableField - Put this attribute on top of a field that's both public & static, and MSU will proceed to automatically create configuration for the field. You'll need to submit your mod to the ConfigurableFieldManager via "ConfigurableFieldManager.AddMod(Assembly, ConfigFile)". Contains 3 string properties for giving custom Section, Name and Description for your configuration.
+    - Loader Classes:
+        - Loader classes are a type of class that loads external content into the game, their main purpose is to facilitate the loading of assetbundles, language files, and content packs.
+            - AssetsLoader: Class for handling loading assetbundles, contains method for automatically swapping the stubbed shaders from MoonstormSharedUtils and creation of EffectDefs.
+            - ContentLoader: Class for handling loading your mod's content, it's main appeal is the ability to load and set up content asynchronously, instead of doing everything in Awake. Contains arrays of Actions for both Loading content and Setting static fields on static types, much like RoR2Content does.
+            - LanguageLoader: Class for handling loading Language folders, automatically handles loading the Language files into the game's systems for use with the TokenModifier attribute.
 
 ## Documentation & Sourcecode
 
@@ -115,6 +120,17 @@ Some things to note...
 ## Changelog
 
 (Old Changelog can be found [here](https://github.com/TeamMoonstorm/MoonstormSharedUtils/blob/main/MSU/README_OLD.md))
+
+### '0.7.0'
+
+* Additions:
+    * Now finally comes bundled with proper XML based documentation, huzzah!
+    * Added Assets, Content and Language Loaders
+        * These classes handle external loading of assets, such as assetbundles and language files
+        * ContentLoader works as a simplified version of a class implementing IContentPackProvider, and helps with loading content Asynchronously
+
+* Changes:
+    * The AchievementDefs are now added directly to the game using R2API
 
 ### '0.6.0'
 

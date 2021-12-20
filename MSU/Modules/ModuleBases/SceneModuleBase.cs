@@ -29,7 +29,7 @@ namespace Moonstorm
         #region Scenes
 
         /// <summary>
-        /// Finds all the SceneBase inherited classes in your assembly and creates instances for each found
+        /// Finds all the SceneBase inheriting classes in your assembly and creates instances for each found
         /// <para>Ignores classes with the "DisabledContent" attribute</para>
         /// </summary>
         /// <returns>An IEnumerable of all your Assembly's SceneBases</returns>

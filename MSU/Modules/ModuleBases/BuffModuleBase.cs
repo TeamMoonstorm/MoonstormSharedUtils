@@ -9,6 +9,7 @@ namespace Moonstorm
 {
     /// <summary>
     /// A Module Base for managing Buffs
+    /// <para>Automatically handles MaterialOverlays used in buffs and adding the ItemBehavior for them</para>
     /// </summary>
     public abstract class BuffModuleBase : ModuleBase
     {
@@ -37,7 +38,7 @@ namespace Moonstorm
 
         #region Buffs
         /// <summary>
-        /// Finds all the BuffBase inherited classes in your assembly and creates instances for each found.
+        /// Finds all the BuffBase inheriting classes in your assembly and creates instances for each found.
         /// <para>Ignores classes with the "DisabledContent" attribute</para>
         /// </summary>
         /// <returns>An IEnumerable of all your Assembly's ItemBases</returns>

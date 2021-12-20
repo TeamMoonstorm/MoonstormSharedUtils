@@ -29,7 +29,7 @@ namespace Moonstorm
 
         #region Damage Types
         /// <summary>
-        /// Finds all the DamageTypeBase inherited classes in your assembly and creates instances for each found.
+        /// Finds all the DamageTypeBase inheriting classes in your assembly and creates instances for each found.
         /// <para>Ignores classes with the "DisabledContent" attribute</para>
         /// </summary>
         /// <returns>An IEnumerable of all your Assembly's DamageTypeBases</returns>

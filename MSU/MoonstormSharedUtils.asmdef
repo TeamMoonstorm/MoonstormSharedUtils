@@ -18,7 +18,8 @@
         "DebugToolkit.dll",
         "MonoMod.Utils.dll",
         "Mono.Cecil.dll",
-        "Microsoft.CSharp.dll"
+        "Microsoft.CSharp.dll",
+        "Zio.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": []

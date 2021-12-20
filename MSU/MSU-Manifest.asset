@@ -16,7 +16,27 @@ MonoBehaviour:
   - {fileID: 114618118668942134}
   - {fileID: 114907914323284656}
   - {fileID: 114781230623049850}
+  - {fileID: 114461789879806048}
   identity: {fileID: 114618118668942134}
+--- !u!114 &114461789879806048
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b243ff405b33b94dbf5b6775dd9aa33, type: 3}
+  m_Name: Files
+  m_EditorClassIdentifier: 
+  Errored: 0
+  ErrorMessage: 
+  ErrorStacktrace: 
+  StagingPaths:
+  - <BuildPath>
+  files:
+  - {fileID: 4900000, guid: 519559792b4d1d6469db4410f6ef416a, type: 3}
 --- !u!114 &114618118668942134
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37,7 +57,7 @@ MonoBehaviour:
   Author: TeamMoonstorm
   Name: TeamMoonstorm-MoonstormSharedUtils
   Description: Utils used by TeamMoonstorm members.
-  Version: 0.6.0
+  Version: 0.7.0
   Dependencies: []
 --- !u!114 &114781230623049850
 MonoBehaviour:

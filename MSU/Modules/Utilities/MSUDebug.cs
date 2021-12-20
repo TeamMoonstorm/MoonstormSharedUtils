@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Moonstorm.Utilities
 {
-    public class MSUDebug : MonoBehaviour
+    internal class MSUDebug : MonoBehaviour
     {
         private void Awake()
         {

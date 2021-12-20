@@ -7,6 +7,9 @@ using UnityEngine.Networking;
 
 namespace Moonstorm.Components
 {
+    /// <summary>
+    /// MSU's Event Director
+    /// </summary>
     public class EventDirector : MonoBehaviour
     {
         public static EventDirector instance;

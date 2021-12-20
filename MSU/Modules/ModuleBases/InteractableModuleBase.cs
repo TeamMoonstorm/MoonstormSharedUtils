@@ -6,14 +6,30 @@ using UnityEngine;
 
 namespace Moonstorm
 {
+    /// <summary>
+    /// A Module Base for Managing Interactables
+    /// <para>Automatically adds them to the StageDirector according to the settings on the interactable's MSInteractableDirectorCard</para>
+    /// </summary>
     public abstract class InteractableModuleBase : ModuleBase
     {
+        /// <summary>
+        /// Dictionary of all the Interactables loaded by Moonstorm Shared Utils
+        /// </summary>
         public static Dictionary<GameObject, InteractableBase> MoonstormInteractables = new Dictionary<GameObject, InteractableBase>();
-
+        
+        /// <summary>
+        /// Returns all the Interactables loaded by Moonstorm Shared Utils that have an MSInteractableDirectorCard
+        /// </summary>
         public static InteractableBase[] InteractablesWithCards { get => MoonstormInteractables.Values.Where(ib => ib.InteractableDirectorCard != null).ToArray(); }
 
+        /// <summary>
+        /// Returns all the Interactables loaded by Moonstorm Shared Utils that do not have an MSInteractableDirectorCard
+        /// </summary>
         public static InteractableBase[] InteractablesWithoutCards { get => MoonstormInteractables.Values.Where(ib => ib.InteractableDirectorCard == null).ToArray(); }
 
+        /// <summary>
+        /// Returns all the Interactables loaded by Moonstorm Shared Utils
+        /// </summary>
         public static GameObject[] LoadedInteractables { get => MoonstormInteractables.Keys.ToArray(); }
 
         [SystemInitializer]
@@ -25,12 +41,22 @@ namespace Moonstorm
 
 
         #region Interactables
+        /// <summary>
+        /// Finds all the InteractableBase inheriting classes in your assembly and creates instances for each found
+        /// <para>Ignores classes with the DisabledContent attribute</para>
+        /// </summary>
+        /// <returns>An IEnumerable of all your assembly's InteractableBases</returns>
         public virtual IEnumerable<InteractableBase> InitializeInteractables()
         {
             MSULog.LogD($"Getting the Interactables found inside {GetType().Assembly}...");
             return GetContentClasses<InteractableBase>();
         }
 
+        /// <summary>
+        /// Initializes and Adds an Interactable
+        /// </summary>
+        /// <param name="interactableBase">The InteractableBase class</param>
+        /// <param name="interactableDictionary">Optional, a Dictionary for getting an InteractableBase by feeding it the interactable prefab</param>
         public void AddInteractable(InteractableBase interactableBase, Dictionary<GameObject, InteractableBase> interactableDictionary = null)
         {
             interactableBase.Initialize();

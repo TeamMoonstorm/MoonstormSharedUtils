@@ -6,6 +6,10 @@ using System.Reflection;
 
 namespace Moonstorm
 {
+    /// <summary>
+    /// Class for managing TokenModifier attributes
+    /// <para>TokenModifierManager runs after the ConfigurableFieldManager finishes configuring fields</para>
+    /// </summary>
     public static class TokenModifierManager
     {
         private static bool initialized = false;
@@ -26,6 +30,10 @@ namespace Moonstorm
             RoR2Application.onLoad += () => ModifyTokensInLanguage(null);
         }
 
+        /// <summary>
+        /// Adds a mod to the TokenModifier manager
+        /// <para>Will automatically look for Types that have fields with TokenModifier attribute and prepare them for formatting</para>
+        /// </summary>
         public static void AddMod()
         {
             Assembly assembly = Assembly.GetCallingAssembly();

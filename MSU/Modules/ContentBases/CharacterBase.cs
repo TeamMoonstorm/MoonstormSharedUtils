@@ -21,7 +21,7 @@ namespace Moonstorm
 
         /// <summary>
         /// Initialize your Character here
-        /// <para>calling base.Initialize() heavily reccomended.</para>
+        /// <para>Calling base.Initialize() runs the method "ModifyPrefab" and the method "Hook"</para>
         /// </summary>
         public override void Initialize()
         {

@@ -21,7 +21,7 @@ namespace Moonstorm
     {
         public const string GUID = "com.TeamMoonstorm.MoonstormSharedUtils";
         public const string MODNAME = "Moonstorm Shared Utils";
-        public const string VERSION = "0.6.0";
+        public const string VERSION = "0.7.0";
 
         public static MoonstormSharedUtils instance;
         public static PluginInfo pluginInfo;

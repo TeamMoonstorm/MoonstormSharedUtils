@@ -3,7 +3,7 @@
 namespace Moonstorm
 {
     /// <summary>
-    /// When all the defs are registered, these ones are ignored and aren't added
+    /// Attatch this attribute to a ContentBase inheriting class and MSU will ignore this class when initializing your content bases.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
     public class DisabledContent : Attribute

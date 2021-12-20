@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Moonstorm
 {
     /// <summary>
-    /// An abstract class for creating a module base.
+    /// A Class where all other ModuleBase classes inherit from
     /// </summary>
     public abstract class ModuleBase
     {
@@ -24,7 +24,12 @@ namespace Moonstorm
 
         public virtual void Init() { }
 
-        //This is honestly just handy, lol.
+        /// <summary>
+        /// Gets all the ContentClasses of type T that dont have the DisabledContent attribute
+        /// </summary>
+        /// <typeparam name="T">The type of content base to look for</typeparam>
+        /// <param name="excludedType">A type of class that works as an extra filter. PickupsModuleBase uses this for filtering between Equipments and EliteEquipments</param>
+        /// <returns></returns>
         internal protected IEnumerable<T> GetContentClasses<T>(Type excludedType = null) where T : ContentBase
         {
             var types = GetType().Assembly.GetTypes()

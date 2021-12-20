@@ -11,6 +11,7 @@ namespace Moonstorm
 {
     /// <summary>
     /// A Module Base for managing Elites
+    /// <para>Automatically handles giving the elite a custom color ramp and adds them to the CombatDirector</para>
     /// </summary>
     public abstract class EliteModuleBase : ModuleBase
     {

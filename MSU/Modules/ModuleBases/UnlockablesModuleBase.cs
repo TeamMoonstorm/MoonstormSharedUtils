@@ -6,43 +6,56 @@ using System.Linq;
 
 namespace Moonstorm
 {
+    /// <summary>
+    /// A Module Base for Managing Unlockables and Achievements
+    /// <para>Automatically handles the creation of AchievementDefs</para>
+    /// </summary>
     public abstract class UnlockablesModuleBase : ModuleBase
     {
-        public static Dictionary<MSUnlockableDef, UnlockableBase> unlockableDefToUnlockableBase = new Dictionary<MSUnlockableDef, UnlockableBase>();
+        /// <summary>
+        /// Dictionary of all the Unlockables loaded by Moonstorm Shared Utils
+        /// </summary>
+        public static Dictionary<MSUnlockableDef, UnlockableBase> MoonstormUnlockables = new Dictionary<MSUnlockableDef, UnlockableBase>();
 
-        private static List<UnlockableBase> unlocksToAdd = new List<UnlockableBase>();
-
-        //Things for AchievementManager
-        private static Dictionary<string, AchievementDef> achievementNameToDef = new Dictionary<string, AchievementDef>();
-        private static List<string> achievementIdentifiers = new List<string>();
-        private static AchievementDef[] achievementDefs = Array.Empty<AchievementDef>();
-        private static AchievementDef[] serverAchievementDefs = Array.Empty<AchievementDef>();
-
-        [SystemInitializer]
-        private static void HookInit()
-        {
-            MSULog.LogI($"Subscribing to Delegates related to Unlockables");
-            AchievementManager.onAchievementsRegistered += AddUnlockables;
-        }
+        /// <summary>
+        /// Returns all the UnlockableDefs loaded by Moonstorm Shared Utils
+        /// </summary>
+        public static UnlockableDef[] LoadedUnlockables { get => MoonstormUnlockables.Keys.Cast<UnlockableDef>().ToArray(); }
+        //private static List<UnlockableBase> unlocksToAdd = new List<UnlockableBase>();
 
         #region Unlockables
+        /// <summary>
+        /// Finds all the UnlockableBase inheriting classes in your assembly and creates instances for each found
+        /// <para>Ignores classes with the DisabledContent attribute</para>
+        /// </summary>
+        /// <returns>An IEnumerable of all your assembly's UnlockableBases</returns>
         public virtual IEnumerable<UnlockableBase> InitializeUnlockables()
         {
             MSULog.LogD($"Getting the Unlockables found inside {GetType().Assembly}");
             return GetContentClasses<UnlockableBase>();
         }
 
+        /// <summary>
+        /// Initializes and Adds an Unlockable
+        /// <para>If the unlockable has required types, MSU will look if said types are initialized, if not, the unlockable is not added to the game</para>
+        /// </summary>
+        /// <param name="unlockableBase">The UnlockableBase class</param>
+        /// <param name="contentPack">Your Mod's content pack</param>
+        /// <param name="unlockableDefToUnlockableBaseDict">Optional, a dictionary for getting an UnlockableBase by feeding it the corresponding UnlockableDef</param>
         public void AddUnlockable(UnlockableBase unlockableBase, SerializableContentPack contentPack, Dictionary<MSUnlockableDef, UnlockableBase> unlockableDefToUnlockableBaseDict = null)
         {
             unlockableBase.Initialize();
             if (CheckIfRequiredTypeIsAdded(unlockableBase))
             {
+                unlockableBase.LateInitialization();
+                FinishUnlockAndCreateAchievement(unlockableBase);
+
                 HG.ArrayUtils.ArrayAppend(ref contentPack.unlockableDefs, unlockableBase.UnlockableDef);
-                unlockableDefToUnlockableBase.Add(unlockableBase.UnlockableDef, unlockableBase);
+                R2API.UnlockableAPI.AddAchievement(unlockableBase.GetAchievementDef);
+                MoonstormUnlockables.Add(unlockableBase.UnlockableDef, unlockableBase);
 
                 if (unlockableDefToUnlockableBaseDict != null) unlockableDefToUnlockableBaseDict.Add(unlockableBase.UnlockableDef, unlockableBase);
 
-                unlocksToAdd.Add(unlockableBase);
                 MSULog.LogD($"Added {unlockableBase.UnlockableDef}");
             }
             else
@@ -51,6 +64,15 @@ namespace Moonstorm
             }
         }
 
+        private void FinishUnlockAndCreateAchievement(UnlockableBase unlockable)
+        {
+            UnlockableDef unlockableDef = unlockable.UnlockableDef as UnlockableDef;
+
+            AchievementDef achievementDef = unlockable.UnlockableDef.GetOrCreateAchievementDef();
+
+            unlockableDef.getHowToUnlockString = () => Language.GetStringFormatted("UNLOCK_VIA_ACHIEVEMENT_FORMAT", Language.GetString(achievementDef.nameToken), Language.GetString(achievementDef.descriptionToken));
+            unlockableDef.getUnlockedString = () => Language.GetStringFormatted("UNLOCKED_FORMAT", Language.GetString(achievementDef.nameToken), Language.GetString(achievementDef.descriptionToken));
+        }
         #endregion
 
         #region Checks
@@ -91,6 +113,11 @@ namespace Moonstorm
             return true;
         }
 
+        /// <summary>
+        /// If MoonstormSharedUtils fails to check if the required type is added, you can add your own workaround here
+        /// </summary>
+        /// <param name="type">The type that failed to check</param>
+        /// <returns>True if the unlockable should be added, false otherwise</returns>
         public virtual bool OnFailedToCheck(Type type) { return false; }
 
         private static bool CheckArtifacts(Type type)
@@ -149,99 +176,13 @@ namespace Moonstorm
 
         private static bool CheckUnlockables(Type type)
         {
-            var allUnlocks = unlockableDefToUnlockableBase.Values.Select(ub => ub.GetType());
+            var allUnlocks = MoonstormUnlockables.Values.Select(ub => ub.GetType());
             return allUnlocks.Contains(type);
         }
         private static bool CheckSurvivors(Type type)
         {
             var allSurvivors = CharacterModuleBase.MoonstormCharacters.Where(charBase => charBase.GetType().IsSubclassOf(typeof(SurvivorBase))).Select(sb => sb.GetType());
             return allSurvivors.Contains(type);
-        }
-        #endregion
-
-        #region Hooks
-        private static void AddUnlockables()
-        {
-            List<AchievementDef> list = new List<AchievementDef>();
-            achievementNameToDef.Clear();
-
-            foreach (UnlockableBase unlockable in unlocksToAdd)
-            {
-                try
-                {
-                    var achievementIdentifier = unlockable.UnlockableDef.cachedName + ".Achievement";
-                    var unlockableDef = unlockable.UnlockableDef;
-
-                    if (achievementNameToDef.ContainsKey(achievementIdentifier))
-                        throw new ArgumentException($"UnlockableBase {unlockable.GetType().FullName} attempted to register as achievement {achievementIdentifier}, but class {achievementNameToDef[achievementIdentifier].type.FullName}");
-
-                    AchievementDef achievementDef = unlockableDef.GetOrCreateAchievementDef();
-
-                    achievementIdentifiers.Add(achievementIdentifier);
-                    achievementNameToDef.Add(achievementIdentifier, achievementDef);
-                    list.Add(achievementDef);
-
-                    unlockableDef.getHowToUnlockString = () => Language.GetStringFormatted("UNLOCK_VIA_ACHIEVEMENT_FORMAT", Language.GetString(achievementDef.nameToken), Language.GetString(achievementDef.descriptionToken));
-                    unlockableDef.getUnlockedString = () => Language.GetStringFormatted("UNLOCKED_FORMAT", Language.GetString(achievementDef.nameToken), Language.GetString(achievementDef.descriptionToken));
-                }
-                catch (Exception e)
-                {
-                    MSULog.LogE($"An Exception has Ocurred while trying to add {unlockable}: {e}");
-                }
-            }
-
-            achievementDefs = list.ToArray();
-            SortAchievements(achievementDefs);
-            serverAchievementDefs = achievementDefs.Where(achievementDef => achievementDef.serverTrackerType != null).ToArray();
-
-            for (int i = 0; i < achievementDefs.Length; i++)
-            {
-                achievementDefs[i].index = new AchievementIndex
-                {
-                    intValue = AchievementManager.achievementCount + i
-                };
-            }
-            for (int j = 0; j < serverAchievementDefs.Length; j++)
-            {
-                serverAchievementDefs[j].serverIndex = new ServerAchievementIndex
-                {
-                    intValue = AchievementManager.serverAchievementCount + j
-                };
-            }
-            for (int k = 0; k < achievementIdentifiers.Count; k++)
-            {
-                string currentIdentifier = achievementIdentifiers[k];
-                achievementNameToDef[currentIdentifier].childAchievementIdentifiers = achievementIdentifiers.Where(identifier => achievementNameToDef[identifier].prerequisiteAchievementIdentifier == currentIdentifier).ToArray();
-            }
-
-            AchievementManager.achievementNamesToDefs = AchievementManager.achievementNamesToDefs.Union(achievementNameToDef).ToDictionary(x => x.Key, y => y.Value);
-            AchievementManager.achievementIdentifiers.AddRange(achievementIdentifiers);
-            AchievementManager.achievementDefs = AchievementManager.achievementDefs.ToList().Union(achievementDefs).ToArray();
-            AchievementManager.serverAchievementDefs = AchievementManager.serverAchievementDefs.ToList().Union(serverAchievementDefs).ToArray();
-
-            MSULog.LogI($"Succesfully added a total of {achievementIdentifiers.Count} Achievements.");
-            achievementNameToDef.Clear();
-            achievementIdentifiers.Clear();
-            achievementDefs = Array.Empty<AchievementDef>();
-            serverAchievementDefs = Array.Empty<AchievementDef>();
-        }
-
-        private static void SortAchievements(AchievementDef[] achievementDefsArray)
-        {
-            AchievementManager.AchievementSortPair[] array = new AchievementManager.AchievementSortPair[achievementDefsArray.Length];
-            for (int i = 0; i < array.Length; i++)
-            {
-                array[i] = new AchievementManager.AchievementSortPair
-                {
-                    score = UnlockableCatalog.GetUnlockableSortScore(achievementDefsArray[i].unlockableRewardIdentifier),
-                    achievementDef = achievementDefsArray[i]
-                };
-            }
-            Array.Sort(array, (AchievementManager.AchievementSortPair a, AchievementManager.AchievementSortPair b) => a.score - b.score);
-            for (int j = 0; j < array.Length; j++)
-            {
-                achievementDefsArray[j] = array[j].achievementDef;
-            }
         }
         #endregion
     }

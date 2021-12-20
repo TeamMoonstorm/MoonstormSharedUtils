@@ -24,17 +24,17 @@ namespace Moonstorm
         {
             logger.LogFatal(logString(data, i, member));
         }
-        internal static void LogI(object data, [CallerLineNumber] int i = 0, [CallerMemberName] string member = "")
+        internal static void LogI(object data)
         {
-            logger.LogInfo(logString(data, i, member));
+            logger.LogInfo(data);
         }
-        internal static void LogM(object data, [CallerLineNumber] int i = 0, [CallerMemberName] string member = "")
+        internal static void LogM(object data)
         {
-            logger.LogMessage(logString(data, i, member));
+            logger.LogMessage(data);
         }
-        internal static void LogW(object data, [CallerLineNumber] int i = 0, [CallerMemberName] string member = "")
+        internal static void LogW(object data)
         {
-            logger.LogWarning(logString(data, i, member));
+            logger.LogWarning(data);
         }
 
         private static string logString(object data, [CallerLineNumber] int i = 0, [CallerMemberName] string member = "")

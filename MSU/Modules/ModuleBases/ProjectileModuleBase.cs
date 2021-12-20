@@ -30,7 +30,7 @@ namespace Moonstorm
 
         #region InitProjectiles
         /// <summary>
-        /// Finds all the ProjectileBase inherited classes in your assembly and creates an instance for each found.
+        /// Finds all the ProjectileBase inheriting classes in your assembly and creates an instance for each found.
         /// <para>Ignores classes with the DisabledContent attribute</para>
         /// </summary>
         /// <returns>An IEnumerable of all your Assembly's ProjectileBases.</returns>

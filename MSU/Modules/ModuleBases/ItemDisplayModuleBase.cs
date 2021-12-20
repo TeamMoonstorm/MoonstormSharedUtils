@@ -10,6 +10,7 @@ namespace Moonstorm
 {
     /// <summary>
     /// A Module Base for managing Item Displays
+    /// <para>Handles proper appending of IDRS values from MSSingleItemDisplayRules and MSIDRS</para>
     /// </summary>
     public abstract class ItemDisplayModuleBase : ModuleBase
     {

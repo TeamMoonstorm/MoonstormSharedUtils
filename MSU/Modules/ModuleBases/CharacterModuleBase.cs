@@ -22,7 +22,7 @@ namespace Moonstorm
 
         #region Characters
         /// <summary>
-        /// Finds all the CharacterBase inherited classes in your assembly and creates instances for each found.
+        /// Finds all the CharacterBase inheriting classes in your assembly and creates instances for each found.
         /// <para>Ignores all classes with the "DisabledContent" attribute</para>
         /// </summary>
         /// <returns>An IEnumerable of all your Assembly's CharacterBases</returns>

@@ -8,6 +8,9 @@ using UnityEngine;
 
 namespace Moonstorm
 {
+    /// <summary>
+    /// Class for managing ConfigurableField attributes
+    /// </summary>
     public static class ConfigurableFieldManager
     {
         private static bool initialized = false;
@@ -25,6 +28,11 @@ namespace Moonstorm
             RoR2Application.onLoad += ConfigureTypes;
         }
 
+        /// <summary>
+        /// Adds a mod to the ConfigurableField manager
+        /// <para>Will automatically look for Types that have fields with ConfigurableField attribute and add them for configuration</para>
+        /// </summary>
+        /// <param name="configFile">Your Mod's ConfigFile</param>
         public static void AddMod(ConfigFile configFile)
         {
             Assembly assembly = Assembly.GetCallingAssembly();

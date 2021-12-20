@@ -3,14 +3,13 @@ using MonoMod.Cil;
 
 namespace Moonstorm.Utilities
 {
-    public static class Patches
+    internal static class Patches
     {
-        public static void Init()
+        internal static void Init()
         {
             IL.RoR2.GlobalEventManager.OnCharacterDeath += IL_ServerKilledOtherPatch;
         }
 
-        ///<summary>Patches the IOnKilledOtherServerReciever to not call twice, once in the HealthComponent and once in the GlobalEventManager. Ghor fixed this for us, it can be removed next ror2 update.</summary>
         private static void IL_ServerKilledOtherPatch(ILContext il)
         {
             var c = new ILCursor(il);

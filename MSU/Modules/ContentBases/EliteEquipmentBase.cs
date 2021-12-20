@@ -10,13 +10,5 @@
         /// Your Elite's MSEliteDef
         /// </summary>
         public abstract MSEliteDef EliteDef { get; set; }
-
-        /// <summary>
-        /// Initialize your Elite Equipment.
-        /// <para>calling base.Initialize() heavily reccomended.</para>
-        /// </summary>
-        public override void Initialize()
-        {
-        }
     }
 }

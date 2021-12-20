@@ -1,5 +1,8 @@
 ﻿namespace Moonstorm
 {
+    /// <summary>
+    /// Utility methods used by MoonstormSharedUtils
+    /// </summary>
     public static class MSUtil
     {
         /// <summary>
@@ -13,10 +16,10 @@
         }
 
 
-        //Credits to KomradeSpectre
         /// <summary>
         /// Calculates inverse hyperbolic scaling (diminishing) for the parameters passed in, and returns the result.
         /// <para>Uses the formula: baseValue + (maxValue - baseValue) * (1 - 1 / (1 + additionalValue * (itemCount - 1)))</para>
+        /// <para>Original code by KomradeSpectre</para>
         /// </summary>
         /// <param name="baseValue">The starting value of the function.</param>
         /// <param name="additionalValue">The value that is added per additional itemCount</param>
