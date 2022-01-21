@@ -3,6 +3,10 @@ using UnityEngine;
 
 namespace RoR2EditorKit.Core.Windows
 {
+    /// <summary>
+    /// Class that's used for creating ScriptableObjects for the editor
+    /// </summary>
+    /// <typeparam name="T">The type of scriptable object to create</typeparam>
     public abstract class CreateRoR2ScriptableObjectWindow<T> : ExtendedEditorWindow where T : ScriptableObject
     {
         public T ScriptableObject { get; private set; }
@@ -16,6 +20,11 @@ namespace RoR2EditorKit.Core.Windows
             actualName = string.Empty;
         }
 
+        /// <summary>
+        /// Turns the given string into DoubleCamelCase
+        /// </summary>
+        /// <param name="name">the string to modify</param>
+        /// <returns>The string in DoubleCamelCase</returns>
         protected string GetCorrectAssetName(string name)
         {
             if (string.IsNullOrEmpty(name))
@@ -38,6 +47,9 @@ namespace RoR2EditorKit.Core.Windows
             return name;
         }
 
+        /// <summary>
+        /// Attempts to close the window
+        /// </summary>
         protected void TryToClose()
         {
             if (Settings.CloseWindowWhenAssetIsCreated)

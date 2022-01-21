@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEditor.UI;
 using UnityEngine;
 
-namespace RoR2EditorKit.RoR2.Inspectors
+namespace RoR2EditorKit.RoR2Related.Inspectors
 {
     [CustomEditor(typeof(HGButton))]
     public class HGButtonCustomEditor : ButtonEditor

@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
 
-namespace RoR2EditorKit.RoR2.PropertyDrawers
+namespace RoR2EditorKit.RoR2Related.PropertyDrawers
 {
     [CustomPropertyDrawer(typeof(EnumMaskAttribute))]
     public class EnumMaskDrawer : PropertyDrawer
@@ -13,6 +13,7 @@ namespace RoR2EditorKit.RoR2.PropertyDrawers
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             Enum targetEnum = GetBaseProperty<Enum>(property);
+            FieldInfo field = GetField(property);
 
             string propName = property.name;
             if (string.IsNullOrEmpty(propName))
@@ -25,8 +26,7 @@ namespace RoR2EditorKit.RoR2.PropertyDrawers
             EditorGUI.EndProperty();
             if (EditorGUI.EndChangeCheck())
             {
-                var convertedType = Convert.ChangeType(enumNew, targetEnum.GetType());
-                property.intValue = Convert.ToInt32(convertedType);
+                fieldInfo.SetValue(property.serializedObject.targetObject, enumNew);
                 property.serializedObject.ApplyModifiedProperties();
                 property.serializedObject.UpdateIfRequiredOrScript();
             }
@@ -46,6 +46,19 @@ namespace RoR2EditorKit.RoR2.PropertyDrawers
                 reflectionTarget = fieldInfo.GetValue(reflectionTarget);
             }
             return (T)reflectionTarget;
+        }
+
+        static FieldInfo GetField(SerializedProperty prop)
+        {
+            string[] separatedPaths = prop.propertyPath.Split('.');
+
+            object reflectionTarget = prop.serializedObject.targetObject;
+            FieldInfo field = null;
+            foreach (var path in separatedPaths)
+            {
+                field = reflectionTarget.GetType().GetField(path);
+            }
+            return field;
         }
     }
 }

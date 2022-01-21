@@ -8,7 +8,7 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
-namespace RoR2EditorKit.RoR2.EditorWindows
+namespace RoR2EditorKit.RoR2Related.EditorWindows
 {
     public class CreateEntityStateConfigWindow : CreateRoR2ScriptableObjectWindow<EntityStateConfiguration>
     {

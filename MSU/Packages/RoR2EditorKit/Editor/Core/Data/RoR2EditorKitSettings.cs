@@ -26,6 +26,8 @@ namespace RoR2EditorKit.Settings
 
         public EnabledAndDisabledInspectorsSettings InspectorSettings { get => GetOrCreateSettings<EnabledAndDisabledInspectorsSettings>(); }
 
+        public MaterialEditorSettings MaterialEditorSettings { get => GetOrCreateSettings<MaterialEditorSettings>(); }
+
         public bool CloseWindowWhenAssetIsCreated = true;
 
         public override void Initialize() => TokenPrefix = "";

@@ -18,7 +18,7 @@ namespace RoR2EditorKit.Core.Inspectors
         {
             if (obj is ScriptableObjectInspector soInspector)
             {
-                InspectorEnabled = CreateEnableInsepctorToggle(soInspector.target.GetType().Name);
+                InspectorEnabled = CreateEnableInsepctorToggle();
             }
         }
     }

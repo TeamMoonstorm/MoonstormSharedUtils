@@ -5,14 +5,18 @@ using UnityEngine;
 namespace RoR2EditorKit.Core.PropertyDrawers
 {
     [CustomPropertyDrawer(typeof(EnabledAndDisabledInspectorsSettings.InspectorSetting))]
-    public class InspectorSettingPropertyDrawer : EditorGUILayoutPropertyDrawer
+    public class InspectorSettingPropertyDrawer : ExtendedPropertyDrawer
     {
-        protected override void DrawPropertyDrawer(SerializedProperty property)
+        protected override void DrawCustomDrawer()
         {
+            Begin();
             var isEnabled = property.FindPropertyRelative("isEnabled");
             var displayName = property.FindPropertyRelative("inspectorName");
 
-            EditorGUILayout.PropertyField(isEnabled, new GUIContent(ObjectNames.NicifyVariableName(displayName.stringValue)));
+            GUIContent content = new GUIContent(NicifyName(displayName.stringValue), "Wether or not this inspector is enabled.");
+
+            EditorGUI.PropertyField(rect, isEnabled, content, false);
+            End();
         }
     }
 }

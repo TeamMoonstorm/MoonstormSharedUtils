@@ -8,7 +8,7 @@ using System.Security.Cryptography;
 using UnityEditor;
 using UnityEngine;
 
-namespace RoR2EditorKit.RoR2.EditorWindows
+namespace RoR2EditorKit.RoR2Related.EditorWindows
 {
     public class CreateSha256HashAssetWindow : CreateRoR2ScriptableObjectWindow<Sha256HashAsset>
     {

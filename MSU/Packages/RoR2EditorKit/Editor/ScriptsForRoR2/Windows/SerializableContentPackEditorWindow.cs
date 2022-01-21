@@ -15,7 +15,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using Object = UnityEngine.Object;
 
-namespace RoR2EditorKit.RoR2.EditorWindows
+namespace RoR2EditorKit.RoR2Related.EditorWindows
 {
     class SerializableContentPackEditorWindow : ExtendedEditorWindow
     {

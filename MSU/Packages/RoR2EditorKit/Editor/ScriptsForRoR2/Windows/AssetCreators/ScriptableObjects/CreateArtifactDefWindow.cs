@@ -6,7 +6,7 @@ using System;
 using UnityEditor;
 using UnityEngine;
 
-namespace RoR2EditorKit.RoR2.EditorWindows
+namespace RoR2EditorKit.RoR2Related.EditorWindows
 {
     public class CreateArtifactDefWindow : CreateRoR2ScriptableObjectWindow<ArtifactDef>
     {
@@ -132,7 +132,7 @@ namespace RoR2EditorKit.RoR2.EditorWindows
         private GameObject CreatePickupPrefab()
         {
             var pickup = new GameObject($"Pickup{actualName}");
-            var mdl = Util.CreateGenericPrefab("mdl", actualName, prefabMesh, prefabMaterial);
+            var mdl = Util.CreateGenericPrefab("mdl" + actualName, prefabMesh, prefabMaterial);
 
             Util.AddTransformToParent(mdl, pickup);
 

@@ -10,7 +10,7 @@ namespace RoR2EditorKit.Core.Inspectors
         public override void OnInspectorGUI()
         {
             EditorGUILayout.BeginVertical("box");
-            InspectorEnabled = CreateEnableInsepctorToggle(target.GetType().Name);
+            InspectorEnabled = CreateEnableInsepctorToggle();
             EditorGUILayout.EndVertical();
             base.OnInspectorGUI();
         }

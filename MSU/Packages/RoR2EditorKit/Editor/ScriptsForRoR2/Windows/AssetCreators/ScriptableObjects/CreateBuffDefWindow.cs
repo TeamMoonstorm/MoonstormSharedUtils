@@ -6,7 +6,7 @@ using System;
 using UnityEditor;
 using UnityEngine;
 
-namespace RoR2EditorKit.RoR2.EditorWindows
+namespace RoR2EditorKit.RoR2Related.EditorWindows
 {
     public class CreateBuffDefWindow : CreateRoR2ScriptableObjectWindow<BuffDef>
     {

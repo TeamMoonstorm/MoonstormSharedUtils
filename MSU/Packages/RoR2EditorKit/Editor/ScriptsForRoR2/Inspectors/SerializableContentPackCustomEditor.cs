@@ -1,12 +1,12 @@
 ﻿using RoR2.ContentManagement;
 using RoR2EditorKit.Core.Inspectors;
 using RoR2EditorKit.Core.Windows;
-using RoR2EditorKit.RoR2.EditorWindows;
+using RoR2EditorKit.RoR2Related.EditorWindows;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
 
-namespace RoR2EditorKit.RoR2.Inspectors
+namespace RoR2EditorKit.RoR2Related.Inspectors
 {
     [CustomEditor(typeof(SerializableContentPack))]
     public class SerializableContentPackCustomEditor : ScriptableObjectInspector
@@ -25,10 +25,10 @@ namespace RoR2EditorKit.RoR2.Inspectors
             }
             return false;
         }
-        public override void OnInspectorGUI()
+
+        public override void DrawCustomInspector()
         {
-            base.OnInspectorGUI();
-            if (InspectorEnabled && GUILayout.Button("Open Editor"))
+            if (GUILayout.Button("Open Editor"))
             {
                 ExtendedEditorWindow.OpenEditorWindow<SerializableContentPackEditorWindow>(target, "Serializable Content Pack Window");
             }

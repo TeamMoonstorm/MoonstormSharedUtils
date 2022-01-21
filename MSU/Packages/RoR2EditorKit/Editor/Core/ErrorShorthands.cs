@@ -2,6 +2,9 @@
 
 namespace RoR2EditorKit.Core
 {
+    /// <summary>
+    /// Shorthands for throwing Errors.
+    /// </summary>
     public static class ErrorShorthands
     {
         public static NullReferenceException ThrowNullAssetName(string fieldName)

@@ -4,7 +4,7 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-namespace RoR2EditorKit.RoR2.PropertyDrawers
+namespace RoR2EditorKit.RoR2Related.PropertyDrawers
 {
 
     public class SerializableSystemTypeTreeView : TreeListControl

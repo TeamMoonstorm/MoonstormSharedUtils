@@ -8,7 +8,7 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
-namespace RoR2EditorKit.RoR2.Inspectors
+namespace RoR2EditorKit.RoR2Related.Inspectors
 {
     [CustomEditor(typeof(EntityStateConfiguration))]
     public class EntityStateConfigCustomEditor : ScriptableObjectInspector
@@ -38,14 +38,8 @@ namespace RoR2EditorKit.RoR2.Inspectors
         private readonly List<FieldInfo> serializableStaticFields = new List<FieldInfo>();
         private readonly List<FieldInfo> serializableInstanceFields = new List<FieldInfo>();
 
-        public override void OnInspectorGUI()
+        public override void DrawCustomInspector()
         {
-            base.OnInspectorGUI();
-            if (!InspectorEnabled)
-            {
-                return;
-            }
-
             var collectionProperty = serializedObject.FindProperty(nameof(EntityStateConfiguration.serializedFieldsCollection));
             var systemTypeProp = serializedObject.FindProperty(nameof(EntityStateConfiguration.targetType));
             var assemblyQuallifiedName = systemTypeProp.FindPropertyRelative("assemblyQualifiedName").stringValue;

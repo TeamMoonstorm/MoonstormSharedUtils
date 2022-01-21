@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace RoR2EditorKit.RoR2.PropertyDrawers
+namespace RoR2EditorKit.RoR2Related.PropertyDrawers
 {
     public class EntityStateTreePicker : EditorWindow
     {

@@ -4,7 +4,7 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
-namespace RoR2EditorKit.RoR2.PropertyDrawers
+namespace RoR2EditorKit.RoR2Related.PropertyDrawers
 {
     [CustomPropertyDrawer(typeof(SerializableEntityStateType), true)]
     public class EntityStateDrawer : PropertyDrawer

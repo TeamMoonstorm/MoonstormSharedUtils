@@ -3,7 +3,7 @@ using RoR2.Skills;
 using UnityEditor;
 using UnityEngine;
 
-namespace RoR2EditorKit.RoR2
+namespace RoR2EditorKit.RoR2Related
 {
     /// <summary>
     /// Creation of ScriptableObjects that are normally uncreatable in RoR2

@@ -9,7 +9,7 @@ namespace RoR2EditorKit.Core.Windows
     /// <para>Based on the video "Easy Editor Windows in Unity with Serialized Properties" by "Game Dev Guide"</para>
     /// <para>https://www.youtube.com/watch?v=c_3DXBrH-Is</para>
     /// </summary>
-    public class ExtendedEditorWindow : EditorWindow
+    public abstract class ExtendedEditorWindow : EditorWindow
     {
         /// <summary>
         /// The serialized object being modified.
@@ -18,6 +18,12 @@ namespace RoR2EditorKit.Core.Windows
 
         public static RoR2EditorKitSettings Settings { get => RoR2EditorKitSettings.GetOrCreateSettings<RoR2EditorKitSettings>(); }
 
+        /// <summary>
+        /// Opens the given editor window, and sets the main serialized object.
+        /// </summary>
+        /// <typeparam name="T">The editor window to open</typeparam>
+        /// <param name="unityObject">The object that's being modified</param>
+        /// <param name="windowName">The window's name</param>
         public static void OpenEditorWindow<T>(Object unityObject, string windowName) where T : ExtendedEditorWindow
         {
             T window = GetWindow<T>(windowName);

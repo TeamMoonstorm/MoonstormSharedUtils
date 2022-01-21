@@ -48,6 +48,11 @@ namespace RoR2EditorKit.Settings
             rootElement.Bind(enabledAndDisabledInspectorSettingsSO);
         }
 
+        /// <summary>
+        /// Tries to get or create the settings for an inspector
+        /// </summary>
+        /// <param name="type">The inspector's Type</param>
+        /// <returns>The Inspector's InspectorSetting</returns>
         public InspectorSetting GetOrCreateInspectorSetting(Type type)
         {
             var setting = EnabledInspectors.Find(x => x.typeReference == type.AssemblyQualifiedName);

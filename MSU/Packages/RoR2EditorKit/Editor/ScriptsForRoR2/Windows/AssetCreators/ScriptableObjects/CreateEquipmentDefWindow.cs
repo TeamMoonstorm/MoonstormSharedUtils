@@ -6,7 +6,7 @@ using System;
 using UnityEditor;
 using UnityEngine;
 
-namespace RoR2EditorKit.RoR2.EditorWindows
+namespace RoR2EditorKit.RoR2Related.EditorWindows
 {
     public class CreateEquipmentDefWindow : CreateRoR2ScriptableObjectWindow<EquipmentDef>
     {
@@ -149,7 +149,7 @@ namespace RoR2EditorKit.RoR2.EditorWindows
         private GameObject CreatePickupPrefab()
         {
             var pickup = new GameObject("Pickup" + actualName);
-            var mdl = Util.CreateGenericPrefab("mdl", actualName, prefabMesh, prefabMaterial);
+            var mdl = Util.CreateGenericPrefab("mdl" + actualName, prefabMesh, prefabMaterial);
 
             //Parents prefabs
             Util.AddTransformToParent(mdl, pickup);
@@ -165,7 +165,7 @@ namespace RoR2EditorKit.RoR2.EditorWindows
         {
             //Creates game objects
             var display = new GameObject($"Display{actualName}");
-            var mdl = Util.CreateGenericPrefab("mdl", actualName, prefabMesh, prefabMaterial);
+            var mdl = Util.CreateGenericPrefab("mdl" + actualName, prefabMesh, prefabMaterial);
 
             //Parents mdl rpefab to parentPrefab
             Util.AddTransformToParent(mdl, display);
