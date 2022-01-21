@@ -532,15 +532,15 @@ PlayerSettings:
   webGLLinkerTarget: 1
   webGLThreadsSupport: 0
   scriptingDefineSymbols:
-    1: thunderkit;riskofrain2;ror2editorkitteam-ror2editorkit
-    7: thunderkit;riskofrain2;ror2editorkitteam-ror2editorkit
-    13: thunderkit;riskofrain2;ror2editorkitteam-ror2editorkit
-    19: thunderkit;riskofrain2;ror2editorkitteam-ror2editorkit
-    21: thunderkit;riskofrain2;ror2editorkitteam-ror2editorkit
-    25: thunderkit;riskofrain2;ror2editorkitteam-ror2editorkit
-    26: thunderkit;riskofrain2;ror2editorkitteam-ror2editorkit
-    27: thunderkit;riskofrain2;ror2editorkitteam-ror2editorkit
-    28: thunderkit;riskofrain2;ror2editorkitteam-ror2editorkit
+    1: thunderkit;riskofrain2;ror2editorkitteam-ror2editorkit;bbepis-bepinexpack;riskofthunder-hookgenpatcher;tristanmcpherson-r2api;iharbhd-debugtoolkit;UNITY_POST_PROCESSING_STACK_V2
+    7: thunderkit;riskofrain2;ror2editorkitteam-ror2editorkit;bbepis-bepinexpack;riskofthunder-hookgenpatcher;tristanmcpherson-r2api;iharbhd-debugtoolkit;UNITY_POST_PROCESSING_STACK_V2
+    13: thunderkit;riskofrain2;ror2editorkitteam-ror2editorkit;bbepis-bepinexpack;riskofthunder-hookgenpatcher;tristanmcpherson-r2api;iharbhd-debugtoolkit;UNITY_POST_PROCESSING_STACK_V2
+    19: thunderkit;riskofrain2;ror2editorkitteam-ror2editorkit;bbepis-bepinexpack;riskofthunder-hookgenpatcher;tristanmcpherson-r2api;iharbhd-debugtoolkit;UNITY_POST_PROCESSING_STACK_V2
+    21: thunderkit;riskofrain2;ror2editorkitteam-ror2editorkit;bbepis-bepinexpack;riskofthunder-hookgenpatcher;tristanmcpherson-r2api;iharbhd-debugtoolkit;UNITY_POST_PROCESSING_STACK_V2
+    25: thunderkit;riskofrain2;ror2editorkitteam-ror2editorkit;bbepis-bepinexpack;riskofthunder-hookgenpatcher;tristanmcpherson-r2api;iharbhd-debugtoolkit;UNITY_POST_PROCESSING_STACK_V2
+    26: thunderkit;riskofrain2;ror2editorkitteam-ror2editorkit;bbepis-bepinexpack;riskofthunder-hookgenpatcher;tristanmcpherson-r2api;iharbhd-debugtoolkit;UNITY_POST_PROCESSING_STACK_V2
+    27: thunderkit;riskofrain2;ror2editorkitteam-ror2editorkit;bbepis-bepinexpack;riskofthunder-hookgenpatcher;tristanmcpherson-r2api;iharbhd-debugtoolkit;UNITY_POST_PROCESSING_STACK_V2
+    28: thunderkit;riskofrain2;ror2editorkitteam-ror2editorkit;bbepis-bepinexpack;riskofthunder-hookgenpatcher;tristanmcpherson-r2api;iharbhd-debugtoolkit;UNITY_POST_PROCESSING_STACK_V2
   platformArchitecture: {}
   scriptingBackend: {}
   il2cppCompilerConfiguration: {}

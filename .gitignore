@@ -64,4 +64,8 @@ crashlytics-build.properties
 [Mm]SU/[Pp]ackages/[Rr]isk of Rain 2/*.dll
 
 #Thunderkit Settings
-[Mm]SU/[Aa]ssets/[Tt]hunderKitSettings/*
+
+MSU/Assets/ThunderKitSettings/EnabledAndDisabledInspectorsSettings.asset.meta
+MSU/Assets/ThunderKitSettings/EnabledAndDisabledInspectorsSettings.asset
+MSU/Assets/ThunderKitSettings/SettingsWindowData.asset
+MSU/Assets/ThunderKitSettings/SettingsWindowData.asset.meta
