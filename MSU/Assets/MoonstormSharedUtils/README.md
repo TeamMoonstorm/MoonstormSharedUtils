@@ -1,120 +1,127 @@
 # Moonstorm Shared Utils
 
-- Moonstorm Shared Utils (Abreviated as MSU) is a library mod with the intention to help ease the creation of mods, mainly ones that are developed trough Thunderkit. It is a library mod used by the members of Team Moonstorm.
+- Moonstorm Shared Utils (Abreviated as MSU) is a library mod with the intention to help with the creation of mods, mainly ones that are developed through ThunderKit. The library mod is used by the members of TeamMoonstorm. But anyone can use it as long as they give credit.
 
-- Contains both classes for mod making and an assembly for Editor utilities.
+## Key Features
 
-- Classes for mod making include a modular system using abstract classes, alongside abstract content classes. Taking heavy use off the ItemBehavior class found inside the CharacterBody.
+---
 
-## Features
+### Modules
 
-- Module Bases
-    - A Module base is a type of class inside MSU that handles a specific type of content found inside RoR2. Theyre abstract by nature so you need to inherit from them to properly work.
-    - Key aspects of module bases include:
-        - Easily add items to your contentpacks.
-        - Handles the automatic use of ItemBehaviors.
-        - Handles most of the interaction between the game's systems and the content bases.
-    - Module bases included are:
-        - Artifact Module
-        - Buff Module
-        - Character Module
-        - Damage Type Module (R2API Dependant)
-        - Elite Module
-        - Interactable Module
-        - Item Display Module
-        - Items and Equipments Module
-        - Projectile Module
-        - Scene Module
-        - Unlockables Module
+MSU was built to be a Modular based library, as such, MSU comes bundled with what are called "ModuleBases"
 
-- Content Bases
-    - A Content base is what MSU uses to identify the type of content youre trying to add to the game. Theyre abstract by nature so you need to inherit from them to properly work.
-    - Key Aspects of Content bases include:
-        - Initialization methods to finish anything on runtime, such as replacing materials with ingame ones, or getting any kind of asset that needs to be finished in runtime.
-        - Abstract fields for ContentDefinitions (ItemDef, ArtifactDef, EquipmentDef, ETC).
-    - Content Bases Included are:
-        - Artifact
-        - Buff
-        - Character
-        - Damage Type
-        - Equipment (& Elite Equipment)
-        - Interactable
-        - Item
-        - Monster
-        - Projectile
-        - Survivor
-        - Scene
-        - Unlockable
+Module bases are basically "Hubs" for MSU to communicate between your content, and the game, a Module base has the main capability of automatically handling the behavior, and implementation of the content you desire to add. They're abstract by nature, so you must inherit from them to properly interact with the module.
 
-- Scriptable Object
-    - MSU comes packaged with scriptable objects to either help the aid of content creation, or for the help of working alongside RoR2's Systems.
-    - Scriptable Object Included are split into 5 categories:
-        - General:
-            - EffectDefHolder - Used for creating EffectDefs in the editor and adding them to the content pack.
-            - MSUnlockableDef - Used alongside the Unlockable content class, the MSUnlockableDef not only works like a regular UnlockableDef, but also creates the AchievementDef associated to the UnlockableDef on runtime.
-            - SerializableDifficultyDef - A Serialized DifficultyDef, Implementation of the difficulty itself is done thru R2API's DifficultyAPI
-            - VanillaSkinDef - Creates a Skin for a vanilla character, avoids the needles implementation of doing a hook on SkinDef's awake.
-            - MSMonsterFamily - Allows for the creation of a custom monster family, it's implemented inside the CharacterModuleBase and uses DirectorAPI for adding them.
-        - DirectorCards:
-            - MSInteractableDirectorCard - Used alongside the Interactable content class, the InteractableDirectorCard works as an extension of the InteractableSpawnCard and has special fields that allow for implementation of the interactable thru R2API's DirectorAPI.
-            - MSMonsterDirectorCard - Used alongside the Monster content class, the MonsterDirectorCard works as an extension of the CharacterSpawnCard and has special fields that allow for implementation of the monster thru R2API's DirectorAPI.
-        - Elites:
-            - MSAspectAbilityDataHolder - Holds data for MysticSword's Aspect Abilities, proper implementation is on the end user (LIT has an example on how to implement it.)
-            - MSEliteDef - An extended version of an EliteDef, the MSEliteDef has the ability to automatically set the Elite's ramp, automatically determine in which tier it spawns, what overlay materials to use and if it has an Effect that accompanies it (Like Tier2 Elites)
-        - Events:
-            - EventDirectorCard - A DirectorCard for MSU's EventDirector, holds information such as the identifier, likelyhood of spawning, event flags, required unlockables, and more.
-            - EventSceneDeck - A Holder for EventDirectorCards, allows the end user to add new events to specific scenes.
-        - IDRS:
-            - KeyAssetDisplayPairHolder - Used for handling the addition of key assets and display prefabs to the IDRS module.
-            - MSIDRS - A version of the IDRS that works in editor, Achieves this function by using Strings to represent key assets and display prefabs. an MSIDRS can be used to append new IDRS to ANY existing IDRS in game.
-            - MSSingleItemDisplayRule - A variation of the MSIDRS, the MSSIDR works by handling a single key asset and a single display prefab, and can add it to as many item display rule sets as wanted.
+Currently, MSU comes bundled with 11 Modules:
+* ArticatModule: Handles Artifacts and the unhooking and hooking of methods
+* BuffModule: Handles buffs and their itemBehaviors
+* CharacterModule: Handles CharacterBodies, alongside implementing Monsters to stages and Monster Families
+* DamageTypeModule: Handles ModdedDamageTypes from R2API's DamageAPI.
+* EliteModule: Handles Elites via a combination of it's systems and R2API's EliteAPI
+* InteractableModule: Handles all sorts of Interactables, alongside implementing them to stages
+* ItemDisplayModule: Handles the ItemDisplay related scriptable objects.
+* PickupModule: Handles Items and Equipments, alongside their behaviors and on use behaviors
+* ProjectileModule: Handles Projectiles
+* SceneModule: Handles Scenes, compatible with Rain of Stages
+* UnlockableModuleBase: Handles Unlockables and AchievementDefs
 
-- Components:
-    - Item Manager - Takes care of managing the items made with MSU. automatically handling their ItemBehaviors.
-    - Manager Extensions - Extend the ItemManager using Manager Extensions.
-    - Moonstorm Item Display Helper - Used for the ItemDisplays module.
-    - DestroyOnEnable - Quite literally as it says, this component destroys it's parent game object as soon as its enabled.
-    - MoonstormEliteBehavior - Used for managing the MSEliteDef.
-    - Comes pre-packaged with KomradeSpectre's HGController finder. modify in real time a material that uses hopoo's shaders with an inspector.
+Module bases by themselves are extensible, so you can inherit from the "ModuleBase" class and create your own module.
 
-- Utilities, Interfaces and Attributes and More:
-    - Utilities:
-        - MSUtil - Contains a shorthand method for knowing if a mod is installed, and a method that creates InverseHyperbolicScaling (Courtesy of KomradeSpectre)
-        - MSUDebug - A MonoBehavior that gets attached to the base unity plugin. enabling this debug component causes changes that should facilitate the creation of mods.
-            - Changes include:
-                - Connect to yourself with a second instance of RoR2.
-                - Making huntress the default character instead of commando, since huntress doesnt shoot or attack when pressing M1 and having no enemies nearby (Useful if you need to do a lot of things in a Runtime inspector)
-                - Automatic deployment of the no_enemies command from debug toolkit, alongside removing the need to spawn via an escape pod
-                - Automatic addition of the Moonstorm Item Display Helper component to all the characterbodies found in the catalog.
-                - Spawning the Material Tester, which comes pre-packaged with the HGControllerFinder.
-    - Interfaces:
-        - IBodyStatArgModifier - An interface that works alongside the ItemBehaviors, its used for interacting with R2Api's RecalculateStatsAPI. which means most recalculate stats interaction should be done with this interface.
-        - IStatItemBehavior - An interface that works alongside the ItemBehaviors. this Interface allows you to interact with RecalculateStats. Albeit only for the Begining portion and the end portion. It's more or less useful for modifying stats that arent available in IBodyStatArgModifier or for getting values right after stat recalculation is finished.
-        - IOnIncomingDamageOtherServerReceiver - An interface used to modify the incoming damage of soon to be Victims in the damage report, it is similar to the IOnIncomingDamage interface.
-        - Provides a fix for IOnKilledOtherServerReceiver interface, it'll no longer run code twice in a row.
-    - Attributes:
-        - DisabledContent - Put this attribute on top of a content base inheriting class, and MSU will not load it nor add it to the content pack.
-        - TokenModifier - Put this attribute on top of a field that is public & static, give it a token to modify, a stat type, and a formatting index, and MSU will format said token with the values in the field, this can be used so configurable values are always in sync between ingame and config file. a guide on doing this can be found [here](https://github.com/TeamMoonstorm/MoonstormSharedUtils/wiki/%5BTokenModifier%5D). You'll need to submit your mod to the TokenModifierManager via "TokenModifierManager.AddMod(Assembly)"
-        - ConfigurableField - Put this attribute on top of a field that's both public & static, and MSU will proceed to automatically create configuration for the field. You'll need to submit your mod to the ConfigurableFieldManager via "ConfigurableFieldManager.AddMod(Assembly, ConfigFile)". Contains 3 string properties for giving custom Section, Name and Description for your configuration.
-    - Loader Classes:
-        - Loader classes are a type of class that loads external content into the game, their main purpose is to facilitate the loading of assetbundles, language files, and content packs.
-            - AssetsLoader: Class for handling loading assetbundles, contains method for automatically swapping the stubbed shaders from MoonstormSharedUtils and creation of EffectDefs.
-            - ContentLoader: Class for handling loading your mod's content, it's main appeal is the ability to load and set up content asynchronously, instead of doing everything in Awake. Contains arrays of Actions for both Loading content and Setting static fields on static types, much like RoR2Content does.
-            - LanguageLoader: Class for handling loading Language folders, automatically handles loading the Language files into the game's systems for use with the TokenModifier attribute.
+Example of a mod implementing a module base can be found [here](https://github.com/swuff-star/LostInTransit/blob/master/LIT/Assets/LostInTransit/Modules/Buffs/Buffs.cs).
+
+---
+
+### Content Bases
+
+In a nutshell, a "ContentBase" is a type of class that's used to represent some kind of Content from RiskOfRain2.
+
+Most of the ContentBases dont do much by themselves, it is the duty of their respective ModuleBase to interact with the ContentBases given to it and implement their functionality ingame. They're abstract by nature, so you must inherit from them to properly create a new piece of content.
+
+Currently, MSU Comes bundled with 13 ContentBases:
+* Artifact: A representation of an Artifact, has methods for unhooking and hooking to events for creating the artifact's behavior
+* Buff: A representation of a buff, utilizes ItemBehaviors for implementing said buff's behavior.
+* CharacterBase: a generic representation of a CharacterBody, you're probably looking for the two below
+* Survivor: A representation of a Survivor, inherits from CharacterBase
+* Monster: A representation of a Monster, inherits from CharacterBase
+* DamageType: A representation of a ModdedDamageType from R2Api's DamageAPI
+* Item: A representation of an Item, utilizes ItemBehaviors for implementing said item's behavior.
+* Equipment: A representation of an Equipment, has methods for handling the equipment's activation, can have an ItemBehavior for implementing custom behaviors.
+* EliteEquipment: A representation of an EliteEquipment, moreso an Elite itself.
+* Interactable: A representation of an Interactable
+* Projectile: A representation of a projectile
+* Scene: A representation of a Scene
+* Unlockable: A representation of an Unlockable and Achievement pair.
+
+Content bases by themselves are extensible, so you can inherit from the "ContentBase" class and create your own
+
+---
+
+### Scriptable Objects
+
+MSU uses heavy use of ScriptableObjects for interacting with the game. these scriptable objects help the creation of content, or help by working alongside ror2's more sensible systems.
+
+MSU comes bundled with 12 ScriptableObjects, these can be split into 5 categories.
+
+* General:
+    * MSUnlockableDef: Used by the unlockable module, the MSUnlockableDef not only works as a regular UnlockableDef, but it can also be used to implement an Unlockable's AchievementDef.
+    * SerializableDifficultyDef: A Serialized version of a DifficultyDef, Implementation of the difficulty itself is done thru R2API's DifficultyAPI
+    * VanillaSkinDef: Can be used to create a skin for a vanilla character, avoids the needless implementation of doing a hook on the skindef's Awake method.
+    * MSMonsterFamily: Allows for the creation of a custom monster family, it is implemented inside the CharacterModule and uses DirectorAPI to add them.
+
+* DirectorCards:
+    * MSInteractableDirectorCard: Used alongside the Interactable module, the InteractableDirectorCard works as an extension of the InteractableSpawnCard, and has special fields that allow for implementation of the interactable on stages thru R2API's DirectorAPI.
+    * MSMonsterDirectorCard: Used alongside the Character moudle, the MonsterDirectorCard works as an extension of the CharacterSpawnCard, and has special fields that allow for implementation of the monster on stages thru R2API's DirectorAPI
+
+* Elites:
+    - MSEliteDef: an extended version of an EliteDef, the MSEliteDef has the ability to automatically set the Elite's ramp, on which vanilla tier it spawns, what overlays to use, Effects, and more.
+    - SerializedEliteTierDef: (Coming Soon)
+
+* Events:
+    * EventdirectorCard: A DirectorCard for MSU's EventDirector, holds information such as the Identifier, likelyhood of spawning, flags, required unlockables and more
+    * EventSceneDeck: A Holder for EventDirectorCards, allows the end user to add new events to specific scenes.
+    * (More information about events coming soon)
+
+* IDRS:
+    * KeyAssetDisplayPairHolder: Used for handling the addition of key assets and display prefabs to the IDRS module
+    * MSIDRS: A string based, serializable IDRS that's used in the editor. Replaces key assets and follower prefabs for strings that are used in the module's dictionaries.
+    * MSSingleItemDisplayRule: a variation of the MSIDRS, the MSSIDRS works by handling a single key asset and a single display prefab, and can add it to as many item display rule sets as wanted.
+
+---
+
+### Utilities, Interfaces, Attributes and More
+
+MSU would not be a complete library without miscealeous tidbits that help boost the creation of mods, these range from the minimal, but useful, to the incredibly helpful.
+
+* MSDebug: MSU has a configuration option that enables debug features, these features are minimal but can help speedup the debugging of mods. it allows you to connect with a second instance of ror2, automatically deploys the no_enemies command from debug toolkit, adds components for helping with IDRS, and allows you to spawn the MaterialTester
+
+* MaterialTester: MSU comes bundled with KomradeSpectre's Runtime Material Controller. which allows you to insert a variety of materials that use Hopoo Shaders, and modify them in real time.
+
+* Interfaces: MSU uses a large amount of Interfaces for creating the ItemBehaviors for handling buffs, items, and more. These interfaces allow the mod creator to implement new ways of interacting with RoR2's Systems
+    * IBodyStatArgModifier - Interface that allows the implementation of R2api's RecalculateStatsAPI.
+    * IStatItemBehavior - A more primitive version of IBodyStatArgModifier, it basically allows you to run code that happens before and after the orig(self) of RecalculateStats
+    * IOnIncomingDamageOtherServerReceiver - An interface used to modify the incoming damage of a soon to be victim in the damage report.
+    * Comes with a fix for IOnKilledOtherServerReceiver, it'll no longer run code twice in a row
+
+* Attributes: MSU comes with attributes that can handle mild issues, and extremely annoying issues that come with creating mods.
+    * DisabledContent: Does nothing by itself, put it on top of a content base inheriting class and MSU will ignore it.
+    * TokenModifier: allows for the run-time modification of LanguageTokens by using String.Format(), allowing for changes in configuration to be displayed correctly in the Token itself. Requires the language to be loaded using ror2's systems, using R2API's language API will not work.
+    * ConfigurableField: allows for the run-time creation of a Config entry of your mod. Easily make an aspect of an item configurable by placing this on a field.
+
+---
+
+### Loaders
+
+ Due to the innate need of MSU to work with RoR2's systems, MSU also comes with so called "Loader" classes.
+
+Loader classes allow the end user to easily load things like Assetbundles, Language files, and handle the Asynchronous loading of the mod using ContentPacks.
+
+- AssetsLoader: Class for handling loading assetbundles, contains method for automatically swapping the stubbed shaders from MoonstormSharedUtils and creation of EffectDefs.
+- ContentLoader: Class for handling loading your mod's content, it's main appeal is the ability to load and set up content asynchronously, instead of doing everything in Awake. Contains arrays of Actions for both Loading content and Setting static fields on static types, much like RoR2Content does.
+- LanguageLoader: Class for handling loading Language folders, automatically handles loading the Language files into the game's systems for use with the TokenModifier attribute.
 
 ## Documentation & Sourcecode
 
 * The Documentation and Sourcecode can be found in MoonstormSharedUtil's Github Repository, which can be found [here](https://github.com/TeamMoonstorm/MoonstormSharedUtils)
-
-Some things to note...
-
-> The Repository might have some disparaties between the current release of MSU and the repo itself, this is because it's not the real repository where the development happens
-
-> we'll try to keep this repository up to date at any cost.
-
-- MoonstormSharedUtils now has a [Wiki](https://github.com/TeamMoonstorm/MoonstormSharedUtils/wiki), filled with introductions and explanations on how the systems work.
-
-- For now, you can find an example on how to use the mod in Lost In Transit's Github repository, which can be found [here](https://github.com/swuff-star/LostInTransit/tree/master/LIT/Assets/LostInTransit)
 
 ## Changelog
 
@@ -122,18 +129,17 @@ Some things to note...
 
 ### '0.8.0'
 
-Additions:
+* Additions:
     * Added a method on MSUtil for playing a networked sound event def
     * The HGCloudRemap controller now has the option to modify the Src and Dst blend enums.
     * Revamped the CharacterModuleBase class
         * Now allows for proper implementation of Monsters, including having them spawn on stages
         * Added the MonsterDirectorCard scriptable object
-Fixes:
+* Fixes:
     * Added missing Submodule dependency for UnlockableAPI and DirectorAPI
-
-
-* Revamped the CharacterModuleBase class.
-    * Now allows for proper implementations of 
+* Other:
+    * Moved the entire codebase and project to the github, instead of being inside Starstorm2's Github
+    * Rewrote parts of the ReadMe
 
 
 ### '0.7.0'
@@ -220,37 +226,3 @@ Actual changelog:
         * Can no longer be spawned outside of runs
         * Renderer is no longer null by default
         * Can now be destroyed easily by enabling the "DestroyOnEnable" component.
-
-### '0.4.1'
-
-* Additions:
-    * Added the StageModuleBase & StageBase
-        * Used for handling custom stages
-        * Compatible with ROS
-* Changes:
-    * Marked the MSAspectAbilityDataHolder as Deprecated, will be removed on the next major update.
-    * Now Dependant on [Microsoft CSharp](https://thunderstore.io/package/RiskofThunder/Microsoft_CSharp/)
-    * Changed how Elite Equipments get initialized
-        * This Retroactively fixes an issue where, if the Elite Equipment Base overrides the AddItemBehavior method, but its not fully initialized (like disabling it from a config) it would add the item behavior regardless ((Example on the issue)[https://github.com/swuff-star/LostInTransit/issues/2])
-    * Completely Revamped the Dynamic Description attribute.
-        * Now called the "TokenModifier" attribute.
-        * Used on Fields that are public & static
-        * Requires the following arguments
-            * String: the Token to modify
-            * StatType: Used for modifying the value held in the field
-                * Default: No changes are made
-                * Percentage: The value on the field is multiplied by 100
-                * DivideBy2: The value on the field is divided by 2
-                * If you need a specific stat type, ask it in the starstorm discord and we might add it.
-            * FormatIndex: the index used for formatting.
-        * Should technically work with any mod.
-        * Not usable on mods that load their language via LanguageAPI (Due to languageAPI's string by tokens dictionaries being private.)
-* Bug Fixes: 
-    * Fixed an issue where moonstorm dependant mods would try to access MSUtil on the Moonstorm.Utilities namespace despite being on the Moonstorm namespace 
-
-### '0.4.0'
-
-* Added ConfigurableField attribute
-    * Used for automatically creating config options for fields.
-* Added DynamicDescription attribute
-    * Used for dynamically modifying the description of an item via the use of formatting, and provided fields.
