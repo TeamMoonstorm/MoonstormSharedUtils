@@ -16,10 +16,10 @@ MonoBehaviour:
   ErrorMessage: 
   ErrorStacktrace: 
   StagingPaths: []
-  Author: RoR2EditorKitTeam
+  Author: RiskofThunder
   Name: RoR2EditorKit
   Description: RoR2EditorKit is a toolkit built around developing mods for Risk of Rain 2
-  Version: 0.2.4
+  Version: 1.0.0
   Dependencies: []
 --- !u!114 &11400000
 MonoBehaviour:

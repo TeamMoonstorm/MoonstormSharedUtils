@@ -77,7 +77,7 @@ MonoBehaviour:
   StagingPaths:
   - <ManifestPluginStaging>
   Author: TeamMoonstorm
-  Name: TeamMoonstorm-MoonstormSharedUtils
+  Name: MoonstormSharedUtils
   Description: Utils used by TeamMoonstorm members.
   Version: 0.8.0
   Dependencies:

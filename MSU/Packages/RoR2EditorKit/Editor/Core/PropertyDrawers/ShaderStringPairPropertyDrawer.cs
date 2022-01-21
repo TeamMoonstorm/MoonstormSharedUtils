@@ -14,5 +14,10 @@ namespace RoR2EditorKit.Core.PropertyDrawers
             objRefProperty.objectReferenceValue = EditorGUI.ObjectField(rect, NicifyName(property.FindPropertyRelative("shaderName").stringValue), objRefProperty.objectReferenceValue, typeof(Shader), false);
             End();
         }
+
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+        {
+            return base.GetPropertyHeight(property, label) / 3;
+        }
     }
 }
