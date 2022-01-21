@@ -69,7 +69,7 @@ namespace Moonstorm.Loaders
         public virtual Action[] PopulateFieldsDispatchers { get; protected set; } = Array.Empty<Action>();
 
         /// <summary>
-        /// Calling base.Init() automatically hooks onto ContentManager.collectContentPackProvider
+        /// Calling base.Init() automatically hooks onto ContentManager.collectContentPackProviders
         /// </summary>
         public virtual void Init()
         {

@@ -46,7 +46,7 @@ namespace Moonstorm
         }
 
         #region Find Methods
-        public static T FindCharacterBase<T>(string bodyName) where T : CharacterBase
+        /*public static T FindCharacterBase<T>(string bodyName) where T : CharacterBase
         {
             MoonstormCharacters.TryGetValue(BodyCatalog.FindBodyPrefab(bodyName), out CharacterBase charBase);
             return charBase as T;
@@ -74,7 +74,7 @@ namespace Moonstorm
         public static MonsterBase FindMonsterBase(MSMonsterDirectorCard monsterDirectorCard)
         {
             return MoonstormCharacters.Values.Where(cb => cb.GetType().IsSubclassOf(typeof(MonsterBase))).Cast<MonsterBase>().Where(mb => mb.MonsterDirectorCard = monsterDirectorCard).FirstOrDefault();
-        }
+        }*/
         #endregion
 
         #region Characters
@@ -108,7 +108,7 @@ namespace Moonstorm
             MSULog.Debug($"Character {character} added");
         }
 
-        internal void TryAddingBodyPrefabToContentPack(GameObject bodyPrefab)
+        /*internal void TryAddingBodyPrefabToContentPack(GameObject bodyPrefab)
         {
             if (ContentPack.bodyPrefabs.Contains(bodyPrefab))
                 MSULog.Debug($"Content pack already has {bodyPrefab} in it's  \"BodyPrefabs\" array.");
@@ -121,17 +121,19 @@ namespace Moonstorm
                 MSULog.Debug($"Content pack already has {masterPrefab} in it's \"MasterPrefabs\" array.");
             else
                 HG.ArrayUtils.ArrayAppend(ref ContentPack.masterPrefabs, masterPrefab);
-        }
+        }*/
         #endregion
 
         #region Monster Families
         public void AddMonsterFamily(MSMonsterFamily[] monsterFamilies)
         {
-            MoonstormFamilies.AddRange(monsterFamilies);
+            MSULog.Info($"Monster family systems are disabled on version 0.8.0 due to not being finished. We're sorry for this inconvenience");
+            //MoonstormFamilies.AddRange(monsterFamilies);
         }
         public void AddMonsterFamily(MSMonsterFamily monsterFamily)
         {
-            MoonstormFamilies.Add(monsterFamily);
+            MSULog.Info($"Monster family systems are disabled on version 0.8.0 due to not being finished. We're sorry for this inconvenience");
+            //MoonstormFamilies.Add(monsterFamily);
         }
         #endregion
 

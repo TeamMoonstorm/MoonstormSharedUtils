@@ -15,7 +15,7 @@ namespace Moonstorm
         public abstract MSUnlockableDef UnlockableDef { get; set; }
 
         /// <summary>
-        /// A collection of  that need to be initialized before the unlockable is added to the game.
+        /// A collection of Types that need to be initialized before the unlockable is added to the game.
         /// <para>Use "AddRequiredType" for adding dependencies</para>
         /// </summary>
         public Type[] RequiredTypes { get; private set; } = Array.Empty<Type>();

@@ -324,7 +324,11 @@
             <summary>
             A Content Base Class for inittializing a Monster
             <para>Inherits from CharacterBase</para>
-            <para>Not fully implemented</para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.MonsterBase.MonsterDirectorCard">
+            <summary>
+            Your Monster's Monster Director Card
             </summary>
         </member>
         <member name="T:Moonstorm.ProjectileBase">
@@ -370,7 +374,7 @@
         </member>
         <member name="P:Moonstorm.UnlockableBase.RequiredTypes">
             <summary>
-            A collection of  that need to be initialized before the unlockable is added to the game.
+            A collection of Types that need to be initialized before the unlockable is added to the game.
             <para>Use "AddRequiredType" for adding dependencies</para>
             </summary>
         </member>
@@ -511,6 +515,21 @@
             </summary>
             <typeparam name="T">The instance of your class</typeparam>
         </member>
+        <member name="M:Moonstorm.Loaders.AssetsLoader`1.LoadAsset``1(System.String)">
+            <summary>
+            Loads an asset from the MainAssetbundle, assuming an Instance of AssetLoader exists
+            </summary>
+            <typeparam name="TAsset">The type of asset to load</typeparam>
+            <param name="name">The name of the asset</param>
+            <returns>The asset</returns>
+        </member>
+        <member name="M:Moonstorm.Loaders.AssetsLoader`1.LoadAllAssetsOfType``1">
+            <summary>
+            Loads all assets of type TAsset from the MainAssetBundle, assuming an Instance of AssetLoader exists
+            </summary>
+            <typeparam name="TAsset">The Type of asset to load</typeparam>
+            <returns>An array of TAsset</returns>
+        </member>
         <!-- Badly formed XML comment ignored for member "T:Moonstorm.Loaders.AssetsLoader" -->
         <member name="P:Moonstorm.Loaders.AssetsLoader.MainAssetBundle">
             <summary>
@@ -605,7 +624,7 @@
         </member>
         <member name="M:Moonstorm.Loaders.ContentLoader.Init">
             <summary>
-            Calling base.Init() automatically hooks onto ContentManager.collectContentPackProvider
+            Calling base.Init() automatically hooks onto ContentManager.collectContentPackProviders
             </summary>
         </member>
         <member name="M:Moonstorm.Loaders.ContentLoader.PopulateTypeFields``1(System.Type,RoR2.ContentManagement.NamedAssetCollection{``0})">
@@ -716,11 +735,32 @@
         <member name="T:Moonstorm.CharacterModuleBase">
             <summary>
             A Module Base for managing Characterbodies
+            <para>Automatically adds Monsters to the CombatDirector according to the settings on the Monster's MSMonsterDirectorCard</para>
             </summary>
         </member>
         <member name="F:Moonstorm.CharacterModuleBase.MoonstormCharacters">
             <summary>
-            List of all the Characters loaded by Moonstorm Shared Utils
+            Dictionary of all the CharacterBodies loaded by Moonstorm Shared Utils
+            </summary>
+        </member>
+        <member name="P:Moonstorm.CharacterModuleBase.MoonstormMonsters">
+            <summary>
+            Returns all the Monsters loaded by Moonstorm Shared Utils
+            </summary>
+        </member>
+        <member name="P:Moonstorm.CharacterModuleBase.MoonstormSurvivors">
+            <summary>
+            Returns all the Survivors loaded by Moonstorm Shared Utils
+            </summary>
+        </member>
+        <member name="P:Moonstorm.CharacterModuleBase.LoadedCharacterBodies">
+            <summary>
+            Returns all the CharacterBody prefabs loaded by Moonstorm Shared Utils
+            </summary>
+        </member>
+        <member name="P:Moonstorm.CharacterModuleBase.LoadedCharacterMasters">
+            <summary>
+            Returns all the CharacterMaster prefabs loaded by MoonstormSharedUtils
             </summary>
         </member>
         <member name="M:Moonstorm.CharacterModuleBase.InitializeCharacters">
@@ -730,7 +770,7 @@
             </summary>
             <returns>An IEnumerable of all your Assembly's CharacterBases</returns>
         </member>
-        <member name="M:Moonstorm.CharacterModuleBase.AddCharacter(Moonstorm.CharacterBase,System.Collections.Generic.List{Moonstorm.CharacterBase})">
+        <member name="M:Moonstorm.CharacterModuleBase.AddCharacter(Moonstorm.CharacterBase,System.Collections.Generic.Dictionary{UnityEngine.GameObject,Moonstorm.CharacterBase})">
             <summary>
             Initializes a Character
             </summary>
@@ -1132,11 +1172,13 @@
             <param name="itemCount">The amount of items/stacks that increments our function.</param>
             <returns>A float representing the inverse hyperbolic scaling of the parameters.</returns>
         </member>
-        <member name="F:Moonstorm.MSMonsterDirectorCardHolder.SceneCardPair.sceneNameOverrides">
-            <summary>Type "all" to include this card in all scenes, or "default" to include it in all scenes not mentioned. Can also be used for modded stages</summary>
-        </member>
-        <member name="F:Moonstorm.MSMonsterDirectorCardHolder.SceneCardPair.categoryName">
-            <summary>The name of the category in the scene's director card.</summary>
+        <member name="M:Moonstorm.MSUtil.PlayNetworkedSFX(System.String,UnityEngine.Vector3,System.Boolean)">
+            <summary>
+            Shorthand for playing a networked sound event def
+            </summary>
+            <param name="soundEventName">The name of the sound event</param>
+            <param name="pos">Position at wich to play the sound</param>
+            <param name="transmit"></param>
         </member>
         <member name="T:Moonstorm.KeyAssetDisplayPairHolder.KeyAssetDisplayPair">
             <summary>
