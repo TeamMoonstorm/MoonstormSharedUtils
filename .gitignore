@@ -78,6 +78,6 @@ MSU/Assets/ThunderKitRelated/OtherPipelines/*.meta
 !MSU/Assets/ThunderKitRelated/OtherPipelines/Nebby/*
 
 # Builds
-#MSU/ThunderKit/Builds/*
-#MSU/ThunderKit/AssetBundleStaging/*
-#MSU/ThunderKit/Libraries/*
+MSU/ThunderKit/Builds/*
+MSU/ThunderKit/AssetBundleStaging/*
+MSU/ThunderKit/Libraries/*
