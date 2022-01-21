@@ -17,8 +17,10 @@ MonoBehaviour:
   - {fileID: 114907914323284656}
   - {fileID: 114781230623049850}
   - {fileID: 114461789879806048}
+  - {fileID: 114640315522313794}
+  - {fileID: 114246976108923444}
   identity: {fileID: 114618118668942134}
---- !u!114 &114461789879806048
+--- !u!114 &114246976108923444
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -35,6 +37,26 @@ MonoBehaviour:
   ErrorStacktrace: 
   StagingPaths:
   - <BuildPath>
+  files:
+  - {fileID: 2800000, guid: 7fa104ba2e59cc44fa5c5e5f3db0d6cf, type: 3}
+  - {fileID: 4900000, guid: 5d422c5a669cb9a4ab4ec1d3d8e6e525, type: 3}
+--- !u!114 &114461789879806048
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b243ff405b33b94dbf5b6775dd9aa33, type: 3}
+  m_Name: Files
+  m_EditorClassIdentifier: 
+  Errored: 0
+  ErrorMessage: 
+  ErrorStacktrace: 
+  StagingPaths:
+  - <MSUBuildPathPlugins>
   files:
   - {fileID: 4900000, guid: 519559792b4d1d6469db4410f6ef416a, type: 3}
 --- !u!114 &114618118668942134
@@ -57,8 +79,28 @@ MonoBehaviour:
   Author: TeamMoonstorm
   Name: TeamMoonstorm-MoonstormSharedUtils
   Description: Utils used by TeamMoonstorm members.
-  Version: 0.7.0
-  Dependencies: []
+  Version: 0.8.0
+  Dependencies:
+  - {fileID: 11400000, guid: 7fb5b3d290bed6011ed7e8daf230df89, type: 2}
+  - {fileID: 11400000, guid: 9bbff6449e1a5460d6b9712c3ecebc9c, type: 2}
+--- !u!114 &114640315522313794
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0a82fec78ebc734d9ad1346cd40b5f9, type: 3}
+  m_Name: ThunderstoreData
+  m_EditorClassIdentifier: 
+  Errored: 0
+  ErrorMessage: 
+  ErrorStacktrace: 
+  StagingPaths:
+  - <BuildPath>
+  url: https://github.com/TeamMoonstorm/MoonstormSharedUtils
 --- !u!114 &114781230623049850
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -75,7 +117,7 @@ MonoBehaviour:
   ErrorMessage: 
   ErrorStacktrace: 
   StagingPaths:
-  - <BuildPathAssets>
+  - <MSUBuildPathAssets>
   assetBundles:
   - assetBundleName: msuassets
     assets:
@@ -96,6 +138,6 @@ MonoBehaviour:
   ErrorMessage: 
   ErrorStacktrace: 
   StagingPaths:
-  - <BuildPath>
+  - <MSUBuildPathPlugins>
   definitions:
   - {fileID: 5897886265953266890, guid: 027c693fefcac6548859a0eec81eed3d, type: 3}

@@ -1,0 +1,57 @@
+ManifestFileVersion: 0
+CRC: 1875071304
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: ab4586f9b612af9eb75c64dd913754a4
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 30b1f74269ab394b940c0b6c964171ae
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+- Class: 114
+  Script: {fileID: -830614127, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: 1297580292, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: 733712478, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: 1918207524, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: -281164913, guid: 06dd3d5416bf43ea368cc39ff96e6d5a, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: ac7b3e366420599418ecc7cf3d32fed0, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 52a44ac676c8ff547be985bc3a8ae891, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 0361a1980df246f4b9c782ef4f442b98, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: e98f718981210a343a10825d2d88abfb, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: b3ad08bf3e7b6da4591a89d01c422e04, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+Assets:
+- Assets/MoonstormSharedUtils/MSUAssets/curveLinear.asset
+- Assets/MoonstormSharedUtils/MSUAssets/ContentPack.asset
+- Assets/MoonstormSharedUtils/MSUAssets/Prefabs/MaterialTester.prefab
+- Assets/MoonstormSharedUtils/MSUAssets/MeshesForMaterialTester/meshPlane.mesh
+- Assets/MoonstormSharedUtils/MSUAssets/MeshesForMaterialTester/meshQuad.asset
+- Assets/MoonstormSharedUtils/MSUAssets/Prefabs/MSUEventDirector.prefab
+Dependencies: []

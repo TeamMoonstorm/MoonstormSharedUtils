@@ -291,6 +291,9 @@ PlayerSettings:
   - m_BuildTarget: WebGLSupport
     m_APIs: 0b000000
     m_Automatic: 1
+  - m_BuildTarget: WindowsStandaloneSupport
+    m_APIs: 1200000002000000
+    m_Automatic: 0
   m_BuildTargetVRSettings:
   - m_BuildTarget: Standalone
     m_Enabled: 0
@@ -532,15 +535,15 @@ PlayerSettings:
   webGLLinkerTarget: 1
   webGLThreadsSupport: 0
   scriptingDefineSymbols:
-    1: thunderkit;riskofrain2;ror2editorkitteam-ror2editorkit;bbepis-bepinexpack;riskofthunder-hookgenpatcher;tristanmcpherson-r2api;iharbhd-debugtoolkit;UNITY_POST_PROCESSING_STACK_V2
-    7: thunderkit;riskofrain2;ror2editorkitteam-ror2editorkit;bbepis-bepinexpack;riskofthunder-hookgenpatcher;tristanmcpherson-r2api;iharbhd-debugtoolkit;UNITY_POST_PROCESSING_STACK_V2
-    13: thunderkit;riskofrain2;ror2editorkitteam-ror2editorkit;bbepis-bepinexpack;riskofthunder-hookgenpatcher;tristanmcpherson-r2api;iharbhd-debugtoolkit;UNITY_POST_PROCESSING_STACK_V2
-    19: thunderkit;riskofrain2;ror2editorkitteam-ror2editorkit;bbepis-bepinexpack;riskofthunder-hookgenpatcher;tristanmcpherson-r2api;iharbhd-debugtoolkit;UNITY_POST_PROCESSING_STACK_V2
-    21: thunderkit;riskofrain2;ror2editorkitteam-ror2editorkit;bbepis-bepinexpack;riskofthunder-hookgenpatcher;tristanmcpherson-r2api;iharbhd-debugtoolkit;UNITY_POST_PROCESSING_STACK_V2
-    25: thunderkit;riskofrain2;ror2editorkitteam-ror2editorkit;bbepis-bepinexpack;riskofthunder-hookgenpatcher;tristanmcpherson-r2api;iharbhd-debugtoolkit;UNITY_POST_PROCESSING_STACK_V2
-    26: thunderkit;riskofrain2;ror2editorkitteam-ror2editorkit;bbepis-bepinexpack;riskofthunder-hookgenpatcher;tristanmcpherson-r2api;iharbhd-debugtoolkit;UNITY_POST_PROCESSING_STACK_V2
-    27: thunderkit;riskofrain2;ror2editorkitteam-ror2editorkit;bbepis-bepinexpack;riskofthunder-hookgenpatcher;tristanmcpherson-r2api;iharbhd-debugtoolkit;UNITY_POST_PROCESSING_STACK_V2
-    28: thunderkit;riskofrain2;ror2editorkitteam-ror2editorkit;bbepis-bepinexpack;riskofthunder-hookgenpatcher;tristanmcpherson-r2api;iharbhd-debugtoolkit;UNITY_POST_PROCESSING_STACK_V2
+    1: thunderkit;riskofrain2;ror2editorkitteam-ror2editorkit;bbepis-bepinexpack;riskofthunder-hookgenpatcher;tristanmcpherson-r2api;iharbhd-debugtoolkit;UNITY_POST_PROCESSING_STACK_V2;riskofthunder-fixplugintypesserialization
+    7: thunderkit;riskofrain2;ror2editorkitteam-ror2editorkit;bbepis-bepinexpack;riskofthunder-hookgenpatcher;tristanmcpherson-r2api;iharbhd-debugtoolkit;UNITY_POST_PROCESSING_STACK_V2;riskofthunder-fixplugintypesserialization
+    13: thunderkit;riskofrain2;ror2editorkitteam-ror2editorkit;bbepis-bepinexpack;riskofthunder-hookgenpatcher;tristanmcpherson-r2api;iharbhd-debugtoolkit;UNITY_POST_PROCESSING_STACK_V2;riskofthunder-fixplugintypesserialization
+    19: thunderkit;riskofrain2;ror2editorkitteam-ror2editorkit;bbepis-bepinexpack;riskofthunder-hookgenpatcher;tristanmcpherson-r2api;iharbhd-debugtoolkit;UNITY_POST_PROCESSING_STACK_V2;riskofthunder-fixplugintypesserialization
+    21: thunderkit;riskofrain2;ror2editorkitteam-ror2editorkit;bbepis-bepinexpack;riskofthunder-hookgenpatcher;tristanmcpherson-r2api;iharbhd-debugtoolkit;UNITY_POST_PROCESSING_STACK_V2;riskofthunder-fixplugintypesserialization
+    25: thunderkit;riskofrain2;ror2editorkitteam-ror2editorkit;bbepis-bepinexpack;riskofthunder-hookgenpatcher;tristanmcpherson-r2api;iharbhd-debugtoolkit;UNITY_POST_PROCESSING_STACK_V2;riskofthunder-fixplugintypesserialization
+    26: thunderkit;riskofrain2;ror2editorkitteam-ror2editorkit;bbepis-bepinexpack;riskofthunder-hookgenpatcher;tristanmcpherson-r2api;iharbhd-debugtoolkit;UNITY_POST_PROCESSING_STACK_V2;riskofthunder-fixplugintypesserialization
+    27: thunderkit;riskofrain2;ror2editorkitteam-ror2editorkit;bbepis-bepinexpack;riskofthunder-hookgenpatcher;tristanmcpherson-r2api;iharbhd-debugtoolkit;UNITY_POST_PROCESSING_STACK_V2;riskofthunder-fixplugintypesserialization
+    28: thunderkit;riskofrain2;ror2editorkitteam-ror2editorkit;bbepis-bepinexpack;riskofthunder-hookgenpatcher;tristanmcpherson-r2api;iharbhd-debugtoolkit;UNITY_POST_PROCESSING_STACK_V2;riskofthunder-fixplugintypesserialization
   platformArchitecture: {}
   scriptingBackend: {}
   il2cppCompilerConfiguration: {}

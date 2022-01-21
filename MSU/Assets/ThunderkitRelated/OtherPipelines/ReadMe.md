@@ -1,0 +1,1 @@
+# In case you have access to this repository, and can push commits at will without doing pull requests, please put your pipelines in this folder.
