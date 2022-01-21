@@ -4,14 +4,27 @@ Moonstorm shared editor utils (Abreviated as MSEU) is a package of classes speci
 
 ## Features:
 
-* Comes prepackaged with stubbed shaders.
+---
+
+### Material Related
+
+MSEU comes prepackaged with Stubbed shaders for the HG shaders, Decalicious and CalmWater. These shaders are used during the Shader swap method on MSU's AssetLoader
+
+Alongside this, MSEU also comes bundled with Material Utilities
 
 * Custom Editor utilities for managing material's shaders. Including KingEnderBrine's Shader Asset Picker.
 
 ![](https://i.gyazo.com/fbcc764992e87e2f9cf08f68ecc86f69.png)
 
 * Pick Shader Asset: Allows you to properly select the real hopoo shader.
-* Upgrade to real shader: In case the custom pipeline fails to swap the stubbed shaders to real shaders, you can click this button and it'll swap automatically to the real shaders.
+* Upgrade to real shader: In case the custom PipelineJob fails to swap the stubbed shaders to real shaders, you can click this button and it'll swap automatically to the real shaders.
+* (PipelineJobs can be found below)
+
+---
+
+### PipelineJobs
+
+MSEU also comes with PipelineJobs, these new jobs can be used for speeding up or simplifying workload.
 
 * A custom pipeline based off "StageAssetBundles". which will:
     * Swap all the materials that are using the real hopoo shaders to their stubbed versions.
@@ -21,16 +34,30 @@ Moonstorm shared editor utils (Abreviated as MSEU) is a package of classes speci
 
 ![](https://i.gyazo.com/27fd721d3a2a0595a8f32c284a550015.png)
 
+* A Pipeline called "Deploy To folders", which can be used as an Enumerable version of the "Copy" job, useful if you need to copy your mod to multiple places (Projects, or mod manager profiles)
+
+![](https://i.gyazo.com/75cc19c0b6730991de871a76d388e4fc.png)
+
 # Editor Windows & Inspectors
 
-* Editor Scripts for custom Editor Windows & Inspectors for the following MSU Types:
+MSU comes bundled with custom editor, these editors can be split into two categories, Inspectors, and Editor Windows.
+
+* Editor Windows:
     * Key Asset Display Pair Holder
     * MSIDRS
-    * SingleItemDisplayRuleSet
+    * MSSingleItemDisplayRuleSet
     * Vanilla Skin Def
-* Just like all other inspectors and windows in RoR2EditorKit, they can be enabled and disabled.
+
+* Inspectors
+    * MSInteractableDirectorCard
+    * MSMonsterDirectorCard
+    * MSMonsterFamily
+    * MSUnlockableDef
+
+Just like all other inspectors and windows in RoR2EditorKit, they can be enabled and disabled.
 
 ![](https://i.gyazo.com/c013972c8d8c4dcea6d6532cf7de067f.png)
+![](https://i.gyazo.com/6a470498d5a5b41f3a51ba1f4aab52a8.png)
 
 # Asset Creation Windows
 
@@ -85,6 +112,9 @@ Moonstorm shared editor utils (Abreviated as MSEU) is a package of classes speci
 * Updated to use MSU 0.7.0
 * Probably changed some interal things that i cant remember
 * Moved the project from Starstorm2's github to its own github.
+* Added the following inspectors:
+    * MSMonsterDirectorCard
+    * MSMonsterFamily
 
 # '1.2.0'
 
