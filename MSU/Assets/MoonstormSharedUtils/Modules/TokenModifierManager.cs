@@ -19,7 +19,7 @@ namespace Moonstorm
         private static void Init()
         {
             initialized = true;
-            MSULog.LogI($"Initializing TokenModifierManager");
+            MSULog.Info($"Initializing TokenModifierManager");
             //This needs to be a hook, otherwise when the language changes it wont update with teh correct values.
             On.RoR2.Language.LoadStrings += (orig, self) =>
             {
@@ -39,7 +39,7 @@ namespace Moonstorm
             Assembly assembly = Assembly.GetCallingAssembly();
             if (!initialized)
             {
-                MSULog.LogI($"Adding mod {assembly.GetName().Name} to the token modifier manager");
+                MSULog.Info($"Adding mod {assembly.GetName().Name} to the token modifier manager");
                 List<(FieldInfo, TokenModifier[])> allFieldsWithAttributes = new List<(FieldInfo, TokenModifier[])>();
                 foreach (Type type in assembly.GetTypes().Where(type => type.GetCustomAttribute<DisabledContent>() == null))
                 {
@@ -61,19 +61,19 @@ namespace Moonstorm
                                 }
                                 catch (Exception e)
                                 {
-                                    MSULog.LogE($"An Exception has Ocurred: {e}");
+                                    MSULog.Error($"An Exception has Ocurred: {e}");
                                 }
                             });
                     }
                     catch (Exception e)
                     {
-                        MSULog.LogE($"An Exception has Ocurred: {e}");
+                        MSULog.Error($"An Exception has Ocurred: {e}");
                     }
                 }
 
                 if (allFieldsWithAttributes.Count > 0)
                 {
-                    MSULog.LogD($"Found a total of {allFieldsWithAttributes.Count} fields with the {nameof(TokenModifier)} attribute within {assembly.GetName().Name}.");
+                    MSULog.Debug($"Found a total of {allFieldsWithAttributes.Count} fields with the {nameof(TokenModifier)} attribute within {assembly.GetName().Name}.");
                     foreach (var (field, attributes) in allFieldsWithAttributes)
                     {
                         foreach (TokenModifier attribute in attributes)
@@ -98,12 +98,12 @@ namespace Moonstorm
                 }
                 else
                 {
-                    MSULog.LogW($"Found no fields with the {nameof(TokenModifier)} attribute within {assembly.GetName().Name}");
+                    MSULog.Warning($"Found no fields with the {nameof(TokenModifier)} attribute within {assembly.GetName().Name}");
                 }
             }
             else
             {
-                MSULog.LogW($"Cannot add {assembly.GetName().Name} to the Dictionary as the token modifier manager has already been initialized.");
+                MSULog.Warning($"Cannot add {assembly.GetName().Name} to the Dictionary as the token modifier manager has already been initialized.");
             }
         }
 
@@ -114,12 +114,12 @@ namespace Moonstorm
                 lang = Language.currentLanguage;
             }
 
-            MSULog.LogI($"Checking if there's need for modifying tokens in language {lang.name}");
+            MSULog.Info($"Checking if there's need for modifying tokens in language {lang.name}");
             if (stringToModifiers.Count > 0)
             {
                 try
                 {
-                    MSULog.LogI($"Modifying a total of {stringToModifiers.Keys.Count} tokens.");
+                    MSULog.Info($"Modifying a total of {stringToModifiers.Keys.Count} tokens.");
                     foreach (var kvp in stringToModifiers)
                     {
                         var key = kvp.Key;
@@ -127,24 +127,24 @@ namespace Moonstorm
 
                         if (lang.stringsByToken.ContainsKey(key))
                         {
-                            MSULog.LogD($"Modifying {key}");
+                            MSULog.Debug($"Modifying {key}");
                             ModifyToken(lang, key, value);
                         }
                         else
                         {
-                            MSULog.LogW($"Token {key} could not be found in the stringsByToken dictionary in {lang.name}! Either the mod that implements the token doesnt support the language {lang.name} or theyre adding their tokens via R2Api's LanguageAPI");
+                            MSULog.Warning($"Token {key} could not be found in the stringsByToken dictionary in {lang.name}! Either the mod that implements the token doesnt support the language {lang.name} or theyre adding their tokens via R2Api's LanguageAPI");
                             continue;
                         }
                     }
                 }
                 catch (Exception e)
                 {
-                    MSULog.LogE($"An Exception has Ocurred {e}");
+                    MSULog.Error($"An Exception has Ocurred {e}");
                 }
             }
             else
             {
-                MSULog.LogI($"Dictionary Empty, no tokens are modified.");
+                MSULog.Info($"Dictionary Empty, no tokens are modified.");
             }
         }
 
@@ -165,7 +165,7 @@ namespace Moonstorm
             }
             catch (Exception e)
             {
-                MSULog.LogE($"An Exception has Ocurred {e}");
+                MSULog.Error($"An Exception has Ocurred {e}");
             }
         }
 

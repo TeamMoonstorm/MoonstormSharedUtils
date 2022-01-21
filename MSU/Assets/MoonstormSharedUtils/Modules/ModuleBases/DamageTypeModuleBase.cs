@@ -23,7 +23,7 @@ namespace Moonstorm
         [SystemInitializer]
         private static void HookInit()
         {
-            MSULog.LogI("Subscribing to delegates related to damage types.");
+            MSULog.Info("Subscribing to delegates related to damage types.");
         }
 
 
@@ -51,7 +51,7 @@ namespace Moonstorm
             MoonstormDamageTypes.Add(dType, damageType);
             if (damageTypeDictionary != null)
                 damageTypeDictionary.Add(dType, damageType);
-            MSULog.LogD($"Damage type {damageType} added");
+            MSULog.Debug($"Damage type {damageType} added");
         }
         #endregion
     }

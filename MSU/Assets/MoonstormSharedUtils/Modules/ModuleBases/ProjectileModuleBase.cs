@@ -24,7 +24,7 @@ namespace Moonstorm
         [SystemInitializer(typeof(ProjectileCatalog))]
         private static void HookInit()
         {
-            MSULog.LogI("Subscribing to delegates related to projectiles.");
+            MSULog.Info("Subscribing to delegates related to projectiles.");
         }
 
 
@@ -36,7 +36,7 @@ namespace Moonstorm
         /// <returns>An IEnumerable of all your Assembly's ProjectileBases.</returns>
         public virtual IEnumerable<ProjectileBase> InitializeProjectiles()
         {
-            MSULog.LogD($"Getting the Projectiles found inside {GetType().Assembly}...");
+            MSULog.Debug($"Getting the Projectiles found inside {GetType().Assembly}...");
             return GetContentClasses<ProjectileBase>();
         }
 
@@ -58,7 +58,7 @@ namespace Moonstorm
             if (projectile.ProjectilePrefab.GetComponent<CharacterBody>())
                 HG.ArrayUtils.ArrayAppend(ref contentPack.bodyPrefabs, projectile.ProjectilePrefab);
 
-            MSULog.LogD($"Projectile {projectile.ProjectilePrefab} added to {ContentPack.name}");
+            MSULog.Debug($"Projectile {projectile.ProjectilePrefab} added to {ContentPack.name}");
         }
         #endregion
     }

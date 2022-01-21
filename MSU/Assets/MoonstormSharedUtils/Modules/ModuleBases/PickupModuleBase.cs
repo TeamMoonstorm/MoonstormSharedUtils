@@ -64,7 +64,7 @@ namespace Moonstorm
         [SystemInitializer(typeof(PickupCatalog))]
         private static void HookInit()
         {
-            MSULog.LogI("Subscribing to delegates related to Items and Equipments.");
+            MSULog.Info("Subscribing to delegates related to Items and Equipments.");
 
             On.RoR2.CharacterBody.RecalculateStats += OnRecalculateStats;
             On.RoR2.EquipmentSlot.PerformEquipmentAction += FireMoonstormEqp;
@@ -83,7 +83,7 @@ namespace Moonstorm
         /// <returns>An IEnumerable of all your Assembly's ItemBases</returns>
         public virtual IEnumerable<ItemBase> InitializeItems()
         {
-            MSULog.LogD($"Getting the Items found inside {GetType().Assembly}...");
+            MSULog.Debug($"Getting the Items found inside {GetType().Assembly}...");
             return GetContentClasses<ItemBase>();
         }
 
@@ -100,7 +100,7 @@ namespace Moonstorm
             MoonstormItems.Add(item.ItemDef, item);
             if (itemDictionary != null)
                 itemDictionary.Add(item.ItemDef, item);
-            MSULog.LogD($"Item {item.ItemDef} added to {contentPack.name}");
+            MSULog.Debug($"Item {item.ItemDef} added to {contentPack.name}");
         }
         #endregion
 
@@ -114,7 +114,7 @@ namespace Moonstorm
         /// <returns>An IEnumerable of all your Assembly's EquipmentBases</returns>
         public virtual IEnumerable<EquipmentBase> InitializeEquipments()
         {
-            MSULog.LogD($"Getting the Equipments found inside {GetType().Assembly}...");
+            MSULog.Debug($"Getting the Equipments found inside {GetType().Assembly}...");
             return GetContentClasses<EquipmentBase>(typeof(EliteEquipmentBase));
         }
 
@@ -131,7 +131,7 @@ namespace Moonstorm
             MoonstormNonEliteEquipments.Add(equip.EquipmentDef, equip);
             if (equipDictionary != null)
                 equipDictionary.Add(equip.EquipmentDef, equip);
-            MSULog.LogD($"Equipment {equip.EquipmentDef} added to {contentPack.name}");
+            MSULog.Debug($"Equipment {equip.EquipmentDef} added to {contentPack.name}");
         }
         #endregion
 
@@ -143,7 +143,7 @@ namespace Moonstorm
         /// <returns>An IEnumerable of all your Assembly's EliteEquipmentBases</returns>
         public virtual IEnumerable<EliteEquipmentBase> InitializeEliteEquipments()
         {
-            MSULog.LogD($"Getting the Elite Equipments found inside {GetType().Assembly}...");
+            MSULog.Debug($"Getting the Elite Equipments found inside {GetType().Assembly}...");
             return GetContentClasses<EliteEquipmentBase>();
         }
 
@@ -156,7 +156,7 @@ namespace Moonstorm
         public void AddEliteEquipment(EliteEquipmentBase eliteEquip)
         {
             nonInitializedEliteEquipments.Add(eliteEquip.EquipmentDef, eliteEquip);
-            MSULog.LogD($"Added {typeof(EliteEquipmentBase).Name} to the Non Initialized Elite Equipments Dictionary.");
+            MSULog.Debug($"Added {typeof(EliteEquipmentBase).Name} to the Non Initialized Elite Equipments Dictionary.");
         }
         #endregion
 

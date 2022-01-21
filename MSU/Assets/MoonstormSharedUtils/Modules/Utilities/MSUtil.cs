@@ -46,7 +46,7 @@ namespace Moonstorm
             var soundID = NetworkSoundEventCatalog.FindNetworkSoundEventIndex(soundEventName);
             if (soundID == NetworkSoundEventIndex.Invalid)
             {
-                MSULog.LogW($"Could not find sound event with name of {soundEventName}");
+                MSULog.Warning($"Could not find sound event with name of {soundEventName}");
                 return;
             }
             EffectManager.SimpleSoundEffect(soundID, pos, transmit);

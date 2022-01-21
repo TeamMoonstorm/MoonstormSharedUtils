@@ -24,7 +24,7 @@ namespace Moonstorm
             }
             else
             {
-                MSULog.LogI($"No events are in the event catalog, aborting spawning the event director.");
+                MSULog.Info($"No events are in the event catalog, aborting spawning the event director.");
             }
         }
 

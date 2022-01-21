@@ -23,7 +23,7 @@ namespace Moonstorm
         [SystemInitializer(typeof(EliteCatalog))]
         public static void HookInit()
         {
-            MSULog.LogI("Subscribing to delegates related to Elites.");
+            MSULog.Info("Subscribing to delegates related to Elites.");
             IL.RoR2.CharacterModel.UpdateMaterials += AddEliteMaterial;
             RoR2Application.onLoad += AddElites;
         }
@@ -36,7 +36,7 @@ namespace Moonstorm
         /// <returns>An IEnumerable of all your Assembly's EliteEquipmentBases</returns>
         public virtual IEnumerable<EliteEquipmentBase> GetNonInitializedEliteEquipments()
         {
-            MSULog.LogD($"Getting the Elites found inside {AssetBundle}...");
+            MSULog.Debug($"Getting the Elites found inside {AssetBundle}...");
 
             var toReturn = new List<EliteEquipmentBase>();
             var eliteDefs = AssetBundle.LoadAllAssets<MSEliteDef>();
@@ -66,7 +66,7 @@ namespace Moonstorm
             equip.Initialize();
             if (equipDictionary != null)
                 equipDictionary.Add(equip.EquipmentDef, equip);
-            MSULog.LogD($"Equipment {equip.EquipmentDef} added to {contentPack.name}");
+            MSULog.Debug($"Equipment {equip.EquipmentDef} added to {contentPack.name}");
 
             //Adding ElitteDef to contentpack
             equip.EliteDef.shaderEliteRampIndex = 0;
@@ -74,7 +74,7 @@ namespace Moonstorm
             MoonstormElites.Add(equip.EliteDef);
             if (equip.EliteDef.overlay)
                 BuffModuleBase.MoonstormOverlayMaterials.Add(equip.EquipmentDef.passiveBuffDef, equip.EliteDef.overlay);
-            MSULog.LogD($"Elite {equip.EliteDef} added to {contentPack.name}");
+            MSULog.Debug($"Elite {equip.EliteDef} added to {contentPack.name}");
 
             //Adding elite equipment to dictionary.
             PickupModuleBase.MoonstormEliteEquipments.Add(equip.EquipmentDef, equip);
@@ -84,7 +84,7 @@ namespace Moonstorm
         #region Hooks
         private static void AddElites()
         {
-            MSULog.LogI($"Adding Elites found in Moonstorm Elites.");
+            MSULog.Info($"Adding Elites found in Moonstorm Elites.");
             foreach (var eliteDef in MoonstormElites)
             {
                 switch (eliteDef.eliteTier)
@@ -92,11 +92,11 @@ namespace Moonstorm
                     case EliteTiers.Basic:
                         HG.ArrayUtils.ArrayAppend(ref CombatDirector.eliteTiers[1].eliteTypes, eliteDef);
                         HG.ArrayUtils.ArrayAppend(ref CombatDirector.eliteTiers[2].eliteTypes, eliteDef);
-                        MSULog.LogD($"Added Elite {eliteDef.name} to Combat Director's Tier 1 & 2's Elites.");
+                        MSULog.Debug($"Added Elite {eliteDef.name} to Combat Director's Tier 1 & 2's Elites.");
                         break;
                     case EliteTiers.PostLoop:
                         HG.ArrayUtils.ArrayAppend(ref CombatDirector.eliteTiers[3].eliteTypes, eliteDef);
-                        MSULog.LogD($"Added Elite {eliteDef.name} to Combat Director's Tier 3 Elites.");
+                        MSULog.Debug($"Added Elite {eliteDef.name} to Combat Director's Tier 3 Elites.");
                         break;
                     case EliteTiers.Other:
                         break;

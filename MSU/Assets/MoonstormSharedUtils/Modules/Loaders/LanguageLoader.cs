@@ -30,7 +30,7 @@ namespace Moonstorm.Loaders
             }
             catch (Exception e)
             {
-                MSULog.LogE(e);
+                MSULog.Error(e);
             }
         }
     }

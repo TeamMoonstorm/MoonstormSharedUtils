@@ -54,7 +54,7 @@ namespace Moonstorm.Components
         {
             var sunLight = FindObjectOfType<NGSS_Directional>()?.GetComponent<Light>(); ;
             if (!sunLight)
-                MSULog.LogW("Could not find sun object.");
+                MSULog.Warning("Could not find sun object.");
             return sunLight;
         }
 

@@ -25,7 +25,7 @@ namespace Moonstorm
                 var modelSkinController = Resources.Load<GameObject>($"prefabs/characterbodies/{bodyResourcePathKeyword}Body")?.GetComponent<ModelLocator>()?.modelTransform?.GetComponent<ModelSkinController>();
                 if (!modelSkinController)
                 {
-                    MSULog.LogE($"Error: Root Object not found for SkinDef {name} or model does not have a model skin controller!");
+                    MSULog.Error($"Error: Root Object not found for SkinDef {name} or model does not have a model skin controller!");
                     return;
                 }
                 CharacterModel model = modelSkinController.characterModel;
@@ -68,7 +68,7 @@ namespace Moonstorm
                         shouldActivate = false
                     };
                 }
-                MSULog.LogE($"Error: child {childName} to parent {gameObjectPrefab} to not found. Did you misspell the name?");
+                MSULog.Error($"Error: child {childName} to parent {gameObjectPrefab} to not found. Did you misspell the name?");
                 return new SkinDef.GameObjectActivation { };
             }
             public GameObject gameObjectPrefab;
@@ -90,7 +90,7 @@ namespace Moonstorm
                         projectileGhostReplacementPrefab = projectileGhostReplacementPrefab
                     };
                 }
-                MSULog.LogE($"Error: Projectile Prefab {projectilePrefabPath} not found to replace! Did you misspell something?");
+                MSULog.Error($"Error: Projectile Prefab {projectilePrefabPath} not found to replace! Did you misspell something?");
                 return new SkinDef.ProjectileGhostReplacement { };
             }
 
@@ -112,7 +112,7 @@ namespace Moonstorm
                         minionSkin = minionSkin
                     };
                 }
-                MSULog.LogE($"Error: Minon Body Prefab {minionBodyPrefabResourcePath} not found to replace for skin {minionSkin}! Did you misspell something?");
+                MSULog.Error($"Error: Minon Body Prefab {minionBodyPrefabResourcePath} not found to replace for skin {minionSkin}! Did you misspell something?");
                 return new SkinDef.MinionSkinReplacement { };
             }
 

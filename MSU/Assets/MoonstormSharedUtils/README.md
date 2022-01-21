@@ -123,9 +123,16 @@ Loader classes allow the end user to easily load things like Assetbundles, Langu
 
 * The Documentation and Sourcecode can be found in MoonstormSharedUtil's Github Repository, which can be found [here](https://github.com/TeamMoonstorm/MoonstormSharedUtils)
 
+## Thanks and Credits
+
+* General Help and Advice: Twiner, KingEnderBrine, IDeathHD, Harb.
+* Contributors: KomradeSpectre.
+* Programmers: Nebby, KevinFromHPCustomerService.
+* Everyone from the Risk of Rain 2 community for appreciating my work.
+
 ## Changelog
 
-(Old Changelog can be found [here](https://github.com/TeamMoonstorm/MoonstormSharedUtils/blob/main/MSU/README_OLD.md))
+(Old Changelog can be found [here](https://github.com/TeamMoonstorm/MoonstormSharedUtils/blob/main/MSU/Assets/MoonstormSharedUtils/README-OLD.md))
 
 ### '0.8.0'
 

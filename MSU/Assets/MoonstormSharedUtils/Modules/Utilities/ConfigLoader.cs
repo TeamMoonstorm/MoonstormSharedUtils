@@ -23,9 +23,9 @@ namespace Moonstorm
                                                     false,
                                                     "Setting this to true causes MSU to Log inportant KEY values from RoR2's IDRS system\n" +
                                                     "It'll Log:\n" +
-                                                    "Vanilla IDRS names\n" +
-                                                    "Vanilla Key Assets names (ItemDefs & Equipment Defs)\n" +
-                                                    "Vanilla Display Prefabs");
+                                                    "IDRS names\n" +
+                                                    "Key Assets names (ItemDefs & Equipment Defs)\n" +
+                                                    "Display Prefabs");
 
             InstantiateMaterialTester = config.Bind<KeyCode>("MoonstormSharedUtils :: Keybinds",
                                                              "Instantiate Material Tester",

@@ -26,7 +26,7 @@ namespace Moonstorm.Utilities
                 c.Emit(OpCodes.Brfalse, endIfLabel);
             }
             else
-                MSULog.LogE("Errors: IL Instruction Not found. Skipping.");
+                MSULog.Error("Errors: IL Instruction Not found. Skipping.");
 
             // This changes that line of code from
             // if (attacker)

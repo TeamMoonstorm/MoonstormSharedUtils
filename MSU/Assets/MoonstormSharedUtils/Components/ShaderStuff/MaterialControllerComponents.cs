@@ -9,7 +9,7 @@ namespace Moonstorm.Components
         {
             if (!material)
             {
-                MSULog.LogE($"Material field was null, cannot run shader keyword method.");
+                MSULog.Error($"Material field was null, cannot run shader keyword method.");
                 return;
             }
 

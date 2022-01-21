@@ -31,7 +31,7 @@ namespace Moonstorm
         [SystemInitializer(typeof(BuffCatalog))]
         private static void HookInit()
         {
-            MSULog.LogI("Subscribing to delegates related to buffs.");
+            MSULog.Info("Subscribing to delegates related to buffs.");
             On.RoR2.CharacterBody.SetBuffCount += OnBuffsChanged;
             On.RoR2.CharacterModel.UpdateOverlays += AddBuffOverlay;
         }
@@ -44,7 +44,7 @@ namespace Moonstorm
         /// <returns>An IEnumerable of all your Assembly's ItemBases</returns>
         public virtual IEnumerable<BuffBase> InitializeBuffs()
         {
-            MSULog.LogD($"Getting the Buffs found inside {GetType().Assembly}...");
+            MSULog.Debug($"Getting the Buffs found inside {GetType().Assembly}...");
             return GetContentClasses<BuffBase>();
         }
 
@@ -61,7 +61,7 @@ namespace Moonstorm
             MoonstormBuffs.Add(buff.BuffDef, buff);
             if (buffDictionary != null)
                 buffDictionary.Add(buff.BuffDef, buff);
-            MSULog.LogD($"Buff {buff.BuffDef} added to {contentPack.name}");
+            MSULog.Debug($"Buff {buff.BuffDef} added to {contentPack.name}");
         }
         #endregion
 

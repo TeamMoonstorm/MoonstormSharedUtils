@@ -12,27 +12,27 @@ namespace Moonstorm
             logger = logger_;
         }
 
-        internal static void LogD(object data, [CallerLineNumber] int i = 0, [CallerMemberName] string member = "")
+        internal static void Debug(object data, [CallerLineNumber] int i = 0, [CallerMemberName] string member = "")
         {
             logger.LogDebug(logString(data, i, member));
         }
-        internal static void LogE(object data, [CallerLineNumber] int i = 0, [CallerMemberName] string member = "")
+        internal static void Error(object data, [CallerLineNumber] int i = 0, [CallerMemberName] string member = "")
         {
             logger.LogError(logString(data, i, member));
         }
-        internal static void LogF(object data, [CallerLineNumber] int i = 0, [CallerMemberName] string member = "")
+        internal static void Fatal(object data, [CallerLineNumber] int i = 0, [CallerMemberName] string member = "")
         {
             logger.LogFatal(logString(data, i, member));
         }
-        internal static void LogI(object data)
+        internal static void Info(object data)
         {
             logger.LogInfo(data);
         }
-        internal static void LogM(object data)
+        internal static void Message(object data)
         {
             logger.LogMessage(data);
         }
-        internal static void LogW(object data)
+        internal static void Warning(object data)
         {
             logger.LogWarning(data);
         }

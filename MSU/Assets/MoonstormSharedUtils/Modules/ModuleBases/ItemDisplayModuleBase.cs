@@ -30,7 +30,7 @@ namespace Moonstorm
         [SystemInitializer(typeof(PickupCatalog), typeof(BodyCatalog))]
         private static void HookInit()
         {
-            MSULog.LogI("Subscribing to delegates related to ItemDisplays.");
+            MSULog.Info("Subscribing to delegates related to ItemDisplays.");
 
             PopulateFromBody("Commando");
             PopulateFromBody("Croco");
@@ -66,7 +66,7 @@ namespace Moonstorm
         [Obsolete("Please remove it as it is no longer used")]
         public void PopulateVanillaIDRSFromAssetBundle()
         {
-            MSULog.LogI($"The method of name {nameof(PopulateVanillaIDRSFromAssetBundle)} is deprecated, please remove it as it is no longer used.\nCalled From {Assembly.GetCallingAssembly().GetName().Name}");
+            MSULog.Info($"The method of name {nameof(PopulateVanillaIDRSFromAssetBundle)} is deprecated, please remove it as it is no longer used.\nCalled From {Assembly.GetCallingAssembly().GetName().Name}");
         }
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace Moonstorm
             if (ConfigLoader.EnableLoggingOfIDRS.Value)
                 LogEverything();
 
-            MSULog.LogI("Finishing IDRS");
+            MSULog.Info("Finishing IDRS");
             foreach (MSIDRS idrs in moonstormItemDisplayRuleSets)
             {
                 idrs.FetchIDRS();
@@ -132,7 +132,7 @@ namespace Moonstorm
                         });
                     idrs.vanillaIDRS.GenerateRuntimeValues();
                 }
-                MSULog.LogD($"Finished appending values in {idrs}");
+                MSULog.Debug($"Finished appending values in {idrs}");
             }
             for (int i = 0; i < singleItemDisplayRules.Count; i++)
             {
@@ -143,7 +143,7 @@ namespace Moonstorm
                     currentJ.FetchIDRS();
                     if (!currentJ.vanillaIDRS)
                     {
-                        MSULog.LogD($"Could not find IDRS or name {currentJ.vanillaIDRSKey} in the dictionary, skipping.");
+                        MSULog.Debug($"Could not find IDRS or name {currentJ.vanillaIDRSKey} in the dictionary, skipping.");
                         continue;
                     }
                     for (int k = 0; k < currentJ.itemDisplayRules.Count; k++)
@@ -157,7 +157,7 @@ namespace Moonstorm
                     }
                     currentJ.vanillaIDRS.GenerateRuntimeValues();
                 }
-                MSULog.LogD($"Finished appending values in {currentI}");
+                MSULog.Debug($"Finished appending values in {currentI}");
             }
 
             //Clears the enumerables because they're no longer needed.
@@ -168,7 +168,7 @@ namespace Moonstorm
             singleItemDisplayRules.Clear();
             moonstormItemDisplayRuleSets.Clear();
 
-            MSULog.LogD("Cleared up memory by clearing static enumerables.");
+            MSULog.Debug("Cleared up memory by clearing static enumerables.");
         }
 
         private static void LogEverything()
@@ -203,9 +203,9 @@ namespace Moonstorm
                 amount++;
             }
 
-            MSULog.LogD(string.Join("\n", toLog));
+            MSULog.Debug(string.Join("\n", toLog));
 
-            MSULog.LogI($"Finished logging a total of {amount} related keys for the IDRS system.");
+            MSULog.Info($"Finished logging a total of {amount} related keys for the IDRS system.");
         }
 
         private static void GetAllVanillaIDRS()

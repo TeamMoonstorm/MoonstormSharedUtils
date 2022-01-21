@@ -10,7 +10,7 @@ namespace Moonstorm
         [SystemInitializer]
         private static void Init()
         {
-            MSULog.LogI("Setting up Interfaces");
+            MSULog.Info("Setting up Interfaces");
             IL.RoR2.HealthComponent.TakeDamage += HealthComponent_TakeDamage;
         }
 
@@ -28,7 +28,7 @@ namespace Moonstorm
             c.Emit(OpCodes.Ldarg_1);
             c.EmitDelegate<Action<HealthComponent, DamageInfo>>(RunOnIncomingDamageOther);
 
-            MSULog.LogD($"{nameof(IOnIncomingDamageOtherServerReciever)} succesfully set up.");
+            MSULog.Debug($"{nameof(IOnIncomingDamageOtherServerReciever)} succesfully set up.");
         }
 
         private static void RunOnIncomingDamageOther(HealthComponent healthComponent, DamageInfo damageInfo)

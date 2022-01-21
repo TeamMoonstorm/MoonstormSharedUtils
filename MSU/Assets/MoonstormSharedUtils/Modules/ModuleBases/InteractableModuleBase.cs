@@ -35,7 +35,7 @@ namespace Moonstorm
         [SystemInitializer]
         private static void HookInit()
         {
-            MSULog.LogI($"Subscribing to delegates related to Interactables");
+            MSULog.Info($"Subscribing to delegates related to Interactables");
             DirectorAPI.InteractableActions += AddCustomInteractables;
         }
 
@@ -48,7 +48,7 @@ namespace Moonstorm
         /// <returns>An IEnumerable of all your assembly's InteractableBases</returns>
         public virtual IEnumerable<InteractableBase> InitializeInteractables()
         {
-            MSULog.LogD($"Getting the Interactables found inside {GetType().Assembly}...");
+            MSULog.Debug($"Getting the Interactables found inside {GetType().Assembly}...");
             return GetContentClasses<InteractableBase>();
         }
 
@@ -66,7 +66,7 @@ namespace Moonstorm
             if (interactableDictionary != null)
                 interactableDictionary.Add(interactableBase.Interactable, interactableBase);
 
-            MSULog.LogD($"Interactable {interactableBase} Added");
+            MSULog.Debug($"Interactable {interactableBase} Added");
         }
         #endregion
 
@@ -88,7 +88,7 @@ namespace Moonstorm
                         {
                             num++;
                             cardList.Add(card.DirectorCardHolder);
-                            MSULog.LogD($"Added {card} Interactable");
+                            MSULog.Debug($"Added {card} Interactable");
                             continue;
                         }
                     }
@@ -96,13 +96,13 @@ namespace Moonstorm
                     {
                         num++;
                         cardList.Add(card.DirectorCardHolder);
-                        MSULog.LogD($"Added {card} Interactable");
+                        MSULog.Debug($"Added {card} Interactable");
                     }
                 }
             }
             if (num > 0)
             {
-                MSULog.LogD($"Added a total of {num} Interactables");
+                MSULog.Debug($"Added a total of {num} Interactables");
             }
         }
         #endregion

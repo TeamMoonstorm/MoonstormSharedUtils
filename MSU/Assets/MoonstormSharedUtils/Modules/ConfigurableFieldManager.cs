@@ -24,7 +24,7 @@ namespace Moonstorm
         {
             initialized = true;
 
-            MSULog.LogI($"Initializing ConfigurableFieldManager");
+            MSULog.Info($"Initializing ConfigurableFieldManager");
             RoR2Application.onLoad += ConfigureTypes;
         }
 
@@ -39,7 +39,7 @@ namespace Moonstorm
 
             if (!initialized)
             {
-                MSULog.LogI($"Adding mod {assembly.GetName().Name} to the configurable field manager");
+                MSULog.Info($"Adding mod {assembly.GetName().Name} to the configurable field manager");
                 List<Type> types = new List<Type>();
 
                 foreach (Type type in assembly.GetTypes().Where(type => type.GetCustomAttribute<DisabledContent>() == null))
@@ -57,14 +57,14 @@ namespace Moonstorm
                     }
                     catch (Exception e)
                     {
-                        MSULog.LogE($"An Exception has Ocurred. {e}");
+                        MSULog.Error($"An Exception has Ocurred. {e}");
                     }
                 }
 
 
                 if (types.Count > 0)
                 {
-                    MSULog.LogD($"Found a total of {types.Count} with fields that have the {nameof(ConfigurableField)} attribute");
+                    MSULog.Debug($"Found a total of {types.Count} with fields that have the {nameof(ConfigurableField)} attribute");
                     (List<Type>, ConfigFile) tuple = (types, configFile);
 
                     if (!typesToConfigure.Contains(tuple))
@@ -74,12 +74,12 @@ namespace Moonstorm
                 }
                 else
                 {
-                    MSULog.LogW($"Found no types with fields that have the {nameof(ConfigurableField)} attribute within {assembly.GetName().Name}");
+                    MSULog.Warning($"Found no types with fields that have the {nameof(ConfigurableField)} attribute within {assembly.GetName().Name}");
                 }
             }
             else
             {
-                MSULog.LogW($"Cannot add {assembly.GetName().Name} to the List as the configurable field manager has already been initialized.");
+                MSULog.Warning($"Cannot add {assembly.GetName().Name} to the List as the configurable field manager has already been initialized.");
             }
         }
 
@@ -87,7 +87,7 @@ namespace Moonstorm
         {
             List<Type> count = new List<Type>();
             typesToConfigure.ForEach(type => count.AddRange(type.Item1));
-            MSULog.LogI($"Configuring a total of {count.Count} Types.");
+            MSULog.Info($"Configuring a total of {count.Count} Types.");
 
             foreach (var (types, config) in typesToConfigure)
             {
@@ -99,7 +99,7 @@ namespace Moonstorm
                     }
                     catch (Exception e)
                     {
-                        MSULog.LogE($"An Exception has Ocurred: {e}");
+                        MSULog.Error($"An Exception has Ocurred: {e}");
                     }
                 }
             }
@@ -108,7 +108,7 @@ namespace Moonstorm
         private static void ConfigureSelectedType(Type type, ConfigFile config)
         {
             var fields = type.GetFields(BindingFlags.Static | BindingFlags.Public).Where(field => field.GetCustomAttribute<ConfigurableField>() != null);
-            MSULog.LogD($"Configuring {fields.Count()} fields inside {type}");
+            MSULog.Debug($"Configuring {fields.Count()} fields inside {type}");
             foreach (FieldInfo field in fields)
             {
                 var configAttribute = field.GetCustomAttribute<ConfigurableField>(true);

@@ -30,7 +30,7 @@ namespace Moonstorm.Loaders
             }
             catch (Exception e)
             {
-                MSULog.LogE(e);
+                MSULog.Error(e);
             }
         }
     }
@@ -154,15 +154,15 @@ namespace Moonstorm.Loaders
                     }
                     else
                     {
-                        MSULog.LogW($"Failed to assign {fieldInfo.DeclaringType.FullName}.{fieldInfo.Name}: Asset Not Found.");
-                        MSULog.LogD($"This may happen because the required asset has been disabled via config, or because it has the DisabledContent attribute.");
+                        MSULog.Warning($"Failed to assign {fieldInfo.DeclaringType.FullName}.{fieldInfo.Name}: Asset Not Found.");
+                        MSULog.Debug($"This may happen because the required asset has been disabled via config, or because it has the DisabledContent attribute.");
                     }
                 }
             }
             if (notAssignedAssets.Count > 0)
             {
-                MSULog.LogD($"There where {notAssignedAssets.Count} Assets that have not been assigned to fields inside {typeToPopulate.FullName}, listing assets:");
-                notAssignedAssets.ForEach(asset => MSULog.LogD(asset));
+                MSULog.Debug($"There where {notAssignedAssets.Count} Assets that have not been assigned to fields inside {typeToPopulate.FullName}, listing assets:");
+                notAssignedAssets.ForEach(asset => MSULog.Debug(asset));
             }
         }
     }

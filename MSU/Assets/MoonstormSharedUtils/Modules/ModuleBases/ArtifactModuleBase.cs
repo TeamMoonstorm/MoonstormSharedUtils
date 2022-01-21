@@ -26,7 +26,7 @@ namespace Moonstorm
         [SystemInitializer(typeof(ArtifactCatalog))]
         private static void HookInit()
         {
-            MSULog.LogI("Subscribing to delegates related to artifacts.");
+            MSULog.Info("Subscribing to delegates related to artifacts.");
             RunArtifactManager.onArtifactEnabledGlobal += OnArtifactEnabled;
             RunArtifactManager.onArtifactDisabledGlobal += OnArtifactDisabled;
         }
@@ -41,7 +41,7 @@ namespace Moonstorm
         /// <returns>An IEnumerable of all your Assembly's ArtifactBases</returns>
         public virtual IEnumerable<ArtifactBase> InitializeArtifacts()
         {
-            MSULog.LogD($"Getting the Artifacts found inside {GetType().Assembly}...");
+            MSULog.Debug($"Getting the Artifacts found inside {GetType().Assembly}...");
             return GetContentClasses<ArtifactBase>();
         }
 
@@ -63,7 +63,7 @@ namespace Moonstorm
             if (artifactDictionary != null)
                 artifactDictionary.Add(artifact.ArtifactDef, artifact);
 
-            MSULog.LogD($"Artifact {artifact.ArtifactDef} added to {contentPack.name}");
+            MSULog.Debug($"Artifact {artifact.ArtifactDef} added to {contentPack.name}");
         }
         #endregion
 
@@ -74,7 +74,7 @@ namespace Moonstorm
             {
                 if (!(artifactDef != kvp.Key) && NetworkServer.active)
                 {
-                    MSULog.LogI($"Running OnArtifactEnabled() for artifact {kvp.Key.cachedName}");
+                    MSULog.Info($"Running OnArtifactEnabled() for artifact {kvp.Key.cachedName}");
                     kvp.Value.OnArtifactEnabled();
                 }
             }
@@ -85,7 +85,7 @@ namespace Moonstorm
             {
                 if (!(artifactDef != kvp.Key))
                 {
-                    MSULog.LogI($"Running OnArtifactDisabled() for artifact {kvp.Key.cachedName}");
+                    MSULog.Info($"Running OnArtifactDisabled() for artifact {kvp.Key.cachedName}");
                     kvp.Value.OnArtifactDisabled();
                 }
             }

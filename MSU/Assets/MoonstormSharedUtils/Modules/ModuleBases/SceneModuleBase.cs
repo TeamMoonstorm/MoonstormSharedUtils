@@ -23,7 +23,7 @@ namespace Moonstorm
         [SystemInitializer(typeof(SceneCatalog))]
         private static void HookInit()
         {
-            MSULog.LogI("Subscribing to delegates related to stages.");
+            MSULog.Info("Subscribing to delegates related to stages.");
         }
 
         #region Scenes
@@ -35,7 +35,7 @@ namespace Moonstorm
         /// <returns>An IEnumerable of all your Assembly's SceneBases</returns>
         public virtual IEnumerable<SceneBase> InitializeScenes()
         {
-            MSULog.LogD($"Getting the Scenes found inside {GetType().Assembly.GetName().Name}");
+            MSULog.Debug($"Getting the Scenes found inside {GetType().Assembly.GetName().Name}");
             return GetContentClasses<SceneBase>();
         }
 
@@ -54,7 +54,7 @@ namespace Moonstorm
             if (sceneDictionary != null)
                 sceneDictionary.Add(scene.SceneDef, scene);
 
-            MSULog.LogD($"Scene {scene.SceneDef} added to {contentPack.name}");
+            MSULog.Debug($"Scene {scene.SceneDef} added to {contentPack.name}");
         }
         #endregion
     }

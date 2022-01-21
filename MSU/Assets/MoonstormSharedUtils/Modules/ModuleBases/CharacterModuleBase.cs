@@ -40,7 +40,7 @@ namespace Moonstorm
         [SystemInitializer(new Type[] { typeof(BodyCatalog), typeof(MasterCatalog) })]
         private static void HookInit()
         {
-            MSULog.LogI("Subscribing to delegates related to survivors & monsters.");
+            MSULog.Info("Subscribing to delegates related to survivors & monsters.");
             //DirectorAPI.FamilyActions += ModifyFamilies;
             DirectorAPI.MonsterActions += ModifyMonsters;
         }
@@ -85,7 +85,7 @@ namespace Moonstorm
         /// <returns>An IEnumerable of all your Assembly's CharacterBases</returns>
         public virtual IEnumerable<CharacterBase> InitializeCharacters()
         {
-            MSULog.LogD($"Getting the Characters found inside {GetType().Assembly}...");
+            MSULog.Debug($"Getting the Characters found inside {GetType().Assembly}...");
             return GetContentClasses<CharacterBase>();
         }
 
@@ -105,20 +105,20 @@ namespace Moonstorm
             /*TryAddingBodyPrefabToContentPack(character.BodyPrefab);
             TryAddingMasterPrefabToContentPack(character.MasterPrefab);*/
 
-            MSULog.LogD($"Character {character} added");
+            MSULog.Debug($"Character {character} added");
         }
 
         internal void TryAddingBodyPrefabToContentPack(GameObject bodyPrefab)
         {
             if (ContentPack.bodyPrefabs.Contains(bodyPrefab))
-                MSULog.LogD($"Content pack already has {bodyPrefab} in it's  \"BodyPrefabs\" array.");
+                MSULog.Debug($"Content pack already has {bodyPrefab} in it's  \"BodyPrefabs\" array.");
             else
                 HG.ArrayUtils.ArrayAppend(ref ContentPack.bodyPrefabs, bodyPrefab);
         }
         internal void TryAddingMasterPrefabToContentPack(GameObject masterPrefab)
         {
             if (ContentPack.masterPrefabs.Contains(masterPrefab))
-                MSULog.LogD($"Content pack already has {masterPrefab} in it's \"MasterPrefabs\" array.");
+                MSULog.Debug($"Content pack already has {masterPrefab} in it's \"MasterPrefabs\" array.");
             else
                 HG.ArrayUtils.ArrayAppend(ref ContentPack.masterPrefabs, masterPrefab);
         }
@@ -150,7 +150,7 @@ namespace Moonstorm
                         {
                             num++;
                             cardList.Add(card.DirectorCardHolder);
-                            MSULog.LogD($"Added {card} Monster");
+                            MSULog.Debug($"Added {card} Monster");
                             continue;
                         }
                     }
@@ -158,13 +158,13 @@ namespace Moonstorm
                     {
                         num++;
                         cardList.Add(card.DirectorCardHolder);
-                        MSULog.LogD($"Added {card} Monster");
+                        MSULog.Debug($"Added {card} Monster");
                     }
                 }
             }
             if(num > 0)
             {
-                MSULog.LogD($"Added a total of {num} Monsters");
+                MSULog.Debug($"Added a total of {num} Monsters");
             }
         }
 
@@ -181,7 +181,7 @@ namespace Moonstorm
                         {
                             num++;
                             familyList.Add(family.MonsterFamilyHolder);
-                            MSULog.LogD($"Added {family} to the Families list");
+                            MSULog.Debug($"Added {family} to the Families list");
                             continue;
                         }
                     }
@@ -189,13 +189,13 @@ namespace Moonstorm
                     {
                         num++;
                         familyList.Add(family.MonsterFamilyHolder);
-                        MSULog.LogD($"Added {family} to the Families list");
+                        MSULog.Debug($"Added {family} to the Families list");
                     }
                 }
             }
             if (num > 0)
             {
-                MSULog.LogD($"Added a total of {num} Monsters");
+                MSULog.Debug($"Added a total of {num} Monsters");
             }
         }
         #endregion

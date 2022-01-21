@@ -31,7 +31,7 @@ namespace Moonstorm
         /// <returns>An IEnumerable of all your assembly's UnlockableBases</returns>
         public virtual IEnumerable<UnlockableBase> InitializeUnlockables()
         {
-            MSULog.LogD($"Getting the Unlockables found inside {GetType().Assembly}");
+            MSULog.Debug($"Getting the Unlockables found inside {GetType().Assembly}");
             return GetContentClasses<UnlockableBase>();
         }
 
@@ -56,11 +56,11 @@ namespace Moonstorm
 
                 if (unlockableDefToUnlockableBaseDict != null) unlockableDefToUnlockableBaseDict.Add(unlockableBase.UnlockableDef, unlockableBase);
 
-                MSULog.LogD($"Added {unlockableBase.UnlockableDef}");
+                MSULog.Debug($"Added {unlockableBase.UnlockableDef}");
             }
             else
             {
-                MSULog.LogD($"Not Adding unlockable {unlockableBase.UnlockableDef} since one of its required types is not added to the game.");
+                MSULog.Debug($"Not Adding unlockable {unlockableBase.UnlockableDef} since one of its required types is not added to the game.");
             }
         }
 

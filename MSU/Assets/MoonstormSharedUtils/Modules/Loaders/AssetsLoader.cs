@@ -29,7 +29,7 @@ namespace Moonstorm.Loaders
             }
             catch (Exception e)
             {
-                MSULog.LogE(e);
+                MSULog.Error(e);
             }
         }
 
@@ -145,7 +145,7 @@ namespace Moonstorm.Loaders
         { 
             if(bundle.isStreamedSceneAssetBundle)
             {
-                MSULog.LogW($"Cannot map materials from a streamed scene asset bundle.");
+                MSULog.Warning($"Cannot map materials from a streamed scene asset bundle.");
                 return;
             }
 

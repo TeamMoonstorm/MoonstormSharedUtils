@@ -74,7 +74,7 @@ namespace Moonstorm
                 }
                 else
                 {
-                    MSULog.LogE($"The type {fieldInfo.FieldType} is not a number, the {nameof(TokenModifier)} attribute should only be used on fields that are numbers!");
+                    MSULog.Error($"The type {fieldInfo.FieldType} is not a number, the {nameof(TokenModifier)} attribute should only be used on fields that are numbers!");
                 }
                 return (null, 0);
             }

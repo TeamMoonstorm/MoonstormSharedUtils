@@ -21,7 +21,7 @@ namespace Moonstorm.Components
             //We only do this so it creates an instance if it hasn't
             postProcessProfile = postProcessVolume.profile;
             if (!postProcessVolume.HasInstantiatedProfile())
-                MSULog.LogE($"{postProcessVolume} has no instantiated profile. returning.");
+                MSULog.Error($"{postProcessVolume} has no instantiated profile. returning.");
         }
 
         void FixedUpdate()
