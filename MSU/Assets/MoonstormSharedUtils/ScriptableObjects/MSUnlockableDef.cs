@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Moonstorm
 {
-    /*[CreateAssetMenu(fileName = "New ExtendedUnlockableDef", menuName = "Moonstorm/MSUnlockableDef")]*/
+    [CreateAssetMenu(fileName = "New ExtendedUnlockableDef", menuName = "Moonstorm/MSUnlockableDef")]
     public class MSUnlockableDef : UnlockableDef
     {
         [Serializable]

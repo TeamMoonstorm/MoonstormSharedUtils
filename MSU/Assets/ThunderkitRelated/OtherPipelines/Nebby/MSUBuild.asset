@@ -15,7 +15,7 @@ MonoBehaviour:
   Data:
   - {fileID: 114246662242695548}
   - {fileID: 114478570708143904}
-  manifest: {fileID: 11400000, guid: 02aef36fb9f4a0e719f149d5f53110b5, type: 2}
+  manifest: {fileID: 0}
 --- !u!114 &114246662242695548
 MonoBehaviour:
   m_ObjectHideFlags: 0
