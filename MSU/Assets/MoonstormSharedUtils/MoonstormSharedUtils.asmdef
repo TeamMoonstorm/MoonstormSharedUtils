@@ -13,12 +13,12 @@
         "DebugToolkit.dll",
         "MonoMod.Utils.dll",
         "Mono.Cecil.dll",
-        "RoR2-nstrip.dll",
         "MMHOOK_RoR2.dll",
         "com.unity.multiplayer-hlapi.Runtime.dll",
         "HGCSharpUtils.dll",
         "HGUnityUtils.dll",
-        "Zio.dll"
+        "Zio.dll",
+        "RoR2.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [],
