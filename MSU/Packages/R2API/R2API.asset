@@ -19,7 +19,7 @@ MonoBehaviour:
   Author: tristanmcpherson
   Name: R2API
   Description: A modding API for Risk of Rain 2
-  Version: 3.0.71
+  Version: 4.0.11
   Dependencies: 
   - {fileID: 11400000, guid: 2d4d09ec817c24698d35dc9bf0704fdc, type: 2}
   - {fileID: 11400000, guid: bff73382628f698c89c1d9ae43c8f350, type: 2}

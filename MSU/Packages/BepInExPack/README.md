@@ -1,4 +1,4 @@
-### BepInEx Framework + API
+## BepInEx Framework
 
 This is the pack of all the things you need to both start using mods, and start making mods using the BepInEx framework.
 
@@ -37,7 +37,7 @@ BepInEx config customized for use with RoR2
 There's 2 documentation pages available:
 
 * [R2Wiki](https://github.com/risk-of-thunder/R2Wiki/wiki)
-* [BepInEx docs](https://bepinex.github.io/bepinex_docs/v5.3/articles/index.html)
+* [BepInEx docs](https://docs.bepinex.dev/)
 
 Places to talk:
 * [RoR2 modding discord](https://discord.gg/5MbXZvd)
@@ -45,3 +45,70 @@ Places to talk:
 
 
 BepInEx contains helper libraries like [MonoMod.RuntimeDetour](https://github.com/MonoMod/MonoMod/blob/master/README-RuntimeDetour.md) and [HarmonyX](https://github.com/BepInEx/HarmonyX/wiki)
+
+### Changelog
+* **5.4.1901**
+	* RoR2 BepInExPack specific changes :
+	    * HideAndDontSave set back to false in config
+		* Plugin Entrypoint is now at RoR2.RoR2Application.Awake
+
+* **5.4.1900**
+    * Added basic fix for cases where games try to ship their own Harmony
+	* Updated HarmonyX to 2.9.0
+	* Updated MonoMod to 22.01.29.01
+	* RoR2 BepInExPack specific changes :
+	    * Added BepInEx.GUI which replace the default console (you can disable it in the settings)
+	    * HideAndDontSave set to true in config
+	    * Add a plugin which detour old Resources.Call to Addressable equivalent
+
+* **5.4.1801**
+    * Updated MonoMod to 22.01.04.03, fixing problems in some Unity environments (wine)
+
+* **5.4.18**
+    * Fixed some console messages being cut off (especially if using non-ASCII characters)
+    * Updated HarmonyX to 2.7.0
+    * Updated MonoMod to 21.12.13.01
+
+* **5.4.17**
+    * Fixed console not opening in Outer Wilds and other games that ship custom `user32.dll`
+
+* **5.4.16**
+    * Fixed when DumpAssemblies is enabled, dumped assemblies are now put to `BepInEx/DumpedAssemblies/<ProcessName>`. If assembly is in use (e.g. multiple game processes open), dumped assemblies will have a number postfix.
+    * Game executable timestamp is not included in console title now (fixes issue with some window managers)
+    * Updated HarmonyX to 2.5.5
+    * Updated MonoMod.RuntimeDetour to 21.9.19.1
+
+* **5.4.15**
+    * Update HarmonyX to 2.5.4
+    * Update MonoMod to 21.8.5.1
+ 
+* **5.4.14**
+    * Update HarmonyX to 2.5.3
+    * Update MonoMod to 21.7.22.3
+
+* **5.4.13**
+    * Update HarmonyX to 2.5.2
+        * Fixes an issue that prevented BepInEx from launching on certain games
+
+* **5.4.12**
+    * Log executable timestamp in preloader logs
+    * Fix BepInEx *nix launch script
+        * Add support for the new Steam bootstrapper
+        * Add experimental fix for resolving symlinks
+    * Update Doorstop to 3.4.0.0
+    * Fix crash in paths with non-ASCII characters
+    * Experimental fix for HarmonyXInterop not working sometimes on first game launch
+    * Update HarmonyX to 2.5.1
+
+* **5.4.11**
+    * Update Bepin GOs to use HideAndDontSave flags
+        * Disable setting BepInEx manager to HideAndDontSave by default
+        * New config option: [Chainloader].HideManagerGameObject which enables HideAndDontSave for manager GameObjects
+    * Fix ChainLoader.HasBepinPlugins returning false when inheriting from class from another Assembly
+
+* **5.4.10**
+    * Updated HarmonyX to 2.4.2
+    * Updated UnityDoorstop.Unix to 1.5.1.0
+    * Marked BepInEx plugin manager and ThreadingHelper GameObjects with HideAndDontSave flag to prevent it from being destroyed in some games
+    * Converted configuration files to always use UTF-8 without BOM
+    * Fixed headless mode check throwing an exception in some games

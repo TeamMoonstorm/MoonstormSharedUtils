@@ -10,19 +10,11 @@ namespace RoR2EditorKit.RoR2Related
     /// </summary>
     public static class ScriptableCreators
     {
-        [MenuItem("Assets/Create/RoR2/UnlockableDef")]
-        public static void CreateUnlockableDef()
-        {
-            var unlockableDef = ScriptableObject.CreateInstance<UnlockableDef>();
-            unlockableDef.cachedName = "New UnlockableDef";
-            Util.CreateAssetAtSelectionPath(unlockableDef);
-        }
-
         #region skilldefs
         [MenuItem("Assets/Create/RoR2/SkillDef/Captain/Orbital")]
         public static void CreateOrbital()
         {
-            CreateSkill<CaptainOrbitalSkillDef>();
+            Util.CreateNewScriptableObject<CaptainOrbitalSkillDef>();
         }
 
         [MenuItem("Assets/Create/RoR2/SkillDef/Captain/SupplyDrop")]

@@ -1,0 +1,10 @@
+<linker>
+       <assembly fullname="UnityEngine">
+               <type fullname="UnityEngine.Application" preserve="all"/>
+               <type fullname="UnityEngine.QualitySettings" preserve="all"/>
+               <type fullname="UnityEngine.AudioSettings" preserve="all"/>
+               <type fullname="UnityEngine.LightmapSettings" preserve="all"/>
+               <type fullname="UnityEngine.RenderSettings" preserve="all"/>
+               <type fullname="UnityEngine.SystemInfo" preserve="all"/>
+       </assembly>
+</linker>

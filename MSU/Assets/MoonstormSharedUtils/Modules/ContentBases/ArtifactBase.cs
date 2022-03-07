@@ -1,4 +1,4 @@
-﻿using R2API;
+﻿using R2API.ScriptableObjects;
 using RoR2;
 
 namespace Moonstorm

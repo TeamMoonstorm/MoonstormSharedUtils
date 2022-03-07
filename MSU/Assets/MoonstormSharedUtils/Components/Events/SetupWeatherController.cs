@@ -52,10 +52,11 @@ namespace Moonstorm.Components
          */
         private Light FindSun()
         {
-            var sunLight = FindObjectOfType<NGSS_Directional>()?.GetComponent<Light>(); ;
+            /*var sunLight = FindObjectOfType<NGSS_Directional>()?.GetComponent<Light>(); ;
             if (!sunLight)
                 MSULog.Warning("Could not find sun object.");
-            return sunLight;
+            return sunLight;*/
+            return null;
         }
 
         //TODO: set up fog shit

@@ -123,7 +123,7 @@ namespace Moonstorm.Loaders
         /// <param name="contentPack">The SerializableContentPack to be filled with effectDefs</param>
         public void AddEffectDefsToSerializableContentPack(EffectDef[] effectDefs, SerializableContentPack contentPack)
         {
-            effectDefs.ToList().ForEach(ed => HG.ArrayUtils.ArrayAppend(ref contentPack.effectDefs, ed));
+            //effectDefs.ToList().ForEach(ed => HG.ArrayUtils.ArrayAppend(ref contentPack.effectDefs, ed));
         }
 
         /// <summary>

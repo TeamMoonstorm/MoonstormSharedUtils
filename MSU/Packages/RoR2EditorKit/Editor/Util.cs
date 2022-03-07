@@ -1,8 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
+using UnityEngine.UIElements;
+using Object = UnityEngine.Object;
 
 namespace RoR2EditorKit
 {
@@ -43,7 +47,6 @@ namespace RoR2EditorKit
         /// <returns>The asset found</returns>
         public static T FindAssetByType<T>(string assetNameFilter = null) where T : UnityEngine.Object
         {
-            T asset;
             string[] guids;
 
             if (assetNameFilter != null)
@@ -100,69 +103,91 @@ namespace RoR2EditorKit
             return PrefabUtility.SaveAsPrefabAsset(asset, path);
         }
 
-        /// <summary>
-        /// Adds a transform to a parent, and sets the child's position to 0
-        /// </summary>
-        /// <param name="child">The child transform</param>
-        /// <param name="parent">The parent transform</param>
-        public static void AddTransformToParent(Transform child, Transform parent)
+        public static void CreateNewScriptableObject<T>(Func<string> overrideName = null, Action<T> afterCreated = null) where T : ScriptableObject
         {
-            child.parent = parent;
-            child.position = Vector3.zero;
+            ThunderKit.Core.ScriptableHelper.SelectNewAsset<T>(overrideName, afterCreated);
+        }
+
+        public static void CreateNewScriptableObject(Type t, Func<string> overrideName = null)
+        {
+            ThunderKit.Core.ScriptableHelper.SelectNewAsset(t, overrideName);
+        }
+
+        public static T EnsureScriptableObjectExists<T>(string assetPath, Action<T> initializer = null) where T : ScriptableObject
+        {
+            return ThunderKit.Core.ScriptableHelper.EnsureAsset<T>(assetPath, initializer);
+        }
+
+        public static object EnsureScriptableObjectExists(string assetPath, Type type, Action<object> initializer = null)
+        {
+            return ThunderKit.Core.ScriptableHelper.EnsureAsset(assetPath, type, initializer);
+        }
+
+        public static void UpdateNameOfObject(Object obj)
+        {
+            AssetDatabase.RenameAsset(AssetDatabase.GetAssetPath(obj), obj.name);
+        }
+
+        #region extensions
+        public static bool IsNullOrEmptyOrWhitespace(this string text)
+        {
+            return (string.IsNullOrEmpty(text) || string.IsNullOrWhiteSpace(text));
         }
 
         /// <summary>
-        /// Adds a transform to a parent, and sets the child's position to a specified value
+        /// Sets the parent of this transform and sets position to a specified value
         /// </summary>
-        /// <param name="child">The child transform</param>
         /// <param name="parent">The parent transform</param>
         /// <param name="pos">The position of the child</param>
-        public static void AddTransformToParent(Transform child, Transform parent, Vector3 pos)
+        public static void SetParent(this Transform t, Transform parent, Vector3 pos)
         {
-            child.parent = parent;
-            child.position = pos;
+            t.SetParent(parent, pos);
         }
 
         /// <summary>
-        /// Adds a GameObject to a parent, and sets the child's position to zero
+        /// Sets the parent of a gameObject to another GameObject, and sets position to 0
         /// </summary>
-        /// <param name="child">The child GameObject</param>
         /// <param name="parent">The parent GameObject</param>
-        public static void AddTransformToParent(GameObject child, GameObject parent)
+        public static void SetParent(this GameObject go, GameObject parent)
         {
-            child.transform.parent = parent.transform;
-            child.transform.position = Vector3.zero;
+            go.transform.SetParent(parent.transform, Vector3.zero);
         }
 
         /// <summary>
-        /// Adds a GameObject to a parent, and sets the child's position to a specified value
+        /// Sets the parent of a gameObject to another GameObject, and sets position to a specified value
         /// </summary>
-        /// <param name="child">The child GameObject</param>
         /// <param name="parent">The parent GameObject</param>
         /// <param name="pos">The position of the Child</param>
-        public static void AddTransformToParent(GameObject child, GameObject parent, Vector3 pos)
+        public static void SetParent(this GameObject go, GameObject parent, Vector3 pos)
         {
-            child.transform.parent = parent.transform;
-            child.transform.position = pos;
+            go.transform.SetParent(parent.transform, pos);
+        }
+
+        public static SerializedProperty GetBindedProperty(this ObjectField objField, SerializedObject objectBound)
+        {
+            if (objField.bindingPath.IsNullOrEmptyOrWhitespace())
+                throw new NullReferenceException($"{objField} doesnot have a bindingPath set");
+
+            return objectBound.FindProperty(objField.bindingPath);
+        }
+
+        public static void TryRemoveFromParent(this VisualElement element)
+        {
+            if(element != null && element.parent != null)
+            {
+                element.parent.Remove(element);
+            }
         }
 
         /// <summary>
-        /// Creates a generic game object ready to be transformed into a prefab
+        /// Quick method to set the ObjectField's object type
         /// </summary>
-        /// <param name="name">The name of the game object</param>
-        /// <param name="mesh">The mesh to use for the game object</param>
-        /// <param name="material">The material to use for the game object</param>
-        /// <returns>The created game object</returns>
-        public static GameObject CreateGenericPrefab(string name, Mesh mesh, Material material)
+        /// <typeparam name="TObj">The type of object to set</typeparam>
+        /// <param name="objField">The object field</param>
+        public static void SetObjectType<T>(this ObjectField objField) where T : UnityEngine.Object
         {
-            var prefab = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            prefab.name = $"mdl{name}";
-            var prefabMeshFilter = prefab.GetComponent<MeshFilter>();
-            prefabMeshFilter.sharedMesh = mesh;
-            var prefabMeshRenderer = prefab.GetComponent<MeshRenderer>();
-            prefabMeshRenderer.sharedMaterial = material;
-
-            return prefab;
+            objField.objectType = typeof(T);
         }
+        #endregion
     }
 }

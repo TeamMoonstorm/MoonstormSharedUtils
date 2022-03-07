@@ -19,7 +19,7 @@ MonoBehaviour:
   Author: bbepis
   Name: BepInExPack
   Description: Unified BepInEx all-in-one modding pack - plugin framework, detour library
-  Version: 3.0.71
+  Version: 5.4.1901
   Dependencies: []
 --- !u!114 &11400000
 MonoBehaviour:

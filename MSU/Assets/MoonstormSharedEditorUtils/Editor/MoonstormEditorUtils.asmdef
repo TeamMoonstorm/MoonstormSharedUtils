@@ -5,7 +5,6 @@
         "MoonstormSharedUtils",
         "RoR2EditorKit"
     ],
-    "optionalUnityReferences": [],
     "includePlatforms": [
         "Editor"
     ],
@@ -13,11 +12,13 @@
     "allowUnsafeCode": false,
     "overrideReferences": true,
     "precompiledReferences": [
-        "Assembly-CSharp.dll",
+        "RoR2.dll",
         "MoonstormSharedUtils.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [
         "UNITY_EDITOR"
-    ]
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

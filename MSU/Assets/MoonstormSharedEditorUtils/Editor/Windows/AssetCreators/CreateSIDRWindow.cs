@@ -1,4 +1,4 @@
-﻿using RoR2EditorKit;
+﻿/*using RoR2EditorKit;
 using RoR2EditorKit.Common;
 using RoR2EditorKit.Core;
 using RoR2EditorKit.Core.Windows;
@@ -231,4 +231,4 @@ namespace Moonstorm.EditorUtils.EditorWindows
             return ruleGroup;
         }
     }
-}
+}*/

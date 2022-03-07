@@ -1,4 +1,4 @@
-﻿using RoR2;
+﻿/*using RoR2;
 using RoR2EditorKit.Common;
 using RoR2EditorKit.Core;
 using RoR2EditorKit.Core.Windows;
@@ -193,4 +193,4 @@ namespace Moonstorm.EditorUtils.EditorWindows
             return stringAssetRef;
         }
     }
-}
+}*/

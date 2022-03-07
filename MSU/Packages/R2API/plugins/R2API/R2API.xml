@@ -4,31 +4,6 @@
         <name>R2API</name>
     </assembly>
     <members>
-        <member name="T:R2API.ArtifactAPI">
-            <summary>
-            API for adding custom artifact to the game.
-            </summary>
-        </member>
-        <member name="P:R2API.ArtifactAPI.Loaded">
-            <summary>
-            Return true if the submodule is loaded.
-            </summary>
-        </member>
-        <member name="M:R2API.ArtifactAPI.Add(RoR2.ArtifactDef)">
-            <summary>
-            Add a custom artifact to the list of available artifacts.
-            If this is called after the ArtifactCatalog inits then this will return false and ignore the custom artifact.
-            </summary>
-            <param name="artifactDef">The artifactDef to add.</param>
-            <returns>true if added, false otherwise</returns>
-        </member>
-        <member name="M:R2API.ArtifactAPI.Add(System.String,System.String,System.String,UnityEngine.GameObject,UnityEngine.Sprite,UnityEngine.Sprite,RoR2.UnlockableDef)">
-            <summary>
-            Add a custom artifact to the list of available artifacts.
-            If this is called after the ArtifactCatalog inits then this will return false and ignore the custom artifact.
-            </summary>
-            <returns>true if added, false otherwise</returns>
-        </member>
         <member name="T:R2API.ArtifactCodeAPI">
             <summary>
             API for adding custom artifact codes to the game.
@@ -47,7 +22,7 @@
             <param name="artifactDef">The artifactDef tied to the artifact code.</param>
             <param name="sha256HashAsset">The artifact code.</param>
         </member>
-        <member name="M:R2API.ArtifactCodeAPI.AddCode(RoR2.ArtifactDef,R2API.ArtifactCode)">
+        <member name="M:R2API.ArtifactCodeAPI.AddCode(RoR2.ArtifactDef,R2API.ScriptableObjects.ArtifactCode)">
             <summary>
             Add a custom Artifact code to the SkyMeadow Artifact portal dialer.
             The artifactDef must exist within the initialized ArtifactCatalog for it to properly added to the portal dialer.
@@ -120,94 +95,313 @@
             Value for the Diamond compound.
             </summary>
         </member>
-        <member name="T:R2API.AssetBundleResourcesProvider">
+        <member name="M:R2API.ContentManagement.CatalogBlockers.GetAvailability``1">
             <summary>
-            This class provides a wrapper around an AssetBundle for integrating it into the regular Unity Resources library
+            Returns if the Catalog that manages the type T has finished initializing or not.
             </summary>
+            <typeparam name="T">The type that the catalog manages</typeparam>
+            <returns>True or False depending on wether the catalog has initialized or not. False if the dictionary doesnt contain T as a Key</returns>
         </member>
-        <member name="M:R2API.AssetBundleResourcesProvider.#ctor(System.String,UnityEngine.AssetBundle)">
+        <member name="T:R2API.ContentManagement.ManagedSerializableContentPack">
             <summary>
-            Creates an AssetBundleResourcesProvider with the specified modPrefix.
+            Represents a SerializableContentPack that's managed by R2API in some way, shape or form
             </summary>
         </member>
-        <member name="P:R2API.AssetBundleResourcesProvider.ModPrefix">
+        <member name="F:R2API.ContentManagement.ManagedSerializableContentPack.serializableContentPack">
             <summary>
-            The prefix for to access the assets in this provider.
+            The SerializableContentPack
             </summary>
         </member>
-        <member name="M:R2API.AssetBundleResourcesProvider.Load(System.String,System.Type)">
+        <member name="P:R2API.ContentManagement.ManagedSerializableContentPack.AutoCreateIContentPackProvider">
             <summary>
-            Load an asset out of the included assetbundle.
+            Wether or not R2API will create an R2APIGenericContentPack for the finalized ContentPack.
             </summary>
-            <param name="path">The path to the asset</param>
-            <param name="type">The type of the asset to find</param>
-            <returns>object of type <paramref name="type"/></returns>
         </member>
-        <member name="M:R2API.AssetBundleResourcesProvider.LoadAsync(System.String,System.Type)">
+        <member name="T:R2API.ContentManagement.ManagedReadOnlyContentPack">
             <summary>
-            Load an asset out of the included assetbundle asynchronosly.
+            Represents a ContentPack that's managed by R2API in some way, shape or form
             </summary>
-            <param name="path">the path to the asset</param>
-            <param name="type">the type of the asset to find</param>
-            <returns>object of type <paramref name="type"/></returns>
         </member>
-        <member name="M:R2API.AssetBundleResourcesProvider.LoadAll(System.Type)">
-            <summary>9
-            Load all assets in this assetbundle that are assignable from the specified type.
-            </summary>
-            <param name="type">The type to match</param>
-            <returns>Array of the type</returns>
-        </member>
-        <member name="T:R2API.BuffAPI">
+        <member name="P:R2API.ContentManagement.ManagedReadOnlyContentPack.ContentPack">
             <summary>
-            API for adding custom buffs to the game. Previously included in ItemAPI.
+            The ReadOnlyContentPack
             </summary>
         </member>
-        <member name="F:R2API.BuffAPI.BuffDefinitions">
+        <member name="P:R2API.ContentManagement.ManagedReadOnlyContentPack.Identifier">
             <summary>
-            All custom buffs added by the API.
+            The Identifier of the ReadOnlyContentPack
             </summary>
         </member>
-        <member name="P:R2API.BuffAPI.Loaded">
+        <member name="P:R2API.ContentManagement.ManagedReadOnlyContentPack.HasAutoCreatedIContentPackProvider">
+            <summary>
+            Wether or not R2API created an R2APIGenericContentPack for this ContentPack
+            </summary>
+        </member>
+        <member name="T:R2API.ContentManagement.R2APIContentManager">
+            <summary>
+            A class that's used for managing ContentPacks created by R2API
+            </summary>
+        </member>
+        <member name="P:R2API.ContentManagement.R2APIContentManager.Loaded">
             <summary>
             Return true if the submodule is loaded.
             </summary>
         </member>
-        <member name="M:R2API.BuffAPI.Add(R2API.CustomBuff)">
+        <member name="P:R2API.ContentManagement.R2APIContentManager.ManagedContentPacks">
             <summary>
-            Add a custom buff to the list of available buffs.
-            Value for BuffDef.buffIndex can be ignored.
-            We can't give you the buffIndex anymore in the method return param. Instead use BuffCatalog.FindBuffIndex (after catalog are init)
-            If this is called after the BuffCatalog inits then this will return false and ignore the custom buff.
-            </summary>
-            <param name="buff">The buff to add.</param>
-            <returns>true if added, false otherwise</returns>
-        </member>
-        <member name="T:R2API.CustomBuff">
-            <summary>
-            Class that defines a custom buff type for use in the game;
-            you may omit the buffIndex in the BuffDef, as that will
-            be assigned by the API.
-            If you are doing a buff for a custom elite, don't forget to register your CustomElite before too to fill the eliteIndex field !
+            Returns a read only collection of all the ContentPacks created by R2API
             </summary>
         </member>
-        <member name="F:R2API.CustomBuff.BuffDef">
+        <member name="F:R2API.ContentManagement.R2APIContentManager.OnContentPacksCreated">
             <summary>
-            Definition of the Buff
+            When R2API finishes creating the ContentPacks that it manages, this Action is ran.
             </summary>
         </member>
-        <member name="M:R2API.CustomBuff.#ctor(System.String,UnityEngine.Sprite,UnityEngine.Color,System.Boolean,System.Boolean)">
+        <member name="M:R2API.ContentManagement.R2APIContentManager.AddPreExistingSerializableContentPack(R2API.ScriptableObjects.R2APISerializableContentPack,System.Boolean)">
             <summary>
-            Create a custom buff to add into the game.
-            If you are doing a buff for a custom elite, don't forget to register your CustomElite before too to fill the eliteIndex field !
+            Adds a Pre-Existing SurvivorsOfTheVoidSerializableContentPack as your mod's content pack.
+            <para>Example usage would be a Thunderkit mod adding their items via ItemAPI to get the advantage of using ItemAPI's IDRS Systems</para>
+            </summary>
+            <param name="sotvSCP">The SOTVSerializable Content Pack that will be tied to your mod.</param>
+            <param name="createIContentPackProvider">If this is set to true, R2API will create a ContentPackProvider for your ContentPack and handle the loading for you.</param>
+        </member>
+        <member name="M:R2API.ContentManagement.R2APIContentManager.ReserveSerializableContentPack">
+            <summary>
+            Reserves a SerializableContentPack for your mod and returns it
+            <para>If the SerializableContentPack already exists, it returns it.</para>
+            </summary>
+            <returns>The reserved SerializableContentPack</returns>
+        </member>
+        <member name="T:R2API.ContentAddition">
+            <summary>
+            Class for adding Content Assets to your Mod's ContentPack.
             </summary>
         </member>
-        <member name="M:R2API.CustomBuff.#ctor(RoR2.BuffDef)">
+        <member name="M:R2API.ContentAddition.AddBody(UnityEngine.GameObject)">
             <summary>
-            Create a custom buff to add into the game.
-            you may omit the buffIndex in the BuffDef, as that will be assigned by the API.
-            If you are doing a buff for a custom elite, don't forget to register your CustomElite before too to fill the eliteIndex field !
+            Adds a BodyPrefab to your Mod's ContentPack
+            <para>BodyPrefab requires a CharacterBody component.</para>
             </summary>
+            <param name="bodyPrefab">The BodyPrefab to add.</param>
+            <returns>true if valid and added, false if one of the requirements is not met</returns>
+        </member>
+        <member name="M:R2API.ContentAddition.AddMaster(UnityEngine.GameObject)">
+            <summary>
+            Adds a MasterPrefab to your Mod's ContentPack
+            <para>MasterPrefab requires a CharacterMaster component.</para>
+            </summary>
+            <param name="masterPrefab">The MasterPrefab to add.</param>
+            <returns>true if valid and added, false if one of the requirements is not met</returns>
+        </member>
+        <member name="M:R2API.ContentAddition.AddProjectile(UnityEngine.GameObject)">
+            <summary>
+            Adds a ProjectilePrefab to your Mod's ContentPack
+            <para>ProjectilePrefab requires a ProjectileController component.</para>
+            <para>Throws a warning if it has no assigned ghost prefab.</para>
+            </summary>
+            <param name="projectilePrefab">The ProjectilePrefab to add.</param>
+            <returns>true if valid and added, false if one of the requirements is not met</returns>
+        </member>
+        <member name="M:R2API.ContentAddition.AddGameMode(UnityEngine.GameObject)">
+            <summary>
+            Adds a GameModePrefab to your Mod's ContentPack
+            <para>GameModePrefab requires a Run component.</para>
+            </summary>
+            <param name="gameModePrefab">The GameModePrefab to add.</param>
+            <returns>true if valid and added, false if one of the requirements is not met</returns>
+        </member>
+        <member name="M:R2API.ContentAddition.AddNetworkedObject(UnityEngine.GameObject)">
+            <summary>
+            Adds a NetworkedObject prefab to your Mod's ContentPack
+            <para>NetworkedObject requires a NetworkIdentity component.</para>
+            <para>NetworkedObject isnt in PrefabAPI's Objects to Network.</para>
+            </summary>
+            <param name="networkedObject">The NetworkedObjectPrefab to add.</param>
+            <returns>true if valid and added, false if one of the requirements is not met</returns>
+        </member>
+        <member name="M:R2API.ContentAddition.AddEffect(UnityEngine.GameObject)">
+            <summary>
+            Adds an EffectPrefab to your Mod's ContentPack
+            EffectPrefab requires an EffectComponent.
+            <para>Throws a warning if it has no VFXAttributes component.</para>
+            </summary>
+            <param name="effectPrefab">The EffectPrefab to add.</param>
+            <returns>true if valid and added, false if one of the requirements is not met.</returns>
+        </member>
+        <member name="M:R2API.ContentAddition.AddSkillDef(RoR2.Skills.SkillDef)">
+            <summary>
+            Adds a SkillDef to your Mod's ContentPack
+            <para>SkillDef Requires a valid activationState</para>
+            <para>SkillDef's activationStateMachine cannot be Null, Empty or Whitespace</para>
+            </summary>
+            <param name="skillDef">the SkillDef to Add.</param>
+            <returns>true if valid and added, false if one of the requirements is not met</returns>
+        </member>
+        <member name="M:R2API.ContentAddition.AddSkillFamily(RoR2.Skills.SkillFamily)">
+            <summary>
+            Adds a SkillFamily to your Mod's ContentPack
+            <para>SkillFamily's Variant's SkillDef cannot be null</para>
+            </summary>
+            <param name="skillFamily">The SkillFamily to Add.</param>
+            <returns>true if valid and added, false if one of the requirements is not met</returns>
+        </member>
+        <member name="M:R2API.ContentAddition.AddSceneDef(RoR2.SceneDef)">
+            <summary>
+            Adds a SceneDef to your Mod's ContentPack
+            <para>If you want he scene to be weaved with vanilla stages, use RainOfStages</para>
+            </summary>
+            <param name="sceneDef">The SceneDef to Add.</param>
+            <returns>true if valid and added, false if one of the requirements is not met</returns>
+        </member>
+        <member name="M:R2API.ContentAddition.AddItemDef(RoR2.ItemDef)">
+            <summary>
+            Adds an ItemDef to your Mod's ContentPack
+            <para>ItemDefs should be added by ItemAPI's Add methods.</para>
+            </summary>
+            <param name="itemDef">The ItemDef to Add.</param>
+            <returns>true if valid and added, false if one of the requirements is not met</returns>
+        </member>
+        <member name="M:R2API.ContentAddition.AddItemTierDef(RoR2.ItemTierDef)">
+            <summary>
+            Adds an ItemTierDef to your Mod's ContentPack
+            </summary>
+            <param name="itemTierDef">The ItemTierDef to add</param>
+            <returns>True if valid and added, false if one of the requirements is not met</returns>
+        </member>
+        <member name="M:R2API.ContentAddition.AddItemRelationshipProvider(RoR2.ItemRelationshipProvider)">
+            <summary>
+            Adds an ItemRelationshipProvider to your Mod's ContentPack
+            </summary>
+            <param name="itemRelationshipProvider">The ItemRelationshipProvider to add</param>
+            <returns>True if valid and added, false if one of the requirements is not met</returns>
+        </member>
+        <member name="M:R2API.ContentAddition.AddItemRelationshipType(RoR2.ItemRelationshipType)">
+            <summary>
+            Adds an ItemRelationshipType to your Mod's ContentPack
+            </summary>
+            <param name="itemRelationshipType">The ItemRelationshipType to add</param>
+            <returns>True if valid and added, false if one of the requirements is not met</returns>
+        </member>
+        <member name="M:R2API.ContentAddition.AddEquipmentDef(RoR2.EquipmentDef)">
+            <summary>
+            Adds an EquipmentDef to your Mod's ContentPack
+            <para>EquipmentDef should be added by ItemAPI's Add methods.</para>
+            </summary>
+            <param name="equipmentDef">The EquipmentDef to Add.</param>
+            <returns>true if valid and added, false if one of the requirements is not met</returns>
+        </member>
+        <member name="M:R2API.ContentAddition.AddBuffDef(RoR2.BuffDef)">
+            <summary>
+            Adds a BuffDef to your Mod's ContentPack
+            <para>Throws a warning if the buffDef's EliteDef's EquipmentDef's passive buffDef is not the buffDef you pass through</para>
+            <para>Throws a warning if the buffDef has a startSFX, but the startSFX's eventName is Null, Empty or White space.</para>
+            </summary>
+            <param name="buffDef">The BuffDef to Add</param>
+            <returns>true if valid and added, false if one of the requirements is not met</returns>
+        </member>
+        <member name="M:R2API.ContentAddition.AddEliteDef(RoR2.EliteDef)">
+            <summary>
+            Adds an EliteDef to your Mod's ContentPack
+            <para>EliteDef should be added by EliteAPI's Add methods.</para>
+            </summary>
+            <param name="eliteDef">The EliteDef to Add</param>
+            <returns>true if valid and added, false if one of the requirements is not met</returns>
+        </member>
+        <member name="M:R2API.ContentAddition.AddUnlockableDef(RoR2.UnlockableDef)">
+            <summary>
+            Adds an UnlockableDef to your Mod's ContentPack
+            <para>If you want the unlockable to be tied to an achievement, use UnlockableAPI instead.</para>
+            </summary>
+            <param name="unlockableDef">The UnlockableDef to Add</param>
+            <returns>true if valid and added, false if one of the requirements is not met</returns>
+        </member>
+        <member name="M:R2API.ContentAddition.AddSurvivorDef(RoR2.SurvivorDef)">
+            <summary>
+            Adds a SurvivorDef to your Mod's ContentPack
+            <para>Requires the bodyPrefab to be assigned</para>
+            <para>BodyPrefab requires a CharacterBody component</para>
+            <para>Throws a warning if no displayPrefab is assigned</para>
+            </summary>
+            <param name="survivorDef">The SurvivorDef to Add</param>
+            <returns>true if valid and added, false if one of the requirements is not met</returns>
+        </member>
+        <member name="M:R2API.ContentAddition.AddArtifactDef(RoR2.ArtifactDef)">
+            <summary>
+            Adds an ArtifactDef to your Mod's ContentPack
+            <para>Requires the ArtifactDef's icon sprites to not be null.</para>
+            </summary>
+            <param name="artifactDef">The ArtifactDef to Add</param>
+            <returns>true if valid and added, false if one of the requirements is not met</returns>
+        </member>
+        <member name="M:R2API.ContentAddition.AddSurfaceDef(RoR2.SurfaceDef)">
+            <summary>
+            Adds a SurfaceDef to your Mod's ContentPack
+            <para>Requires the surfaceDef's impactEffect or footstepEffect prefabs to not be null</para>
+            </summary>
+            <param name="surfaceDef">The SurfaceDef to Add</param>
+            <returns>true if valid and added, false if one of the requirements is not met</returns>
+        </member>
+        <member name="M:R2API.ContentAddition.AddNetworkSoundEventDef(RoR2.NetworkSoundEventDef)">
+            <summary>
+            Adds a NetworkSoundEventDef to your Mod's ContentPack
+            <para>Requires that the event's name is not null, empty or whitespace</para>
+            </summary>
+            <param name="networkSoundEventDef">The NetworkSoundEventDef to Add</param>
+            <returns>true if valid and added, false if one of the requirements is not met</returns>
+        </member>
+        <member name="M:R2API.ContentAddition.AddMusicTrackDef(RoR2.MusicTrackDef)">
+            <summary>
+            Adds a MusicTrackDef to your Mod's ContentPack
+            <para>MusicTrackDefs should only be created in the editor due to WWise's unity integration. If you want to add new songs, use SoundAPI's MusicAPI</para>
+            </summary>
+            <param name="musicTrackDef">The MusicTrackDef to Add.</param>
+            <returns>true if valid and added, false if one of the requirements is not met</returns>
+        </member>
+        <member name="M:R2API.ContentAddition.AddGameEndingDef(RoR2.GameEndingDef)">
+            <summary>
+            Adds a GameEndingDef to your Mod's ContentPack
+            </summary>
+            <param name="gameEndingDef">The GameEndingDef to Add</param>
+            <returns>true if valid and added, false if one of the requirements is not met</returns>
+        </member>
+        <member name="M:R2API.ContentAddition.AddEntityStateConfiguration(RoR2.EntityStateConfiguration)">
+            <summary>
+            Adds an EntityStateConfiguration to your Mod's ContentPack
+            <para>ESC's Target Type must inherit from EntityState</para>
+            <para>ESC's Target Type cannot be Abstract</para>
+            </summary>
+            <param name="entityStateConfiguration">The EntityStateConfiguration to Add</param>
+            <returns>true if valid and added, false if one of the requirements is not met</returns>
+        </member>
+        <member name="M:R2API.ContentAddition.AddExpansionDef(RoR2.ExpansionManagement.ExpansionDef)">
+            <summary>
+            Adds an ExpansionDef to your Mod's ContentPack
+            </summary>
+            <param name="expansionDef">The ExpansionDef to Add</param>
+            <returns>true if valid and added, false if one of the requirements is not met</returns>
+        </member>
+        <member name="M:R2API.ContentAddition.AddEntitlementDef(RoR2.EntitlementManagement.EntitlementDef)">
+            <summary>
+            Adds an EntitlementDef to your Mod's ContentPack
+            </summary>
+            <param name="entitlementDef">The EntitlementDef to Add</param>
+            <returns>true if valid and added, false if one of the requirements is not met</returns>
+        </member>
+        <member name="M:R2API.ContentAddition.AddMiscPickupDef(RoR2.MiscPickupDef)">
+            <summary>
+            Adds a MiscPickupDef to your Mod's ContentPack
+            </summary>
+            <param name="miscPickupDef">The MiscPickupDef to Add</param>
+            <returns>true if valid and added, false if one of the requirements is not met</returns>
+        </member>
+        <member name="M:R2API.ContentAddition.AddEntityState``1(System.Boolean@)">
+            <summary>
+            Adds an EntitySateType to your Mod's ContentPack
+            <para>State Type cannot be abstract</para>
+            </summary>
+            <typeparam name="T">The State's Type</typeparam>
+            <param name="wasAdded">Wether or not the state Type was succesfully added or not</param>
+            <returns>A SerializableEntityStateType, the StateType will be null if "wasAdded" is false.</returns>
         </member>
         <member name="T:R2API.DamageAPI">
             <summary>
@@ -1067,7 +1261,7 @@
         </member>
         <member name="T:R2API.DotAPI.CustomDotBehaviour">
             <summary>
-            Allows for custom behaviours when applying the dot. EG, percentburn. <see cref="M:RoR2.DotController.AddDot(UnityEngine.GameObject,System.Single,RoR2.DotController.DotIndex,System.Single)"/>
+            Allows for custom behaviours when applying the dot. EG, percentburn. <see cref="M:RoR2.DotController.AddDot(UnityEngine.GameObject,System.Single,RoR2.DotController.DotIndex,System.Single,System.Nullable{System.UInt32},System.Nullable{System.Single})"/>
             </summary>
             <param name="self"></param>
             <param name="dotStack"></param>
@@ -1102,27 +1296,6 @@
             <param name="customDotBehaviour"></param>
             <param name="customDotVisual"></param>
             <returns></returns>
-        </member>
-        <member name="P:R2API.EffectAPI.Loaded">
-            <summary>
-            Return true if the submodule is loaded.
-            </summary>
-        </member>
-        <member name="M:R2API.EffectAPI.AddEffect(UnityEngine.GameObject)">
-            <summary>
-            Creates an EffectDef from a prefab and adds it to the EffectCatalog.
-            The prefab must have an the following components: EffectComponent, VFXAttributes
-            For more control over the EffectDef, use AddEffect(EffectDef)
-            </summary>
-            <param name="effect">The prefab of the effect to be added</param>
-            <returns>True if the effect was added</returns>
-        </member>
-        <member name="M:R2API.EffectAPI.AddEffect(RoR2.EffectDef)">
-            <summary>
-            Adds an EffectDef to the EffectCatalog when the catalog inits.
-            </summary>
-            <param name="effect">The EffectDef to addZ</param>
-            <returns>False if the EffectDef was null</returns>
         </member>
         <member name="P:R2API.EliteAPI.Loaded">
             <summary>
@@ -1182,7 +1355,7 @@
             <summary>
             Class that defines a custom Elite type for use in the game
             All Elites consistent of an Elite definition, a <see cref="T:R2API.CustomEquipment"/>
-            and a <see cref="T:R2API.CustomBuff"/>. The equipment is automatically provided to
+            and a <see cref="T:RoR2.BuffDef"/>. The equipment is automatically provided to
             the Elite when it spawns and is configured to passively apply the buff.
             </summary>
         </member>
@@ -1210,34 +1383,6 @@
             But don't forget to give it a valid eliteTier so that your custom elite correctly get spawned.
             You can also make a totally new tier, by using OverrideCombatDirectorEliteTiers for example.
             </summary>
-        </member>
-        <member name="T:R2API.FontAPI">
-            <summary>
-            API for replacing the ingame font
-            </summary>
-        </member>
-        <member name="T:R2API.FontAPI.Fonts">
-            <summary>
-            use this class to add fonts
-            </summary>
-        </member>
-        <member name="M:R2API.FontAPI.Fonts.Add(System.String)">
-            <summary>
-            for adding an TMP_FontAsset inside an seperate assetbundle (.font is loaded automatically)
-            </summary>
-            <param name="path">absolute path to the assetbundle</param>
-        </member>
-        <member name="M:R2API.FontAPI.Fonts.Add(System.Byte[])">
-            <summary>
-            for adding an TMP_FontAsset while it is still in an assetbundle
-            </summary>
-            <param name="fontFile">the assetbundle file</param>
-        </member>
-        <member name="M:R2API.FontAPI.Fonts.Add(TMPro.TMP_FontAsset)">
-            <summary>
-            for adding an TMP_FontAsset directly
-            </summary>
-            <param name="fontAsset">The loaded fontasset</param>
         </member>
         <member name="P:R2API.InteractablesAPI.Loaded">
             <summary>
@@ -1269,6 +1414,18 @@
             <param name="item">The equipment item to add.</param>
             <returns>true if added, false otherwise</returns>
         </member>
+        <member name="M:R2API.ItemAPI.DoNotAutoIDRSFor(System.String)">
+            <summary>
+            Prevents bodies and charactermodels matching this name from having nonspecific item display rules applied to them
+            </summary>
+            <param name="bodyPrefabOrCharacterModelName">The string to match</param>
+        </member>
+        <member name="M:R2API.ItemAPI.DoNotAutoIDRSFor(UnityEngine.GameObject)">
+            <summary>
+            Prevent prefabs with this name having nonspecific item display rules applied to them
+            </summary>
+            <param name="bodyPrefab">The body prefab to match</param>
+        </member>
         <member name="P:R2API.ItemDisplayRuleDict.Item(System.String)">
             <summary>
             Get the applicable rule for this charactermodel. Returns the default rules if no specific rule is found.
@@ -1294,11 +1451,6 @@
         <member name="P:R2API.ItemDisplayRuleDict.DefaultRules">
             <summary>
             The default rules to apply when no matching model is found.
-            </summary>
-        </member>
-        <member name="P:R2API.ItemDropAPI.Loaded">
-            <summary>
-            Return true if the submodule is loaded.
             </summary>
         </member>
         <member name="T:R2API.LanguageAPI">
@@ -1608,10 +1760,178 @@
             <param name="key"></param>
             <param name="value"></param>
         </member>
+        <member name="T:R2API.Networking.Interfaces.INetCommand">
+            <summary>
+            Interface for network messages which will execute <see cref="M:R2API.Networking.Interfaces.INetCommand.OnReceived"/> when received by the targeted machine(s).
+            </summary>
+        </member>
+        <member name="M:R2API.Networking.Interfaces.INetCommand.OnReceived">
+            <summary>
+            Executed when received by the targeted machine(s).
+            </summary>
+        </member>
+        <member name="M:R2API.Networking.Interfaces.NetCommandExtensions.Send(R2API.Networking.Interfaces.INetCommand,R2API.Networking.NetworkDestination)">
+            <summary>
+            Send the passed command over the network
+            </summary>
+            <param name="command">Registered command</param>
+            <param name="destination">Destination of the command</param>
+        </member>
+        <member name="M:R2API.Networking.Interfaces.NetCommandExtensions.Send(R2API.Networking.Interfaces.INetCommand,UnityEngine.Networking.NetworkConnection)">
+            <summary>
+            <inheritdoc cref="M:R2API.Networking.Interfaces.NetCommandExtensions.Send(R2API.Networking.Interfaces.INetCommand,R2API.Networking.NetworkDestination)"/>
+            to a specific NetworkConnection, only callable from server.
+            You can retrieve a <see cref="T:UnityEngine.Networking.NetworkConnection"/> from <see cref="P:UnityEngine.Networking.NetworkServer.connections"/> or
+            from a <see cref="P:UnityEngine.Networking.NetworkBehaviour.connectionToClient"/> field.
+            </summary>
+            <param name="command">Registered command</param>
+            <param name="target">NetworkConnection the command will be sent to.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when target is null</exception>
+            <exception cref="T:System.InvalidOperationException">Thrown if not called from server</exception>
+        </member>
+        <member name="T:R2API.Networking.Interfaces.INetMessage">
+            <summary>
+            <inheritdoc cref="T:R2API.Networking.Interfaces.INetCommand"/>
+            <inheritdoc cref="T:R2API.Networking.Interfaces.ISerializableObject"/>
+            </summary>
+        </member>
+        <member name="M:R2API.Networking.Interfaces.INetMessage.OnReceived">
+            <inheritdoc cref="M:R2API.Networking.Interfaces.INetCommand.OnReceived"/>
+        </member>
+        <member name="M:R2API.Networking.Interfaces.NetMessageExtensions.Send(R2API.Networking.Interfaces.INetMessage,R2API.Networking.NetworkDestination)">
+            <summary>
+            Send the passed message over the network
+            </summary>
+            <param name="message">Registered message</param>
+            <param name="destination">Destination of the message</param>
+        </member>
+        <member name="M:R2API.Networking.Interfaces.NetMessageExtensions.Send(R2API.Networking.Interfaces.INetMessage,UnityEngine.Networking.NetworkConnection)">
+            <summary>
+            <inheritdoc cref="M:R2API.Networking.Interfaces.NetMessageExtensions.Send(R2API.Networking.Interfaces.INetMessage,R2API.Networking.NetworkDestination)"/>
+            to a specific NetworkConnection, only callable from server.
+            You can retrieve a <see cref="T:UnityEngine.Networking.NetworkConnection"/> from <see cref="P:UnityEngine.Networking.NetworkServer.connections"/> or
+            from a <see cref="P:UnityEngine.Networking.NetworkBehaviour.connectionToClient"/> field.
+            </summary>
+            <param name="message">Registered message</param>
+            <param name="target">NetworkConnection the message will be sent to.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when target is null</exception>
+            <exception cref="T:System.InvalidOperationException">Thrown if not called from server</exception>
+        </member>
+        <member name="T:R2API.Networking.Interfaces.INetRequest`2">
+            <summary>
+            Interface for network requests which will execute <see cref="M:R2API.Networking.Interfaces.INetRequest`2.OnRequestReceived"/> when received by the targeted machine(s).
+            Must be used in conjunction with <see cref="T:R2API.Networking.Interfaces.INetRequestReply`2"/>"/>.
+            Check <seealso cref="T:R2API.Networking.Messages.ExamplePing"/> for an example implementation.
+            <inheritdoc cref="T:R2API.Networking.Interfaces.ISerializableObject"/>
+            </summary>
+            <typeparam name="TRequest"></typeparam>
+            <typeparam name="TReply"></typeparam>
+        </member>
+        <member name="M:R2API.Networking.Interfaces.INetRequest`2.OnRequestReceived">
+            <summary>
+            Executed when received by the targeted machine(s).
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:R2API.Networking.Interfaces.INetRequestReply`2">
+            <summary>
+            Interface for network replies which will execute <see cref="M:R2API.Networking.Interfaces.INetRequestReply`2.OnReplyReceived"/>
+            after the original target received and executed <see cref="M:R2API.Networking.Interfaces.INetRequest`2.OnRequestReceived"/>.
+            Must be used in conjunction with <see cref="T:R2API.Networking.Interfaces.INetRequest`2"/>"/>.
+            Check <seealso cref="T:R2API.Networking.Messages.ExamplePingReply"/> for an example implementation.
+            <inheritdoc cref="T:R2API.Networking.Interfaces.ISerializableObject"/>
+            </summary>
+            <typeparam name="TRequest"></typeparam>
+            <typeparam name="TReply"></typeparam>
+        </member>
+        <member name="M:R2API.Networking.Interfaces.INetRequestReply`2.OnReplyReceived">
+            <summary>
+            Executed by the original sender of the <see cref="T:R2API.Networking.Interfaces.INetRequest`2"/>.
+            </summary>
+        </member>
+        <member name="M:R2API.Networking.Interfaces.NetRequestExtensions.Send``2(``0,R2API.Networking.NetworkDestination)">
+            <summary>
+            Send the passed request over the network
+            </summary>
+            <param name="request">Registered request</param>
+            <param name="destination">Destination of the request</param>
+        </member>
+        <member name="M:R2API.Networking.Interfaces.NetRequestExtensions.Send``2(``0,UnityEngine.Networking.NetworkConnection)">
+            <summary>
+            <inheritdoc cref="M:R2API.Networking.Interfaces.NetRequestExtensions.Send``2(``0,R2API.Networking.NetworkDestination)"/>
+            to a specific NetworkConnection, only callable from server.
+            You can retrieve a <see cref="T:UnityEngine.Networking.NetworkConnection"/> from <see cref="P:UnityEngine.Networking.NetworkServer.connections"/> or
+            from a <see cref="P:UnityEngine.Networking.NetworkBehaviour.connectionToClient"/> field.
+            </summary>
+            <param name="request">Registered request</param>
+            <param name="target">NetworkConnection the request will be sent to.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when target is null</exception>
+            <exception cref="T:System.InvalidOperationException">Thrown if not called from server</exception>
+        </member>
+        <member name="T:R2API.Networking.Interfaces.ISerializableObject">
+            <summary>
+            Must implement Serialize for how to serialize the class / struct through a NetworkWriter
+            and how to deserialize them through a NetworkReader
+            </summary>
+        </member>
+        <member name="M:R2API.Networking.Interfaces.ISerializableObject.Serialize(UnityEngine.Networking.NetworkWriter)">
+            <summary>
+            How the class / struct should be serialized over the network
+            </summary>
+            <param name="writer"></param>
+        </member>
+        <member name="M:R2API.Networking.Interfaces.ISerializableObject.Deserialize(UnityEngine.Networking.NetworkReader)">
+            <summary>
+            How the class / struct should be deserialized over the network
+            </summary>
+            <param name="reader"></param>
+        </member>
+        <member name="T:R2API.Networking.NetworkingAPI">
+            <summary>
+            Allow easy sending of custom networked messages, check 
+            <see href="https://github.com/risk-of-thunder/R2Wiki/wiki/Networking-with-R2API.NetworkingAPI-(INetMessage)">
+            the tutorial for example usage.</see>
+            </summary>
+        </member>
         <member name="P:R2API.Networking.NetworkingAPI.Loaded">
             <summary>
             Return true if the submodule is loaded.
             </summary>
+        </member>
+        <member name="M:R2API.Networking.NetworkingAPI.RegisterMessageType``1">
+            <summary>
+            <inheritdoc cref="T:R2API.Networking.NetworkingAPI"/>
+            </summary>
+            <typeparam name="TMessage"></typeparam>
+            <returns></returns>
+            <exception cref="T:System.InvalidOperationException"></exception>
+        </member>
+        <member name="M:R2API.Networking.NetworkingAPI.RegisterCommandType``1">
+            <summary>
+            <inheritdoc cref="T:R2API.Networking.NetworkingAPI"/>
+            </summary>
+            <typeparam name="TCommand"></typeparam>
+            <returns></returns>
+            <exception cref="T:System.InvalidOperationException"></exception>
+        </member>
+        <member name="M:R2API.Networking.NetworkingAPI.RegisterRequestTypes``2">
+            <summary>
+            Check <see cref="T:R2API.Networking.Messages.ExamplePing"/> and <see cref="T:R2API.Networking.Messages.ExamplePingReply"/> for example.
+            <inheritdoc cref="T:R2API.Networking.NetworkingAPI"/>
+            </summary>
+            <typeparam name="TRequest"></typeparam>
+            <typeparam name="TReply"></typeparam>
+            <returns></returns>
+            <exception cref="T:System.InvalidOperationException"></exception>
+        </member>
+        <member name="M:R2API.Networking.NetworkingAPI.RegisterRequestTypesInternal``2">
+            <summary>
+            Check <see cref="T:R2API.Networking.Messages.ExamplePing"/> and <see cref="T:R2API.Networking.Messages.ExamplePingReply"/> for example.
+            <inheritdoc cref="T:R2API.Networking.NetworkingAPI"/>
+            </summary>
+            <typeparam name="TRequest"></typeparam>
+            <typeparam name="TReply"></typeparam>
+            <returns></returns>
         </member>
         <member name="M:R2API.Networking.NetworkingAPI.GetNetworkHash(System.Type)">
             <summary>
@@ -1672,24 +1992,6 @@
             </summary>
             <param name="g">The prefab to register</param>
         </member>
-        <member name="T:R2API.ProjectileAPI">
-            <summary>
-            API for adding custom projectile to the game.
-            </summary>
-        </member>
-        <member name="P:R2API.ProjectileAPI.Loaded">
-            <summary>
-            Return true if the submodule is loaded.
-            </summary>
-        </member>
-        <member name="M:R2API.ProjectileAPI.Add(UnityEngine.GameObject)">
-            <summary>
-            Add a custom projectile to the list of available projectiles.
-            If this is called after the ProjectileCatalog inits then this will return false and ignore the custom projectile.
-            </summary>
-            <param name="projectile">The projectile prefab to add.</param>
-            <returns>true if added, false otherwise</returns>
-        </member>
         <member name="M:R2API.R2API.LogDebug(System.Object,System.String)">
             <summary>
             Logs caller information along side debug message
@@ -1725,7 +2027,7 @@
             <summary>Added to base health. MAX_HEALTH ~ (BASE_HEALTH + baseHealthAdd) * (HEALTH_MULT + healthMultAdd).</summary>
         </member>
         <member name="F:R2API.RecalculateStatsAPI.StatHookEventArgs.baseShieldAdd">
-            <summary>Added to base shield. MAX_SHIELD ~ BASE_SHIELD + baseShieldAdd.</summary>
+            <summary>Added to base shield. MAX_SHIELD ~ (BASE_SHIELD + baseShieldAdd) * (SHIELD_MULT + shieldMultAdd).</summary>
         </member>
         <member name="F:R2API.RecalculateStatsAPI.StatHookEventArgs.regenMultAdd">
             <summary>Added to the direct multiplier to base health regen. HEALTH_REGEN ~ (BASE_REGEN + baseRegenAdd) * (REGEN_MULT + regenMultAdd).</summary>
@@ -1785,7 +2087,7 @@
             <summary> (Special) Added to the direct multiplier to cooldown timers. COOLDOWN ~ BASE_COOLDOWN * (BASE_COOLDOWN_MULT + cooldownMultAdd + specialCooldownMultAdd) - (BASE_FLAT_REDUCTION + cooldownReductionAdd)</summary>
         </member>
         <member name="F:R2API.RecalculateStatsAPI.StatHookEventArgs.shieldMultAdd">
-            <summary>Added to the direct multiplier to base shield</summary>
+            <summary>Added to the direct multiplier to shields MAX_SHIELD ~ (BASE_SHIELD + baseShieldAdd) * (SHIELD_MULT + shieldMultAdd).</summary>
         </member>
         <member name="F:R2API.RecalculateStatsAPI.StatHookEventArgs.baseJumpPowerAdd">
             <summary>Added to base jump power. JUMP_POWER ~ (BASE_JUMP_POWER + baseJumpPowerAdd)* (JUMP_POWER_MULT + jumpPowerMultAdd)</summary>
@@ -1795,6 +2097,9 @@
         </member>
         <member name="F:R2API.RecalculateStatsAPI.StatHookEventArgs.moveSpeedRootCount">
             <summary>Amount of Root effects currently applied. MOVE_SPEED ~ (moveSpeedRootCount > 0) ? 0 : MOVE_SPEED </summary>
+        </member>
+        <member name="F:R2API.RecalculateStatsAPI.StatHookEventArgs.critDamageMultAdd">
+            <summary>Added to the direct multiplier to crit damage. CRIT_DAMAGE ~ DAMAGE * (BASE_CRIT_MULT + critDamageMultAdd) </summary>
         </member>
         <member name="T:R2API.RecalculateStatsAPI.StatHookEventHandler">
             <summary>
@@ -1807,24 +2112,6 @@
             <summary>
             Subscribe to this event to modify one of the stat hooks which StatHookEventArgs covers. Fired during CharacterBody.RecalculateStats.
             </summary>
-        </member>
-        <member name="T:R2API.ResourcesAPI">
-            <summary>
-            Allow to register AssetBundles for Mod Makers.
-            </summary>
-        </member>
-        <member name="P:R2API.ResourcesAPI.Loaded">
-            <summary>
-            Return true if the submodule is loaded.
-            </summary>
-        </member>
-        <member name="M:R2API.ResourcesAPI.AddProvider(R2API.IResourceProvider)">
-            <summary>
-            Add an AssetBundleResourcesProvider to the API.
-            A prefix usually looks like this: "@MyModPrefix"
-            More information on the R2API Wiki.
-            </summary>
-            <param name="provider">assetbundle provider to give, usually made with an AssetBundleResourcesProvider(prefix, assetbundle)</param>
         </member>
         <member name="T:R2API.SceneAssetAPI">
             <summary>
@@ -1846,30 +2133,36 @@
             the GameObject[] will contains the scene root game objects.</param>
             <exception cref="T:System.InvalidOperationException"></exception>
         </member>
-        <member name="T:R2API.ArtifactCode">
+        <member name="T:R2API.ScriptableObjects.ArtifactCode">
             <summary>
             Scriptable object to ease the creation of Artifact codes.
             </summary>
         </member>
-        <member name="F:R2API.ArtifactCode.middleRow">
+        <member name="F:R2API.ScriptableObjects.ArtifactCode.middleRow">
             <summary>
             Compound values that represent the middle 3 compounds. For a list of accepted vanilla compound values, check ArtifactCodeAPI.CompoundValues
             </summary>
         </member>
-        <member name="F:R2API.ArtifactCode.bottomRow">
+        <member name="F:R2API.ScriptableObjects.ArtifactCode.bottomRow">
             <summary>
             Compound values that represent the bottom 3 compounds. For a list of accepted vanila compound values, check ArtifactCodeAPI.CompoundValues
             </summary>
         </member>
-        <member name="F:R2API.ArtifactCode.hashAsset">
+        <member name="F:R2API.ScriptableObjects.ArtifactCode.hashAsset">
             <summary>
             The Sha256HashAsset stored in this Scriptable Object.
             </summary>
         </member>
-        <member name="M:R2API.ArtifactCode.Start">
+        <member name="M:R2API.ScriptableObjects.ArtifactCode.Start">
             <summary>
             Creates the Sha256HashAsset
             </summary>
+        </member>
+        <member name="M:R2API.ScriptableObjects.R2APISerializableContentPack.GetOrCreateContentPack">
+            <summary>
+            Creates the ContentPack tied to this SerializableContentPack, or returns one if its already been created.
+            </summary>
+            <returns>The ContentPack tied to this SerializableContentPack</returns>
         </member>
         <member name="T:R2API.SoundAPI">
             <summary>
@@ -1908,6 +2201,14 @@
             </summary>
             <param name="path">the absolute path to the file</param>
         </member>
+        <member name="M:R2API.SoundAPI.SoundBanks.Add(System.String,System.Reflection.Assembly)">
+            <summary>
+            Adds an external soundbank to load, loaded from an embedded resource in the assembly
+            </summary>
+            <param name="resourceName"></param>
+            <param name="owningAssembly"></param>
+            <returns></returns>
+        </member>
         <member name="M:R2API.SoundAPI.SoundBanks.Remove(System.UInt32)">
             <summary>
             Unloads an bank using the ID (ID is returned at the Add() of the bank)
@@ -1925,19 +2226,29 @@
             Number keeping track of PublicID to give
             </summary>
         </member>
+        <member name="F:R2API.SoundAPI.SoundBanks.Bank.BankDataPtr">
+            <summary>
+            Pointer to bank data
+            </summary>
+        </member>
         <member name="F:R2API.SoundAPI.SoundBanks.Bank.BankData">
             <summary>
             BankData supplied by the user
             </summary>
         </member>
-        <member name="F:R2API.SoundAPI.SoundBanks.Bank.PublicID">
-            <summary>
-            Identifier for the User
-            </summary>
-        </member>
         <member name="F:R2API.SoundAPI.SoundBanks.Bank.Memory">
             <summary>
             Handle for BankData array
+            </summary>
+        </member>
+        <member name="F:R2API.SoundAPI.SoundBanks.Bank.Size">
+            <summary>
+            Size of the bank in bytes
+            </summary>
+        </member>
+        <member name="F:R2API.SoundAPI.SoundBanks.Bank.PublicID">
+            <summary>
+            Identifier for the User
             </summary>
         </member>
         <member name="F:R2API.SoundAPI.SoundBanks.Bank.BankID">
@@ -2123,23 +2434,6 @@
             <param name="data"></param>
             <returns></returns>
         </member>
-        <member name="P:R2API.SurvivorAPI.Loaded">
-            <summary>
-            Return true if the submodule is loaded.
-            </summary>
-        </member>
-        <member name="M:R2API.SurvivorAPI.AddSurvivor(RoR2.SurvivorDef)">
-            <summary>
-            Add a SurvivorDef to the list of available survivors.
-            This must be called before the SurvivorCatalog inits, so before plugin.Start()
-            Value for SurvivorIndex is ignored by game code so can be left blank
-            If this is called after the SurvivorCatalog inits then this will return false and ignore the survivor
-            Can optionally specify a name for the survivor that will be logged with the mod info.
-            The survivor prefab must be non-null
-            </summary>
-            <param name="survivor">The survivor to add.</param>
-            <returns>true if survivor will be added</returns>
-        </member>
         <member name="T:R2API.TempVisualEffectAPI">
             <summary>
             API for adding custom TemporaryVisualEffects to CharacterBody components.
@@ -2175,12 +2469,12 @@
         </member>
         <member name="T:R2API.Tweaks.ILLine">
             <summary>
-            class for language files to load
+            Show IL Instruction Line in stack traces instead of mangled data
             </summary>
         </member>
-        <member name="T:R2API.UnbundledResourcesProvider">
+        <member name="P:R2API.Tweaks.ILLine.Loaded">
             <summary>
-            This class allows loading of resources not stored in an assetbundle with Resources.Load. Primary use would be for generating an item icon in code.
+            Return true if the submodule is loaded.
             </summary>
         </member>
         <member name="T:R2API.IModdedUnlockableDataProvider">
@@ -2267,12 +2561,21 @@
             Add an unlockable tied to an achievement.
             For an example usage check <see href="https://github.com/ArcPh1r3/HenryTutorial/blob/master/HenryMod/Modules/Achievements/HenryMasteryAchievement.cs">rob repository</see>
             </summary>
-            <typeparam name="TUnlockable">Class that inherits from BaseAchievement and implements IModdedUnlockableDataProvider</typeparam>
+            <typeparam name="TUnlockable">Class that inherits from BaseAchievement and implements <see cref="T:R2API.IModdedUnlockableDataProvider"/></typeparam>
             <param name="serverTrackerType">Type that inherits from BaseServerAchievement for achievements that the server needs to track</param>
             <param name="unlockableDef">For UnlockableDefs created in advance. Leaving null will generate an UnlockableDef instead.</param>
             <returns></returns>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:R2API.UnlockableAPI.AddUnlockable(System.Type,System.Type,RoR2.UnlockableDef)" -->
+        <member name="M:R2API.UnlockableAPI.AddUnlockable(System.Type,System.Type,RoR2.UnlockableDef)">
+            <summary>
+            Add an unlockable tied to an achievement.
+            For an example usage check <see href="https://github.com/ArcPh1r3/HenryTutorial/blob/master/HenryMod/Modules/Achievements/HenryMasteryAchievement.cs">rob repository</see>
+            </summary>
+            <param name="unlockableType">Class that inherits from BaseAchievement and implements <see cref="T:R2API.IModdedUnlockableDataProvider"/></param>
+            <param name="serverTrackerType">Type that inherits from <see cref="T:RoR2.Achievements.BaseServerAchievement"/> for achievements that the server needs to track</param>
+            <param name="unlockableDef">For <see cref="T:RoR2.UnlockableDef"/> created in advance. Leaving null will generate an <see cref="T:RoR2.UnlockableDef"/> instead.</param>
+            <returns></returns>
+        </member>
         <member name="T:R2API.Utils.R2APISubmoduleDependency">
             <summary>
             Attribute to have at the top of your BaseUnityPlugin class if you want to load a specific R2API Submodule.

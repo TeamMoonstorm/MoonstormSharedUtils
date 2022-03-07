@@ -1,0 +1,92 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1577365849282456
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4710565400114044}
+  - component: {fileID: 114429428813669582}
+  - component: {fileID: 114605886651078596}
+  - component: {fileID: 114135839531008866}
+  m_Layer: 0
+  m_Name: NGServerScene
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4710565400114044
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1577365849282456}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114429428813669582
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1577365849282456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 328273694, guid: 71abda9d1e4a8834f98f9c665a52a783, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  server: {fileID: 114605886651078596}
+  autoDestroyInProduction: 0
+  refreshMonitoring: 1
+  autoDisabled: 1
+  resources:
+    assets: []
+  shaderReferences:
+    shaders: []
+    properties: 
+  displayDebug: 0
+  tab: 0
+  offsetSent: 0
+  offsetReceived: 0
+  maxPacketsDisplay: 100
+  displayObjectWatchers: 1
+  displayTypeWatchers: 1
+--- !u!114 &114605886651078596
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1577365849282456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1514502921, guid: 126179ed1da78b342b994ae3f67a7998, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  autoStart: 1
+  dontDestroyOnLoad: 1
+  listener: {fileID: 114135839531008866}
+--- !u!114 &114135839531008866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1577365849282456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -265367019, guid: 126179ed1da78b342b994ae3f67a7998, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  port: 17257
+  backLog: 1

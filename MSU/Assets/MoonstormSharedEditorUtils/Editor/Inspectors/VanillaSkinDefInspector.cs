@@ -1,4 +1,4 @@
-﻿using Moonstorm.EditorUtils.EditorWindows;
+﻿/*using Moonstorm.EditorUtils.EditorWindows;
 using RoR2EditorKit.Core.Inspectors;
 using RoR2EditorKit.Core.Windows;
 using UnityEditor;
@@ -32,4 +32,4 @@ namespace Moonstorm.EditorUtils.Inspectors
             }
         }
     }
-}
+}*/

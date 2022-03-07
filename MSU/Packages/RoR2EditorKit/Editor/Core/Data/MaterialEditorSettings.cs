@@ -1,11 +1,11 @@
-﻿using RoR2EditorKit.Core.Windows;
+﻿using RoR2EditorKit.Core.Inspectors;
 using System;
 using System.Collections.Generic;
 using ThunderKit.Core.Data;
 using UnityEditor;
-using UnityEditor.Experimental.UIElements;
+using UnityEditor.UIElements;
 using UnityEngine;
-using UnityEngine.Experimental.UIElements;
+using UnityEngine.UIElements;
 
 namespace RoR2EditorKit.Settings
 {
@@ -29,22 +29,6 @@ namespace RoR2EditorKit.Settings
         private static void SetupSettings()
         {
             var mes = GetOrCreateSettings<MaterialEditorSettings>();
-            if (mes.EnableMaterialEditor)
-                mes.CheckForNullSettings();
-        }
-
-        private void CheckForNullSettings()
-        {
-            List<string> nullPairs = new List<string>();
-            foreach (ShaderStringPair ssp in shaderStringPairs)
-            {
-                if (ssp.shader == null)
-                    nullPairs.Add(ssp.shaderName);
-            }
-            if (nullPairs.Count > 0)
-            {
-                NullShaderPairWindow.Create(nullPairs);
-            }
         }
 
         private SerializedObject materialEditorSettingsSO;
@@ -58,18 +42,10 @@ namespace RoR2EditorKit.Settings
 
         public override void CreateSettingsUI(VisualElement rootElement)
         {
-            CheckForNullSettings();
-            var enabled = CreateStandardField(nameof(EnableMaterialEditor));
-            enabled.tooltip = $"Toggle the ROR2EK Material Editor, disabling this will disable all the MaterialEditor functionality of ROR2EK";
-            rootElement.Add(enabled);
-
-            var list = CreateStandardField(nameof(shaderStringPairs));
-            list.tooltip = $"Select the shaders that matches the name displayed on the left";
-            rootElement.Add(list);
-
-
             if (materialEditorSettingsSO == null)
                 materialEditorSettingsSO = new SerializedObject(this);
+
+            rootElement.Add(MaterialEditorSettingsInspector.StaticInspectorGUI(materialEditorSettingsSO));
 
             rootElement.Bind(materialEditorSettingsSO);
         }

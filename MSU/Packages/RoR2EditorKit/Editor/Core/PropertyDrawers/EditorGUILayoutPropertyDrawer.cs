@@ -1,13 +1,13 @@
-﻿using UnityEditor;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using UnityEditor;
 using UnityEngine;
 
 namespace RoR2EditorKit.Core.PropertyDrawers
 {
-    /// <summary>
-    /// Used for lazy creation of property drawer using editor gui layout instead of editor gui.
-    ///<para>This shouldnt be used unless you want a very simple property drawer that doesnt need to be all specific</para>
-    ///<para>May cause spamming in the unity editor console that's caused by using EditorGUILayout instead of EditorGUI.</para>
-    /// </summary>
     public abstract class EditorGUILayoutPropertyDrawer : PropertyDrawer
     {
         SerializedProperty serializedProperty;

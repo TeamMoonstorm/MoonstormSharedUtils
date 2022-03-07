@@ -1528,6 +1528,11 @@
             Whether current Common Language Runtime supports dynamic method generation using <see cref="N:System.Reflection.Emit"/> namespace.
             </summary>
         </member>
+        <member name="P:BepInEx.Utility.UTF8NoBom">
+            <summary>
+            An encoding for UTF-8 which does not emit a byte order mark (BOM). 
+            </summary>
+        </member>
         <member name="M:BepInEx.Utility.TryDo(System.Action,System.Exception@)">
             <summary>
             Try to perform an action.

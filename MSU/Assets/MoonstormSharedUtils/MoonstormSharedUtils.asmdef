@@ -3,24 +3,25 @@
     "references": [
         "Unity.Postprocessing.Runtime"
     ],
-    "optionalUnityReferences": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": true,
     "precompiledReferences": [
-        "HGUnityUtils.dll",
         "BepInEx.dll",
-        "HGCSharpUtils.dll",
-        "MMHOOK_Assembly-CSharp.dll",
         "R2API.dll",
-        "Stubbed.dll",
         "DebugToolkit.dll",
         "MonoMod.Utils.dll",
         "Mono.Cecil.dll",
-        "Microsoft.CSharp.dll",
+        "RoR2-nstrip.dll",
+        "MMHOOK_RoR2.dll",
+        "com.unity.multiplayer-hlapi.Runtime.dll",
+        "HGCSharpUtils.dll",
+        "HGUnityUtils.dll",
         "Zio.dll"
     ],
     "autoReferenced": true,
-    "defineConstraints": []
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }
