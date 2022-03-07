@@ -35,7 +35,7 @@ namespace Moonstorm.Components
                 weatherController.sun = FindSun();
                 weatherController.fogMaterial = GetFogMaterial();
                 weatherController.initialWeatherParams = GetInitialParams();
-                weatherController.weatherLerpOverChargeTime = MoonstormSharedUtils.mainAssetBundle.LoadAsset<AnimationCurveAsset>("curveLinear").value;
+                weatherController.weatherLerpOverChargeTime = MoonstormSharedUtils.MSUAssetBundle.LoadAsset<AnimationCurveAsset>("curveLinear").value;
                 EventDirector.instance.weatherParamsWhenSceneStarted = weatherController.initialWeatherParams;
                 weatherController.weatherLerp = 0f;
                 EventDirector.instance.weatherRtpcWhenStarted = (weatherController.rtpcWeather is null) ? "" : weatherController.rtpcWeather;

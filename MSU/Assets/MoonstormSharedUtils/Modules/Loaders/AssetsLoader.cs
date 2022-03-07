@@ -84,27 +84,6 @@ namespace Moonstorm.Loaders
         public static List<Material> MaterialsWithSwappedShaders { get; private set; } = new List<Material>();
 
         /// <summary>
-        /// Automatically loads all the EffectDefs from your assetbundle using the EffectDefHolder
-        /// </summary>
-        /// <param name="bundle">The bundle to load from</param>
-        /// <returns>An array of all the EffectDefs</returns>
-        protected EffectDef[] LoadEffectDefsFromHolders(AssetBundle bundle)
-        {
-            EffectDefHolder[] effectDefHolders = bundle.LoadAllAssets<EffectDefHolder>();
-
-            List<EffectDef> effects = new List<EffectDef>();
-
-            for(int i = 0; i < effectDefHolders.Length; i++)
-            {
-                EffectDefHolder currentHolder = effectDefHolders[i];
-
-                effects.AddRange(currentHolder.ToEffectDefs());
-            }
-
-            return effects.ToArray();
-        }
-
-        /// <summary>
         /// Automatically loads all the EffectDefs from your assetbundle by looking for prefabs with the EffectComponent component
         /// </summary>
         /// <param name="bundle">The bundle to load from</param>

@@ -71,7 +71,7 @@ namespace Moonstorm.Utilities
                 var inputBank = PlayerCharacterMasterController.instances[0].master.GetBodyObject().GetComponent<InputBankTest>();
                 position = inputBank.aimOrigin + inputBank.aimDirection * 5;
                 quaternion = Quaternion.LookRotation(inputBank.GetAimRay().direction, Vector3.up);
-                var materialTester = MoonstormSharedUtils.mainAssetBundle.LoadAsset<GameObject>("MaterialTester");
+                var materialTester = MoonstormSharedUtils.MSUAssetBundle.LoadAsset<GameObject>("MaterialTester");
                 Instantiate(materialTester, position, quaternion);
             }
             #endregion

@@ -28,8 +28,9 @@ namespace Moonstorm
 
         public string achievementDescToken;
 
+        [HideInInspector]
         public Sprite achievedIcon;
-
+        [HideInInspector]
         public Sprite unachievedIcon;
 
         public AchievementStringAssetRef prerequisiteAchievement;
@@ -52,8 +53,8 @@ namespace Moonstorm
                     nameToken = achievementNameToken,
                     descriptionToken = achievementDescToken,
                     type = (Type)achievementCondition,
-                    achievedIcon = achievedIcon,
-                    unachievedIcon = unachievedIcon,
+                    achievedIcon = achievementIcon,
+                    unachievedIcon = null,
                 };
                 if (serverTracked)
                 {
@@ -81,6 +82,12 @@ namespace Moonstorm
                 return stringAssetRef.UnlockableDef.cachedName + ".Achievement";
             }
             return null;
+        }
+
+        [ContextMenu("Migrate from sprite fields to vanilla field")]
+        private void UpdateSpritesToVanillaIconField()
+        {
+            achievementIcon = achievedIcon;
         }
     }
 }

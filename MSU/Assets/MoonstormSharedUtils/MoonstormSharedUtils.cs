@@ -1,6 +1,7 @@
 ﻿using BepInEx;
 using Moonstorm.Utilities;
 using R2API;
+using R2API.ScriptableObjects;
 using R2API.Utils;
 using RoR2.ContentManagement;
 using System.Collections;
@@ -23,74 +24,27 @@ namespace Moonstorm
     {
         public const string GUID = "com.TeamMoonstorm.MoonstormSharedUtils";
         public const string MODNAME = "Moonstorm Shared Utils";
-        public const string VERSION = "0.7.0";
+        public const string VERSION = "1.0.0";
 
-        public static MoonstormSharedUtils instance;
-        public static PluginInfo pluginInfo;
-
-        public static AssetBundle mainAssetBundle;
-        public static string assemblyDir { get => Path.Combine(Path.GetDirectoryName(pluginInfo.Location), "assetbundles"); }
+        public static MoonstormSharedUtils Instance { get; private set; }
+        public static PluginInfo PluginInfo { get; private set; }
+        public static AssetBundle MSUAssetBundle { get; private set; }
+        public static R2APISerializableContentPack MSUSerializableContentPack { get; private set; }
+        public static string assemblyDir { get => Path.Combine(Path.GetDirectoryName(PluginInfo.Location), "assetbundles"); }
 
         private void Awake()
         {
-            pluginInfo = Info;
-            instance = this;
+            Instance = this;
+            PluginInfo = Info;
             MSULog.logger = Logger;
             ConfigLoader.Init(Config);
             if (ConfigLoader.EnableDebugFeatures.Value)
             {
                 gameObject.AddComponent<MSUDebug>();
             }
-            Patches.Init();
             Events.Init();
-            mainAssetBundle = AssetBundle.LoadFromFile(Path.Combine(assemblyDir, "msuassets"));
-            ContentPackProvider.serializedContentPack = mainAssetBundle.LoadAsset<SerializableContentPack>("ContentPack");
-            ContentPackProvider.Initialize();
-        }
-    }
-
-    public class ContentPackProvider : IContentPackProvider
-    {
-        public static SerializableContentPack serializedContentPack;
-        public static ContentPack contentPack;
-
-        public string identifier
-        {
-            get
-            {
-                //If I see this name while loading a mod I will make fun of you
-                return "Moonstorm";
-            }
-        }
-
-        internal static void Initialize()
-        {
-            contentPack = serializedContentPack.CreateContentPack();
-            ContentManager.collectContentPackProviders += AddCustomContent;
-        }
-
-        private static void AddCustomContent(ContentManager.AddContentPackProviderDelegate addContentPackProvider)
-        {
-            addContentPackProvider(new ContentPackProvider());
-        }
-
-        public IEnumerator LoadStaticContentAsync(LoadStaticContentAsyncArgs args)
-        {
-            args.ReportProgress(1f);
-            yield break;
-        }
-
-        public IEnumerator GenerateContentPackAsync(GetContentPackAsyncArgs args)
-        {
-            ContentPack.Copy(contentPack, args.output);
-            args.ReportProgress(1f);
-            yield break;
-        }
-
-        public IEnumerator FinalizeAsync(FinalizeAsyncArgs args)
-        {
-            args.ReportProgress(1f);
-            yield break;
+            MSUAssetBundle = AssetBundle.LoadFromFile(Path.Combine(assemblyDir, "msuassets"));
+            R2API.ContentManagement.R2APIContentManager.AddPreExistingSerializableContentPack(MSUAssetBundle.LoadAsset<R2APISerializableContentPack>("Content Pack"));
         }
     }
 }

@@ -1,9 +1,11 @@
 ﻿using RoR2;
+using System;
 using UnityEngine;
 
 namespace Moonstorm
 {
     [CreateAssetMenu(fileName = "New Serializable DifficultyDef", menuName = "Moonstorm/Serializable DifficultyDef")]
+    [Obsolete("SerializableDifficultyDef is obsolete, Use R2API's SerializableDifficultyDef")]
     public class SerializableDifficultyDef : ScriptableObject
     {
         public bool countsAsHardMode;
@@ -23,5 +25,10 @@ namespace Moonstorm
             return def;
         }
 
+        [ContextMenu("Migrate to R2API")]
+        private void Migrate()
+        {
+
+        }
     }
 }

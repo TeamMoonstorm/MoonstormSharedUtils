@@ -19,7 +19,7 @@ namespace Moonstorm
             {
                 if (Run.instance && SceneInfo.instance.countsAsStage && NetworkServer.active)
                 {
-                    NetworkServer.Spawn(Object.Instantiate(MoonstormSharedUtils.mainAssetBundle.LoadAsset<GameObject>("MSUEventDirector")));
+                    NetworkServer.Spawn(Object.Instantiate(MoonstormSharedUtils.MSUAssetBundle.LoadAsset<GameObject>("MSUEventDirector")));
                 }
             }
             else
