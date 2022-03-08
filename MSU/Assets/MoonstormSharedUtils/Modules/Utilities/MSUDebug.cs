@@ -1,5 +1,6 @@
 ﻿using Moonstorm.Components;
 using RoR2;
+using System;
 using System.Linq;
 using UnityEngine;
 
@@ -30,32 +31,32 @@ namespace Moonstorm.Utilities
             #endregion
             #region Item display helper adder
             //Adds the item display helper to all the character bodies.
-            RoR2Application.onLoad += ModifyCharModels;
-            void ModifyCharModels()
+            RoR2Application.onLoad += () =>
             {
-                BodyCatalog.allBodyPrefabs
-                .ToList()
-                .ForEach(gameObject =>
+                foreach(GameObject prefab in BodyCatalog.allBodyPrefabs)
                 {
-                    var modelLocator = gameObject.GetComponent<ModelLocator>();
-                    if ((bool)modelLocator)
+                    try
                     {
+                        var modelLocator = gameObject.GetComponent<ModelLocator>();
+                        if (!modelLocator)
+                            continue;
+
                         var mdlPrefab = modelLocator.modelTransform.gameObject;
-                        if ((bool)mdlPrefab)
-                        {
-                            var charModel = mdlPrefab.GetComponent<CharacterModel>();
-                            if ((bool)charModel)
-                            {
-                                if (charModel.itemDisplayRuleSet != null)
-                                {
-                                    if (!mdlPrefab.GetComponent<MoonstormIDH>())
-                                        mdlPrefab.AddComponent<MoonstormIDH>();
-                                }
-                            }
-                        }
+                        if (!mdlPrefab)
+                            continue;
+
+                        var charModel = mdlPrefab.GetComponent<CharacterModel>();
+                        if (!charModel)
+                            continue;
+
+                        if (charModel.itemDisplayRuleSet == null)
+                            continue;
+
+                        mdlPrefab.EnsureComponent<MoonstormIDH>();
                     }
-                });
-            }
+                    catch(Exception e) { MSULog.Error(e); }
+                }
+            };
             #endregion
         }
 

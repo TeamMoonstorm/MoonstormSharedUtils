@@ -1,4 +1,5 @@
-﻿using RoR2;
+﻿using R2API.ScriptableObjects;
+using RoR2;
 using RoR2.ContentManagement;
 using System;
 using System.Collections;
@@ -54,7 +55,7 @@ namespace Moonstorm.Loaders
         /// <summary>
         /// The SerializableContentPack of the Mod
         /// </summary>
-        public abstract SerializableContentPack SerializableContentPack {get; protected set;}
+        public abstract R2APISerializableContentPack SerializableContentPack {get; protected set;}
 
         /// <summary>
         /// An array of actions to load your mod.
@@ -106,7 +107,7 @@ namespace Moonstorm.Loaders
                 j = num2;
             }
 
-            ContentPack = SerializableContentPack.CreateContentPack();
+            ContentPack = SerializableContentPack.GetOrCreateContentPack();
             ContentPack.identifier = identifier;
 
             if (PopulateFieldsDispatchers != null)

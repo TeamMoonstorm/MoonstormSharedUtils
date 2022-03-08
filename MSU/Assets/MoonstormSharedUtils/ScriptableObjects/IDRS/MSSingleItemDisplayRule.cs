@@ -8,6 +8,7 @@ using UnityEngine;
 namespace Moonstorm
 {
     [CreateAssetMenu(fileName = "New SingleItemDisplayRule", menuName = "Moonstorm/IDRS/SingleItemDisplayRule")]
+    [Obsolete("MSSingleItemDisplayRule is obsolete, update to ItemDisplayDictionary")]
     public class MSSingleItemDisplayRule : ScriptableObject
     {
         [Serializable]

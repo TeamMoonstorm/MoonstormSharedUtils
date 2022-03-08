@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Moonstorm
 {
-    [CreateAssetMenu(fileName = "New MSIDRS", menuName = "Moonstorm/IDRS/MSIDRS", order = 0)]
+    [Obsolete("MSIDRS is obsolete, upgrade to NamedIDRS")]
     public class MSIDRS : ScriptableObject
     {
         [Serializable]

@@ -15,7 +15,7 @@ MonoBehaviour:
   Data:
   - {fileID: 114246662242695548}
   - {fileID: 114478570708143904}
-  manifest: {fileID: 0}
+  manifest: {fileID: 11400000, guid: a8ac6a3e325999651bd53f63760e6ff0, type: 2}
 --- !u!114 &114246662242695548
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -57,10 +57,4 @@ MonoBehaviour:
   EstablishDestination: 1
   pathReferencePairs:
   - pathSource: <BuildPath>
-    pathDestination: <NebTrinketsTestingPath>
-  - pathSource: <BuildPath>
-    pathDestination: <SlayerTestingPath>
-  - pathSource: <BuildPath>
-    pathDestination: <VAPITestingPath>
-  - pathSource: <BuildPath>
-    pathDestination: <VAPIProjectPath>
+    pathDestination: <MSUTestingPath>

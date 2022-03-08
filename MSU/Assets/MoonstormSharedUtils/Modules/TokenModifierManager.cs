@@ -13,160 +13,111 @@ namespace Moonstorm
     public static class TokenModifierManager
     {
         private static bool initialized = false;
-        private static Dictionary<string, List<(FieldInfo, TokenModifier[])>> stringToModifiers = new Dictionary<string, List<(FieldInfo, TokenModifier[])>>();
+
+        //A single language token can be modified from multiple fields, and each field may contian multiple token modifiers.
+        private static Dictionary<string, List<(FieldInfo, TokenModifier[])>> tokenToModifiers = new Dictionary<string, List<(FieldInfo, TokenModifier[])>>();
 
         [SystemInitializer()]
         private static void Init()
         {
             initialized = true;
             MSULog.Info($"Initializing TokenModifierManager");
-            //This needs to be a hook, otherwise when the language changes it wont update with teh correct values.
-            On.RoR2.Language.LoadStrings += (orig, self) =>
+            On.RoR2.Language.SetStringByToken += (orig, self, token, localizedString) =>
             {
-                orig(self);
-                ModifyTokensInLanguage(self);
+                orig(self, token, localizedString);
+                ModifyLocalizedString(self, token, localizedString);
             };
-
-            RoR2Application.onLoad += () => ModifyTokensInLanguage(null);
         }
 
         /// <summary>
         /// Adds a mod to the TokenModifier manager
         /// <para>Will automatically look for Types that have fields with TokenModifier attribute and prepare them for formatting</para>
         /// </summary>
-        public static void AddMod()
+        public static void AddToManager()
         {
             Assembly assembly = Assembly.GetCallingAssembly();
-            if (!initialized)
-            {
-                MSULog.Info($"Adding mod {assembly.GetName().Name} to the token modifier manager");
-                List<(FieldInfo, TokenModifier[])> allFieldsWithAttributes = new List<(FieldInfo, TokenModifier[])>();
-                foreach (Type type in assembly.GetTypes().Where(type => type.GetCustomAttribute<DisabledContent>() == null))
-                {
-                    try
-                    {
-                        type.GetFields()
-                            .Where(field => field.GetCustomAttributes<TokenModifier>().Count() != 0)
-                            .ToList()
-                            .ForEach(field =>
-                            {
-                                try
-                                {
-                                    //A field can have multiple token modifiers.
-                                    var tokenModifiers = field.GetCustomAttributes<TokenModifier>().ToArray();
-                                    if (tokenModifiers.Length > 0)
-                                    {
-                                        allFieldsWithAttributes.Add((field, tokenModifiers));
-                                    }
-                                }
-                                catch (Exception e)
-                                {
-                                    MSULog.Error($"An Exception has Ocurred: {e}");
-                                }
-                            });
-                    }
-                    catch (Exception e)
-                    {
-                        MSULog.Error($"An Exception has Ocurred: {e}");
-                    }
-                }
 
-                if (allFieldsWithAttributes.Count > 0)
-                {
-                    MSULog.Debug($"Found a total of {allFieldsWithAttributes.Count} fields with the {nameof(TokenModifier)} attribute within {assembly.GetName().Name}.");
-                    foreach (var (field, attributes) in allFieldsWithAttributes)
-                    {
-                        foreach (TokenModifier attribute in attributes)
-                        {
-
-                            var currentToken = attribute.langToken;
-                            //If the key doesnt exist, add a new one alongside empty list.
-                            if (!stringToModifiers.ContainsKey(currentToken))
-                            {
-                                stringToModifiers.Add(currentToken, new List<(FieldInfo, TokenModifier[])>());
-                            }
-
-                            var attributesThatMatchToken = attributes.Where(tokenMod => tokenMod.langToken == currentToken);
-
-                            //If the value doesnt contain the field & their attributes, add them.
-                            if (attributesThatMatchToken.Count() > 0 && !stringToModifiers[attribute.langToken].Contains((field, attributesThatMatchToken.ToArray())))
-                            {
-                                stringToModifiers[attribute.langToken].Add((field, attributesThatMatchToken.ToArray()));
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    MSULog.Warning($"Found no fields with the {nameof(TokenModifier)} attribute within {assembly.GetName().Name}");
-                }
-            }
-            else
+            if(initialized)
             {
                 MSULog.Warning($"Cannot add {assembly.GetName().Name} to the Dictionary as the token modifier manager has already been initialized.");
-            }
-        }
-
-        private static void ModifyTokensInLanguage(Language lang)
-        {
-            if (lang == null)
-            {
-                lang = Language.currentLanguage;
+                return;
             }
 
-            MSULog.Info($"Checking if there's need for modifying tokens in language {lang.name}");
-            if (stringToModifiers.Count > 0)
+            MSULog.Info($"Adding mod {assembly.GetName().Name} to the token modifier manager");
+            List<(FieldInfo, TokenModifier[])> allFieldsWithAttributes = new List<(FieldInfo, TokenModifier[])>();
+            foreach (Type type in assembly.GetTypes().Where(type => type.GetCustomAttribute<DisabledContent>() == null))
             {
                 try
                 {
-                    MSULog.Info($"Modifying a total of {stringToModifiers.Keys.Count} tokens.");
-                    foreach (var kvp in stringToModifiers)
-                    {
-                        var key = kvp.Key;
-                        var value = kvp.Value;
+                    List<FieldInfo> fields = type.GetFields()
+                                                 .Where(f => f.GetCustomAttributes<TokenModifier>().Count() != 0) //A field can have multiple modifiers.
+                                                 .ToList();
 
-                        if (lang.stringsByToken.ContainsKey(key))
+                    foreach(FieldInfo field in fields)
+                    {
+                        try
                         {
-                            MSULog.Debug($"Modifying {key}");
-                            ModifyToken(lang, key, value);
+                            var modifiers = field.GetCustomAttributes<TokenModifier>().ToArray();
+                            if(modifiers.Length > 0)
+                            {
+                                allFieldsWithAttributes.Add((field, modifiers));
+                            }
+
                         }
-                        else
-                        {
-                            MSULog.Warning($"Token {key} could not be found in the stringsByToken dictionary in {lang.name}! Either the mod that implements the token doesnt support the language {lang.name} or theyre adding their tokens via R2Api's LanguageAPI");
-                            continue;
-                        }
+                        catch(Exception e) { MSULog.Error(e); }
                     }
                 }
-                catch (Exception e)
-                {
-                    MSULog.Error($"An Exception has Ocurred {e}");
-                }
+                catch (Exception e) { MSULog.Error(e); }
             }
-            else
+
+            if(allFieldsWithAttributes.Count == 0)
             {
-                MSULog.Info($"Dictionary Empty, no tokens are modified.");
+                MSULog.Warning($"Found no fields with the {nameof(TokenModifier)} attribute within {assembly.GetName().Name}");
+                return;
+            }
+
+            MSULog.Debug($"Found a total of {allFieldsWithAttributes.Count} fields with the {nameof(TokenModifier)} attribute within {assembly.GetName().Name}.");
+            foreach (var (field, attributes) in allFieldsWithAttributes)
+            {
+                foreach(TokenModifier modifier in attributes)
+                {
+                    var token = modifier.langToken;
+                    if(!tokenToModifiers.ContainsKey(token))
+                    {
+                        tokenToModifiers.Add(token, new List<(FieldInfo, TokenModifier[])>());
+                    }
+
+                    var attributeMatch = attributes.Where(att => att.langToken == token).ToArray(); //A field can have an multiple attributes that modifies different tokens.
+
+                    if (attributeMatch.Length == 0)
+                        continue;
+
+                    //If the value doesnt contain the field & their attributes, add them.
+                    if(!tokenToModifiers[token].Contains((field, attributeMatch.ToArray())))
+                    {
+                        tokenToModifiers[token].Add((field, attributeMatch));
+                    }
+                }
             }
         }
 
-        private static void ModifyToken(Language lang, string token, List<(FieldInfo, TokenModifier[])> modifiers)
+        private static void ModifyLocalizedString(Language lang, string token, string localizedString)
+        {
+            if (!tokenToModifiers.ContainsKey(token))
+                return;
+
+            MSULog.Message($"Modifying token {token}");
+            ModifyToken(lang, token, localizedString, tokenToModifiers[token]);
+        }
+
+        private static void ModifyToken(Language lang, string token, string localizedString, List<(FieldInfo, TokenModifier[])> modifiers)
         {
             try
             {
-                if (lang.stringsByToken.TryGetValue(token, out string tokenValue))
-                {
-                    object[] formatting = GetFormattingFromList(modifiers);
-                    if (formatting.Length != 0)
-                    {
-                        var formatted = string.Format(tokenValue, formatting);
-
-                        lang.stringsByToken[token] = formatted;
-                    }
-                }
+                object[] formatting = GetFormattingFromList(modifiers);
+                lang.stringsByToken[token] = string.Format(localizedString, formatting);
             }
-            catch (Exception e)
-            {
-                MSULog.Error($"An Exception has Ocurred {e}");
-            }
+            catch (Exception e) { MSULog.Error(e); }
         }
 
         private static object[] GetFormattingFromList(List<(FieldInfo, TokenModifier[])> fieldAndModifiers)
@@ -174,18 +125,26 @@ namespace Moonstorm
             object[] objectArray = new object[0];
             foreach (var (field, modifiers) in fieldAndModifiers)
             {
-                foreach (var modifier in modifiers)
+                try
                 {
-                    (object value, int index) formattingTuple = modifier.GetFormatting(field);
-                    if (formattingTuple.value != null)
+                    foreach (var modifier in modifiers)
                     {
-                        if (objectArray.Length < formattingTuple.index + 1)
+                        try
                         {
-                            Array.Resize(ref objectArray, formattingTuple.index + 1);
+                            (object value, int index) formattingTuple = modifier.GetFormatting(field);
+                            if (formattingTuple.value != null)
+                            {
+                                if (objectArray.Length < formattingTuple.index + 1)
+                                {
+                                    Array.Resize(ref objectArray, formattingTuple.index + 1);
+                                }
+                                objectArray[formattingTuple.index] = formattingTuple.value;
+                            }
                         }
-                        objectArray[formattingTuple.index] = formattingTuple.value;
+                        catch(Exception e) { MSULog.Error(e); }
                     }
                 }
+                catch(Exception e) { MSULog.Error(e); }
             }
             return objectArray;
         }

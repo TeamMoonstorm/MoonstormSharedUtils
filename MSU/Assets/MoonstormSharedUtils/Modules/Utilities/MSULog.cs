@@ -5,7 +5,7 @@ namespace Moonstorm
 {
     internal class MSULog
     {
-        internal static ManualLogSource logger = null;
+        private static ManualLogSource logger = null;
 
         internal MSULog(ManualLogSource logger_)
         {

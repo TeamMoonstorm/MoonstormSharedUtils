@@ -15,16 +15,15 @@ namespace Moonstorm
 
         private static void AddEventDirector(SceneDirector obj)
         {
-            if (EventCatalog.HasAnyEventRegistered)
-            {
-                if (Run.instance && SceneInfo.instance.countsAsStage && NetworkServer.active)
-                {
-                    NetworkServer.Spawn(Object.Instantiate(MoonstormSharedUtils.MSUAssetBundle.LoadAsset<GameObject>("MSUEventDirector")));
-                }
-            }
-            else
+            if(!EventCatalog.HasAnyEventRegistered)
             {
                 MSULog.Info($"No events are in the event catalog, aborting spawning the event director.");
+                return;
+            }
+            
+            if (Run.instance && SceneInfo.instance.countsAsStage && NetworkServer.active)
+            {
+                NetworkServer.Spawn(Object.Instantiate(MoonstormSharedUtils.MSUAssetBundle.LoadAsset<GameObject>("MSUEventDirector")));
             }
         }
 

@@ -51,5 +51,16 @@ namespace Moonstorm
             }
             EffectManager.SimpleSoundEffect(soundID, pos, transmit);
         }
+
+        #region Extensions
+        public static T EnsureComponent<T>(this GameObject obj) where T : MonoBehaviour
+        {
+            var comp = obj.GetComponent<T>();
+            if (!comp)
+                comp = obj.AddComponent<T>();
+
+            return comp;
+        }
+        #endregion
     }
 }

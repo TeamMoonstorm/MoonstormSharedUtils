@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace Moonstorm
 {
-    [CreateAssetMenu(fileName = "New Serializable DifficultyDef", menuName = "Moonstorm/Serializable DifficultyDef")]
     [Obsolete("SerializableDifficultyDef is obsolete, Use R2API's SerializableDifficultyDef")]
     public class SerializableDifficultyDef : ScriptableObject
     {
@@ -23,12 +22,6 @@ namespace Moonstorm
             def.iconSprite = iconSprite;
             def.foundIconSprite = true; //We set this to true, otherwise the GetIconSprite method in diffucltyDef returns a null sprite, causing a white square.
             return def;
-        }
-
-        [ContextMenu("Migrate to R2API")]
-        private void Migrate()
-        {
-
         }
     }
 }

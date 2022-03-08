@@ -18,7 +18,8 @@
         "HGCSharpUtils.dll",
         "HGUnityUtils.dll",
         "Zio.dll",
-        "RoR2.dll"
+        "RoR2.dll",
+        "Assembly-CSharp.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [],

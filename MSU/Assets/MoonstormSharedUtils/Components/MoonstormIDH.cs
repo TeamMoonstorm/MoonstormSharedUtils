@@ -22,7 +22,7 @@ namespace Moonstorm.Components
                     for (int j = 0; j < ruleGroup.rules.Length; j++)
                     {
                         ItemDisplayRule currentRule = ruleGroup.rules[j];
-                        if (currentRule.childName == MSIDRS.ItemDisplayRule.NoValue)
+                        if (currentRule.childName == NamedIDRS.NamedDisplayRule.NoValue)
                         {
                             ChildLocator childLocator = model.childLocator;
                             var firstChild = childLocator.transformPairs.FirstOrDefault().name;
@@ -40,7 +40,7 @@ namespace Moonstorm.Components
                     for (int j = 0; j < ruleGroup.rules.Length; j++)
                     {
                         ItemDisplayRule currentRule = ruleGroup.rules[j];
-                        if (currentRule.childName == MSIDRS.ItemDisplayRule.NoValue)
+                        if (currentRule.childName == NamedIDRS.NamedDisplayRule.NoValue)
                         {
                             ChildLocator childLocator = model.childLocator;
                             var firstChild = childLocator.transformPairs.FirstOrDefault().name;

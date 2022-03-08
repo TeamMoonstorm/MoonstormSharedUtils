@@ -27,10 +27,7 @@ namespace Moonstorm.Loaders
                 }
                 Instance = this as T;
             }
-            catch (Exception e)
-            {
-                MSULog.Error(e);
-            }
+            catch (Exception e) { MSULog.Error(e); }
         }
 
         /// <summary>
@@ -82,38 +79,6 @@ namespace Moonstorm.Loaders
         /// List holding all the materials with swapped shaders
         /// </summary>
         public static List<Material> MaterialsWithSwappedShaders { get; private set; } = new List<Material>();
-
-        /// <summary>
-        /// Automatically loads all the EffectDefs from your assetbundle by looking for prefabs with the EffectComponent component
-        /// </summary>
-        /// <param name="bundle">The bundle to load from</param>
-        /// <returns>An array of all the EffectDefs</returns>
-        protected EffectDef[] LoadEffectDefsFromPrefabs(AssetBundle bundle)
-        {
-            GameObject[] goWithComponents = bundle.LoadAllAssets<GameObject>().Where(go => go.GetComponent<EffectComponent>()).ToArray();
-
-            return goWithComponents.Select(go => new EffectDef(go)).ToArray();
-        }
-
-        /// <summary>
-        /// Adds all the given EffectDefs to a SerializableContentPack
-        /// </summary>
-        /// <param name="effectDefs">The effectDefs to add</param>
-        /// <param name="contentPack">The SerializableContentPack to be filled with effectDefs</param>
-        public void AddEffectDefsToSerializableContentPack(EffectDef[] effectDefs, SerializableContentPack contentPack)
-        {
-            //effectDefs.ToList().ForEach(ed => HG.ArrayUtils.ArrayAppend(ref contentPack.effectDefs, ed));
-        }
-
-        /// <summary>
-        /// Adds all the given EffectDefs to a ContentPack
-        /// </summary>
-        /// <param name="effectDefs">The EffectDefs to add</param>
-        /// <param name="contentPack">The ContentPack to be filled with EffectDefs</param>
-        public void AddEffectDefsToContentPack(EffectDef[] effectDefs, ContentPack contentPack)
-        {
-            contentPack.effectDefs.Add(effectDefs);
-        }
 
         /// <summary>
         /// Swaps all the stubbed shaders from MoonstormSharedEditorUtils to use the correct shaders
