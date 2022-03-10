@@ -59,7 +59,7 @@ namespace Moonstorm
         private static void SystemInit()
         {
             Initialized = true;
-            MSULog.Info("Subscribing to delegates related to buffs.");
+            MSULog.Info("Initializing Buff Module...");
             On.RoR2.CharacterBody.SetBuffCount += OnBuffsChanged;
             On.RoR2.CharacterModel.UpdateOverlays += AddBuffOverlay;
 

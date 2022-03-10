@@ -37,7 +37,7 @@ namespace Moonstorm
         private static void SystemInit()
         {
             Initialized = true;
-            MSULog.Info("Subscribing to delegates related to damage types.");
+            MSULog.Info("Initializing DamageType Module...");
 
             MoonstormDamageTypes = new ReadOnlyDictionary<ModdedDamageType, DamageTypeBase>(damageTypes);
             damageTypes.Clear();

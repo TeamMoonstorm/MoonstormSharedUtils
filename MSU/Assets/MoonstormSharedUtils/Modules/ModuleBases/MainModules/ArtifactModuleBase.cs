@@ -39,8 +39,8 @@ namespace Moonstorm
         [SystemInitializer(typeof(ArtifactCatalog))]
         private static void SystemInit()
         {
-            MSULog.Info("Subscribing to delegates related to artifacts.");
             Initialized = true;
+            MSULog.Info("Initializing Artifact Module...");
             RunArtifactManager.onArtifactEnabledGlobal += OnArtifactEnabled;
             RunArtifactManager.onArtifactDisabledGlobal += OnArtifactDisabled;
 

@@ -9,7 +9,7 @@ using UnityEngine.Networking;
 
 namespace Moonstorm
 {
-    public abstract class PickupModuleBase : ContentModule
+    /*public abstract class PickupModuleBase : ContentModule
     {
         public static readonly Dictionary<ItemDef, ItemBase> MoonstormItems = new Dictionary<ItemDef, ItemBase>();
 
@@ -137,5 +137,5 @@ namespace Moonstorm
             }
         }
         #endregion
-    }
+    }*/
 }

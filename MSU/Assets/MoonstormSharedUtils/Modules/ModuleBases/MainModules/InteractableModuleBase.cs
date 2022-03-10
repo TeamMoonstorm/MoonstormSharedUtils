@@ -42,7 +42,7 @@ namespace Moonstorm
         private static void SystemInit()
         {
             Initialized = true;
-            MSULog.Info($"Subscribing to delegates related to Interactables");
+            MSULog.Info($"Initializing Interactable Module...");
             DirectorAPI.InteractableActions += AddCustomInteractables;
 
             MoonstormInteractables = new ReadOnlyDictionary<GameObject, InteractableBase>(interactables);

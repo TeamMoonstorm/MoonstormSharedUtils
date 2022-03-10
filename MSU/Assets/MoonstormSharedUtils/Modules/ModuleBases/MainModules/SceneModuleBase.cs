@@ -35,7 +35,7 @@ namespace Moonstorm
         private static void SystemInit()
         {
             Initialized = true;
-            MSULog.Info("Subscribing to delegates related to stages.");
+            MSULog.Info("Initializing Scene Module...");
 
             MoonstormScenes = new ReadOnlyDictionary<SceneDef, SceneBase>(scenes);
             scenes.Clear();

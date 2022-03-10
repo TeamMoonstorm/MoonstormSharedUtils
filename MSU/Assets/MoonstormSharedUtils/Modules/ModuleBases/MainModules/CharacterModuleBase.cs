@@ -42,7 +42,7 @@ namespace Moonstorm
         private static void SystemInit()
         {
             Initialized = true;
-            MSULog.Info("Subscribing to delegates related to survivors & monsters.");
+            MSULog.Info("Initializing Character Module...");
             DirectorAPI.MonsterActions += ModifyMonsters;
 
             MoonstormCharacters = new ReadOnlyDictionary<GameObject, CharacterBase>(characters);

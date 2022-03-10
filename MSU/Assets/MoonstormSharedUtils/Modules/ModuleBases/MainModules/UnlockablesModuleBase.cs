@@ -38,7 +38,7 @@ namespace Moonstorm
         private static void SystemInit()
         {
             Initialized = true;
-            MSULog.Info($"Initializing UnlockableModule");
+            MSULog.Info($"Initializing Unlockables Module...");
 
             MoonstormUnlockables = new ReadOnlyDictionary<MSUnlockableDef, UnlockableBase>(unlocks);
             unlocks.Clear();

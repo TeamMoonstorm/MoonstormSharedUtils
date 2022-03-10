@@ -38,7 +38,7 @@ namespace Moonstorm
         private static void SystemInit()
         {
             Initialized = true;
-            MSULog.Info("Subscribing to delegates related to projectiles.");
+            MSULog.Info("Initializing Projectile Module...");
 
             MoonstormProjectiles = new ReadOnlyDictionary<GameObject, ProjectileBase>(projectiles);
             projectiles.Clear();
