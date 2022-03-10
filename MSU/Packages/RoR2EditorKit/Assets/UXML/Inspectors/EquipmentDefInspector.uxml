@@ -1,10 +1,10 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
     <ui:VisualElement name="Header" class="header" style="height: auto; flex-shrink: 0;">
-        <Style src="/Packages/RoR2EditorKit/Assets/USS/Inspectors/EquipmentDefInspector.uss" />
+        <Style src="/Packages/riskofthunder-ror2editorkit/Assets/USS/Inspectors/EquipmentDefInspector.uss" />
         <ui:Label text="EquipmentDef" name="m_Name" binding-path="m_Name" class="headerLabel" />
     </ui:VisualElement>
     <ui:VisualElement name="InspectorData">
-        <Style src="/Packages/RoR2EditorKit/Assets/USS/Inspectors/EquipmentDefInspector.uss" />
+        <Style src="/Packages/riskofthunder-ror2editorkit/Assets/USS/Inspectors/EquipmentDefInspector.uss" />
         <uie:PropertyField name="pickupModel" binding-path="pickupModelPrefab" tooltip="The PickupModel for this Equipment" />
         <uie:PropertyField name="cooldown" binding-path="cooldown" tooltip="How long until this equipment can be activated again" />
         <uie:PropertyField name="pickupIcon" binding-path="pickupIconSprite" tooltip="The icon used for the Pickup" />
@@ -33,6 +33,6 @@
         </ui:Foldout>
     </ui:VisualElement>
     <ui:VisualElement name="Messages">
-        <Style src="/Packages/RoR2EditorKit/Assets/USS/Inspectors/EquipmentDefInspector.uss" />
+        <Style src="/Packages/riskofthunder-ror2editorkit/Assets/USS/Inspectors/EquipmentDefInspector.uss" />
     </ui:VisualElement>
 </ui:UXML>

@@ -68,7 +68,9 @@ namespace RoR2EditorKit.Core.PipelineJobs
                     Object asset = AssetDatabase.LoadAssetAtPath<Object>(assetPath);
                     pipeline.Log(LogLevel.Information, $"Changing {asset}'s hideFlags ({asset.hideFlags}) to {flags}");
                     asset.hideFlags = flags;
+                    new SerializedObject(asset).ApplyModifiedProperties();
                 }
+                AssetDatabase.SaveAssets();
             }
 
             return Task.CompletedTask;

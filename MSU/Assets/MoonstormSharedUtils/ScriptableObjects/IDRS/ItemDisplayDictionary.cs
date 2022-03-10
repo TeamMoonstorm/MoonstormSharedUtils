@@ -12,7 +12,7 @@ namespace Moonstorm
     [CreateAssetMenu(fileName = "New ItemDisplayDictionary", menuName = "Moonstorm/IDRS/ItemDisplayDictionary")]
     public class ItemDisplayDictionary : ScriptableObject
     {
-        [Serializable]
+        /*[Serializable]
         public struct NamedDisplayDictionary
         {
             internal ItemDisplayRuleSet IDRS
@@ -130,6 +130,6 @@ namespace Moonstorm
                 }
             }
             return keyAssetRuleGroup;
-        }
+        }*/
     }
 }

@@ -176,12 +176,7 @@ namespace RoR2EditorKit.Core.Inspectors
             ClearElements();
             OnRootElementsCleared?.Invoke();
 
-            Debug.Log(DrawInspectorElement);
-            GetTemplateInstance(GetType().Name, DrawInspectorElement, path =>
-            {
-                Debug.Log(path);
-                return path.StartsWith($"Packages/{Constants.PackageName}") || path.StartsWith($"Assets/{Constants.PackageName}");
-            });
+            GetTemplateInstance(GetType().Name, DrawInspectorElement, path => path.StartsWith($"Packages/{Constants.RoR2EditorKit}") || path.StartsWith($"Assets/{Constants.RoR2EditorKit}"));
             DrawInspectorElement.Bind(serializedObject);
             OnVisualTreeCopy?.Invoke();
 

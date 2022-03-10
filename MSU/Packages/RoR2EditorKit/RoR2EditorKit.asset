@@ -19,7 +19,7 @@ MonoBehaviour:
   Author: RiskofThunder
   Name: RoR2EditorKit
   Description: RoR2EditorKit is a toolkit built around developing mods for Risk of Rain 2
-  Version: 2.0.0
+  Version: 2.0.2
   Dependencies: []
 --- !u!114 &11400000
 MonoBehaviour:

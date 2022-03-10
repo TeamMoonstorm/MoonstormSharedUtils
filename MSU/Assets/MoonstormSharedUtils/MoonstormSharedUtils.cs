@@ -36,7 +36,7 @@ namespace Moonstorm
         {
             Instance = this;
             PluginInfo = Info;
-            MSULog.logger = Logger;
+            new MSULog(Logger);
             ConfigLoader.Init(Config);
             if (ConfigLoader.EnableDebugFeatures.Value)
             {

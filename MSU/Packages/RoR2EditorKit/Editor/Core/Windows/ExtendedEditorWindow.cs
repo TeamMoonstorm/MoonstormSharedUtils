@@ -18,25 +18,22 @@ namespace RoR2EditorKit.Core.EditorWindows
         protected virtual void OnEnable()
         {
             base.rootVisualElement.Clear();
-            GetTemplateInstance(GetType().Name, rootVisualElement, IsFromRoR2EK);
-            bool IsFromRoR2EK(string path)
-            {
-                if (path.Contains(Constants.RoR2EditorKit))
-                {
-                    return true;
-                }
-                return false;
-            }
+            GetTemplateInstance(GetType().Name, rootVisualElement, ValidateUXMLPath);
             SerializedObject = new SerializedObject(this);
             rootVisualElement.Bind(SerializedObject);
         }
 
-        protected void CreateGUI()
+        protected virtual bool ValidateUXMLPath(string path)
         {
-            base.rootVisualElement.Add(DrawGUI());
+            return path.StartsWith("Assets/RoR2EditorKit") || path.StartsWith("/Packages/riskofthunder-ror2editorkit");
         }
 
-        protected abstract VisualElement DrawGUI();
+        protected void CreateGUI()
+        {
+            DrawGUI();
+        }
+
+        protected abstract void DrawGUI();
 
         #region Util Methods
         protected TElement Find<TElement>(string name = null, string ussClass = null) where TElement : VisualElement

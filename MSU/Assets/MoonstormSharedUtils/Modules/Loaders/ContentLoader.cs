@@ -10,11 +10,6 @@ using UnityEngine;
 
 namespace Moonstorm.Loaders
 {
-    /// <summary>
-    /// Class for loading your mod's Content asynchronously
-    /// <para>Handles populating static types that hold references to assets.</para>
-    /// </summary>
-    /// <typeparam name="T">The Instance of your class</typeparam>
     public abstract class ContentLoader<T> : ContentLoader where T : ContentLoader<T>
     {
         public static T Instance { get; private set; }
@@ -35,43 +30,18 @@ namespace Moonstorm.Loaders
             }
         }
     }
-    /// <summary>
-    /// Class for loading your mod's Content asynchronously
-    /// <para>Handles populating static types that hold references to assets</para>
-    /// <para>Inherit from ContentLoaderT instead</para>
-    /// </summary>
     public abstract class ContentLoader : IContentPackProvider
     {
-        /// <summary>
-        /// A unique identifier for the content
-        /// </summary>
         public abstract string identifier { get; }
 
-        /// <summary>
-        /// The Mod's ContentPack
-        /// </summary>
         public ContentPack ContentPack { get; private set; }
 
-        /// <summary>
-        /// The SerializableContentPack of the Mod
-        /// </summary>
         public abstract R2APISerializableContentPack SerializableContentPack {get; protected set;}
 
-        /// <summary>
-        /// An array of actions to load your mod.
-        /// <see href="https://github.com/swuff-star/LostInTransit/blob/7df8122594a1bd637f9ad22aec33b229ec6eec0c/LIT/Assets/LostInTransit/Modules/LITContent.cs#L80-L121">Example available here</see>
-        /// </summary>
         public abstract Action[] LoadDispatchers { get; protected set; }
 
-        /// <summary>
-        /// An array of actions for setting static fields of your content.
-        ///<see href="https://github.com/swuff-star/LostInTransit/blob/7df8122594a1bd637f9ad22aec33b229ec6eec0c/LIT/Assets/LostInTransit/Modules/LITContent.cs#L123-L141">Example available here</see>
-        /// </summary>
         public virtual Action[] PopulateFieldsDispatchers { get; protected set; } = Array.Empty<Action>();
 
-        /// <summary>
-        /// Calling base.Init() automatically hooks onto ContentManager.collectContentPackProviders
-        /// </summary>
         public virtual void Init()
         {
             ContentManager.collectContentPackProviders += AddContent;
@@ -125,13 +95,6 @@ namespace Moonstorm.Loaders
 
         }
 
-        /// <summary>
-        /// Populates a type's fields with the assets
-        /// <para>RoR2 uses this for their RoR2Content.Items class</para>
-        /// </summary>
-        /// <typeparam name="TAsset">The type of asset to use</typeparam>
-        /// <param name="typeToPopulate">The type to populate</param>
-        /// <param name="assets">The assets to use for population</param>
         public static void PopulateTypeFields<TAsset>(Type typeToPopulate, NamedAssetCollection<TAsset> assets) where TAsset : UnityEngine.Object
         {
             List<TAsset> notAssignedAssets = assets.assetInfos.Select(asset => asset.asset).ToList();

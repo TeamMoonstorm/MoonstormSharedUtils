@@ -8,11 +8,6 @@ using UnityEngine;
 
 namespace Moonstorm.Loaders
 {
-    /// <summary>
-    /// Class for loading your mod's AssetBundles
-    /// <para>Handles swapping stubbed shaders from MoonstormSharedEditorUtils</para>
-    /// </summary>
-    /// <typeparam name="T">The instance of your class</typeparam>
     public abstract class AssetsLoader<T> : AssetsLoader where T : AssetsLoader<T>
     {
         public static T Instance { get; private set; }
@@ -30,12 +25,6 @@ namespace Moonstorm.Loaders
             catch (Exception e) { MSULog.Error(e); }
         }
 
-        /// <summary>
-        /// Loads an asset from the MainAssetbundle, assuming an Instance of AssetLoader exists
-        /// </summary>
-        /// <typeparam name="TAsset">The type of asset to load</typeparam>
-        /// <param name="name">The name of the asset</param>
-        /// <returns>The asset</returns>
         public static TAsset LoadAsset<TAsset>(string name) where TAsset : UnityEngine.Object
         {
             if (Instance != null)
@@ -45,11 +34,6 @@ namespace Moonstorm.Loaders
             throw new NullReferenceException("Cannot load asset when there's no instance of AssetLoader!");
         }
 
-        /// <summary>
-        /// Loads all assets of type TAsset from the MainAssetBundle, assuming an Instance of AssetLoader exists
-        /// </summary>
-        /// <typeparam name="TAsset">The Type of asset to load</typeparam>
-        /// <returns>An array of TAsset</returns>
         public static TAsset[] LoadAllAssetsOfType<TAsset>() where TAsset : UnityEngine.Object
         {
             if(Instance != null)
@@ -59,32 +43,13 @@ namespace Moonstorm.Loaders
             throw new NullReferenceException("Cannot load asset when there's no instance of AssetLoader!");
         }
     }
-    /// <summary>
-    /// Class for loading your mod's AssetBundles
-    /// <para>Handles swapping stubbed shaders from MoonstormSharedEditorUtils</para>
-    /// <para>Inherit from AssetsLoaderT instead</para>
     public abstract class AssetsLoader
     {
-        /// <summary>
-        /// Your mod's Main AssetBundle
-        /// </summary>
         public abstract AssetBundle MainAssetBundle { get; }
-
-        /// <summary>
-        /// The directory of your assembly
-        /// </summary>
         public abstract string AssemblyDir { get; }
 
-        /// <summary>
-        /// List holding all the materials with swapped shaders
-        /// </summary>
         public static List<Material> MaterialsWithSwappedShaders { get; private set; } = new List<Material>();
 
-        /// <summary>
-        /// Swaps all the stubbed shaders from MoonstormSharedEditorUtils to use the correct shaders
-        /// <para>Automatically stores the swapped shaders in a static list</para>
-        /// </summary>
-        /// <param name="bundle">The bundle to load all the materials with shaders to be swapped</param>
         protected void SwapShadersFromMaterialsInBundle(AssetBundle bundle)
         { 
             if(bundle.isStreamedSceneAssetBundle)

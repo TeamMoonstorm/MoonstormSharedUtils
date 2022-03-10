@@ -1,47 +1,76 @@
-﻿using RoR2.ContentManagement;
+﻿using R2API.ScriptableObjects;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Data;
 using System.Linq;
-using UnityEngine;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Moonstorm
 {
-    /// <summary>
-    /// A Class where all other ModuleBase classes inherit from
-    /// </summary>
-    public abstract class ModuleBase
+    public abstract class ModuleBase<T> where T : ContentBase
     {
+        public virtual void Initialize() { }
 
-        /// <summary>
-        /// Your Mod's Content Pack
-        /// </summary>
-        public virtual SerializableContentPack ContentPack { get; set; }
-
-        /// <summary>
-        /// Your Mod's AssetBundle
-        /// </summary>
-        public virtual AssetBundle AssetBundle { get; set; }
-
-        public virtual void Init() { }
-
-        /// <summary>
-        /// Gets all the ContentClasses of type T that dont have the DisabledContent attribute
-        /// </summary>
-        /// <typeparam name="T">The type of content base to look for</typeparam>
-        /// <param name="excludedType">A type of class that works as an extra filter. PickupsModuleBase uses this for filtering between Equipments and EliteEquipments</param>
-        /// <returns></returns>
-        internal protected IEnumerable<T> GetContentClasses<T>(Type excludedType = null) where T : ContentBase
+        protected IEnumerable<T> GetContentClasses<T>(Type excludedType = null) where T : ContentBase
         {
-            var types = GetType().Assembly.GetTypes()
-                                          .Where(type => !type.IsAbstract && type.IsSubclassOf(typeof(T)));
+            return GetType()
+                            .Assembly
+                            .GetTypes()
+                            .Where(type => !type.IsAbstract && type.IsSubclassOf(typeof(T)))
+                            .Where(type => excludedType != null ? !type.IsSubclassOf(excludedType) : true)
+                            .Where(type => !type.GetCustomAttributes(true)
+                                .Select(obj => obj.GetType())
+                                .Contains(typeof(DisabledContent)))
+                            .Select(type => (T)Activator.CreateInstance(type));
+        }
 
-            if (excludedType != null)
-                types = types.Where(type => !type.IsSubclassOf(excludedType));
+        protected void AddSafelyToDict<TKey, TValue>(ref Dictionary<TKey, TValue> dictionary, TKey key, TValue value)
+        {
+            try
+            {
+                if (dictionary.ContainsKey(key))
+                    throw new InvalidOperationException($"Cannot add {key} as it's already present within the dictionary {dictionary}!");
 
-            return types.Where(type => !type.GetCustomAttributes(true)
-                                            .Select(obj => obj.GetType())
-                                            .Contains(typeof(DisabledContent)))
-                        .Select(type => (T)Activator.CreateInstance(type));
+                dictionary.Add(key, value);
+            }
+            catch(Exception e) { MSULog.Error(e); }
+        }
+
+        protected void AddSafelyToList<TObject>(ref List<TObject> list, TObject obj)
+        {
+            try
+            {
+                if (list.Contains(obj))
+                    throw new InvalidOperationException($"Cannot add {obj} as its already present within the dictionary {list}");
+
+                list.Add(obj);
+            }
+            catch
+            {
+
+            }
+        }
+
+        protected abstract bool InitializeContent(T contentClass);
+
+        protected static void ThrowModuleNotInitialized(string triedAction, Type module)
+        {
+            try
+            {
+                throw new InvalidOperationException($"Cannot {triedAction} because {module.Name} is not initialized.");
+            }
+            catch (Exception e) { MSULog.Error(e); }
+        }
+
+        protected static void ThrowModuleInitialized(string triedAction, Type module)
+        {
+            try
+            {
+                throw new InvalidOperationException($"Cannot {triedAction} because {module.Name} has already initialized.");
+            }
+            catch (Exception e) { MSULog.Error(e); }
         }
     }
 }

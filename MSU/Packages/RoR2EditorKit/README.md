@@ -76,6 +76,17 @@ All of these material editors work with either the real hopoo shaders, or with s
 
 (Old Changelogs can be found [here](https://github.com/risk-of-thunder/RoR2EditorKit/blob/main/RoR2EditorKit/Assets/RoR2EditorKit/OldChangelogs.md))
 
+### '2.0.2'
+
+* Fixed an issue where ExtendedInspectors would not display properly due to incorrect USS paths.
+* Added ValidateUXMLPath to ExtendedInspector, used to validate the UXML's file path, override this if youre making an ExtendedInspector for a package that depends on RoR2EK's systems.
+* Added ValidateUXMLPath to ExtendedEditorWindow
+* Hopefully fixed the issue where RoR2EK assets can be edited.
+
+### '2.0.1'
+
+* Fixed an issue where ExtendedInspectors would not work due to incorrect path management.
+
 ### '2.0.0'
 
 * Updated to unity version 2019.4.26f1

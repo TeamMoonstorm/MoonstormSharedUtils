@@ -2,25 +2,18 @@
 
 namespace Moonstorm
 {
-    /// <summary>
-    /// A Content Base Class for initializing a Damage Type
-    /// </summary>
     public abstract class DamageTypeBase : ContentBase
     {
         /// <summary>
-        /// Your ModdedDamageType
+        /// The ModedDamageType of this DamageTypeBase
+        /// <para>Set by the DamageTypeModule.</para>
         /// </summary>
-        public abstract ModdedDamageType ModdedDamageType { get; set; }
+        public abstract ModdedDamageType ModdedDamageType { get; internal set; }
 
         /// <summary>
-        /// Get the DamageType asociated with this DamageTypeBase
+        /// Subscribe here to any On. or IL. hooks to make your DamageType work properly.
+        /// <para>Method gets called automatically by the DamageTypeModule</para>
         /// </summary>
-        /// <returns>The ModdedDamageType asociated with this DamageTypeBase</returns>
-        public abstract ModdedDamageType GetDamageType();
-
-        /// <summary>
-        /// Subscribe to any needed Events or Delegates here to run your DamageType's logic
-        /// </summary>
-        public virtual void Delegates() { }
+        public abstract void Delegates();
     }
 }

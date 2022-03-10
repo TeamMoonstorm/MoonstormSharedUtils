@@ -4,22 +4,10 @@ using System.Reflection;
 
 namespace Moonstorm
 {
-    /// <summary>
-    /// Enum for modifying the value of a field for use in tokens
-    /// </summary>
     public enum StatTypes : int
     {
-        /// <summary>
-        /// No changes are made to the value in the field
-        /// </summary>
         Default,
-        /// <summary>
-        /// The value of the field gets multiplied by 100
-        /// </summary>
         Percentage,
-        /// <summary>
-        /// The value of the field gets divided by 2
-        /// </summary>
         DivideBy2,
     }
 
@@ -35,12 +23,6 @@ namespace Moonstorm
 
         private object valueForFormatting;
 
-        /// <summary>
-        /// Initialize a TokenModifier
-        /// </summary>
-        /// <param name="langToken">The key for the language token to modify. ej: ITEM_SYRINGE_NAME</param>
-        /// <param name="statType">A special operation to do on the field's value.</param>
-        /// <param name="formatIndex">The formatting index that corresponds to this token modifier</param>
         public TokenModifier(string langToken, StatTypes statType, int formatIndex = 0)
         {
             this.langToken = langToken;

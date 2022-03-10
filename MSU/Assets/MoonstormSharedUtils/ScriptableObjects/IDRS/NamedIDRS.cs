@@ -12,7 +12,7 @@ namespace Moonstorm
     [CreateAssetMenu(fileName = "New NamedIDRS", menuName = "Moonstorm/IDRS/NamedIDRS")]
     public class NamedIDRS : ScriptableObject
     {
-        [Serializable]
+        /*[Serializable]
         public struct NamedRuleGroup
         {
             public string keyAssetName;
@@ -138,6 +138,6 @@ namespace Moonstorm
             }
             namedRuleGroups.Clear();
             return keyAssetList.ToArray();
-        }
+        }*/
     }
 }

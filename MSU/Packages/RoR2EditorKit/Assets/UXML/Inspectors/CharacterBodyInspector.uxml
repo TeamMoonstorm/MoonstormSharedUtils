@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
     <ui:VisualElement name="inspectorData">
-        <Style src="/Packages/RoR2EditorKit/Assets/USS/Inspectors/CharacterBodyInspector.uss" />
+        <Style src="/Packages/riskofthunder-ror2editorkit/Assets/USS/Inspectors/CharacterBodyInspector.uss" />
         <ui:Button text="Set tokens from GameObject name" name="tokenSetter" tooltip="Automatically set the tokens for this body" class="tokenSetter" />
         <ui:TextField picking-mode="Ignore" label="Base Name Token" max-length="-1" tooltip="The token that&apos;s used to display this body&apos;s name" binding-path="baseNameToken" name="baseNameToken" />
         <ui:TextField picking-mode="Ignore" label="Subtitle Name Token" max-length="-1" tooltip="The token that&apos;s used to display this body&apos;s name" binding-path="subtitleNameToken" name="subtitleNameToken" />

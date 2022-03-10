@@ -2,9 +2,6 @@
 
 namespace Moonstorm.Components
 {
-    /// <summary>
-    /// Attach this component to a gameObject and pass a meshrenderer in. It'll attempt to find the correct shader controller from the meshrenderer material, attach it if it finds it, and destroy itself.
-    /// </summary>
     public class HGControllerFinder : MonoBehaviour
     {
         public Renderer Renderer;

@@ -14,13 +14,13 @@ namespace RoR2EditorKit.Core.PropertyDrawers
         {
             get
             {
-                if (_visualElement == null)
-                    _visualElement = new VisualElement();
-                return _visualElement;
+                if (_rootVisualElement == null)
+                    _rootVisualElement = new VisualElement();
+                return _rootVisualElement;
             }
         }
 
-        private VisualElement _visualElement;
+        private VisualElement _rootVisualElement;
 
         protected SerializedProperty serializedProperty;
 
@@ -32,6 +32,6 @@ namespace RoR2EditorKit.Core.PropertyDrawers
             return RootVisualElement;
         }
 
-        protected abstract VisualElement DrawPropertyGUI();
+        protected abstract void DrawPropertyGUI();
     }
 }

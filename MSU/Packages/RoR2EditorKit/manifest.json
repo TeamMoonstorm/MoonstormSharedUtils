@@ -1,7 +1,7 @@
 {
     "name": "RoR2EditorKit",
     "author": "RoR2EditorKitTeam",
-    "version_number": "2.0.0",
+    "version_number": "2.0.2",
     "website_url": "https://github.com/risk-of-thunder/RoR2EditorKit",
     "description": "RoR2EditorKit is a toolkit built around developing mods for Risk of Rain 2",
     "dependencies": []

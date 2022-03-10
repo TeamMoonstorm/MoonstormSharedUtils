@@ -9,11 +9,6 @@ using Zio.FileSystems;
 
 namespace Moonstorm.Loaders
 {
-    /// <summary>
-    /// Class for loading Language Files
-    /// <para>Automatically adds a Language folder to the game so it loads into the game's token dictionary</para>
-    /// </summary>
-    /// <typeparam name="T">The instance of your class</typeparam>
     public abstract class LanguageLoader<T> : LanguageLoader where T : LanguageLoader<T>
     {
         public static T Instance { get; private set; }
@@ -35,28 +30,13 @@ namespace Moonstorm.Loaders
         }
     }
 
-    /// <summary>
-    /// Class for loading Language Files
-    /// <para>Automatically adds a Language folder to the game so it loads into the game's token dictionary</para>
-    /// <para>Inherit from LanguageLoaderT instead</para>
-    /// </summary>
     public abstract class LanguageLoader
     {
-        /// <summary>
-        /// The directory of your assembly
-        /// </summary>
         public abstract string AssemblyDir { get; }
-
-        /// <summary>
-        /// The name of the Folder that contains the language files
-        /// </summary>
         public abstract string LanguagesFolderName { get; }
 
         public FileSystem FileSystem { get; private set; }
 
-        /// <summary>
-        /// Loads the LanguageFile into the game
-        /// </summary>
         protected void LoadLanguages()
         {
             PhysicalFileSystem physicalFileSystem = new PhysicalFileSystem();

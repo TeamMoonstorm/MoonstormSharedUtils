@@ -12,7 +12,7 @@ namespace Moonstorm.Components
 
         void Start()
         {
-            model = GetComponent<CharacterModel>();
+            /*model = GetComponent<CharacterModel>();
             modelIDRS = model.itemDisplayRuleSet;
             for (int i = 0; i < modelIDRS.runtimeEquipmentRuleGroups.Length; i++)
             {
@@ -49,7 +49,7 @@ namespace Moonstorm.Components
                         }
                     }
                 }
-            }
+            }*/
         }
     }
 }

@@ -8,9 +8,6 @@ using UnityEngine;
 
 namespace Moonstorm
 {
-    /// <summary>
-    /// Moonstorm Shared Utils's EventCatalog
-    /// </summary>
     public static class EventCatalog
     {
         private static readonly List<EventSceneDeck> loadedSceneDecks = new List<EventSceneDeck>();
@@ -24,45 +21,22 @@ namespace Moonstorm
             }
         }
 
-        /// <summary>
-        /// Returns true if the amount of registered events is greater than 0, false otherwise
-        /// </summary>
         public static bool HasAnyEventRegistered { get => loadedSceneDecks.Count > 0; }
 
-        /// <summary>
-        /// An array of all the event names
-        /// </summary>
         public static string[] eventNames = Array.Empty<string>();
 
-        /// <summary>
-        /// A Dictionary to go from an event name to it's event index
-        /// </summary>
         public static readonly Dictionary<string, EventIndex> eventNameToIndex = new Dictionary<string, EventIndex>();
 
-        /// <summary>
-        /// A Dictionary to go from an event index to the EventDirectorCard
-        /// </summary>
         public static readonly Dictionary<EventIndex, EventDirectorCard> eventIndexToCard = new Dictionary<EventIndex, EventDirectorCard>();
 
-        /// <summary>
-        /// A Dictionary to go from a SceneDef to the EventDirectorCards that belong in said scene
-        /// </summary>
         public static readonly Dictionary<SceneDef, EventDirectorCard[]> sceneToCards = new Dictionary<SceneDef, EventDirectorCard[]>();
 
-        /// <summary>
-        /// Adds the given EventSceneDecks to the EventCatalog
-        /// </summary>
-        /// <param name="decks">An Array of EventSceneDecks</param>
         public static void AddEventDecks(EventSceneDeck[] decks)
         {
             foreach (var newDeck in decks)
                 AddEventDeck(newDeck);
         }
 
-        /// <summary>
-        /// Adds the given EventSceneDeck to the EventCatalog
-        /// </summary>
-        /// <param name="newDeck">The EventSceneDeck to add</param>
         public static void AddEventDeck(EventSceneDeck newDeck)
         {
             loadedSceneDecks.Add(newDeck);
@@ -110,20 +84,11 @@ namespace Moonstorm
             }
         }
 
-        /// <summary>
-        /// Gets the current stage's events
-        /// </summary>
-        /// <returns>Returns the current stage's EventCardDeck</returns>
         public static EventCardDeck GetCurrentStageEvents()
         {
             return GetStageEvents(SceneInfo.instance.sceneDef);
         }
 
-        /// <summary>
-        /// Get a stage's events
-        /// </summary>
-        /// <param name="scene">The scene to get the events</param>
-        /// <returns>Returns the given scene's EventCardDeck</returns>
         public static EventCardDeck GetStageEvents(SceneDef scene)
         {
             return new EventCardDeck
@@ -132,12 +97,6 @@ namespace Moonstorm
             };
         }
 
-        /// <summary>
-        /// Tries to find a director card by its name
-        /// </summary>
-        /// <param name="cardName">The name of the card</param>
-        /// <param name="card">The card itself, if not found, it'll be null</param>
-        /// <returns>True if succesfully found, false otherwise</returns>
         public static bool TryFindDirectorCard(string cardName, out EventDirectorCard card)
         {
             string name = cardName.ToLower();
@@ -166,12 +125,6 @@ namespace Moonstorm
             return false;
         }
 
-        /// <summary>
-        /// Tries to find a director card by using the EventIndex
-        /// </summary>
-        /// <param name="eventIndex">The EventIndex</param>
-        /// <param name="card">The card that has the given EventIndex, if no card is found, this will be null</param>
-        /// <returns>true if succesful, false otherwise</returns>
         public static bool TryFindDirectorCard(EventIndex eventIndex, out EventDirectorCard card)
         {
             return eventIndexToCard.TryGetValue(eventIndex, out card);
