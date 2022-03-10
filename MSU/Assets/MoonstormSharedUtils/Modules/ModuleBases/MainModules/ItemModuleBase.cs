@@ -27,7 +27,7 @@ namespace Moonstorm
                 MoonstormItems = value;
             }
         }
-        private static Dictionary<ItemDef, ItemBase> items = new Dictionary<ItemDef, ItemBase>();
+        internal static Dictionary<ItemDef, ItemBase> items = new Dictionary<ItemDef, ItemBase>();
         public static Action<ReadOnlyDictionary<ItemDef, ItemBase>> OnDictionaryCreated;
 
         public static ItemDef[] LoadedItemDefs { get => MoonstormItems.Keys.ToArray(); }

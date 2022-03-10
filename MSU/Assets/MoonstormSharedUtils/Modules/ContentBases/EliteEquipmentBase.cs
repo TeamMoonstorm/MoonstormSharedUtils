@@ -2,6 +2,6 @@
 {
     public abstract class EliteEquipmentBase : EquipmentBase
     {
-        public abstract MSEliteDef EliteDef { get; set; }
+        public abstract MSEliteDef EliteDef { get; }
     }
 }

@@ -27,7 +27,7 @@ namespace Moonstorm
                 MoonstormCharacters = value;
             }
         }
-        private static Dictionary<GameObject, CharacterBase> characters = new Dictionary<GameObject, CharacterBase>();
+        internal static Dictionary<GameObject, CharacterBase> characters = new Dictionary<GameObject, CharacterBase>();
         public static Action<ReadOnlyDictionary<GameObject, CharacterBase>> OnDictionariesCreated;
 
         public static MonsterBase[] MoonstormMonsters { get => MoonstormCharacters.Values.Where(cb => cb.GetType().IsSubclassOf(typeof(MonsterBase))).Cast<MonsterBase>().ToArray(); }

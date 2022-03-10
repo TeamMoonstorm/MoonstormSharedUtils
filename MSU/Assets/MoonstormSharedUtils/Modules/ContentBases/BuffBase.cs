@@ -8,7 +8,5 @@ namespace Moonstorm
         public abstract BuffDef BuffDef { get; }
 
         public virtual Material OverlayMaterial { get; }
-
-        public virtual void AddBehavior(ref CharacterBody body, int stack) { }
     }
 }

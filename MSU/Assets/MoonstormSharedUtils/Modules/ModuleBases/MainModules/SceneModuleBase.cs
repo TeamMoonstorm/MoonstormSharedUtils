@@ -25,7 +25,7 @@ namespace Moonstorm
                 MoonstormScenes = value;
             }
         }
-        private static Dictionary<SceneDef, SceneBase> scenes = new Dictionary<SceneDef, SceneBase>();
+        internal static Dictionary<SceneDef, SceneBase> scenes = new Dictionary<SceneDef, SceneBase>();
         public static Action<ReadOnlyDictionary<SceneDef, SceneBase>> OnDictionaryCreated;
 
         public SceneDef[] LoadedSceneDefs { get => MoonstormScenes.Keys.ToArray(); }

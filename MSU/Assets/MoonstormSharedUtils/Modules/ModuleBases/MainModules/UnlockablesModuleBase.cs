@@ -142,66 +142,66 @@ namespace Moonstorm
 
         private static bool CheckArtifacts(Type type)
         {
-            var allArtifactBases = ArtifactModuleBase.MoonstormArtifacts.Values.Select(ab => ab.GetType());
+            var allArtifactBases = ArtifactModuleBase.artifacts.Values.Select(ab => ab.GetType());
             return allArtifactBases.Contains(type);
         }
 
         private static bool CheckBuffs(Type type)
         {
-            var allBuffs = BuffModuleBase.MoonstormBuffs.Values.Select(bb => bb.GetType());
+            var allBuffs = BuffModuleBase.buffs.Values.Select(bb => bb.GetType());
             return allBuffs.Contains(type);
         }
 
         private static bool CheckDamageTypes(Type type)
         {
-            var allDamageTypes = DamageTypeModuleBase.MoonstormDamageTypes.Values.Select(dtb => dtb.GetType());
+            var allDamageTypes = DamageTypeModuleBase.damageTypes.Values.Select(dtb => dtb.GetType());
             return allDamageTypes.Contains(type);
         }
 
         private static bool CheckEliteEquipments(Type type)
         {
-            var allEliteEquipments = PickupModuleBase.MoonstormEliteEquipments.Values.Select(eeb => eeb.GetType());
+            var allEliteEquipments = EquipmentModuleBase.eliteEquip.Values.Select(eeb => eeb.GetType());
             return allEliteEquipments.Contains(type);
         }
 
         private static bool CheckEquipments(Type type)
         {
-            var allEquipments = PickupModuleBase.MoonstormNonEliteEquipments.Values.Select(eb => eb.GetType());
+            var allEquipments = EquipmentModuleBase.nonEliteEquip.Values.Select(eb => eb.GetType());
             return allEquipments.Contains(type);
         }
 
         private static bool CheckItems(Type type)
         {
-            var allItems = PickupModuleBase.MoonstormItems.Values.Select(ib => ib.GetType());
+            var allItems = ItemModuleBase.items.Values.Select(ib => ib.GetType());
             return allItems.Contains(type);
         }
 
         private static bool CheckMonsters(Type type)
         {
-            var allMonsters = CharacterModuleBase.MoonstormCharacters.Where(charBase => charBase.GetType().IsSubclassOf(typeof(MonsterBase))).Select(mb => mb.GetType());
+            var allMonsters = CharacterModuleBase.characters.Where(charBase => charBase.GetType().IsSubclassOf(typeof(MonsterBase))).Select(mb => mb.GetType());
             return allMonsters.Contains(type);
         }
 
         private static bool CheckProjectiles(Type type)
         {
-            var allProjectiles = ProjectileModuleBase.MoonstormProjectiles.Values.Select(pb => pb.GetType());
+            var allProjectiles = ProjectileModuleBase.projectiles.Values.Select(pb => pb.GetType());
             return allProjectiles.Contains(type);
         }
 
         private static bool CheckScenes(Type type)
         {
-            var allScenes = SceneModuleBase.MoonstormScenes.Values.Select(sb => sb.GetType());
+            var allScenes = SceneModuleBase.scenes.Values.Select(sb => sb.GetType());
             return allScenes.Contains(type);
         }
 
         private static bool CheckUnlockables(Type type)
         {
-            var allUnlocks = MoonstormUnlockables.Values.Select(ub => ub.GetType());
+            var allUnlocks = unlocks.Values.Select(ub => ub.GetType());
             return allUnlocks.Contains(type);
         }
         private static bool CheckSurvivors(Type type)
         {
-            var allSurvivors = CharacterModuleBase.MoonstormCharacters.Where(charBase => charBase.GetType().IsSubclassOf(typeof(SurvivorBase))).Select(sb => sb.GetType());
+            var allSurvivors = CharacterModuleBase.characters.Where(charBase => charBase.GetType().IsSubclassOf(typeof(SurvivorBase))).Select(sb => sb.GetType());
             return allSurvivors.Contains(type);
         }
         #endregion

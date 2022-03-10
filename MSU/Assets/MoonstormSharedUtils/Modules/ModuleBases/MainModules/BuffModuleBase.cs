@@ -29,7 +29,7 @@ namespace Moonstorm
                 MoonstormBuffs = value;
             }
         }
-        private static Dictionary<BuffDef, BuffBase> buffs = new Dictionary<BuffDef, BuffBase>();
+        internal static Dictionary<BuffDef, BuffBase> buffs = new Dictionary<BuffDef, BuffBase>();
         public static Action<ReadOnlyDictionary<BuffDef, BuffBase>, ReadOnlyDictionary<BuffDef, Material>> OnDictionariesCreated;
 
         public static ReadOnlyDictionary<BuffDef, Material> MoonstormOverlayMaterials
@@ -48,7 +48,7 @@ namespace Moonstorm
                 MoonstormOverlayMaterials = value;
             }
         }
-        private static Dictionary<BuffDef, Material> overlayMaterials = new Dictionary<BuffDef, Material>();
+        internal static Dictionary<BuffDef, Material> overlayMaterials = new Dictionary<BuffDef, Material>();
 
         public static BuffDef[] LoadedBuffDefs { get => MoonstormBuffs.Keys.ToArray(); }
 

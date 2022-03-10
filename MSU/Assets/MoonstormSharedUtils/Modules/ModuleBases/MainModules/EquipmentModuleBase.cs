@@ -27,8 +27,7 @@ namespace Moonstorm
                 NonEliteMoonstormEquipments = value;
             }
         }
-        private static Dictionary<EquipmentDef, EquipmentBase> nonEliteEquip = new Dictionary<EquipmentDef, EquipmentBase>();
-        public static Action<ReadOnlyDictionary<EquipmentDef, EquipmentBase>> OnNonEliteEquipmentDictionaryCreated;
+        internal static Dictionary<EquipmentDef, EquipmentBase> nonEliteEquip = new Dictionary<EquipmentDef, EquipmentBase>();
 
         public static ReadOnlyDictionary<EquipmentDef, EliteEquipmentBase> EliteMoonstormEquipments
         {
@@ -46,8 +45,7 @@ namespace Moonstorm
                 EliteMoonstormEquipments = value;
             }
         }
-        private static Dictionary<EquipmentDef, EliteEquipmentBase> eliteEquip = new Dictionary<EquipmentDef, EliteEquipmentBase>();
-        public static Action<ReadOnlyDictionary<EquipmentDef, EliteEquipmentBase>> OnEliteEquipmentDictionaryCreated;
+        internal static Dictionary<EquipmentDef, EliteEquipmentBase> eliteEquip = new Dictionary<EquipmentDef, EliteEquipmentBase>();
 
         public static ReadOnlyDictionary<EquipmentDef, EquipmentBase> AllMoonstormEquipments
         {
@@ -69,6 +67,7 @@ namespace Moonstorm
             }
         }
         private static ReadOnlyDictionary<EquipmentDef, EquipmentBase> allMoonstormEquipments;
+        public static Action<ReadOnlyDictionary<EquipmentDef, EquipmentBase>, ReadOnlyDictionary<EquipmentDef, EliteEquipmentBase>> OnDictionariesCreated;
 
         public static EquipmentDef[] LoadedNonEliteEquipmentDefs { get => NonEliteMoonstormEquipments.Keys.ToArray(); }
         public static EquipmentDef[] EliteEquipmentDefs { get => EliteMoonstormEquipments.Keys.ToArray(); }
@@ -87,13 +86,12 @@ namespace Moonstorm
 
             EliteMoonstormEquipments = new ReadOnlyDictionary<EquipmentDef, EliteEquipmentBase>(eliteEquip);
             eliteEquip = null;
-            OnEliteEquipmentDictionaryCreated?.Invoke(EliteMoonstormEquipments);
 
             NonEliteMoonstormEquipments = new ReadOnlyDictionary<EquipmentDef, EquipmentBase>(nonEliteEquip);
             nonEliteEquip = null;
-            OnNonEliteEquipmentDictionaryCreated?.Invoke(NonEliteMoonstormEquipments);
 
             _ = AllMoonstormEquipments;
+            OnDictionariesCreated?.Invoke(NonEliteMoonstormEquipments, EliteMoonstormEquipments);
         }
 
         #region Equipments
@@ -163,11 +161,11 @@ namespace Moonstorm
         {
             if(AddSafely(ref SerializableContentPack.equipmentDefs, contentClass.EquipmentDef))
             {
-                contentClass.Initialize();
 
                 if(contentClass is EliteEquipmentBase eeb)
                 {
                     AddSafelyToDict(ref eliteEquip, eeb.EquipmentDef, eeb);
+                    contentClass.Initialize();
                     return true;
                 }
                 else if(contentClass is EquipmentBase eb)

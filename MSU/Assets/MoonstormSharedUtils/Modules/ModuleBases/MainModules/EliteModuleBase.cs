@@ -5,14 +5,102 @@ using RoR2;
 using RoR2.ContentManagement;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
+using RoR2BepInExPack;
 
 namespace Moonstorm
 {
-    public abstract class EliteModuleBase : ModuleBase<EliteEquipmentBase>
+    public abstract class EliteModuleBase : ContentModule<EliteEquipmentBase>
     {
-        public static List<MSEliteDef> MoonstormElites = new List<MSEliteDef>();
+        public static ReadOnlyCollection<MSEliteDef> MoonstormElites
+        {
+            get
+            {
+                if(!Initialized)
+                {
+                    ThrowModuleNotInitialized($"Retrieve dictionary {nameof(MoonstormElites)}", typeof(EliteModuleBase));
+                    return null;
+                }
+                return MoonstormElites;
+            }
+            private set
+            {
+                MoonstormElites = value;
+            }
+        }
+        internal static List<MSEliteDef> eliteDefs = new List<MSEliteDef>();
+        public static Action<ReadOnlyCollection<MSEliteDef>> OnListCreated;
 
+        public static bool Initialized { get; private set; } = false;
+
+        public abstract AssetBundle AssetBundle { get; }
+
+        [SystemInitializer(new Type[] { typeof(BuffCatalog), typeof(EquipmentCatalog), typeof(EliteCatalog) })]
+        private static void SystemInit()
+        {
+            Initialized = true;
+            MSULog.Info($"Initializing Elite Module...");
+
+            MoonstormElites = new ReadOnlyCollection<MSEliteDef>(eliteDefs);
+            eliteDefs = null;
+
+            OnListCreated?.Invoke(MoonstormElites);
+        }
+
+        protected virtual IEnumerable<EliteEquipmentBase> GetInitializedEliteEquipmentBases()
+        {
+            if(Initialized)
+            {
+                ThrowModuleInitialized($"Retrieve Initialized EliteEquipmentBases list", typeof(EliteModuleBase));
+                return null;
+            }
+
+            MSULog.Debug($"Getting the initialized EliteEquipmentBases inside {GetType().Assembly}");
+
+            var initializedEliteEquipmentBases = new List<EliteEquipmentBase>();
+            foreach(MSEliteDef def in AssetBundle.LoadAllAssets<MSEliteDef>())
+            {
+                EliteEquipmentBase equipmentBase;
+                bool flag = EquipmentModuleBase.eliteEquip.TryGetValue(def.eliteEquipmentDef, out equipmentBase);
+                if(flag)
+                {
+                    initializedEliteEquipmentBases.Add(equipmentBase);
+                }
+            }
+            return initializedEliteEquipmentBases;
+        }
+
+        protected void AddElite(EliteEquipmentBase elite, List<MSEliteDef> list = null)
+        {
+            if (Initialized)
+            {
+                ThrowModuleInitialized($"Add EliteEquipmentBase to ContentPack", typeof(EliteModuleBase));
+                return;
+            }
+
+            if (InitializeContent(elite) && list != null)
+                AddSafelyToList(ref list, elite.EliteDef);
+
+            MSULog.Debug($"Elite {elite.EliteDef} added to {SerializableContentPack.name}");
+        }
+
+        protected override bool InitializeContent(EliteEquipmentBase contentClass)
+        {
+            if(AddSafely(ref SerializableContentPack.eliteDefs, contentClass.EliteDef))
+            {
+                contentClass.Initialize();
+
+                AddSafelyToList(ref eliteDefs, contentClass.EliteDef);
+
+                if(contentClass.EliteDef.overlay && contentClass.EquipmentDef.passiveBuffDef)
+                {
+                    BuffModuleBase.overlayMaterials.Add(contentClass.EquipmentDef.passiveBuffDef, contentClass.EliteDef.overlay);
+                }
+                return true;
+            }
+            return false;
+        }
         /*[SystemInitializer(typeof(EliteCatalog))]
         public static void HookInit()
         {

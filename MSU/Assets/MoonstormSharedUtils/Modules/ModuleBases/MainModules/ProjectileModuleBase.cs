@@ -27,7 +27,7 @@ namespace Moonstorm
                 MoonstormProjectiles = value;
             }
         }
-        private static Dictionary<GameObject, ProjectileBase> projectiles = new Dictionary<GameObject, ProjectileBase>();
+        internal static Dictionary<GameObject, ProjectileBase> projectiles = new Dictionary<GameObject, ProjectileBase>();
         public static Action<ReadOnlyDictionary<GameObject, ProjectileBase>> OnDictionaryCreated;
 
         public static GameObject[] LoadedProjectiles { get => MoonstormProjectiles.Keys.ToArray(); }

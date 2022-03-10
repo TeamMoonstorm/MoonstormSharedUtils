@@ -26,7 +26,7 @@ namespace Moonstorm
                 MoonstormDamageTypes = value;
             }
         }
-        public static Dictionary<ModdedDamageType, DamageTypeBase> damageTypes = new Dictionary<ModdedDamageType, DamageTypeBase>();
+        internal static Dictionary<ModdedDamageType, DamageTypeBase> damageTypes = new Dictionary<ModdedDamageType, DamageTypeBase>();
         public static Action<ReadOnlyDictionary<ModdedDamageType, DamageTypeBase>> OnDictionaryCreated;
 
         public static ModdedDamageType[] ModdedDamageTypes { get => MoonstormDamageTypes.Keys.ToArray(); }

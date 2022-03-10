@@ -28,7 +28,7 @@ namespace Moonstorm
                 MoonstormInteractables = value;
             }
         }
-        private static Dictionary<GameObject, InteractableBase> interactables = new Dictionary<GameObject, InteractableBase>();
+        internal static Dictionary<GameObject, InteractableBase> interactables = new Dictionary<GameObject, InteractableBase>();
         public static Action<ReadOnlyDictionary<GameObject, InteractableBase>> OnDictionaryCreated;
 
         public static InteractableBase[] InteractablesWithCards { get => MoonstormInteractables.Values.Where(ib => ib.InteractableDirectorCard != null).ToArray(); }

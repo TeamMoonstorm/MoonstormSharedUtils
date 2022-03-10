@@ -3,6 +3,6 @@ namespace Moonstorm
 {
     public abstract class MonsterBase : CharacterBase
     {
-        public abstract MSMonsterDirectorCard MonsterDirectorCard { get; set; }
+        public abstract MSMonsterDirectorCard MonsterDirectorCard { get; }
     }
 }

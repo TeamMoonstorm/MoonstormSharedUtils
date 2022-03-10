@@ -6,7 +6,7 @@ namespace Moonstorm
 {
     public abstract class UnlockableBase : ContentBase
     {
-        public abstract MSUnlockableDef UnlockableDef { get; set; }
+        public abstract MSUnlockableDef UnlockableDef { get; }
         public Type[] RequiredTypes { get; private set; } = Array.Empty<Type>();
 
         protected void AddRequiredType<T>() where T : ContentBase

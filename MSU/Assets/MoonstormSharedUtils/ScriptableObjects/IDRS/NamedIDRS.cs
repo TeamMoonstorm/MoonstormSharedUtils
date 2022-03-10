@@ -12,27 +12,27 @@ namespace Moonstorm
     [CreateAssetMenu(fileName = "New NamedIDRS", menuName = "Moonstorm/IDRS/NamedIDRS")]
     public class NamedIDRS : ScriptableObject
     {
-        /*[Serializable]
-        public struct NamedRuleGroup
+        [Serializable]
+        public struct AddressNamedRuleGroup
         {
-            public string keyAssetName;
-            public List<NamedDisplayRule> rules;
+            public string keyAssetAdressOrName;
+            public List<AdressNamedDisplayRule> rules;
 
             public bool IsEmpty { get => rules != null ? rules.Count == 0 : true; }
 
-            public void AddRule(NamedDisplayRule rule)
+            public void AddRule(AdressNamedDisplayRule rule)
             {
                 if (rules == null)
-                    rules = new List<NamedDisplayRule>();
+                    rules = new List<AdressNamedDisplayRule>();
 
                 rules.Add(rule);
             }
         }
         [Serializable]
-        public struct NamedDisplayRule
+        public struct AdressNamedDisplayRule
         {
             public ItemDisplayRuleType ruleType;
-            public string displayPrefabName;
+            public string dislpayPrefabAdressOrName;
             [Tooltip("Values taken from the ItemDisplayPlacementHelper\nMake sure to use the copy format \"For Parsing\"!.")]
             [TextArea(1, int.MaxValue)]
             public string IDPHValues;
@@ -109,7 +109,7 @@ namespace Moonstorm
         private ItemDisplayRuleSet _idrs;
 
         [Space(2)]
-        public List<NamedRuleGroup> namedRuleGroups = new List<NamedRuleGroup>();
+        public List<AddressNamedRuleGroup> namedRuleGroups = new List<AddressNamedRuleGroup>();
         public string idrsName;
 
         internal ItemDisplayRuleSet.KeyAssetRuleGroup[] GetKeyAssetRuleGroups()
@@ -130,7 +130,7 @@ namespace Moonstorm
 
                 for(int i = 0; i < namedRuleGroup.rules.Count; i++)
                 {
-                    NamedDisplayRule rule = namedRuleGroup.rules[i];
+                    AdressNamedDisplayRule rule = namedRuleGroup.rules[i];
                     rule.Parse();
                     keyAssetGroup.displayRuleGroup.AddDisplayRule(rule.finishedRule);
                 }

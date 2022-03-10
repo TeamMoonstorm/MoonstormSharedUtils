@@ -30,7 +30,7 @@ namespace Moonstorm
                 MoonstormArtifacts = value;
             }
         }
-        private static Dictionary<ArtifactDef, ArtifactBase> artifacts = new Dictionary<ArtifactDef, ArtifactBase>();
+        internal static Dictionary<ArtifactDef, ArtifactBase> artifacts = new Dictionary<ArtifactDef, ArtifactBase>();
         public static Action<ReadOnlyDictionary<ArtifactDef, ArtifactBase>> OnDictionaryCreated;
         public static ArtifactDef[] LoadedArtifactDefs { get => MoonstormArtifacts.Keys.ToArray(); }
         public static bool Initialized { get; private set; } = false;

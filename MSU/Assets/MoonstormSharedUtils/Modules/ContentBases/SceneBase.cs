@@ -4,6 +4,6 @@ namespace Moonstorm
 {
     public abstract class SceneBase : ContentBase
     {
-        public abstract SceneDef SceneDef { get; set; }
+        public abstract SceneDef SceneDef { get; }
     }
 }
