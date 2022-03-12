@@ -60,7 +60,7 @@ namespace Moonstorm
             return GetContentClasses<ItemBase>();
         }
 
-        protected void AddItem(ItemBase item, Dictionary<ItemDef, ItemBase> dictionary)
+        protected void AddItem(ItemBase item, Dictionary<ItemDef, ItemBase> dictionary = null)
         {
             if(Initialized)
             {

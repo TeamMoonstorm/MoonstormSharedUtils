@@ -57,4 +57,6 @@ MonoBehaviour:
   EstablishDestination: 1
   pathReferencePairs:
   - pathSource: <BuildPath>
-    pathDestination: <MSUTestingPath>
+    pathDestination: <LITTestingPath>
+  - pathSource: <BuildPath>
+    pathDestination: <LITEditorPath>

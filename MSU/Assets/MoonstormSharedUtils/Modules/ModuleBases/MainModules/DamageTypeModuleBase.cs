@@ -76,7 +76,7 @@ namespace Moonstorm
         {
             contentClass.Initialize();
             contentClass.Delegates();
-            contentClass.ModdedDamageType = ReserveDamageType();
+            contentClass.SetDamageType(ReserveDamageType());
 
             damageTypes.Add(contentClass.ModdedDamageType, contentClass);
             return true;

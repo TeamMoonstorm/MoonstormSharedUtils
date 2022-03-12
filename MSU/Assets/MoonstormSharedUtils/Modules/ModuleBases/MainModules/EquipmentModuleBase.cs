@@ -108,7 +108,7 @@ namespace Moonstorm
             return GetContentClasses<EquipmentBase>(typeof(EliteEquipmentBase));
         }
 
-        protected void AddEquipment(EquipmentBase equip, Dictionary<EquipmentDef, EquipmentBase> dictionary)
+        protected void AddEquipment(EquipmentBase equip, Dictionary<EquipmentDef, EquipmentBase> dictionary = null)
         {
             if (Initialized)
             {
@@ -139,7 +139,7 @@ namespace Moonstorm
             return GetContentClasses<EliteEquipmentBase>();
         }
 
-        protected void AddEliteEquipment(EliteEquipmentBase eliteEqp, Dictionary<EquipmentDef, EliteEquipmentBase> dictionary)
+        protected void AddEliteEquipment(EliteEquipmentBase eliteEqp, Dictionary<EquipmentDef, EliteEquipmentBase> dictionary = null)
         {
             if (Initialized)
             {
