@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace Moonstorm
 {
-    [CreateAssetMenu(fileName = "New ItemDisplayDictionary", menuName = "Moonstorm/IDRS/ItemDisplayDictionary")]
+    /*[CreateAssetMenu(fileName = "New ItemDisplayDictionary", menuName = "Moonstorm/IDRS/ItemDisplayDictionary")]
     public class ItemDisplayDictionary : ScriptableObject
     {
         [Serializable]
@@ -131,5 +131,5 @@ namespace Moonstorm
             }
             return keyAssetRuleGroup;
         }
-    }
+    }*/
 }

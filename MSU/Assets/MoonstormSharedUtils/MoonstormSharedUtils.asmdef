@@ -20,7 +20,9 @@
         "Zio.dll",
         "RoR2.dll",
         "Assembly-CSharp.dll",
-        "RoR2BepInExPack.dll"
+        "RoR2BepInExPack.dll",
+        "Unity.Addressables.dll",
+        "Unity.ResourceManager.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [],

@@ -41,9 +41,6 @@ namespace Moonstorm
             Initialized = true;
             MSULog.Info($"Initializing Item Module...");
 
-            On.RoR2.CharacterBody.RecalculateStats += OnRecalculateStats;
-            R2API.RecalculateStatsAPI.GetStatCoefficients += OnGetStatCoefficients;
-
             MoonstormItems = new ReadOnlyDictionary<ItemDef, ItemBase>(items);
             items = null;
 
@@ -87,18 +84,6 @@ namespace Moonstorm
                 return true;
             }
             return false;
-        }
-        #endregion
-
-        #region Hooks
-        private static void OnGetStatCoefficients(CharacterBody sender, R2API.RecalculateStatsAPI.StatHookEventArgs args)
-        {
-            throw new NotImplementedException();
-        }
-
-        private static void OnRecalculateStats(On.RoR2.CharacterBody.orig_RecalculateStats orig, CharacterBody self)
-        {
-            throw new NotImplementedException();
         }
         #endregion
     }

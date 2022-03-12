@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace Moonstorm
 {
-    [CreateAssetMenu(fileName = "New NamedIDRS", menuName = "Moonstorm/IDRS/NamedIDRS")]
+    /*[CreateAssetMenu(fileName = "New NamedIDRS", menuName = "Moonstorm/IDRS/NamedIDRS")]
     public class NamedIDRS : ScriptableObject
     {
         [Serializable]
@@ -138,6 +138,6 @@ namespace Moonstorm
             }
             namedRuleGroups.Clear();
             return keyAssetList.ToArray();
-        }*/
-    }
+        }
+    }*/
 }

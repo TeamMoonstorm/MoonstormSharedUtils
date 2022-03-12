@@ -11,9 +11,9 @@ namespace Moonstorm
         private static bool initialized = false;
 
         //A single language token can be modified from multiple fields, and each field may contian multiple token modifiers.
-        private static Dictionary<string, List<(FieldInfo, TokenModifier[])>> tokenToModifiers = new Dictionary<string, List<(FieldInfo, TokenModifier[])>>();
+        private static Dictionary<string, List<(FieldInfo, TokenModifierAttribute[])>> tokenToModifiers = new Dictionary<string, List<(FieldInfo, TokenModifierAttribute[])>>();
 
-        [SystemInitializer()]
+        [SystemInitializer(typeof(ConfigurableFieldManager))]
         private static void Init()
         {
             initialized = true;
@@ -36,20 +36,20 @@ namespace Moonstorm
             }
 
             MSULog.Info($"Adding mod {assembly.GetName().Name} to the token modifier manager");
-            List<(FieldInfo, TokenModifier[])> allFieldsWithAttributes = new List<(FieldInfo, TokenModifier[])>();
-            foreach (Type type in assembly.GetTypes().Where(type => type.GetCustomAttribute<DisabledContent>() == null))
+            List<(FieldInfo, TokenModifierAttribute[])> allFieldsWithAttributes = new List<(FieldInfo, TokenModifierAttribute[])>();
+            foreach (Type type in assembly.GetTypes().Where(type => type.GetCustomAttribute<DisabledContentAttribute>() == null))
             {
                 try
                 {
                     List<FieldInfo> fields = type.GetFields()
-                                                 .Where(f => f.GetCustomAttributes<TokenModifier>().Count() != 0) //A field can have multiple modifiers.
+                                                 .Where(f => f.GetCustomAttributes<TokenModifierAttribute>().Count() != 0) //A field can have multiple modifiers.
                                                  .ToList();
 
                     foreach(FieldInfo field in fields)
                     {
                         try
                         {
-                            var modifiers = field.GetCustomAttributes<TokenModifier>().ToArray();
+                            var modifiers = field.GetCustomAttributes<TokenModifierAttribute>().ToArray();
                             if(modifiers.Length > 0)
                             {
                                 allFieldsWithAttributes.Add((field, modifiers));
@@ -64,19 +64,19 @@ namespace Moonstorm
 
             if(allFieldsWithAttributes.Count == 0)
             {
-                MSULog.Warning($"Found no fields with the {nameof(TokenModifier)} attribute within {assembly.GetName().Name}");
+                MSULog.Warning($"Found no fields with the {nameof(TokenModifierAttribute)} attribute within {assembly.GetName().Name}");
                 return;
             }
 
-            MSULog.Debug($"Found a total of {allFieldsWithAttributes.Count} fields with the {nameof(TokenModifier)} attribute within {assembly.GetName().Name}.");
+            MSULog.Debug($"Found a total of {allFieldsWithAttributes.Count} fields with the {nameof(TokenModifierAttribute)} attribute within {assembly.GetName().Name}.");
             foreach (var (field, attributes) in allFieldsWithAttributes)
             {
-                foreach(TokenModifier modifier in attributes)
+                foreach(TokenModifierAttribute modifier in attributes)
                 {
                     var token = modifier.langToken;
                     if(!tokenToModifiers.ContainsKey(token))
                     {
-                        tokenToModifiers.Add(token, new List<(FieldInfo, TokenModifier[])>());
+                        tokenToModifiers.Add(token, new List<(FieldInfo, TokenModifierAttribute[])>());
                     }
 
                     var attributeMatch = attributes.Where(att => att.langToken == token).ToArray(); //A field can have an multiple attributes that modifies different tokens.
@@ -102,7 +102,7 @@ namespace Moonstorm
             ModifyToken(lang, token, localizedString, tokenToModifiers[token]);
         }
 
-        private static void ModifyToken(Language lang, string token, string localizedString, List<(FieldInfo, TokenModifier[])> modifiers)
+        private static void ModifyToken(Language lang, string token, string localizedString, List<(FieldInfo, TokenModifierAttribute[])> modifiers)
         {
             try
             {
@@ -112,7 +112,7 @@ namespace Moonstorm
             catch (Exception e) { MSULog.Error(e); }
         }
 
-        private static object[] GetFormattingFromList(List<(FieldInfo, TokenModifier[])> fieldAndModifiers)
+        private static object[] GetFormattingFromList(List<(FieldInfo, TokenModifierAttribute[])> fieldAndModifiers)
         {
             object[] objectArray = new object[0];
             foreach (var (field, modifiers) in fieldAndModifiers)

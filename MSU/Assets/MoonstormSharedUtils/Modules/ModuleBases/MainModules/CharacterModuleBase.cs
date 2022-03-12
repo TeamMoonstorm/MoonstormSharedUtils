@@ -46,7 +46,6 @@ namespace Moonstorm
             DirectorAPI.MonsterActions += ModifyMonsters;
 
             MoonstormCharacters = new ReadOnlyDictionary<GameObject, CharacterBase>(characters);
-            characters.Clear();
             characters = null;
 
             OnDictionariesCreated?.Invoke(MoonstormCharacters);

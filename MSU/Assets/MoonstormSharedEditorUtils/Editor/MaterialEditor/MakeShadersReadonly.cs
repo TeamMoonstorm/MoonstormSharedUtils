@@ -1,4 +1,4 @@
-﻿using RoR2EditorKit;
+﻿/*using RoR2EditorKit;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -49,3 +49,4 @@ namespace Moonstorm.EditorUtils
         }
     }
 }
+*/

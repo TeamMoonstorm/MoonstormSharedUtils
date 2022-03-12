@@ -1,4 +1,4 @@
-﻿using UnityEditor;
+﻿/*using UnityEditor;
 using UnityEngine;
 
 namespace Moonstorm.EditorUtils
@@ -41,3 +41,4 @@ namespace Moonstorm.EditorUtils
         }
     }
 }
+*/

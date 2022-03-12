@@ -27,7 +27,7 @@ namespace Moonstorm.Components
 
         public void SetNewElite(MSEliteDef eliteDef)
         {
-            if (model && eliteDef != elite)
+            if (eliteDef != elite)
             {
                 oldRamp = elite?.eliteRamp;
                 elite = eliteDef;

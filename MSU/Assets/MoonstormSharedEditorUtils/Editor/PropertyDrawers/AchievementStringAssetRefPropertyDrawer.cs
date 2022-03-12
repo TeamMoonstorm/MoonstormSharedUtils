@@ -1,4 +1,4 @@
-﻿using RoR2EditorKit.Core.PropertyDrawers;
+﻿/*using RoR2EditorKit.Core.PropertyDrawers;
 using UnityEditor;
 
 namespace Moonstorm.EditorUtils.PropertyDrawers
@@ -27,3 +27,4 @@ namespace Moonstorm.EditorUtils.PropertyDrawers
         }
     }
 }
+*/

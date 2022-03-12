@@ -15,7 +15,7 @@ namespace Moonstorm
     /// Declares that the value from a field must be used for formatting a language token
     /// </summary>
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
-    public class TokenModifier : Attribute
+    public class TokenModifierAttribute : Attribute
     {
         public string langToken;
         public StatTypes statType;
@@ -23,7 +23,7 @@ namespace Moonstorm
 
         private object valueForFormatting;
 
-        public TokenModifier(string langToken, StatTypes statType, int formatIndex = 0)
+        public TokenModifierAttribute(string langToken, StatTypes statType, int formatIndex = 0)
         {
             this.langToken = langToken;
             this.statType = statType;
@@ -56,7 +56,7 @@ namespace Moonstorm
                 }
                 else
                 {
-                    MSULog.Error($"The type {fieldInfo.FieldType} is not a number, the {nameof(TokenModifier)} attribute should only be used on fields that are numbers!");
+                    MSULog.Error($"The type {fieldInfo.FieldType} is not a number, the {nameof(TokenModifierAttribute)} attribute should only be used on fields that are numbers!");
                 }
                 return (null, 0);
             }

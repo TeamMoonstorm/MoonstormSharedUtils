@@ -40,7 +40,6 @@ namespace Moonstorm
             MSULog.Info("Initializing DamageType Module...");
 
             MoonstormDamageTypes = new ReadOnlyDictionary<ModdedDamageType, DamageTypeBase>(damageTypes);
-            damageTypes.Clear();
             damageTypes = null;
 
             OnDictionaryCreated?.Invoke(MoonstormDamageTypes);

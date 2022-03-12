@@ -1,4 +1,4 @@
-﻿using RoR2;
+﻿/*using RoR2;
 using UnityEngine;
 
 namespace Moonstorm.Components
@@ -17,4 +17,4 @@ namespace Moonstorm.Components
 
         public virtual void CheckForBuffs() { }
     }
-}
+}*/

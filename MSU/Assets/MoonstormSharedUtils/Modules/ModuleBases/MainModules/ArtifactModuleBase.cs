@@ -45,7 +45,6 @@ namespace Moonstorm
             RunArtifactManager.onArtifactDisabledGlobal += OnArtifactDisabled;
 
             MoonstormArtifacts = new ReadOnlyDictionary<ArtifactDef, ArtifactBase>(artifacts);
-            artifacts.Clear();
             artifacts = null;
 
             OnDictionaryCreated?.Invoke(MoonstormArtifacts);

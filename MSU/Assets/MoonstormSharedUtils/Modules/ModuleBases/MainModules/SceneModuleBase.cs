@@ -38,7 +38,6 @@ namespace Moonstorm
             MSULog.Info("Initializing Scene Module...");
 
             MoonstormScenes = new ReadOnlyDictionary<SceneDef, SceneBase>(scenes);
-            scenes.Clear();
             scenes = null;
 
             OnDictionaryCreated(MoonstormScenes);

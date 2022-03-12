@@ -3,7 +3,7 @@
 namespace Moonstorm
 {
     [AttributeUsage(AttributeTargets.Class)]
-    public class DisabledContent : Attribute
+    public class DisabledContentAttribute : Attribute
     {
     }
 }

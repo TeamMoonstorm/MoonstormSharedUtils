@@ -46,7 +46,6 @@ namespace Moonstorm
             DirectorAPI.InteractableActions += AddCustomInteractables;
 
             MoonstormInteractables = new ReadOnlyDictionary<GameObject, InteractableBase>(interactables);
-            interactables.Clear();
             interactables = null;
 
             OnDictionaryCreated?.Invoke(MoonstormInteractables);

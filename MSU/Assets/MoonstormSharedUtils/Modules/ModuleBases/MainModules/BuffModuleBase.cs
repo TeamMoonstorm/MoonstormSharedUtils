@@ -64,11 +64,9 @@ namespace Moonstorm
             On.RoR2.CharacterModel.UpdateOverlays += AddBuffOverlay;
 
             MoonstormBuffs = new ReadOnlyDictionary<BuffDef, BuffBase>(buffs);
-            buffs.Clear();
             buffs = null;
 
             MoonstormOverlayMaterials = new ReadOnlyDictionary<BuffDef, Material>(overlayMaterials);
-            overlayMaterials.Clear();
             overlayMaterials = null;
             
             OnDictionariesCreated?.Invoke(MoonstormBuffs, MoonstormOverlayMaterials);
@@ -121,14 +119,11 @@ namespace Moonstorm
         private static void OnBuffsChanged(On.RoR2.CharacterBody.orig_SetBuffCount orig, CharacterBody self, BuffIndex buffType, int newCount)
         {
             orig(self, buffType, newCount);
-            if(self)
-            {
-                var itemManager = self.GetComponent<MoonstormItemManager>();
-                if(itemManager)
-                {
-                    itemManager.CheckForBuffs();
-                }
-            }
+            if (!self)
+                return;
+
+            var contentManager = self.GetComponent<MoonstormContentManager>();
+            contentManager.StartGetInterfaces();
         }
 
         private static void AddBuffOverlay(On.RoR2.CharacterModel.orig_UpdateOverlays orig, CharacterModel model)

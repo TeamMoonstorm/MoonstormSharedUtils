@@ -22,7 +22,7 @@ namespace Moonstorm
                             .Where(type => excludedType != null ? !type.IsSubclassOf(excludedType) : true)
                             .Where(type => !type.GetCustomAttributes(true)
                                 .Select(obj => obj.GetType())
-                                .Contains(typeof(DisabledContent)))
+                                .Contains(typeof(DisabledContentAttribute)))
                             .Select(type => (T)Activator.CreateInstance(type));
         }
 
