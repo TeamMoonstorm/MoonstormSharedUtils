@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Moonstorm.ScriptableObjects
 {
-    [CreateAssetMenu(menuName = "Moonstorm/Events/Event Director Card")]
+    /*[CreateAssetMenu(menuName = "Moonstorm/Events/Event Director Card")]
     public class EventDirectorCard : ScriptableObject
     {
         public int Cost
@@ -99,5 +99,5 @@ namespace Moonstorm.ScriptableObjects
                     Debug.Log(Enum.GetName(typeof(EventFlags), flag));
             }
         }
-    }
+    }*/
 }

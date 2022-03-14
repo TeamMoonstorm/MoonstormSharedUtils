@@ -1,4 +1,4 @@
-﻿using RoR2;
+﻿/*using RoR2;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -49,13 +49,13 @@ namespace Moonstorm.Components
          * In all current vanilla cases there is only one NGSS_Directional per scene, and it's always attached to the sun.
          * That doesn't necessarily mean that this will be the case in the future, as either of these cases failing will mess this up,
          * not to mention modding.
-         */
+         *
         private Light FindSun()
         {
             /*var sunLight = FindObjectOfType<NGSS_Directional>()?.GetComponent<Light>(); ;
             if (!sunLight)
                 MSULog.Warning("Could not find sun object.");
-            return sunLight;*/
+            return sunLight;
             return null;
         }
 
@@ -76,4 +76,4 @@ namespace Moonstorm.Components
         }
 
     }
-}
+}*/

@@ -141,7 +141,7 @@ namespace Moonstorm
                 return (null, null);
             }
             object typeAsObj = bepInPluginType;
-            if (!(typeAsObj is BaseUnityPlugin))
+            if (!bepInPluginType.IsSubclassOf(typeof(BaseUnityPlugin)))
             {
                 MSULog.Error($"The type {bepInPluginType} does not inherit from BaseUnityPlugin! cannot retrieve Config Tuple.");
                 return (null, null);

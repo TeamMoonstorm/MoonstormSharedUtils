@@ -10,6 +10,47 @@ namespace Moonstorm
 {
     public static class EventCatalog
     {
+        private static EventCard[] eventCards;
+
+        private static readonly Dictionary<string, EventIndex> nameToEventIndex = new Dictionary<string, EventIndex>();
+
+        public static int eventCount => eventCards.Length;
+
+        private static void RegisterEvent(EventIndex eventIndex, EventCard eventCard)
+        {
+            eventCard.EventIndex = eventIndex;
+            nameToEventIndex[eventCard.name] = eventIndex;
+        }
+
+        public static EventCard GetEventCard(EventIndex eventIndex)
+        {
+            return ArrayUtils.GetSafe(eventCards, (int)eventIndex);
+        }
+
+        public static EventIndex FindEventIndex(string eventName)
+        {
+            if(nameToEventIndex.TryGetValue(eventName, out EventIndex eventIndex))
+            {
+                return eventIndex;
+            }
+            return EventIndex.None;
+        }
+
+        private static void Init()
+        {
+            nameToEventIndex.Clear();
+            for(EventIndex eventIndex = (EventIndex)0; (int)eventIndex < eventCards.Length; eventIndex++)
+            {
+                RegisterEvent(eventIndex, eventCards[(int)eventIndex]);
+            }
+        }
+
+        public static void AddCards(EventCard[] cards) => cards.ToList().ForEach(card => AddCard(card));
+
+        public static void AddCard(EventCard card) => HG.ArrayUtils.ArrayAppend(ref eventCards, card);
+    }
+    /*public static class EventCatalog
+    {
         private static readonly List<EventSceneDeck> loadedSceneDecks = new List<EventSceneDeck>();
 
         //Returns the amount of available events
@@ -196,7 +237,7 @@ namespace Moonstorm
             eventCards = Array.Empty<EventDirectorCard>();
         }
 
-    }
+    }*/
 
 }
 

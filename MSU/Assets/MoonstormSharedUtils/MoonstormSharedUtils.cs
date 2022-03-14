@@ -42,7 +42,7 @@ namespace Moonstorm
             {
                 gameObject.AddComponent<MSUDebug>();
             }
-            Events.Init();
+            //Events.Init();
             MSUAssetBundle = AssetBundle.LoadFromFile(Path.Combine(assemblyDir, "msuassets"));
             R2API.ContentManagement.R2APIContentManager.AddPreExistingSerializableContentPack(MSUAssetBundle.LoadAsset<R2APISerializableContentPack>("ContentPack"));
         }

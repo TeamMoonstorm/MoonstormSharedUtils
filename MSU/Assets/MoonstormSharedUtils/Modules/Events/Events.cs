@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 
 namespace Moonstorm
 {
-    internal static class Events
+    /*internal static class Events
     {
         internal static void Init()
         {
@@ -31,5 +31,5 @@ namespace Moonstorm
         {
             EventDirector.eventCredit = 0;
         }
-    }
+    }*/
 }

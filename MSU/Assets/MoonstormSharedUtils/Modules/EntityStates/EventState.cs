@@ -1,4 +1,4 @@
-﻿using Moonstorm.ScriptableObjects;
+﻿/*using Moonstorm.ScriptableObjects;
 using RoR2;
 using System;
 using UnityEngine;
@@ -77,4 +77,4 @@ namespace EntityStates.Events
         }
     }
 
-}
+}*/

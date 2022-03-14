@@ -1,4 +1,4 @@
-﻿using Moonstorm.ScriptableObjects;
+﻿/*using Moonstorm.ScriptableObjects;
 using RoR2;
 using RoR2.ConVar;
 using UnityEngine;
@@ -170,7 +170,7 @@ namespace Moonstorm.Components
             if (weightedSelection.Count > 0)
                 return weightedSelection.Evaluate(rng.nextNormalizedFloat);
             return null;
-        }*/
+        }
 
         public EntityStateMachine FindIdleStateMachine()
         {
@@ -264,4 +264,4 @@ namespace Moonstorm.Components
 
         private static readonly BoolConVar cvDirectorEventEnableInternalLogs = new BoolConVar("director_event_enable_internal_logs", ConVarFlags.None, "0", "Enables event director to print internal logging.");
     }
-}
+}*/
