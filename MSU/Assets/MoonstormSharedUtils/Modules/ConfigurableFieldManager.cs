@@ -37,17 +37,17 @@ namespace Moonstorm
             ConfigFile mainConfigFile = tuple.Item2;
             string mainConfigFileIdentifier = tuple.Item1;
 
-            if(initialized)
+            if (initialized)
             {
                 MSULog.Warning($"Cannot add {assembly.GetName().Name} to the ConfigurableFieldManager as the manager has already been initialized.");
                 return;
             }
-            if(assemblyToIdentifier.ContainsKey(assembly))
+            if (assemblyToIdentifier.ContainsKey(assembly))
             {
                 MSULog.Warning($"Assembly {assembly.GetName().Name} has already been added to the ConfigurableFieldManager!");
                 return;
             }
-            if(mainConfigFile == null)
+            if (mainConfigFile == null)
             {
                 MSULog.Error($"Cannot add {assembly.GetName().Name} to the ConfigurableFieldManager as the assembly either does not have a type with the BepInPlugin attribute, or the type with the Attribute does not inherit from BaseUnityPlugin.");
                 return;
@@ -62,7 +62,7 @@ namespace Moonstorm
 
             Dictionary<string, List<FieldInfo>> dict = new Dictionary<string, List<FieldInfo>>();
 
-            foreach(Type type in assembly.GetTypes().Where(type => type.GetCustomAttribute<DisabledContentAttribute>() == null))
+            foreach (Type type in assembly.GetTypes().Where(type => type.GetCustomAttribute<DisabledContentAttribute>() == null))
             {
                 try
                 {
@@ -70,15 +70,15 @@ namespace Moonstorm
                                           .Where(field => field.GetCustomAttribute<ConfigurableFieldAttribute>() != null)
                                           .ToList();
 
-                    if(validFields.Count > 0)
+                    if (validFields.Count > 0)
                     {
-                        foreach(FieldInfo field in validFields)
+                        foreach (FieldInfo field in validFields)
                         {
                             try
                             {
                                 var attribute = field.GetCustomAttribute<ConfigurableFieldAttribute>();
                                 string configIdeentifier = attribute.configFileIdentifier ?? assemblyToIdentifier[field.DeclaringType.Assembly]; //If configFilePath is null, use the main config file's path, otherwise, use the provided one.
-                                if(!dict.ContainsKey(configIdeentifier))
+                                if (!dict.ContainsKey(configIdeentifier))
                                 {
                                     dict.Add(configIdeentifier, new List<FieldInfo>());
                                 }
@@ -88,10 +88,10 @@ namespace Moonstorm
                         }
                     }
                 }
-                catch(Exception e) { MSULog.Error(e); }
+                catch (Exception e) { MSULog.Error(e); }
             }
 
-            if(dict.Count == 0)
+            if (dict.Count == 0)
             {
                 MSULog.Warning($"Found no fields that have the {nameof(ConfigurableFieldAttribute)} attribute within {assembly.GetName().Name}");
                 return;
@@ -99,9 +99,9 @@ namespace Moonstorm
 
             MSULog.Debug($"Found a total of {dict.Values.SelectMany(x => x).Count()} fields with the {nameof(ConfigurableFieldAttribute)}");
 
-            foreach(var (identifier, fields) in dict)
+            foreach (var (identifier, fields) in dict)
             {
-                if(identifierToFields.ContainsKey(identifier))
+                if (identifierToFields.ContainsKey(identifier))
                 {
                     MSULog.Warning($"ConfigFilePathToFields already has a key with name {identifier}! is this intentional?");
                     identifierToFields[identifier].AddRange(fields);
@@ -114,13 +114,13 @@ namespace Moonstorm
         private static void AddConfigFile(ConfigFile configFile, string uniqueIdentifier)
         {
             Assembly assembly = Assembly.GetCallingAssembly();
-            if(configFile == GetMainConfigFile(assembly).Item2)
+            if (configFile == GetMainConfigFile(assembly).Item2)
             {
                 MSULog.Error($"Cannot add config file {configFile} because its the main config file of {assembly}!" +
                     $"The identifier of the main config file is the Mod's GUID");
                 return;
             }
-            if(identifierToConfigFile.ContainsKey(uniqueIdentifier))
+            if (identifierToConfigFile.ContainsKey(uniqueIdentifier))
             {
                 MSULog.Error($"Cannot add config file {configFile} because its already in the dictionary!");
                 return;
@@ -135,7 +135,7 @@ namespace Moonstorm
                 .Where(type => type.GetCustomAttribute<BepInPlugin>() != null)
                 .FirstOrDefault();
 
-            if(bepInPluginType == null)
+            if (bepInPluginType == null)
             {
                 MSULog.Error($"Could not find main class of assembly {assembly}! cannot retrieve Config Tuple.");
                 return (null, null);
@@ -146,8 +146,11 @@ namespace Moonstorm
                 MSULog.Error($"The type {bepInPluginType} does not inherit from BaseUnityPlugin! cannot retrieve Config Tuple.");
                 return (null, null);
             }
-            var baseUP = (BaseUnityPlugin)typeAsObj;
-            return (bepInPluginType.GetCustomAttribute<BepInPlugin>().GUID, baseUP.Config);
+
+
+            var GUID = bepInPluginType.GetCustomAttribute<BepInPlugin>().GUID;
+            var configFile = BepInEx.Bootstrap.Chainloader.PluginInfos[GUID].Instance.Config;
+            return (GUID, configFile);
         }
 
         private static void ConfigureFields()
