@@ -140,16 +140,23 @@ namespace Moonstorm
                 MSULog.Error($"Could not find main class of assembly {assembly}! cannot retrieve Config Tuple.");
                 return (null, null);
             }
-            object typeAsObj = bepInPluginType;
             if (!bepInPluginType.IsSubclassOf(typeof(BaseUnityPlugin)))
             {
                 MSULog.Error($"The type {bepInPluginType} does not inherit from BaseUnityPlugin! cannot retrieve Config Tuple.");
                 return (null, null);
             }
-
-
             var GUID = bepInPluginType.GetCustomAttribute<BepInPlugin>().GUID;
+            if(!BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey(GUID))
+            {
+                MSULog.Error($"The BepInEx's Bootstrap's ChainLoader's PluginInfos does not contain a key for {GUID}! cannot retrieve Config Tuple.");
+                return (GUID, null);
+            }
             var configFile = BepInEx.Bootstrap.Chainloader.PluginInfos[GUID].Instance.Config;
+            if(configFile == null)
+            {
+                MSULog.Error($"Tried to retrieve Config file of assembly {assembly.GetName().Name}, but a config file does not exist!\nOn your plugin's awake method, make sure to call Config.Save(); before trying to add your mod to the configurable field manager! cannot retrieve Config Tuple.");
+                return (GUID, null);
+            }
             return (GUID, configFile);
         }
 
