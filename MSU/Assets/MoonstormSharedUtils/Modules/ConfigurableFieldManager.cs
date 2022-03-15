@@ -29,10 +29,10 @@ namespace Moonstorm
             RoR2Application.onLoad += ConfigureFields;
         }
 
-        public static void AddMod()
+        public static void AddMod(BaseUnityPlugin baseUnityPlugin)
         {
             Assembly assembly = Assembly.GetCallingAssembly();
-            var tuple = GetMainConfigFile(assembly);
+            var tuple = GetMainConfigFile(baseUnityPlugin);
 
             ConfigFile mainConfigFile = tuple.Item2;
             string mainConfigFileIdentifier = tuple.Item1;
@@ -111,10 +111,10 @@ namespace Moonstorm
             }
         }
 
-        private static void AddConfigFile(ConfigFile configFile, string uniqueIdentifier)
+        private static void AddConfigFile(BaseUnityPlugin baseUnityPlugin, ConfigFile configFile, string uniqueIdentifier)
         {
             Assembly assembly = Assembly.GetCallingAssembly();
-            if (configFile == GetMainConfigFile(assembly).Item2)
+            if (configFile == GetMainConfigFile(baseUnityPlugin).Item2)
             {
                 MSULog.Error($"Cannot add config file {configFile} because its the main config file of {assembly}!" +
                     $"The identifier of the main config file is the Mod's GUID");
@@ -129,35 +129,10 @@ namespace Moonstorm
             identifierToConfigFile.Add(uniqueIdentifier, configFile);
         }
 
-        private static (string, ConfigFile) GetMainConfigFile(Assembly assembly)
+        private static (string, ConfigFile) GetMainConfigFile(BaseUnityPlugin plugin)
         {
-            Type bepInPluginType = assembly.GetTypes()
-                .Where(type => type.GetCustomAttribute<BepInPlugin>() != null)
-                .FirstOrDefault();
-
-            if (bepInPluginType == null)
-            {
-                MSULog.Error($"Could not find main class of assembly {assembly}! cannot retrieve Config Tuple.");
-                return (null, null);
-            }
-            if (!bepInPluginType.IsSubclassOf(typeof(BaseUnityPlugin)))
-            {
-                MSULog.Error($"The type {bepInPluginType} does not inherit from BaseUnityPlugin! cannot retrieve Config Tuple.");
-                return (null, null);
-            }
-            var GUID = bepInPluginType.GetCustomAttribute<BepInPlugin>().GUID;
-            if(!BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey(GUID))
-            {
-                MSULog.Error($"The BepInEx's Bootstrap's ChainLoader's PluginInfos does not contain a key for {GUID}! cannot retrieve Config Tuple.");
-                return (GUID, null);
-            }
-            var configFile = BepInEx.Bootstrap.Chainloader.PluginInfos[GUID].Instance.Config;
-            if(configFile == null)
-            {
-                MSULog.Error($"Tried to retrieve Config file of assembly {assembly.GetName().Name}, but a config file does not exist!\nOn your plugin's awake method, make sure to call Config.Save(); before trying to add your mod to the configurable field manager! cannot retrieve Config Tuple.");
-                return (GUID, null);
-            }
-            return (GUID, configFile);
+            plugin.Config.Save();
+            return (plugin.Info.Metadata.GUID, plugin.Config);
         }
 
         private static void ConfigureFields()
