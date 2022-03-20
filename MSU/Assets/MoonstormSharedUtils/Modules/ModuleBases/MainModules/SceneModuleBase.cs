@@ -18,13 +18,14 @@ namespace Moonstorm
                     ThrowModuleNotInitialized($"Retrieve dictionary {nameof(MoonstormScenes)}", typeof(SceneModuleBase));
                     return null;
                 }
-                return MoonstormScenes;
+                return moonstormScenes;
             }
             private set
             {
-                MoonstormScenes = value;
+                moonstormScenes = value;
             }
         }
+        private static ReadOnlyDictionary<SceneDef, SceneBase> moonstormScenes;
         internal static Dictionary<SceneDef, SceneBase> scenes = new Dictionary<SceneDef, SceneBase>();
         public static Action<ReadOnlyDictionary<SceneDef, SceneBase>> OnDictionaryCreated;
 
@@ -40,7 +41,7 @@ namespace Moonstorm
             MoonstormScenes = new ReadOnlyDictionary<SceneDef, SceneBase>(scenes);
             scenes = null;
 
-            OnDictionaryCreated(MoonstormScenes);
+            OnDictionaryCreated?.Invoke(MoonstormScenes);
         }
 
         #region Scenes

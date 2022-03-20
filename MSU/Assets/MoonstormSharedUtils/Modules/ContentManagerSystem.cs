@@ -18,49 +18,34 @@ namespace Moonstorm
             MSULog.Info($"Initializing Content Manager System...");
             foreach(GameObject bodyPrefab in BodyCatalog.allBodyPrefabs)
             {
-                var charBody = bodyPrefab.GetComponent<CharacterBody>();
-                var manager = bodyPrefab.AddComponent<MoonstormContentManager>();
+                try
+                {
+                    var charBody = bodyPrefab.GetComponent<CharacterBody>();
+                    var manager = bodyPrefab.AddComponent<MoonstormContentManager>();
 
-                manager.Body = charBody;
+                    var modelLocator = bodyPrefab.GetComponent<ModelLocator>();
+                    if (!modelLocator)
+                        continue;
+                    if (!modelLocator.modelTransform)
+                        continue;
+                    if (!modelLocator.modelTransform.GetComponent<CharacterModel>())
+                        continue;
 
-                if (!charBody.modelLocator)
-                    continue;
+                    var eliteBehavior = bodyPrefab.AddComponent<MoonstormEliteBehavior>();
+                    manager.EliteBehavior = eliteBehavior;
 
-                if (!charBody.modelLocator.modelTransform)
-                    continue;
+                    eliteBehavior.body = charBody;
 
-                if (!charBody.modelLocator.modelTransform.GetComponent<CharacterModel>())
-                    continue;
-
-                var eliteBehavior = bodyPrefab.AddComponent<MoonstormEliteBehavior>();
-                manager.EliteBehavior = eliteBehavior;
-
-                eliteBehavior.body = charBody;
-
-                eliteBehavior.model = charBody.modelLocator.modelTransform.GetComponent<CharacterModel>();
+                    eliteBehavior.model = modelLocator.modelTransform.GetComponent<CharacterModel>();
+                }
+                catch(Exception ex)
+                {
+                    MSULog.Error(ex);
+                }
             }
-
-            CharacterBody.onBodyAwakeGlobal += SetupComponentFields;
             CharacterBody.onBodyStartGlobal += OnBodyStart;
             On.RoR2.CharacterBody.RecalculateStats += OnRecaluclateStats;
             R2API.RecalculateStatsAPI.GetStatCoefficients += OnGetStatCoefficients;
-        }
-
-
-        private static void SetupComponentFields(CharacterBody body)
-        {
-            var manager = body.GetComponent<MoonstormContentManager>();
-            if (!manager)
-                return;
-
-            if(body.master)
-            {
-                manager.HasMaster = true;
-                if(body.master.inventory)
-                {
-                    manager.HasInventory = true;
-                }
-            }
         }
 
         private static void OnBodyStart(CharacterBody body)
@@ -68,6 +53,16 @@ namespace Moonstorm
             var manager = body.GetComponent<MoonstormContentManager>();
             if (!manager)
                 return;
+
+            manager.Body = body;
+            if (body.master)
+            {
+                manager.HasMaster = true;
+                if (body.master.inventory)
+                {
+                    manager.HasInventory = true;
+                }
+            }
 
             manager.StartGetInterfaces();
         }

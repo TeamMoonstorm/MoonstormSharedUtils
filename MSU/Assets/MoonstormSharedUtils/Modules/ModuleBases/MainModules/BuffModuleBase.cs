@@ -22,13 +22,14 @@ namespace Moonstorm
                     ThrowModuleNotInitialized($"Retrieve Dictionary {nameof(MoonstormBuffs)}", typeof(BuffModuleBase));
                     return null;
                 }
-                return MoonstormBuffs;
+                return moonstormBuffs;
             }
             private set
             {
-                MoonstormBuffs = value;
+                moonstormBuffs = value;
             }
         }
+        private static ReadOnlyDictionary<BuffDef, BuffBase> moonstormBuffs;
         internal static Dictionary<BuffDef, BuffBase> buffs = new Dictionary<BuffDef, BuffBase>();
         public static Action<ReadOnlyDictionary<BuffDef, BuffBase>, ReadOnlyDictionary<BuffDef, Material>> OnDictionariesCreated;
 
@@ -41,13 +42,14 @@ namespace Moonstorm
                     ThrowModuleNotInitialized($"Retrieve Dictionary {nameof(MoonstormOverlayMaterials)}", typeof(BuffModuleBase));
                     return null;
                 }
-                return MoonstormOverlayMaterials;
+                return moonstormOverlayMaterials;
             }
             private set
             {
-                MoonstormOverlayMaterials = value;
+                moonstormOverlayMaterials = value;
             }
         }
+        private static ReadOnlyDictionary<BuffDef, Material> moonstormOverlayMaterials;
         internal static Dictionary<BuffDef, Material> overlayMaterials = new Dictionary<BuffDef, Material>();
 
         public static BuffDef[] LoadedBuffDefs { get => MoonstormBuffs.Keys.ToArray(); }

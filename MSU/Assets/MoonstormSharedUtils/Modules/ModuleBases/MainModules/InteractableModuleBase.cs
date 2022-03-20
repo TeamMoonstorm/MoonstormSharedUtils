@@ -21,13 +21,14 @@ namespace Moonstorm
                     ThrowModuleNotInitialized($"Retrieve dictionary {nameof(MoonstormInteractables)}", typeof(InteractableModuleBase));
                     return null;
                 }
-                return MoonstormInteractables;
+                return moonstormInteractables;
             }
             private set
             {
-                MoonstormInteractables = value;
+                moonstormInteractables = value;
             }
         }
+        private static ReadOnlyDictionary<GameObject, InteractableBase> moonstormInteractables;
         internal static Dictionary<GameObject, InteractableBase> interactables = new Dictionary<GameObject, InteractableBase>();
         public static Action<ReadOnlyDictionary<GameObject, InteractableBase>> OnDictionaryCreated;
 

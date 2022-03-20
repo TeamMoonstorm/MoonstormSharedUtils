@@ -21,13 +21,14 @@ namespace Moonstorm
                     ThrowModuleNotInitialized($"Retrieve dictionary {NonEliteMoonstormEquipments}", typeof(EquipmentModuleBase));
                     return null;
                 }
-                return NonEliteMoonstormEquipments;
+                return nonEliteMoonstormEquipments;
             }
             private set
             {
-                NonEliteMoonstormEquipments = value;
+                nonEliteMoonstormEquipments = value;
             }
         }
+        private static ReadOnlyDictionary<EquipmentDef, EquipmentBase> nonEliteMoonstormEquipments;
         internal static Dictionary<EquipmentDef, EquipmentBase> nonEliteEquip = new Dictionary<EquipmentDef, EquipmentBase>();
 
         public static ReadOnlyDictionary<EquipmentDef, EliteEquipmentBase> EliteMoonstormEquipments
@@ -39,13 +40,14 @@ namespace Moonstorm
                     ThrowModuleNotInitialized($"Retrieve dictionary {nameof(EliteMoonstormEquipments)}", typeof(EquipmentModuleBase));
                     return null;
                 }
-                return EliteMoonstormEquipments;
+                return eliteMoonstormEquipments;
             }
             private set
             {
-                EliteMoonstormEquipments = value;
+                eliteMoonstormEquipments = value;
             }
         }
+        private static ReadOnlyDictionary<EquipmentDef, EliteEquipmentBase> eliteMoonstormEquipments;
         internal static Dictionary<EquipmentDef, EliteEquipmentBase> eliteEquip = new Dictionary<EquipmentDef, EliteEquipmentBase>();
 
         public static ReadOnlyDictionary<EquipmentDef, EquipmentBase> AllMoonstormEquipments
@@ -115,10 +117,6 @@ namespace Moonstorm
                 ThrowModuleInitialized($"Add EquipmentBase to ContentPack", typeof(EquipmentModuleBase));
                 return;
             }
-            if(equip is EliteEquipmentBase)
-            {
-                throw new InvalidOperationException($"Cannot Add equipment {equip.EquipmentDef} because it's declaring type {equip.GetType()} inherits from EliteEquipmentBase!");
-            }
 
             if (InitializeContent(equip) && dictionary != null)
                 AddSafelyToDict(ref dictionary, equip.EquipmentDef, equip);
@@ -145,10 +143,6 @@ namespace Moonstorm
             {
                 ThrowModuleInitialized($"Add EliteEquipmentBase to ContentPack", typeof(EquipmentModuleBase));
                 return;
-            }
-            if (eliteEqp is EliteEquipmentBase)
-            {
-                throw new InvalidOperationException($"Cannot Add Elite Equipment {eliteEqp.EquipmentDef} because it's declaring type {eliteEqp.GetType()} inherits from EquipmentBase!");
             }
 
             if (InitializeContent(eliteEqp) && dictionary != null)

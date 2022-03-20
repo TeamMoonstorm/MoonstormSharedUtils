@@ -23,13 +23,14 @@ namespace Moonstorm
                     ThrowModuleNotInitialized($"Retrieve dictionary {nameof(MoonstormArtifacts)}", typeof(ArtifactModuleBase));
                     return null;
                 }
-                return MoonstormArtifacts;
+                return moonstormArtifacts;
             }
             private set
             {
-                MoonstormArtifacts = value;
+                moonstormArtifacts = value;
             }
         }
+        private static ReadOnlyDictionary<ArtifactDef, ArtifactBase> moonstormArtifacts;
         internal static Dictionary<ArtifactDef, ArtifactBase> artifacts = new Dictionary<ArtifactDef, ArtifactBase>();
         public static Action<ReadOnlyDictionary<ArtifactDef, ArtifactBase>> OnDictionaryCreated;
         public static ArtifactDef[] LoadedArtifactDefs { get => MoonstormArtifacts.Keys.ToArray(); }

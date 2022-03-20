@@ -20,13 +20,14 @@ namespace Moonstorm
                     ThrowModuleNotInitialized($"Retrieve dictionary {nameof(MoonstormProjectiles)}", typeof(ProjectileModuleBase));
                     return null;
                 }
-                return MoonstormProjectiles;
+                return moonstormProjectiles;
             }
             private set
             {
-                MoonstormProjectiles = value;
+                moonstormProjectiles = value;
             }
         }
+        private static ReadOnlyDictionary<GameObject, ProjectileBase> moonstormProjectiles;
         internal static Dictionary<GameObject, ProjectileBase> projectiles = new Dictionary<GameObject, ProjectileBase>();
         public static Action<ReadOnlyDictionary<GameObject, ProjectileBase>> OnDictionaryCreated;
 

@@ -22,13 +22,14 @@ namespace Moonstorm
                     ThrowModuleNotInitialized($"Retrieve dictionary {nameof(MoonstormElites)}", typeof(EliteModuleBase));
                     return null;
                 }
-                return MoonstormElites;
+                return moonstormElites;
             }
             private set
             {
-                MoonstormElites = value;
+                moonstormElites = value;
             }
         }
+        private static ReadOnlyCollection<MSEliteDef> moonstormElites;
         internal static List<MSEliteDef> eliteDefs = new List<MSEliteDef>();
         public static Action<ReadOnlyCollection<MSEliteDef>> OnListCreated;
 

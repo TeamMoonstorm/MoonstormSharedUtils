@@ -20,13 +20,14 @@ namespace Moonstorm
                     ThrowModuleNotInitialized($"Retrieve dictionary {MoonstormItems}", typeof(ItemModuleBase));
                     return null;
                 }
-                return MoonstormItems;
+                return moonstormItems;
             }
             private set
             {
-                MoonstormItems = value;
+                moonstormItems = value;
             }
         }
+        private static ReadOnlyDictionary<ItemDef, ItemBase> moonstormItems;
         internal static Dictionary<ItemDef, ItemBase> items = new Dictionary<ItemDef, ItemBase>();
         public static Action<ReadOnlyDictionary<ItemDef, ItemBase>> OnDictionaryCreated;
 

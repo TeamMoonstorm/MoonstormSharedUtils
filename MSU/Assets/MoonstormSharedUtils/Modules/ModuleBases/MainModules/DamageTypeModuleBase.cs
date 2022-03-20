@@ -19,13 +19,14 @@ namespace Moonstorm
                     ThrowModuleNotInitialized($"Retrieve Dictionary {nameof(MoonstormDamageTypes)}", typeof(DamageTypeModuleBase));
                     return null;
                 }
-                return MoonstormDamageTypes;
+                return moonstormDamageTypes;
             }
             private set
             {
-                MoonstormDamageTypes = value;
+                moonstormDamageTypes = value;
             }
         }
+        private static ReadOnlyDictionary<ModdedDamageType, DamageTypeBase> moonstormDamageTypes;
         internal static Dictionary<ModdedDamageType, DamageTypeBase> damageTypes = new Dictionary<ModdedDamageType, DamageTypeBase>();
         public static Action<ReadOnlyDictionary<ModdedDamageType, DamageTypeBase>> OnDictionaryCreated;
 

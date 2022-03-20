@@ -36,6 +36,7 @@ namespace Moonstorm
             return EventIndex.None;
         }
 
+        //Make sure the for loop runs after we sort the entries alphabetically.
         private static void Init()
         {
             nameToEventIndex.Clear();

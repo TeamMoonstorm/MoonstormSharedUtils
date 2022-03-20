@@ -19,13 +19,14 @@ namespace Moonstorm
                     ThrowModuleNotInitialized($"Retrieve dictionary {MoonstormUnlockables}", typeof(UnlockablesModuleBase));
                     return null;
                 }
-                return MoonstormUnlockables;
+                return moonstormUnlockables;
             }
             private set
             {
-                MoonstormUnlockables = value;
+                moonstormUnlockables = value;
             }
         }
+        private static ReadOnlyDictionary<MSUnlockableDef, UnlockableBase> moonstormUnlockables;
         private static Dictionary<MSUnlockableDef, UnlockableBase> unlocks = new Dictionary<MSUnlockableDef, UnlockableBase>();
         public static Action<ReadOnlyDictionary<MSUnlockableDef, UnlockableBase>> OnDictionaryCreated;
 
