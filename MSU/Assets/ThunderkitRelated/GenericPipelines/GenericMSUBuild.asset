@@ -76,5 +76,6 @@ MonoBehaviour:
   Active: 1
   assemblyArtifactPath: <AssemblyStaging>
   cacheAssembliesOnSubfolder: 0
-  uNetAssemblyPath: 
-  unityEngineAssemblyPath: 
+  uNetAssemblyPath: D:\RoR2 Modding\MoonstormSharedUtils\MSU\Packages\Risk of Rain
+    2\com.unity.multiplayer-hlapi.Runtime.dll
+  unityEngineAssemblyPath: C:\Program Files\Unity\Hub\Editor\2019.4.26f1\Editor\Data\Managed\UnityEngine.dll

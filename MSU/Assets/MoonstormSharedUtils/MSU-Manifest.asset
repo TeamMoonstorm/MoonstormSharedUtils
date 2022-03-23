@@ -79,7 +79,7 @@ MonoBehaviour:
   Author: TeamMoonstorm
   Name: MoonstormSharedUtils
   Description: Utils used by TeamMoonstorm members.
-  Version: 0.8.0
+  Version: 1.0.0
   Dependencies:
   - {fileID: 11400000, guid: 7fb5b3d290bed6011ed7e8daf230df89, type: 2}
   - {fileID: 11400000, guid: 9bbff6449e1a5460d6b9712c3ecebc9c, type: 2}

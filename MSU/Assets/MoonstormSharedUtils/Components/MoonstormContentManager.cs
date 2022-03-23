@@ -21,7 +21,7 @@ namespace Moonstorm.Components
         IStatItemBehavior[] statItemBehaviors = Array.Empty<IStatItemBehavior>();
         IBodyStatArgModifier[] bodyStatArgModifiers = Array.Empty<IBodyStatArgModifier>();
 
-        private void Awake()
+        private void Start()
         {
             Body.onInventoryChanged += CheckItemEquipments;
         }

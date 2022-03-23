@@ -31,24 +31,25 @@ namespace Moonstorm.Loaders
             {
                 return Instance.MainAssetBundle.LoadAsset<TAsset>(name);
             }
-            throw new NullReferenceException("Cannot load asset when there's no instance of AssetLoader!");
+            MSULog.Error("Cannot load asset when there's no instance of AssetLoader!");
+            return null;
         }
 
         public static TAsset[] LoadAllAssetsOfType<TAsset>() where TAsset : UnityEngine.Object
         {
-            if(Instance != null)
+            if (Instance != null)
             {
                 return Instance.MainAssetBundle.LoadAllAssets<TAsset>();
             }
-            throw new NullReferenceException("Cannot load asset when there's no instance of AssetLoader!");
+            MSULog.Error("Cannot load assets when there's no instance of AssetLoader!");
+            return null;
         }
     }
     public abstract class AssetsLoader
     {
         public abstract AssetBundle MainAssetBundle { get; }
-        public abstract string AssemblyDir { get; }
 
-        public static List<Material> MaterialsWithSwappedShaders { get; private set; } = new List<Material>();
+        public static List<Material> MaterialsWithSwappedShaders { get; } = new List<Material>();
 
         protected void SwapShadersFromMaterialsInBundle(AssetBundle bundle)
         { 

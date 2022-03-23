@@ -14,7 +14,6 @@
         "MonoMod.Utils.dll",
         "Mono.Cecil.dll",
         "MMHOOK_RoR2.dll",
-        "com.unity.multiplayer-hlapi.Runtime.dll",
         "HGCSharpUtils.dll",
         "HGUnityUtils.dll",
         "Zio.dll",
@@ -22,7 +21,8 @@
         "Assembly-CSharp.dll",
         "RoR2BepInExPack.dll",
         "Unity.Addressables.dll",
-        "Unity.ResourceManager.dll"
+        "Unity.ResourceManager.dll",
+        "com.unity.multiplayer-hlapi.Runtime.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [],

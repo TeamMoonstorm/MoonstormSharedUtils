@@ -1,11 +1,11 @@
 ﻿using RoR2;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Zio;
-using Zio.FileSystems;
+using Path = System.IO.Path;
 
 namespace Moonstorm.Loaders
 {
@@ -35,21 +35,20 @@ namespace Moonstorm.Loaders
         public abstract string AssemblyDir { get; }
         public abstract string LanguagesFolderName { get; }
 
-        public FileSystem FileSystem { get; private set; }
-
         protected void LoadLanguages()
         {
-            PhysicalFileSystem physicalFileSystem = new PhysicalFileSystem();
+            On.RoR2.Language.SetFolders += AddLanguageFile;
+        }
 
-            FileSystem = new SubFileSystem(physicalFileSystem, physicalFileSystem.ConvertPathFromInternal(AssemblyDir), true);
-
-            if(FileSystem.DirectoryExists($"/{LanguagesFolderName}/"))
+        private void AddLanguageFile(On.RoR2.Language.orig_SetFolders orig, Language self, IEnumerable<string> newFolders)
+        {
+            if(Directory.Exists(Path.Combine(AssemblyDir, LanguagesFolderName)))
             {
-                Language.collectLanguageRootFolders += (list) =>
-                {
-                    //list.Add(FileSystem.GetDirectoryEntry($"/{LanguagesFolderName}/")); //CS1503
-                };
+                var dirs = Directory.EnumerateDirectories(Path.Combine(AssemblyDir, LanguagesFolderName), self.name);
+                orig(self, newFolders.Union(dirs));
+                return;
             }
+            orig(self, newFolders);
         }
     }
 }
