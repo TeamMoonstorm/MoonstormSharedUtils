@@ -159,6 +159,12 @@
       "source": "embedded",
       "dependencies": {}
     },
+    "nebby-unitymultiplayerhlapi": {
+      "version": "file:UnityMultiplayerHLAPI",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "riskofrain2": {
       "version": "file:Risk of Rain 2",
       "depth": 0,

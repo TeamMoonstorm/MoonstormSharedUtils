@@ -3,7 +3,8 @@
     "references": [
         "ThunderKit.Core",
         "ThunderKit.Markdown",
-        "ThunderKit.Common"
+        "ThunderKit.Common",
+        "com.unity.multiplayer-hlapi.Runtime"
     ],
     "includePlatforms": [
         "Editor"

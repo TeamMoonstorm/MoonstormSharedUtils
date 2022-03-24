@@ -1,0 +1,8 @@
+{
+    "name": "UnityMultiplayerHLAPI",
+    "author": "skaughtx0r",
+    "version_number": "1.0.0",
+    "website_url": "https://github.com/skaughtx0r/MultiplayerHLAPI",
+    "description": "The Unity Multiplayer High Level API is the open source component of the Unity Multiplayer system. This version does not contain an explicit dependency on Mono.Cecil",
+    "dependencies": []
+}

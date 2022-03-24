@@ -1,7 +1,8 @@
 {
     "name": "MoonstormSharedUtils",
     "references": [
-        "Unity.Postprocessing.Runtime"
+        "Unity.Postprocessing.Runtime",
+        "com.unity.multiplayer-hlapi.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
