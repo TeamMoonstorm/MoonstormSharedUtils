@@ -55,6 +55,7 @@ namespace Moonstorm
                 return;
 
             manager.Body = body;
+            manager.EliteBehavior = body.GetComponent<MoonstormEliteBehavior>();
             if (body.master)
             {
                 manager.HasMaster = true;

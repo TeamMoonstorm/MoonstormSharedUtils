@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
+using CLoader = Moonstorm.Loaders.ConfigLoader;
 
 namespace Moonstorm
 {
@@ -27,6 +28,23 @@ namespace Moonstorm
 
             MSULog.Info($"Initializing ConfigurableFieldManager");
             RoR2Application.onLoad += ConfigureFields;
+
+            foreach(CLoader loader in CLoader.instances)
+            {
+                MSULog.Info($"Managing extra config files from {loader.OwnerMetaData.Name}'s ConfigLoader");
+                foreach(var kvp in loader.identifierToConfigFile)
+                {
+                    try
+                    {
+                        if(identifierToConfigFile.ContainsKey(kvp.Key))
+                        {
+                            throw new InvalidOperationException($"Cannot add ConfigFile {kvp.Value} to the identifierToConfigFile because the identifier {kvp.Key} is already being used!");
+                        }
+                        identifierToConfigFile[kvp.Key] = kvp.Value;
+                    }
+                    catch (Exception ex) { MSULog.Error(ex); }
+                }
+            }
         }
 
         public static void AddMod(BaseUnityPlugin baseUnityPlugin)
@@ -111,7 +129,7 @@ namespace Moonstorm
             }
         }
 
-        private static void AddConfigFile(BaseUnityPlugin baseUnityPlugin, ConfigFile configFile, string uniqueIdentifier)
+        /*private static void AddConfigFile(BaseUnityPlugin baseUnityPlugin, ConfigFile configFile, string uniqueIdentifier)
         {
             Assembly assembly = Assembly.GetCallingAssembly();
             if (configFile == GetMainConfigFile(baseUnityPlugin).Item2)
@@ -127,7 +145,7 @@ namespace Moonstorm
             }
 
             identifierToConfigFile.Add(uniqueIdentifier, configFile);
-        }
+        }*/
 
         private static (string, ConfigFile) GetMainConfigFile(BaseUnityPlugin plugin)
         {
