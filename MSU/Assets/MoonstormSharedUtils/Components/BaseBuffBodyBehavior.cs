@@ -204,10 +204,10 @@ namespace Moonstorm.Components
         private static void OnSetBuffCount(On.RoR2.CharacterBody.orig_SetBuffCount orig, CharacterBody self, BuffIndex buffType, int newCount)
         {
             orig(self, buffType, newCount);
-            UpdateBodyBuffBehaviorStacks(self, newCount);
+            UpdateBodyBuffBehaviorStacks(self, newCount, buffType);
         }
 
-        private static void UpdateBodyBuffBehaviorStacks(CharacterBody body, int buffStacks)
+        private static void UpdateBodyBuffBehaviorStacks(CharacterBody body, int buffStacks, BuffIndex index)
         {
             ref NetworkContextSet networkContext = ref GetNetworkContext();
             BaseBuffBodyBehavior[] array = bodyToBuffBehaviors[body];
@@ -217,7 +217,10 @@ namespace Moonstorm.Components
                 for(int i = 0; i < buffTypePairs.Length; i++)
                 {
                     BuffTypePair buffTypePair = buffTypePairs[i];
+                    if (buffTypePair.buffIndex != index)
+                        continue;
                     SetBuffStack(body, ref array[i], buffTypePair.behaviorType, buffStacks);
+                    break;
                 }
                 return;
             }

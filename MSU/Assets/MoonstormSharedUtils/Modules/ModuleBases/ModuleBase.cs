@@ -35,7 +35,7 @@ namespace Moonstorm
 
                 dictionary.Add(key, value);
             }
-            catch(Exception e) { MSULog.Error(e); }
+            catch(Exception e) { MSULog.Error($"{e} (Key: {key}, value: {value})"); }
         }
 
         protected void AddSafelyToList<TObject>(ref List<TObject> list, TObject obj)
@@ -47,9 +47,9 @@ namespace Moonstorm
 
                 list.Add(obj);
             }
-            catch
+            catch(Exception e)
             {
-
+                MSULog.Error($"{e} (Item: {obj})");
             }
         }
 
