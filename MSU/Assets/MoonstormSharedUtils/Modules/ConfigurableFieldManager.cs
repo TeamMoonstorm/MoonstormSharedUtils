@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
-using CLoader = Moonstorm.Loaders.ConfigLoader;
+using Moonstorm.Loaders;
 
 namespace Moonstorm
 {
@@ -29,7 +29,7 @@ namespace Moonstorm
             MSULog.Info($"Initializing ConfigurableFieldManager");
             RoR2Application.onLoad += ConfigureFields;
 
-            foreach(CLoader loader in CLoader.instances)
+            foreach(ConfigLoader loader in ConfigLoader.instances)
             {
                 MSULog.Info($"Managing extra config files from {loader.OwnerMetaData.Name}'s ConfigLoader");
                 foreach(var kvp in loader.identifierToConfigFile)
@@ -40,9 +40,10 @@ namespace Moonstorm
                         {
                             throw new InvalidOperationException($"Cannot add ConfigFile {kvp.Value} to the identifierToConfigFile because the identifier {kvp.Key} is already being used!");
                         }
-                        identifierToConfigFile[kvp.Key] = kvp.Value;
+                        identifierToConfigFile.Add(kvp.Key, kvp.Value);
+                        MSULog.Debug($"Added config file {kvp.Value} with identifier {kvp.Key}");
                     }
-                    catch (Exception ex) { MSULog.Error(ex); }
+                    catch (Exception ex) { MSULog.Error($"{ex} (Key: {kvp.Key}, Value: {kvp.Value})"); }
                 }
             }
         }
@@ -102,11 +103,11 @@ namespace Moonstorm
                                 }
                                 dict[configIdeentifier].Add(field);
                             }
-                            catch (Exception e) { MSULog.Error(e); }
+                            catch (Exception e) { MSULog.Error($"{e} (Field: {field.Name}"); }
                         }
                     }
                 }
-                catch (Exception e) { MSULog.Error(e); }
+                catch (Exception e) { MSULog.Error($"{e} (Type: {type.Name})"); }
             }
 
             if (dict.Count == 0)
@@ -172,16 +173,16 @@ namespace Moonstorm
                         {
                             ConfigureField(field, identifierToConfigFile[identifier]);
                         }
-                        catch(Exception e) { MSULog.Error(e); }
+                        catch(Exception e) { MSULog.Error($"{e} (Field: {e})"); }
                     }
                 }
-                catch(Exception e) { MSULog.Error(e); }
+                catch(Exception e) { MSULog.Error($"{e} (Identifier: {identifier}, Fields: {fields}"); }
             }
         }
 
         private static void ConfigureField(FieldInfo field, ConfigFile config)
         {
-            MSULog.Debug($"Configuring {field.Name}");
+            MSULog.Debug($"Configuring {field.Name} (From {field.DeclaringType.Name}");
 
             var attribute = field.GetCustomAttribute<ConfigurableFieldAttribute>(true);
 

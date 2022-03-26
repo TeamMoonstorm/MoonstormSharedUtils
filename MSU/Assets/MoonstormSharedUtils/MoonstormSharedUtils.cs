@@ -37,8 +37,8 @@ namespace Moonstorm
             Instance = this;
             PluginInfo = Info;
             new MSULog(Logger);
-            ConfigLoader.Init(Config);
-            if (ConfigLoader.EnableDebugFeatures.Value)
+            MSUConfig.Init(Config);
+            if (MSUConfig.EnableDebugFeatures.Value)
             {
                 gameObject.AddComponent<MSUDebug>();
             }

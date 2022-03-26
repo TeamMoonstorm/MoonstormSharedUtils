@@ -43,14 +43,17 @@ namespace Moonstorm.Loaders
 
         public ConfigFile CreateConfigFile(string identifier, bool wipedBetweenMinorVersions = true)
         {
-            if(!identifier.EndsWith(".cfg", StringComparison.OrdinalIgnoreCase))
+            string fileName = identifier;
+            if(!fileName.EndsWith(".cfg", StringComparison.OrdinalIgnoreCase))
             {
-                identifier += ".cfg";
+                fileName += ".cfg";
             }
-            var path = System.IO.Path.Combine(ConfigFolderPath, identifier);
+            var path = System.IO.Path.Combine(ConfigFolderPath, fileName);
             ConfigFile configFile = new ConfigFile(path, true, OwnerMetaData);
             if (wipedBetweenMinorVersions)
                 TryWipeConfig(configFile);
+
+            identifierToConfigFile.Add(identifier, configFile);
             return configFile;
         }
 

@@ -5,14 +5,37 @@ using System.Reflection;
 
 namespace Moonstorm
 {
+    /// <summary>
+    /// The Configurable Field Attribute can be used to make a field Configurable using BepInEx's Config System.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
     public class ConfigurableFieldAttribute : Attribute
     {
+        /// <summary>
+        /// The Section of the Config, if left null, it'll use the declaring type's name.
+        /// </summary>
         public string ConfigSection { get; set; }
+        
+        /// <summary>
+        /// The Name of the Config, if left null, it'll use the Field's name.
+        /// </summary>
         public string ConfigName { get; set; }
+
+        /// <summary>
+        /// The Description of the Config, if left null, it'll use a generic description.
+        /// </summary>
         public string ConfigDesc { get; set; }
+        
+        /// <summary>
+        /// The identifier of a config file to use for binding.
+        /// If left null, it'll use the mod's main config file.
+        /// </summary>
         public string configFileIdentifier;
 
+        /// <summary>
+        /// Creates a new instance of the Configurable Field Attribute.
+        /// </summary>
+        /// <param name="fileIdentifier">The config identifier</param>
         public ConfigurableFieldAttribute(string fileIdentifier = null)
         {
             configFileIdentifier = fileIdentifier;

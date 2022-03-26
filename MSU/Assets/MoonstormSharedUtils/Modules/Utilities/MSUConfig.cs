@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Moonstorm
 {
-    internal static class ConfigLoader
+    internal static class MSUConfig
     {
         public static ConfigEntry<bool> EnableDebugFeatures;
 
