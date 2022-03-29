@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using ThunderKit.Core.Data;
+using RoR2EditorKit.Utilities;
 
 namespace RoR2EditorKit.Core.PipelineJobs
 {

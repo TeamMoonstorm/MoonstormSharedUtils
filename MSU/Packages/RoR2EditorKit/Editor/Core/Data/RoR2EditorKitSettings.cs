@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using RoR2EditorKit.Utilities;
+using System.Collections.Generic;
 using System.Linq;
 using ThunderKit.Core.Data;
 using ThunderKit.Core.Manifests;
@@ -11,7 +12,7 @@ namespace RoR2EditorKit.Settings
 {
     public class RoR2EditorKitSettings : ThunderKitSetting
     {
-        const string MarkdownStylePath = "Packages/com.passivepicasso.thunderkit/Documentation/uss/markdown.uss";
+        const string MarkdownStylePath = "Packages/com.passivepicasso.thunderkit/USS/markdown.uss";
         const string DocumentationStylePath = "Packages/com.passivepicasso.thunderkit/uss/thunderkit_style.uss";
 
         [InitializeOnLoadMethod]
@@ -25,6 +26,8 @@ namespace RoR2EditorKit.Settings
         public string TokenPrefix;
 
         public Manifest MainManifest;
+
+        public bool madeRoR2EKAssetsNonEditable = false;
 
         public EditorInspectorSettings InspectorSettings { get => GetOrCreateSettings<EditorInspectorSettings>(); }
 

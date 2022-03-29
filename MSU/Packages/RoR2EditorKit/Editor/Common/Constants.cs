@@ -9,6 +9,8 @@ namespace RoR2EditorKit.Common
     public static class Constants
     {
         public const string RoR2EditorKit = nameof(RoR2EditorKit);
+        public const string AssetFolderPath = "Assets/RoR2EditorKit";
+        public const string PackageFolderPath = "Packages/riskofthunder-ror2editorkit";
 
         public const string RoR2EditorKitContextRoot = "Assets/Create/RoR2EditorKit/";
         public const string RoR2EditorKitscriptableRoot = "Assets/RoR2EditorKit/";
@@ -20,6 +22,7 @@ namespace RoR2EditorKit.Common
         private const string nullMeshGUID = "9bef9cd9cd0c4b244ad1ff166c26f57e";
         private const string nullSpriteGUID = "1a8e7e70058f32f4483753ec5be3838b";
         private const string nullPrefabGUID = "f6317a68216520848aaef2c2f470c8b2";
+        private const string iconGUID = "efa2e3ecb36780a4d81685ecd4789ff3";
 
         /// <summary>
         /// Loads the RoR2EditorKit null material
@@ -40,5 +43,7 @@ namespace RoR2EditorKit.Common
         /// Loads the RoR2EditorKit null prefab
         /// </summary>
         public static GameObject NullPrefab { get => AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GUIDToAssetPath(nullPrefabGUID)); }
+
+        public static Texture Icon { get => AssetDatabase.LoadAssetAtPath<Texture>(AssetDatabase.GUIDToAssetPath(iconGUID)); }
     }
 }

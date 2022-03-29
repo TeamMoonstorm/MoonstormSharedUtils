@@ -1,5 +1,6 @@
 ﻿using RoR2;
 using RoR2EditorKit.Core.Inspectors;
+using RoR2EditorKit.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -151,7 +152,7 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
         {
             var origName = TargetType.name;
             TargetType.name = prefix + origName;
-            Util.UpdateNameOfObject(TargetType);
+            AssetDatabaseUtils.UpdateNameOfObject(TargetType);
         }
     }
 }

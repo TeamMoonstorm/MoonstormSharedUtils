@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using RoR2;
 using RoR2EditorKit.Core.Inspectors;
+using RoR2EditorKit.Utilities;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;

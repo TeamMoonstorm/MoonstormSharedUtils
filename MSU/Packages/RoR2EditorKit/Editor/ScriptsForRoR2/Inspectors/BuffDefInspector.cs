@@ -5,10 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using RoR2;
 using RoR2EditorKit.Core.Inspectors;
+using RoR2EditorKit.Utilities;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static RoR2EditorKit.Utilities.AssetDatabaseUtils;
 
 namespace RoR2EditorKit.RoR2Related.Inspectors
 {
@@ -155,7 +157,7 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
         {
             var origName = TargetType.name;
             TargetType.name = prefix + origName;
-            Util.UpdateNameOfObject(TargetType);
+            UpdateNameOfObject(TargetType);
         }
     }
 }

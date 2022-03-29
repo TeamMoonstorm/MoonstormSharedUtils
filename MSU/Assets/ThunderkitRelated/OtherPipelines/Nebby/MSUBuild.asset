@@ -60,3 +60,5 @@ MonoBehaviour:
     pathDestination: <LITTestingPath>
   - pathSource: <BuildPath>
     pathDestination: <LITEditorPath>
+  - pathSource: <BuildPath>
+    pathDestination: <SS2EditorPath>

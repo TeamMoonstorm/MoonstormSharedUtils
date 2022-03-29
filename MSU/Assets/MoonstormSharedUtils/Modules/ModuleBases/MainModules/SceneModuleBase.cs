@@ -57,7 +57,7 @@ namespace Moonstorm
             return GetContentClasses<SceneBase>();
         }
 
-        public void AddScene(SceneBase scene, SerializableContentPack contentPack, Dictionary<SceneDef, SceneBase> sceneDictionary = null)
+        public void AddScene(SceneBase scene, Dictionary<SceneDef, SceneBase> sceneDictionary = null)
         {
             if(Initialized)
             {
@@ -68,7 +68,7 @@ namespace Moonstorm
             if (InitializeContent(scene) && sceneDictionary != null)
                 AddSafelyToDict(ref sceneDictionary, scene.SceneDef, scene);
 
-            MSULog.Debug($"Scene {scene.SceneDef} added to {contentPack.name}");
+            MSULog.Debug($"Scene {scene.SceneDef} added to {SerializableContentPack.name}");
         }
 
         protected override bool InitializeContent(SceneBase contentClass)

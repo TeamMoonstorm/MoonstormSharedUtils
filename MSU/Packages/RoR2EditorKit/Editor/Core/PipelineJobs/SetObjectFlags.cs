@@ -10,6 +10,7 @@ using System.IO;
 using ThunderKit.Core.Data;
 using System.Threading.Tasks;
 using System.Text;
+using RoR2EditorKit.Utilities;
 
 namespace RoR2EditorKit.Core.PipelineJobs
 {

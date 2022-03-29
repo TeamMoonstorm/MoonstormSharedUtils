@@ -2,7 +2,7 @@
 
 The Risk of Rain 2 Editor Kit (Abreviated as ROR2EK) is a Thunderkit Extension designed specifically for helping mod creators create content for Risk of Rain 2.
 
-The main goal of (ROR2EK) is to bring a friendly, easy to use editor experience for creating content, ranging from items, all the way to prefabs.
+The main goal of ROR2EK is to bring a friendly, easy to use editor experience for creating content, ranging from items, all the way to prefabs.
 
 ## Features:
 
@@ -75,6 +75,22 @@ All of these material editors work with either the real hopoo shaders, or with s
 ## Changelog
 
 (Old Changelogs can be found [here](https://github.com/risk-of-thunder/RoR2EditorKit/blob/main/RoR2EditorKit/Assets/RoR2EditorKit/OldChangelogs.md))
+
+### '2.1.0'
+
+* Actually added ValidateUXMLPath to the expended inspector.
+* Added IMGUToVisualElementInspector editor. Used to transform an IMGUI inspector into a VisualElement inspector.
+* Fixed StageLanguageFiles not working properly
+* Fixed StageLanguageFiles not copying the results to the manifest's staging paths.
+* Improved StageLanguageFiles' logging capabilities.
+* RoR2EK assets can no longer be edited if the package is installed under the "Packages" folder.
+* Split Utils.CS into 5 classes
+	* Added AssetDatabaseUtils
+	* Added ExtensionUtils
+	* Added IOUtils
+	* Added MarkdownUtils
+	* Added ScriptableObjectUtils
+* Removed SkillFamilyVariant property drawer
 
 ### '2.0.2'
 

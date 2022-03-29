@@ -8,6 +8,7 @@ using System;
 using System.Collections;
 using Object = UnityEngine.Object;
 using System.Collections.Generic;
+using RoR2EditorKit.Utilities;
 
 namespace RoR2EditorKit.RoR2Related.Inspectors
 {
@@ -178,7 +179,7 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
         {
             var origName = TargetType.name;
             TargetType.name = prefix + origName;
-            Util.UpdateNameOfObject(TargetType);
+            AssetDatabaseUtils.UpdateNameOfObject(TargetType);
         }
     }
 }

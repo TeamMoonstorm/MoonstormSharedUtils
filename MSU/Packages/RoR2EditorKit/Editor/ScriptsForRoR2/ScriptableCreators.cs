@@ -2,6 +2,8 @@
 using RoR2.Skills;
 using UnityEditor;
 using UnityEngine;
+using static RoR2EditorKit.Utilities.ScriptableObjectUtils;
+using static RoR2EditorKit.Utilities.AssetDatabaseUtils;
 
 namespace RoR2EditorKit.RoR2Related
 {
@@ -14,7 +16,7 @@ namespace RoR2EditorKit.RoR2Related
         [MenuItem("Assets/Create/RoR2/SkillDef/Captain/Orbital")]
         public static void CreateOrbital()
         {
-            Util.CreateNewScriptableObject<CaptainOrbitalSkillDef>();
+            CreateNewScriptableObject<CaptainOrbitalSkillDef>();
         }
 
         [MenuItem("Assets/Create/RoR2/SkillDef/Captain/SupplyDrop")]
@@ -84,7 +86,7 @@ namespace RoR2EditorKit.RoR2Related
             SO.name = $"New {typeof(T).Name}";
             skillDef = SO as T;
 
-            Util.CreateAssetAtSelectionPath(skillDef);
+            CreateAssetAtSelectionPath(skillDef);
         }
         #endregion
     }

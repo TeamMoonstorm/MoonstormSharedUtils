@@ -1,162 +1,176 @@
 using System.Threading.Tasks;
-using System.Collections.Generic;
-using ThunderKit.Core.Attributes;
 using ThunderKit.Core.Pipelines;
+using ThunderKit.Core.Attributes;
 using RoR2EditorKit.Core.ManifestDatums;
-using UnityEditor;
 using System.Linq;
-using UnityEngine.Networking;
+using System;
+using System.IO;
 using ThunderKit.Core.Paths;
 using UnityEngine;
-using SimpleJSON;
-using System.IO;
+using UnityEditor;
+using System.Collections.Generic;
+using UnityEngine.Networking;
 using System.Text;
-using System;
+using SimpleJSON;
+using RoR2EditorKit.Utilities;
 
 namespace RoR2EditorKit.Core.PipelineJobs
 {
-    [PipelineSupport(typeof(Pipeline)), RequiresManifestDatumType(typeof(LanguageFolderTree))]
+    [PipelineSupport(typeof(Pipeline)), RequiresManifestDatumType(typeof(LanguageFolderTree)), ManifestProcessor]
     public class StageLanguageFiles : PipelineJob
     {
-        public enum InvalidFile
+        public enum InvalidLangfile
         {
             InvalidExtension,
             FormatError,
             NodeError
         }
 
+        [PathReferenceResolver]
         public string LanguageArtifactPath = "<LanguageStaging>";
         public override Task Execute(Pipeline pipeline)
         {
-            var validExtensions = new string[] { ".json", ".txt" };
-
             AssetDatabase.SaveAssets();
-            var manifests = pipeline.Manifests;
-            var lftIndices = new Dictionary<LanguageFolderTree, int>();
-            var lfts = new List<LanguageFolderTree>();
 
-            for(int i = 0; i < manifests.Length; i++)
-            {
-                foreach(var lft in manifests[i].Data.OfType<LanguageFolderTree>())
-                {
-                    lfts.Add(lft);
-                    lftIndices.Add(lft, i);
-                }
-            }
+            var mainManifest = pipeline.Manifest;
+            var folderTrees = mainManifest.Data.OfType<LanguageFolderTree>().ToList();
 
-            var languageFolderTrees = lfts.ToArray();
-            var hasValidTreeFolders = languageFolderTrees.Any(lft => lft.languageFolders.Any(lf => !lf.languageName.IsNullOrEmptyOrWhitespace() && lf.languageFiles.Any()));
-            if(!hasValidTreeFolders)
+            var hasValidTreeFolders = folderTrees.Any(ft => ft.languageFolders.Any(lf => !lf.languageName.IsNullOrEmptyOrWhitespace() && lf.languageFiles.Any()));
+            if (!hasValidTreeFolders)
             {
                 var scriptPath = UnityWebRequest.EscapeURL(AssetDatabase.GetAssetPath(MonoScript.FromScriptableObject(this)));
-                pipeline.Log(LogLevel.Warning, $"No valid LanguageTreeFolder defined, skipping [{nameof(StageLanguageFiles)}](assetlink://{scriptPath}) PipelineJob");
+                pipeline.Log(LogLevel.Warning, $"No valid LanguageTreeFolder defined, skipping {MarkdownUtils.GenerateAssetLink(nameof(StageLanguageFiles), scriptPath)} PipelineJob");
                 return Task.CompletedTask;
             }
 
-            var languageArtifactPath = LanguageArtifactPath.Resolve(pipeline, this);
+            var languageArtifactPath = PathReference.ResolvePath(LanguageArtifactPath, pipeline, this);
+            IOUtils.EnsureDirectory(languageArtifactPath);
 
-            Directory.CreateDirectory(languageArtifactPath);
-
-            var allLanguageFiles = languageFolderTrees
+            var allLanguageFiles = folderTrees
                 .SelectMany(lft => lft.languageFolders)
                 .SelectMany(lf => lf.languageFiles)
                 .ToArray();
 
-            if(HasInvalidFile(allLanguageFiles, out var invalidFile, out var invalidFileReason))
+            var logBuilder = new List<string>();
+            if (CheckForInvalidFiles(allLanguageFiles, out var invalidFiles))
             {
-                var scriptPath = UnityWebRequest.EscapeURL(AssetDatabase.GetAssetPath(MonoScript.FromScriptableObject(this)));
-                switch(invalidFileReason)
+
+                foreach (var (asset, error) in invalidFiles)
                 {
-                    case InvalidFile.InvalidExtension:
-                        pipeline.Log(LogLevel.Warning, $"File {invalidFile} has an invalid extension, extension should be either \".txt\" or \".json\", skipping [{nameof(StageLanguageFiles)}](assetlink://{scriptPath}) PipelineJob.");
-                        break;
-                    case InvalidFile.FormatError:
-                        pipeline.Log(LogLevel.Warning, $"File {invalidFile} has JSON related format errors, skipping [{nameof(StageLanguageFiles)}](assetlink://{scriptPath}) PipelineJob.");
-                        break;
-                    case InvalidFile.NodeError:
-                        pipeline.Log(LogLevel.Warning, $"File {invalidFile} has an invalid JSON Node, the name for the json dictionary needs to be \"strings\", skipping [{nameof(StageLanguageFiles)}](assetlink://{scriptPath}) PipelineJob.");
-                        break;
+                    var scriptPath = UnityWebRequest.EscapeURL(AssetDatabase.GetAssetPath(MonoScript.FromScriptableObject(this)));
+                    switch (error)
+                    {
+                        case InvalidLangfile.InvalidExtension:
+                            logBuilder.Add($"* File {MarkdownUtils.GenerateAssetLink(asset)} has an invalid extension ({Path.GetExtension(AssetDatabase.GetAssetPath(asset))}), extension should be either **\".txt\"** or **\".json\"**, skipping {MarkdownUtils.GenerateAssetLink(nameof(StageLanguageFiles), scriptPath)} PipelineJob");
+                            break;
+                        case InvalidLangfile.FormatError:
+                            logBuilder.Add($"* File {MarkdownUtils.GenerateAssetLink(asset)} has JSON related format errors, skipping {MarkdownUtils.GenerateAssetLink(nameof(StageLanguageFiles), scriptPath)} PipelineJob");
+                            break;
+                        case InvalidLangfile.NodeError:
+                            logBuilder.Add($"* File {MarkdownUtils.GenerateAssetLink(asset)} has an invalid JSON Node, the name for the json dictionary needs to be **\"strings\"**, skipping {MarkdownUtils.GenerateAssetLink(nameof(StageLanguageFiles), scriptPath)} PipelineJob");
+                            break;
+                    }
                 }
+                pipeline.Log(LogLevel.Warning, $"Found a total of {invalidFiles.Length} invalid language files on manifest {MarkdownUtils.GenerateAssetLink(mainManifest)}", logBuilder.ToArray());
+                logBuilder.Clear();
                 return Task.CompletedTask;
             }
 
-            var logBuilder = new StringBuilder();
-
-            for(pipeline.ManifestIndex = 0; pipeline.ManifestIndex < pipeline.Manifests.Length; pipeline.ManifestIndex++)
+            foreach (var languageFolderTree in folderTrees)
             {
-                var manifest = pipeline.Manifest;
-                foreach(var languageFolderTree in manifest.Data.OfType<LanguageFolderTree>())
-                {
-                    string rootLanguageFolderPath = Path.Combine(languageArtifactPath, languageFolderTree.rootFolderName);
-                    if(!Directory.Exists(rootLanguageFolderPath))
-                    {
-                        Directory.CreateDirectory(rootLanguageFolderPath);
-                    }
+                string rootLanguageFolderPath = Path.Combine(languageArtifactPath, languageFolderTree.rootFolderName);
+                IOUtils.EnsureDirectory(rootLanguageFolderPath);
 
-                    foreach(LanguageFolder languageFolder in languageFolderTree.languageFolders)
+                foreach (LanguageFolder languageFolder in languageFolderTree.languageFolders)
+                {
+                    string langFolder = Path.Combine(rootLanguageFolderPath, languageFolder.languageName);
+                    IOUtils.EnsureDirectory(langFolder);
+                    foreach (TextAsset asset in languageFolder.languageFiles)
                     {
-                        string langFolder = Path.Combine(rootLanguageFolderPath, languageFolder.languageName);
-                        if(!Directory.Exists(langFolder))
-                        {
-                            Directory.CreateDirectory(langFolder);
-                        }
-                        foreach(TextAsset asset in languageFolder.languageFiles)
-                        {
-                            string relativeAssetPath = AssetDatabase.GetAssetPath(asset);
-                            string fullAssetPath = Path.GetFullPath(relativeAssetPath);
-                            string fullAssetName = Path.GetFileName(fullAssetPath);
-                            string destPath = Path.Combine(langFolder, fullAssetName);
-                            FileUtil.ReplaceFile(relativeAssetPath, destPath);
-                        }
+                        string relativeAssetPath = AssetDatabase.GetAssetPath(asset);
+                        string fullAssetPath = Path.GetFullPath(relativeAssetPath);
+                        string fullAssetName = Path.GetFileName(fullAssetPath);
+                        string destPath = Path.Combine(langFolder, fullAssetName);
+                        FileUtil.ReplaceFile(relativeAssetPath, destPath);
+                        logBuilder.Add($"* Moved {MarkdownUtils.GenerateAssetLink(asset)} from ***{relativeAssetPath}*** to ***{destPath}***");
                     }
                 }
             }
-            pipeline.ManifestIndex = -1;
+            pipeline.Log(LogLevel.Information, $"Finished moving language files to {LanguageArtifactPath} ({languageArtifactPath})", logBuilder.ToArray());
+            logBuilder.Clear();
 
+            foreach (var languageFolderTree in folderTrees)
+            {
+                var languageNames = languageFolderTree.languageFolders.Select(lf => lf.languageName).ToArray();
+                foreach(var outputPath in languageFolderTree.StagingPaths.Select(path => path.Resolve(pipeline, this)))
+                {
+                    foreach (string dirPath in Directory.GetDirectories(languageArtifactPath, "*", SearchOption.AllDirectories))
+                        IOUtils.EnsureDirectory(dirPath.Replace(languageArtifactPath, outputPath));
+
+                    foreach(string filePath in Directory.GetFiles(languageArtifactPath, "*", SearchOption.AllDirectories))
+                    {
+                        bool found = false;
+                        foreach(var languageName in languageNames)
+                        {
+                            if(filePath.IndexOf(languageName, StringComparison.OrdinalIgnoreCase) >= 0)
+                            {
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found)
+                            continue;
+
+                        string destFileName = filePath.Replace(languageArtifactPath, outputPath);
+                        Directory.CreateDirectory(Path.GetDirectoryName(destFileName));
+                        FileUtil.ReplaceFile(filePath, destFileName);
+                        logBuilder.Add($"* Moved {Path.GetFileName(filePath)} from ***{filePath}*** to ***{destFileName}***");
+                    }
+                }
+            }
+            pipeline.Log(LogLevel.Information, $"Finished moving language files to manifest's Staging Paths.", logBuilder.ToArray());
             return Task.CompletedTask;
         }
 
-        private bool HasInvalidFile(TextAsset[] langFiles, out TextAsset invalidFile, out InvalidFile invalidFileReason)
+        private bool CheckForInvalidFiles(TextAsset[] assets, out (TextAsset, InvalidLangfile)[] invalidLangTuple)
         {
-            for(int i = 0; i < langFiles.Length; i++)
+            List<(TextAsset, InvalidLangfile)> invalidLangTupleList = new List<(TextAsset, InvalidLangfile)>();
+            foreach (TextAsset asset in assets)
             {
-                TextAsset asset = langFiles[i];
-                string fileExtension = Path.GetExtension(Path.GetFileName(AssetDatabase.GetAssetPath(asset)));
-                if(MatchesExtension(fileExtension, ".txt") || MatchesExtension(fileExtension, ".json"))
+                string assetPath = Path.GetFullPath(AssetDatabase.GetAssetPath(asset));
+                string fileExtension = Path.GetExtension(Path.GetFileName(assetPath));
+                if (!MatchesExtension(fileExtension, ".txt") && !MatchesExtension(fileExtension, ".json"))
                 {
-                    Stream stream = File.Open(AssetDatabase.GetAssetPath(asset), FileMode.Open, FileAccess.Read);
-                    StreamReader streamReader = new StreamReader(stream, Encoding.UTF8);
+                    invalidLangTupleList.Add((asset, InvalidLangfile.InvalidExtension));
+                    continue;
+                }
+
+                using (Stream stream = File.Open(assetPath, FileMode.Open, FileAccess.Read))
+                using (StreamReader streamReader = new StreamReader(stream, Encoding.UTF8))
+                {
                     JSONNode node = JSON.Parse(streamReader.ReadToEnd());
 
-                    if(!(node != null))
+                    if (node == null)
                     {
-                        invalidFile = asset;
-                        invalidFileReason = InvalidFile.FormatError;
-                        return true;
+                        invalidLangTupleList.Add((asset, InvalidLangfile.FormatError));
+                        continue;
                     }
+
                     JSONNode node2 = node["strings"];
-                    if(!(node2 != null))
+                    if(node2 == null)
                     {
-                        invalidFile = asset;
-                        invalidFileReason = InvalidFile.NodeError;
-                        return true;
+                        invalidLangTupleList.Add((asset, InvalidLangfile.NodeError));
+                        continue;
                     }
-                }
-                else
-                {
-                    invalidFile = asset;
-                    invalidFileReason = InvalidFile.InvalidExtension;
-                    return true;
                 }
             }
 
-            invalidFile = null;
-            invalidFileReason = (InvalidFile)int.MinValue;
-            return false;
+            invalidLangTuple = invalidLangTupleList.ToArray();
+            return invalidLangTupleList.Count > 0;
 
-             bool MatchesExtension(string fileExtension, string testExtension)
+            bool MatchesExtension(string fileExtension, string extension)
             {
-                return string.Compare(fileExtension, testExtension, StringComparison.OrdinalIgnoreCase) == 0;
+                return string.Compare(fileExtension, extension, StringComparison.OrdinalIgnoreCase) == 0;
             }
         }
     }
