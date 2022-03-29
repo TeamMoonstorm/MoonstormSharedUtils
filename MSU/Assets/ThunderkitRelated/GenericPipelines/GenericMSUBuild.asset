@@ -15,6 +15,7 @@ MonoBehaviour:
   Data:
   - {fileID: 114946925108004874}
   - {fileID: 114289857963937564}
+  QuickAccess: 0
   manifest: {fileID: 11400000, guid: a8ac6a3e325999651bd53f63760e6ff0, type: 2}
 --- !u!114 &114289857963937564
 MonoBehaviour:
@@ -28,9 +29,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5b20fac9c71fd64183cb7a8f359d73a, type: 3}
   m_Name: StageAssemblies
   m_EditorClassIdentifier: 
-  Errored: 0
-  ErrorMessage: 
-  ErrorStacktrace: 
   Active: 1
   stageDebugDatabases: 1
   assemblyArtifactPath: <AssemblyStaging>
@@ -48,9 +46,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 924ee63e6c016f14d8a1560b288f15a3, type: 3}
   m_Name: StageAssetBundles
   m_EditorClassIdentifier: 
-  Errored: 0
-  ErrorMessage: 
-  ErrorStacktrace: 
   Active: 1
   AssetBundleBuildOptions: 256
   buildTarget: 5

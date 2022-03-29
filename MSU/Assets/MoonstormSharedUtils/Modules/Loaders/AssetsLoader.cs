@@ -4,7 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace Moonstorm.Loaders
 {
@@ -54,6 +56,32 @@ namespace Moonstorm.Loaders
         protected void SwapShadersFromMaterialsInBundle(AssetBundle bundle)
         { 
             if(bundle.isStreamedSceneAssetBundle)
+            {
+                MSULog.Warning($"Cannot swap material shaders from a streamed scene assetbundle.");
+                return;
+            }
+
+            Material[] assetBundleMaterials = bundle.LoadAllAssets<Material>();
+
+            for (int i = 0; i < assetBundleMaterials.Length; i++)
+            {
+                var material = assetBundleMaterials[i];
+                if(!material.shader.name.StartsWith("Stubbed"))
+                {
+                    MSULog.Warning($"The material {material} has a shader which's name doesnt start with \"Stubbed\" ({material.shader.name}), this is not allowed for stubbed shaders for MSU. not swapping shader.");
+                    continue;
+                }
+
+                try
+                {
+                    _ = SwapShader(material);
+                }
+                catch(Exception ex)
+                {
+                    MSULog.Error($"Failed to swap shader of material {material}: {ex}");
+                }
+            }
+            /*if(bundle.isStreamedSceneAssetBundle)
             {
                 MSULog.Warning($"Cannot map materials from a streamed scene asset bundle.");
                 return;
@@ -107,7 +135,18 @@ namespace Moonstorm.Loaders
                         }
                     continue;
                 }
-            }
+            }*/
+        }
+
+        private async Task SwapShader(Material material)
+        {
+            var shaderName = material.shader.name.Substring(7);
+            var adressablePath = $"{shaderName}.shader";
+            var asyncOp = Addressables.LoadAssetAsync<Shader>(adressablePath);
+            var shaderTask = asyncOp.Task;
+            var shader = await shaderTask;
+            material.shader = shader;
+            MaterialsWithSwappedShaders.Add(material);
         }
     }
 }
