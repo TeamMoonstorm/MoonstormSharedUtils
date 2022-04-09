@@ -85,7 +85,7 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
                 field.label = esm.customName;
                 if(field.parent != stateMachineHolder)
                 {
-                    field.TryRemoveFromParent();
+                    field.RemoveFromHierarchy();
                     stateMachineHolder.Add(field);
                 }
             }

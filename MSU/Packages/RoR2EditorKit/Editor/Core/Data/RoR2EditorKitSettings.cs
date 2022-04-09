@@ -12,7 +12,7 @@ namespace RoR2EditorKit.Settings
 {
     public class RoR2EditorKitSettings : ThunderKitSetting
     {
-        const string MarkdownStylePath = "Packages/com.passivepicasso.thunderkit/USS/markdown.uss";
+        const string MarkdownStylePath = "Packages/com.passivepicasso.thunderkit/Documentation/uss/markdown.uss";
         const string DocumentationStylePath = "Packages/com.passivepicasso.thunderkit/uss/thunderkit_style.uss";
 
         [InitializeOnLoadMethod]
@@ -46,9 +46,6 @@ namespace RoR2EditorKit.Settings
 
                     MarkdownDataType = MarkdownDataType.Text
                 };
-                markdown.AddSheet(MarkdownStylePath);
-
-                markdown.AddToClassList("m4");
                 markdown.RefreshContent();
                 rootElement.Add(markdown);
             }
@@ -73,7 +70,7 @@ namespace RoR2EditorKit.Settings
         {
             if(TokenPrefix.IsNullOrEmptyOrWhitespace())
             {
-                throw ErrorShorthands.ThrowNullTokenPrefix();
+                throw ErrorShorthands.NullTokenPrefix();
             }
             return TokenPrefix.ToUpperInvariant();
         }
@@ -81,7 +78,7 @@ namespace RoR2EditorKit.Settings
         {
             if (TokenPrefix.IsNullOrEmptyOrWhitespace())
             {
-                throw ErrorShorthands.ThrowNullTokenPrefix();
+                throw ErrorShorthands.NullTokenPrefix();
             }
             return TokenPrefix.ToLowerInvariant();
         }

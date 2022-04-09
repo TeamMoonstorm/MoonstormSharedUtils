@@ -84,7 +84,7 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
         {
             if(notAppearMessage != null)
             {
-                notAppearMessage.TryRemoveFromParent();
+                notAppearMessage.RemoveFromHierarchy();
             }
 
             if(DoesNotAppear)
@@ -98,7 +98,7 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
         {
             if(cooldownMsg != null)
             {
-                cooldownMsg.TryRemoveFromParent();
+                cooldownMsg.RemoveFromHierarchy();
             }
             if(TargetType.cooldown < 0)
             {
@@ -110,7 +110,7 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
         private void OnBuffDefSet(ChangeEvent<BuffDef> evt = null)
         {
             var button = Find<Button>(slider, "chanceSetter");
-            buffMessage?.TryRemoveFromParent();
+            buffMessage?.RemoveFromHierarchy();
 
             if (!passiveBuffDef)
                 return;
@@ -130,7 +130,7 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
         private void SetTokens()
         {
             if (Settings.TokenPrefix.IsNullOrEmptyOrWhitespace())
-                throw ErrorShorthands.ThrowNullTokenPrefix();
+                throw ErrorShorthands.NullTokenPrefix();
 
             string objName = TargetType.name.ToLowerInvariant();
             if (objName.Contains(prefix.ToLowerInvariant()))
@@ -169,7 +169,7 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
             }
             else if (objectNameSetter != null)
             {
-                objectNameSetter.TryRemoveFromParent();
+                objectNameSetter.RemoveFromHierarchy();
             }
 
             return null;

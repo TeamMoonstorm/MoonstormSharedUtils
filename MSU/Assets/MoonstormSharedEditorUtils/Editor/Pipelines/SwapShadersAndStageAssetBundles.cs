@@ -16,6 +16,7 @@ using UnityEngine.Networking;
 using RoR2EditorKit.Utilities;
 using Object = UnityEngine.Object;
 using Moonstorm.EditorUtils.ShaderSystem;
+using Moonstorm.EditorUtils.Settings;
 
 namespace Moonstorm.EditorUtils.Pipelines
 {
@@ -62,16 +63,16 @@ namespace Moonstorm.EditorUtils.Pipelines
             var bundleArtifactPath = BundleArtifactPath.Resolve(pipeline, this);
             Directory.CreateDirectory(bundleArtifactPath);
 
-            var shaderDictionary = MaterialShaderManager.ShaderDictionary;
-            var origToStubbed = shaderDictionary.OriginalToStubbed;
-            var stubbedToOrig = shaderDictionary.StubbedToOriginal;
+            MaterialShaderManager.ShaderDictionary.UpdateLists();
+            var origToStubbed = MaterialShaderManager.OrigToStubbed;
+            var stubbedToOrig = MaterialShaderManager.StubbedToOrig;
 
             var materials = GetAllMaterialsWithOrigShaders(origToStubbed.Keys.ToArray());
 
             if (materials.Length != 0)
             {
-                var count = SwapOrigForStubbedd(materials, origToStubbed);
-                pipeline.Log(LogLevel.Information, $"Replacing a total of {count} real shaders for stubbed shaders.");
+                var log = SwapOrigForStubbedd(materials, origToStubbed);
+                pipeline.Log(LogLevel.Information, $"Replacing a total of {log.Count} real shaders for stubbed shaders.", log.ToArray());
             }
 
             var explicitAssets = assetBundleDefs.SelectMany(abd => abd.assetBundles)
@@ -187,9 +188,10 @@ namespace Moonstorm.EditorUtils.Pipelines
 
             if (materials.Length != 0)
             {
-                var count = RestoreMaterialShaders(materials, stubbedToOrig);
-                pipeline.Log(LogLevel.Information, $"Restored a total of {count} stubbed shaders for real shaders.");
+                var log = RestoreMaterialShaders(materials, stubbedToOrig);
+                pipeline.Log(LogLevel.Information, $"Restored a total of {log.Count} stubbed shaders for real shaders.", log.ToArray());
             }
+            AssetDatabase.SaveAssets();
             return Task.CompletedTask;
         }
 
@@ -216,36 +218,44 @@ namespace Moonstorm.EditorUtils.Pipelines
         {
             return AssetDatabaseUtils.FindAssetsByType<Material>().Where(mat => shaders.Contains(mat.shader)).ToArray();
         }
-        private int SwapOrigForStubbedd(Material[] materials, Dictionary<Shader, Shader> realToStubbed)
+        private List<string> SwapOrigForStubbedd(Material[] materials, Dictionary<Shader, Shader> realToStubbed)
         {
-            var count = 0;
+            var log = new List<string>();
             for (int i = 0; i < materials.Length; i++)
             {
-                var current = materials[i];
-                if (realToStubbed.TryGetValue(current.shader, out Shader stubbed))
+                var material = materials[i];
+                var shader = material.shader;
+                if (realToStubbed.TryGetValue(material.shader, out Shader stubbed))
                 {
-                    count++;
-                    current.shader = stubbed;
+                    material.shader = stubbed;
+                    log.Add($"Swapped {MarkdownUtils.GenerateAssetLink(material)}'s shader ({MarkdownUtils.GenerateAssetLink(shader)} with {MarkdownUtils.GenerateAssetLink(stubbed)}");
+                }
+                else
+                {
+                    log.Add($"Could not find matching shader for {MarkdownUtils.GenerateAssetLink(material)}'s shader ({MarkdownUtils.GenerateAssetLink(material.shader)}");
                 }
             }
-            AssetDatabase.SaveAssets();
-            return count;
+            return log;
         }
 
-        private static int RestoreMaterialShaders(Material[] materials, Dictionary<Shader, Shader> stubbedToOrig)
+        private List<string> RestoreMaterialShaders(Material[] materials, Dictionary<Shader, Shader> stubbedToOrig)
         {
-            var count = 0;
+            var log = new List<string>();
             for (int i = 0; i < materials.Length; i++)
             {
-                var current = materials[i];
-                if (stubbedToOrig.TryGetValue(current.shader, out Shader stubbed))
+                var material = materials[i];
+                var shader = material.shader;
+                if (stubbedToOrig.TryGetValue(shader, out Shader orig))
                 {
-                    count++;
-                    current.shader = stubbed;
+                    material.shader = orig;
+                    log.Add($"Swapped {MarkdownUtils.GenerateAssetLink(material)}'s shader ({MarkdownUtils.GenerateAssetLink(shader)} with {MarkdownUtils.GenerateAssetLink(orig)}");
+                }
+                else
+                {
+                    log.Add($"Could not find matching shader for {MarkdownUtils.GenerateAssetLink(material)}'s shader ({MarkdownUtils.GenerateAssetLink(material.shader)}");
                 }
             }
-            AssetDatabase.SaveAssets();
-            return count;
+            return log;
         }
 
         private static void PopulateWithExplicitAssets(IEnumerable<Object> inputAssets, List<string> outputAssets)

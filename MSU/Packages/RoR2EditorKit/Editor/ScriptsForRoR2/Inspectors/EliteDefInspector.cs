@@ -31,7 +31,7 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
         {
             base.OnEnable();
             equipmentDef = TargetType.eliteEquipmentDef;
-            prefix = Settings.GetPrefix1stUpperRestLower() + "Affix";
+            prefix = $"ed{Settings.GetPrefix1stUpperRestLower()}Affix";
             prefixUsesTokenPrefix = true;
 
             OnVisualTreeCopy += () =>
@@ -64,7 +64,7 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
             foreach(IMGUIContainer container in equipDefMessages)
             {
                 if (container != null)
-                    container.TryRemoveFromParent();
+                    container.RemoveFromHierarchy();
             }
             equipDefMessages.Clear();
 
@@ -107,7 +107,7 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
         private void SetTokens()
         {
             if(Settings.TokenPrefix.IsNullOrEmptyOrWhitespace())
-                throw ErrorShorthands.ThrowNullTokenPrefix();
+                throw ErrorShorthands.NullTokenPrefix();
 
             string objName = TargetType.name.ToLowerInvariant();
             if(objName.Contains(prefix.ToLowerInvariant()))
@@ -142,7 +142,7 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
             }
             else if (objectNameSetter != null)
             {
-                objectNameSetter.TryRemoveFromParent();
+                objectNameSetter.RemoveFromHierarchy();
             }
 
             return null;

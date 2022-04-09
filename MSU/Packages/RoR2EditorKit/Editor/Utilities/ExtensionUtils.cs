@@ -11,11 +11,16 @@ using Object = UnityEngine.Object;
 namespace RoR2EditorKit.Utilities
 {
     /// <summary>
-    /// Class holding various utility methods for interacting with the editor and the asset database
+    /// Class holding a multitude of extension methods.
     /// </summary>
     public static class ExtensionUtils
     {
         #region String Extensions
+        /// <summary>
+        /// Ensures that the string object is not Null, Empty or WhiteSpace.
+        /// </summary>
+        /// <param name="text">The string object to check</param>
+        /// <returns>True if the string object is not Null, Empty or Whitespace, false otherwise.</returns>
         public static bool IsNullOrEmptyOrWhitespace(this string text)
         {
             return (string.IsNullOrEmpty(text) || string.IsNullOrWhiteSpace(text));
@@ -23,6 +28,13 @@ namespace RoR2EditorKit.Utilities
         #endregion
 
         #region SerializedProperties/Objects  Extensions
+        /// <summary>
+        /// Returns the serialized property that's bound to this ObjectField.
+        /// </summary>
+        /// <param name="objField">The objectField that has a bounded property</param>
+        /// <param name="objectBound">The SerializedObject that has the objectField's property binding path.</param>
+        /// <returns>The serialized property</returns>
+        /// <exception cref="NullReferenceException">when the objField does not have a bindingPath set.</exception>
         public static SerializedProperty GetBindedProperty(this ObjectField objField, SerializedObject objectBound)
         {
             if (objField.bindingPath.IsNullOrEmptyOrWhitespace())
@@ -31,6 +43,11 @@ namespace RoR2EditorKit.Utilities
             return objectBound.FindProperty(objField.bindingPath);
         }
 
+        /// <summary>
+        /// Returns an IEnumerable of all the visible serialized properties based off the SerializedObject's Iterator.
+        /// </summary>
+        /// <param name="serializedProperty">The serialized property obtained from ScriptableObject.GetIterator()</param>
+        /// <returns>An IEnumerable of all the visible children</returns>
         public static IEnumerable<SerializedProperty> GetVisibleChildren(this SerializedProperty serializedProperty)
         {
             SerializedProperty currentProperty = serializedProperty.Copy();
@@ -54,14 +71,6 @@ namespace RoR2EditorKit.Utilities
         #endregion
 
         #region Visual Element Extensions
-        public static void TryRemoveFromParent(this VisualElement element)
-        {
-            if(element != null && element.parent != null)
-            {
-                element.parent.Remove(element);
-            }
-        }
-
         /// <summary>
         /// Quick method to set the ObjectField's object type
         /// </summary>

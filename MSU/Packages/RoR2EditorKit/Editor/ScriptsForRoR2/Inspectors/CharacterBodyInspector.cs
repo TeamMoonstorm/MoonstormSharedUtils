@@ -34,7 +34,7 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
         {
             if (Settings.TokenPrefix.IsNullOrEmptyOrWhitespace())
             {
-                throw ErrorShorthands.ThrowNullTokenPrefix();
+                throw ErrorShorthands.NullTokenPrefix();
             }
 
             GameObject go = TargetType.gameObject;

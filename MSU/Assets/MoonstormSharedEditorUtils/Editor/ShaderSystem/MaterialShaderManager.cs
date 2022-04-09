@@ -10,10 +10,12 @@ namespace Moonstorm.EditorUtils.ShaderSystem
     public static class MaterialShaderManager
     {
         public static ShaderDictionary ShaderDictionary { get => ShaderDictionary.GetOrCreateSettings<ShaderDictionary>(); }
+        public static Dictionary<Shader, Shader> OrigToStubbed { get => ShaderDictionary.validPairs.ToDictionary(k => k.original, v => v.stubbed); }
+        public static Dictionary<Shader, Shader> StubbedToOrig { get => ShaderDictionary.validPairs.ToDictionary(k => k.stubbed, v => v.original); }
         public static void Upgrade(Material material)
         {
             var currentShader = material.shader;
-            if (ShaderDictionary.StubbedToOriginal.TryGetValue(currentShader, out Shader realShader))
+            if (OrigToStubbed.TryGetValue(currentShader, out Shader realShader))
             {
                 if (realShader)
                 {
@@ -26,11 +28,11 @@ namespace Moonstorm.EditorUtils.ShaderSystem
         public static void Downgrade(Material material)
         {
             var currentShader = material.shader;
-            if (ShaderDictionary.OriginalToStubbed.TryGetValue(currentShader, out Shader realShader))
+            if (StubbedToOrig.TryGetValue(currentShader, out Shader stubbedShader))
             {
-                if (realShader)
+                if (stubbedShader)
                 {
-                    material.shader = realShader;
+                    material.shader = stubbedShader;
                     Debug.Log($"Succesfully replaced {material.name}'s real shader for the stubbed shader");
                 }
             }

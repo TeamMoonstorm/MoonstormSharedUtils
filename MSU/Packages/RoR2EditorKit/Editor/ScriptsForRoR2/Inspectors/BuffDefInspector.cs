@@ -35,7 +35,7 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
             base.OnEnable();
             eliteDef = TargetType.eliteDef;
             networkSoundEventDef = TargetType.startSfx;
-            prefix = Settings.GetPrefix1stUpperRestLower();
+            prefix = $"bd{Settings.GetPrefix1stUpperRestLower()}";
             prefixUsesTokenPrefix = true;
 
             OnVisualTreeCopy += () =>
@@ -69,7 +69,7 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
         {
             if(networkSoundEventdefMessage != null)
             {
-                networkSoundEventdefMessage.TryRemoveFromParent();
+                networkSoundEventdefMessage.RemoveFromHierarchy();
             }
 
             if (!networkSoundEventDef)
@@ -88,7 +88,7 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
             foreach (IMGUIContainer container in eliteDefMessages)
             {
                 if (container != null)
-                    container.TryRemoveFromParent();
+                    container.RemoveFromHierarchy();
             }
             eliteDefMessages.Clear();
 
@@ -147,7 +147,7 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
             }
             else if (objectNameSetter != null)
             {
-                objectNameSetter.TryRemoveFromParent();
+                objectNameSetter.RemoveFromHierarchy();
             }
 
             return null;

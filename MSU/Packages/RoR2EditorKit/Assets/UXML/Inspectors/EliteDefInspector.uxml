@@ -1,10 +1,10 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
     <ui:VisualElement name="Header" class="header" style="height: auto; flex-shrink: 0;">
-        <Style src="/Packages/riskofthunder-ror2editorkit/Assets/USS/Inspectors/EliteDefInspector.uss" />
+        <Style src="/Assets/RoR2EditorKit/Assets/USS/Inspectors/EliteDefInspector.uss" />
         <ui:Label text="EliteDef" name="m_Name" binding-path="m_Name" class="headerLabel" />
     </ui:VisualElement>
     <ui:VisualElement name="InspectorData">
-        <Style src="/Packages/riskofthunder-ror2editorkit/Assets/USS/Inspectors/EliteDefInspector.uss" />
+        <Style src="/Assets/RoR2EditorKit/Assets/USS/Inspectors/EliteDefInspector.uss" />
         <ui:Button text="Set tokens from Object name " name="tokenSetter" style="flex-direction: column; justify-content: flex-start; align-items: stretch; width: 173px;" />
         <uie:PropertyField name="modifierToken" tooltip="The token that&apos;s applied to the begining of the Elite&apos;s name (IE: the &quot;Blazing&quot; part of Blazing Elites)" binding-path="modifierToken" />
         <uie:PropertyField name="eliteEquipmentDef" tooltip="The Associated EquipmentDef of this EliteDef, The Equipment&apos;s PassiveBuffDef&apos;s EliteDef field must point to this EliteDef." binding-path="eliteEquipmentDef" label="Associated Equipment Def" />
@@ -15,6 +15,6 @@
         <uie:PropertyField name="damageBoostCoeff" tooltip="Coefficient that&apos;s applied to the Damage of the Elite." binding-path="damageBoostCoefficient" label="Damage Boost Coeff" />
     </ui:VisualElement>
     <ui:VisualElement name="Messages">
-        <Style src="/Packages/riskofthunder-ror2editorkit/Assets/USS/Inspectors/EliteDefInspector.uss" />
+        <Style src="/Assets/RoR2EditorKit/Assets/USS/Inspectors/EliteDefInspector.uss" />
     </ui:VisualElement>
 </ui:UXML>

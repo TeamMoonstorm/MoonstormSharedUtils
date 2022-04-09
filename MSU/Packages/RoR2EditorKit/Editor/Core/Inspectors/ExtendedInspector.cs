@@ -385,7 +385,7 @@ namespace RoR2EditorKit.Core.Inspectors
 
             if(prefixContainer != null)
             {
-                prefixContainer.TryRemoveFromParent();
+                prefixContainer.RemoveFromHierarchy();
             }
 
             if(evt != null)
@@ -395,7 +395,7 @@ namespace RoR2EditorKit.Core.Inspectors
 
             if(prefixUsesTokenPrefix && Settings.TokenPrefix.IsNullOrEmptyOrWhitespace())
             {
-                throw ErrorShorthands.ThrowNullTokenPrefix();
+                throw ErrorShorthands.NullTokenPrefix();
             }
 
 

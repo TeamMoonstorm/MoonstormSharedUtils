@@ -4,14 +4,14 @@ using UnityEditor;
 using UnityEditor.Experimental.SceneManagement;
 using UnityEngine;
 
-/// <summary>
-/// This is a script given by Ghor, All rights reserved to Hopoo Games.
-/// <para>If youre a hopoo employee, and the team have decided this is not ok, please contact Nebby at nebby1999@gmail.com</para>
-/// </summary>
 namespace RoR2EditorKit.RoR2Related.PropertyDrawers
 {
 
     [CustomPropertyDrawer(typeof(PrefabReferenceAttribute))]
+    /// <summary>
+    /// This is a script given by Ghor, All rights reserved to Hopoo Games.
+    /// <para>If youre a hopoo employee, and the team have decided this is not ok, please contact Nebby at nebby1999@gmail.com</para>
+    /// </summary>
     public class PrefabReferencePropertyDrawer : IMGUIPropertyDrawer
     {
         private static GameObject ConvertToPrefab(GameObject sceneObject)
