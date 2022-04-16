@@ -11,7 +11,7 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
         private static void Initialize()
         {
             if (MaterialEditorEnabled)
-                AddShader("hgCloudRemap", HGCloudRemapEditor, typeof(HGFXInspectors));
+                AddShaderEditor("hgCloudRemap", HGCloudRemapEditor, typeof(HGFXInspectors));
         }
 
         public static void HGCloudRemapEditor()

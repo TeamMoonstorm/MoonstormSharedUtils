@@ -12,7 +12,7 @@ using UnityEngine.UIElements;
 namespace RoR2EditorKit.RoR2Related.Inspectors
 {
     [CustomEditor(typeof(EntityStateConfiguration))]
-    public class EntityStateConfigurationInspector : ScriptableObjectInspector<EntityStateConfiguration>
+    public sealed class EntityStateConfigurationInspector : ScriptableObjectInspector<EntityStateConfiguration>
     {
         private delegate object FieldDrawHandler(FieldInfo fieldInfo, object value);
         private static readonly Dictionary<Type, FieldDrawHandler> typeDrawers = new Dictionary<Type, FieldDrawHandler>
@@ -38,6 +38,12 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
         private Type entityStateType;
         private readonly List<FieldInfo> serializableStaticFields = new List<FieldInfo>();
         private readonly List<FieldInfo> serializableInstanceFields = new List<FieldInfo>();
+
+        protected override string Prefix => null;
+
+        protected override bool PrefixUsesTokenPrefix => false;
+
+        protected override bool HasVisualTreeAsset => false;
 
         public void Legacy()
         {

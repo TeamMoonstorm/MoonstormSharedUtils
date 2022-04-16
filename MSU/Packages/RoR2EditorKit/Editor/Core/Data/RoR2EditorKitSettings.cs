@@ -10,27 +10,36 @@ using UnityEngine.UIElements;
 
 namespace RoR2EditorKit.Settings
 {
-    public class RoR2EditorKitSettings : ThunderKitSetting
+    /// <summary>
+    /// The main settings file of RoR2EditorKit
+    /// </summary>
+    public sealed class RoR2EditorKitSettings : ThunderKitSetting
     {
-        const string MarkdownStylePath = "Packages/com.passivepicasso.thunderkit/Documentation/uss/markdown.uss";
-        const string DocumentationStylePath = "Packages/com.passivepicasso.thunderkit/uss/thunderkit_style.uss";
-
-        [InitializeOnLoadMethod]
-        static void SetupSettings()
-        {
-            GetOrCreateSettings<RoR2EditorKitSettings>();
-        }
-
         private SerializedObject ror2EditorKitSettingsSO;
 
+        /// <summary>
+        /// The tokenPrefix thats used for this project
+        /// </summary>
         public string TokenPrefix;
 
+        /// <summary>
+        /// The main manifest of this project
+        /// </summary>
         public Manifest MainManifest;
 
+        /// <summary>
+        /// Used to check if the assets of ror2EK have been made ineditable
+        /// </summary>
         public bool madeRoR2EKAssetsNonEditable = false;
 
+        /// <summary>
+        /// Direct access to RoR2EditorKit's Inspector Settings
+        /// </summary>
         public EditorInspectorSettings InspectorSettings { get => GetOrCreateSettings<EditorInspectorSettings>(); }
 
+        /// <summary>
+        /// Direct access to RoR2EditorKit's MaterialEditorSettings
+        /// </summary>
         public MaterialEditorSettings MaterialEditorSettings { get => GetOrCreateSettings<MaterialEditorSettings>(); }
 
         public override void Initialize() => TokenPrefix = "";
@@ -66,6 +75,11 @@ namespace RoR2EditorKit.Settings
             rootElement.Bind(ror2EditorKitSettingsSO);
         }
 
+        /// <summary>
+        /// Returns the token prefix with all Chars uppercase.
+        /// <para>Example: "myToken" => "MYTOKEN"</para>
+        /// </summary>
+        /// <returns>The token prefix on all uppercase</returns>
         public string GetPrefixUppercase()
         {
             if(TokenPrefix.IsNullOrEmptyOrWhitespace())
@@ -74,6 +88,11 @@ namespace RoR2EditorKit.Settings
             }
             return TokenPrefix.ToUpperInvariant();
         }
+        /// <summary>
+        /// Returns the token prefix with all Chars lowercase
+        /// <para>Example: "MyToken" => "mytoken"</para>
+        /// </summary>
+        /// <returns></returns>
         public string GetPrefixLowercase()
         {
             if (TokenPrefix.IsNullOrEmptyOrWhitespace())
@@ -82,6 +101,12 @@ namespace RoR2EditorKit.Settings
             }
             return TokenPrefix.ToLowerInvariant();
         }
+
+        /// <summary>
+        /// Returns the token prefix with the first char Uppercase and the rest lowerCase
+        /// <para>Example: "MyToken" => "Mytoken"</para>
+        /// </summary>
+        /// <returns></returns>
         public string GetPrefix1stUpperRestLower()
         {
             List<char> prefix = new List<char>();

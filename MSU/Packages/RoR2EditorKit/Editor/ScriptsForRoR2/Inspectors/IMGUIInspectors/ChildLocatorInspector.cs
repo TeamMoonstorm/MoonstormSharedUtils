@@ -11,8 +11,14 @@ using UnityEditor;
 namespace RoR2EditorKit.RoR2Related.Inspectors
 {
     [CustomEditor(typeof(ChildLocator))]
-    public class ChildLocatorInspector : ComponentInspector<ChildLocator>
+    public sealed class ChildLocatorInspector : ComponentInspector<ChildLocator>
     {
+        protected override string Prefix => null;
+
+        protected override bool PrefixUsesTokenPrefix => false;
+
+        protected override bool HasVisualTreeAsset => false;
+
         protected override void DrawInspectorGUI()
         {
             DrawInspectorElement.Add(new IMGUIContainer(Legacy));

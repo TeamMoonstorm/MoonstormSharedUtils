@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-public class IDRSHolder : ScriptableObject
+public sealed class IDRSHolder : ScriptableObject
 {
     [Serializable]
     public struct IDRSStringAssetReference

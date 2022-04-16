@@ -14,7 +14,7 @@ using UnityEngine.UIElements;
 namespace RoR2EditorKit.RoR2Related.Inspectors
 {
     [CustomEditor(typeof(EliteDef))]
-    public class EliteDefInspector : ScriptableObjectInspector<EliteDef>
+    public sealed class EliteDefInspector : ScriptableObjectInspector<EliteDef>
     {
         private EquipmentDef equipmentDef;
         private List<IMGUIContainer> equipDefMessages = new List<IMGUIContainer>();
@@ -27,12 +27,16 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
 
         Button objectNameSetter = null;
 
+        protected override string Prefix => Settings.GetPrefix1stUpperRestLower() + "Affix";
+
+        protected override bool PrefixUsesTokenPrefix => true;
+
+        protected override bool HasVisualTreeAsset => true;
+
         protected override void OnEnable()
         {
             base.OnEnable();
             equipmentDef = TargetType.eliteEquipmentDef;
-            prefix = $"ed{Settings.GetPrefix1stUpperRestLower()}Affix";
-            prefixUsesTokenPrefix = true;
 
             OnVisualTreeCopy += () =>
             {
@@ -110,9 +114,9 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
                 throw ErrorShorthands.NullTokenPrefix();
 
             string objName = TargetType.name.ToLowerInvariant();
-            if(objName.Contains(prefix.ToLowerInvariant()))
+            if(objName.Contains(Prefix.ToLowerInvariant()))
             {
-                objName = objName.Replace(prefix.ToLowerInvariant(), "");
+                objName = objName.Replace(Prefix.ToLowerInvariant(), "");
             }
             TargetType.modifierToken = $"{Settings.GetPrefixUppercase()}_AFFIX_{objName.ToUpperInvariant()}";
         }
@@ -151,7 +155,7 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
         private void SetObjectName()
         {
             var origName = TargetType.name;
-            TargetType.name = prefix + origName;
+            TargetType.name = Prefix + origName;
             AssetDatabaseUtils.UpdateNameOfObject(TargetType);
         }
     }

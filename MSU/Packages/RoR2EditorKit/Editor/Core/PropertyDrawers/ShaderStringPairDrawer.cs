@@ -1,23 +1,23 @@
 ﻿using RoR2EditorKit.Settings;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace RoR2EditorKit.Core.PropertyDrawers
 {
     [CustomPropertyDrawer(typeof(MaterialEditorSettings.ShaderStringPair))]
-    public class ShaderStringPairPropertyDrawer : IMGUIPropertyDrawer
+    public sealed class ShaderStringPairPropertyDrawer : PropertyDrawer
     {
-        protected override void DrawCustomDrawer()
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            Begin();
+            EditorGUI.BeginProperty(position, label, property);
             var objRefProperty = property.FindPropertyRelative("shader");
-            objRefProperty.objectReferenceValue = EditorGUI.ObjectField(rect, NicifyName(property.FindPropertyRelative("shaderName").stringValue), objRefProperty.objectReferenceValue, typeof(Shader), false);
-            End();
+            objRefProperty.objectReferenceValue = EditorGUI.ObjectField(position, ObjectNames.NicifyVariableName(property.FindPropertyRelative("shaderName").stringValue), objRefProperty.objectReferenceValue, typeof(Shader), false);
+            EditorGUI.EndProperty();
         }
-
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            return base.GetPropertyHeight(property, label) / 3;
+            return 16;
         }
     }
 }

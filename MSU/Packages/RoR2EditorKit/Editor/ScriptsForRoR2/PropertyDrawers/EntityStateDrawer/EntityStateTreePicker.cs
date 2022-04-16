@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace RoR2EditorKit.RoR2Related.PropertyDrawers
 {
-    public class EntityStateTreePicker : EditorWindow
+    public sealed class EntityStateTreePicker : EditorWindow
     {
         private static EntityStateTreePicker stateTreePicker;
 

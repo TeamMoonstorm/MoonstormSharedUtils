@@ -31,7 +31,7 @@ namespace Moonstorm
                     _directorCardHolder = new DirectorCardHolder();
                     _directorCardHolder.Card = directorCard;
                     _directorCardHolder.MonsterCategory = monsterCategory;
-                    _directorCardHolder.InteractableCategory = InteractableCategory.None;
+                    _directorCardHolder.InteractableCategory = InteractableCategory.Invalid;
                     return _directorCardHolder;
                 }
             }

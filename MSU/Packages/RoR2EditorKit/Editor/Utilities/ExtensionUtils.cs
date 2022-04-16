@@ -38,35 +38,31 @@ namespace RoR2EditorKit.Utilities
         public static SerializedProperty GetBindedProperty(this ObjectField objField, SerializedObject objectBound)
         {
             if (objField.bindingPath.IsNullOrEmptyOrWhitespace())
-                throw new NullReferenceException($"{objField} doesnot have a bindingPath set");
+                throw new NullReferenceException($"{objField} does not have a bindingPath set");
 
             return objectBound.FindProperty(objField.bindingPath);
         }
 
         /// <summary>
-        /// Returns an IEnumerable of all the visible serialized properties based off the SerializedObject's Iterator.
+        /// Obtains a List of all the top layer serialized properties from a serialized object.
         /// </summary>
-        /// <param name="serializedProperty">The serialized property obtained from ScriptableObject.GetIterator()</param>
-        /// <returns>An IEnumerable of all the visible children</returns>
-        public static IEnumerable<SerializedProperty> GetVisibleChildren(this SerializedProperty serializedProperty)
+        /// <param name="serializedObject">The serialized object to get the children</param>
+        /// <returns>A List of all the top layer serialized properties</returns>
+        public static List<SerializedProperty> GetVisibleChildren(this SerializedObject serializedObject)
         {
-            SerializedProperty currentProperty = serializedProperty.Copy();
-            SerializedProperty nextSiblingProperty = serializedProperty.Copy();
+            List<SerializedProperty> list = new List<SerializedProperty>();
+            SerializedProperty iterator = serializedObject.GetIterator();
+            bool enterChildren = true;
+            while (iterator.NextVisible(enterChildren))
             {
-                nextSiblingProperty.NextVisible(false);
-            }
-
-            if (currentProperty.NextVisible(true))
-            {
-                do
+                using (new EditorGUI.DisabledScope("m_Script" == iterator.propertyPath))
                 {
-                    if (SerializedProperty.EqualContents(currentProperty, nextSiblingProperty))
-                        break;
-
-                    yield return currentProperty;
+                    list.Add(serializedObject.FindProperty(iterator.propertyPath));
                 }
-                while (currentProperty.NextVisible(false));
+
+                enterChildren = false;
             }
+            return list;
         }
         #endregion
 
@@ -79,6 +75,16 @@ namespace RoR2EditorKit.Utilities
         public static void SetObjectType<T>(this ObjectField objField) where T : UnityEngine.Object
         {
             objField.objectType = typeof(T);
+        }
+
+        /// <summary>
+        /// Quick method to Clear a visual element's USS Class List, Hierarchy, and Unbind it from a serializedObject
+        /// </summary>
+        public static void Wipe(this VisualElement visualElement)
+        {
+            visualElement.Clear();
+            visualElement.ClearClassList();
+            visualElement.Unbind();
         }
         #endregion
     }

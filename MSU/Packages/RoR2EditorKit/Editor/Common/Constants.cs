@@ -14,7 +14,6 @@ namespace RoR2EditorKit.Common
 
         public const string RoR2EditorKitContextRoot = "Assets/Create/RoR2EditorKit/";
         public const string RoR2EditorKitscriptableRoot = "Assets/RoR2EditorKit/";
-        public const int RoR2EditorKitContextPriority = 999999999;
         public const string RoR2EditorKitMenuRoot = "Tools/RoR2EditorKit/";
         public const string RoR2KitSettingsRoot = "Assets/ThunderkitSettings/RoR2EditorKit/";
 
@@ -44,6 +43,9 @@ namespace RoR2EditorKit.Common
         /// </summary>
         public static GameObject NullPrefab { get => AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GUIDToAssetPath(nullPrefabGUID)); }
 
+        /// <summary>
+        /// Loads the RoR2EditorKit icon
+        /// </summary>
         public static Texture Icon { get => AssetDatabase.LoadAssetAtPath<Texture>(AssetDatabase.GUIDToAssetPath(iconGUID)); }
     }
 }

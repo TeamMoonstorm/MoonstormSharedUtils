@@ -16,8 +16,13 @@ using RoR2EditorKit.Utilities;
 
 namespace RoR2EditorKit.Core.PipelineJobs
 {
+    /// <summary>
+    /// Pipeline for staging a LanguageFolderTree
+    /// <para>Requires manifest datum of type LanguageFolderTree</para>
+    /// <para>Is a manifest processor</para>
+    /// </summary>
     [PipelineSupport(typeof(Pipeline)), RequiresManifestDatumType(typeof(LanguageFolderTree)), ManifestProcessor]
-    public class StageLanguageFiles : PipelineJob
+    public sealed class StageLanguageFiles : PipelineJob
     {
         public enum InvalidLangfile
         {

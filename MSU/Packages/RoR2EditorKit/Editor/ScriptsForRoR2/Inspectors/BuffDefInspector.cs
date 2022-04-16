@@ -15,7 +15,7 @@ using static RoR2EditorKit.Utilities.AssetDatabaseUtils;
 namespace RoR2EditorKit.RoR2Related.Inspectors
 {
     [CustomEditor(typeof(RoR2.BuffDef))]
-    public class BuffDefInspector : ScriptableObjectInspector<BuffDef>
+    public sealed class BuffDefInspector : ScriptableObjectInspector<BuffDef>
     {
         private EliteDef eliteDef;
         private List<IMGUIContainer> eliteDefMessages = new List<IMGUIContainer>();
@@ -30,13 +30,18 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
         VisualElement buffColor = null;
 
         private Button objectNameSetter = null;
+
+        protected override string Prefix => Settings.GetPrefix1stUpperRestLower();
+
+        protected override bool PrefixUsesTokenPrefix => true;
+
+        protected override bool HasVisualTreeAsset => false;
+
         protected override void OnEnable()
         {
             base.OnEnable();
             eliteDef = TargetType.eliteDef;
             networkSoundEventDef = TargetType.startSfx;
-            prefix = $"bd{Settings.GetPrefix1stUpperRestLower()}";
-            prefixUsesTokenPrefix = true;
 
             OnVisualTreeCopy += () =>
             {
@@ -156,7 +161,7 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
         private void SetObjectName()
         {
             var origName = TargetType.name;
-            TargetType.name = prefix + origName;
+            TargetType.name = Prefix + origName;
             UpdateNameOfObject(TargetType);
         }
     }

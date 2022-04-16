@@ -21,7 +21,7 @@ using Moonstorm.EditorUtils.Settings;
 namespace Moonstorm.EditorUtils.Pipelines
 {
     [PipelineSupport(typeof(Pipeline)), RequiresManifestDatumType(typeof(AssetBundleDefinitions))]
-    public class SwapShadersAndStageAssetBundles : PipelineJob
+    public sealed class SwapShadersAndStageAssetBundles : PipelineJob
     {
         [EnumFlag]
         public BuildAssetBundleOptions AssetBundleBuildOptions = BuildAssetBundleOptions.UncompressedAssetBundle;

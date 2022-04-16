@@ -14,8 +14,12 @@ using RoR2EditorKit.Utilities;
 
 namespace RoR2EditorKit.Core.PipelineJobs
 {
+    /// <summary>
+    /// Pipeline for setting object flags
+    /// <para>Requires manifest datum of type SetObjectFlagsDatum</para>
+    /// </summary>
     [PipelineSupport(typeof(Pipeline)), RequiresManifestDatumType(typeof(SetObjectFlagsDatum))]
-    public class SetObjectFlags : PipelineJob
+    public sealed class SetObjectFlags : PipelineJob
     {
         public bool AffectsDependencies = false;
         public HideFlags flags = HideFlags.None;

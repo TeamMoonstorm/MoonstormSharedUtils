@@ -12,12 +12,18 @@ using UnityEngine.UIElements;
 namespace RoR2EditorKit.RoR2Related.Inspectors
 {
     [CustomEditor(typeof(SkillLocator))]
-    public class SkillLocatorInspector : ComponentInspector<SkillLocator>
+    public sealed class SkillLocatorInspector : ComponentInspector<SkillLocator>
     {
         VisualElement inspectorData;
         VisualElement passiveSkillHolder;
 
         Dictionary<GenericSkill, PropertyField> skillToPropField = new Dictionary<GenericSkill, PropertyField>();
+
+        protected override string Prefix => null;
+
+        protected override bool PrefixUsesTokenPrefix => false;
+
+        protected override bool HasVisualTreeAsset => true;
 
         protected override void OnEnable()
         {

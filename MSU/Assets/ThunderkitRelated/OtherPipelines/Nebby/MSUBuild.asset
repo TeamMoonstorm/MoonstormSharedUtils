@@ -57,3 +57,5 @@ MonoBehaviour:
     pathDestination: <LITEditorPath>
   - pathSource: <BuildPath>
     pathDestination: <SS2EditorPath>
+  - pathSource: <BuildPath>
+    pathDestination: <DDEditorPath>

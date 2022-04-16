@@ -9,35 +9,48 @@ using UnityEngine.UIElements;
 
 namespace RoR2EditorKit.Settings
 {
-    public class MaterialEditorSettings : ThunderKitSetting
+    /// <summary>
+    /// The RoR2EK Material Editor Settings
+    /// </summary>
+    public sealed class MaterialEditorSettings : ThunderKitSetting
     {
+        /// <summary>
+        /// Represents a pair of string and shader
+        /// </summary>
         [Serializable]
         public class ShaderStringPair
         {
+            /// <summary>
+            /// The shader's name, ideally this should be the File name, not the actual shader.name
+            /// </summary>
             public string shaderName;
+            /// <summary>
+            /// The shader that belongs to this pair
+            /// </summary>
             public Shader shader;
 
+            /// <summary>
+            /// The type that added this ShaderStringPair
+            /// </summary>
             [HideInInspector]
             public string typeReference;
         }
 
-        const string MarkdownStylePath = "Packages/com.passivepicasso.thunderkit/Documentation/uss/markdown.uss";
-        const string DocumentationStylePath = "Packages/com.passivepicasso.thunderkit/uss/thunderkit_style.uss";
-
-
-        [InitializeOnLoadMethod]
-        private static void SetupSettings()
-        {
-            var mes = GetOrCreateSettings<MaterialEditorSettings>();
-        }
-
         private SerializedObject materialEditorSettingsSO;
 
+        /// <summary>
+        /// Wether the material editor system is enabled or disabled
+        /// </summary>
         public bool EnableMaterialEditor = true;
 
+        /// <summary>
+        /// The Shader String Pairs of the Material Editor Setting
+        /// </summary>
         public List<ShaderStringPair> shaderStringPairs = new List<ShaderStringPair>();
 
-
+        /// <summary>
+        /// Direct access to the main settings file
+        /// </summary>
         public RoR2EditorKitSettings MainSettings { get => GetOrCreateSettings<RoR2EditorKitSettings>(); }
 
         public override void CreateSettingsUI(VisualElement rootElement)

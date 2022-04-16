@@ -14,9 +14,15 @@ using UnityEngine.UIElements;
 namespace RoR2EditorKit.RoR2Related.Inspectors
 {
     [CustomEditor(typeof(CharacterBody))]
-    public class CharacterBodyInspector : ComponentInspector<CharacterBody>
+    public sealed class CharacterBodyInspector : ComponentInspector<CharacterBody>
     {
         private VisualElement inspectorData;
+
+        protected override string Prefix => null;
+
+        protected override bool PrefixUsesTokenPrefix => false;
+
+        protected override bool HasVisualTreeAsset => true;
 
         protected override void DrawInspectorGUI()
         {

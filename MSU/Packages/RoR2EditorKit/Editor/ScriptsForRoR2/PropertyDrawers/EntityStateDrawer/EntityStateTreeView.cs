@@ -7,7 +7,7 @@ using UnityEngine;
 namespace RoR2EditorKit.RoR2Related.PropertyDrawers
 {
 
-    public class EntityStateTreeView : TreeListControl
+    public sealed class EntityStateTreeView : TreeListControl
     {
         public TreeListItem LastDoubleClickedItem;
 

@@ -22,8 +22,7 @@
         "Assembly-CSharp.dll",
         "RoR2BepInExPack.dll",
         "Unity.Addressables.dll",
-        "Unity.ResourceManager.dll",
-        "com.unity.multiplayer-hlapi.Runtime.dll"
+        "Unity.ResourceManager.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [],

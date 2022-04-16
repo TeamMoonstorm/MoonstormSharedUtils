@@ -12,8 +12,12 @@ using RoR2EditorKit.Utilities;
 
 namespace RoR2EditorKit.Core.PipelineJobs
 {
+    /// <summary>
+    /// Pipeline for replacing text in files
+    /// <para>Requires manifest datum of type ReplaceTextInFiles</para>
+    /// </summary>
     [PipelineSupport(typeof(Pipeline)), RequiresManifestDatumType(typeof(ReplaceTextInFiles))]
-    public class ReplaceTextInFiles : PipelineJob
+    public sealed class ReplaceTextInFiles : PipelineJob
     {
         public string textToReplace;
         public string replacementText;

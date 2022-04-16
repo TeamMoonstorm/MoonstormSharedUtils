@@ -15,16 +15,18 @@ namespace RoR2EditorKit.Core.Inspectors
     using static ThunderKit.Core.UIElements.TemplateHelpers;
 
     /// <summary>
-    /// Base inspector for all the RoR2EditorKit Inspectors.
-    /// <para>If you want to make a Scriptable Object Inspector, you'll probably want to use the ScriptableObjectInspector</para>
-    /// <para>If you want to make an Inspector for a Component, you'll probably want to use the ComponentInspector</para>
+    /// Base inspector for all the RoR2EditorKit Inspectors. Uses visual elements instead of IMGUI
+    /// <para>Automatically retrieves the UXML asset for the editor by looking for an UXML asset with the same name as the inheriting type</para>
+    /// <para>Extended Inspectors can be enabled or disabled</para>
+    /// <para>If you want to make a Scriptable Object Inspector, you'll probably want to use the <see cref="ScriptableObjectInspector{T}"/></para>
+    /// <para>If you want to make an Inspector for a Component, you'll probably want to use the <see cref="ComponentInspector{T}"/></para>
     /// </summary>
     /// <typeparam name="T">The type of Object being inspected</typeparam>
     public abstract class ExtendedInspector<T> : Editor where T : Object
     {
         #region Properties
         /// <summary>
-        /// Access to the Settings file
+        /// Access to the main RoR2EditorKit Settings file
         /// </summary>
         public static RoR2EditorKitSettings Settings { get => RoR2EditorKitSettings.GetOrCreateSettings<RoR2EditorKitSettings>(); }
 
@@ -134,26 +136,26 @@ namespace RoR2EditorKit.Core.Inspectors
         /// Direct access to the object that's being inspected as its type.
         /// </summary>
         protected T TargetType { get => target as T; }
-        #endregion Properties
-
-        #region Fields
-        /// <summary>
-        /// The visual tree asset, every inspector should have an UXML file with the inspector layout
-        /// <para>The visual tree asset is used to setup the inspector layout for the "DrawInspectorElement"</para>
-        /// </summary>
-        protected VisualTreeAsset visualTreeAsset;
 
         /// <summary>
-        /// The prefix this asset should use, leave this null unless the asset youre creating requires a prefix.
+        /// The prefix this asset should use, leave this null unless the asset youre inspecting requires a prefix.
         /// </summary>
-        protected string prefix = null;
+        protected abstract string Prefix { get; }
 
         /// <summary>
         /// If the "prefix" string uses the TokenPrefix on the settings file, set this to true.
         /// </summary>
-        protected bool prefixUsesTokenPrefix = false;
+        protected abstract bool PrefixUsesTokenPrefix { get; }
 
+        /// <summary>
+        /// If the editor has a visual tree asset, if set to false, RoR2EK will supress the null reference exception that appears from not having one.
+        /// </summary>
+        protected abstract bool HasVisualTreeAsset { get; }
+        #endregion Properties
+
+        #region Fields
         private IMGUIContainer prefixContainer = null;
+        private bool hasDoneFirstDrawing = false;
         #endregion Fields
 
         #region Methods
@@ -166,19 +168,26 @@ namespace RoR2EditorKit.Core.Inspectors
         {
             void ClearElements()
             {
-                RootVisualElement.Clear();
-                RootVisualElement.styleSheets.Clear();
-                IMGUIContainerElement.Clear();
-                IMGUIContainerElement.styleSheets.Clear();
-                DrawInspectorElement.Clear();
-                DrawInspectorElement.styleSheets.Clear();
+                DrawInspectorElement.Wipe();
+                IMGUIContainerElement.Wipe();
+                RootVisualElement.Wipe();
             }
 
             ClearElements();
             OnRootElementsCleared?.Invoke();
 
-            GetTemplateInstance(GetType().Name, DrawInspectorElement, ValidateUXMLPath);
-            DrawInspectorElement.Bind(serializedObject);
+            try
+            {
+                GetTemplateInstance(GetType().Name, DrawInspectorElement, ValidateUXMLPath);
+            }
+            catch (Exception ex)
+            {
+                if(HasVisualTreeAsset)
+                {
+                    Debug.LogError(ex);
+                }
+            }
+
             OnVisualTreeCopy?.Invoke();
 
             EnsureNamingConventions();
@@ -196,24 +205,41 @@ namespace RoR2EditorKit.Core.Inspectors
                 DrawInspectorGUI();
                 RootVisualElement.Add(DrawInspectorElement);
                 OnDrawInspectorElementAdded?.Invoke();
+                if(hasDoneFirstDrawing)
+                {
+                    RootVisualElement.Bind(serializedObject);
+                }
             }
             serializedObject.ApplyModifiedProperties();
         }
 
+        /// <summary>
+        /// Used to validate the path of a potential UXML asset, overwrite this if youre making an inspector that isnt in the same assembly as RoR2EK.
+        /// </summary>
+        /// <param name="path">A potential UXML asset path</param>
+        /// <returns>True if the path is for this inspector, false otherwise</returns>
         protected virtual bool ValidateUXMLPath(string path)
         {
             return path.StartsWith(Constants.AssetFolderPath) || path.StartsWith(Constants.PackageFolderPath);
         }
 
         /// <summary>
-        /// DO NOT OVERRIDE THIS METHOD. Use "DrawInspectorGUI" if you want to implement your inspector!
+        /// Cannot be overwritten, creates the inspector by checking if the editor is enabled or not
+        /// <para>If the editor is enabled, the custom UI from the visual tree asset is drawn, to finish the implementation of said UI, implement <see cref="DrawInspectorGUI"/></para>
+        /// <para>If the editor is disabled, the default IMGUI UI is drawn.</para>
         /// </summary>
-        /// <returns>DO NOT OVERRIDE THIS METHOD. Use "DrawInspectorGUI" if you want to implement your inspector!</returns>
-        public override VisualElement CreateInspectorGUI()
+        /// <returns></returns>
+        public sealed override VisualElement CreateInspectorGUI()
         {
             OnInspectorEnabledChange();
             serializedObject.ApplyModifiedProperties();
+            hasDoneFirstDrawing = true;
             return RootVisualElement;
+        }
+
+        public sealed override void OnInspectorGUI()
+        {
+            DrawDefaultInspector();
         }
         #endregion Methods
 
@@ -378,39 +404,46 @@ namespace RoR2EditorKit.Core.Inspectors
         /// <returns>If the convention is not followed, an IMGUIContainer with a help box, otherwise it returns null.</returns>
         protected virtual IMGUIContainer EnsureNamingConventions(ChangeEvent<string> evt = null)
         {
-            if(!Settings.InspectorSettings.enableNamingConventions)
+            try
             {
+                if (!Settings.InspectorSettings.enableNamingConventions)
+                {
+                    return null;
+                }
+
+                if (prefixContainer != null)
+                {
+                    prefixContainer.RemoveFromHierarchy();
+                }
+
+                if (evt != null)
+                {
+                    TargetType.name = evt.newValue;
+                }
+
+                if (PrefixUsesTokenPrefix && Settings.TokenPrefix.IsNullOrEmptyOrWhitespace())
+                {
+                    throw ErrorShorthands.NullTokenPrefix();
+                }
+
+
+                if (Prefix != null)
+                {
+                    if (TargetType && !TargetType.name.ToLowerInvariant().StartsWith(Prefix.ToLowerInvariant()))
+                    {
+                        string typeName = typeof(T).Name;
+                        prefixContainer = CreateHelpBox($"This {typeName}'s name should start with {Prefix} for naming conventions.", MessageType.Info);
+                        return prefixContainer;
+                    }
+                }
                 return null;
             }
-
-            if(prefixContainer != null)
+            catch (Exception ex)
             {
-                prefixContainer.RemoveFromHierarchy();
+                Debug.LogError(ex);
+                return CreateHelpBox($"Your TokenPrefix in the RoR2EditorKitSettings is Empty or Null\nPlease fill the token prefix or disable the naming convention system.", MessageType.Warning);
             }
-
-            if(evt != null)
-            {
-                TargetType.name = evt.newValue;
-            }
-
-            if(prefixUsesTokenPrefix && Settings.TokenPrefix.IsNullOrEmptyOrWhitespace())
-            {
-                throw ErrorShorthands.NullTokenPrefix();
-            }
-
-
-            if(prefix != null)
-            {
-                if(TargetType && !TargetType.name.ToLowerInvariant().StartsWith(prefix.ToLowerInvariant()))
-                {
-                    string typeName = typeof(T).Name;
-                    prefixContainer = CreateHelpBox($"This {typeName}'s name should start with {prefix} for naming conventions.", MessageType.Info);
-                    return prefixContainer;
-                }
-            }
-            return null;
         }
-
         #endregion
     }
 }

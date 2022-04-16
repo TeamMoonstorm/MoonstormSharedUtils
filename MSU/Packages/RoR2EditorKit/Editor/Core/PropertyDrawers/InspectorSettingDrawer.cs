@@ -5,23 +5,22 @@ using UnityEngine;
 namespace RoR2EditorKit.Core.PropertyDrawers
 {
     [CustomPropertyDrawer(typeof(EditorInspectorSettings.InspectorSetting))]
-    public class InspectorSettingPropertyDrawer : IMGUIPropertyDrawer
+    public sealed class InspectorSettingPropertyDrawer : PropertyDrawer
     {
-        protected override void DrawCustomDrawer()
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            Begin();
+            EditorGUI.BeginProperty(position, label, property);
             var isEnabled = property.FindPropertyRelative("isEnabled");
             var displayName = property.FindPropertyRelative("inspectorName");
 
-            GUIContent content = new GUIContent(NicifyName(displayName.stringValue), "Wether or not this inspector is enabled.");
-
-            EditorGUI.PropertyField(rect, isEnabled, content, false);
-            End();
+            GUIContent content = new GUIContent(ObjectNames.NicifyVariableName(displayName.stringValue), "Wether this inspector is enabled");
+            EditorGUI.PropertyField(position, isEnabled, content, false);
+            EditorGUI.EndProperty();
         }
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            return base.GetPropertyHeight(property, label) / 3;
+            return 16;
         }
     }
 }

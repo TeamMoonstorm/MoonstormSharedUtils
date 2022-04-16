@@ -9,26 +9,79 @@ using UnityEngine.UIElements;
 using RoR2;
 using RoR2.Skills;
 using RoR2EditorKit.Utilities;
+using UnityEngine;
 
 namespace RoR2EditorKit.Core.Inspectors
 {
     /// <summary>
     /// Inherit from this inspector to make an Editor that looks exactly like the default inspector, but uses UIElements.
     /// <para>Perfect for later on creating a property drawer for a specific property in said inspector, so that you dont have to rewrite the original inspector's functionality.</para>
+    /// <para>Unlike the other Editor wrappers from RoR2EditorKit, this editor cannot be enabled or disabled.</para>
+    /// <para>The child elements that get added to this RootVisualElement can be identifier by their name</para>
+    /// <para>The m_Script property is an ObjectField, it's name is "m_Script"</para>
+    /// <para>All other first level serializedProperties are drawn with PropertyFields, their names are the same as their property names.</para>
     /// </summary>
-    public abstract class IMGUIToVisualElementInspector : Editor
+    /// <typeparam name="T">The type of object being inspected</typeparam>
+    public abstract class IMGUIToVisualElementInspector<T> : Editor where T : UnityEngine.Object
     {
-        public override VisualElement CreateInspectorGUI()
+        /// <summary>
+        /// The Editor's RootVisualElement.
+        /// <para>It's name is a combination of the inheriting type's name plus "_RootElement"</para>
+        /// <para>Example: MyInspector_RootElement</para>
+        /// </summary>
+        protected VisualElement RootVisualElement
         {
-            VisualElement root = new VisualElement();
-            root.name = GetType().Name + "_RootElement";
+            get
+            {
+                if(_visualElement == null)
+                {
+                    _visualElement = new VisualElement();
+                    _visualElement.name = $"{GetType().Name}_RootElement";
+                }
+                return _visualElement;
+            }
+        }
+        private VisualElement _visualElement;
 
-            var children = serializedObject.GetIterator().GetVisibleChildren();
+        /// <summary>
+        /// Direct access to the object that's being inspected as its type
+        /// </summary>
+        protected T TargetType => target as T;
+
+        /// <summary>
+        /// Cannot be overwritten, creates the inspector gui using the serialized object's visible children and property fields
+        /// <para>If you want to draw extra visual elements, write them in the <see cref="FinishGUI"/> method</para>
+        /// </summary>
+        /// <returns>The <see cref="RootVisualElement"/> property</returns>
+        public sealed override VisualElement CreateInspectorGUI()
+        {
+            var children = serializedObject.GetVisibleChildren();
             foreach(var child in children)
             {
-                root.Add(new PropertyField(child));
+                if(child.name == "m_Script")
+                {
+                    ObjectField objField = new ObjectField();
+                    objField.SetObjectType<MonoScript>();
+                    objField.value = child.objectReferenceValue;
+                    objField.label = child.displayName;
+                    objField.name = child.name;
+                    objField.bindingPath = child.propertyPath;
+                    objField.SetEnabled(false);
+                    RootVisualElement.Add(objField);
+                    continue;
+                }
+
+                PropertyField propField = new PropertyField(child);
+                propField.name = child.name;
+                RootVisualElement.Add(new PropertyField(child));
             }
-            return root;
+            FinishGUI();
+            return RootVisualElement;
         }
+
+        /// <summary>
+        /// Override this method to finish the implementation of your GUI by modifying the RootVisualElement
+        /// </summary>
+        protected virtual void FinishGUI() { }
     }
 }

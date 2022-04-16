@@ -852,6 +852,15 @@
             <param name="preferPositive">If you prefer to be appended to the array. In game version 1.0.0.X this means you will get all Eclipse modifiers as well when your difficulty is selected. </param>
             <returns>DifficultyIndex.Invalid if it fails. Your index otherwise.</returns>
         </member>
+        <member name="M:R2API.DifficultyAPI.AddDifficulty(R2API.ScriptableObjects.SerializableDifficultyDef)">
+            <summary>
+            Add a DifficultyDef to the list of available difficulties using a SerializableDifficultyDef
+            This must be called before the DifficultyCatalog inits, so before plugin.Start()
+            You can get the DifficultyIndex from the SerializableDifficultyDef's DifficultyIndex property
+            If this is called after the DifficultyCatalog inits, then the DifficultyIndex will return -1/DifficultyIndex.Invalid and ignore the difficulty
+            </summary>
+            <param name="serializableDifficultyDef">The SerializableDifficultyDef from which to create the DifficultyDef</param>
+        </member>
         <member name="T:R2API.DirectorAPI">
             <summary>
             API for modifying the monster and scene directors.
@@ -864,35 +873,106 @@
         </member>
         <member name="E:R2API.DirectorAPI.StageSettingsActions">
             <summary>
-            Event used to edit stage settings.
+            Event used to edit <see cref="T:R2API.DirectorAPI.StageSettings"/>.
             </summary>
         </member>
         <member name="E:R2API.DirectorAPI.MonsterActions">
-            <summary>
-            Event used to edit/add/remove the monsters spawned on a stage.
-            </summary>
+             <summary>
+             <para>
+             Event used to edit the pool of monsters that can spawn in a given stage.
+             </para>
+            
+             <para>
+             First parameter is the <see cref="F:RoR2.ClassicStageInfo.monsterDccsPool"/>,
+             depending if the stage was updated or not to use the new <see cref="T:RoR2.DccsPool"/>,
+             some of the <see cref="T:RoR2.DccsPool.Category"/> and <see cref="T:RoR2.DccsPool.PoolEntry"/> can be here or not.
+             </para>
+             
+             <para>
+             For the Artifact of Dissonance <see cref="P:RoR2.RoR2Content.Artifacts.mixEnemyArtifactDef"/>,
+             the original DCCS is located in <see cref="F:RoR2.RoR2Content.mixEnemyMonsterCards"/>
+             which is represented by the second parameter of this event.
+             </para>
+            
+             <para>
+             A <see cref="F:RoR2.ClassicStageInfo.monsterDccsPool"/> usually contains, in a vanilla stage, the following :
+             3 <see cref="F:RoR2.DccsPool.poolCategories"/>, written out in <see cref="T:R2API.DirectorAPI.Helpers.MonsterPoolCategories"/>.
+             </para>
+            
+             <para>
+             Below is an explanation of the <see cref="F:RoR2.ClassicStageInfo.monsterDccsPool"/> categories.
+             </para>
+             
+             <para>
+             The first category, <see cref="F:R2API.DirectorAPI.Helpers.MonsterPoolCategories.Standard"/> has, right now,
+             a single <see cref="T:RoR2.DccsPool.ConditionalPoolEntry"/> (contained in <see cref="F:RoR2.DccsPool.Category.includedIfConditionsMet"/>)
+             which contains the <see cref="T:RoR2.DirectorCardCategorySelection"/> used for DLC1 SOTV.
+             Note : This <see cref="T:RoR2.DccsPool.ConditionalPoolEntry"/> is only here for stages that were setup for having DLC1 SOTV content.
+             If the <see cref="F:RoR2.DccsPool.ConditionalPoolEntry.requiredExpansions"/> is not enabled in the current lobby,
+             they are not added to the pool of choice.
+             Right now, there is a single PoolEntry in <see cref="F:RoR2.DccsPool.Category.includedIfNoConditionsMet"/>,
+             which is the vanilla (no expansion) dccs.
+             </para>
+            
+             <para>
+             The second category, <see cref="F:R2API.DirectorAPI.Helpers.MonsterPoolCategories.Family"/> has, right now,
+             multiple <see cref="T:RoR2.DccsPool.ConditionalPoolEntry"/> (contained in <see cref="F:RoR2.DccsPool.Category.includedIfConditionsMet"/>)
+             which contains the <see cref="T:RoR2.DirectorCardCategorySelection"/>s used for family events.
+             They don't have a corresponding <see cref="F:RoR2.DccsPool.ConditionalPoolEntry.requiredExpansions"/>,
+             so they are effectively always added to the pool of choice.
+             </para>
+            
+             <para>
+             The third category, <see cref="F:R2API.DirectorAPI.Helpers.MonsterPoolCategories.VoidInvasion"/> has, right now,
+             a single <see cref="T:RoR2.DccsPool.ConditionalPoolEntry"/> (contained in <see cref="F:RoR2.DccsPool.Category.includedIfConditionsMet"/>)
+             which contains the <see cref="T:RoR2.DirectorCardCategorySelection"/> used for void invasion events.
+             It has a corresponding <see cref="F:RoR2.DccsPool.ConditionalPoolEntry.requiredExpansions"/>,
+             so they are only added to the pool of choice if the DLC1 expansion is enabled.
+             Note : This category is only here if the stage has DLC content, which is not guaranted.
+             </para>
+             </summary>
         </member>
         <member name="E:R2API.DirectorAPI.InteractableActions">
-            <summary>
-            Event used to edit/add/remove interactables spawned on a stage.
-            </summary>
-        </member>
-        <member name="E:R2API.DirectorAPI.FamilyActions">
-            <summary>
-            Event used to edit/add/remove monster families on a stage.
-            </summary>
+             <summary>
+             <para>
+             Event used to edit the pool of interactables that can spawn in a given stage.
+             </para>
+            
+             <para>
+             First parameter is the <see cref="F:RoR2.ClassicStageInfo.interactableDccsPool"/>,
+             which is used to select a <see cref="T:RoR2.DirectorCardCategorySelection"/>.
+             </para>
+             
+             <para>
+             A <see cref="F:RoR2.ClassicStageInfo.interactableDccsPool"/> usually contains, in a vanilla stage, the following :
+             1 <see cref="F:RoR2.DccsPool.poolCategories"/>, written out in <see cref="T:R2API.DirectorAPI.Helpers.InteractablePoolCategories"/>.
+             </para>
+            
+             <para>
+             The first category, <see cref="F:R2API.DirectorAPI.Helpers.InteractablePoolCategories.Standard"/> has, right now,
+             a single <see cref="T:RoR2.DccsPool.ConditionalPoolEntry"/> (contained in <see cref="F:RoR2.DccsPool.Category.includedIfConditionsMet"/>)
+             which contains the <see cref="T:RoR2.DirectorCardCategorySelection"/> used for DLC1 SOTV.
+             Note : This <see cref="T:RoR2.DccsPool.ConditionalPoolEntry"/> is only here for stages that were setup for having DLC1 SOTV content.
+             If the <see cref="F:RoR2.DccsPool.ConditionalPoolEntry.requiredExpansions"/> is not enabled in the current lobby,
+             they are not added to the pool of choice.
+             Right now, there is a single PoolEntry in <see cref="F:RoR2.DccsPool.Category.includedIfNoConditionsMet"/>,
+             which is the vanilla (no expansion) dccs.
+             </para>
+             </summary>
         </member>
         <member name="T:R2API.DirectorAPI.MonsterCategory">
             <summary>
-            If this is called then DirectorAPI will hook ClassicStageInfo.Awake and use the events to make changes
-            </summary>
-            <summary>
-            The three categories for monsters. Support for custom categories will come later.
+            The categories for monsters.
             </summary>
         </member>
-        <member name="F:R2API.DirectorAPI.MonsterCategory.None">
+        <member name="F:R2API.DirectorAPI.MonsterCategory.Invalid">
             <summary>
             An invalid default value. Anything with this value is ignored when dealing with monsters.
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.MonsterCategory.Custom">
+            <summary>
+            Anything with this value will instead be checked through <see cref="F:R2API.DirectorAPI.DirectorCardHolder.CustomMonsterCategory"/>
             </summary>
         </member>
         <member name="F:R2API.DirectorAPI.MonsterCategory.BasicMonsters">
@@ -912,12 +992,17 @@
         </member>
         <member name="T:R2API.DirectorAPI.InteractableCategory">
             <summary>
-            The categories for interactables. Support for custom categories will come later.
+            The categories for interactables.
             </summary>
         </member>
-        <member name="F:R2API.DirectorAPI.InteractableCategory.None">
+        <member name="F:R2API.DirectorAPI.InteractableCategory.Invalid">
             <summary>
             An invalid default value. Anything with this value is ignored when dealing with interactables.
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.InteractableCategory.Custom">
+            <summary>
+            Anything with this value will instead be checked through <see cref="F:R2API.DirectorAPI.DirectorCardHolder.CustomInteractableCategory"/>
             </summary>
         </member>
         <member name="F:R2API.DirectorAPI.InteractableCategory.Chests">
@@ -965,6 +1050,180 @@
             When this is set to custom, check the string in StageInfo
             </summary>
         </member>
+        <member name="F:R2API.DirectorAPI.Stage.TitanicPlains">
+            <summary>
+            External / Internal Name : Titanic Plains / golemplains
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.Stage.DistantRoost">
+            <summary>
+            External / Internal Name : Distant Roost / blackbeach
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.Stage.WetlandAspect">
+            <summary>
+            External / Internal Name : Wetland Aspect / foggyswamp
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.Stage.AbandonedAqueduct">
+            <summary>
+            External / Internal Name : Abandoned Aqueduct / goolake
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.Stage.RallypointDelta">
+            <summary>
+            External / Internal Name : Rallypoint Delta / frozenwall
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.Stage.ScorchedAcres">
+            <summary>
+            External / Internal Name : Scorched Acres / wispgraveyard
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.Stage.AbyssalDepths">
+            <summary>
+            External / Internal Name : Abyssal Depths / dampcavesimple
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.Stage.SirensCall">
+            <summary>
+            External / Internal Name : Siren's Call / shipgraveyard
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.Stage.GildedCoast">
+            <summary>
+            External / Internal Name : Hidden Realm: Gilded Coast / goldshores
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.Stage.MomentFractured">
+            <summary>
+            External / Internal Name : Hidden Realm: A Moment, Fractured / mysteryspace
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.Stage.Bazaar">
+            <summary>
+            External / Internal Name : Hidden Realm: Bazaar Between Time / bazaar
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.Stage.VoidCell">
+            <summary>
+            External / Internal Name : Void Fields / arena
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.Stage.MomentWhole">
+            <summary>
+            External / Internal Name : Hidden Realm: A Moment, Whole / limbo
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.Stage.SkyMeadow">
+            <summary>
+            External / Internal Name : Sky Meadow / skymeadow
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.Stage.ArtifactReliquary">
+            <summary>
+            External / Internal Name : Hidden Realm: Bulwark's Ambry / artifactworld
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.Stage.Commencement">
+            <summary>
+            External / Internal Name : Commencement / moon2
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.Stage.SunderedGrove">
+            <summary>
+            External / Internal Name : Sundered Grove / rootjungle
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.Stage.AphelianSanctuary">
+            <summary>
+            External / Internal Name : Aphelian Sanctuary / ancientloft
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.Stage.AphelianSanctuarySimulacrum">
+            <summary>
+            External / Internal Name : Aphelian Sanctuary - The Simulacrum / itancientloft
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.Stage.AbyssalDepthsSimulacrum">
+            <summary>
+            External / Internal Name : Abyssal Depths - The Simulacrum / itdampcave
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.Stage.RallypointDeltaSimulacrum">
+            <summary>
+            External / Internal Name : Rallypoint Delta - The Simulacrum / itfrozenwall
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.Stage.TitanicPlainsSimulacrum">
+            <summary>
+            External / Internal Name : Titanic Plains - The Simulacrum / itgolemplains
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.Stage.AbandonedAqueductSimulacrum">
+            <summary>
+            External / Internal Name : Abandoned Aqueduct - The Simulacrum / itgoolake
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.Stage.CommencementSimulacrum">
+            <summary>
+            External / Internal Name : Commencement - The Simulacrum / itmoon
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.Stage.SkyMeadowSimulacrum">
+            <summary>
+            External / Internal Name : Sky Meadow - The Simulacrum / itskymeadow
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.Stage.SiphonedForest">
+            <summary>
+            External / Internal Name : Siphoned Forest / snowyforest
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.Stage.SulfurPools">
+            <summary>
+            External / Internal Name : Sulfur Pools / sulfurpools
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.Stage.VoidLocus">
+            <summary>
+            External / Internal Name : Void Locus / voidraid
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.Stage.ThePlanetarium">
+            <summary>
+            External / Internal Name : The Planetarium / voidstage
+            </summary>
+        </member>
+        <member name="M:R2API.DirectorAPI.ParseInternalStageName(System.String)">
+            <summary>
+            Returns the <see cref="T:R2API.DirectorAPI.Stage"/> based on the internal name (<see cref="P:RoR2.SceneDef.baseSceneName"/>) of the stage.
+            Returns <see cref="F:R2API.DirectorAPI.Stage.Custom"/> if the name is not vanilla.
+            </summary>
+            <param name="internalStageName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:R2API.DirectorAPI.GetStageEnumFromSceneDef(RoR2.SceneDef)">
+            <summary>
+            Returns the <see cref="T:R2API.DirectorAPI.Stage"/> based on the <see cref="P:RoR2.SceneDef.baseSceneName"/>.
+            Returns <see cref="F:R2API.DirectorAPI.Stage.Custom"/> if the <see cref="T:RoR2.SceneDef"/> is not vanilla.
+            </summary>
+            <param name="sceneDef"></param>
+            <returns></returns>
+        </member>
+        <member name="M:R2API.DirectorAPI.ToInternalStageName(R2API.DirectorAPI.Stage)">
+            <summary>
+            Returns the internal name (<see cref="P:RoR2.SceneDef.baseSceneName"/>) of the stage based on the <see cref="T:R2API.DirectorAPI.Stage"/>.
+            Returns the empty string if the stage is not vanilla.
+            </summary>
+            <param name="stage"></param>
+            <returns></returns>
+        </member>
+        <member name="P:R2API.DirectorAPI.VanillaStageToSceneDefs">
+            <summary>
+            Maps vanilla <see cref="T:R2API.DirectorAPI.Stage"/> to its <see cref="T:RoR2.SceneDef"/>.
+            </summary>
+        </member>
         <member name="T:R2API.DirectorAPI.StageInfo">
             <summary>
             Struct for holding information about the stage.
@@ -972,7 +1231,7 @@
         </member>
         <member name="F:R2API.DirectorAPI.StageInfo.stage">
             <summary>
-            The current stage. If set to custom, check customStageName.
+            The current stage. If set to custom, check <see cref="F:R2API.DirectorAPI.StageInfo.CustomStageName"/>.
             </summary>
         </member>
         <member name="F:R2API.DirectorAPI.StageInfo.CustomStageName">
@@ -980,10 +1239,20 @@
             This is set to the name of the custom stage. Is left blank for vanilla stages.
             </summary>
         </member>
+        <member name="M:R2API.DirectorAPI.StageInfo.ParseInternalStageName(System.String)">
+            <summary>
+            Returns the <see cref="T:R2API.DirectorAPI.StageInfo"/> based on the internal name (<see cref="P:RoR2.SceneDef.baseSceneName"/>) of the stage.
+            </summary>
+        </member>
+        <member name="M:R2API.DirectorAPI.StageInfo.ToInternalStageName">
+            <summary>
+            The internal name (<see cref="P:RoR2.SceneDef.baseSceneName"/>) of the current stage.
+            </summary>
+        </member>
         <member name="M:R2API.DirectorAPI.StageInfo.CheckStage(R2API.DirectorAPI.Stage,System.String[])">
             <summary>
             Returns true if the current stage matches any of the stages you specify.
-            To match a custom stage, include Stage.Custom in your stage input and specify names in customStageNames.
+            To match a custom stage, include <see cref="F:R2API.DirectorAPI.Stage.Custom"/> in your stage input and specify names in <see cref="F:R2API.DirectorAPI.StageInfo.CustomStageName"/>.
             </summary>
             <param name="stage">The stages to match with</param>
             <param name="customStageNames">Names of the custom stages to match. Leave blank to match all custom stages</param>
@@ -991,8 +1260,8 @@
         </member>
         <member name="T:R2API.DirectorAPI.StageSettings">
             <summary>
-            A class passed to everything subscribed to stageSettingsActions that contains various settings for a stage.
-            All mods will be working off the same settings, so operators like *=,+=,-=, and /= are preferred over directly setting values.
+            A class passed to everything subscribed to <see cref="E:R2API.DirectorAPI.StageSettingsActions"/> that contains various settings for a stage.
+            All mods will be working off the same settings, so operators like *=, +=, -=, and /= are preferred over directly setting values.
             </summary>
         </member>
         <member name="F:R2API.DirectorAPI.StageSettings.SceneDirectorMonsterCredits">
@@ -1008,23 +1277,23 @@
         </member>
         <member name="F:R2API.DirectorAPI.StageSettings.BonusCreditObjects">
             <summary>
-            If the GameObject key of the dictionary is enabled, then the scene director gains the value in extra interactable credits
+            If the GameObject key of the dictionary is enabled, then the scene director gains the value in extra interactable credits.
             Used for things like the door in Abyssal Depths.
             </summary>
         </member>
-        <member name="F:R2API.DirectorAPI.StageSettings.MonsterCategoryWeights">
+        <member name="F:R2API.DirectorAPI.StageSettings.MonsterCategoryWeightsPerDccs">
             <summary>
-            The weights for each monster category on this stage.
+            The weights for each monster category per possible DCCS on this stage.
             </summary>
         </member>
-        <member name="F:R2API.DirectorAPI.StageSettings.InteractableCategoryWeights">
+        <member name="F:R2API.DirectorAPI.StageSettings.InteractableCategoryWeightsPerDccs">
             <summary>
-            The weights for each interactable category on this stage.
+            The weights for each interactable category per possible DCCS on this stage.
             </summary>
         </member>
         <member name="T:R2API.DirectorAPI.DirectorCardHolder">
             <summary>
-            A wrapper class for DirectorCards. A list of these is passed to everything subscribed to monsterActions and interactableActions.
+            A wrapper class for DirectorCards.
             </summary>
         </member>
         <member name="F:R2API.DirectorAPI.DirectorCardHolder.Card">
@@ -1034,47 +1303,60 @@
         </member>
         <member name="F:R2API.DirectorAPI.DirectorCardHolder.MonsterCategory">
             <summary>
-            The monster category the card belongs to. Will be set to None for interactables.
+            The monster category the card belongs to. Will be set to <see cref="F:R2API.DirectorAPI.MonsterCategory.Invalid"/> for interactables,
+            <see cref="F:R2API.DirectorAPI.MonsterCategory.Custom"/> for custom monster non-vanilla categories.
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.DirectorCardHolder.CustomMonsterCategory">
+            <summary>
+            Should be null for vanilla categories
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.DirectorCardHolder.MonsterCategorySelectionWeight">
+            <summary>
+            This is only used in case the category didnt exist in the first place in the targeted DCCS.
             </summary>
         </member>
         <member name="F:R2API.DirectorAPI.DirectorCardHolder.InteractableCategory">
             <summary>
-            The interactable category the card belongs to. Will be set to none for monsters.
+            The interactable category the card belongs to. Will be set to <see cref="F:R2API.DirectorAPI.InteractableCategory.Invalid"/> for monsters,
+            <see cref="F:R2API.DirectorAPI.InteractableCategory.Custom"/> for custom non-vanilla categories.
             </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.DirectorCardHolder.CustomInteractableCategory">
+            <summary>
+            Should be null for vanilla categories
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.DirectorCardHolder.InteractableCategorySelectionWeight">
+            <summary>
+            This is only used in case the category didnt exist in the first place in the targeted DCCS.
+            </summary>
+        </member>
+        <member name="M:R2API.DirectorAPI.AddCard(RoR2.DirectorCardCategorySelection,R2API.DirectorAPI.DirectorCardHolder)">
+            <summary>
+            Add a <see cref="T:R2API.DirectorAPI.DirectorCardHolder"/> to a <see cref="T:RoR2.DirectorCardCategorySelection"/>.
+            If the category from the given card parameter is not in the given dccs parameter,
+            the category is created and added to the dccs.
+            Returns the card index in the category if successful.
+            </summary>
+            <param name="dccs"></param>
+            <param name="cardHolder"></param>
+            <returns></returns>
         </member>
         <member name="T:R2API.DirectorAPI.MonsterFamilyHolder">
             <summary>
-            A wrapper class for Monster Families. A list of these is passed to everything subscribed to familyActions.
+            A wrapper class for Monster Families.
             </summary>
         </member>
-        <member name="F:R2API.DirectorAPI.MonsterFamilyHolder.FamilyBasicMonsters">
+        <member name="F:R2API.DirectorAPI.MonsterFamilyHolder.MonsterCategoryToMonsterCards">
             <summary>
-            List of all basic monsters that can spawn during this family event.
+            List of all monster per monster category name that can spawn during this family event.
             </summary>
         </member>
-        <member name="F:R2API.DirectorAPI.MonsterFamilyHolder.FamilyMinibosses">
+        <member name="F:R2API.DirectorAPI.MonsterFamilyHolder.MonsterCategoryToSelectionWeights">
             <summary>
-            List of all minibosses that can spawn during this family event.
-            </summary>
-        </member>
-        <member name="F:R2API.DirectorAPI.MonsterFamilyHolder.FamilyChampions">
-            <summary>
-            List of all champions that can spawn during this family event.
-            </summary>
-        </member>
-        <member name="F:R2API.DirectorAPI.MonsterFamilyHolder.FamilyBasicMonsterWeight">
-            <summary>
-            The selection weight for basic monsters during the family event.
-            </summary>
-        </member>
-        <member name="F:R2API.DirectorAPI.MonsterFamilyHolder.FamilyMinibossWeight">
-            <summary>
-            The selection weight for minibosses during the family event.
-            </summary>
-        </member>
-        <member name="F:R2API.DirectorAPI.MonsterFamilyHolder.FamilyChampionWeight">
-            <summary>
-            The selection weight for champions during the family event.
+            The selection weight per monster category name during the family event.
             </summary>
         </member>
         <member name="F:R2API.DirectorAPI.MonsterFamilyHolder.MinStageCompletion">
@@ -1091,7 +1373,6 @@
             <summary>
             The weight of this monster family relative to other monster families.
             Does NOT increase the chances of a family event occuring, just the chance that this will be chosen when one does occur.
-            Support for modifying the chance of family events overall will come later (and will be in StageSettings)
             </summary>
         </member>
         <member name="F:R2API.DirectorAPI.MonsterFamilyHolder.SelectionChatString">
@@ -1104,24 +1385,75 @@
             This subclass contains helper methods for use with DirectorAPI.
             Note that there is much more flexibility by working with the API directly through its event system.
             The primary purpose of these helpers is to serve as example code, and to assist with very simple tasks.
-            They are NOT intended to be, or ever will be, a comprehensive way to use the DirectorAPI.
             </summary>
         </member>
         <member name="T:R2API.DirectorAPI.Helpers.MonsterNames">
             <summary>
-            This class contains static strings for each characterspawncard in the base game.
+            This class contains static strings for each <see cref="T:RoR2.CharacterSpawnCard"/> in the base game.
             These can be used for matching names.
+            </summary>
+        </member>
+        <member name="T:R2API.DirectorAPI.Helpers.MonsterPoolCategories">
+            <summary>
+            Most vanilla <see cref="F:RoR2.ClassicStageInfo.monsterDccsPool"/> have (right now) 3 <see cref="T:RoR2.DccsPool.Category"/> in them,
+            their name are inside this class.
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.Helpers.MonsterPoolCategories.Standard">
+            <summary>
+            Standard pool category
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.Helpers.MonsterPoolCategories.StandardWeight">
+            <summary>
+            Weight of the standard pool category, usually 0.98f
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.Helpers.MonsterPoolCategories.Family">
+            <summary>
+            Family pool category
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.Helpers.MonsterPoolCategories.FamilyWeight">
+            <summary>
+            Weight of the Family pool category, usually 0.02f
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.Helpers.MonsterPoolCategories.VoidInvasion">
+            <summary>
+            Void Invasion pool category
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.Helpers.MonsterPoolCategories.VoidInvasionWeight">
+            <summary>
+            Weight of the Void Invasion pool category, usually 0.02f
+            </summary>
+        </member>
+        <member name="T:R2API.DirectorAPI.Helpers.InteractablePoolCategories">
+            <summary>
+            Most vanilla <see cref="F:RoR2.ClassicStageInfo.interactableDccsPool"/> have (right now) 1 <see cref="T:RoR2.DccsPool.Category"/> in them,
+            their name are inside this class.
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.Helpers.InteractablePoolCategories.Standard">
+            <summary>
+            Standard pool category
+            </summary>
+        </member>
+        <member name="F:R2API.DirectorAPI.Helpers.InteractablePoolCategories.StandardWeight">
+            <summary>
+            Weight of the standard pool category, usually 1f
             </summary>
         </member>
         <member name="T:R2API.DirectorAPI.Helpers.InteractableNames">
             <summary>
-            This class contains static strings for each interactablespawncard in the base game.
+            This class contains static strings for each <see cref="T:RoR2.InteractableSpawnCard"/> in the base game.
             These can be used for matching names.
             </summary>
         </member>
         <member name="M:R2API.DirectorAPI.Helpers.TryApplyChangesNow">
             <summary>
-            Try applying changes for the current stage (hot swap) for monster and family changes,
+            Try applying changes for the current stage (hot swap) for monster and family changes
             </summary>
         </member>
         <member name="M:R2API.DirectorAPI.Helpers.PreventElites(System.String,System.Boolean)">
@@ -1136,7 +1468,15 @@
             Adds a new monster to all stages.
             </summary>
             <param name="monsterCard">The DirectorCard for the monster</param>
-            <param name="category">The category to add the monster to</param>
+            <param name="monsterCategory">The category to add the monster to</param>
+        </member>
+        <member name="M:R2API.DirectorAPI.Helpers.AddNewMonster(R2API.DirectorAPI.DirectorCardHolder,System.Boolean)">
+            <summary>
+            Adds a new monster to all stages.
+            Also add to each existing monster families if second parameter is true.
+            </summary>
+            <param name="monsterCard"></param>
+            <param name="addToFamilies"></param>
         </member>
         <member name="M:R2API.DirectorAPI.Helpers.AddNewMonsterToStage(RoR2.DirectorCard,R2API.DirectorAPI.MonsterCategory,R2API.DirectorAPI.Stage,System.String)">
             <summary>
@@ -1144,16 +1484,33 @@
             For custom stages use Stage.Custom and enter the name of the stage in customStageName.
             </summary>
             <param name="monsterCard">The DirectorCard of the monster to add</param>
-            <param name="category">The category to add the monster to</param>
+            <param name="monsterCategory">The category to add the monster to</param>
             <param name="stage">The stage to add the monster to</param>
             <param name="customStageName">The name of the custom stage</param>
+        </member>
+        <member name="M:R2API.DirectorAPI.Helpers.AddNewMonsterToStage(R2API.DirectorAPI.DirectorCardHolder,System.Boolean,R2API.DirectorAPI.Stage,System.String)">
+            <summary>
+            Adds a new monster to a specific stage.
+            Also add to each existing monster families if second parameter is true.
+            For custom stages use Stage.Custom and enter the name of the stage in customStageName.
+            </summary>
+            <param name="monsterCard"></param>
+            <param name="addToFamilies"></param>
+            <param name="stage"></param>
+            <param name="customStageName"></param>
         </member>
         <member name="M:R2API.DirectorAPI.Helpers.AddNewInteractable(RoR2.DirectorCard,R2API.DirectorAPI.InteractableCategory)">
             <summary>
             Adds a new interactable to all stages.
             </summary>
             <param name="interactableCard">The DirectorCard for the interactable</param>
-            <param name="category">The category of the interactable</param>
+            <param name="interactableCategory">The category of the interactable</param>
+        </member>
+        <member name="M:R2API.DirectorAPI.Helpers.AddNewInteractable(R2API.DirectorAPI.DirectorCardHolder)">
+            <summary>
+            Adds a new interactable to all stages.
+            </summary>
+            <param name="directorCardHolder"></param>
         </member>
         <member name="M:R2API.DirectorAPI.Helpers.AddNewInteractableToStage(RoR2.DirectorCard,R2API.DirectorAPI.InteractableCategory,R2API.DirectorAPI.Stage,System.String)">
             <summary>
@@ -1161,7 +1518,7 @@
             For custom stages use Stage.Custom and enter the name of the stage in customStageName.
             </summary>
             <param name="interactableCard">The DirectorCard of the interactable</param>
-            <param name="category">The category of the interactable</param>
+            <param name="interactableCategory">The category of the interactable</param>
             <param name="stage">The stage to add the interactable to</param>
             <param name="customStageName">The name of the custom stage</param>
         </member>
@@ -1249,6 +1606,77 @@
             <param name="stage">The stage to divide on</param>
             <param name="customStageName">The name of the custom stage</param>
         </member>
+        <member name="M:R2API.DirectorAPI.Helpers.ForEachPoolEntryInDccsPool(RoR2.DccsPool,System.Action{RoR2.DccsPool.PoolEntry})">
+            <summary>
+            For each <see cref="T:RoR2.DccsPool.PoolEntry"/> in a <see cref="T:RoR2.DccsPool"/>, call the given <see cref="T:System.Action"/>.
+            </summary>
+            <param name="dccsPool"></param>
+            <param name="action"></param>
+        </member>
+        <member name="M:R2API.DirectorAPI.Helpers.ForEachPoolCategoryInDccsPool(RoR2.DccsPool,System.Action{RoR2.DccsPool.Category})">
+            <summary>
+            For each <see cref="T:RoR2.DccsPool.Category"/> in a <see cref="T:RoR2.DccsPool"/>, call the given <see cref="T:System.Action"/>.
+            </summary>
+            <param name="dccsPool"></param>
+            <param name="action"></param>
+        </member>
+        <member name="M:R2API.DirectorAPI.Helpers.ForEachPoolEntryInDccsPoolCategory(RoR2.DccsPool.Category,System.Action{RoR2.DccsPool.PoolEntry})">
+            <summary>
+            For each <see cref="T:RoR2.DccsPool.PoolEntry"/> in a <see cref="T:RoR2.DccsPool.Category"/>, call the given <see cref="T:System.Action"/>.
+            </summary>
+            <param name="dccsPoolCategory"></param>
+            <param name="action"></param>
+        </member>
+        <member name="M:R2API.DirectorAPI.Helpers.IsSameMonsterCategory(RoR2.DirectorCardCategorySelection.Category@,R2API.DirectorAPI.MonsterCategory)">
+            <summary>
+            Returns true if the <see cref="F:RoR2.DirectorCardCategorySelection.Category.name"/> is the same as the <see cref="T:R2API.DirectorAPI.MonsterCategory"/>
+            </summary>
+            <param name="category"></param>
+            <param name="monsterCategory"></param>
+            <returns></returns>
+        </member>
+        <member name="M:R2API.DirectorAPI.Helpers.GetMonsterCategory(System.String)">
+            <summary>
+            Returns the enum value corresponding the given string, returns <see cref="F:R2API.DirectorAPI.MonsterCategory.Custom"/> if the category is a custom one.
+            </summary>
+            <param name="categoryString"></param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:R2API.DirectorAPI.Helpers.GetVanillaMonsterCategoryName(R2API.DirectorAPI.MonsterCategory)">
+            <summary>
+            Get the string corresponding to the given vanilla <see cref="T:R2API.DirectorAPI.MonsterCategory"/>.
+            Throws if the given <see cref="T:R2API.DirectorAPI.MonsterCategory"/> is not vanilla.
+            </summary>
+            <param name="monsterCategory"></param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:R2API.DirectorAPI.Helpers.GetInteractableCategory(System.String)">
+            <summary>
+            Returns the enum value corresponding the given string, returns <see cref="F:R2API.DirectorAPI.InteractableCategory.Custom"/> if the category is a custom one.
+            </summary>
+            <param name="categoryString"></param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:R2API.DirectorAPI.Helpers.GetVanillaInteractableCategoryName(R2API.DirectorAPI.InteractableCategory)">
+            <summary>
+            Get the string corresponding to the given vanilla <see cref="T:R2API.DirectorAPI.InteractableCategory"/>.
+            Throws if the given <see cref="T:R2API.DirectorAPI.InteractableCategory"/> is not vanilla.
+            </summary>
+            <param name="interactableCategory"></param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:R2API.DirectorAPI.Helpers.IsSameInteractableCategory(RoR2.DirectorCardCategorySelection.Category@,R2API.DirectorAPI.InteractableCategory)">
+            <summary>
+            Returns true if the <see cref="F:RoR2.DirectorCardCategorySelection.Category.name"/> is the same as the <see cref="T:R2API.DirectorAPI.InteractableCategory"/>
+            </summary>
+            <param name="category"></param>
+            <param name="interactableCategory"></param>
+            <returns></returns>
+        </member>
         <member name="T:R2API.DotAPI">
             <summary>
             API for adding damage over time effects to the game.
@@ -1302,12 +1730,28 @@
             Return true if the submodule is loaded.
             </summary>
         </member>
+        <member name="M:R2API.EliteAPI.#cctor">
+            <summary>
+            See <see cref="M:R2API.EliteAPI.CombatDirectorInitNoTimingIssue"/>
+            </summary>
+        </member>
+        <member name="M:R2API.EliteAPI.CombatDirectorInitNoTimingIssue">
+            <summary>
+            Only hope at this point is HG using extensible code and not hard coding.
+            Before we were loading all hard refs earlier, but we removed that in favor of a bit better loading screen.
+            Bandaid fix for now for the api to work again : replace the RoR2Content hard refs with Addressables Load Asset.
+            Todo : investigate if adding an event like the other catalogs have + putting code inside a GenerateContentPackAsync
+            would be a cleaner fix or not.
+            Note: Will be breaking as opposed to current solution below which doesnt change anything on how the old mods were operating.
+            </summary>
+        </member>
         <member name="M:R2API.EliteAPI.Add(R2API.CustomElite)">
             <summary>
-            Add a custom elite to the list of available elites.
-            Value for EliteDef.eliteIndex can be ignored.
-            We can't give you the EliteIndex anymore in the method return param.
-            If this is called after the ItemCatalog inits then this will ignore the custom elite.
+            Add a custom elite to the elite catalog.
+            If this is called after the <see cref="T:RoR2.EliteCatalog"/> inits then this will throw.
+            <see cref="F:R2API.CustomElite.EliteTierDefs"/> shouldnt be empty if you want to see your custom elite appear in the game.
+            You can also directly modify <see cref="F:RoR2.CombatDirector.eliteTiers"/>.
+            Please check the constructors docs of <see cref="T:R2API.CustomElite"/> for more information.
             </summary>
             <param name="elite">The elite to add.</param>
             <returns>true if added, false otherwise</returns>
@@ -1320,7 +1764,7 @@
         <member name="M:R2API.EliteAPI.OverrideCombatDirectorEliteTiers(RoR2.CombatDirector.EliteTierDef[])">
             <summary>
             The EliteTierDef array is used by the Combat Director for doing its elite spawning while doing a run.
-            You can get the current array used by the director with EliteAPI.GetCombatDirectorEliteTiers()
+            You can get the current array used by the director with <see cref="M:R2API.EliteAPI.GetCombatDirectorEliteTiers"/>
             </summary>
             <param name="newEliteTiers">The new elite tiers that will be used by the combat director.</param>
         </member>
@@ -1344,9 +1788,9 @@
         </member>
         <member name="M:R2API.EliteAPI.AddCustomEliteTier(RoR2.CombatDirector.EliteTierDef,System.Int32)">
             <summary>
-            Allows for adding a new elite tier def to the combat director.
-            When adding a new elite tier, do not fill the eliteTypes field with your custom elites defs if your goal is to add your custom elite in it right after.
-            Because when doing EliteAPI.Add, the API will add your elite to the specified tiers <see cref="F:R2API.CustomElite.EliteTierDefs"/>.
+            Allows for adding a new <see cref="T:RoR2.CombatDirector.EliteTierDef"/>
+            Do NOT fill the <see cref="F:RoR2.CombatDirector.EliteTierDef.eliteTypes"/> field with your custom elites defs if your goal is to add your custom elite in it right after.
+            Because when doing <see cref="M:R2API.EliteAPI.Add(R2API.CustomElite)"/>, it'll add your elite to the specified <see cref="F:R2API.CustomElite.EliteTierDefs"/>.
             </summary>
             <param name="eliteTierDef">The new elite tier to add.</param>
             <param name="indexToInsertAt">Optional index to specify if you want to insert a cheaper elite tier</param>
@@ -1354,9 +1798,10 @@
         <member name="T:R2API.CustomElite">
             <summary>
             Class that defines a custom Elite type for use in the game
-            All Elites consistent of an Elite definition, a <see cref="T:R2API.CustomEquipment"/>
-            and a <see cref="T:RoR2.BuffDef"/>. The equipment is automatically provided to
-            the Elite when it spawns and is configured to passively apply the buff.
+            All Elites consist of an <see cref="T:RoR2.EliteDef"/>, an <see cref="T:RoR2.EquipmentDef"/>
+            and a <see cref="T:RoR2.BuffDef"/>. 
+            An Elite can only spawn if its in one of the available <see cref="F:RoR2.CombatDirector.eliteTiers"/> (vanilla or custom).
+            Please check the constructors docs for more information.
             </summary>
         </member>
         <member name="F:R2API.CustomElite.EliteDef">
@@ -1371,23 +1816,16 @@
         </member>
         <member name="M:R2API.CustomElite.#ctor(System.String,RoR2.EquipmentDef,UnityEngine.Color32,System.String,System.Collections.Generic.IEnumerable{RoR2.CombatDirector.EliteTierDef})">
             <summary>
-            You can omit the index references for the EliteDef, as those will be filled in automatically by the API.
-            You can retrieve a vanilla EquipmentDef through RoR2Content.Equipments class
-            Also, don't forget to give it a valid eliteTier so that your custom elite correctly get spawned.
-            You can also make a totally new tier, by using OverrideCombatDirectorEliteTiers for example.
+            You can omit giving a value to <see cref="P:RoR2.EliteDef.eliteIndex"/>, as it'll be filled in automatically by the game.
+            For your custom elite to spawn, you need to provide an enumerable of <see cref="T:RoR2.CombatDirector.EliteTierDef"/> as second parameter.
+            The API will then add your <see cref="F:R2API.CustomElite.EliteDef"/> in them.
+            You can also make a totally new tier, by either
+            directly modifying the array through <see cref="M:R2API.EliteAPI.GetCombatDirectorEliteTiers"/> and <see cref="M:R2API.EliteAPI.OverrideCombatDirectorEliteTiers(RoR2.CombatDirector.EliteTierDef[])"/>
+            or by using <see cref="M:R2API.EliteAPI.AddCustomEliteTier(RoR2.CombatDirector.EliteTierDef)"/>
             </summary>
         </member>
         <member name="M:R2API.CustomElite.#ctor(RoR2.EliteDef,System.Collections.Generic.IEnumerable{RoR2.CombatDirector.EliteTierDef})">
-            <summary>
-            You can omit the index references for the EliteDef, as those will be filled in automatically by the API.
-            But don't forget to give it a valid eliteTier so that your custom elite correctly get spawned.
-            You can also make a totally new tier, by using OverrideCombatDirectorEliteTiers for example.
-            </summary>
-        </member>
-        <member name="P:R2API.InteractablesAPI.Loaded">
-            <summary>
-            Return true if the submodule is loaded.
-            </summary>
+            <inheritdoc cref="M:R2API.CustomElite.#ctor(System.String,RoR2.EquipmentDef,UnityEngine.Color32,System.String,System.Collections.Generic.IEnumerable{RoR2.CombatDirector.EliteTierDef})"/>
         </member>
         <member name="P:R2API.ItemAPI.Loaded">
             <summary>
@@ -2465,16 +2903,6 @@
         <member name="T:R2API.R2APITVEController">
             <summary>
             Contains a local list of custom TemporaryVisualEffects for each CharacterBody.
-            </summary>
-        </member>
-        <member name="T:R2API.Tweaks.ILLine">
-            <summary>
-            Show IL Instruction Line in stack traces instead of mangled data
-            </summary>
-        </member>
-        <member name="P:R2API.Tweaks.ILLine.Loaded">
-            <summary>
-            Return true if the submodule is loaded.
             </summary>
         </member>
         <member name="T:R2API.IModdedUnlockableDataProvider">

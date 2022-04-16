@@ -11,7 +11,7 @@ using UnityEngine;
 namespace Moonstorm.EditorUtils.Pipelines
 {
     [PipelineSupport(typeof(Pipeline))]
-    public class EnumerableCopy : FlowPipelineJob
+    public sealed class EnumerableCopy : FlowPipelineJob
     {
         [Serializable]
         public struct PathReferencePair

@@ -13,7 +13,7 @@ using RoR2EditorKit.Utilities;
 namespace RoR2EditorKit.RoR2Related.Inspectors
 {
     [CustomEditor(typeof(EquipmentDef))]
-    public class EquipmentDefInspector : ScriptableObjectInspector<EquipmentDef>
+    public sealed class EquipmentDefInspector : ScriptableObjectInspector<EquipmentDef>
     {
         IMGUIContainer cooldownMsg;
 
@@ -23,6 +23,13 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
         IMGUIContainer buffMessage;
 
         bool DoesNotAppear => (!TargetType.appearsInMultiPlayer && !TargetType.appearsInSinglePlayer);
+
+        protected override string Prefix => Settings.GetPrefix1stUpperRestLower();
+
+        protected override bool PrefixUsesTokenPrefix => true;
+
+        protected override bool HasVisualTreeAsset => true;
+
         IMGUIContainer notAppearMessage;
 
         VisualElement header = null;
@@ -37,8 +44,6 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
         {
             base.OnEnable();
             passiveBuffDef = TargetType.passiveBuffDef;
-            prefix = Settings.GetPrefix1stUpperRestLower();
-            prefixUsesTokenPrefix = true;
 
             OnVisualTreeCopy += () =>
             {
@@ -133,9 +138,9 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
                 throw ErrorShorthands.NullTokenPrefix();
 
             string objName = TargetType.name.ToLowerInvariant();
-            if (objName.Contains(prefix.ToLowerInvariant()))
+            if (objName.Contains(Prefix.ToLowerInvariant()))
             {
-                objName = objName.Replace(prefix.ToLowerInvariant(), "");
+                objName = objName.Replace(Prefix.ToLowerInvariant(), "");
             }
             string tokenBase = $"{Settings.GetPrefixUppercase()}_EQUIP_{objName.ToUpperInvariant()}_";
             TargetType.nameToken = $"{tokenBase}NAME";
@@ -178,7 +183,7 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
         private void SetObjectName()
         {
             var origName = TargetType.name;
-            TargetType.name = prefix + origName;
+            TargetType.name = Prefix + origName;
             AssetDatabaseUtils.UpdateNameOfObject(TargetType);
         }
     }

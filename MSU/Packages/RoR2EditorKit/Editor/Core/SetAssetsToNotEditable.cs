@@ -54,8 +54,9 @@ namespace RoR2EditorKit.Core
                 stringBuilder.Add(asset.name);
             }
             Debug.Log(string.Join("\n", stringBuilder));
-            Settings.madeRoR2EKAssetsNonEditable = true;
-            new SerializedObject(Settings).ApplyModifiedProperties();
+            SerializedObject serializedObject = new SerializedObject(Settings);
+            serializedObject.FindProperty(nameof(RoR2EditorKitSettings.madeRoR2EKAssetsNonEditable)).boolValue = true;
+            serializedObject.ApplyModifiedProperties();
             AssetDatabase.SaveAssets();
         }
 

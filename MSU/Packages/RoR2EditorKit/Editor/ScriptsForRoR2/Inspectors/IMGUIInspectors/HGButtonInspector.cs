@@ -7,7 +7,7 @@ using UnityEngine;
 namespace RoR2EditorKit.RoR2Related.Inspectors
 {
     [CustomEditor(typeof(HGButton))]
-    public class HGButtonInspector : ButtonEditor
+    public sealed class HGButtonInspector : ButtonEditor
     {
         /// <summary>
         /// Access to the Settings file

@@ -8,23 +8,23 @@ using UnityEditor.UIElements;
 namespace Moonstorm.EditorUtils.PropertyDrawers
 {
     [CustomPropertyDrawer(typeof(ShaderDictionary.ShaderPair))]
-    public class ShaderPairPropertyDrawer : VisualElementPropertyDrawer
+    public sealed class ShaderPairPropertyDrawer : PropertyDrawer
     {
-        protected override void DrawPropertyGUI()
+        public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
             VisualElement root = new VisualElement();
             root.style.flexDirection = new StyleEnum<FlexDirection>(FlexDirection.Row);
 
-            PropertyField prop = new PropertyField(serializedProperty.FindPropertyRelative("original"));
+            PropertyField prop = new PropertyField(property.FindPropertyRelative("original"));
             Length length = new Length(50, LengthUnit.Percent);
             StyleLength sLength = new StyleLength(length);
             prop.style.width = sLength;
             root.Add(prop);
 
-            prop = new PropertyField(serializedProperty.FindPropertyRelative("stubbed"));
+            prop = new PropertyField(property.FindPropertyRelative("stubbed"));
             prop.style.width = sLength;
             root.Add(prop);
-            RootVisualElement.Add(root);
+            return root;
         }
     }
 }

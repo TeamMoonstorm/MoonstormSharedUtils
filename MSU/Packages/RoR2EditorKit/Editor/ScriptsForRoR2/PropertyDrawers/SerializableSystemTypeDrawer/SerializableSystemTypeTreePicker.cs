@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace RoR2EditorKit.RoR2Related.PropertyDrawers
 {
-    public class SerializableSystemTypeTreePicker : EditorWindow
+    public sealed class SerializableSystemTypeTreePicker : EditorWindow
     {
         private static SerializableSystemTypeTreePicker typeTreePicker;
 

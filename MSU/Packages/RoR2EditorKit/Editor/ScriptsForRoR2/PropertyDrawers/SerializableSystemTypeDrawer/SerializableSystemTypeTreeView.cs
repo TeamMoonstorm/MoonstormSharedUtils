@@ -7,7 +7,7 @@ using UnityEngine;
 namespace RoR2EditorKit.RoR2Related.PropertyDrawers
 {
 
-    public class SerializableSystemTypeTreeView : TreeListControl
+    public sealed class SerializableSystemTypeTreeView : TreeListControl
     {
         public TreeListItem LastDoubleClickedItem;
 

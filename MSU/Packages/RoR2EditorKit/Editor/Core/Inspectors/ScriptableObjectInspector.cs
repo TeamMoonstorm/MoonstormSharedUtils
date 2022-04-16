@@ -12,6 +12,7 @@ namespace RoR2EditorKit.Core.Inspectors
     /// <summary>
     /// Inherit from this class to make your own Scriptable Object Inspectors.
     /// </summary>
+    /// <typeparam name="T">The type of scriptable object thats being inspected</typeparam>
     public abstract class ScriptableObjectInspector<T> : ExtendedInspector<T> where T : ScriptableObject
     {
         protected override void OnEnable()

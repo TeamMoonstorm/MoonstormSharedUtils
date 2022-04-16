@@ -30,20 +30,32 @@ Also you need to install [HookGenPatcher](https://thunderstore.io/package/Riskof
 
 A lot of documentation is in the included *xmldocs*, and further information may be on the dedicated [R2API wiki](https://github.com/risk-of-thunder/R2API/wiki). Do not hestiate to ask in [the modding discord](https://discord.gg/5MbXZvd) too!
 
-
-## Bleeding Edge
-
-**Unless you are a mod developer, you won't need this.**
-
-Want to get the latest versions of R2API? The latest bleeding edge builds of `master` are hosted on [Azure](https://raegous.visualstudio.com/Risk%20of%20Rain%202%20Modding/_build/latest?definitionId=1&branchName=master), and may be downloaded using the `Artifacts` drop down menu.
-
-Note that such builds may be **unstable**.
-
 ## Changelog
 
 The most recent changelog can always be found on the [GitHub](https://github.com/risk-of-thunder/R2API/blob/master/Archived%20changelogs.md). In this readme, only the most recent *minor* version will have a changelog.
 
 **Current**
+* [Friendlier internal stage names by @bb010g](https://github.com/risk-of-thunder/R2API/pull/373)
+* [Fix DirectorApi spawning by @xiaoxiao921](https://github.com/risk-of-thunder/R2API/pull/374)
+
+
+**4.3.x**
+* [Update DirectorAPI by @xiaoxiao921](https://github.com/risk-of-thunder/R2API/pull/368)
+* [Fix ItemDisplay issues by @KomradeSpectre](https://github.com/risk-of-thunder/R2API/pull/369)
+* [ItemAPI ItemDisplay fixes by @Nebby1999](https://github.com/risk-of-thunder/R2API/pull/371)
+* [Fix EliteAPI and bug fix DirectorAPI by @xiaoxiao921](https://github.com/risk-of-thunder/R2API/pull/372)
+
+**4.2.x**
+* [NuGet package is now available!](https://www.nuget.org/packages/R2API/)
+
+**4.1.x**
+
+* [Fix ItemDisplay addition for Items and Equipment](https://github.com/risk-of-thunder/R2API/pull/369)
+* [Fix contentpacks that did not have the correct name in some cases](https://github.com/risk-of-thunder/R2API/pull/366)
+* [Crit damage multiplier is now a float](https://github.com/risk-of-thunder/R2API/pull/365)
+* [ArtifactCode fix, ContentLogging fix](https://github.com/risk-of-thunder/R2API/pull/361)
+
+**4.0.11**
 
 * Updated for the game `Survivors of The Void`
 * [Added SOTVSerializableContentPack](https://github.com/risk-of-thunder/R2API/commit/423a6b3de16da31e42ef57d6aaf7bc2b781eab2a)

@@ -11,7 +11,7 @@ using UnityEngine.UIElements;
 
 namespace Moonstorm.EditorUtils.Settings
 {
-    public class ShaderDictionary : ThunderKitSetting
+    public sealed class ShaderDictionary : ThunderKitSetting
     {
         [Serializable]
         public class ShaderPair
@@ -27,8 +27,6 @@ namespace Moonstorm.EditorUtils.Settings
         }
 
         const string ShaderRootGUID = "e57526cd2e529264f8e9999843849112";
-        const string MarkdownStylePath = "Packages/com.passivepicasso.thunderkit/Documentation/uss/markdown.uss";
-        const string DocumentationStylePath = "Packages/com.passivepicasso.thunderkit/uss/thunderkit_style.uss";
 
         [InitializeOnLoadMethod]
         static void SetupSettings()
@@ -52,7 +50,7 @@ namespace Moonstorm.EditorUtils.Settings
         public List<Shader> allShaders = new List<Shader>();
         [HideInInspector]
         public List<ShaderPair> validPairs = new List<ShaderPair>();
-        
+
         public override void CreateSettingsUI(VisualElement rootElement)
         {
             UpdateLists();
@@ -86,11 +84,21 @@ namespace Moonstorm.EditorUtils.Settings
             string fullPath = Path.GetFullPath(rootPath);
             string pathWithoutFile = fullPath.Replace(Path.GetFileName(fullPath), "");
             IEnumerable<string> files = Directory.EnumerateFiles(pathWithoutFile, "*.shader", SearchOption.AllDirectories);
-            shaderPairs = files.Select(path => FileUtil.GetProjectRelativePath(path.Replace("\\", "/")))
+            shaderPairs = files.Select(ModifyPath)
+                .Select(path => FileUtil.GetProjectRelativePath(path.Replace("\\", "/")))
                 .Select(relativePath => AssetDatabase.LoadAssetAtPath<Shader>(relativePath))
                 .Select(shader => new ShaderPair(null, shader)).ToList();
 
             shaderDictionarySO.ApplyModifiedProperties();
+        }
+
+        private string ModifyPath(string path)
+        {
+            if (path.Contains($"Packages\\MoonstormSharedEditorUtils"))
+            {
+                return path.Replace($"Packages\\MoonstormSharedEditorUtils", "Packages\\teammoonstorm-moonstormsharededitorutils");
+            }
+            return path;
         }
 
         private void AttemptToFinishDictionaryAutomatically()
@@ -98,7 +106,7 @@ namespace Moonstorm.EditorUtils.Settings
             Shader[] allYAMLShaders = RoR2EditorKit.Utilities.AssetDatabaseUtils.FindAssetsByType<Shader>()
                 .Where(shader => AssetDatabase.GetAssetPath(shader).EndsWith(".asset")).ToArray();
 
-            foreach(ShaderPair pair in shaderPairs)
+            foreach (ShaderPair pair in shaderPairs)
             {
                 if (pair.original || !pair.stubbed)
                     continue;
@@ -109,7 +117,7 @@ namespace Moonstorm.EditorUtils.Settings
                 Shader origShader = allYAMLShaders.FirstOrDefault(shader =>
                 {
                     string yamlShaderFileName = Path.GetFileName(AssetDatabase.GetAssetPath(shader));
-                    if(string.Compare(yamlShaderFileName, origShaderFileName, StringComparison.OrdinalIgnoreCase) == 0)
+                    if (string.Compare(yamlShaderFileName, origShaderFileName, StringComparison.OrdinalIgnoreCase) == 0)
                     {
                         return true;
                     }

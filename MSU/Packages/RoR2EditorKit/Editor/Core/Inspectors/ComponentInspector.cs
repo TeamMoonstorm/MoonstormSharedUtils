@@ -15,7 +15,6 @@ namespace RoR2EditorKit.Core.Inspectors
     /// </summary>
     public abstract class ComponentInspector<T> : ExtendedInspector<T> where T : MonoBehaviour
     {
-
         private IMGUIContainer container;
         protected override void OnEnable()
         {

@@ -7,7 +7,7 @@ using UnityEngine;
 namespace RoR2EditorKit.RoR2Related.PropertyDrawers
 {
     [CustomPropertyDrawer(typeof(SerializableEntityStateType), true)]
-    public class EntityStateDrawer : PropertyDrawer
+    public sealed class EntityStateDrawer : PropertyDrawer
     {
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
@@ -46,7 +46,7 @@ namespace RoR2EditorKit.RoR2Related.PropertyDrawers
             EditorGUI.EndProperty();
         }
 
-        protected virtual (string typeName, string fullName) GetTypeName(SerializedProperty stateReference)
+        public (string typeName, string fullName) GetTypeName(SerializedProperty stateReference)
         {
             string reference = stateReference.stringValue;
             Type type;

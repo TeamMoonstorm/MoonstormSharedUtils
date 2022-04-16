@@ -15,7 +15,7 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
 {
     //Remove foldout of array, Set element's name to ESM's custom name
     [CustomEditor(typeof(NetworkStateMachine))]
-    public class NetworkStateMachineInspector : ComponentInspector<NetworkStateMachine>
+    public sealed class NetworkStateMachineInspector : ComponentInspector<NetworkStateMachine>
     {
         SerializedProperty stateMachines;
 
@@ -24,6 +24,13 @@ namespace RoR2EditorKit.RoR2Related.Inspectors
         VisualElement stateMachineHolder;
 
         Dictionary<EntityStateMachine, ObjectField> ESMToField = new Dictionary<EntityStateMachine, ObjectField>();
+
+        protected override string Prefix => null;
+
+        protected override bool PrefixUsesTokenPrefix => false;
+
+        protected override bool HasVisualTreeAsset => true;
+
         protected override void OnEnable()
         {
             base.OnEnable();

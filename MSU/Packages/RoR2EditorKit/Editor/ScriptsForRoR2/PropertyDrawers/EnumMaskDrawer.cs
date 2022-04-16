@@ -9,9 +9,9 @@ using RoR2EditorKit.Core.PropertyDrawers;
 namespace RoR2EditorKit.RoR2Related.PropertyDrawers
 {
     [CustomPropertyDrawer(typeof(EnumMaskAttribute))]
-    public class EnumMaskDrawer : IMGUIPropertyDrawer
+    public sealed class EnumMaskDrawer : PropertyDrawer
     {
-        protected override void DrawCustomDrawer()
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             Enum targetEnum = GetBaseProperty<Enum>(property);
             FieldInfo field = GetField(property);
@@ -20,9 +20,9 @@ namespace RoR2EditorKit.RoR2Related.PropertyDrawers
             if (string.IsNullOrEmpty(propName))
                 propName = Regex.Replace(property.name, "([^^])([A-Z])", "$1 $2");
             EditorGUI.BeginChangeCheck();
-            EditorGUI.BeginProperty(rect, label, property);
+            EditorGUI.BeginProperty(position, label, property);
 
-            Enum enumNew = EditorGUI.EnumFlagsField(rect, ObjectNames.NicifyVariableName(propName), targetEnum);
+            Enum enumNew = EditorGUI.EnumFlagsField(position, ObjectNames.NicifyVariableName(propName), targetEnum);
 
             EditorGUI.EndProperty();
             if (EditorGUI.EndChangeCheck())
@@ -31,6 +31,7 @@ namespace RoR2EditorKit.RoR2Related.PropertyDrawers
                 property.serializedObject.ApplyModifiedProperties();
                 property.serializedObject.UpdateIfRequiredOrScript();
             }
+
         }
 
         static T GetBaseProperty<T>(SerializedProperty prop)

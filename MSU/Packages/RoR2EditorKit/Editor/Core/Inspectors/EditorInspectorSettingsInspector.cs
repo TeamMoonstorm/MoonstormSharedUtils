@@ -13,7 +13,7 @@ namespace RoR2EditorKit.Core.Inspectors
 {
     //This is fucking stupid
     [CustomEditor(typeof(EditorInspectorSettings))]
-    public class EditorInspectorSettingsInspector : Editor
+    public sealed class EditorInspectorSettingsInspector : Editor
     {
         public override VisualElement CreateInspectorGUI()
         {
@@ -23,6 +23,8 @@ namespace RoR2EditorKit.Core.Inspectors
         public static VisualElement StaticInspectorGUI(SerializedObject serializedObject)
         {
             VisualElement ve = new VisualElement();
+
+            ve.Add(new PropertyField(serializedObject.FindProperty(nameof(EditorInspectorSettings.enableNamingConventions))));
 
             SerializedProperty settings = serializedObject.FindProperty(nameof(EditorInspectorSettings.inspectorSettings));
 

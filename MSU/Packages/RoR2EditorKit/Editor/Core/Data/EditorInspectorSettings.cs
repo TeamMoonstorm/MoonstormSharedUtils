@@ -9,34 +9,49 @@ using UnityEngine.UIElements;
 
 namespace RoR2EditorKit.Settings
 {
-    public class EditorInspectorSettings : ThunderKitSetting
+    /// <summary>
+    /// The RoR2EK Editor Inspector Settings
+    /// </summary>
+    public sealed class EditorInspectorSettings : ThunderKitSetting
     {
+        /// <summary>
+        /// Represents an ExtendedInspector
+        /// </summary>
         [Serializable]
         public class InspectorSetting
         {
+            /// <summary>
+            /// The name of the inspector
+            /// </summary>
             public string inspectorName;
 
+            /// <summary>
+            /// The type of the inspector
+            /// </summary>
             [HideInInspector]
             public string typeReference;
 
+            /// <summary>
+            /// Wether the inspector is enabled or not
+            /// </summary>
             public bool isEnabled;
-        }
-
-        const string MarkdownStylePath = "Packages/com.passivepicasso.thunderkit/Documentation/uss/markdown.uss";
-        const string DocumentationStylePath = "Packages/com.passivepicasso.thunderkit/uss/thunderkit_style.uss";
-
-        [InitializeOnLoadMethod]
-        static void SetupSettings()
-        {
-            GetOrCreateSettings<EditorInspectorSettings>();
         }
 
         private SerializedObject enabledAndDisabledInspectorSettingsSO;
 
+        /// <summary>
+        /// If true, RoR2EditorKit will notify the user when theyre not following the modding community's naming conventions
+        /// </summary>
         public bool enableNamingConventions = true;
 
+        /// <summary>
+        /// The list of inspector settings
+        /// </summary>
         public List<InspectorSetting> inspectorSettings = new List<InspectorSetting>();
 
+        /// <summary>
+        /// Direct access to the main settings file
+        /// </summary>
         public RoR2EditorKitSettings MainSettings { get => GetOrCreateSettings<RoR2EditorKitSettings>(); }
 
         public override void CreateSettingsUI(VisualElement rootElement)
