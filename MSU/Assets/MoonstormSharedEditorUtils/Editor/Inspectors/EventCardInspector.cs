@@ -28,7 +28,7 @@ namespace Moonstorm.EditorUtils.Inspectors
             OnVisualTreeCopy += () =>
             {
                 directorData = Find<VisualElement>("DirectorDataHolder");
-                customStages = Find<PropertyField>(directorData, nameof(EventCard.availableCustomStages));
+                customStages = Find<PropertyField>(directorData, nameof(EventCard.customStageNames));
             };
         }
         protected override void DrawInspectorGUI()

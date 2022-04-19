@@ -1,4 +1,318 @@
-﻿/*using Moonstorm.ScriptableObjects;
+﻿
+using BepInEx.Logging;
+using RoR2;
+using RoR2.ConVar;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.Networking;
+
+namespace Moonstorm.Components
+{
+    [RequireComponent(typeof(NetworkStateMachine))]
+    public class EventDirector : MonoBehaviour
+    {
+        public static EventDirector Instance { get; private set; }
+        public NetworkStateMachine NetworkStateMachine { get; private set; }
+        public EventFunctions EventFunctions { get; private set; }
+        public WeightedSelection<EventCard> EventCardSelection { get; private set; }
+        public EventDirectorCategorySelection EventDirectorCategorySelection { get; private set; }
+        public EntityStateMachine TargetedStateMachine { get; private set; }
+        public EventCard LastAttemptedEventCard { get; private set; }
+        public EventCard LastSuccesfulEventCard { get; private set; }
+        public float TotalCreditsSpent { get; private set; }
+        private int MostExpensiveEventInDeck
+        {
+            get
+            {
+                int cost = 0;
+                for(int i = 0; i < EventCardSelection.Count; i++)
+                {
+                    EventCard card = EventCardSelection.GetChoice(i).value;
+                    int cardCost = card.cost;
+
+                    cost = Mathf.Max(cost, cardCost);
+                }
+                return cost;
+            }
+        }
+        private float GetDifficultyScalingValue
+        {
+            get
+            {
+                if (!Run.instance)
+                    return 0;
+
+                return DifficultyCatalog.GetDifficultyDef(Run.instance.selectedDifficulty).scalingValue;
+            }
+        }
+
+        public RangeFloat creditGainRange;
+        public float eventCredits;
+        public RangeFloat intervalResetRange;
+        public float intervalStopWatch;
+        private Xoroshiro128Plus eventRNG;
+        private EventCard currentEventCard;
+
+
+        [SystemInitializer]
+        private static void SystemInit()
+        {
+            SceneDirector.onPrePopulateSceneServer += (director) =>
+            {
+                /*if(EventCatalog.RegisteredEventCount <= 0)
+                {
+                    return;
+                }*/
+
+                if(Run.instance && SceneInfo.instance.countsAsStage && NetworkServer.active)
+                {
+                    var go = Object.Instantiate(MoonstormSharedUtils.MSUAssetBundle.LoadAsset<GameObject>("MSUEventDirector"));
+                    NetworkServer.Spawn(go);
+                    var thisComponent = go.GetComponent<EventDirector>();
+                    if (!thisComponent.isActiveAndEnabled)
+                        thisComponent.enabled = true;
+                    thisComponent.Log("Spawned");
+                }
+            };
+        }
+
+        private void Awake()
+        {
+            if(NetworkServer.active && Run.instance && SceneInfo.instance && SceneInfo.instance.sceneDef)
+            {
+                NetworkStateMachine = GetComponent<NetworkStateMachine>();
+                EventFunctions = GetComponent<EventFunctions>();
+
+                eventRNG = new Xoroshiro128Plus(Run.instance.stageRng.nextUlong);
+                EventDirectorCategorySelection = EventCatalog.GetCategoryFromSceneDef(SceneInfo.instance.sceneDef);
+                if(EventDirectorCategorySelection == null)
+                {
+                    MSULog.Error($"COULD NOT RETRIEVE EVENT CATEGORY FOR SCENE {SceneInfo.instance.sceneDef}!!!");
+                    Log($"Destroying root");
+                    Destroy(gameObject.transform.root.gameObject);
+                }
+                EventCardSelection = EventDirectorCategorySelection.GenerateWeightedSelection();
+                Log($"Awakened with the following EventCards:\n{string.Join("\n", EventCardSelection.choices.Select(c => c.value.name))}");
+            }
+        }
+        private void OnEnable()
+        {
+            if(!Instance)
+            {
+                Instance = this;
+                return;
+            }
+            MSULog.Error($"Duplicate instance of singleton class {GetType().Name}. Only one should exist at a time.");
+        }
+
+        private void OnDisable()
+        {
+            if(Instance == this)
+            {
+                Instance = null;
+            }
+        }
+
+        private void FixedUpdate()
+        {
+            if (!cvDisableEventDirector.value && NetworkServer.active && Run.instance)
+            {
+                if(!Run.instance.isRunStopwatchPaused)
+                {
+                    intervalStopWatch -= Time.fixedDeltaTime;
+                    if (intervalStopWatch <= 0)
+                    {
+                        float newStopwatchVal = eventRNG.RangeFloat(intervalResetRange.min, intervalResetRange.max);
+                        Log($"EventDirector: new stopwatch value: {newStopwatchVal}");
+                        intervalStopWatch = newStopwatchVal;
+
+                        float compensatedDifficultyCoefficient = Run.instance.compensatedDifficultyCoefficient;
+
+                        float eventScaling = compensatedDifficultyCoefficient / Run.instance.participatingPlayerCount;
+
+                        Log($"Event Director: compensated difficulty coefficient: {compensatedDifficultyCoefficient}" +
+                                $"\nevent scaling: {eventScaling}");
+
+                        float newCredits = eventRNG.RangeFloat(creditGainRange.min, creditGainRange.max) * eventScaling;
+                        eventCredits += newCredits;
+
+                        Log($"Event Director: new Credits: {newCredits}" +
+                                $"\nTotal credits so far: {eventCredits}");
+
+                        Simulate();
+                    }
+                }
+            }
+        }
+
+        private void Simulate()
+        {
+            if(AttemptSpawnEvent())
+            {
+                float amount = eventRNG.RangeFloat(intervalResetRange.min, intervalResetRange.max) * 10;
+                intervalStopWatch += amount;
+                Log($"Added {amount} to interval stopwatch" +
+                    $"\n(New value: {intervalStopWatch})");
+                return;
+            }
+            currentEventCard = null;
+        }
+        private bool AttemptSpawnEvent()
+        {
+            bool canSpawn = false;
+            if(currentEventCard == null)
+            {
+                Log($"Current event card is null, picking new one");
+                canSpawn = PrepareNewEvent(EventCardSelection.Evaluate(eventRNG.nextNormalizedFloat));
+
+                if(!canSpawn)
+                    return false;
+            }
+
+            Log($"Playing event {currentEventCard}" +
+                $"\n(Event state: {currentEventCard.eventState})");
+            TargetedStateMachine.SetState(EntityStateCatalog.InstantiateState(currentEventCard.eventState));
+
+            if (currentEventCard.eventFlags.HasFlag(EventFlags.OncePerRun))
+            {
+                Log($"Card {currentEventCard} has OncePerRun flag, setting flag.");
+                EventFunctions.RunSetFlag(currentEventCard.OncePerRunFlag);
+            }
+
+            LastSuccesfulEventCard = currentEventCard;
+
+            eventCredits -= currentEventCard.cost;
+            TotalCreditsSpent += currentEventCard.cost;
+            Log($"Subtracted {currentEventCard.cost} credits" +
+                $"\nTotal credits spent: {TotalCreditsSpent}");
+
+            return true;
+        }
+
+        private bool PrepareNewEvent(EventCard card)
+        {
+            Log($"Preparing event {card}");
+            currentEventCard = card;
+            if(!card.IsAvailable())
+            {
+                Log($"Event card {card.name} is not available! Aborting.");
+                LastAttemptedEventCard = LastAttemptedEventCard;
+                return false;
+            }
+            if(eventCredits < currentEventCard.cost)
+            {
+                Log($"Event card {card.name} is too expensive! Aborting");
+                LastAttemptedEventCard = LastAttemptedEventCard;
+                return false;
+            }
+            if(IsEventBeingPlayed(card))
+            {
+                Log($"Event card {card.name} is already playing! Aborting");
+                LastAttemptedEventCard = LastAttemptedEventCard;
+                return false;
+            }
+            FindIdleStateMachine();
+            if (card.eventFlags.HasFlag(EventFlags.WeatherRelated) && TargetedStateMachine.customName != "WeatherEvent")
+            {
+                Log($"No empty state machines to play event on! Aborting");
+                return false;
+            }
+            return true;
+        }
+
+        private bool IsEventBeingPlayed(EventCard card)
+        {
+            if(NetworkStateMachine)
+            {
+                foreach(var statemachine in NetworkStateMachine.stateMachines)
+                {
+                    if (statemachine.state.GetType().Equals(card.eventState.stateType))
+                        return true;
+                }
+            }
+            return false;
+        }
+
+        private void FindIdleStateMachine()
+        {
+            if(NetworkStateMachine)
+            {
+                foreach(var stateMachine in NetworkStateMachine.stateMachines)
+                {
+                    if(stateMachine.state.GetType().Equals(stateMachine.mainStateType.stateType))
+                    {
+                        TargetedStateMachine = stateMachine;
+                        return;
+                    }
+                }
+            }
+        }
+
+        private void Log(string msg)
+        {
+            if (EnableInternalLogging)
+                MSULog.Info($"-----o-----\nEvent Director: {msg}\n-----o-----");
+        }
+
+        ///Commands
+        ///------------------------------------------------------------------------------------------------------------
+        
+        //[ConCommand(commandName = "force_event", flags = ConVarFlags.ExecuteOnServer, helpText = "Forces a gamewide event to begin. Argument is the event card's name")]
+        /*private static void ForceEvent(ConCommandArgs args)
+        {
+            if(!Instance)
+            {
+                Debug.Log($"Event director is unavailable! Cannot start any events.");
+                return;
+            }
+
+            string evArg = args.TryGetArgString(0).ToLowerInvariant();
+            if(string.IsNullOrEmpty(evArg))
+            {
+                Debug.Log($"Command requires one string argument (Event card name)");
+                return;
+            }
+
+            EventIndex eventIndex = EventCatalog.FindEventIndex(evArg);
+            if(eventIndex == EventIndex.None)
+            {
+                Debug.Log($"Could not find an EventCard of name {evArg} (FindEventIndex returned EventIndex.None)");
+                return;
+            }
+
+            EventCard card = EventCatalog.GetEventCard(eventIndex);
+            if(card == null)
+            {
+                Debug.Log($"Could not get eventCard of name {evArg} (EventIndex {eventIndex} isnt tied to any event cards)");
+                return;
+            }
+
+            if(!Instance.AttemptForceSpawnEvent(Instance.FindIdleStateMachine(), card))
+            {
+                Debug.Log($"Could not start event. too many events are playing.");
+                return;
+            }
+        }*/
+
+        [ConCommand(commandName = "stop_events", flags = ConVarFlags.ExecuteOnServer, helpText = "Forces all active events to stop")]
+        private static void StopEvents(ConCommandArgs args)
+        {
+            if(!Instance)
+            {
+                Debug.Log($"Event director is unavailable! Cannot stop any events");
+                return;
+            }
+            /*int count = Instance.StopAllEvents();
+            Debug.Log($"Stopped {count} events");*/
+        }
+
+        public static bool DisableEventDirector => cvDisableEventDirector.value;
+        public static bool EnableInternalLogging => cvEnableInternalEventDirectorLogging.value;
+        public static readonly BoolConVar cvDisableEventDirector = new BoolConVar("disable_events", ConVarFlags.SenderMustBeServer | ConVarFlags.Cheat, "0", "Disable the Event Director");
+        public static readonly BoolConVar cvEnableInternalEventDirectorLogging = new BoolConVar("enable_event_logging", ConVarFlags.None, "0", "Enables the event director to print internal logging.");
+    }
+}
+/*using Moonstorm.ScriptableObjects;
 using RoR2;
 using RoR2.ConVar;
 using UnityEngine;

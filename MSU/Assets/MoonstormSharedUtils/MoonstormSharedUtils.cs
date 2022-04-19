@@ -11,6 +11,7 @@ using UnityEngine;
 namespace Moonstorm
 {
     [BepInDependency("com.bepis.r2api", BepInDependency.DependencyFlags.HardDependency)]
+    [BepInDependency("iHarbHD.DebugToolkit", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInPlugin(GUID, MODNAME, VERSION)]
     [R2APISubmoduleDependency(new string[]
         {
@@ -18,7 +19,8 @@ namespace Moonstorm
           nameof(DamageAPI),
           nameof(RecalculateStatsAPI),
           nameof(UnlockableAPI),
-          nameof(DirectorAPI)
+          nameof(DirectorAPI),
+          nameof(CommandHelper)
         })]
     public class MoonstormSharedUtils : BaseUnityPlugin
     {
@@ -37,14 +39,15 @@ namespace Moonstorm
             Instance = this;
             PluginInfo = Info;
             new MSULog(Logger);
+            R2API.Utils.CommandHelper.AddToConsoleWhenReady();
             MSUConfig.Init(Config);
             if (MSUConfig.EnableDebugFeatures.Value)
             {
                 gameObject.AddComponent<MSUDebug>();
             }
-            //Events.Init();
             MSUAssetBundle = AssetBundle.LoadFromFile(Path.Combine(assemblyDir, "msuassets"));
-            R2API.ContentManagement.R2APIContentManager.AddPreExistingSerializableContentPack(MSUAssetBundle.LoadAsset<R2APISerializableContentPack>("ContentPack"));
+            R2API.ContentManagement.R2APIContentManager.AddPreExistingSerializableContentPack(MSUAssetBundle.LoadAsset<R2APISerializableContentPack>("MSUSCP"));
+            //Events.Init();
         }
     }
 }

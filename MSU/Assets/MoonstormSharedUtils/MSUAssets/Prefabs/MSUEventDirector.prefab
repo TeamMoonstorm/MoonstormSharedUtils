@@ -17,7 +17,6 @@ GameObject:
   - component: {fileID: 6580511454466361975}
   - component: {fileID: 829338667738391963}
   - component: {fileID: 1543048969364378828}
-  - component: {fileID: 2892396891058308394}
   m_Layer: 0
   m_Name: MSUEventDirector
   m_TagString: Untagged
@@ -70,7 +69,7 @@ MonoBehaviour:
     i13: 0
     i14: 0
     i15: 0
-  m_ServerOnly: 0
+  m_ServerOnly: 1
   m_LocalPlayerAuthority: 0
 --- !u!114 &5980152293601622425
 MonoBehaviour:
@@ -84,16 +83,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0361a1980df246f4b9c782ef4f442b98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  networkStateMachine: {fileID: 8961382438740311447}
-  eventFunctions: {fileID: 2892396891058308394}
-  currentEventCard: {fileID: 0}
-  weatherParamsWhenSceneStarted:
-    sunColor: {r: 0, g: 0, b: 0, a: 0}
-    sunIntensity: 0
-    fogStart: 0
-    fogScale: 0
-    fogIntensity: 0
-  weatherRtpcWhenStarted: 
+  creditGainRange:
+    min: 15
+    max: 55
+  eventCredits: 0
+  intervalResetRange:
+    min: 15
+    max: 45
+  intervalStopWatch: 0
 --- !u!114 &8961382438740311447
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -103,7 +100,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6129970050706187277}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1918207524, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+  m_Script: {fileID: 1918207524, guid: 951ce57ad9993c1f840a4dceb5f8b763, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   stateMachines:
@@ -119,7 +116,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6129970050706187277}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1297580292, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+  m_Script: {fileID: 1297580292, guid: 951ce57ad9993c1f840a4dceb5f8b763, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   customName: WeatherEvent
@@ -136,7 +133,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6129970050706187277}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1297580292, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+  m_Script: {fileID: 1297580292, guid: 951ce57ad9993c1f840a4dceb5f8b763, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   customName: Event0
@@ -153,7 +150,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6129970050706187277}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1297580292, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+  m_Script: {fileID: 1297580292, guid: 951ce57ad9993c1f840a4dceb5f8b763, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   customName: Event1
@@ -170,7 +167,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6129970050706187277}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b3ad08bf3e7b6da4591a89d01c422e04, type: 3}
+  m_Script: {fileID: 733712478, guid: 951ce57ad9993c1f840a4dceb5f8b763, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &1543048969364378828
@@ -197,15 +194,3 @@ MonoBehaviour:
     windPulseMagnitude: 0
     windPulseFrequency: 0
   windLerp: 0
---- !u!114 &2892396891058308394
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6129970050706187277}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 733712478, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

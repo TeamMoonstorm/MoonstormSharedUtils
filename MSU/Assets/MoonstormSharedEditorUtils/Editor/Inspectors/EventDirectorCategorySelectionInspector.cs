@@ -41,6 +41,8 @@ namespace Moonstorm.EditorUtils.Inspectors
             PropertyField category = new PropertyField(serializedObject.FindProperty(nameof(EventDirectorCategorySelection.categories)), "Event Categories");
             category.tooltip = $"The Event categories for this selection.";
             DrawInspectorElement.Add(category);
+
+            DrawInspectorElement.Add(new IMGUIContainer(() => EditorGUILayout.HelpBox($"The EventCards for categories cannot be added in the editor\nThey get added at runtime instead by the EventCatalog", MessageType.Info)));
         }
 
         private void OnStageSet(ChangeEvent<string> evt)

@@ -18,17 +18,7 @@ namespace Moonstorm.Utilities
 
         private void Start()
         {
-            #region No Enemies
-            //These just make testing faster
-            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("iHarbHD.DebugToolkit"))
-            {
-                Run.onRunStartGlobal += (connection) =>
-                {
-                    DebugToolkit.DebugToolkit.InvokeCMD(NetworkUser.instancesList[0], "stage1_pod", new string[] { "0" });
-                    DebugToolkit.DebugToolkit.InvokeCMD(NetworkUser.instancesList[0], "no_enemies", new string[] { });
-                };
-            }
-            #endregion
+            Run.onRunStartGlobal += OnRunStart;
             #region Item display helper adder
             //Adds the item display helper to all the character bodies.
             RoR2Application.onLoad += () =>
@@ -59,6 +49,20 @@ namespace Moonstorm.Utilities
             };
             #endregion
         }
+
+        private void OnRunStart(Run obj)
+        {
+            #region Command Invoking
+            if (MSUtil.IsModInstalled("iHarbHD.DebugToolkit"))
+            {
+                InvokeCommand("stage1_pod", "0");
+                InvokeCommand("no_enemies");
+                InvokeCommand("enable_event_logging", "1");
+            }
+            #endregion
+        }
+
+        private void InvokeCommand(string commandName, params string[] arguments) => DebugToolkit.DebugToolkit.InvokeCMD(NetworkUser.instancesList[0], commandName, arguments);
 
         private void Update()
         {

@@ -10,14 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 870831823, guid: c8c954e10545f6cd0045de066bc4846b, type: 3}
-  m_Name: ContentPack
+  m_Name: MSUSCP
   m_EditorClassIdentifier: 
   bodyPrefabs: []
   masterPrefabs: []
   projectilePrefabs: []
   gameModePrefabs: []
   effectPrefabs: []
-  networkedObjectPrefabs: []
+  networkedObjectPrefabs:
+  - {fileID: 6129970050706187277, guid: 637525fed156c554b9471c98b903fbbb, type: 3}
   skillDefs: []
   skillFamilies: []
   sceneDefs: []

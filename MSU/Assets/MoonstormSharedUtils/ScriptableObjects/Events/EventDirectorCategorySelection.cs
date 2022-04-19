@@ -16,6 +16,7 @@ namespace Moonstorm
             [Tooltip("A name to identify this category.")]
             public string categoryName;
 
+            [HideInInspector]
             public EventCard[] eventCards;
 
             public float selectionWeight;
@@ -25,6 +26,7 @@ namespace Moonstorm
 
         public string stageName;
 
+        [Header("The cards categories cannot be added in the editor\nthey get added at runtime automatically by the EventCatalog")]
         public EventCategory[] categories = Array.Empty<EventCategory>();
 
         public float SumAllWeightsInCategory(EventCategory category)
@@ -148,14 +150,6 @@ namespace Moonstorm
                 if(category.selectionWeight <= 0f)
                 {
                     Debug.LogError($"{category.categoryName} in {this} has no weight!");
-                }
-                for(int j = 0; j < category.eventCards.Length; j++)
-                {
-                    EventCard card = category.eventCards[j];
-                    if(card.selectionWeight <= 0f)
-                    {
-                        Debug.LogError($"{card.name} in {this} has no weight!");
-                    }
                 }
             }
         }

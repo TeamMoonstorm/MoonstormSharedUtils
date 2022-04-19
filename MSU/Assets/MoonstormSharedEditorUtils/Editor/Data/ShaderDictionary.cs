@@ -89,6 +89,7 @@ namespace Moonstorm.EditorUtils.Settings
                 .Select(relativePath => AssetDatabase.LoadAssetAtPath<Shader>(relativePath))
                 .Select(shader => new ShaderPair(null, shader)).ToList();
 
+            shaderDictionarySO.Update();
             shaderDictionarySO.ApplyModifiedProperties();
         }
 
@@ -130,6 +131,7 @@ namespace Moonstorm.EditorUtils.Settings
                 pair.original = origShader;
             }
 
+            shaderDictionarySO.Update();
             shaderDictionarySO.ApplyModifiedProperties();
         }
     }

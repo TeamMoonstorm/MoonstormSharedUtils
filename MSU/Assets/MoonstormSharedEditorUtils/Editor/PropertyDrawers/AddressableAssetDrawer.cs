@@ -8,6 +8,7 @@ using UnityEditor;
 using UnityEditor.UIElements;
 using System;
 using RoR2;
+using RoR2.ExpansionManagement;
 
 namespace Moonstorm.EditorUtils.PropertyDrawers
 {
@@ -55,4 +56,12 @@ namespace Moonstorm.EditorUtils.PropertyDrawers
 
     [CustomPropertyDrawer(typeof(AddressableAssets.AddressableUnlockableDef))]
     public sealed class AddressableUnlockableDefDrawer : AddressableAssetDrawer<UnlockableDef> { }
+    [CustomPropertyDrawer(typeof(AddressableAssets.AddressableBuffDef))]
+    public sealed class AddressableBuffDefDrawer : AddressableAssetDrawer<BuffDef> { }
+    [CustomPropertyDrawer(typeof(AddressableAssets.AddressableEquipmentDef))]
+    public sealed class AddressableEquipmentDefDrawer : AddressableAssetDrawer<EquipmentDef> { }
+    [CustomPropertyDrawer(typeof(AddressableAssets.AddressableExpansionDef))]
+    public sealed class AddressableExpansionDefDrawer : AddressableAssetDrawer<ExpansionDef> { }
+    [CustomPropertyDrawer(typeof(AddressableAssets.AddressableItemDef))]
+    public sealed class AddressableItemDefDrawer : AddressableAssetDrawer<ItemDef> { }
 }

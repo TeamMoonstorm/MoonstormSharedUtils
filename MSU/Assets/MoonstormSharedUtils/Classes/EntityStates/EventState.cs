@@ -1,4 +1,4 @@
-﻿/*using Moonstorm.ScriptableObjects;
+﻿using Moonstorm;
 using RoR2;
 using System;
 using UnityEngine;
@@ -9,7 +9,7 @@ namespace EntityStates.Events
     public abstract class EventState : EntityState
     {
         [SerializeField]
-        public EventDirectorCard eventCard;
+        public EventCard eventCard;
         [SerializeField]
         public float drizzleDuration = 30f;
         [SerializeField]
@@ -76,5 +76,4 @@ namespace EntityStates.Events
             hasWarned = true;
         }
     }
-
-}*/
+}
