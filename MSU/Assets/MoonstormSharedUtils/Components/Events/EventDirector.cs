@@ -54,7 +54,7 @@ namespace Moonstorm.Components
         private EventCard currentEventCard;
 
 
-        [SystemInitializer]
+        [SystemInitializer(typeof(EventCatalog))]
         private static void SystemInit()
         {
             SceneDirector.onPrePopulateSceneServer += (director) =>
@@ -92,7 +92,7 @@ namespace Moonstorm.Components
                     Destroy(gameObject.transform.root.gameObject);
                 }
                 EventCardSelection = EventDirectorCategorySelection.GenerateWeightedSelection();
-                Log($"Awakened with the following EventCards:\n{string.Join("\n", EventCardSelection.choices.Select(c => c.value.name))}");
+                //Log($"Awakened with the following EventCards:\n{string.Join("\n", EventCardSelection.choices.Select(c => c.value.name))}");
             }
         }
         private void OnEnable()
@@ -251,14 +251,24 @@ namespace Moonstorm.Components
         private void Log(string msg)
         {
             if (EnableInternalLogging)
-                MSULog.Info($"-----o-----\nEvent Director: {msg}\n-----o-----");
+                MSULog.Info($"\n-----o-----\nEvent Director: {msg}\n-----o-----");
+        }
+
+        private bool AttemptForceSpawnEvent(EventCard card)
+        {
+            if (card && TargetedStateMachine && !IsEventBeingPlayed(card))
+            {
+                TargetedStateMachine.SetState(EntityStateCatalog.InstantiateState(currentEventCard.eventState));
+                return true;
+            }
+            return false;
         }
 
         ///Commands
         ///------------------------------------------------------------------------------------------------------------
-        
-        //[ConCommand(commandName = "force_event", flags = ConVarFlags.ExecuteOnServer, helpText = "Forces a gamewide event to begin. Argument is the event card's name")]
-        /*private static void ForceEvent(ConCommandArgs args)
+
+        [ConCommand(commandName = "force_event", flags = ConVarFlags.ExecuteOnServer, helpText = "Forces a gamewide event to begin. Argument is the event card's name")]
+        private static void ForceEvent(ConCommandArgs args)
         {
             if(!Instance)
             {
@@ -287,12 +297,12 @@ namespace Moonstorm.Components
                 return;
             }
 
-            if(!Instance.AttemptForceSpawnEvent(Instance.FindIdleStateMachine(), card))
+            if(!Instance.AttemptForceSpawnEvent(card))
             {
                 Debug.Log($"Could not start event. too many events are playing.");
                 return;
             }
-        }*/
+        }
 
         [ConCommand(commandName = "stop_events", flags = ConVarFlags.ExecuteOnServer, helpText = "Forces all active events to stop")]
         private static void StopEvents(ConCommandArgs args)

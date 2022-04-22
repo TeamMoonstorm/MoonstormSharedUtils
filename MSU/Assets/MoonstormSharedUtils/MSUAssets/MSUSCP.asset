@@ -37,7 +37,10 @@ MonoBehaviour:
   musicTrackDefs: []
   gameEndingDefs: []
   miscPickupDefs: []
-  entityStateConfigurations: []
-  entityStateTypes: []
+  entityStateConfigurations:
+  - {fileID: 11400000, guid: a24fc4bd9072b4245ab16cbdea507566, type: 2}
+  entityStateTypes:
+  - _typeName: EntityStates.Events.TestEventState, MoonstormSharedUtils, Version=1.0.0.0,
+      Culture=neutral, PublicKeyToken=null
   expansionDefs: []
   entitlementDefs: []

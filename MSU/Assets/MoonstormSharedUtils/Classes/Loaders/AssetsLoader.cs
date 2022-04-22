@@ -146,6 +146,14 @@ namespace Moonstorm.Loaders
             var shaderTask = asyncOp.Task;
             var shader = await shaderTask;
             material.shader = shader;
+            if (material.shader.name.Contains("Cloud Remap"))
+            {
+                var cloudMatAsyncOp = Addressables.LoadAssetAsync<Material>("RoR2/Base/Common/VFX/matLightningLongBlue.mat");
+                var cloudMat = await cloudMatAsyncOp.Task;
+                var remapper = new RuntimeCloudMaterialMapper(material);
+                material.CopyPropertiesFromMaterial(cloudMat);
+                remapper.SetMaterialValues(ref material);
+            }
             MaterialsWithSwappedShaders.Add(material);
         }
     }

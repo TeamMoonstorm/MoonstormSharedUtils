@@ -20,6 +20,8 @@ namespace Moonstorm.AddressableAssets
         {
             if (asset != null)
                 return;
+            if (string.IsNullOrEmpty(address))
+                return;
             else
                 LoadAsset();
         }

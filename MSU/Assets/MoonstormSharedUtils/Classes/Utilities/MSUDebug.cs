@@ -1,5 +1,6 @@
 ﻿using Moonstorm.Components;
 using RoR2;
+using RoR2.UI;
 using System;
 using System.Linq;
 using UnityEngine;
@@ -80,6 +81,12 @@ namespace Moonstorm.Utilities
                 Instantiate(materialTester, position, quaternion);
             }
             #endregion
+            var input1 = Input.GetKeyDown(KeyCode.KeypadMinus);
+            if(input1)
+            {
+                var go = EventHelpers.AnnounceEvent(new EventHelpers.EventAnnounceInfo(MoonstormSharedUtils.MSUAssetBundle.LoadAsset<EventCard>("TestEventState"), 15, true) { fadeOnStart = false });
+                go.GetComponent<HGTextMeshProUGUI>().alpha = 1f;
+            }
         }
     }
 }

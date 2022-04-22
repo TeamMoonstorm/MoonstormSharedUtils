@@ -6,54 +6,78 @@ using UnityEngine.Networking;
 
 namespace EntityStates.Events
 {
+    /// <summary>
+    /// Base class for all event related entity states
+    /// </summary>
     public abstract class EventState : EntityState
     {
         [SerializeField]
         public EventCard eventCard;
         [SerializeField]
-        public float drizzleDuration = 30f;
+        public float minDuration = 30f;
         [SerializeField]
-        public float typhoonDuration = 90f;
+        public float maxDuration = 90f;
         [SerializeField]
-        public float warningDuration = 15f;
-        public static float typhoonScaling = 3.5f;
+        public float warningDur = 10f;
+
+        public static float maxDiffScaling = 3.5f;
 
         public virtual bool overrideTimer => false;
 
-        public bool hasWarned { get; protected set; }
-        public float difficultyScaledDuration { get; protected set; }
-        public float difficultyScalingValue { get; protected set; }
-        public float totalDuration { get; protected set; }
+        /// <summary>
+        /// Wether this event is already past the "Warned" phase
+        /// </summary>
+        public bool HasWarned { get; protected set; }
+        /// <summary>
+        /// The actual duration of the event
+        /// <para>Duration is taken by remaping the current <see cref="DiffScalingValue"/> capping the in value with min 1 and max 3.5, and keeping the result between min <see cref="minDuration"/> and max <see cref="maxDuration"/></para>
+        /// </summary>
+        public float DiffScaledDuration { get; protected set; }
+        /// <summary>
+        /// The current run's difficulty scaling value, taken from the difficultyDef.
+        /// </summary>
+        public float DiffScalingValue { get; protected set; }
+        /// <summary>
+        /// The total duration of the event, calculated from the sum of <see cref="DiffScaledDuration"/> and <see cref="warningDur"/>
+        /// </summary>
+        public float TotalDuration { get; protected set; }
+
+        public static Action<EventCard> onEventStartGlobal;
+        public static Action<EventCard> onEventStartServer;
+
+        public static Action<EventCard> onEventEndGlobal;
+        public static Action<EventCard> onEventEndServer;
         public override void OnEnter()
         {
             base.OnEnter();
-            difficultyScalingValue = DifficultyCatalog.GetDifficultyDef(Run.instance.selectedDifficulty).scalingValue;
+            DiffScalingValue = DifficultyCatalog.GetDifficultyDef(Run.instance.selectedDifficulty).scalingValue;
 
-            difficultyScaledDuration = Util.Remap(difficultyScalingValue, 1f, typhoonScaling, drizzleDuration, typhoonDuration);
+            DiffScaledDuration = Util.Remap(DiffScalingValue, 1f, maxDiffScaling, minDuration, maxDuration);
 
-            totalDuration = difficultyScaledDuration + warningDuration;
+            TotalDuration = DiffScaledDuration + warningDur;
             if (NetworkServer.active)
             {
                 if (!eventCard.startMessageToken.Equals(string.Empty))
                 {
-                    Chat.SimpleChatMessage messageBase = new Chat.SimpleChatMessage()
+                    EventHelpers.AnnounceEvent(new EventHelpers.EventAnnounceInfo(eventCard, warningDur, true));
+                    /*Chat.SimpleChatMessage messageBase = new Chat.SimpleChatMessage()
                     {
                         paramTokens = Array.Empty<string>(),
                         baseToken = Util.GenerateColoredString(Language.GetString(eventCard.startMessageToken), eventCard.messageColor)
                     };
-                    Chat.SendBroadcastChat(messageBase);
+                    Chat.SendBroadcastChat(messageBase);*/
                 }
             }
         }
         public override void FixedUpdate()
         {
             base.FixedUpdate();
-            if (fixedAge >= totalDuration && !overrideTimer)
+            if (fixedAge >= TotalDuration && !overrideTimer)
             {
                 outer.SetNextStateToMain();
                 return;
             }
-            if (!hasWarned && fixedAge >= warningDuration)
+            if (!HasWarned && fixedAge >= warningDur)
                 StartEvent();
         }
 
@@ -62,18 +86,27 @@ namespace EntityStates.Events
             base.OnExit();
             if (NetworkServer.active)
             {
-                Chat.SimpleChatMessage messageBase = new Chat.SimpleChatMessage()
+                EventHelpers.AnnounceEvent(new EventHelpers.EventAnnounceInfo(eventCard, warningDur, false));
+                /*Chat.SimpleChatMessage messageBase = new Chat.SimpleChatMessage()
                 {
                     paramTokens = Array.Empty<string>(),
                     baseToken = Util.GenerateColoredString(Language.GetString(eventCard.endMessageToken), eventCard.messageColor)
                 };
-                Chat.SendBroadcastChat(messageBase);
+                Chat.SendBroadcastChat(messageBase);*/
+                onEventEndServer?.Invoke(eventCard);
             }
+            onEventEndGlobal?.Invoke(eventCard);
         }
 
+        /// <summary>
+        /// Run logic that happens when the event starts here.
+        /// </summary>
         public virtual void StartEvent()
         {
-            hasWarned = true;
+            HasWarned = true;
+            onEventStartGlobal?.Invoke(eventCard);
+            if (NetworkServer.active)
+                onEventStartServer?.Invoke(eventCard);
         }
     }
 }

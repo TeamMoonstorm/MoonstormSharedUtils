@@ -58,7 +58,7 @@ namespace Moonstorm
                     return false;
 
                 //If event requires expansionDef
-                if (!requiredExpansionDef.Asset)
+                if (requiredExpansionDef.Asset)
                 {
                     return Run.instance.IsExpansionEnabled(requiredExpansionDef.Asset);
                 }

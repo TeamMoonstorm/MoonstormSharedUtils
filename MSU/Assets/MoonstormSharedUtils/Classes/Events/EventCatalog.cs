@@ -158,6 +158,7 @@ namespace Moonstorm
         private static void Init()
         {
             AddCategories(MoonstormSharedUtils.MSUAssetBundle.LoadAllAssets<EventDirectorCategorySelection>());
+            AddCard(MoonstormSharedUtils.MSUAssetBundle.LoadAsset<EventCard>("TestEventState"));
 
             nameToEventIndex.Clear();
             stageToCategory.Clear();
@@ -420,6 +421,13 @@ namespace Moonstorm
             }
 
             return flagAmount <= -1 || flagAmount >= 1;
+        }
+
+        [ConCommand(commandName = "list_events", flags = ConVarFlags.None, helpText = "Prints all loaded events")]
+        private static void ListEvents(ConCommandArgs args)
+        {
+            for (int i = 0; i < RegisteredEventCount; i++)
+                Debug.Log($"[{i}]\t{registeredEventCards[i].name}");
         }
         #endregion
     }

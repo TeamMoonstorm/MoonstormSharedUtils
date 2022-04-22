@@ -2,7 +2,9 @@
     "name": "MoonstormSharedUtils",
     "references": [
         "Unity.Postprocessing.Runtime",
-        "com.unity.multiplayer-hlapi.Runtime"
+        "com.unity.multiplayer-hlapi.Runtime",
+        "Unity.TextMeshPro",
+        "UnityEditor.UI"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -22,7 +24,9 @@
         "Assembly-CSharp.dll",
         "RoR2BepInExPack.dll",
         "Unity.Addressables.dll",
-        "Unity.ResourceManager.dll"
+        "Unity.ResourceManager.dll",
+        "Unity.TextMeshPro.dll",
+        "UnityEngine.UI.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [],

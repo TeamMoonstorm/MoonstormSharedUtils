@@ -90,7 +90,7 @@ MonoBehaviour:
   intervalResetRange:
     min: 15
     max: 45
-  intervalStopWatch: 0
+  intervalStopWatch: 5
 --- !u!114 &8961382438740311447
 MonoBehaviour:
   m_ObjectHideFlags: 0
