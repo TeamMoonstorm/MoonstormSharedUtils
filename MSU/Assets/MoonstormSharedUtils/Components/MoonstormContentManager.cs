@@ -12,37 +12,37 @@ namespace Moonstorm.Components
 {
     public class MoonstormContentManager : MonoBehaviour
     {
-        public bool HasMaster { get; internal set; }
+        public bool hasMaster;
 
-        public CharacterBody Body { get; internal set; }
+        public CharacterBody body;
 
-        public MoonstormEliteBehavior EliteBehavior { get; internal set; }
+        public MoonstormEliteBehavior eliteBehavior;
 
         IStatItemBehavior[] statItemBehaviors = Array.Empty<IStatItemBehavior>();
         IBodyStatArgModifier[] bodyStatArgModifiers = Array.Empty<IBodyStatArgModifier>();
 
         private void Start()
         {
-            Body.onInventoryChanged += CheckItemEquipments;
+            body.onInventoryChanged += CheckItemEquipments;
         }
 
         public void CheckItemEquipments()
         {
-            if (!HasMaster)
+            if (!hasMaster)
                 return;
 
             foreach(var equipment in EquipmentModuleBase.AllMoonstormEquipments)
             {
-                if(Body.inventory.GetEquipmentIndex() == equipment.Key.equipmentIndex)
+                if(body.inventory.GetEquipmentIndex() == equipment.Key.equipmentIndex)
                 {
                     //this is stupid
-                    var bod = Body;
+                    var bod = body;
                     equipment.Value.AddBehavior(ref bod, 1);
                     break;
                 }
             }
 
-            if (EliteBehavior)
+            if (eliteBehavior)
                 CheckEliteBehavior();
 
             StartGetInterfaces();
@@ -55,8 +55,8 @@ namespace Moonstorm.Components
             yield return new WaitForEndOfFrame();
             statItemBehaviors = GetComponents<IStatItemBehavior>();
             bodyStatArgModifiers = GetComponents<IBodyStatArgModifier>();
-            Body.healthComponent.onIncomingDamageReceivers = GetComponents<IOnIncomingDamageServerReceiver>();
-            Body.healthComponent.onTakeDamageReceivers = GetComponents<IOnTakeDamageServerReceiver>();
+            body.healthComponent.onIncomingDamageReceivers = GetComponents<IOnIncomingDamageServerReceiver>();
+            body.healthComponent.onTakeDamageReceivers = GetComponents<IOnTakeDamageServerReceiver>();
         }
 
         private void CheckEliteBehavior()
@@ -64,7 +64,7 @@ namespace Moonstorm.Components
             bool isElite = false;
             foreach(var eliteEqp in EquipmentModuleBase.EliteMoonstormEquipments)
             {
-                if(Body.inventory.GetEquipmentIndex() == eliteEqp.Key.equipmentIndex)
+                if(body.inventory.GetEquipmentIndex() == eliteEqp.Key.equipmentIndex)
                 {
                     isElite = true;
                     break;
@@ -73,13 +73,13 @@ namespace Moonstorm.Components
             if (!isElite)
                 return;
 
-            EliteBehavior.CharacterModel.UpdateOverlays();
-            Body.RecalculateStats();
+            eliteBehavior.characterModel.UpdateOverlays();
+            body.RecalculateStats();
             foreach(var eliteDef in EliteModuleBase.MoonstormElites)
             {
-                if(Body.isElite && EliteBehavior.CharacterModel.myEliteIndex == eliteDef.eliteIndex)
+                if(body.isElite && eliteBehavior.characterModel.myEliteIndex == eliteDef.eliteIndex)
                 {
-                    EliteBehavior.SetNewElite(eliteDef);
+                    eliteBehavior.SetNewElite(eliteDef);
                 }
             }
         }
@@ -105,7 +105,7 @@ namespace Moonstorm.Components
         }
         private void OnDestroy()
         {
-            Body.onInventoryChanged -= CheckItemEquipments;
+            body.onInventoryChanged -= CheckItemEquipments;
         }
     }
 }

@@ -23,7 +23,7 @@ namespace Moonstorm
                     GameObject bodyPrefab = BodyCatalog.bodyPrefabs[i];
 
                     var manager = bodyPrefab.AddComponent<MoonstormContentManager>();
-                    manager.Body = bodyPrefab.GetComponent<CharacterBody>();
+                    manager.body = bodyPrefab.GetComponent<CharacterBody>();
 
                     var modelLocator = bodyPrefab.GetComponent<ModelLocator>();
                     if (!modelLocator)
@@ -34,9 +34,9 @@ namespace Moonstorm
                         continue;
 
                     var eliteBehavior = bodyPrefab.AddComponent<MoonstormEliteBehavior>();
-                    eliteBehavior.CharacterModel = modelLocator.modelTransform.GetComponent<CharacterModel>();
-                    eliteBehavior.Body = bodyPrefab.GetComponent<CharacterBody>();
-                    manager.EliteBehavior = eliteBehavior;
+                    eliteBehavior.characterModel = modelLocator.modelTransform.GetComponent<CharacterModel>();
+                    eliteBehavior.body = bodyPrefab.GetComponent<CharacterBody>();
+                    manager.eliteBehavior = eliteBehavior;
 
                     BodyCatalog.bodyPrefabs[i] = bodyPrefab;
                 }
@@ -59,7 +59,7 @@ namespace Moonstorm
 
             if (body.master)
             {
-                manager.HasMaster = true;
+                manager.hasMaster = true;
             }
 
             manager.StartGetInterfaces();

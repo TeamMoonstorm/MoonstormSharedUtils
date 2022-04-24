@@ -53,7 +53,7 @@ namespace Moonstorm
             hgText.autoSizeTextContainer = true;
 
             EventTextController textController = eventAnnouncerInstance.GetComponent<EventTextController>();
-            textController.warningDuration = announceInfo.eventWarningDuration;
+            textController.warningDuration = announceInfo.isEventStart ? announceInfo.eventWarningDuration : announceInfo.eventWarningDuration / 2;
             textController.fadeOnStart = announceInfo.fadeOnStart;
             return eventAnnouncerInstance;
         }
