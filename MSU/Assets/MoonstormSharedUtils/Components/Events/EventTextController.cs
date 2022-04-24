@@ -42,6 +42,7 @@ namespace Moonstorm.Components
                     uiJuice.TransitionAlphaFadeIn();
                     break;
                 case EventFadeState.Wait:
+                    fading = true;
                     break;
                 case EventFadeState.FadeOut:
                     uiJuice.destroyOnEndOfTransition = true;

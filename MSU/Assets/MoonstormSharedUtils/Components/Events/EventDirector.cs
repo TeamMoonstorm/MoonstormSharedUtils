@@ -61,10 +61,10 @@ namespace Moonstorm.Components
         {
             SceneDirector.onPrePopulateSceneServer += (director) =>
             {
-                /*if(EventCatalog.RegisteredEventCount <= 0)
+                if(EventCatalog.RegisteredEventCount <= 0)
                 {
                     return;
-                }*/
+                }
 
                 if(Run.instance && SceneInfo.instance.countsAsStage && NetworkServer.active)
                 {
