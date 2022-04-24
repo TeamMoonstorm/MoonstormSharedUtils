@@ -20,9 +20,7 @@ namespace EntityStates.Events
         [SerializeField]
         public float warningDur = 10f;
 
-        public static float maxDiffScaling = 3.5f;
-
-        public virtual bool overrideTimer => false;
+        public virtual bool OverrideTimer => false;
 
         /// <summary>
         /// Wether this event is already past the "Warned" phase
@@ -52,27 +50,31 @@ namespace EntityStates.Events
             base.OnEnter();
             DiffScalingValue = DifficultyCatalog.GetDifficultyDef(Run.instance.selectedDifficulty).scalingValue;
 
-            DiffScaledDuration = Util.Remap(DiffScalingValue, 1f, maxDiffScaling, minDuration, maxDuration);
+            DiffScaledDuration = Util.Remap(DiffScalingValue, 1f, MSUConfig.maxDifficultyScaling.Value, minDuration, maxDuration);
 
             TotalDuration = DiffScaledDuration + warningDur;
             if (NetworkServer.active)
             {
                 if (!eventCard.startMessageToken.Equals(string.Empty))
                 {
-                    EventHelpers.AnnounceEvent(new EventHelpers.EventAnnounceInfo(eventCard, warningDur, true));
-                    /*Chat.SimpleChatMessage messageBase = new Chat.SimpleChatMessage()
+                    if(MSUConfig.eventAnnouncementsAsChatMessages.Value)
                     {
-                        paramTokens = Array.Empty<string>(),
-                        baseToken = Util.GenerateColoredString(Language.GetString(eventCard.startMessageToken), eventCard.messageColor)
-                    };
-                    Chat.SendBroadcastChat(messageBase);*/
+                        Chat.SimpleChatMessage messageBase = new Chat.SimpleChatMessage()
+                        {
+                            paramTokens = Array.Empty<string>(),
+                            baseToken = Util.GenerateColoredString(Language.GetString(eventCard.startMessageToken), eventCard.messageColor)
+                        };
+                        Chat.SendBroadcastChat(messageBase);
+                    }
+                    else
+                        EventHelpers.AnnounceEvent(new EventHelpers.EventAnnounceInfo(eventCard, warningDur, true));
                 }
             }
         }
         public override void FixedUpdate()
         {
             base.FixedUpdate();
-            if (fixedAge >= TotalDuration && !overrideTimer)
+            if (fixedAge >= TotalDuration && !OverrideTimer)
             {
                 outer.SetNextStateToMain();
                 return;
@@ -84,15 +86,22 @@ namespace EntityStates.Events
         public override void OnExit()
         {
             base.OnExit();
-            if (NetworkServer.active)
+            if(MSUConfig.eventAnnouncementsAsChatMessages.Value)
             {
-                EventHelpers.AnnounceEvent(new EventHelpers.EventAnnounceInfo(eventCard, warningDur, false));
-                /*Chat.SimpleChatMessage messageBase = new Chat.SimpleChatMessage()
+                Chat.SimpleChatMessage messageBase = new Chat.SimpleChatMessage()
                 {
                     paramTokens = Array.Empty<string>(),
                     baseToken = Util.GenerateColoredString(Language.GetString(eventCard.endMessageToken), eventCard.messageColor)
                 };
-                Chat.SendBroadcastChat(messageBase);*/
+                Chat.SendBroadcastChat(messageBase);
+            }
+            else
+            {
+                EventHelpers.AnnounceEvent(new EventHelpers.EventAnnounceInfo(eventCard, warningDur, false));
+            }
+
+            if (NetworkServer.active)
+            {
                 onEventEndServer?.Invoke(eventCard);
             }
             onEventEndGlobal?.Invoke(eventCard);

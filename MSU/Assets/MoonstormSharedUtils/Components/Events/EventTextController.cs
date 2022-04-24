@@ -32,7 +32,7 @@ namespace Moonstorm.Components
                 BeginFade();
         }
         
-        private void BeginFade()
+        public void BeginFade()
         {
             switch(fadeState)
             {

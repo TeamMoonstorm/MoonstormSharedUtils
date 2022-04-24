@@ -96,12 +96,12 @@ namespace Moonstorm
                             try
                             {
                                 var attribute = field.GetCustomAttribute<ConfigurableFieldAttribute>();
-                                string configIdeentifier = attribute.configFileIdentifier ?? assemblyToIdentifier[field.DeclaringType.Assembly]; //If configFilePath is null, use the main config file's path, otherwise, use the provided one.
-                                if (!dict.ContainsKey(configIdeentifier))
+                                string configIdentifier = attribute.ConfigFileIdentifier ?? assemblyToIdentifier[field.DeclaringType.Assembly]; //If configFilePath is null, use the main config file's path, otherwise, use the provided one.
+                                if (!dict.ContainsKey(configIdentifier))
                                 {
-                                    dict.Add(configIdeentifier, new List<FieldInfo>());
+                                    dict.Add(configIdentifier, new List<FieldInfo>());
                                 }
-                                dict[configIdeentifier].Add(field);
+                                dict[configIdentifier].Add(field);
                             }
                             catch (Exception e) { MSULog.Error($"{e} (Field: {field.Name}"); }
                         }

@@ -25,12 +25,9 @@ namespace Moonstorm
         /// The Description of the Config, if left null, it'll use a generic description.
         /// </summary>
         public string ConfigDesc { get; set; }
+        public string ConfigFileIdentifier => configFileIdentifier;
         
-        /// <summary>
-        /// The identifier of a config file to use for binding.
-        /// If left null, it'll use the mod's main config file.
-        /// </summary>
-        public string configFileIdentifier;
+        private string configFileIdentifier;
 
         /// <summary>
         /// Creates a new instance of the Configurable Field Attribute.

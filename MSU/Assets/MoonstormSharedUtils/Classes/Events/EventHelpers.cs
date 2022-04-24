@@ -38,6 +38,26 @@ namespace Moonstorm
                 hudInstance = self;
                 orig(self);
             };
+
+            ClassicStageInfo.monsterFamilyChance = 1000;
+            if(MSUConfig.familyEventUsesEventAnnouncementInsteadOfChatMessage.Value)
+            {
+                //Make the family event message use an EventAnnouncement
+                On.RoR2.ClassicStageInfo.BroadcastFamilySelection += ShowAnnouncement;
+            }
+        }
+        private static System.Collections.IEnumerator ShowAnnouncement(On.RoR2.ClassicStageInfo.orig_BroadcastFamilySelection orig, ClassicStageInfo self, string familySelectionChatString)
+        {
+            GameObject instance = AnnounceFamilyEvent(familySelectionChatString, Color.white, 9);
+            if(instance)
+            {
+                yield return new WaitForSeconds(4);
+                instance.transform.SetParent(hudInstance.mainContainer.transform, false);
+                instance.GetComponent<EventTextController>().BeginFade();
+
+                yield break;
+            }
+            orig(self, familySelectionChatString);
         }
 
         public static GameObject AnnounceEvent(EventAnnounceInfo announceInfo)
@@ -50,12 +70,43 @@ namespace Moonstorm
             hgText.text = Language.GetString(token);
             hgText.color = messageColor;
             hgText.outlineColor = GetOutlineColor(messageColor);
-            hgText.autoSizeTextContainer = true;
+            hgText.autoSizeTextContainer = false;
 
             EventTextController textController = eventAnnouncerInstance.GetComponent<EventTextController>();
             textController.warningDuration = announceInfo.isEventStart ? announceInfo.eventWarningDuration : announceInfo.eventWarningDuration / 2;
             textController.fadeOnStart = announceInfo.fadeOnStart;
             return eventAnnouncerInstance;
+        }
+
+        private static GameObject AnnounceFamilyEvent(string token, Color color, float duration)
+        {
+            GameObject eventAnnouncerInstance = null;
+            try
+            {
+                eventAnnouncerInstance = UnityEngine.Object.Instantiate(EventAnnouncer);
+
+                HGTextMeshProUGUI hgText = eventAnnouncerInstance.GetComponent<HGTextMeshProUGUI>();
+                string formattedToken = Language.GetString(token);
+                string[] splitString = formattedToken.Split(']');
+                hgText.text = $"{splitString[0]}]\n{splitString[1]}";
+                hgText.color = color;
+                hgText.outlineColor = GetOutlineColor(color);
+                hgText.autoSizeTextContainer = false;
+
+                EventTextController textController = eventAnnouncerInstance.GetComponent<EventTextController>();
+                textController.warningDuration = duration;
+                textController.fadeOnStart = false;
+                return eventAnnouncerInstance;
+            }
+            catch (Exception ex)
+            {
+                MSULog.Error($"Cannot announce FamilyEvent! reason: {ex}");
+
+                if (eventAnnouncerInstance)
+                    UnityEngine.Object.Destroy(eventAnnouncerInstance);
+
+                return null;
+            }
         }
 
         private static Color32 GetOutlineColor(Color messageColor)

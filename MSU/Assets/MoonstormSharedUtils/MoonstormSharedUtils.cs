@@ -40,7 +40,7 @@ namespace Moonstorm
             PluginInfo = Info;
             new MSULog(Logger);
             R2API.Utils.CommandHelper.AddToConsoleWhenReady();
-            MSUConfig.Init(Config);
+            new MSUConfig().Init();
             if (MSUConfig.EnableDebugFeatures.Value)
             {
                 gameObject.AddComponent<MSUDebug>();
