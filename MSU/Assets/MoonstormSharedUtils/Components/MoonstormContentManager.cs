@@ -13,9 +13,9 @@ namespace Moonstorm.Components
     public class MoonstormContentManager : MonoBehaviour
     {
         public bool HasMaster { get; internal set; }
-        public bool HasInventory { get; internal set; }
-        public CharacterBody Body { get => _body; internal set => _body = value; }
-        private CharacterBody _body; 
+
+        public CharacterBody Body { get; internal set; }
+
         public MoonstormEliteBehavior EliteBehavior { get; internal set; }
 
         IStatItemBehavior[] statItemBehaviors = Array.Empty<IStatItemBehavior>();
@@ -28,14 +28,16 @@ namespace Moonstorm.Components
 
         public void CheckItemEquipments()
         {
-            if (!HasInventory)
+            if (!HasMaster)
                 return;
 
             foreach(var equipment in EquipmentModuleBase.AllMoonstormEquipments)
             {
                 if(Body.inventory.GetEquipmentIndex() == equipment.Key.equipmentIndex)
                 {
-                    equipment.Value.AddBehavior(ref _body, 1);
+                    //this is stupid
+                    var bod = Body;
+                    equipment.Value.AddBehavior(ref bod, 1);
                     break;
                 }
             }
@@ -71,11 +73,11 @@ namespace Moonstorm.Components
             if (!isElite)
                 return;
 
-            EliteBehavior.model.UpdateOverlays();
+            EliteBehavior.CharacterModel.UpdateOverlays();
             Body.RecalculateStats();
             foreach(var eliteDef in EliteModuleBase.MoonstormElites)
             {
-                if(Body.isElite && EliteBehavior.model.myEliteIndex == eliteDef.eliteIndex)
+                if(Body.isElite && EliteBehavior.CharacterModel.myEliteIndex == eliteDef.eliteIndex)
                 {
                     EliteBehavior.SetNewElite(eliteDef);
                 }

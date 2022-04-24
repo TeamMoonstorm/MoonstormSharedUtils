@@ -16,12 +16,14 @@ namespace Moonstorm
         private static void SystemInit()
         {
             MSULog.Info($"Initializing Content Manager System...");
-            foreach(GameObject bodyPrefab in BodyCatalog.allBodyPrefabs)
+            for (int i = 0; i < BodyCatalog.bodyPrefabs.Length; i++)
             {
                 try
                 {
-                    var charBody = bodyPrefab.GetComponent<CharacterBody>();
+                    GameObject bodyPrefab = BodyCatalog.bodyPrefabs[i];
+
                     var manager = bodyPrefab.AddComponent<MoonstormContentManager>();
+                    manager.Body = bodyPrefab.GetComponent<CharacterBody>();
 
                     var modelLocator = bodyPrefab.GetComponent<ModelLocator>();
                     if (!modelLocator)
@@ -32,11 +34,11 @@ namespace Moonstorm
                         continue;
 
                     var eliteBehavior = bodyPrefab.AddComponent<MoonstormEliteBehavior>();
+                    eliteBehavior.CharacterModel = modelLocator.modelTransform.GetComponent<CharacterModel>();
+                    eliteBehavior.Body = bodyPrefab.GetComponent<CharacterBody>();
                     manager.EliteBehavior = eliteBehavior;
 
-                    eliteBehavior.body = charBody;
-
-                    eliteBehavior.model = modelLocator.modelTransform.GetComponent<CharacterModel>();
+                    BodyCatalog.bodyPrefabs[i] = bodyPrefab;
                 }
                 catch(Exception ex)
                 {
@@ -48,21 +50,16 @@ namespace Moonstorm
             R2API.RecalculateStatsAPI.GetStatCoefficients += OnGetStatCoefficients;
         }
 
+        //Has master needs to be set here because we cant guarantee a body has a singular master (A body can have multiple possible masters)
         private static void OnBodyStart(CharacterBody body)
         {
             var manager = body.GetComponent<MoonstormContentManager>();
             if (!manager)
                 return;
 
-            manager.Body = body;
-            manager.EliteBehavior = body.GetComponent<MoonstormEliteBehavior>();
             if (body.master)
             {
                 manager.HasMaster = true;
-                if (body.master.inventory)
-                {
-                    manager.HasInventory = true;
-                }
             }
 
             manager.StartGetInterfaces();

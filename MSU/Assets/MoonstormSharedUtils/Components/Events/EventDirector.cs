@@ -50,6 +50,8 @@ namespace Moonstorm.Components
         public float eventCredits;
         public RangeFloat intervalResetRange;
         public float intervalStopWatch;
+        public SceneWeatherController.WeatherParams weatherParamsWhenSceneStarted;
+        public string weatherRtpcWhenStarted = string.Empty;
         private Xoroshiro128Plus eventRNG;
         private EventCard currentEventCard;
 

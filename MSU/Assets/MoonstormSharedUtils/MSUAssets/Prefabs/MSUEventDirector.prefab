@@ -15,8 +15,9 @@ GameObject:
   - component: {fileID: 138975700533300348}
   - component: {fileID: 6608108323168215014}
   - component: {fileID: 6580511454466361975}
-  - component: {fileID: 829338667738391963}
   - component: {fileID: 1543048969364378828}
+  - component: {fileID: 829338667738391963}
+  - component: {fileID: 4570915290331818840}
   m_Layer: 0
   m_Name: MSUEventDirector
   m_TagString: Untagged
@@ -91,6 +92,13 @@ MonoBehaviour:
     min: 15
     max: 45
   intervalStopWatch: 5
+  weatherParamsWhenSceneStarted:
+    sunColor: {r: 0, g: 0, b: 0, a: 0}
+    sunIntensity: 0
+    fogStart: 0
+    fogScale: 0
+    fogIntensity: 0
+  weatherRtpcWhenStarted: 
 --- !u!114 &8961382438740311447
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -158,18 +166,6 @@ MonoBehaviour:
     _typeName: EntityStates.Idle, Assembly-CSharp
   mainStateType:
     _typeName: EntityStates.Idle, Assembly-CSharp
---- !u!114 &829338667738391963
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6129970050706187277}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 733712478, guid: 951ce57ad9993c1f840a4dceb5f8b763, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1543048969364378828
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -194,3 +190,27 @@ MonoBehaviour:
     windPulseMagnitude: 0
     windPulseFrequency: 0
   windLerp: 0
+--- !u!114 &829338667738391963
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6129970050706187277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 733712478, guid: 951ce57ad9993c1f840a4dceb5f8b763, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &4570915290331818840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6129970050706187277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3ad08bf3e7b6da4591a89d01c422e04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

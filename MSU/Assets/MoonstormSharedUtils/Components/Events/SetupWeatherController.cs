@@ -1,4 +1,4 @@
-﻿/*using RoR2;
+﻿using RoR2;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -26,8 +26,8 @@ namespace Moonstorm.Components
             if (SceneWeatherController.instance)
             {
                 weatherController = SceneWeatherController.instance;
-                EventDirector.instance.weatherParamsWhenSceneStarted = weatherController.initialWeatherParams;
-                EventDirector.instance.weatherRtpcWhenStarted = (string.IsNullOrEmpty(weatherController.rtpcWeather)) ? string.Empty : weatherController.rtpcWeather;
+                EventDirector.Instance.weatherParamsWhenSceneStarted = weatherController.initialWeatherParams;
+                EventDirector.Instance.weatherRtpcWhenStarted = (string.IsNullOrEmpty(weatherController.rtpcWeather)) ? string.Empty : weatherController.rtpcWeather;
             }
             else if (!blacklistedScenes.Contains(SceneInfo.instance.sceneDef.baseSceneName))
             {
@@ -36,9 +36,9 @@ namespace Moonstorm.Components
                 weatherController.fogMaterial = GetFogMaterial();
                 weatherController.initialWeatherParams = GetInitialParams();
                 weatherController.weatherLerpOverChargeTime = MoonstormSharedUtils.MSUAssetBundle.LoadAsset<AnimationCurveAsset>("curveLinear").value;
-                EventDirector.instance.weatherParamsWhenSceneStarted = weatherController.initialWeatherParams;
+                EventDirector.Instance.weatherParamsWhenSceneStarted = weatherController.initialWeatherParams;
                 weatherController.weatherLerp = 0f;
-                EventDirector.instance.weatherRtpcWhenStarted = (weatherController.rtpcWeather is null) ? "" : weatherController.rtpcWeather;
+                EventDirector.Instance.weatherRtpcWhenStarted = (weatherController.rtpcWeather is null) ? "" : weatherController.rtpcWeather;
                 weatherController.rtpcWeather = "";
             }
             Destroy(this);
@@ -49,14 +49,13 @@ namespace Moonstorm.Components
          * In all current vanilla cases there is only one NGSS_Directional per scene, and it's always attached to the sun.
          * That doesn't necessarily mean that this will be the case in the future, as either of these cases failing will mess this up,
          * not to mention modding.
-         *
+         */
         private Light FindSun()
         {
-            /*var sunLight = FindObjectOfType<NGSS_Directional>()?.GetComponent<Light>(); ;
+            var sunLight = FindObjectOfType<NGSS_Directional>()?.GetComponent<Light>(); ;
             if (!sunLight)
                 MSULog.Warning("Could not find sun object.");
             return sunLight;
-            return null;
         }
 
         //TODO: set up fog shit
@@ -76,4 +75,4 @@ namespace Moonstorm.Components
         }
 
     }
-}*/
+}

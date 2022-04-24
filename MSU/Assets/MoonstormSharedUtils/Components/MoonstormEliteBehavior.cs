@@ -14,17 +14,19 @@ namespace Moonstorm.Components
             }
         }
 
-        public CharacterBody body;
-        public CharacterModel model;
+        public CharacterBody Body { get; internal set; }
+        public CharacterModel CharacterModel { get; internal set; }
 
         private GameObject effectInstance;
         private MSEliteDef elite;
         private Texture oldRamp;
+
         public void Start()
         {
-            model = body.modelLocator.modelTransform.GetComponent<CharacterModel>();
+            MSULog.Info($"GameObject {gameObject} (MoonstormEliteBehavior):" +
+                $"\nBody: {Body}" +
+                $"\nEliteBehavior: {CharacterModel}");
         }
-
         public void SetNewElite(MSEliteDef eliteDef)
         {
             if (eliteDef != elite)
@@ -34,9 +36,9 @@ namespace Moonstorm.Components
                 //this only gets executed if an elite def has already been loaded into the behavior
                 if (!elite)
                 {
-                    if (model && model.propertyStorage != null)
+                    if (CharacterModel && CharacterModel.propertyStorage != null)
                     {
-                        model.propertyStorage.SetTexture(EliteRampPropertyID, Shader.GetGlobalTexture(EliteRampPropertyID));
+                        CharacterModel.propertyStorage.SetTexture(EliteRampPropertyID, Shader.GetGlobalTexture(EliteRampPropertyID));
                     }
                     if (effectInstance)
                         Destroy(effectInstance);
@@ -44,25 +46,25 @@ namespace Moonstorm.Components
                 if (elite)
                 {
                     if (elite.effect)
-                        effectInstance = Instantiate(elite.effect, body.aimOriginTransform, false);
+                        effectInstance = Instantiate(elite.effect, Body.aimOriginTransform, false);
                 }
             }
         }
 
         public void UpdateShaderRamp()
         {
-            if (model && elite)
+            if (CharacterModel && elite)
             {
-                model.propertyStorage.SetTexture(EliteRampPropertyID, elite.eliteRamp);
+                CharacterModel.propertyStorage.SetTexture(EliteRampPropertyID, elite.eliteRamp);
             }
-            else if (model)
+            else if (CharacterModel)
             {
                 if (!oldRamp)
                     return;
 
-                if (model.propertyStorage.GetTexture(EliteRampPropertyID) == oldRamp)
+                if (CharacterModel.propertyStorage.GetTexture(EliteRampPropertyID) == oldRamp)
                 {
-                    model.propertyStorage.Clear();
+                    CharacterModel.propertyStorage.Clear();
                 }
             }
         }
