@@ -1,19 +1,13 @@
 {
   "dependencies": {
-    "bbepis-bepinexpack": {
-      "version": "file:BepInExPack",
-      "depth": 0,
-      "source": "embedded",
-      "dependencies": {}
-    },
     "com.passivepicasso.thunderkit": {
-      "version": "https://github.com/PassivePicasso/ThunderKit.git#RC_5_0_0",
+      "version": "https://github.com/PassivePicasso/ThunderKit.git#5.0.1",
       "depth": 0,
       "source": "git",
       "dependencies": {
         "com.unity.scriptablebuildpipeline": "1.16.1"
       },
-      "hash": "515f013cbde05dd255c0e3aa6cfa72962ff40ad2"
+      "hash": "364e5ce9e9bc4c9e83fe674faa06e14d812f865a"
     },
     "com.unity.postprocessing": {
       "version": "2.3.0",
@@ -36,44 +30,8 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
-    "iharbhd-debugtoolkit": {
-      "version": "file:DebugToolkit",
-      "depth": 0,
-      "source": "embedded",
-      "dependencies": {}
-    },
-    "riskofrain2": {
-      "version": "file:Risk of Rain 2",
-      "depth": 0,
-      "source": "embedded",
-      "dependencies": {}
-    },
-    "riskofthunder-fixplugintypesserialization": {
-      "version": "file:FixPluginTypesSerialization",
-      "depth": 0,
-      "source": "embedded",
-      "dependencies": {}
-    },
-    "riskofthunder-hookgenpatcher": {
-      "version": "file:HookGenPatcher",
-      "depth": 0,
-      "source": "embedded",
-      "dependencies": {}
-    },
-    "riskofthunder-ror2editorkit": {
-      "version": "file:RoR2EditorKit",
-      "depth": 0,
-      "source": "embedded",
-      "dependencies": {}
-    },
-    "riskofthunder-ror2multiplayerhlapi": {
-      "version": "file:RoR2MultiplayerHLAPI",
-      "depth": 0,
-      "source": "embedded",
-      "dependencies": {}
-    },
-    "tristanmcpherson-r2api": {
-      "version": "file:R2API",
+    "riskofthunder-ror2importer": {
+      "version": "file:Importer",
       "depth": 0,
       "source": "embedded",
       "dependencies": {}

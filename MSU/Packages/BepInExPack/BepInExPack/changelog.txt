@@ -1,5 +1,0 @@
-Changelog
-
-RoR2 BepInExPack specific changes :
-HideAndDontSave set back to false in config
-Plugin Entrypoint is now at RoR2.RoR2Application.Awake

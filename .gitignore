@@ -13,8 +13,6 @@
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 !/[Aa]ssets/**/*.meta
 
-# Ignores everything but the meta files in packages/risk of rain 2
-/[Pp]ackages/Risk of Rain 2
 # Uncomment this line if you wish to ignore the asset store tools plugin
 # /[Aa]ssets/AssetStoreTools*
 
@@ -60,9 +58,6 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
-#RoR2
-[Mm]SU/[Pp]ackages/[Rr]isk of Rain 2/*.dll
-
 #Thunderkit Settings
 MSU/Assets/ThunderKitSettings/EnabledAndDisabledInspectorsSettings.asset.meta
 MSU/Assets/ThunderKitSettings/EnabledAndDisabledInspectorsSettings.asset
@@ -82,3 +77,5 @@ MSU/ThunderKit/Builds/*
 MSU/ThunderKit/AssetBundleStaging/*
 MSU/ThunderKit/Libraries/*
 MSU/Assets/Vanillashaders/
+
+#Packages
