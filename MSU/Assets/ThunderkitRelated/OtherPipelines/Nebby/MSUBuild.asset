@@ -59,3 +59,5 @@ MonoBehaviour:
     pathDestination: <SS2EditorPath>
   - pathSource: <BuildPath>
     pathDestination: <DDEditorPath>
+  - pathSource: <BuildPath>
+    pathDestination: <SS2TestingPath>

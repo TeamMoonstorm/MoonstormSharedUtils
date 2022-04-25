@@ -37,9 +37,7 @@ MonoBehaviour:
   musicTrackDefs: []
   gameEndingDefs: []
   miscPickupDefs: []
-  entityStateConfigurations:
-  - {fileID: 0}
-  entityStateTypes:
-  - _typeName: 
+  entityStateConfigurations: []
+  entityStateTypes: []
   expansionDefs: []
   entitlementDefs: []

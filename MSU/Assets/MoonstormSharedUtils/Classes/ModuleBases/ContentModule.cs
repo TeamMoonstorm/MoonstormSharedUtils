@@ -26,6 +26,8 @@ namespace Moonstorm
             catch(Exception e) 
             {
                 MSULog.Error($"{e} (Content: {content})");
+                if (contentPackArray.Contains(content))
+                    return true;
                 return false;
             }
         }
