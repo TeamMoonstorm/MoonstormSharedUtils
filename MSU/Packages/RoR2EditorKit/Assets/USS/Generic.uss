@@ -1,0 +1,42 @@
+.genericHolder {
+    border-left-color: rgb(77, 77, 77);
+    border-right-color: rgb(77, 77, 77);
+    border-top-color: rgb(77, 77, 77);
+    border-bottom-color: rgb(77, 77, 77);
+    border-left-width: 5px;
+    border-right-width: 5px;
+    border-top-width: 5px;
+    border-bottom-width: 5px;
+}
+
+.genericHolderHeader {
+    -unity-text-align: middle-center;
+    -unity-font-style: normal;
+    font-size: 20px;
+    background-color: rgb(66, 66, 66);
+    border-left-color: rgb(61, 61, 61);
+    border-right-color: rgb(61, 61, 61);
+    border-top-color: rgb(61, 61, 61);
+    border-bottom-color: rgb(61, 61, 61);
+    border-left-width: 3px;
+    border-right-width: 3px;
+    border-top-width: 3px;
+    border-bottom-width: 3px;
+}
+
+.scriptType {
+    -unity-font-style: bold;
+}
+
+.genericHolderFoldout {
+    padding-left: 8px;
+    background-color: rgba(66, 66, 66, 255);
+    border-left-color: rgba(61, 61, 61, 255);
+    border-right-color: rgba(61, 61, 61, 255);
+    border-top-color: rgba(61, 61, 61, 255);
+    border-bottom-color: rgba(61, 61, 61, 255);
+    border-left-width: 3px;
+    border-right-width: 3px;
+    border-top-width: 3px;
+    border-bottom-width: 3px;
+}

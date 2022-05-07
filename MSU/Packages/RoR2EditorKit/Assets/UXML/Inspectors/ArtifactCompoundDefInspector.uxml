@@ -1,0 +1,11 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <ui:VisualElement name="Container" class="genericHolder">
+        <Style src="/Packages/riskofthunder-ror2editorkit/Assets/USS/Generic.uss" />
+        <ui:Label text="Label" name="scriptType" class="genericHolderHeader scriptType" />
+        <ui:VisualElement name="InspectorDataHolder">
+            <uie:PropertyField name="value" binding-path="value" tooltip="The value of the Compound, needs to be unique." />
+            <uie:PropertyField name="decalMaterial" binding-path="decalMaterial" tooltip="The decal material, needs to use Decalicious/Deferred Decal" />
+            <uie:PropertyField name="modelPrefab" binding-path="modelPrefab" tooltip="The model prefab of the compound" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

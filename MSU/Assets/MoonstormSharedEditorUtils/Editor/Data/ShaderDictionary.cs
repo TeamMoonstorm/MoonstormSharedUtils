@@ -91,6 +91,7 @@ namespace Moonstorm.EditorUtils.Settings
 
             shaderDictionarySO.Update();
             shaderDictionarySO.ApplyModifiedProperties();
+            AssetDatabase.SaveAssets();
         }
 
         private string ModifyPath(string path)
