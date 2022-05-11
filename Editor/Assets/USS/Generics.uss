@@ -1,0 +1,44 @@
+.GenericHolder {
+    border-left-color: rgb(77, 77, 77);
+    border-right-color: rgb(77, 77, 77);
+    border-top-color: rgb(77, 77, 77);
+    border-bottom-color: rgb(77, 77, 77);
+    border-left-width: 5px;
+    border-right-width: 5px;
+    border-top-width: 5px;
+    border-bottom-width: 5px;
+}
+
+.GenericHolderHeader {
+    -unity-text-align: upper-center;
+    font-size: 20px;
+    background-color: rgb(66, 66, 66);
+    border-left-color: rgb(61, 61, 61);
+    border-right-color: rgb(61, 61, 61);
+    border-top-color: rgb(61, 61, 61);
+    border-bottom-color: rgb(61, 61, 61);
+    border-left-width: 3px;
+    border-right-width: 3px;
+    border-top-width: 3px;
+    border-bottom-width: 3px;
+}
+
+.GenericHolderFoldout {
+    background-color: rgb(66, 66, 66);
+    border-left-color: rgb(61, 61, 61);
+    border-right-color: rgb(61, 61, 61);
+    border-top-color: rgb(61, 61, 61);
+    border-bottom-color: rgb(61, 61, 61);
+    border-left-width: 3px;
+    border-right-width: 3px;
+    border-top-width: 3px;
+    border-bottom-width: 3px;
+    margin-left: 0;
+    padding-left: 8px;
+}
+
+.scriptType {
+    -unity-text-align: upper-center;
+    -unity-font-style: bold;
+    font-size: 20px;
+}

@@ -1,0 +1,22 @@
+{
+    "name": "MSUImporters",
+    "references": [
+        "BsDiff",
+        "ThunderKit.Core",
+        "ThunderKit.Common",
+        "ThunderKit.Markdown",
+        "ThunderKit.Thunderstore",
+        "ThunderKit.Addressable.Config"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

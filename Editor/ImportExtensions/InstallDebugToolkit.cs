@@ -1,0 +1,16 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using ThunderKit.Integrations.Thunderstore;
+
+namespace Moonstorm.EditorUtils.Importers
+{
+    public class InstallDebugToolkit : ThunderstorePackageInstaller
+    {
+        public override int Priority => Constants.Priority.InstallDebugToolkit;
+        public override string SourcePath => "Assets/ThunderKitSettings/RoR2Thunderstore.asset";
+        public override string DependencyId => "IHarbHD-DebugToolkit";
+        public override string Description => $"Installs the latest version of DebugToolkit.\r\nAdds console command for debugging mods.\n(Used by MSUDebug and commands from MSU)";
+        public override string Name => $"Install DebugToolkit";
+    }
+}
