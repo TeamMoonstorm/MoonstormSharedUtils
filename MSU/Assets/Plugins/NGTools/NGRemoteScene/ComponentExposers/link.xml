@@ -1,9 +1,0 @@
-<linker>
-	<assembly fullname="UnityEngine">
-		<type fullname="UnityEngine.GameObject" preserve="all"/>
-		<type fullname="UnityEngine.Renderer" preserve="all"/>
-		<type fullname="UnityEngine.MeshFilter" preserve="all"/>
-		<type fullname="UnityEngine.Collider" preserve="all"/>
-		<type fullname="UnityEngine.Transform" preserve="all"/>
-	</assembly>
-</linker>
