@@ -10,7 +10,7 @@ namespace Moonstorm.AddressableAssets
     [Serializable]
     public class AddressableUnlockableDef : AddressableAsset<UnlockableDef>
     {
-        public override void LoadAsset()
+        protected override void LoadAsset()
         {
             UnlockableDef unlockable = UnlockableCatalog.GetUnlockableDef(address);
             if(unlockable != null)

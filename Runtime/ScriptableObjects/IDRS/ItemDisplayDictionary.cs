@@ -1,4 +1,5 @@
-﻿using RoR2;
+﻿using Moonstorm.AddressableAssets;
+using RoR2;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -9,23 +10,13 @@ using UnityEngine;
 
 namespace Moonstorm
 {
-    /*[CreateAssetMenu(fileName = "New ItemDisplayDictionary", menuName = "Moonstorm/IDRS/ItemDisplayDictionary")]
+    [CreateAssetMenu(fileName = "New ItemDisplayDictionary", menuName = "Moonstorm/IDRS/ItemDisplayDictionary")]
     public class ItemDisplayDictionary : ScriptableObject
     {
         [Serializable]
         public struct NamedDisplayDictionary
         {
-            internal ItemDisplayRuleSet IDRS
-            {
-                get
-                {
-                    if (!_idrs)
-                        _idrs = ItemDisplayModuleBase.GetIDRS(idrsName);
-                    return _idrs;
-                }
-            }
-            private ItemDisplayRuleSet _idrs;
-            public string idrsName;
+            public AddressableIDRS idrs;
             public List<DisplayRule> displayRules;
 
             public bool IsEmpty { get => displayRules != null ? displayRules.Count == 0 : true; }
@@ -43,9 +34,10 @@ namespace Moonstorm
         public struct DisplayRule
         {
             public ItemDisplayRuleType ruleType;
-            [Tooltip("Values taken from the ItemDisplayPlacementHelper\nMake sure to use the copy format \"For Parsing\"!.")]
-            [TextArea(1, int.MaxValue)]
-            public string IDPHValues;
+            public string childName;
+            public Vector3 localPos;
+            public Vector3 localAngles;
+            public Vector3 localScales;
             public LimbFlags limbMask;
 
             [HideInInspector]
@@ -55,7 +47,7 @@ namespace Moonstorm
 
             internal void Parse()
             {
-                if (IDPHValues == string.Empty)
+                if (string.IsNullOrEmpty(childName))
                 {
                     finishedRule = new ItemDisplayRule
                     {
@@ -71,37 +63,13 @@ namespace Moonstorm
 
                 finishedRule = new ItemDisplayRule
                 {
+                    childName = childName,
+                    localAngles = localAngles,
+                    localPos = localPos,
+                    localScale = localScales,
                     limbMask = limbMask,
                     ruleType = ruleType
                 };
-
-                List<string> splitValues = IDPHValues.Split(',').ToList();
-                finishedRule.childName = splitValues[0];
-                List<string> V3Builder = new List<string>();
-
-                V3Builder.Add(splitValues[1]);
-                V3Builder.Add(splitValues[2]);
-                V3Builder.Add(splitValues[3]);
-                finishedRule.localPos = CreateVector3(V3Builder);
-
-                V3Builder.Clear();
-                V3Builder.Add(splitValues[4]);
-                V3Builder.Add(splitValues[5]);
-                V3Builder.Add(splitValues[6]);
-                finishedRule.localAngles = CreateVector3(V3Builder);
-
-                V3Builder.Clear();
-                V3Builder.Add(splitValues[7]);
-                V3Builder.Add(splitValues[8]);
-                V3Builder.Add(splitValues[9]);
-                finishedRule.localScale = CreateVector3(V3Builder);
-            }
-
-            private Vector3 CreateVector3(List<string> list)
-            {
-                return new Vector3(GetFloat(list[0]), GetFloat(list[1]), GetFloat(list[2]));
-
-                float GetFloat(string floatAsText) => float.Parse(floatAsText, CultureInfo.InvariantCulture);
             }
         }
 
@@ -117,7 +85,7 @@ namespace Moonstorm
             keyAssetRuleGroup.keyAsset = keyAsset;
             keyAssetRuleGroup.displayRuleGroup = new DisplayRuleGroup();
 
-            var index = namedDisplayDictionary.FindIndex(x => x.IDRS == ruleSet);
+            var index = namedDisplayDictionary.FindIndex(x => x.idrs.Asset == ruleSet);
             if(index >= 0)
             {
                 var namedDisplay = namedDisplayDictionary[index];
@@ -125,11 +93,12 @@ namespace Moonstorm
                 {
                     DisplayRule rule = namedDisplay.displayRules[i];
                     rule.Parse();
-                    rule.finishedRule.followerPrefab = displayPrefab;
-                    keyAssetRuleGroup.displayRuleGroup.AddDisplayRule(rule.finishedRule);
+                    var finishedRule = rule.finishedRule;
+                    finishedRule.followerPrefab = displayPrefab;
+                    keyAssetRuleGroup.displayRuleGroup.AddDisplayRule(finishedRule);
                 }
             }
             return keyAssetRuleGroup;
         }
-    }*/
+    }
 }

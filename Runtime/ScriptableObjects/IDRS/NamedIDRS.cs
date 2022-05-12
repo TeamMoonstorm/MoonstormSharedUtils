@@ -1,4 +1,5 @@
-﻿using RoR2;
+﻿using Moonstorm.AddressableAssets;
+using RoR2;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -9,13 +10,13 @@ using UnityEngine;
 
 namespace Moonstorm
 {
-    /*[CreateAssetMenu(fileName = "New NamedIDRS", menuName = "Moonstorm/IDRS/NamedIDRS")]
+    [CreateAssetMenu(fileName = "New NamedIDRS", menuName = "Moonstorm/IDRS/NamedIDRS")]
     public class NamedIDRS : ScriptableObject
     {
         [Serializable]
         public struct AddressNamedRuleGroup
         {
-            public string keyAssetAdressOrName;
+            public AddressableKeyAsset keyAsset;
             public List<AdressNamedDisplayRule> rules;
 
             public bool IsEmpty { get => rules != null ? rules.Count == 0 : true; }
@@ -32,10 +33,11 @@ namespace Moonstorm
         public struct AdressNamedDisplayRule
         {
             public ItemDisplayRuleType ruleType;
-            public string dislpayPrefabAdressOrName;
-            [Tooltip("Values taken from the ItemDisplayPlacementHelper\nMake sure to use the copy format \"For Parsing\"!.")]
-            [TextArea(1, int.MaxValue)]
-            public string IDPHValues;
+            public AddressableGameObject displayPrefab;
+            public string childName;
+            public Vector3 localPos;
+            public Vector3 localAngles;
+            public Vector3 localScales;
             public LimbFlags limbMask;
 
             [HideInInspector]
@@ -43,9 +45,9 @@ namespace Moonstorm
 
             public const string NoValue = nameof(NoValue);
 
-            internal void Parse()
+            internal void CreateRule()
             {
-                if(IDPHValues == string.Empty)
+                if(string.IsNullOrEmpty(childName))
                 {
                     finishedRule = new ItemDisplayRule
                     {
@@ -53,7 +55,7 @@ namespace Moonstorm
                         localAngles = Vector3.zero,
                         localPos = Vector3.zero,
                         localScale = Vector3.zero,
-                        followerPrefab = ItemDisplayModuleBase.GetFollowerPrefab(displayPrefabName),
+                        followerPrefab = displayPrefab.Asset,
                         limbMask = limbMask,
                         ruleType = ruleType
                     };
@@ -62,76 +64,33 @@ namespace Moonstorm
 
                 finishedRule = new ItemDisplayRule
                 {
-                    followerPrefab = ItemDisplayModuleBase.GetFollowerPrefab(displayPrefabName),
+                    childName = childName,
+                    localAngles = localAngles,
+                    localPos = localPos,
+                    localScale = localScales,
+                    followerPrefab = displayPrefab.Asset,
                     limbMask = limbMask,
                     ruleType = ruleType
                 };
-
-                List<string> splitValues = IDPHValues.Split(',').ToList();
-                finishedRule.childName = splitValues[0];
-                List<string> V3Builder = new List<string>();
-
-                V3Builder.Add(splitValues[1]);
-                V3Builder.Add(splitValues[2]);
-                V3Builder.Add(splitValues[3]);
-                finishedRule.localPos = CreateVector3(V3Builder);
-
-                V3Builder.Clear();
-                V3Builder.Add(splitValues[4]);
-                V3Builder.Add(splitValues[5]);
-                V3Builder.Add(splitValues[6]);
-                finishedRule.localAngles = CreateVector3(V3Builder);
-
-                V3Builder.Clear();
-                V3Builder.Add(splitValues[7]);
-                V3Builder.Add(splitValues[8]);
-                V3Builder.Add(splitValues[9]);
-                finishedRule.localScale = CreateVector3(V3Builder);
-            }
-
-            private Vector3 CreateVector3(List<string> list)
-            {
-                return new Vector3(GetFloat(list[0]), GetFloat(list[1]), GetFloat(list[2]));
-
-                float GetFloat(string floatAsText) => float.Parse(floatAsText, CultureInfo.InvariantCulture);
             }
         }
 
-        internal ItemDisplayRuleSet IDRS
-        {
-            get
-            {
-                if (!_idrs)
-                    _idrs = ItemDisplayModuleBase.GetIDRS(idrsName);
-                return _idrs;
-            }
-        }
-        private ItemDisplayRuleSet _idrs;
+        public AddressableIDRS idrs;
 
         [Space(2)]
         public List<AddressNamedRuleGroup> namedRuleGroups = new List<AddressNamedRuleGroup>();
-        public string idrsName;
 
         internal ItemDisplayRuleSet.KeyAssetRuleGroup[] GetKeyAssetRuleGroups()
         {
             var keyAssetList = new List<ItemDisplayRuleSet.KeyAssetRuleGroup>();
             foreach(var namedRuleGroup in namedRuleGroups)
             {
-                var keyAssetGroup = new ItemDisplayRuleSet.KeyAssetRuleGroup();
-                if(ItemDisplayModuleBase.GetKeyAsset(namedRuleGroup.keyAssetName, out keyAssetGroup.keyAsset))
-                {
-                    keyAssetGroup.displayRuleGroup = new DisplayRuleGroup();
-                }
-                if(!keyAssetGroup.keyAsset)
-                {
-                    MSULog.Warning($"Could not find KeyAsset of name {namedRuleGroup.keyAssetName} in {this}");
-                    continue;
-                }
+                var keyAssetGroup = new ItemDisplayRuleSet.KeyAssetRuleGroup { keyAsset = namedRuleGroup.keyAsset.Asset };
 
                 for(int i = 0; i < namedRuleGroup.rules.Count; i++)
                 {
                     AdressNamedDisplayRule rule = namedRuleGroup.rules[i];
-                    rule.Parse();
+                    rule.CreateRule();
                     keyAssetGroup.displayRuleGroup.AddDisplayRule(rule.finishedRule);
                 }
                 keyAssetList.Add(keyAssetGroup);
@@ -139,5 +98,5 @@ namespace Moonstorm
             namedRuleGroups.Clear();
             return keyAssetList.ToArray();
         }
-    }*/
+    }
 }

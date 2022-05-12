@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using Object = UnityEngine.Object;
 
 namespace Moonstorm
 {
     public abstract class ItemDisplayModuleBase : BundleModule
     {
-        /*internal static readonly Dictionary<string, GameObject> moonstormItemDisplayPrefabs = new Dictionary<string, GameObject>();
+        internal static readonly Dictionary<string, GameObject> moonstormItemDisplayPrefabs = new Dictionary<string, GameObject>();
 
         internal static readonly Dictionary<string, ItemDisplayRuleSet> vanillaIDRS = new Dictionary<string, ItemDisplayRuleSet>();
 
@@ -18,9 +19,9 @@ namespace Moonstorm
 
         internal static readonly Dictionary<string, Object> equipKeyAssets = new Dictionary<string, Object>();
 
-        internal static readonly List<MSSingleItemDisplayRule> singleItemDisplayRules = new List<MSSingleItemDisplayRule>();
+        internal static readonly List<ItemDisplayDictionary> singleItemDisplayRules = new List<ItemDisplayDictionary>();
 
-        internal static readonly List<MSIDRS> moonstormItemDisplayRuleSets = new List<MSIDRS>();
+        internal static readonly List<NamedIDRS> moonstormItemDisplayRuleSets = new List<NamedIDRS>();
 
 
         [SystemInitializer(typeof(PickupCatalog), typeof(BodyCatalog))]
@@ -66,7 +67,7 @@ namespace Moonstorm
         /// </summary>
         public void PopulateKeyAssetsAndDisplaysFromAssetbundle()
         {
-            AssetBundle.LoadAllAssets<KeyAssetDisplayPairHolder>()
+            MainBundle.LoadAllAssets<KeyAssetDisplayPairHolder>()
                 .ToList()
                 .ForEach(so =>
                 {
@@ -81,7 +82,7 @@ namespace Moonstorm
         /// </summary>
         public void PopulateMSIDRSFromAssetBundle()
         {
-            AssetBundle.LoadAllAssets<MSIDRS>()
+            MainBundle.LoadAllAssets<NamedIDRS>()
                 .ToList()
                 .ForEach(idrs =>
                 {
@@ -95,7 +96,7 @@ namespace Moonstorm
         /// </summary>
         public void PopulateSingleItemDisplayRuleFromAssetBundle()
         {
-            AssetBundle.LoadAllAssets<MSSingleItemDisplayRule>()
+            MainBundle.LoadAllAssets<ItemDisplayDictionary>()
                 .ToList()
                 .ForEach(sidrs =>
                 {
@@ -107,11 +108,11 @@ namespace Moonstorm
 
         private static void FinishIDRS()
         {
-            if (ConfigLoader.EnableLoggingOfIDRS.Value)
+            /*if (MSUConfig.EnableLoggingOfIDRS.Value)
                 LogEverything();
 
             MSULog.Info("Finishing IDRS");
-            foreach (MSIDRS idrs in moonstormItemDisplayRuleSets)
+            foreach (NamedIDRS idrs in moonstormItemDisplayRuleSets)
             {
                 idrs.FetchIDRS();
                 if (idrs.vanillaIDRS)
@@ -160,7 +161,7 @@ namespace Moonstorm
             singleItemDisplayRules.Clear();
             moonstormItemDisplayRuleSets.Clear();
 
-            MSULog.Debug("Cleared up memory by clearing static enumerables.");
+            MSULog.Debug("Cleared up memory by clearing static enumerables.");*/
         }
 
         private static void LogEverything()
@@ -234,39 +235,12 @@ namespace Moonstorm
                     }
                 });
         }
-        private static void PopulateVanillaIDRS()
-        {
-            Resources.LoadAll<GameObject>("Prefabs/CharacterBodies/")
-                .ToList()
-                .ForEach(GameObject =>
-                {
-                    var modelLocator = GameObject.GetComponent<ModelLocator>();
-                    if ((bool)modelLocator)
-                    {
-                        var mdlPrefab = modelLocator.modelTransform.gameObject;
-                        if ((bool)mdlPrefab)
-                        {
-                            var characterModel = mdlPrefab.GetComponent<CharacterModel>();
-                            if ((bool)characterModel)
-                            {
-                                var IDRS = characterModel.itemDisplayRuleSet;
-                                if ((bool)IDRS)
-                                {
-                                    bool flag = vanillaIDRS.ContainsKey(IDRS.name.ToLowerInvariant());
-                                    if (!flag)
-                                    {
-                                        vanillaIDRS.Add(IDRS.name.ToLowerInvariant(), IDRS);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-        }
 
-        private static void PopulateFromBody(string bodyName)
+        private static async void PopulateFromBody(string bodyName)
         {
-            ItemDisplayRuleSet itemDisplayRuleSet = Resources.Load<GameObject>("Prefabs/CharacterBodies/" + bodyName + "Body").GetComponent<ModelLocator>().modelTransform.GetComponent<CharacterModel>().itemDisplayRuleSet;
+            var asyncOp = Addressables.LoadAssetAsync<ItemDisplayRuleSet>($"RoR2/Base/{bodyName}/idrs{bodyName}.asset");
+
+            ItemDisplayRuleSet itemDisplayRuleSet = await asyncOp.Task;
 
             ItemDisplayRuleSet.KeyAssetRuleGroup[] item = itemDisplayRuleSet.keyAssetRuleGroups;
 
@@ -296,6 +270,6 @@ namespace Moonstorm
                 if (moonstormItemDisplayPrefabs[name.ToLowerInvariant()]) return moonstormItemDisplayPrefabs[name.ToLowerInvariant()];
             }
             return null;
-        }*/
+        }
     }
 }

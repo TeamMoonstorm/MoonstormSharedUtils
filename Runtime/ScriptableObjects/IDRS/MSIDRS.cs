@@ -8,6 +8,7 @@ using UnityEngine;
 namespace Moonstorm
 {
     [Obsolete("MSIDRS is obsolete, upgrade to NamedIDRS")]
+    [CreateAssetMenu(menuName = "Lol/Lol!")]
     public class MSIDRS : ScriptableObject
     {
         [Serializable]
@@ -39,7 +40,7 @@ namespace Moonstorm
             public const string NoValue = "NoValue";
         }
 
-        public static List<MSIDRS> instancesList = new List<MSIDRS>();
+        public static List<NamedIDRS> instancesList = new List<NamedIDRS>();
         internal ItemDisplayRuleSet vanillaIDRS;
 
         [Space]

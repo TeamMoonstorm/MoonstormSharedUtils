@@ -10,7 +10,7 @@ namespace Moonstorm.AddressableAssets
     [Serializable]
     public class AddressableBuffDef : AddressableAsset<BuffDef>
     {
-        public override void LoadAsset()
+        protected override void LoadAsset()
         {
             BuffIndex index = BuffCatalog.FindBuffIndex(address);
             if(index != BuffIndex.None)

@@ -5,16 +5,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using UObject = UnityEngine.Object;
 using UnityEngine.AddressableAssets;
+using System.Reflection;
 
 namespace Moonstorm.AddressableAssets
 {
     public abstract class AddressableAsset<T> : AddressableAsset where T : UObject
     {
-        [SerializeField]
-        internal string address;
+        public string address;
         [SerializeField]
         private T asset;
-        public T Asset => asset;
+        public T Asset
+        {
+            get
+            {
+                if(asset == null)
+                {
+                    MSULog.Warning($"Assembly {Assembly.GetCallingAssembly()} is trying to access an {GetType()} before the address has been loaded automatically!");
+                    Load();
+                }
+                return asset;
+            }
+        }
 
         internal sealed override void Load()
         {
@@ -26,7 +37,7 @@ namespace Moonstorm.AddressableAssets
                 LoadAsset();
         }
 
-        public virtual void LoadAsset()
+        protected virtual void LoadAsset()
         {
             LoadFromAddress();
         }
@@ -44,6 +55,7 @@ namespace Moonstorm.AddressableAssets
     {
         internal static List<AddressableAsset> instances = new List<AddressableAsset>();
 
+        public static Action OnAddressableAssetsLoaded;
         public AddressableAsset()
         {
             instances.Add(this);
@@ -68,6 +80,7 @@ namespace Moonstorm.AddressableAssets
                     MSULog.Error(e);
                 }
             }
+            OnAddressableAssetsLoaded?.Invoke();
         }
 
         internal abstract void Load();

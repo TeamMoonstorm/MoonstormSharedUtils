@@ -10,7 +10,7 @@ namespace Moonstorm.AddressableAssets
     [Serializable]
     public class AddressableItemDef : AddressableAsset<ItemDef>
     {
-        public override void LoadAsset()
+        protected override void LoadAsset()
         {
             ItemIndex index = ItemCatalog.FindItemIndex(address);
             if(index != ItemIndex.None)

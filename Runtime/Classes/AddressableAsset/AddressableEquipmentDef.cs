@@ -10,7 +10,7 @@ namespace Moonstorm.AddressableAssets
     [Serializable]
     public class AddressableEquipmentDef : AddressableAsset<EquipmentDef>
     {
-        public override void LoadAsset()
+        protected override void LoadAsset()
         {
             EquipmentIndex index = EquipmentCatalog.FindEquipmentIndex(address);
             if(index != EquipmentIndex.None)

@@ -13,7 +13,11 @@
     "overrideReferences": true,
     "precompiledReferences": [
         "RoR2.dll",
-        "R2API.dll"
+        "R2API.dll",
+        "Unity.Addressables.dll",
+        "Unity.ResourceManager.dll",
+        "HGUnityUtils.dll",
+        "HGCSharpUtils.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [],

@@ -10,7 +10,7 @@ namespace Moonstorm.AddressableAssets
     [Serializable]
     public class AddressableExpansionDef : AddressableAsset<ExpansionDef>
     {
-        public override void LoadAsset()
+        protected override void LoadAsset()
         {
             ExpansionDef expansionDef = ExpansionCatalog.expansionDefs.FirstOrDefault(ed => ed.name == address);
             if(expansionDef != null)
