@@ -6,6 +6,7 @@ using UnityEngine;
 using UObject = UnityEngine.Object;
 using UnityEngine.AddressableAssets;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Moonstorm.AddressableAssets
 {
@@ -20,35 +21,36 @@ namespace Moonstorm.AddressableAssets
             {
                 if(asset == null)
                 {
-                    MSULog.Warning($"Assembly {Assembly.GetCallingAssembly()} is trying to access an {GetType()} before the address has been loaded automatically!");
+                    MSULog.Warning($"Assembly {Assembly.GetCallingAssembly()} is trying to access an {GetType()} before AddressableAssets have initialize!" +
+                        $"\n Consider using AddressableAsset.OnAddressableAssetsLoaded for running code that depends on AddressableAssets!");
                     Load();
                 }
                 return asset;
             }
         }
 
-        internal sealed override void Load()
+        internal sealed override async Task Load()
         {
-            if (asset != null)
-                return;
-            if (string.IsNullOrEmpty(address))
-                return;
-            else
-                LoadAsset();
+            if (asset == null && !string.IsNullOrEmpty(address))
+                await LoadAsset();
         }
 
-        protected virtual void LoadAsset()
+        protected virtual async Task LoadAsset()
         {
-            LoadFromAddress();
+            await LoadFromAddress();
         }
 
-        public async void LoadFromAddress()
+        public async Task LoadFromAddress()
         {
             var asyncOp = Addressables.LoadAssetAsync<T>(address);
             var task = asyncOp.Task;
             asset = await task;
         }
-        protected void SetAsset(T asset) => this.asset = asset;
+        protected async Task SetAsset(T asset)
+        {
+            this.asset = asset;
+            await Task.CompletedTask;
+        }
     }
 
     public abstract class AddressableAsset
@@ -67,13 +69,13 @@ namespace Moonstorm.AddressableAssets
             RoR2Application.onLoad += FinishAdressableAssets;
         }
 
-        private static void FinishAdressableAssets()
+        private static async void FinishAdressableAssets()
         {
             foreach(AddressableAsset instance in instances)
             {
                 try
                 {
-                    instance.Load();
+                    await instance.Load();
                 }
                 catch (Exception e)
                 {
@@ -83,6 +85,6 @@ namespace Moonstorm.AddressableAssets
             OnAddressableAssetsLoaded?.Invoke();
         }
 
-        internal abstract void Load();
+        internal abstract Task Load();
     }
 }

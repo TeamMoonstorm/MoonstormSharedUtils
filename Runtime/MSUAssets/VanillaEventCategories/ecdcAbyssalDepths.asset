@@ -16,4 +16,5 @@ MonoBehaviour:
   stageName: 
   categories:
   - categoryName: CommonEvents
+    eventCards: []
     selectionWeight: 1

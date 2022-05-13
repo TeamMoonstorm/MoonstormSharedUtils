@@ -19,43 +19,50 @@ namespace Moonstorm.AddressableAssets
 
         public KeyAssetAddressType loadAssetFrom;
 
-        protected override void LoadAsset()
+        protected override async Task LoadAsset()
         {
-            switch (loadAssetFrom)
+            try
             {
-                case KeyAssetAddressType.EquipmentCatalog:
-                    {
-                        EquipmentIndex eqpIndex = EquipmentCatalog.FindEquipmentIndex(address);
-                        if(eqpIndex != EquipmentIndex.None)
+                switch (loadAssetFrom)
+                {
+                    case KeyAssetAddressType.EquipmentCatalog:
                         {
-                            SetAsset(EquipmentCatalog.GetEquipmentDef(eqpIndex));
+                            EquipmentIndex eqpIndex = EquipmentCatalog.FindEquipmentIndex(address);
+                            if(eqpIndex != EquipmentIndex.None)
+                            {
+                                await SetAsset(EquipmentCatalog.GetEquipmentDef(eqpIndex));
+                            }
+                            else
+                            {
+                                throw AddressableKeyAssetException($"Could not load EquipmentDef from catalog with name {address}" +
+                                    $"\n(AddressableKeyAsset has loadAssetFrom set to {loadAssetFrom})");
+                            }
+                            break;
                         }
-                        else
+                    case KeyAssetAddressType.ItemCatalog:
                         {
-                            throw AddressableKeyAssetException($"Could not load EquipmentDef from catalog with name {address}" +
-                                $"\n(AddressableKeyAsset has loadAssetFrom set to {loadAssetFrom})");
+                            ItemIndex itemIndex = ItemCatalog.FindItemIndex(address);
+                            if(itemIndex != ItemIndex.None)
+                            {
+                                await SetAsset(ItemCatalog.GetItemDef(itemIndex));
+                            }
+                            else
+                            {
+                                throw AddressableKeyAssetException($"Could not load ItemDef from catalog with name {address}" +
+                                    $"\n(AddressableKeyAsset has loadAssetFrom set to {loadAssetFrom})");
+                            }
+                            break;
                         }
-                        break;
-                    }
-                case KeyAssetAddressType.ItemCatalog:
-                    {
-                        ItemIndex itemIndex = ItemCatalog.FindItemIndex(address);
-                        if(itemIndex != ItemIndex.None)
+                    case KeyAssetAddressType.Addressables:
                         {
-                            SetAsset(ItemCatalog.GetItemDef(itemIndex));
+                            await LoadFromAddress();
+                            break;
                         }
-                        else
-                        {
-                            throw AddressableKeyAssetException($"Could not load ItemDef from catalog with name {address}" +
-                                $"\n(AddressableKeyAsset has loadAssetFrom set to {loadAssetFrom})");
-                        }
-                        break;
-                    }
-                case KeyAssetAddressType.Addressables:
-                    {
-                        LoadFromAddress();
-                        break;
-                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MSULog.Error(ex);
             }
         }
 

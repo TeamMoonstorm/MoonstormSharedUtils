@@ -10,16 +10,16 @@ namespace Moonstorm.AddressableAssets
     [Serializable]
     public class AddressableItemDef : AddressableAsset<ItemDef>
     {
-        protected override void LoadAsset()
+        protected override async Task LoadAsset()
         {
             ItemIndex index = ItemCatalog.FindItemIndex(address);
             if(index != ItemIndex.None)
             {
-                SetAsset(ItemCatalog.GetItemDef(index));
+                await SetAsset(ItemCatalog.GetItemDef(index));
             }
             else
             {
-                LoadFromAddress();
+                await LoadFromAddress();
             }
         }
     }
