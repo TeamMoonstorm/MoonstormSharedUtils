@@ -12,9 +12,9 @@ namespace Moonstorm.AddressableAssets
 {
     public abstract class AddressableAsset<T> : AddressableAsset where T : UObject
     {
-        public string address;
+        public string address = string.Empty;
         [SerializeField]
-        private T asset;
+        private T asset = null;
         public T Asset
         {
             get

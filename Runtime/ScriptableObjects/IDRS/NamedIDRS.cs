@@ -75,7 +75,7 @@ namespace Moonstorm
             }
         }
 
-        public AddressableIDRS idrs;
+        public ItemDisplayRuleSet idrs;
 
         [Space(2)]
         public List<AddressNamedRuleGroup> namedRuleGroups = new List<AddressNamedRuleGroup>();

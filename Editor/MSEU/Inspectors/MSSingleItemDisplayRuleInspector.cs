@@ -50,13 +50,16 @@ namespace Moonstorm.EditorUtils.Inspectors
         private async void UpdateToIDD()
         {
             ItemDisplayDictionary itemDisplayDictionary = CreateInstance<ItemDisplayDictionary>();
+            char[] nameAsCharArray = keyAsset.value.name.ToCharArray();
+            nameAsCharArray[0] = char.ToUpper(nameAsCharArray[0]);
+            itemDisplayDictionary.name = $"idd{new string(nameAsCharArray)}";
             itemDisplayDictionary.displayPrefab = (GameObject)displayPrefab.value;
             itemDisplayDictionary.keyAsset = keyAsset.value;
 
             for(int i = 0; i < TargetType.singleItemDisplayRules.Count; i++)
             {
                 MSSingleItemDisplayRule.SingleKeyAssetRuleGroup skarg = TargetType.singleItemDisplayRules[i];
-                ItemDisplayDictionary.NamedDisplayDictionary namedDisplayDictionary = new ItemDisplayDictionary.NamedDisplayDictionary();
+                ItemDisplayDictionary.NamedDisplayDictionary namedDisplayDictionary = new ItemDisplayDictionary.NamedDisplayDictionary { idrs = new AddressableIDRS() };
                 namedDisplayDictionary.idrs.address = skarg.vanillaIDRSKey;
                 foreach(var sidr in skarg.itemDisplayRules)
                 {
@@ -65,37 +68,20 @@ namespace Moonstorm.EditorUtils.Inspectors
                 itemDisplayDictionary.namedDisplayDictionary.Add(namedDisplayDictionary);
             }
             AssetDatabaseUtils.CreateAssetAtSelectionPath(itemDisplayDictionary);
-            /*ItemDisplayDictionary itemDisplayDictionary = CreateInstance<ItemDisplayDictionary>();
-            itemDisplayDictionary.displayPrefab = await GetDisplayPrefab(TargetType.displayPrefabName);
-            itemDisplayDictionary.keyAsset = await GetKeyAsset(TargetType.keyAssetName);
-            for (int i = 0; i < TargetType.singleItemDisplayRules.Count; i++)
-            {
-                MSSingleItemDisplayRule.SingleKeyAssetRuleGroup sidr = TargetType.singleItemDisplayRules[i];
-                ItemDisplayDictionary.NamedDisplayDictionary namedDisplayDictionary = new ItemDisplayDictionary.NamedDisplayDictionary();
-                namedDisplayDictionary.idrs = await GetIDRS(sidr.vanillaIDRSKey);
-                for(int j = 0; j < sidr.itemDisplayRules.Count; j++)
-                {
-                    MSSingleItemDisplayRule.SingleItemDisplayRule rule = sidr.itemDisplayRules[j];
-                    namedDisplayDictionary.AddDisplayRule(await CreateRule(rule));
-                }
-                itemDisplayDictionary.namedDisplayDictionary.Add(namedDisplayDictionary);
-            }
-            AssetDatabaseUtils.CreateAssetAtSelectionPath(itemDisplayDictionary);*/
         }
 
         private async Task<ItemDisplayDictionary.DisplayRule> CreateRule(MSSingleItemDisplayRule.SingleItemDisplayRule oldRule)
         {
             ItemDisplayDictionary.DisplayRule newRule = new ItemDisplayDictionary.DisplayRule();
-            await Task.Run(async () =>
-            {
-                List<string> splitValues = oldRule.IDPHValues.Split(',').ToList();
-                newRule.childName = splitValues[0];
-                newRule.localPos = await CreateVector3FromList(new List<string> { splitValues[1], splitValues[2], splitValues[3] });
-                newRule.localAngles = await CreateVector3FromList(new List<string> { splitValues[4], splitValues[5], splitValues[6] });
-                newRule.localScales = await CreateVector3FromList(new List<string> { splitValues[7], splitValues[8], splitValues[9] });
-                newRule.limbMask = oldRule.limbMask;
-                newRule.ruleType = oldRule.ruleType;
-            });
+
+            List<string> splitValues = oldRule.IDPHValues.Split(',').ToList();
+            newRule.childName = splitValues[0];
+            newRule.localPos = await CreateVector3FromList(new List<string> { splitValues[1], splitValues[2], splitValues[3] });
+            newRule.localAngles = await CreateVector3FromList(new List<string> { splitValues[4], splitValues[5], splitValues[6] });
+            newRule.localScales = await CreateVector3FromList(new List<string> { splitValues[7], splitValues[8], splitValues[9] });
+            newRule.limbMask = oldRule.limbMask;
+            newRule.ruleType = oldRule.ruleType;
+
             return newRule;
         }
 
