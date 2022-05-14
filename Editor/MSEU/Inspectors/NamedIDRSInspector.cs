@@ -10,6 +10,7 @@ using UnityEditor;
 using UnityEditor.UIElements;
 using RoR2EditorKit.Utilities;
 using Moonstorm.EditorUtils.EditorWindows;
+using RoR2EditorKit.Core.EditorWindows;
 
 namespace Moonstorm.EditorUtils.Inspectors
 {
@@ -27,7 +28,7 @@ namespace Moonstorm.EditorUtils.Inspectors
 
         private void OpenWindow()
         {
-            MSExtendedEditorWindow.OpenEditorWindow<NamedIDRSEditorWindow>(target);
+            ExtendedEditorWindow<NamedIDRS>.OpenEditorWindow<NamedIDRSEditorWindow>(target);
         }
     }
 }

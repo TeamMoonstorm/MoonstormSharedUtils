@@ -62,9 +62,9 @@ namespace Moonstorm.EditorUtils.Inspectors
             AssetDatabaseUtils.CreateAssetAtSelectionPath(namedIDRS);
         }
 
-        private async Task<NamedIDRS.AdressNamedDisplayRule> CreateRule(MSIDRS.ItemDisplayRule oldRule)
+        private async Task<NamedIDRS.AddressNamedDisplayRule> CreateRule(MSIDRS.ItemDisplayRule oldRule)
         {
-            NamedIDRS.AdressNamedDisplayRule newRule = new NamedIDRS.AdressNamedDisplayRule();
+            NamedIDRS.AddressNamedDisplayRule newRule = new NamedIDRS.AddressNamedDisplayRule();
 
             List<string> splitValues = oldRule.IDPHValues.Split(',').ToList();
             newRule.childName = splitValues[0];

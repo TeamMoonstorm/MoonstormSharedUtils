@@ -17,20 +17,20 @@ namespace Moonstorm
         public struct AddressNamedRuleGroup
         {
             public AddressableKeyAsset keyAsset;
-            public List<AdressNamedDisplayRule> rules;
+            public List<AddressNamedDisplayRule> rules;
 
             public bool IsEmpty { get => rules != null ? rules.Count == 0 : true; }
 
-            public void AddRule(AdressNamedDisplayRule rule)
+            public void AddRule(AddressNamedDisplayRule rule)
             {
                 if (rules == null)
-                    rules = new List<AdressNamedDisplayRule>();
+                    rules = new List<AddressNamedDisplayRule>();
 
                 rules.Add(rule);
             }
         }
         [Serializable]
-        public struct AdressNamedDisplayRule
+        public struct AddressNamedDisplayRule
         {
             public ItemDisplayRuleType ruleType;
             public AddressableGameObject displayPrefab;
@@ -89,7 +89,7 @@ namespace Moonstorm
 
                 for(int i = 0; i < namedRuleGroup.rules.Count; i++)
                 {
-                    AdressNamedDisplayRule rule = namedRuleGroup.rules[i];
+                    AddressNamedDisplayRule rule = namedRuleGroup.rules[i];
                     rule.CreateRule();
                     keyAssetGroup.displayRuleGroup.AddDisplayRule(rule.finishedRule);
                 }

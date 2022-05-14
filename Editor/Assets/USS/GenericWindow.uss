@@ -1,0 +1,10 @@
+.container {
+    border-left-width: 2.5px;
+    border-right-width: 2.5px;
+    border-top-width: 2.5px;
+    border-bottom-width: 2.5px;
+    border-left-color: rgb(89, 89, 89);
+    border-right-color: rgb(77, 77, 77);
+    border-top-color: rgb(89, 89, 89);
+    border-bottom-color: rgb(77, 77, 77);
+}
