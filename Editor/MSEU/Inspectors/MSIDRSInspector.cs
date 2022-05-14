@@ -39,6 +39,7 @@ namespace Moonstorm.EditorUtils.Inspectors
 
             RootVisualElement.Add(root);
             root.SendToBack();
+            Debug.Log(typeof(LimbFlags).AssemblyQualifiedName);
         }
 
         private async void UpdateToNIDRS()

@@ -3,7 +3,8 @@
     "references": [
         "ThunderKit.Core",
         "MoonstormSharedUtils",
-        "RoR2EditorKit"
+        "RoR2EditorKit",
+        "ThunderKit.Markdown"
     ],
     "includePlatforms": [
         "Editor"

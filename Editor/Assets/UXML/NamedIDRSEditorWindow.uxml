@@ -1,0 +1,25 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <uie:ObjectField label="Target IDRS" name="targetIDRS" />
+    <ui:VisualElement name="RootContainer" style="width: 100%; height: 100%; flex-direction: row;">
+        <ThunderKit.Markdown.MarkdownElement markdown-data-type="Text" data="# No TargetIDRS set, cannot display elements without a TargetIDRS" name="noTargetMD" style="display: none;" />
+        <ui:VisualElement name="NamedRuleGroupContainer" style="width: 15%; height: 100%; display: none;">
+            <ui:Label text="Named Rule Groups" name="namedRuleGroups" style="-unity-text-align: middle-center;" />
+            <uie:IntegerField label="Array Size" value="42" name="arraySize" style="flex-direction: column;" />
+            <ui:ListView focusable="true" name="buttonView" item-height="20" style="height: 100%;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="RuleGroupContainer" style="width: 15%; height: 100%; display: none;">
+            <ui:ListView focusable="true" name="buttonView" />
+        </ui:VisualElement>
+        <ui:VisualElement name="RuleDisplayContainer" style="width: 70%; display: none;">
+            <uie:EnumField label="Rule Type" value="Center" name="ruleType" type="RoR2.ItemDisplayRuleType, RoR2, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" />
+            <uie:PropertyField name="displayPrefab" />
+            <ui:VisualElement name="IDPHValueContainer">
+                <ui:Button text="Paste from IDPH Values" name="pasteFromIDPH" tooltip="Pastes the values of the IDPH&apos;s copy button to this rule. Be sure to copy with the &quot;ForParsing&quot; format!" />
+                <ui:TextField picking-mode="Ignore" label="Child Name" name="childName" />
+                <uie:Vector3Field label="Local Position" name="localPos" />
+                <uie:Vector3Field label="Local Angles" name="localAngles" />
+                <uie:Vector3Field label="Local Scales" name="localScales" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
