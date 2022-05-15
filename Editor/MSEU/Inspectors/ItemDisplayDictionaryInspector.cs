@@ -11,13 +11,13 @@ using Moonstorm.EditorUtils.EditorWindows;
 namespace Moonstorm.EditorUtils.Inspectors
 {
     [CustomEditor(typeof(ItemDisplayDictionary))]
-    public class ItemDisplayDictionaryInspector : IMGUIToVisualElementInspector<ItemDisplayDictionary>
+    public class ItemDisplayDictionaryInspector : Editor
     {
-        protected override void FinishGUI()
+        public override VisualElement CreateInspectorGUI()
         {
             Button button = new Button(() => ExtendedEditorWindow<ItemDisplayDictionary>.OpenEditorWindow<ItemDisplayDictionaryEditorWindow>(target));
             button.text = $"Open ItemDisplayDictionary Editor Window";
-            RootVisualElement.Add(button);
+            return button;
         }
     }
 }
