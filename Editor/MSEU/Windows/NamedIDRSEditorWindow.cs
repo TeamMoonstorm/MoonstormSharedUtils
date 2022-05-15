@@ -153,9 +153,9 @@ namespace Moonstorm.EditorUtils.EditorWindows
 
             var foldoutContainer = keyAsset.Q<Foldout>().Q<VisualElement>("unity-content");
             foldoutContainer[0]
-                .RegisterCallback<ChangeEvent<string>>(_ => namedRuleGroupsHelper.TiedListView.Refresh());
-            foldoutContainer[1]
                 .RegisterCallback<ChangeEvent<UnityEngine.Object>>(_ => namedRuleGroupsHelper.TiedListView.Refresh());
+            foldoutContainer[1]
+                .RegisterCallback<ChangeEvent<string>>(_ => namedRuleGroupsHelper.TiedListView.Refresh());
             foldoutContainer[2]
                 .RegisterCallback<ChangeEvent<string>>(_ => namedRuleGroupsHelper.TiedListView.Refresh());
         }
@@ -171,7 +171,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
                 subContainer.SetDisplay(DisplayStyle.None);
                 return;
             }
-            var inspectedRulesParentGroup = InspectedRule.FindParentProperty().FindParentProperty();
+            var inspectedRulesParentGroup = InspectedRule.GetParentProperty().GetParentProperty();
             if(inspectedRulesParentGroup.propertyPath != InspectedNamedRuleGroup.propertyPath)
             {
                 mdElement.SetDisplay(DisplayStyle.Flex);
@@ -256,15 +256,16 @@ namespace Moonstorm.EditorUtils.EditorWindows
 
             string BuildNameFromAddress(string address)
             {
-                switch (enumProp.enumValueIndex)
+                var value = (AddressableKeyAsset.KeyAssetAddressType)enumProp.enumValueIndex;
+                switch (value)
                 {
-                    case (int)AddressableKeyAsset.KeyAssetAddressType.Addressables:
+                    case AddressableKeyAsset.KeyAssetAddressType.Addressables:
                         string[] split = address.Split('/');
                         string name = split[split.Length - 1];
                         return name;
-                    case (int)AddressableKeyAsset.KeyAssetAddressType.ItemCatalog:
+                    case AddressableKeyAsset.KeyAssetAddressType.ItemCatalog:
                         return $"Item: {address}";
-                    case (int)AddressableKeyAsset.KeyAssetAddressType.EquipmentCatalog:
+                    case AddressableKeyAsset.KeyAssetAddressType.EquipmentCatalog:
                         return $"Equipment: {address}";
                 }
                 return $"Invalid KeyAssetAddressType";

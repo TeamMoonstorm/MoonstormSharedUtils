@@ -12,9 +12,9 @@ namespace Moonstorm.AddressableAssets
     {
         public enum KeyAssetAddressType
         {
-            EquipmentCatalog,
-            ItemCatalog,
-            Addressables
+            EquipmentCatalog = 0,
+            ItemCatalog = 1,
+            Addressables = 2
         }
 
         public KeyAssetAddressType loadAssetFrom;

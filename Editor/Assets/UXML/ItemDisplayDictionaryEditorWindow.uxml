@@ -1,0 +1,35 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <ui:VisualElement name="KeyAssetPrefabContainer" class="container" style="flex-shrink: 0;">
+        <Style src="/Packages/teammoonstorm-moonstormsharedutils/Editor/Assets/USS/GenericWindow.uss" />
+        <uie:ObjectField label="Key Asset" tooltip="The KeyAsset for this dictionary, it needs to be an EquipmentDef or ItemDef" name="keyAsset" binding-path="keyAsset" allow-scene-objects="false" />
+        <uie:ObjectField label="Display Prefab" name="displayPrefab" tooltip="The DisplayPrefab tied to the KeyAsset" focusable="true" allow-scene-objects="false" />
+    </ui:VisualElement>
+    <ui:VisualElement name="RootContainer" class="container root-container">
+        <Style src="/Packages/teammoonstorm-moonstormsharedutils/Editor/Assets/USS/GenericWindow.uss" />
+        <ThunderKit.Markdown.MarkdownElement markdown-data-type="Text" data="# No KeyAsset Or Display Prefab Set, Cannot display values." name="noKADP" style="display: none;" />
+        <ui:VisualElement name="DictionaryContainer" class="container named-rule-groups-container">
+            <uie:IntegerField label="Dictionary Entries" value="42" name="arraySize" class="array-size" />
+            <ui:ListView focusable="true" name="buttonView" item-height="20" class="list-view" />
+        </ui:VisualElement>
+        <ui:VisualElement name="DisplayRulesContainer" class="rule-group-container container">
+            <ThunderKit.Markdown.MarkdownElement markdown-data-type="Text" data="## No Dictionary Entry Selected" name="noEntrySelected" />
+            <ui:VisualElement name="SubContainer" class="sub-container">
+                <uie:PropertyField name="idrs" class="addressable-asset" />
+                <uie:IntegerField label="Display Rules" value="42" name="arraySize" class="array-size" />
+                <ui:ListView focusable="true" name="buttonView" item-height="20" class="list-view" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="RuleDisplayContainer" class="container rule-display-container">
+            <ThunderKit.Markdown.MarkdownElement name="noDisplayRuleSelected" markdown-data-type="Text" data="# No Display Rule Selected" />
+            <ui:VisualElement name="SubContainer" class="sub-container">
+                <ui:VisualElement name="IDPHValuesContainer">
+                    <ui:Button text="Paste From Clipboard" name="pasteFromClipboard" tooltip="Pastes the values of the IDPH&apos;s copy button to this rule. Be sure to copy with the &quot;ForParsing&quot; format!" />
+                    <ui:TextField picking-mode="Ignore" label="Child Name" name="childName" />
+                    <uie:Vector3Field label="Local Position" name="localPos" />
+                    <uie:Vector3Field label="Local Angles" name="localAngles" />
+                    <uie:Vector3Field label="Local Scale" name="localScale" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

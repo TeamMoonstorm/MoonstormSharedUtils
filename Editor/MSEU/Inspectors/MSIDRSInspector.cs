@@ -52,6 +52,7 @@ namespace Moonstorm.EditorUtils.Inspectors
             {
                 MSIDRS.KeyAssetRuleGroup karg = TargetType.MSUKeyAssetRuleGroup[i];
                 NamedIDRS.AddressNamedRuleGroup namedRuleGroup = new NamedIDRS.AddressNamedRuleGroup { keyAsset = new AddressableKeyAsset() };
+                namedRuleGroup.keyAsset.loadAssetFrom = AddressableKeyAsset.KeyAssetAddressType.ItemCatalog;
                 namedRuleGroup.keyAsset.address = karg.keyAssetName;
                 foreach(MSIDRS.ItemDisplayRule idr in karg.rules)
                 {

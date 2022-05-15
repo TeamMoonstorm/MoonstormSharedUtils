@@ -15,17 +15,14 @@ using RoR2EditorKit.Core.EditorWindows;
 namespace Moonstorm.EditorUtils.Inspectors
 {
     [CustomEditor(typeof(NamedIDRS))]
-    public class NamedIDRSInspector : IMGUIToVisualElementInspector<NamedIDRS>
+    public class NamedIDRSInspector : Editor
     {
-        protected override void FinishGUI()
+        public override VisualElement CreateInspectorGUI()
         {
-            Button button = new Button();
+            Button button = new Button(OpenWindow);
             button.text = $"Open NamedIDRS Editor Window";
-            button.clicked += OpenWindow;
-
-            RootVisualElement.Add(button);
+            return button;
         }
-
         private void OpenWindow()
         {
             ExtendedEditorWindow<NamedIDRS>.OpenEditorWindow<NamedIDRSEditorWindow>(target);
