@@ -42,7 +42,9 @@ namespace Moonstorm.EditorUtils.Inspectors
             category.tooltip = $"The Event categories for this selection.";
             DrawInspectorElement.Add(category);
 
-            DrawInspectorElement.Add(new IMGUIContainer(() => EditorGUILayout.HelpBox($"The EventCards for categories cannot be added in the editor\nThey get added at runtime instead by the EventCatalog", MessageType.Info)));
+            var container = CreateHelpBox($"The EventCards for categories cannot be added in the editor\nThey get added at runtime instead by the EventCatalog", MessageType.Info);
+            RootVisualElement.Add(container);
+            container.BringToFront();
         }
 
         private void OnStageSet(ChangeEvent<string> evt)

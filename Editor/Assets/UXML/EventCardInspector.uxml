@@ -1,10 +1,9 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
-    <ui:VisualElement name="Container" class="GenericHolder">
-        <Style src="/Assets/MoonstormSharedEditorUtils/Assets/USS/EventCardInspector.uss" />
-        <Style src="/Assets/MoonstormSharedEditorUtils/Assets/USS/Generics.uss" />
-        <ui:Label text="Label" name="scriptType" binding-path="m_Script.displayName" tooltip="The type of this object" class="GenericHolderHeader scriptType" />
-        <ui:VisualElement name="EventDataHolder" class="GenericHolder">
-            <ui:Label text="Event Data" name="EventData" class="GenericHolderHeader" />
+    <ui:VisualElement name="Container" class="genericHolder">
+        <Style src="/Packages/riskofthunder-ror2editorkit/Assets/USS/Inspectors/ScriptableObjectInspector.uss" />
+        <ui:Label text="Label" name="scriptType" binding-path="m_Script.displayName" tooltip="The type of this object" class="scriptType genericHolderHeader" />
+        <ui:VisualElement name="EventDataHolder" class="genericHolder">
+            <ui:Label text="Event Data" name="EventData" class="genericHolderHeader" />
             <uie:PropertyField name="eventState" tooltip="The entity state that gets triggered from this eventCard, needs to inherit from EventBase" binding-path="eventState" />
             <uie:PropertyField name="eventFlags" tooltip="The flags for the Event" binding-path="eventFlags" />
             <uie:PropertyField name="startSound" tooltip="The sound that plays when this event starts" binding-path="startSound" />
@@ -14,8 +13,8 @@
                 <uie:PropertyField name="messageColor" tooltip="The color of the chat message" binding-path="messageColor" />
             </ui:Foldout>
         </ui:VisualElement>
-        <ui:VisualElement name="DirectorDataHolder" class="GenericHolder">
-            <ui:Label text="Director Data" class="GenericHolderHeader" />
+        <ui:VisualElement name="DirectorDataHolder" class="genericHolder">
+            <ui:Label text="Director Data" class="genericHolderHeader" />
             <uie:PropertyField name="customStageNames" binding-path="customStageNames" tooltip="When &quot;Available Stages&quot; is set to custom, the data from this list is used." class="GenericHolderFoldout" />
             <uie:PropertyField name="selectionWeight" tooltip="The weight of this card" binding-path="selectionWeight" />
             <uie:PropertyField name="cost" tooltip="The credit cost of this event" binding-path="cost" />

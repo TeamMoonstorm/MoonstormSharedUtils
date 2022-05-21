@@ -12,12 +12,14 @@ using RoR2EditorKit.Core.Inspectors;
 namespace Moonstorm.EditorUtils.Inspectors
 {
     [CustomEditor(typeof(EventCard))]
-    public sealed class EventCardInspector : MSScriptableObjectInspector<EventCard>
+    public sealed class EventCardInspector : MSScriptableObjectInspector<EventCard>, IObjectNameConvention
     {
         VisualElement directorData;
         PropertyField customStages;
 
-        protected override bool HasVisualTreeAsset => true;
+        public string Prefix => "ec";
+
+        public bool UsesTokenForPrefix => false;
 
         protected override void OnEnable()
         {
@@ -43,6 +45,16 @@ namespace Moonstorm.EditorUtils.Inspectors
         private void OnStageSet(ChangeEvent<Enum> evt)
         {
             customStages.style.display = evt.newValue.HasFlag(DirectorAPI.Stage.Custom) ? DisplayStyle.Flex : DisplayStyle.None;
+        }
+
+        public PrefixData GetPrefixData()
+        {
+            return new PrefixData(() =>
+            {
+                var origName = TargetType.name;
+                TargetType.name = Prefix + origName;
+                RoR2EditorKit.Utilities.AssetDatabaseUtils.UpdateNameOfObject(TargetType);
+            });
         }
     }
 }

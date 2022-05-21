@@ -31,7 +31,6 @@ namespace Moonstorm.EditorUtils.PropertyDrawers
 
             addressField = new TextField(addressFieldLabel ?? "Address");
             //addressField.BindProperty(serializedProperty.FindPropertyRelative("address"));
-            addressField.isDelayed = true;
             addressField.bindingPath = property.FindPropertyRelative("address").propertyPath;
             addressField.name = "address";
             addressField.tooltip = "An address that'll be used if the asset is null.";
@@ -72,10 +71,10 @@ namespace Moonstorm.EditorUtils.PropertyDrawers
     public sealed class AddressableExpansionDefDrawer : AddressableAssetDrawer <ExpansionDef> { protected override string addressFieldLabel => $"ExpansionDef Name || Address"; }
     //-----
     [CustomPropertyDrawer(typeof(AddressableItemDef))]
-    public sealed class AddressableItemDef : AddressableAssetDrawer<ItemDef> { protected override string addressFieldLabel => $"ItemDef Name || Address"; }
+    public sealed class AddressableItemDefDrawer : AddressableAssetDrawer<ItemDef> { protected override string addressFieldLabel => $"ItemDef Name || Address"; }
     //-----
     [CustomPropertyDrawer(typeof(AddressableUnlockableDef))]
-    public sealed class AddressableUnlockableDef : AddressableAssetDrawer<UnlockableDef> { protected override string addressFieldLabel => $"UnlockableDEf Name || Address"; }
+    public sealed class AddressableUnlockableDefDrawer : AddressableAssetDrawer<UnlockableDef> { protected override string addressFieldLabel => $"UnlockableDef Name || Address"; }
     //-----
     [CustomPropertyDrawer(typeof(AddressableGameObject))]
     public sealed class AddressableGameObjectDrawer : AddressableAssetDrawer<GameObject> { }

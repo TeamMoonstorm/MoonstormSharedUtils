@@ -32,7 +32,7 @@ namespace Moonstorm
         public static PluginInfo PluginInfo { get; private set; }
         public static AssetBundle MSUAssetBundle { get; private set; }
         public static R2APISerializableContentPack MSUSerializableContentPack { get; private set; }
-        public static string assemblyDir { get => Path.Combine(Path.GetDirectoryName(PluginInfo.Location), "assetbundles"); }
+        public static string AssemblyDir { get => Path.Combine(Path.GetDirectoryName(PluginInfo.Location), "assetbundles"); }
 
         private void Awake()
         {
@@ -45,7 +45,7 @@ namespace Moonstorm
             {
                 gameObject.AddComponent<MSUDebug>();
             }
-            MSUAssetBundle = AssetBundle.LoadFromFile(Path.Combine(assemblyDir, "msuassets"));
+            MSUAssetBundle = AssetBundle.LoadFromFile(Path.Combine(AssemblyDir, "msuassets"));
             R2API.ContentManagement.R2APIContentManager.AddPreExistingSerializableContentPack(MSUAssetBundle.LoadAsset<R2APISerializableContentPack>("MSUSCP"));
             //Events.Init();
         }

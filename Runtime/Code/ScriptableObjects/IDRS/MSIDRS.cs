@@ -8,7 +8,6 @@ using UnityEngine;
 namespace Moonstorm
 {
     [Obsolete("MSIDRS is obsolete, upgrade to NamedIDRS")]
-    [CreateAssetMenu(menuName = "Lol/Lol!")]
     public class MSIDRS : ScriptableObject
     {
         [Serializable]
