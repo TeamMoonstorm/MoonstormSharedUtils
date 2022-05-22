@@ -15,7 +15,7 @@ namespace Moonstorm.EditorUtils.Inspectors
     {
         public override VisualElement CreateInspectorGUI()
         {
-            Button button = new Button(() => ExtendedEditorWindow<ItemDisplayDictionary>.OpenEditorWindow<ItemDisplayDictionaryEditorWindow>(target));
+            Button button = new Button(() => ObjectEditingEditorWindow<ItemDisplayDictionary>.OpenEditorWindow<ItemDisplayDictionaryEditorWindow>(target));
             button.text = $"Open ItemDisplayDictionary Editor Window";
             return button;
         }

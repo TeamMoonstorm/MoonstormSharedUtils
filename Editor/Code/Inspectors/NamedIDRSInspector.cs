@@ -25,7 +25,7 @@ namespace Moonstorm.EditorUtils.Inspectors
         }
         private void OpenWindow()
         {
-            ExtendedEditorWindow<NamedIDRS>.OpenEditorWindow<NamedIDRSEditorWindow>(target);
+            ObjectEditingEditorWindow<NamedIDRS>.OpenEditorWindow<NamedIDRSEditorWindow>(target);
         }
     }
 }

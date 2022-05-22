@@ -16,7 +16,7 @@ using System.Globalization;
 
 namespace Moonstorm.EditorUtils.EditorWindows
 {
-    public class NamedIDRSEditorWindow : MSExtendedEditorWindow<NamedIDRS>
+    public class NamedIDRSEditorWindow : MSObjectEditingEditorWindow<NamedIDRS>
     {
         VisualElement rootContainer;
         VisualElement namedRuleGroupContainer;
@@ -53,12 +53,11 @@ namespace Moonstorm.EditorUtils.EditorWindows
             }
         }
         SerializedProperty _inspectedRule = null;
-        protected override bool BindElementToMainSerializedObject => true;
         protected override void OnWindowOpened()
         {
             base.OnWindowOpened();
             var namedRuleGroupsData = new ListViewHelper.ListViewHelperData(
-                MainSerializedObject.FindProperty(nameof(NamedIDRS.namedRuleGroups)),
+                SerializedObject.FindProperty(nameof(NamedIDRS.namedRuleGroups)),
                 namedRuleGroupContainer.Q<ListView>("buttonView"),
                 namedRuleGroupContainer.Q<IntegerField>("arraySize"),
                 () => new Button(),
@@ -115,7 +114,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
                 InspectedRule.FindPropertyRelative(nameof(NamedIDRS.AddressNamedDisplayRule.localScales))
                     .vector3Value = CreateVector3FromList(new List<string> { splitValues[5], splitValues[6], splitValues[7] });
 
-                MainSerializedObject.ApplyModifiedProperties();
+                SerializedObject.ApplyModifiedProperties();
             }
             catch (Exception ex)
             {
@@ -149,7 +148,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
             keyAsset.Clear();
             keyAsset.bindingPath = InspectedNamedRuleGroup.FindPropertyRelative(nameof(NamedIDRS.AddressNamedRuleGroup.keyAsset)).propertyPath;
             if (keyAsset.childCount == 0)
-                keyAsset.Bind(MainSerializedObject);
+                keyAsset.Bind(SerializedObject);
 
             var foldoutContainer = keyAsset.Q<Foldout>().Q<VisualElement>("unity-content");
             foldoutContainer[0]
@@ -200,7 +199,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
             displayPrefab.bindingPath = InspectedRule.FindPropertyRelative(nameof(NamedIDRS.AddressNamedDisplayRule.displayPrefab)).propertyPath;
 
             
-            subContainer.Bind(MainSerializedObject);
+            subContainer.Bind(SerializedObject);
 
             var foldoutContainer = displayPrefab.Q<Foldout>().Q<VisualElement>("unity-content");
             foldoutContainer[0]

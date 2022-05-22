@@ -16,7 +16,7 @@ using System.Globalization;
 
 namespace Moonstorm.EditorUtils.EditorWindows
 {
-    public class ItemDisplayDictionaryEditorWindow : MSExtendedEditorWindow<ItemDisplayDictionary>
+    public class ItemDisplayDictionaryEditorWindow : MSObjectEditingEditorWindow<ItemDisplayDictionary>
     {
         VisualElement keyAssetContainer;
         VisualElement rootContainer;
@@ -54,8 +54,6 @@ namespace Moonstorm.EditorUtils.EditorWindows
             }
         }
         SerializedProperty _inspectedRule = null;
-
-        protected override bool BindElementToMainSerializedObject => true;
 
         protected override void CreateGUI()
         {
@@ -96,7 +94,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
                     InspectedRule.FindPropertyRelative(nameof(NamedIDRS.AddressNamedDisplayRule.localScales))
                         .vector3Value = CreateVector3FromList(new List<string> { splitValues[5], splitValues[6], splitValues[7] });
 
-                    MainSerializedObject.ApplyModifiedProperties();
+                    SerializedObject.ApplyModifiedProperties();
                 }
                 catch (Exception ex)
                 {
@@ -116,7 +114,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
             base.OnWindowOpened();
             var dictionaryData = new ListViewHelper.ListViewHelperData
             {
-                property = MainSerializedObject.FindProperty(nameof(ItemDisplayDictionary.namedDisplayDictionary)),
+                property = SerializedObject.FindProperty(nameof(ItemDisplayDictionary.namedDisplayDictionary)),
                 intField = dictionaryContainer.Q<IntegerField>("arraySize"),
                 listView = dictionaryContainer.Q<ListView>("buttonView"),
                 createElement = () => new Button(),
@@ -146,7 +144,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
             //This is beyond stupid
             var displayPrefab = keyAssetContainer.Q<ObjectField>("displayPrefab");
             displayPrefab.SetObjectType<GameObject>();
-            displayPrefab.BindProperty(MainSerializedObject.FindProperty(nameof(ItemDisplayDictionary.displayPrefab)));
+            displayPrefab.BindProperty(SerializedObject.FindProperty(nameof(ItemDisplayDictionary.displayPrefab)));
             displayPrefab.RegisterValueChangedCallback(OnDisplayPrefabSet);
 
             OnKeyAssetSet();
@@ -277,7 +275,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
             idrs.Clear();
             idrs.bindingPath = InspectedDictionaryEntry.FindPropertyRelative(nameof(ItemDisplayDictionary.NamedDisplayDictionary.idrs)).propertyPath;
             if (idrs.childCount == 0)
-                idrs.Bind(MainSerializedObject);
+                idrs.Bind(SerializedObject);
 
             var foldoutContainer = idrs.Q<Foldout>().Q<VisualElement>("unity-content");
             foldoutContainer[0]
@@ -314,7 +312,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
             idphValuesContainer.Q<Vector3Field>("localAngles").bindingPath = InspectedRule.FindPropertyRelative(nameof(ItemDisplayDictionary.DisplayRule.localAngles)).propertyPath;
             idphValuesContainer.Q<Vector3Field>("localScale").bindingPath = InspectedRule.FindPropertyRelative(nameof(ItemDisplayDictionary.DisplayRule.localScales)).propertyPath;
 
-            subContainer.Bind(MainSerializedObject);
+            subContainer.Bind(SerializedObject);
 
             idphValuesContainer.Q<TextField>("childName").RegisterValueChangedCallback(_ => displayRulesHelper.TiedListView.Refresh());
         }
