@@ -226,6 +226,11 @@ namespace Moonstorm.EditorUtils.EditorWindows
 
             button.clicked += SetInspectedDictionaryEntry;
 
+            button.AddManipulator(new ContextualMenuManipulator((builder) =>
+            {
+                builder.menu.AppendAction("Delete Array Element", DeleteElement);
+            }));
+
             string BuildNameFromAddress(string address)
             {
                 string[] split = address.Split('/');
@@ -238,6 +243,16 @@ namespace Moonstorm.EditorUtils.EditorWindows
                 InspectedDictionaryEntry = prop;
                 InspectedRule = null;
             }
+
+            void DeleteElement(DropdownMenuAction act)
+            {
+                int arrayIndex = int.Parse(button.name.Substring("element".Length), CultureInfo.InvariantCulture);
+                var arrayProp = prop.GetParentProperty();
+
+                arrayProp.DeleteArrayElementAtIndex(arrayIndex);
+                arrayProp.serializedObject.ApplyModifiedProperties();
+                dictionaryHelper.Refresh();
+            }
         }
 
         private void BindDisplayRuleButton(VisualElement element, SerializedProperty prop)
@@ -249,9 +264,24 @@ namespace Moonstorm.EditorUtils.EditorWindows
 
             button.clicked += SetInspectedRule;
 
+            button.AddManipulator(new ContextualMenuManipulator((builder) =>
+            {
+                builder.menu.AppendAction("Delete Array Element", DeleteElement);
+            }));
+
             void SetInspectedRule()
             {
                 InspectedRule = prop;
+            }
+
+            void DeleteElement(DropdownMenuAction act)
+            {
+                int arrayIndex = int.Parse(button.name.Substring("element".Length), CultureInfo.InvariantCulture);
+                var arrayProp = prop.GetParentProperty();
+
+                arrayProp.DeleteArrayElementAtIndex(arrayIndex);
+                arrayProp.serializedObject.ApplyModifiedProperties();
+                displayRulesHelper.Refresh();
             }
         }
 

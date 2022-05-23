@@ -313,11 +313,26 @@ namespace Moonstorm.EditorUtils.EditorWindows
                 button.text = $"No DisplayPrefab Set";
             }
 
+            button.AddManipulator(new ContextualMenuManipulator((builder) =>
+            {
+                builder.menu.AppendAction("Delete Array Element", DeleteElement);
+            }));
+
             button.clicked += SetInspectedRule;
 
             void SetInspectedRule()
             {
                 InspectedRule = arg2;
+            }
+
+            void DeleteElement(DropdownMenuAction act)
+            {
+                int arrayIndex = int.Parse(button.name.Substring("element".Length), CultureInfo.InvariantCulture);
+                var arrayProp = arg2.GetParentProperty();
+
+                arrayProp.DeleteArrayElementAtIndex(arrayIndex);
+                arrayProp.serializedObject.ApplyModifiedProperties();
+                namedRuleGroupsHelper.Refresh();
             }
         }
     }
