@@ -4,7 +4,8 @@
         "ThunderKit.Core",
         "MoonstormSharedUtils",
         "RoR2EditorKit",
-        "ThunderKit.Markdown"
+        "ThunderKit.Markdown",
+        "RoR2EditorScripts"
     ],
     "includePlatforms": [
         "Editor"

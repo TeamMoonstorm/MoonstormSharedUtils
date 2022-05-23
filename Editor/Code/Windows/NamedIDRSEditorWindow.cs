@@ -253,6 +253,11 @@ namespace Moonstorm.EditorUtils.EditorWindows
 
             button.clicked += SetInspectedNamedRuleGroupProperty;
 
+            button.AddManipulator(new ContextualMenuManipulator((builder) =>
+            {
+                builder.menu.AppendAction("Delete Array Element", DeleteElement);
+            }));
+
             string BuildNameFromAddress(string address)
             {
                 var value = (AddressableKeyAsset.KeyAssetAddressType)enumProp.enumValueIndex;
@@ -274,6 +279,16 @@ namespace Moonstorm.EditorUtils.EditorWindows
             {
                 InspectedNamedRuleGroup = arg2;
                 InspectedRule = null;
+            }
+
+            void DeleteElement(DropdownMenuAction menuAction)
+            {
+                int arrayIndex = int.Parse(button.name.Substring("element".Length), CultureInfo.InvariantCulture);
+                var arrayProp = arg2.GetParentProperty();
+
+                arrayProp.DeleteArrayElementAtIndex(arrayIndex);
+                arrayProp.serializedObject.ApplyModifiedProperties();
+                namedRuleGroupsHelper.Refresh();
             }
         }
 

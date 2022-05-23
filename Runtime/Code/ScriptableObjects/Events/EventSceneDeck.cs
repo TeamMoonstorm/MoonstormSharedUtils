@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Moonstorm.ScriptableObjects
+namespace Moonstorm
 {
     /*[CreateAssetMenu(menuName = "Moonstorm/Events/Event Scene Deck")]
     public class EventSceneDeck : ScriptableObject

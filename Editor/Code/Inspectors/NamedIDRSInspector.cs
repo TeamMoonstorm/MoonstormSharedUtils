@@ -19,9 +19,12 @@ namespace Moonstorm.EditorUtils.Inspectors
     {
         public override VisualElement CreateInspectorGUI()
         {
+            VisualElement element = new VisualElement();
+            //element.Add(new IMGUIContainer(OnInspectorGUI));
             Button button = new Button(OpenWindow);
             button.text = $"Open NamedIDRS Editor Window";
-            return button;
+            element.Add(button);
+            return element;
         }
         private void OpenWindow()
         {

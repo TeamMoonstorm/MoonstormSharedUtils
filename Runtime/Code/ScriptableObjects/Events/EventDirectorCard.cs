@@ -3,7 +3,7 @@ using RoR2;
 using System;
 using UnityEngine;
 
-namespace Moonstorm.ScriptableObjects
+namespace Moonstorm
 {
     /*[CreateAssetMenu(menuName = "Moonstorm/Events/Event Director Card")]
     public class EventDirectorCard : ScriptableObject

@@ -62,19 +62,22 @@ namespace Moonstorm.EditorUtils.PropertyDrawers
 
     #region drawers
     [CustomPropertyDrawer(typeof(AddressableBuffDef))]
-    public sealed class AddressableBuffDefDrawer : AddressableAssetDrawer<BuffDef> { protected override string addressFieldLabel => $"BuffDef Name || Address"; }
+    public sealed class AddressableBuffDefDrawer : AddressableAssetDrawer<BuffDef> { protected override string addressFieldLabel => $"Address/Name"; }
     //-----
     [CustomPropertyDrawer(typeof(AddressableEquipmentDef))]
-    public sealed class AddressableEquipmentDefDrawer : AddressableAssetDrawer<EquipmentDef> { protected override string addressFieldLabel => $"EquipmentDef Name || Address"; }
+    public sealed class AddressableEquipmentDefDrawer : AddressableAssetDrawer<EquipmentDef> { protected override string addressFieldLabel => $"Address/Name"; }
     //-----
     [CustomPropertyDrawer(typeof(AddressableExpansionDef))]
-    public sealed class AddressableExpansionDefDrawer : AddressableAssetDrawer <ExpansionDef> { protected override string addressFieldLabel => $"ExpansionDef Name || Address"; }
+    public sealed class AddressableExpansionDefDrawer : AddressableAssetDrawer <ExpansionDef> { protected override string addressFieldLabel => $"Address/Name"; }
     //-----
     [CustomPropertyDrawer(typeof(AddressableItemDef))]
-    public sealed class AddressableItemDefDrawer : AddressableAssetDrawer<ItemDef> { protected override string addressFieldLabel => $"ItemDef Name || Address"; }
+    public sealed class AddressableItemDefDrawer : AddressableAssetDrawer<ItemDef> { protected override string addressFieldLabel => $"Address/Name"; }
     //-----
     [CustomPropertyDrawer(typeof(AddressableUnlockableDef))]
-    public sealed class AddressableUnlockableDefDrawer : AddressableAssetDrawer<UnlockableDef> { protected override string addressFieldLabel => $"UnlockableDef Name || Address"; }
+    public sealed class AddressableUnlockableDefDrawer : AddressableAssetDrawer<UnlockableDef> { protected override string addressFieldLabel => $"Address/Name"; }
+    //-----
+    [CustomPropertyDrawer(typeof(AddressableEliteDef))]
+    public sealed class AddressableEliteDefDrawer : AddressableAssetDrawer<EliteDef> { protected override string addressFieldLabel => $"Address/Name"; }
     //-----
     [CustomPropertyDrawer(typeof(AddressableGameObject))]
     public sealed class AddressableGameObjectDrawer : AddressableAssetDrawer<GameObject> { }

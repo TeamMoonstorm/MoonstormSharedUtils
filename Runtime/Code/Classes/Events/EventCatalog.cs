@@ -1,5 +1,4 @@
 ﻿using HG;
-using Moonstorm.ScriptableObjects;
 using R2API;
 using RoR2;
 using System;
