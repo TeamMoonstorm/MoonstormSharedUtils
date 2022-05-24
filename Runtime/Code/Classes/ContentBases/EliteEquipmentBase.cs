@@ -1,7 +1,9 @@
-﻿namespace Moonstorm
+﻿using System.Collections.Generic;
+
+namespace Moonstorm
 {
     public abstract class EliteEquipmentBase : EquipmentBase
     {
-        public abstract MSEliteDef EliteDef { get; }
+        public abstract List<MSEliteDef> EliteDefs { get; }
     }
 }
