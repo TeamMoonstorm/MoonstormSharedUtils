@@ -12,54 +12,16 @@ namespace Moonstorm
     public abstract class EquipmentModuleBase : ContentModule<EquipmentBase>
     {
         #region Properties and Fields
-        public static ReadOnlyDictionary<EquipmentDef, EquipmentBase> NonEliteMoonstormEquipments
-        {
-            get
-            {
-                if(!Initialized)
-                {
-                    ThrowModuleNotInitialized($"Retrieve dictionary {NonEliteMoonstormEquipments}", typeof(EquipmentModuleBase));
-                    return null;
-                }
-                return nonEliteMoonstormEquipments;
-            }
-            private set
-            {
-                nonEliteMoonstormEquipments = value;
-            }
-        }
-        private static ReadOnlyDictionary<EquipmentDef, EquipmentBase> nonEliteMoonstormEquipments;
+        public static ReadOnlyDictionary<EquipmentDef, EquipmentBase> NonEliteMoonstormEquipments { get; private set; }
         internal static Dictionary<EquipmentDef, EquipmentBase> nonEliteEquip = new Dictionary<EquipmentDef, EquipmentBase>();
 
-        public static ReadOnlyDictionary<EquipmentDef, EliteEquipmentBase> EliteMoonstormEquipments
-        {
-            get
-            {
-                if(!Initialized)
-                {
-                    ThrowModuleNotInitialized($"Retrieve dictionary {nameof(EliteMoonstormEquipments)}", typeof(EquipmentModuleBase));
-                    return null;
-                }
-                return eliteMoonstormEquipments;
-            }
-            private set
-            {
-                eliteMoonstormEquipments = value;
-            }
-        }
-        private static ReadOnlyDictionary<EquipmentDef, EliteEquipmentBase> eliteMoonstormEquipments;
+        public static ReadOnlyDictionary<EquipmentDef, EliteEquipmentBase> EliteMoonstormEquipments { get; private set; }
         internal static Dictionary<EquipmentDef, EliteEquipmentBase> eliteEquip = new Dictionary<EquipmentDef, EliteEquipmentBase>();
 
         public static ReadOnlyDictionary<EquipmentDef, EquipmentBase> AllMoonstormEquipments
         {
             get
             {
-                if(!Initialized)
-                {
-                    ThrowModuleNotInitialized($"Retrieve dictionary {nameof(AllMoonstormEquipments)}", typeof(EquipmentModuleBase));
-                    return null;
-                }
-
                 if(allMoonstormEquipments == null)
                 {
                     var mergedDictionary = NonEliteMoonstormEquipments.Union(EliteMoonstormEquipments.ToDictionary(k => k.Key, v => (EquipmentBase)v.Value))
@@ -70,19 +32,16 @@ namespace Moonstorm
             }
         }
         private static ReadOnlyDictionary<EquipmentDef, EquipmentBase> allMoonstormEquipments;
-        public static Action<ReadOnlyDictionary<EquipmentDef, EquipmentBase>, ReadOnlyDictionary<EquipmentDef, EliteEquipmentBase>> OnDictionariesCreated;
 
         public static EquipmentDef[] LoadedNonEliteEquipmentDefs { get => NonEliteMoonstormEquipments.Keys.ToArray(); }
         public static EquipmentDef[] EliteEquipmentDefs { get => EliteMoonstormEquipments.Keys.ToArray(); }
         public static EquipmentDef[] AllEquipmentDefs { get => AllMoonstormEquipments.Keys.ToArray(); }
-
-        public static bool Initialized { get; private set; } = false;
+        public static Action<ReadOnlyDictionary<EquipmentDef, EquipmentBase>, ReadOnlyDictionary<EquipmentDef, EliteEquipmentBase>> OnDictionariesCreated;
         #endregion
 
         [SystemInitializer(typeof(EquipmentCatalog))]
         private static void SystemInit()
         {
-            Initialized = true;
             MSULog.Info($"Initializing Equipment Module...");
 
             On.RoR2.EquipmentSlot.PerformEquipmentAction += PerformAction;
@@ -100,76 +59,45 @@ namespace Moonstorm
         #region Equipments
         protected virtual IEnumerable<EquipmentBase> GetEquipmentBases()
         {
-            if(Initialized)
-            {
-                ThrowModuleInitialized($"Retrieve EquipmentBase list", typeof(EquipmentModuleBase));
-                return null;
-            }
-
             MSULog.Debug($"Getting the Equipments found inside {GetType().Assembly}");
             return GetContentClasses<EquipmentBase>(typeof(EliteEquipmentBase));
         }
 
         protected void AddEquipment(EquipmentBase equip, Dictionary<EquipmentDef, EquipmentBase> dictionary = null)
         {
-            if (Initialized)
-            {
-                ThrowModuleInitialized($"Add EquipmentBase to ContentPack", typeof(EquipmentModuleBase));
-                return;
-            }
-
-            if (InitializeContent(equip) && dictionary != null)
-                AddSafelyToDict(ref dictionary, equip.EquipmentDef, equip);
-
-            MSULog.Debug($"Equipment {equip.EquipmentDef} added to {SerializableContentPack.name}");
+            InitializeContent(equip);
+            dictionary?.Add(equip.EquipmentDef, equip);
         }
 
         #region EliteEquipments
         protected virtual IEnumerable<EliteEquipmentBase> GetEliteEquipmentBases()
         {
-            if (Initialized)
-            {
-                ThrowModuleInitialized($"Retrieve EliteEquipmentBase list", typeof(EquipmentModuleBase));
-                return null;
-            }
-
             MSULog.Debug($"Getting the Elite Equipments found inside {GetType().Assembly}");
             return GetContentClasses<EliteEquipmentBase>();
         }
 
         protected void AddEliteEquipment(EliteEquipmentBase eliteEqp, Dictionary<EquipmentDef, EliteEquipmentBase> dictionary = null)
         {
-            if (Initialized)
-            {
-                ThrowModuleInitialized($"Add EliteEquipmentBase to ContentPack", typeof(EquipmentModuleBase));
-                return;
-            }
-
-            if (InitializeContent(eliteEqp) && dictionary != null)
-                AddSafelyToDict(ref dictionary, eliteEqp.EquipmentDef, eliteEqp);
-
-            MSULog.Debug($"Equipment {eliteEqp.EquipmentDef} Added to {SerializableContentPack.name}");
+            InitializeContent(eliteEqp);
+            dictionary?.Add(eliteEqp.EquipmentDef, eliteEqp);
         }
         #endregion
 
-        protected override bool InitializeContent(EquipmentBase contentClass)
+        protected override void InitializeContent(EquipmentBase contentClass)
         {
-            if(AddSafely(ref SerializableContentPack.equipmentDefs, contentClass.EquipmentDef))
-            {
+            AddSafely(ref SerializableContentPack.equipmentDefs, contentClass.EquipmentDef);
 
-                if(contentClass is EliteEquipmentBase eeb)
-                {
-                    AddSafelyToDict(ref eliteEquip, eeb.EquipmentDef, eeb);
-                    contentClass.Initialize();
-                    return true;
-                }
-                else if(contentClass is EquipmentBase eb)
-                {
-                    AddSafelyToDict(ref nonEliteEquip, eb.EquipmentDef, eb);
-                    return true;
-                }
+            if(contentClass is EliteEquipmentBase eeb)
+            {
+                eliteEquip[eeb.EquipmentDef] = eeb;
+                MSULog.Debug($"EliteEquipmentBase {eeb}'s equipment def ensured in {SerializableContentPack.name}" +
+                    $"\nBe sure to create an EliteModule to finalize the initialization of the elite equipment base!");
+                return;
             }
-            return false;
+
+            nonEliteEquip[contentClass.EquipmentDef] = contentClass;
+            contentClass.Initialize();
+            MSULog.Debug($"Equipment {contentClass} Initialized and ensured in {SerializableContentPack.name}");
         }
         #endregion
 

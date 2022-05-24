@@ -11,35 +11,16 @@ namespace Moonstorm
     public abstract class ItemModuleBase : ContentModule<ItemBase>
     {
         #region Properties and Fields
-        public static ReadOnlyDictionary<ItemDef, ItemBase> MoonstormItems
-        {
-            get
-            {
-                if(!Initialized)
-                {
-                    ThrowModuleNotInitialized($"Retrieve dictionary {MoonstormItems}", typeof(ItemModuleBase));
-                    return null;
-                }
-                return moonstormItems;
-            }
-            private set
-            {
-                moonstormItems = value;
-            }
-        }
-        private static ReadOnlyDictionary<ItemDef, ItemBase> moonstormItems;
+        public static ReadOnlyDictionary<ItemDef, ItemBase> MoonstormItems { get; private set; }
         internal static Dictionary<ItemDef, ItemBase> items = new Dictionary<ItemDef, ItemBase>();
-        public static Action<ReadOnlyDictionary<ItemDef, ItemBase>> OnDictionaryCreated;
 
         public static ItemDef[] LoadedItemDefs { get => MoonstormItems.Keys.ToArray(); }
-
-        public static bool Initialized { get; private set; } = false;
+        public static Action<ReadOnlyDictionary<ItemDef, ItemBase>> OnDictionaryCreated;
         #endregion
 
         [SystemInitializer(typeof(ItemCatalog))]
         private static void SystemInit()
         {
-            Initialized = true;
             MSULog.Info($"Initializing Item Module...");
 
             MoonstormItems = new ReadOnlyDictionary<ItemDef, ItemBase>(items);
@@ -51,40 +32,22 @@ namespace Moonstorm
         #region Items
         protected virtual IEnumerable<ItemBase> GetItemBases()
         {
-            if(Initialized)
-            {
-                ThrowModuleInitialized($"Retrieve ItemBase list", typeof(ItemModuleBase));
-                return null;
-            }
-
             MSULog.Debug($"Getting the Items found inside {GetType().Assembly}");
             return GetContentClasses<ItemBase>();
         }
 
         protected void AddItem(ItemBase item, Dictionary<ItemDef, ItemBase> dictionary = null)
         {
-            if(Initialized)
-            {
-                ThrowModuleInitialized($"Add ItemBase to ContentPack", typeof(ItemModuleBase));
-                return;
-            }
-
-            if (InitializeContent(item) && dictionary != null)
-                AddSafelyToDict(ref dictionary, item.ItemDef, item);
-
-            MSULog.Debug($"Item {item.ItemDef} addeed to {SerializableContentPack.name}");
+            InitializeContent(item);
+            dictionary?.Add(item.ItemDef, item);
+            MSULog.Debug($"Item {item.ItemDef} Initialized and Ensured in {SerializableContentPack.name}");
         }
 
-        protected override bool InitializeContent(ItemBase contentClass)
+        protected override void InitializeContent(ItemBase contentClass)
         {
-            if(AddSafely(ref SerializableContentPack.itemDefs, contentClass.ItemDef))
-            {
-                contentClass.Initialize();
-
-                AddSafelyToDict(ref items, contentClass.ItemDef, contentClass);
-                return true;
-            }
-            return false;
+            AddSafely(ref SerializableContentPack.itemDefs, contentClass.ItemDef);
+            contentClass.Initialize();
+            items[contentClass.ItemDef] = contentClass;
         }
         #endregion
     }

@@ -10,34 +10,16 @@ namespace Moonstorm
     public abstract class DamageTypeModuleBase : ModuleBase<DamageTypeBase>
     {
         #region Properties and Fields
-        public static ReadOnlyDictionary<ModdedDamageType, DamageTypeBase> MoonstormDamageTypes
-        {
-            get
-            {
-                if(!Initialized)
-                {
-                    ThrowModuleNotInitialized($"Retrieve Dictionary {nameof(MoonstormDamageTypes)}", typeof(DamageTypeModuleBase));
-                    return null;
-                }
-                return moonstormDamageTypes;
-            }
-            private set
-            {
-                moonstormDamageTypes = value;
-            }
-        }
-        private static ReadOnlyDictionary<ModdedDamageType, DamageTypeBase> moonstormDamageTypes;
+        public static ReadOnlyDictionary<ModdedDamageType, DamageTypeBase> MoonstormDamageTypes { get; private set; }
         internal static Dictionary<ModdedDamageType, DamageTypeBase> damageTypes = new Dictionary<ModdedDamageType, DamageTypeBase>();
-        public static Action<ReadOnlyDictionary<ModdedDamageType, DamageTypeBase>> OnDictionaryCreated;
-
+        
         public static ModdedDamageType[] ModdedDamageTypes { get => MoonstormDamageTypes.Keys.ToArray(); }
-        public static bool Initialized { get; private set; }
+        public static Action<ReadOnlyDictionary<ModdedDamageType, DamageTypeBase>> OnDictionaryCreated;
         #endregion
 
         [SystemInitializer]
         private static void SystemInit()
         {
-            Initialized = true;
             MSULog.Info("Initializing DamageType Module...");
 
             MoonstormDamageTypes = new ReadOnlyDictionary<ModdedDamageType, DamageTypeBase>(damageTypes);
@@ -50,37 +32,24 @@ namespace Moonstorm
         #region Damage Types
         protected virtual IEnumerable<DamageTypeBase> GetDamageTypeBases()
         {
-            if (Initialized)
-            {
-                ThrowModuleInitialized($"Retrieve DamageTypeBase list", typeof(DamageTypeModuleBase));
-                return null;
-            }
-
+            MSULog.Debug($"Getting the Damage Types found inside {GetType().Assembly}...");
             return GetContentClasses<DamageTypeBase>();
         }
 
-        protected void AddDamageType(DamageTypeBase dType, Dictionary<ModdedDamageType, DamageTypeBase> damageTypeDictionary = null)
+        protected void AddDamageType(DamageTypeBase damageType, Dictionary<ModdedDamageType, DamageTypeBase> damageTypeDictionary = null)
         {
-            if (Initialized)
-            {
-                ThrowModuleInitialized($"Add ModdedDamageType", typeof(DamageTypeModuleBase));
-                return;
-            }
-
-            if (InitializeContent(dType) && damageTypeDictionary != null)
-                AddSafelyToDict(ref damageTypeDictionary, dType.ModdedDamageType, dType);
-
-            MSULog.Debug($"Damage type {dType} added");
+            InitializeContent(damageType);
+            damageTypeDictionary?.Add(damageType.ModdedDamageType, damageType);
+            MSULog.Debug($"Damage type {damageType} added to the game");
         }
 
-        protected override bool InitializeContent(DamageTypeBase contentClass)
+        protected override void InitializeContent(DamageTypeBase contentClass)
         {
             contentClass.Initialize();
             contentClass.Delegates();
             contentClass.SetDamageType(ReserveDamageType());
 
-            damageTypes.Add(contentClass.ModdedDamageType, contentClass);
-            return true;
+            damageTypes[contentClass.ModdedDamageType] = contentClass;
         }
         #endregion
     }

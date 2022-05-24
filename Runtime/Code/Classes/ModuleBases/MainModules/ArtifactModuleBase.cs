@@ -14,33 +14,16 @@ namespace Moonstorm
     {
 
         #region Properties and Fields
-        public static ReadOnlyDictionary<ArtifactDef, ArtifactBase> MoonstormArtifacts
-        {
-            get
-            {
-                if (!Initialized)
-                {
-                    ThrowModuleNotInitialized($"Retrieve dictionary {nameof(MoonstormArtifacts)}", typeof(ArtifactModuleBase));
-                    return null;
-                }
-                return moonstormArtifacts;
-            }
-            private set
-            {
-                moonstormArtifacts = value;
-            }
-        }
-        private static ReadOnlyDictionary<ArtifactDef, ArtifactBase> moonstormArtifacts;
+        public static ReadOnlyDictionary<ArtifactDef, ArtifactBase> MoonstormArtifacts { get; private set; }
         internal static Dictionary<ArtifactDef, ArtifactBase> artifacts = new Dictionary<ArtifactDef, ArtifactBase>();
+
         public static Action<ReadOnlyDictionary<ArtifactDef, ArtifactBase>> OnDictionaryCreated;
         public static ArtifactDef[] LoadedArtifactDefs { get => MoonstormArtifacts.Keys.ToArray(); }
-        public static bool Initialized { get; private set; } = false;
         #endregion
 
         [SystemInitializer(typeof(ArtifactCatalog))]
         private static void SystemInit()
         {
-            Initialized = true;
             MSULog.Info("Initializing Artifact Module...");
             RunArtifactManager.onArtifactEnabledGlobal += OnArtifactEnabled;
             RunArtifactManager.onArtifactDisabledGlobal += OnArtifactDisabled;
@@ -56,43 +39,28 @@ namespace Moonstorm
         #region Artifacts
         protected virtual IEnumerable<ArtifactBase> GetArtifactBases()
         {
-            if(Initialized)
-            {
-                ThrowModuleInitialized($"Retrieve ArtifactBase list", typeof(ArtifactModuleBase));
-                return null;
-            }
-
             MSULog.Debug($"Getting the Artifacts found inside {GetType().Assembly}...");
             return GetContentClasses<ArtifactBase>();
         }
 
         protected void AddArtifact(ArtifactBase artifact, Dictionary<ArtifactDef, ArtifactBase> artifactDictionary = null)
         {
-            if (Initialized)
-            {
-                ThrowModuleInitialized($"Add ArtifactBase To ContentPack", typeof(ArtifactModuleBase));
-                return;
-            }
-
-            if (InitializeContent(artifact) && artifactDictionary != null)
-                AddSafelyToDict(ref artifactDictionary, artifact.ArtifactDef, artifact);
+            InitializeContent(artifact);
+            artifactDictionary?.Add(artifact.ArtifactDef, artifact);
             
-            MSULog.Debug($"Artifact {artifact.ArtifactDef} added to {SerializableContentPack.name}");
+            MSULog.Debug($"Artifact {artifact.ArtifactDef} Initialized and ensured in {SerializableContentPack.name}");
         }
 
-        protected override bool InitializeContent(ArtifactBase contentClass)
+        protected override void InitializeContent(ArtifactBase contentClass)
         {
-            if(AddSafely(ref SerializableContentPack.artifactDefs, contentClass.ArtifactDef))
-            {
-                contentClass.Initialize();
+            AddSafely(ref SerializableContentPack.artifactDefs, contentClass.ArtifactDef);
 
-                if (contentClass.ArtifactCode)
-                    AddCode(contentClass.ArtifactDef, contentClass.ArtifactCode);
+            contentClass.Initialize();
 
-                AddSafelyToDict(ref artifacts, contentClass.ArtifactDef, contentClass);
-                return true;
-            }
-            return false;
+            if (contentClass.ArtifactCode)
+                AddCode(contentClass.ArtifactDef, contentClass.ArtifactCode);
+
+            artifacts[contentClass.ArtifactDef] = contentClass;
         }
         #endregion
 

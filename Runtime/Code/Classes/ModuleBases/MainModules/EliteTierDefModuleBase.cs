@@ -12,27 +12,11 @@ namespace Moonstorm
     public abstract class EliteTierDefModuleBase : ModuleBase<EliteTierDefBase>
     {
         #region Properties and Fields
-        public static ReadOnlyDictionary<SerializableEliteTierDef, EliteTierDefBase> MoonstormEliteTiers
-        {
-            get
-            {
-                if(!Initialized)
-                {
-                    ThrowModuleNotInitialized($"Retrieve dictionary {nameof(MoonstormEliteTiers)}", typeof(EliteTierDefModuleBase));
-                    return null;
-                }
-                return moonstormEliteTiers;
-            }
-            private set
-            {
-                moonstormEliteTiers = value;
-            }
-        }
-        private static ReadOnlyDictionary<SerializableEliteTierDef, EliteTierDefBase> moonstormEliteTiers;
+        public static ReadOnlyDictionary<SerializableEliteTierDef, EliteTierDefBase> MoonstormEliteTiers { get; private set; }
         internal static Dictionary<SerializableEliteTierDef, EliteTierDefBase> eliteTierDefs = new Dictionary<SerializableEliteTierDef, EliteTierDefBase>();
-        public static Action<ReadOnlyDictionary<SerializableEliteTierDef, EliteTierDefBase>> OnDictionaryCreated;
+        
         public static SerializableEliteTierDef[] LoadedEliteTierDefs { get => MoonstormEliteTiers.Keys.ToArray(); }
-        public static bool Initialized { get; private set; } = false;
+        public static Action<ReadOnlyDictionary<SerializableEliteTierDef, EliteTierDefBase>> OnDictionaryCreated;
         #endregion
 
         [SystemInitializer]
@@ -40,7 +24,6 @@ namespace Moonstorm
         {
             AddressableAssets.AddressableAsset.OnAddressableAssetsLoaded += () =>
             {
-                Initialized = true;
                 MSULog.Info($"Initializing EliteTierDef Module...");
 
                 CreateAndAddTiers();
@@ -67,35 +50,21 @@ namespace Moonstorm
         #region EliteTierDefs
         protected virtual IEnumerable<EliteTierDefBase> GetEliteTierDefBases()
         {
-            if(Initialized)
-            {
-                ThrowModuleInitialized($"Retrieve EliteTierDefBase list", typeof(EliteTierDefModuleBase));
-                return null;
-            }
-
             MSULog.Debug($"Getting the EliteTierDefs found inside {GetType().Assembly}...");
             return GetContentClasses<EliteTierDefBase>();
         }
 
         protected void AddEliteTierDef(EliteTierDefBase eliteTierDef, Dictionary<SerializableEliteTierDef, EliteTierDefBase> dictionary = null)
         {
-            if(Initialized)
-            {
-                ThrowModuleInitialized($"Add EliteTierDefBase to Game", typeof(EliteTierDefModuleBase));
-                return;
-            }
-
-            if (InitializeContent(eliteTierDef) && dictionary != null)
-                AddSafelyToDict(ref dictionary, eliteTierDef.SerializableEliteTierDef, eliteTierDef);
-
+            InitializeContent(eliteTierDef);
+            dictionary?.Add(eliteTierDef.SerializableEliteTierDef, eliteTierDef);
             MSULog.Debug($"EliteTierDef {eliteTierDef.SerializableEliteTierDef} added to the game");
         }
 
-        protected override bool InitializeContent(EliteTierDefBase contentClass)
+        protected override void InitializeContent(EliteTierDefBase contentClass)
         {
             contentClass.Initialize();
-            AddSafelyToDict(ref eliteTierDefs, contentClass.SerializableEliteTierDef, contentClass);
-            return true;
+            eliteTierDefs[contentClass.SerializableEliteTierDef] = contentClass;
         }
         #endregion
     }

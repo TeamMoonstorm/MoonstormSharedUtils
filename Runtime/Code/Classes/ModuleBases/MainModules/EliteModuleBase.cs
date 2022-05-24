@@ -13,34 +13,17 @@ namespace Moonstorm
 {
     public abstract class EliteModuleBase : ContentModule<EliteEquipmentBase>
     {
-        public static ReadOnlyCollection<MSEliteDef> MoonstormElites
-        {
-            get
-            {
-                if(!Initialized)
-                {
-                    ThrowModuleNotInitialized($"Retrieve dictionary {nameof(MoonstormElites)}", typeof(EliteModuleBase));
-                    return null;
-                }
-                return moonstormElites;
-            }
-            private set
-            {
-                moonstormElites = value;
-            }
-        }
-        private static ReadOnlyCollection<MSEliteDef> moonstormElites;
+        #region Propertiess and Fields
+        public static ReadOnlyCollection<MSEliteDef> MoonstormElites { get; private set; }
         internal static List<MSEliteDef> eliteDefs = new List<MSEliteDef>();
-        public static Action<ReadOnlyCollection<MSEliteDef>> OnListCreated;
-
-        public static bool Initialized { get; private set; } = false;
 
         public abstract AssetBundle AssetBundle { get; }
+        public static Action<ReadOnlyCollection<MSEliteDef>> OnListCreated;
+        #endregion
 
         [SystemInitializer(new Type[] { typeof(BuffCatalog), typeof(EquipmentCatalog), typeof(EliteCatalog) })]
         private static void SystemInit()
         {
-            Initialized = true;
             MSULog.Info($"Initializing Elite Module...");
 
             AddElitesViaDirectorAPI();
@@ -83,14 +66,7 @@ namespace Moonstorm
         #region Elites
         protected virtual IEnumerable<EliteEquipmentBase> GetInitializedEliteEquipmentBases()
         {
-            if(Initialized)
-            {
-                ThrowModuleInitialized($"Retrieve Initialized EliteEquipmentBases list", typeof(EliteModuleBase));
-                return null;
-            }
-
             MSULog.Debug($"Getting the initialized EliteEquipmentBases inside {GetType().Assembly}");
-
             var initializedEliteEquipmentBases = new List<EliteEquipmentBase>();
             foreach(MSEliteDef def in AssetBundle.LoadAllAssets<MSEliteDef>())
             {
@@ -106,33 +82,22 @@ namespace Moonstorm
 
         protected void AddElite(EliteEquipmentBase elite, List<MSEliteDef> list = null)
         {
-            if (Initialized)
-            {
-                ThrowModuleInitialized($"Add EliteEquipmentBase to ContentPack", typeof(EliteModuleBase));
-                return;
-            }
-
-            if (InitializeContent(elite) && list != null)
-                AddSafelyToList(ref list, elite.EliteDef);
-
-            MSULog.Debug($"Elite {elite.EliteDef} added to {SerializableContentPack.name}");
+            InitializeContent(elite);
+            list?.AddRange(elite.EliteDefs);
+            MSULog.Debug($"Elite {elite} Initialized and Ensured in {SerializableContentPack.name}");
         }
 
-        protected override bool InitializeContent(EliteEquipmentBase contentClass)
+        protected override void InitializeContent(EliteEquipmentBase contentClass)
         {
-            if(AddSafely(ref SerializableContentPack.eliteDefs, contentClass.EliteDef))
+            contentClass.Initialize();
+            foreach(MSEliteDef eliteDef in contentClass.EliteDefs)
             {
-                contentClass.Initialize();
-
-                AddSafelyToList(ref eliteDefs, contentClass.EliteDef);
-
-                if(contentClass.EliteDef.overlay && contentClass.EquipmentDef.passiveBuffDef)
+                eliteDefs.Add(eliteDef);
+                if (eliteDef.overlay && contentClass.EquipmentDef.passiveBuffDef)
                 {
-                    BuffModuleBase.overlayMaterials.Add(contentClass.EquipmentDef.passiveBuffDef, contentClass.EliteDef.overlay);
+                    BuffModuleBase.overlayMaterials[contentClass.EquipmentDef.passiveBuffDef] = eliteDef.overlay;
                 }
-                return true;
             }
-            return false;
         }
         #endregion
     }

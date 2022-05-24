@@ -12,37 +12,18 @@ namespace Moonstorm
     public abstract class InteractableModuleBase : ContentModule<InteractableBase>
     {
         #region Properties and Fields
-        public static ReadOnlyDictionary<GameObject, InteractableBase> MoonstormInteractables
-        {
-            get
-            {
-                if(!Initialized)
-                {
-                    ThrowModuleNotInitialized($"Retrieve dictionary {nameof(MoonstormInteractables)}", typeof(InteractableModuleBase));
-                    return null;
-                }
-                return moonstormInteractables;
-            }
-            private set
-            {
-                moonstormInteractables = value;
-            }
-        }
-        private static ReadOnlyDictionary<GameObject, InteractableBase> moonstormInteractables;
+        public static ReadOnlyDictionary<GameObject, InteractableBase> MoonstormInteractables { get; private set; }
         internal static Dictionary<GameObject, InteractableBase> interactables = new Dictionary<GameObject, InteractableBase>();
-        public static Action<ReadOnlyDictionary<GameObject, InteractableBase>> OnDictionaryCreated;
 
         public static InteractableBase[] InteractablesWithCards { get => MoonstormInteractables.Values.Where(ib => ib.InteractableDirectorCard != null).ToArray(); }
         public static InteractableBase[] InteractablesWithoutCards { get => MoonstormInteractables.Values.Where(ib => ib.InteractableDirectorCard == null).ToArray(); }
         public static GameObject[] LoadedInteractables { get => MoonstormInteractables.Keys.ToArray(); }
-
-        public static bool Initialized { get; private set; }
+        public static Action<ReadOnlyDictionary<GameObject, InteractableBase>> OnDictionaryCreated;
         #endregion
 
         [SystemInitializer]
         private static void SystemInit()
         {
-            Initialized = true;
             MSULog.Info($"Initializing Interactable Module...");
             DirectorAPI.InteractableActions += AddCustomInteractables;
 
@@ -56,37 +37,21 @@ namespace Moonstorm
         #region Interactables
         protected virtual IEnumerable<InteractableBase> GetInteractableBases()
         {
-            if(Initialized)
-            {
-                ThrowModuleInitialized($"Retrieve InteractableBase list", typeof(InteractableModuleBase));
-                return null;
-            }
-
             MSULog.Debug($"Getting the Interactables found inside {GetType().Assembly}...");
             return GetContentClasses<InteractableBase>();
         }
         protected void AddInteractable(InteractableBase interactableBase, Dictionary<GameObject, InteractableBase> interactableDictionary = null)
         {
-            if(Initialized)
-            {
-                ThrowModuleInitialized($"Add InteractableBase", typeof(InteractableModuleBase));
-                return;
-            }
-
-            if (InitializeContent(interactableBase) && interactableDictionary != null)
-                AddSafelyToDict(ref interactableDictionary, interactableBase.Interactable, interactableBase);
-
-            MSULog.Debug($"Interactable {interactableBase} Added");
+            InitializeContent(interactableBase);
+            interactableDictionary?.Add(interactableBase.Interactable, interactableBase);
+            MSULog.Debug($"Interactable {interactableBase} Initialized and Ensured in {SerializableContentPack.name}");
         }
 
-        protected override bool InitializeContent(InteractableBase contentClass)
+        protected override void InitializeContent(InteractableBase contentClass)
         {
-            AddSafely(ref SerializableContentPack.networkedObjectPrefabs, contentClass.Interactable);
-
+            AddSafely(ref SerializableContentPack.networkedObjectPrefabs, contentClass.Interactable, "NetworkedObjectPrefabs");
             contentClass.Initialize();
-
-            AddSafelyToDict(ref interactables, contentClass.Interactable, contentClass);
-            return true;
+            interactables.Add(contentClass.Interactable, contentClass);
         }
         #endregion
 

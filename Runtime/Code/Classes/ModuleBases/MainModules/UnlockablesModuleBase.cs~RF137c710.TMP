@@ -49,10 +49,10 @@ namespace Moonstorm
 
             InitializeContent(unlockableBase);
             unlockableDictionary?.Add(unlockableBase.UnlockableDef, unlockableBase);
-            MSULog.Debug($"Unlockable {unlockableBase} Initialized and ensured in {SerializableContentPack.name}");
+            MSULog.Debug($"Added {unlockableBase.UnlockableDef}");
         }
 
-        protected override void InitializeContent(UnlockableBase contentClass)
+        protected override bool InitializeContent(UnlockableBase contentClass)
         {
             AddSafely(ref SerializableContentPack.unlockableDefs, contentClass.UnlockableDef);
             contentClass.OnCheckPassed();
@@ -87,15 +87,13 @@ namespace Moonstorm
                         case Type t when t.IsSubclassOf(typeof(BuffBase)): isAdded = CheckBuffs(type); break;
                         case Type t when t.IsSubclassOf(typeof(DamageTypeBase)): isAdded = CheckDamageTypes(type); break;
                         case Type t when t.IsSubclassOf(typeof(EliteEquipmentBase)): isAdded = CheckEliteEquipments(type); break;
-                        case Type t when t.IsSubclassOf(typeof(EliteTierDefBase)): isAdded = CheckEliteTierDefs(type); break;
                         case Type t when t.IsSubclassOf(typeof(EquipmentBase)): isAdded = CheckEquipments(type); break;
-                        case Type t when t.IsSubclassOf(typeof(InteractableBase)): isAdded = CheckInteractables(type); break;
                         case Type t when t.IsSubclassOf(typeof(ItemBase)): isAdded = CheckItems(type); break;
                         case Type t when t.IsSubclassOf(typeof(MonsterBase)): isAdded = CheckMonsters(type); break;
                         case Type t when t.IsSubclassOf(typeof(ProjectileBase)): isAdded = CheckProjectiles(type); break;
                         case Type t when t.IsSubclassOf(typeof(SceneBase)): isAdded = CheckScenes(type); break;
-                        case Type t when t.IsSubclassOf(typeof(SurvivorBase)): isAdded = CheckSurvivors(type); break;
                         case Type t when t.IsSubclassOf(typeof(UnlockableBase)): isAdded = CheckUnlockables(type); break;
+                        case Type t when t.IsSubclassOf(typeof(SurvivorBase)): isAdded = CheckSurvivors(type); break;
                     }
 
                     if (!isAdded)
@@ -138,22 +136,10 @@ namespace Moonstorm
             return allEliteEquipments.Contains(type);
         }
 
-        private static bool CheckEliteTierDefs(Type type)
-        {
-            var allEliteTierDefs = EliteTierDefModuleBase.eliteTierDefs.Values.Select(etd => etd.GetType());
-            return allEliteTierDefs.Contains(type);
-        }
-
         private static bool CheckEquipments(Type type)
         {
             var allEquipments = EquipmentModuleBase.nonEliteEquip.Values.Select(eb => eb.GetType());
             return allEquipments.Contains(type);
-        }
-
-        private static bool CheckInteractables(Type type)
-        {
-            var allInteractables = InteractableModuleBase.interactables.Values.Select(interactable => interactable.GetType());
-            return allInteractables.Contains(type);
         }
 
         private static bool CheckItems(Type type)

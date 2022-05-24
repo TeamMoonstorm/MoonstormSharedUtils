@@ -12,7 +12,7 @@ namespace Moonstorm
     {
         public abstract AssetBundle MainBundle { get; }
 
-        protected sealed override bool InitializeContent(ContentBase contentClass)
+        protected sealed override void InitializeContent(ContentBase contentClass)
         {
             throw new System.NotSupportedException($"A BundleModule does not have a ContentBase by definition.");
         }

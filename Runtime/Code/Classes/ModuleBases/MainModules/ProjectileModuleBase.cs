@@ -11,34 +11,16 @@ namespace Moonstorm
     public abstract class ProjectileModuleBase : ContentModule<ProjectileBase>
     {
         #region Properties and Fields
-        public static ReadOnlyDictionary<GameObject, ProjectileBase> MoonstormProjectiles
-        {
-            get
-            {
-                if(!Initialized)
-                {
-                    ThrowModuleNotInitialized($"Retrieve dictionary {nameof(MoonstormProjectiles)}", typeof(ProjectileModuleBase));
-                    return null;
-                }
-                return moonstormProjectiles;
-            }
-            private set
-            {
-                moonstormProjectiles = value;
-            }
-        }
-        private static ReadOnlyDictionary<GameObject, ProjectileBase> moonstormProjectiles;
+        public static ReadOnlyDictionary<GameObject, ProjectileBase> MoonstormProjectiles { get; private set; }
         internal static Dictionary<GameObject, ProjectileBase> projectiles = new Dictionary<GameObject, ProjectileBase>();
-        public static Action<ReadOnlyDictionary<GameObject, ProjectileBase>> OnDictionaryCreated;
 
         public static GameObject[] LoadedProjectiles { get => MoonstormProjectiles.Keys.ToArray(); }
-        public static bool Initialized { get; private set; }
+        public static Action<ReadOnlyDictionary<GameObject, ProjectileBase>> OnDictionaryCreated;
         #endregion
 
         [SystemInitializer(typeof(ProjectileCatalog))]
         private static void SystemInit()
         {
-            Initialized = true;
             MSULog.Info("Initializing Projectile Module...");
 
             MoonstormProjectiles = new ReadOnlyDictionary<GameObject, ProjectileBase>(projectiles);
@@ -51,43 +33,26 @@ namespace Moonstorm
         #region InitProjectiles
         protected virtual IEnumerable<ProjectileBase> GetProjectileBases()
         {
-            if(Initialized)
-            {
-                ThrowModuleInitialized($"Retrieve ProjectileBase List", typeof(ProjectileModuleBase));
-                return null;
-            }
-
             MSULog.Debug($"Getting the Projectiles found inside {GetType().Assembly}...");
             return GetContentClasses<ProjectileBase>();
         }
 
         protected void AddProjectile(ProjectileBase projectile, Dictionary<GameObject, ProjectileBase> projectileDictionary = null)
         {
-            if(Initialized)
-            {
-                ThrowModuleInitialized($"Add ProjectileBase to ContentPack", typeof(ProjectileModuleBase));
-                return;
-            }
-
-            if (InitializeContent(projectile) && projectileDictionary != null)
-                AddSafelyToDict(ref projectileDictionary, projectile.ProjectilePrefab, projectile);
-
-            MSULog.Debug($"Projectile {projectile.ProjectilePrefab} added to {SerializableContentPack.name}");
+            InitializeContent(projectile);
+            projectileDictionary?.Add(projectile.ProjectilePrefab, projectile);
         }
 
-        protected override bool InitializeContent(ProjectileBase contentClass)
+        protected override void InitializeContent(ProjectileBase contentClass)
         {
-            if(AddSafely(ref SerializableContentPack.projectilePrefabs, contentClass.ProjectilePrefab))
-            {
-                contentClass.Initialize();
+            AddSafely(ref SerializableContentPack.projectilePrefabs, contentClass.ProjectilePrefab, "ProjectilePrefabs");
+            contentClass.Initialize();
 
-                if (contentClass.ProjectilePrefab.GetComponent<CharacterBody>() && AddSafely(ref SerializableContentPack.bodyPrefabs, contentClass.ProjectilePrefab))
-                    MSULog.Debug($"Preemptively added {contentClass.ProjectilePrefab} to CharacterBody array");
+            if(contentClass.ProjectilePrefab.GetComponent<CharacterBody>())
+                AddSafely(ref SerializableContentPack.bodyPrefabs, contentClass.ProjectilePrefab, "BodyPrefabs");
 
-                AddSafelyToDict(ref projectiles, contentClass.ProjectilePrefab, contentClass);
-                return true;
-            }
-            return false;
+            projectiles.Add(contentClass.ProjectilePrefab, contentClass);
+            MSULog.Debug($"Projectile {contentClass} Initialized and ensured in {SerializableContentPack.name}");
         }
         #endregion
     }

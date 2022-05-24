@@ -11,38 +11,19 @@ namespace Moonstorm
     public abstract class CharacterModuleBase : ContentModule<CharacterBase>
     {
         #region Properties and Fields
-        public static ReadOnlyDictionary<GameObject, CharacterBase> MoonstormCharacters
-        {
-            get
-            {
-                if (!Initialized)
-                {
-                    ThrowModuleNotInitialized($"Retrieve dictionary {nameof(MoonstormCharacters)}", typeof(CharacterModuleBase));
-                    return null;
-                }
-                return moonstormCharacters;
-            }
-            private set
-            {
-                moonstormCharacters = value;
-            }
-        }
-        private static ReadOnlyDictionary<GameObject, CharacterBase> moonstormCharacters;
+        public static ReadOnlyDictionary<GameObject, CharacterBase> MoonstormCharacters { get; private set; }
         internal static Dictionary<GameObject, CharacterBase> characters = new Dictionary<GameObject, CharacterBase>();
-        public static Action<ReadOnlyDictionary<GameObject, CharacterBase>> OnDictionariesCreated;
 
         public static MonsterBase[] MoonstormMonsters { get => MoonstormCharacters.Values.Where(cb => cb.GetType().IsSubclassOf(typeof(MonsterBase))).Cast<MonsterBase>().ToArray(); }
         public static SurvivorBase[] MoonstormSurvivors { get => MoonstormCharacters.Values.Where(cb => cb.GetType().IsSubclassOf(typeof(SurvivorBase))).Cast<SurvivorBase>().ToArray(); }
         public static GameObject[] LoadedCharacterBodies { get => MoonstormCharacters.Values.Select(cb => cb.BodyPrefab).ToArray(); }
         public static GameObject[] LoadedCharacterMasters { get => MoonstormCharacters.Values.Select(cb => cb.MasterPrefab).ToArray(); }
-
-        public static bool Initialized { get; private set; } = false;
+        public static Action<ReadOnlyDictionary<GameObject, CharacterBase>> OnDictionariesCreated;
         #endregion
 
         [SystemInitializer(new Type[] { typeof(BodyCatalog), typeof(MasterCatalog) })]
         private static void SystemInit()
         {
-            Initialized = true;
             MSULog.Info("Initializing Character Module...");
             DirectorAPI.MonsterActions += ModifyMonsters;
 
@@ -55,49 +36,34 @@ namespace Moonstorm
         #region Characters
         protected virtual IEnumerable<CharacterBase> GetCharacterBases()
         {
-            if (Initialized)
-            {
-                ThrowModuleInitialized($"Retrieve CharacterBase list", typeof(CharacterModuleBase));
-                return null;
-            }
-
             MSULog.Debug($"Getting the Characters found inside {GetType().Assembly}...");
             return GetContentClasses<CharacterBase>();
         }
 
         protected void AddCharacter(CharacterBase character, Dictionary<GameObject, CharacterBase> characterDictionary = null)
         {
-            if (Initialized)
-            {
-                ThrowModuleInitialized($"Add CharacterBase to ContentPack", typeof(CharacterModuleBase));
-                return;
-            }
-
-            if (InitializeContent(character) && characterDictionary != null)
-                AddSafelyToDict(ref characterDictionary, character.BodyPrefab, character);
-
-            MSULog.Debug($"Character {character} added");
+            InitializeContent(character);
+            characterDictionary?.Add(character.BodyPrefab, character);
         }
 
-        protected override bool InitializeContent(CharacterBase contentClass)
+        protected override void InitializeContent(CharacterBase contentClass)
         {
-            if(AddSafely(ref SerializableContentPack.bodyPrefabs, contentClass.BodyPrefab))
-            {
-                contentClass.Initialize();
+            AddSafely(ref SerializableContentPack.bodyPrefabs, contentClass.BodyPrefab, "BodyPrefabs");
 
-                switch(contentClass)
-                {
-                    case MonsterBase monster:
-                        AddSafely(ref SerializableContentPack.masterPrefabs, monster.MasterPrefab);
-                        break;
-                    case SurvivorBase survivor:
-                        AddSafely(ref SerializableContentPack.survivorDefs, survivor.SurvivorDef);
-                        AddSafely(ref SerializableContentPack.masterPrefabs, survivor.MasterPrefab);
-                        break;
-                }
-                return true;
+            contentClass.Initialize();
+
+            switch(contentClass)
+            {
+                case MonsterBase monster:
+                    AddSafely(ref SerializableContentPack.masterPrefabs, monster.MasterPrefab, "MasterPrefabs");
+                    MSULog.Debug($"Character {monster} Initialized and ensured it's body and master prefabs in {SerializableContentPack.name}");
+                    break;
+                case SurvivorBase survivor:
+                    AddSafely(ref SerializableContentPack.survivorDefs, survivor.SurvivorDef);
+                    AddSafely(ref SerializableContentPack.masterPrefabs, survivor.MasterPrefab, "MasterPrefabs");
+                    MSULog.Debug($"Character {survivor} Initialized and ensured it's body, master prefabs & survivor def in {SerializableContentPack.name}");
+                    break;
             }
-            return false;
         }
         #endregion
 

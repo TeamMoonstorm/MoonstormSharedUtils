@@ -12,24 +12,17 @@ namespace Moonstorm
     {
         public abstract R2APISerializableContentPack SerializableContentPack { get; }
 
-        protected bool AddSafely<TAsset>(ref TAsset[] contentPackArray, TAsset content) where TAsset : UnityEngine.Object
+        protected bool AddSafely<TAsset>(ref TAsset[] contentPackArray, TAsset content, string correspondingArrayName = null) where TAsset : UnityEngine.Object
         {
-            try
-            { 
-                if(contentPackArray.Contains(content))
-                {
-                    throw new InvalidOperationException($"Cannot add {content} to {SerializableContentPack} because the asset has already been added to it's corresponding array!");
-                }
-                HG.ArrayUtils.ArrayAppend(ref contentPackArray, content);
+            if (contentPackArray.Contains(content)) //Content already in the contentPack for whatever reason? return true;
+            {
+                MSULog.Warning($"Content {content} was already in {SerializableContentPack}'s {correspondingArrayName ?? content.GetType().Name} array!\n" +
+                    $"MSU automatically adds the content piece to its corresponding array in initialization, do not add it beforehand.");
                 return true;
             }
-            catch(Exception e) 
-            {
-                MSULog.Error($"{e} (Content: {content})");
-                if (contentPackArray.Contains(content))
-                    return true;
-                return false;
-            }
+
+            HG.ArrayUtils.ArrayAppend(ref contentPackArray, content);
+            return true;
         }
     }
 }
