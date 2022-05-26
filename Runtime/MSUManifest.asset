@@ -103,7 +103,7 @@ MonoBehaviour:
   m_Name: AssetBundleDefinitions
   m_EditorClassIdentifier: 
   StagingPaths:
-  - <BuildPathAssetts>
+  - <BuildPathAssets>
   assetBundles:
   - assetBundleName: msuassets
     assets:
