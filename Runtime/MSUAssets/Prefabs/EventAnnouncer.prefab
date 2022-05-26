@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6709673378652027855}
   - component: {fileID: 3916189021239166270}
   - component: {fileID: -4272976251058039023}
-  - component: {fileID: 1378606929618914867}
+  - component: {fileID: 7290148279729907428}
   m_Layer: 5
   m_Name: EventAnnouncer
   m_TagString: Untagged
@@ -69,7 +69,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8213170796682785221}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 649313124, guid: 951ce57ad9993c1f840a4dceb5f8b763, type: 3}
+  m_Script: {fileID: 649313124, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
@@ -158,7 +158,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8213170796682785221}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -946661946, guid: 951ce57ad9993c1f840a4dceb5f8b763, type: 3}
+  m_Script: {fileID: -946661946, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   canvasGroup: {fileID: 6709673378652027855}
@@ -166,7 +166,7 @@ MonoBehaviour:
   transitionDuration: 0
   panningMagnitude: 0
   destroyOnEndOfTransition: 0
---- !u!114 &1378606929618914867
+--- !u!114 &7290148279729907428
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

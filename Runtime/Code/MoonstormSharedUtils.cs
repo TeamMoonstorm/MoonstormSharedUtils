@@ -20,7 +20,8 @@ namespace Moonstorm
           nameof(RecalculateStatsAPI),
           nameof(UnlockableAPI),
           nameof(DirectorAPI),
-          nameof(CommandHelper)
+          nameof(CommandHelper),
+          nameof(EliteAPI)
         })]
     public class MoonstormSharedUtils : BaseUnityPlugin
     {
