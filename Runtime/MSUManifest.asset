@@ -54,7 +54,7 @@ MonoBehaviour:
   m_Name: ThunderstoreData
   m_EditorClassIdentifier: 
   StagingPaths:
-  - <ManifestStagingRoot>
+  - <BuildPath>
   url: https://github.com/TeamMoonstorm/MoonstormSharedUtils
 --- !u!114 &426352536190054080
 MonoBehaviour:
@@ -69,7 +69,7 @@ MonoBehaviour:
   m_Name: AssemblyDefinitions
   m_EditorClassIdentifier: 
   StagingPaths:
-  - <ManifestPluginStaging>
+  - <BuildPathPlugins>
   definitions:
   - {fileID: 5897886265953266890, guid: 027c693fefcac6548859a0eec81eed3d, type: 3}
 --- !u!114 &3240393688467726566
@@ -84,9 +84,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b243ff405b33b94dbf5b6775dd9aa33, type: 3}
   m_Name: Files
   m_EditorClassIdentifier: 
-  StagingPaths: []
+  StagingPaths:
+  - <BuildPath>
   files:
   - {fileID: 4900000, guid: b3596cfdbadf835458f195bf3ef1afcc, type: 3}
+  - {fileID: 4900000, guid: 1e079f86f9f2f764ba218f0a9e1917e6, type: 3}
   - {fileID: 2800000, guid: 05e2e00a91cc59546a6c6567b89c210f, type: 3}
 --- !u!114 &4291155482398341959
 MonoBehaviour:
@@ -101,7 +103,7 @@ MonoBehaviour:
   m_Name: AssetBundleDefinitions
   m_EditorClassIdentifier: 
   StagingPaths:
-  - <ManifestPluginStaging>
+  - <BuildPathAssetts>
   assetBundles:
   - assetBundleName: msuassets
     assets:
