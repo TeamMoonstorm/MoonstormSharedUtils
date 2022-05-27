@@ -92,6 +92,7 @@ namespace Moonstorm
             contentClass.Initialize();
             foreach(MSEliteDef eliteDef in contentClass.EliteDefs)
             {
+                AddSafely(ref SerializableContentPack.eliteDefs, eliteDef);
                 eliteDefs.Add(eliteDef);
                 if (eliteDef.overlay && contentClass.EquipmentDef.passiveBuffDef)
                 {
