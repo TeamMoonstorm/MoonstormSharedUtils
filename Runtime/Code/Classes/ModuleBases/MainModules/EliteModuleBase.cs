@@ -38,9 +38,6 @@ namespace Moonstorm
             CombatDirector.EliteTierDef[] vanillaTiers = R2API.EliteAPI.VanillaEliteTiers;
             foreach (MSEliteDef eliteDef in eliteDefs)
             {
-                if (eliteDef.eliteRamp)
-                    EliteRampManager.AddRamp(eliteDef, eliteDef.eliteRamp);
-
                 switch(eliteDef.eliteTier)
                 {
                     case VanillaEliteTier.HonorDisabled:
@@ -92,6 +89,8 @@ namespace Moonstorm
             contentClass.Initialize();
             foreach(MSEliteDef eliteDef in contentClass.EliteDefs)
             {
+                if (eliteDef.eliteRamp)
+                    EliteRampManager.AddRamp(eliteDef, eliteDef.eliteRamp);
                 AddSafely(ref SerializableContentPack.eliteDefs, eliteDef);
                 eliteDefs.Add(eliteDef);
                 if (eliteDef.overlay && contentClass.EquipmentDef.passiveBuffDef)
