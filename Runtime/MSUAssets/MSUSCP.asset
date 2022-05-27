@@ -17,7 +17,8 @@ MonoBehaviour:
   projectilePrefabs: []
   gameModePrefabs: []
   effectPrefabs: []
-  networkedObjectPrefabs: []
+  networkedObjectPrefabs:
+  - {fileID: 6129970050706187277, guid: 637525fed156c554b9471c98b903fbbb, type: 3}
   skillDefs: []
   skillFamilies: []
   sceneDefs: []
