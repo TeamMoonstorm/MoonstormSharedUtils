@@ -71,7 +71,6 @@ namespace Moonstorm.Loaders
                     MSULog.Warning($"The material {material} has a shader which's name doesnt start with \"Stubbed\" ({material.shader.name}), this is not allowed for stubbed shaders for MSU. not swapping shader.");
                     continue;
                 }
-
                 try
                 {
                     SwapShader(material);
@@ -81,61 +80,26 @@ namespace Moonstorm.Loaders
                     MSULog.Error($"Failed to swap shader of material {material}: {ex}");
                 }
             }
-            /*if(bundle.isStreamedSceneAssetBundle)
+        }
+
+        protected void SwapShadersFromMaterials(IEnumerable<Material> materials)
+        { 
+            foreach(Material material in materials)
             {
-                MSULog.Warning($"Cannot map materials from a streamed scene asset bundle.");
-                return;
+                if(!material.shader.name.StartsWith("Stubbed"))
+                {
+                    MSULog.Warning($"The material {material} has a shader which's name doesnt start with \"Stubbed\" ({material.shader.name}), this is not allowed for stubbed shaders for MSU. not swapping shader.");
+                    continue;
+                }
+                try
+                {
+                    SwapShader(material);
+                }
+                catch (Exception ex)
+                {
+                    MSULog.Error($"Failed to swap shader of material {material}: {ex}");
+                }
             }
-
-            var cloudMat = Resources.Load<GameObject>("Prefabs/Effects/OrbEffects/LightningStrikeOrbEffect").transform.Find("Ring").GetComponent<ParticleSystemRenderer>().material;
-
-            Material[] assetBundleMaterials = bundle.LoadAllAssets<Material>();
-
-            Material[] gameMaterials = Resources.FindObjectsOfTypeAll<Material>();
-
-            for (int i = 0; i < assetBundleMaterials.Length; i++)
-            {
-                var material = assetBundleMaterials[i];
-                if (material.shader.name.StartsWith("StubbedCalmWater"))
-                {
-                    material.shader = Shader.Find(material.shader.name.Substring(7));
-                    MaterialsWithSwappedShaders.Add(material);
-                    continue;
-                }
-                if (material.shader.name.StartsWith("StubbedDecalicious"))
-                {
-                    material.shader = Shader.Find(material.shader.name.Substring(8));
-                    MaterialsWithSwappedShaders.Add(material);
-                    continue;
-                }
-                // If it's stubbed, just switch out the shader unless it's fucking cloudremap
-                if (material.shader.name.StartsWith("StubbedShader"))
-                {
-                    material.shader = Resources.Load<Shader>("shaders" + material.shader.name.Substring(13));
-                    if (material.shader.name.Contains("Cloud Remap"))
-                    {
-                        var eatShit = new RuntimeCloudMaterialMapper(material);
-                        material.CopyPropertiesFromMaterial(cloudMat);
-                        eatShit.SetMaterialValues(ref material);
-                    }
-                    MaterialsWithSwappedShaders.Add(material);
-                    continue;
-                }
-
-                //If it's this shader it searches for a material with the same name and copies the properties
-                if (material.shader.name.Equals("CopyFromRoR2"))
-                {
-                    foreach (var gameMaterial in gameMaterials)
-                        if (material.name.Equals(gameMaterial.name))
-                        {
-                            material.shader = gameMaterial.shader;
-                            material.CopyPropertiesFromMaterial(gameMaterial);
-                            MaterialsWithSwappedShaders.Add(material);
-                            break;
-                        }
-                    continue;
-                }
-            }*/
         }
 
         private async void SwapShader(Material material)
