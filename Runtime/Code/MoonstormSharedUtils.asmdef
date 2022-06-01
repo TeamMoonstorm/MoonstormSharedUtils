@@ -26,7 +26,8 @@
         "Unity.Addressables.dll",
         "Unity.ResourceManager.dll",
         "Unity.TextMeshPro.dll",
-        "UnityEngine.UI.dll"
+        "UnityEngine.UI.dll",
+        "Unity.Postprocessing.Runtime.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [],
