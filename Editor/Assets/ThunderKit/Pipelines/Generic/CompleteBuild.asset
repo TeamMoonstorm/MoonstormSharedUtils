@@ -30,7 +30,7 @@ MonoBehaviour:
   m_Name: ExecutePipeline
   m_EditorClassIdentifier: 
   Active: 1
-  OverrideManifest: 0
+  OverrideManifest: 1
   targetpipeline: {fileID: 11400000, guid: b5193eb7d28d28847bbcaabe768d005f, type: 2}
 --- !u!114 &8163737811350780012
 MonoBehaviour:
@@ -45,5 +45,5 @@ MonoBehaviour:
   m_Name: ExecutePipeline
   m_EditorClassIdentifier: 
   Active: 1
-  OverrideManifest: 0
+  OverrideManifest: 1
   targetpipeline: {fileID: 11400000, guid: 1d3c168b33650b34884a3c7ec84bd0d9, type: 2}
