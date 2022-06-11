@@ -55,6 +55,7 @@ namespace Moonstorm
                     var keyAssetRuleGroup = itemDisplayDictionary.GetKeyAssetRuleGroup(current.idrs.Asset);
                     HG.ArrayUtils.ArrayAppend(ref current.idrs.Asset.keyAssetRuleGroups, keyAssetRuleGroup);
 
+                    current.idrs.Asset.GenerateRuntimeValues();
                     MSULog.Debug($"Finished appending values from {itemDisplayDictionary}'s {i} entry into {current.idrs.Asset}");
                 }
                 MSULog.Debug($"Finished appending values of {itemDisplayDictionary}");
