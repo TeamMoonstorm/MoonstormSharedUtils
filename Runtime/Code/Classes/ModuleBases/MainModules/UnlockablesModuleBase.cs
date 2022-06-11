@@ -19,15 +19,26 @@ namespace Moonstorm
         public static bool Initialized { get; private set; } = false;
         #endregion
 
-        [SystemInitializer(typeof(UnlockableCatalog), typeof(AchievementManager))]
+        [SystemInitializer(typeof(UnlockableCatalog))]
         private static void SystemInit()
         {
             MSULog.Info($"Initializing Unlockables Module...");
+            RoR2BepInExPack.VanillaFixes.SaferAchievementManager.OnCollectAchievementDefs += AddMSUDefs;
 
             MoonstormUnlockables = new ReadOnlyDictionary<MSUnlockableDef, UnlockableBase>(unlocks);
             unlocks = null;
 
             OnDictionaryCreated?.Invoke(MoonstormUnlockables);
+        }
+
+        private static void AddMSUDefs(List<string> arg1, Dictionary<string, AchievementDef> arg2, List<AchievementDef> arg3)
+        {
+            foreach(AchievementDef def in LoadedAchievements)
+            {
+                arg1.Add(def.identifier);
+                arg2.Add(def.identifier, def);
+                arg3.Add(def);
+            }
         }
 
         #region Unlockables
@@ -57,8 +68,6 @@ namespace Moonstorm
             AddSafely(ref SerializableContentPack.unlockableDefs, contentClass.UnlockableDef);
             contentClass.OnCheckPassed();
             FinishUnlockAndCreateAchievement(contentClass);
-
-            R2API.UnlockableAPI.AddAchievement(contentClass.GetAchievementDef);
             unlocks.Add(contentClass.UnlockableDef, contentClass);
         }
         private void FinishUnlockAndCreateAchievement(UnlockableBase unlockable)

@@ -18,7 +18,6 @@ namespace Moonstorm
           nameof(ArtifactCodeAPI),
           nameof(DamageAPI),
           nameof(RecalculateStatsAPI),
-          nameof(UnlockableAPI),
           nameof(DirectorAPI),
           nameof(CommandHelper),
           nameof(EliteAPI)
