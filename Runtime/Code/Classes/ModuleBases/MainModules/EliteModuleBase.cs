@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
-using RoR2BepInExPack.GlobalEliteRampSolution;
+//using RoR2BepInExPack.GlobalEliteRampSolution;
 
 namespace Moonstorm
 {
@@ -89,8 +89,8 @@ namespace Moonstorm
             contentClass.Initialize();
             foreach(MSEliteDef eliteDef in contentClass.EliteDefs)
             {
-                if (eliteDef.eliteRamp)
-                    EliteRampManager.AddRamp(eliteDef, eliteDef.eliteRamp);
+                //if (eliteDef.eliteRamp)
+                    //EliteRampManager.AddRamp(eliteDef, eliteDef.eliteRamp);
                 AddSafely(ref SerializableContentPack.eliteDefs, eliteDef);
                 eliteDefs.Add(eliteDef);
                 if (eliteDef.overlay && contentClass.EquipmentDef.passiveBuffDef)
