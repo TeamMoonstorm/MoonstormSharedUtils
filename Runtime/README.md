@@ -134,6 +134,9 @@ Loader classes allow the end user to easily load things like Assetbundles, Langu
 
 (Old Changelog can be found [here](https://github.com/TeamMoonstorm/MoonstormSharedUtils/blob/main/MSU/Assets/MoonstormSharedUtils/README-OLD.md))
 
+### '1.0.0'
+* Death
+
 ### '0.8.0'
 
 * Additions:
