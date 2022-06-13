@@ -128,14 +128,8 @@ namespace Moonstorm.Loaders
 
             void RemoveNullFields<T>(ref T[] array)
             {
-                for(int i = array.Length; i >= 0; i--)
-                {
-                    if (array[i] == null)
-                    {
-                        MSULog.Error($"Removing {i}");
-                        HG.ArrayUtils.ArrayRemoveAtAndResize(ref array, i);
-                    }
-                }
+                IEnumerable<T> nonNullValues = array.Where(obj => obj != null);
+                array = nonNullValues.ToArray();
             }
         }
 
