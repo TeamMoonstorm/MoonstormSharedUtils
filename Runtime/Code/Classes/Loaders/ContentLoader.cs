@@ -77,6 +77,7 @@ namespace Moonstorm.Loaders
                 j = num2;
             }
 
+            EnsureNoFieldsAreNull();
             ContentPack = SerializableContentPack.GetOrCreateContentPack();
             ContentPack.identifier = identifier;
 
@@ -92,7 +93,50 @@ namespace Moonstorm.Loaders
                     j = num2;
                 }
             }
+        }
 
+        private void EnsureNoFieldsAreNull()
+        {
+            RemoveNullFields(ref SerializableContentPack.artifactDefs);
+            RemoveNullFields(ref SerializableContentPack.bodyPrefabs);
+            RemoveNullFields(ref SerializableContentPack.buffDefs);
+            RemoveNullFields(ref SerializableContentPack.effectPrefabs);
+            RemoveNullFields(ref SerializableContentPack.eliteDefs);
+            RemoveNullFields(ref SerializableContentPack.entitlementDefs);
+            RemoveNullFields(ref SerializableContentPack.entityStateConfigurations);
+            RemoveNullFields(ref SerializableContentPack.entityStateTypes);
+            RemoveNullFields(ref SerializableContentPack.equipmentDefs);
+            RemoveNullFields(ref SerializableContentPack.expansionDefs);
+            RemoveNullFields(ref SerializableContentPack.gameEndingDefs);
+            RemoveNullFields(ref SerializableContentPack.gameModePrefabs);
+            RemoveNullFields(ref SerializableContentPack.itemDefs);
+            RemoveNullFields(ref SerializableContentPack.itemRelationshipProviders);
+            RemoveNullFields(ref SerializableContentPack.itemRelationshipTypes);
+            RemoveNullFields(ref SerializableContentPack.itemTierDefs);
+            RemoveNullFields(ref SerializableContentPack.masterPrefabs);
+            RemoveNullFields(ref SerializableContentPack.miscPickupDefs);
+            RemoveNullFields(ref SerializableContentPack.musicTrackDefs);
+            RemoveNullFields(ref SerializableContentPack.networkedObjectPrefabs);
+            RemoveNullFields(ref SerializableContentPack.networkSoundEventDefs);
+            RemoveNullFields(ref SerializableContentPack.projectilePrefabs);
+            RemoveNullFields(ref SerializableContentPack.sceneDefs);
+            RemoveNullFields(ref SerializableContentPack.skillDefs);
+            RemoveNullFields(ref SerializableContentPack.skillFamilies);
+            RemoveNullFields(ref SerializableContentPack.surfaceDefs);
+            RemoveNullFields(ref SerializableContentPack.survivorDefs);
+            RemoveNullFields(ref SerializableContentPack.unlockableDefs);
+
+            void RemoveNullFields<T>(ref T[] array)
+            {
+                for(int i = array.Length; i >= 0; i--)
+                {
+                    if (array[i] == null)
+                    {
+                        MSULog.Error($"Removing {i}");
+                        HG.ArrayUtils.ArrayRemoveAtAndResize(ref array, i);
+                    }
+                }
+            }
         }
 
         public static void PopulateTypeFields<TAsset>(Type typeToPopulate, NamedAssetCollection<TAsset> assets) where TAsset : UnityEngine.Object
