@@ -81,27 +81,18 @@ namespace Moonstorm.EditorUtils.Settings
         private void FillWithDefaultShaders()
         {
             string rootPath = AssetDatabase.GUIDToAssetPath(ShaderRootGUID);
-            string fullPath = Path.GetFullPath(rootPath);
-            string pathWithoutFile = fullPath.Replace(Path.GetFileName(fullPath), "");
+            string pathWithoutFile = rootPath.Replace(Path.GetFileName(rootPath), "");
             IEnumerable<string> files = Directory.EnumerateFiles(pathWithoutFile, "*.shader", SearchOption.AllDirectories);
-            shaderPairs = files.Select(ModifyPath)
-                .Select(path => FileUtil.GetProjectRelativePath(path.Replace("\\", "/")))
-                .Select(relativePath => AssetDatabase.LoadAssetAtPath<Shader>(relativePath))
-                .Select(shader => new ShaderPair(null, shader)).ToList();
 
-            shaderDictionarySO.Update();
+            shaderPairs = files.Select(file => file.Replace("\\", "/"))
+                .Select(shaderPath => AssetDatabase.LoadAssetAtPath<Shader>(shaderPath))
+                .Select(shaderAsset => new ShaderPair(null, shaderAsset))
+                .ToList();
+
             shaderDictionarySO.ApplyModifiedProperties();
             AssetDatabase.SaveAssets();
         }
 
-        private string ModifyPath(string path)
-        {
-            if (path.Contains($"Packages\\MoonstormSharedEditorUtils"))
-            {
-                return path.Replace($"Packages\\MoonstormSharedEditorUtils", "Packages\\teammoonstorm-moonstormsharededitorutils");
-            }
-            return path;
-        }
 
         private void AttemptToFinishDictionaryAutomatically()
         {
