@@ -54,6 +54,10 @@ namespace Moonstorm.EditorUtils.EditorWindows
             }
         }
         SerializedProperty _inspectedRule = null;
+        public void OnDisable()
+        {
+            SerializedObject.ApplyModifiedProperties();
+        }
 
         protected override void CreateGUI()
         {
