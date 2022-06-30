@@ -17,6 +17,7 @@ namespace Moonstorm.EditorUtils.Inspectors
     [CustomEditor(typeof(NamedIDRS))]
     public class NamedIDRSInspector : Editor
     {
+        private static ItemDisplayDictionaryEditorWindow Instance;
         public override VisualElement CreateInspectorGUI()
         {
             VisualElement element = new VisualElement();
@@ -28,7 +29,11 @@ namespace Moonstorm.EditorUtils.Inspectors
         }
         private void OpenWindow()
         {
-            ObjectEditingEditorWindow<NamedIDRS>.OpenEditorWindow<NamedIDRSEditorWindow>(target);
+            if (Instance == null)
+            {
+                Instance = ObjectEditingEditorWindow<ItemDisplayDictionary>.OpenEditorWindow<ItemDisplayDictionaryEditorWindow>(target);
+            }
+            Instance.Focus();
         }
     }
 }

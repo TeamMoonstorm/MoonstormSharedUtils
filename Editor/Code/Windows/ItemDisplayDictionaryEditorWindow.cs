@@ -18,7 +18,6 @@ namespace Moonstorm.EditorUtils.EditorWindows
 {
     public class ItemDisplayDictionaryEditorWindow : MSObjectEditingEditorWindow<ItemDisplayDictionary>
     {
-        public static ItemDisplayDictionaryEditorWindow Instance { get; set; }
         VisualElement keyAssetContainer;
         VisualElement rootContainer;
         VisualElement dictionaryContainer;
@@ -55,10 +54,6 @@ namespace Moonstorm.EditorUtils.EditorWindows
             }
         }
         SerializedProperty _inspectedRule = null;
-        public void OnEnable()
-        {
-            Instance = this;
-        }
         public void OnDisable()
         {
             SerializedObject.ApplyModifiedProperties();

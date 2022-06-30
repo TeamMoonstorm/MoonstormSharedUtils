@@ -49,6 +49,7 @@ namespace Moonstorm
 
             foreach(ItemDisplayDictionary itemDisplayDictionary in itemDisplayDictionaries)
             {
+                MSULog.Info($"{itemDisplayDictionary.name}, entries: {itemDisplayDictionary.namedDisplayDictionary.Count}");
                 for(int i = 0; i < itemDisplayDictionary.namedDisplayDictionary.Count; i++)
                 {
                     var current = itemDisplayDictionary.namedDisplayDictionary[i];
