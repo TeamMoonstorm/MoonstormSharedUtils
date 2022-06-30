@@ -123,7 +123,6 @@ namespace Moonstorm.EditorUtils.Settings
                 pair.original = origShader;
             }
 
-            shaderDictionarySO.Update();
             shaderDictionarySO.ApplyModifiedProperties();
         }
     }
