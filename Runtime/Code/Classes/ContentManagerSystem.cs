@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace Moonstorm
 {
-    public static class ContentManagerSystem
+    internal static class ContentManagerSystem
     {
         [SystemInitializer(new Type[] { typeof(BodyCatalog), typeof(ItemCatalog), typeof(EquipmentCatalog), typeof(BuffCatalog) })]
         private static void SystemInit()

@@ -18,6 +18,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
 {
     public class ItemDisplayDictionaryEditorWindow : MSObjectEditingEditorWindow<ItemDisplayDictionary>
     {
+        public static ItemDisplayDictionaryEditorWindow Instance { get; set; }
         VisualElement keyAssetContainer;
         VisualElement rootContainer;
         VisualElement dictionaryContainer;
@@ -54,6 +55,10 @@ namespace Moonstorm.EditorUtils.EditorWindows
             }
         }
         SerializedProperty _inspectedRule = null;
+        public void OnEnable()
+        {
+            Instance = this;
+        }
         public void OnDisable()
         {
             SerializedObject.ApplyModifiedProperties();
@@ -153,6 +158,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
 
             OnKeyAssetSet();
             OnDisplayPrefabSet();
+            SerializedObject.ApplyModifiedProperties();
 
             void OnKeyAssetSet(ChangeEvent<UnityEngine.Object> evt = null)
             {
@@ -316,6 +322,8 @@ namespace Moonstorm.EditorUtils.EditorWindows
                 .RegisterCallback<ChangeEvent<string>>(_ => dictionaryHelper.TiedListView.Refresh());
             foldoutContainer[1]
                 .RegisterCallback<ChangeEvent<UnityEngine.Object>>(_ => dictionaryHelper.TiedListView.Refresh());
+
+            SerializedObject.ApplyModifiedProperties();
         }
 
         private void OnInspectedRuleChanged()
@@ -349,6 +357,8 @@ namespace Moonstorm.EditorUtils.EditorWindows
             subContainer.Bind(SerializedObject);
 
             idphValuesContainer.Q<TextField>("childName").RegisterValueChangedCallback(_ => displayRulesHelper.TiedListView.Refresh());
+
+            SerializedObject.ApplyModifiedProperties();
         }
     }
 }

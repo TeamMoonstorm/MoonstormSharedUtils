@@ -173,7 +173,7 @@ namespace Moonstorm
                         {
                             ConfigureField(field, identifierToConfigFile[identifier]);
                         }
-                        catch(Exception e) { MSULog.Error($"{e} (Field: {e})"); }
+                        catch(Exception e) { MSULog.Error($"{e} (Field: {field.Name}, fieldType: {field.FieldType})"); }
                     }
                 }
                 catch(Exception e) { MSULog.Error($"{e} (Identifier: {identifier}, Fields: {fields}"); }
@@ -182,8 +182,10 @@ namespace Moonstorm
 
         private static void ConfigureField(FieldInfo field, ConfigFile config)
         {
-            MSULog.Debug($"Configuring {field.Name} (From {field.DeclaringType.Name}");
-
+            MSULog.Debug($"Configuring {field.Name}\n" +
+                $"(Field Value Type: {field.FieldType.Name}\n" +
+                $"From {field.DeclaringType.Name})");
+            
             var attribute = field.GetCustomAttribute<ConfigurableFieldAttribute>(true);
 
             switch(field.GetValue(null))
