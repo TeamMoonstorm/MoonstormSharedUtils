@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Moonstorm
 {
-    [CreateAssetMenu(fileName = "New VanillaSkinDef", menuName = "Moonstorm/Vanilla SkinDef", order = 0)]
+    [Obsolete("VanillaSkinDefinition is obsolete and causes issues at load, utilize VanillaSkinDefinition instead")]
     public class VanillaSkinDef : SkinDef
     {
         public CustomGameObjectActivation[] customGameObjectActivations = Array.Empty<CustomGameObjectActivation>();

@@ -1,0 +1,14 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <ui:VisualElement name="InspectorDataContainer">
+        <uie:PropertyField name="_baseSkins" binding-path="_baseSkins" />
+        <uie:PropertyField name="icon" binding-path="icon" />
+        <uie:PropertyField name="nameToken" binding-path="nameToken" />
+        <uie:PropertyField name="unlockableDef" binding-path="unlockableDef" />
+        <uie:PropertyField name="bodyAddress" binding-path="bodyAddress" tooltip="The Addressable Address of the CharacterBody prefab for this skin" />
+        <uie:PropertyField name="displayAddress" binding-path="displayAddress" tooltip="The Addressable Address for the Display prefab for this skin" />
+        <uie:PropertyField name="_gameObjectActivations" binding-path="_gameObjectActivations" />
+        <uie:PropertyField name="_meshReplacements" binding-path="_meshReplacements" />
+        <uie:PropertyField name="_projectileGhostReplacements" binding-path="_projectileGhostReplacements" />
+        <uie:PropertyField name="_minionSkinReplacements" binding-path="_minionSkinReplacements" />
+    </ui:VisualElement>
+</ui:UXML>
