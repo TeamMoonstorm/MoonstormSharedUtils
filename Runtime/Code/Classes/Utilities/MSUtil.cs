@@ -1,5 +1,6 @@
 ﻿using RoR2;
 using RoR2.Audio;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Moonstorm
@@ -60,6 +61,22 @@ namespace Moonstorm
                 comp = obj.AddComponent<T>();
 
             return comp;
+        }
+
+        public static bool AddIfNotInCollection<T>(this ICollection<T> collection, T entry)
+        {
+            if (collection.Contains(entry))
+                return false;
+            collection.Add(entry);
+            return true;
+        }
+
+        public static bool RemoveIfNotInCollection<T>(this ICollection<T> collection, T entry)
+        {
+            if (!collection.Contains(entry))
+                return false;
+            collection.Remove(entry);
+            return true;
         }
         #endregion
     }

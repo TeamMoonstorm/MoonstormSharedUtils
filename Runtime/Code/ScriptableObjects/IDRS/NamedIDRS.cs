@@ -75,10 +75,38 @@ namespace Moonstorm
             }
         }
 
+        public static readonly List<NamedIDRS> instances = new List<NamedIDRS>();
         public ItemDisplayRuleSet idrs;
 
-        [Space(2)]
+        [Space]
         public List<AddressNamedRuleGroup> namedRuleGroups = new List<AddressNamedRuleGroup>();
+
+        private void Awake()
+        {
+            instances.AddIfNotInCollection(this);
+        }
+        private void OnDestroy()
+        {
+            instances.RemoveIfNotInCollection(this);
+        }
+
+        [SystemInitializer]
+        private static void SystemInitializer()
+        {
+            AddressableAssets.AddressableAsset.OnAddressableAssetsLoaded += () =>
+            {
+                MSULog.Info($"Initializing NamedIDRS");
+                foreach (NamedIDRS namedIdrs in instances)
+                {
+                    foreach (ItemDisplayRuleSet.KeyAssetRuleGroup keyAssetRuleGroup in namedIdrs.GetKeyAssetRuleGroups())
+                    {
+                        HG.ArrayUtils.ArrayAppend(ref namedIdrs.idrs.keyAssetRuleGroups, keyAssetRuleGroup);
+                    }
+                    namedIdrs.idrs.GenerateRuntimeValues();
+                    MSULog.Debug($"Finished appending values from {namedIdrs} to {namedIdrs.idrs}");
+                }
+            };
+        }
 
         internal ItemDisplayRuleSet.KeyAssetRuleGroup[] GetKeyAssetRuleGroups()
         {

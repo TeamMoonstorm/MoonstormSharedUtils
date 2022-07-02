@@ -73,12 +73,43 @@ namespace Moonstorm
             }
         }
 
+        public static readonly List<ItemDisplayDictionary> instances = new List<ItemDisplayDictionary>();
         public UnityEngine.Object keyAsset;
         public GameObject displayPrefab;
 
         [Space]
         public List<NamedDisplayDictionary> namedDisplayDictionary = new List<NamedDisplayDictionary>();
 
+        private void Awake()
+        {
+            instances.AddIfNotInCollection(this);
+        }
+        private void OnDestroy()
+        {
+            instances.RemoveIfNotInCollection(this);
+        }
+
+        [SystemInitializer]
+        private static void SystemInitializer()
+        {
+            AddressableAssets.AddressableAsset.OnAddressableAssetsLoaded += () =>
+            {
+                MSULog.Info($"Initializing ItemDisplayDictionary");
+                foreach (ItemDisplayDictionary itemDisplayDictionary in instances)
+                {
+                    for (int i = 0; i < itemDisplayDictionary.namedDisplayDictionary.Count; i++)
+                    {
+                        var current = itemDisplayDictionary.namedDisplayDictionary[i];
+                        var keyAssetRuleGroup = itemDisplayDictionary.GetKeyAssetRuleGroup(current.idrs.Asset);
+                        HG.ArrayUtils.ArrayAppend(ref current.idrs.Asset.keyAssetRuleGroups, keyAssetRuleGroup);
+
+                        current.idrs.Asset.GenerateRuntimeValues();
+                        MSULog.Debug($"Finished appending values from {itemDisplayDictionary}'s {i} entry into {current.idrs.Asset}");
+                    }
+                    MSULog.Debug($"Finished appending values of {itemDisplayDictionary}");
+                }
+            };
+        }
         public ItemDisplayRuleSet.KeyAssetRuleGroup GetKeyAssetRuleGroup(ItemDisplayRuleSet ruleSet)
         {
             var keyAssetRuleGroup = new ItemDisplayRuleSet.KeyAssetRuleGroup();
