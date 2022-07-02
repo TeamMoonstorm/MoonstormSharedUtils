@@ -16,6 +16,7 @@ namespace Moonstorm.EditorUtils.Inspectors
         }
         protected override void DrawInspectorGUI()
         {
+            DrawInspectorElement.Q<PropertyField>("m_Script").SetEnabled(false);
         }
     }
 }

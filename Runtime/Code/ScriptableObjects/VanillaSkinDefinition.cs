@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.Rendering;
 using Object = UnityEngine.Object;
 
 namespace Moonstorm
@@ -28,6 +29,34 @@ namespace Moonstorm
             public async Task<SkinDef> Upgrade()
             {
                 return await Addressables.LoadAssetAsync<SkinDef>(skinAddress).Task;
+            }
+        }
+
+        [Serializable]
+        public class MSRendererInfo
+        {
+            public Material defaultMaterial;
+            public ShadowCastingMode defaultShadowCastingMode;
+            public bool ignoreOverlays;
+            public bool hideOnDeath;
+            public int rendererIndex;
+
+            public CharacterModel.RendererInfo Upgrade(CharacterModel model)
+            {
+                if (rendererIndex < 0 || rendererIndex > model.baseRendererInfos.Length)
+                {
+                    throw new IndexOutOfRangeException($"Renderer Index of MSGameObjectActivation is out of bounds. (index: {rendererIndex})");
+                }
+
+                var baseRenderInfo = model.baseRendererInfos[rendererIndex];
+                return new CharacterModel.RendererInfo
+                {
+                    defaultMaterial = defaultMaterial,
+                    defaultShadowCastingMode = defaultShadowCastingMode,
+                    hideOnDeath = hideOnDeath,
+                    ignoreOverlays = ignoreOverlays,
+                    renderer = baseRenderInfo.renderer
+                };
             }
         }
 
@@ -135,6 +164,7 @@ namespace Moonstorm
         public string bodyAddress;
         public string displayAddress;
         public MSBaseSkin[] _baseSkins;
+        public MSRendererInfo[] _rendererInfos;
         public MSGameObjectActivation[] _gameObjectActivations;
         public MSMeshReplacement[] _meshReplacements;
         public MSProjectileGhostReplacement[] _projectileGhostReplacements;
@@ -164,7 +194,10 @@ namespace Moonstorm
                         HG.ArrayUtils.ArrayAppend(ref baseSkins, skin);
                     }
                     rootObject = modelObject;
-                    rendererInfos = model.baseRendererInfos;
+                    foreach(var item in _rendererInfos)
+                    {
+                        HG.ArrayUtils.ArrayAppend(ref rendererInfos, item.Upgrade(model));
+                    }
                     foreach (var item in _gameObjectActivations)
                     {
                         HG.ArrayUtils.ArrayAppend(ref gameObjectActivations, item.Upgrade(model, displayModel));
