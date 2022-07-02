@@ -61,8 +61,12 @@ namespace Moonstorm.EditorUtils.Settings
             if (shaderDictionarySO == null)
                 shaderDictionarySO = new SerializedObject(this);
 
-            if (shaderPairs.Count == 0)
-                FillWithDefaultShaders();
+            var addDefaultStubbeds = new Button();
+            addDefaultStubbeds.text = $"Add Default Stubbed Shaders";
+            addDefaultStubbeds.tooltip = $"When clicked, MSU will populate the list with it's default stubbed shaders";
+            addDefaultStubbeds.style.maxWidth = new StyleLength(new Length(250));
+            addDefaultStubbeds.clicked += AddDefaultStubbeds;
+            rootElement.Add(addDefaultStubbeds);
 
             var attemptToFinish = new Button();
             attemptToFinish.text = $"Attempt to find missing keys";
@@ -110,6 +114,25 @@ namespace Moonstorm.EditorUtils.Settings
             AssetDatabase.SaveAssets();
         }
 
+        private void AddDefaultStubbeds()
+        {
+            string rootPath = AssetDatabase.GUIDToAssetPath(ShaderRootGUID);
+            string pathWithoutFile = rootPath.Replace(Path.GetFileName(rootPath), "");
+            IEnumerable<Shader> files = Directory.EnumerateFiles(pathWithoutFile, "*.shader", SearchOption.AllDirectories)
+                .Select(file => file.Replace("\\", "/"))
+                .Select(shaderPath => AssetDatabase.LoadAssetAtPath<Shader>(shaderPath));
+
+            foreach(Shader shader in files)
+            {
+                var stubbeds = shaderPairs.Select(sp => sp.stubbed);
+                if(!stubbeds.Contains(shader))
+                {
+                    shaderPairs.Add(new ShaderPair(null, shader));
+                }
+            }
+            shaderDictionarySO.ApplyModifiedProperties();
+            AssetDatabase.SaveAssets();
+        }
 
         private void AttemptToFinishDictionaryAutomatically()
         {

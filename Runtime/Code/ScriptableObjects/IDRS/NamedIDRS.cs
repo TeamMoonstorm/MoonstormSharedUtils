@@ -98,12 +98,19 @@ namespace Moonstorm
                 MSULog.Info($"Initializing NamedIDRS");
                 foreach (NamedIDRS namedIdrs in instances)
                 {
-                    foreach (ItemDisplayRuleSet.KeyAssetRuleGroup keyAssetRuleGroup in namedIdrs.GetKeyAssetRuleGroups())
+                    try
                     {
-                        HG.ArrayUtils.ArrayAppend(ref namedIdrs.idrs.keyAssetRuleGroups, keyAssetRuleGroup);
+                        foreach (ItemDisplayRuleSet.KeyAssetRuleGroup keyAssetRuleGroup in namedIdrs.GetKeyAssetRuleGroups())
+                        {
+                            HG.ArrayUtils.ArrayAppend(ref namedIdrs.idrs.keyAssetRuleGroups, keyAssetRuleGroup);
+                        }
+                        namedIdrs.idrs.GenerateRuntimeValues();
+                        MSULog.Debug($"Finished appending values from {namedIdrs} to {namedIdrs.idrs}");
                     }
-                    namedIdrs.idrs.GenerateRuntimeValues();
-                    MSULog.Debug($"Finished appending values from {namedIdrs} to {namedIdrs.idrs}");
+                    catch(Exception e)
+                    {
+                        MSULog.Error($"{e}\n({namedIdrs}");
+                    }
                 }
             };
         }

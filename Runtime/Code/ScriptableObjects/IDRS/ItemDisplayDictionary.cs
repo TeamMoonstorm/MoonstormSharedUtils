@@ -99,12 +99,19 @@ namespace Moonstorm
                 {
                     for (int i = 0; i < itemDisplayDictionary.namedDisplayDictionary.Count; i++)
                     {
-                        var current = itemDisplayDictionary.namedDisplayDictionary[i];
-                        var keyAssetRuleGroup = itemDisplayDictionary.GetKeyAssetRuleGroup(current.idrs.Asset);
-                        HG.ArrayUtils.ArrayAppend(ref current.idrs.Asset.keyAssetRuleGroups, keyAssetRuleGroup);
+                        try
+                        {
+                            var current = itemDisplayDictionary.namedDisplayDictionary[i];
+                            var keyAssetRuleGroup = itemDisplayDictionary.GetKeyAssetRuleGroup(current.idrs.Asset);
+                            HG.ArrayUtils.ArrayAppend(ref current.idrs.Asset.keyAssetRuleGroups, keyAssetRuleGroup);
 
-                        current.idrs.Asset.GenerateRuntimeValues();
-                        MSULog.Debug($"Finished appending values from {itemDisplayDictionary}'s {i} entry into {current.idrs.Asset}");
+                            current.idrs.Asset.GenerateRuntimeValues();
+                            MSULog.Debug($"Finished appending values from {itemDisplayDictionary}'s {i} entry into {current.idrs.Asset}");
+                        }
+                        catch(Exception e)
+                        {
+                            MSULog.Error($"{e}\n({itemDisplayDictionary} index {i}");
+                        }
                     }
                     MSULog.Debug($"Finished appending values of {itemDisplayDictionary}");
                 }
