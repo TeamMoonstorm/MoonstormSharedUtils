@@ -41,25 +41,27 @@ namespace Moonstorm.EditorUtils.Settings
 
             allShaders = origs.Union(stubbeds).ToList();
             validPairs = shaderPairs.Where(p => p.original && p.stubbed).ToList();
+
+            shaderDictionarySO.ApplyModifiedProperties();
+            AssetDatabase.SaveAssets();
         }
 
         private SerializedObject shaderDictionarySO;
 
         public List<ShaderPair> shaderPairs = new List<ShaderPair>();
-        [HideInInspector]
         public List<Shader> allShaders = new List<Shader>();
-        [HideInInspector]
         public List<ShaderPair> validPairs = new List<ShaderPair>();
 
         public override void CreateSettingsUI(VisualElement rootElement)
         {
-            UpdateLists();
             if (shaderDictionarySO == null)
                 shaderDictionarySO = new SerializedObject(this);
 
+            Debug.Log($"Shader Pair Count: {shaderPairs.Count}");
             if (shaderPairs.Count == 0)
                 FillWithDefaultShaders();
 
+            UpdateLists();
             var attemptToFinish = new Button();
             attemptToFinish.text = $"Attempt to find missing keys";
             attemptToFinish.tooltip = $"When clicked, MSEU will attempt to find the missing keys based off the value of stubbed shader." +
@@ -77,6 +79,9 @@ namespace Moonstorm.EditorUtils.Settings
             rootElement.Add(shaderPair);
 
             rootElement.Bind(shaderDictionarySO);
+
+            shaderDictionarySO.ApplyModifiedProperties();
+            AssetDatabase.SaveAssets();
         }
         private void FillWithDefaultShaders()
         {
@@ -124,6 +129,7 @@ namespace Moonstorm.EditorUtils.Settings
             }
 
             shaderDictionarySO.ApplyModifiedProperties();
+            AssetDatabase.SaveAssets();
         }
     }
 }

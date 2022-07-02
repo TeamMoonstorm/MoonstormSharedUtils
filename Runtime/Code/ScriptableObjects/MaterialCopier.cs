@@ -23,6 +23,7 @@ namespace Moonstorm
         [SystemInitializer]
         private static void Initialize()
         {
+            MSULog.Debug($"Material Copier Initialized");
             foreach(MaterialCopier copier in instances)
             {
                 copier.CopyMaterials();
@@ -30,13 +31,12 @@ namespace Moonstorm
         }
 
         public List<MaterialPair> materialPairs = new List<MaterialPair>();
-        public AddressableAssets.AddressableUnlockableDef ass;
-        public void OnEnable()
+        public void Awake()
         {
             instances.Add(this);
         }
 
-        public void OnDisable()
+        public void OnDestroy()
         {
             instances.Remove(this);
         }
