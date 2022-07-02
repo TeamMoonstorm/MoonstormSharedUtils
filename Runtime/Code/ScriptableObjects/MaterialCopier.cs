@@ -19,6 +19,7 @@ namespace Moonstorm
             public Material material;
         }
         private static readonly List<MaterialCopier> instances = new List<MaterialCopier>();
+        private static readonly List<Material> copiedMaterials = new List<Material>();
 
         [SystemInitializer]
         private static void Initialize()
@@ -26,6 +27,7 @@ namespace Moonstorm
             MSULog.Debug($"Material Copier Initialized");
             foreach(MaterialCopier copier in instances)
             {
+                MSULog.Debug($"Copying materials from {copier}");
                 copier.CopyMaterials();
             }
         }
@@ -47,6 +49,7 @@ namespace Moonstorm
             {
                 try
                 {
+                    MSULog.Debug($"{pair.materialAddress}\n{pair.material}");
                     CopyFromMaterialAddress(pair);
                 }
                 catch(Exception ex)
@@ -62,6 +65,8 @@ namespace Moonstorm
             var task = asyncOp.Task;
             var originalMaterial = await task;
             materialPair.material.CopyPropertiesFromMaterial(originalMaterial);
+            copiedMaterials.Add(materialPair.material);
+            MSULog.Debug($"Properties from {originalMaterial} copied to {materialPair.material}");
         }
     }
 }
