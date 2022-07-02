@@ -63,9 +63,8 @@ namespace Moonstorm.EditorUtils.Pipelines
             var bundleArtifactPath = BundleArtifactPath.Resolve(pipeline, this);
             Directory.CreateDirectory(bundleArtifactPath);
 
-            MaterialShaderManager.ShaderDictionary.UpdateLists();
-            var origToStubbed = MaterialShaderManager.OrigToStubbed;
-            var stubbedToOrig = MaterialShaderManager.StubbedToOrig;
+            var origToStubbed = ShaderDictionary.OrigToStubbed;
+            var stubbedToOrig = ShaderDictionary.StubbedToOrig;
 
             var materials = GetAllMaterialsWithOrigShaders(origToStubbed.Keys.ToArray());
 

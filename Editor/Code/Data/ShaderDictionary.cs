@@ -34,34 +34,36 @@ namespace Moonstorm.EditorUtils.Settings
             GetOrCreateSettings<ShaderDictionary>();
         }
 
-        public void UpdateLists()
-        {
-            var origs = shaderPairs.Where(p => p.original).Select(p => p.original);
-            var stubbeds = shaderPairs.Where(p => p.stubbed).Select(p => p.stubbed);
-
-            allShaders = origs.Union(stubbeds).ToList();
-            validPairs = shaderPairs.Where(p => p.original && p.stubbed).ToList();
-
-            shaderDictionarySO.ApplyModifiedProperties();
-            AssetDatabase.SaveAssets();
-        }
-
         private SerializedObject shaderDictionarySO;
 
         public List<ShaderPair> shaderPairs = new List<ShaderPair>();
-        public List<Shader> allShaders = new List<Shader>();
-        public List<ShaderPair> validPairs = new List<ShaderPair>();
 
+        public static Dictionary<Shader, Shader> OrigToStubbed
+        {
+            get
+            {
+                return GetOrCreateSettings<ShaderDictionary>().shaderPairs
+                    .Where(sp => sp.stubbed != null && sp.original != null)
+                    .ToDictionary(k => k.original, v => v.stubbed);
+            }
+        }
+        public static Dictionary<Shader, Shader> StubbedToOrig
+        {
+            get
+            {
+                return GetOrCreateSettings<ShaderDictionary>().shaderPairs
+                    .Where(sp => sp.stubbed != null && sp.original != null)
+                    .ToDictionary(k => k.stubbed, v => v.original);
+            }
+        }
         public override void CreateSettingsUI(VisualElement rootElement)
         {
             if (shaderDictionarySO == null)
                 shaderDictionarySO = new SerializedObject(this);
 
-            Debug.Log($"Shader Pair Count: {shaderPairs.Count}");
             if (shaderPairs.Count == 0)
                 FillWithDefaultShaders();
 
-            UpdateLists();
             var attemptToFinish = new Button();
             attemptToFinish.text = $"Attempt to find missing keys";
             attemptToFinish.tooltip = $"When clicked, MSEU will attempt to find the missing keys based off the value of stubbed shader." +
@@ -79,9 +81,19 @@ namespace Moonstorm.EditorUtils.Settings
             rootElement.Add(shaderPair);
 
             rootElement.Bind(shaderDictionarySO);
-
-            shaderDictionarySO.ApplyModifiedProperties();
-            AssetDatabase.SaveAssets();
+        }
+        internal static List<Shader> GetAllShadersFromDictionary()
+        {
+            List<Shader> list = new List<Shader>();
+            var sd = GetOrCreateSettings<ShaderDictionary>();
+            foreach(ShaderPair pair in sd.shaderPairs)
+            {
+                if (pair.stubbed != null && !list.Contains(pair.stubbed))
+                    list.Add(pair.stubbed);
+                if (pair.original != null && !list.Contains(pair.original))
+                    list.Add(pair.original);
+            }
+            return list;
         }
         private void FillWithDefaultShaders()
         {
@@ -129,7 +141,6 @@ namespace Moonstorm.EditorUtils.Settings
             }
 
             shaderDictionarySO.ApplyModifiedProperties();
-            AssetDatabase.SaveAssets();
         }
     }
 }

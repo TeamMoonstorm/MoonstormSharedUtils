@@ -9,13 +9,10 @@ namespace Moonstorm.EditorUtils.ShaderSystem
 {
     public static class MaterialShaderManager
     {
-        public static ShaderDictionary ShaderDictionary { get => ShaderDictionary.GetOrCreateSettings<ShaderDictionary>(); }
-        public static Dictionary<Shader, Shader> OrigToStubbed { get => ShaderDictionary.validPairs.ToDictionary(k => k.original, v => v.stubbed); }
-        public static Dictionary<Shader, Shader> StubbedToOrig { get => ShaderDictionary.validPairs.ToDictionary(k => k.stubbed, v => v.original); }
         public static void Upgrade(Material material)
         {
             var currentShader = material.shader;
-            if (OrigToStubbed.TryGetValue(currentShader, out Shader realShader))
+            if (ShaderDictionary.OrigToStubbed.TryGetValue(currentShader, out Shader realShader))
             {
                 if (realShader)
                 {
@@ -28,7 +25,7 @@ namespace Moonstorm.EditorUtils.ShaderSystem
         public static void Downgrade(Material material)
         {
             var currentShader = material.shader;
-            if (StubbedToOrig.TryGetValue(currentShader, out Shader stubbedShader))
+            if (ShaderDictionary.StubbedToOrig.TryGetValue(currentShader, out Shader stubbedShader))
             {
                 if (stubbedShader)
                 {
@@ -60,7 +57,7 @@ namespace Moonstorm.EditorUtils.ShaderSystem
 
         public static List<Material> GetAllMaterials()
         {
-            return RoR2EditorKit.Utilities.AssetDatabaseUtils.FindAssetsByType<Material>().Where(mat => ShaderDictionary.allShaders.Contains(mat.shader)).ToList();
+            return RoR2EditorKit.Utilities.AssetDatabaseUtils.FindAssetsByType<Material>().Where(mat => ShaderDictionary.GetAllShadersFromDictionary().Contains(mat.shader)).ToList();
         }
     }
 }
