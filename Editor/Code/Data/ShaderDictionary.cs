@@ -37,6 +37,7 @@ namespace Moonstorm.EditorUtils.Settings
         private SerializedObject shaderDictionarySO;
 
         public List<ShaderPair> shaderPairs = new List<ShaderPair>();
+        public string testString;
 
         public static Dictionary<Shader, Shader> OrigToStubbed
         {
@@ -60,6 +61,8 @@ namespace Moonstorm.EditorUtils.Settings
         {
             if (shaderDictionarySO == null)
                 shaderDictionarySO = new SerializedObject(this);
+
+            rootElement.Add(CreateStandardField(nameof(testString)));
 
             var addDefaultStubbeds = new Button();
             addDefaultStubbeds.text = $"Add Default Stubbed Shaders";
@@ -99,20 +102,6 @@ namespace Moonstorm.EditorUtils.Settings
             }
             return list;
         }
-        private void FillWithDefaultShaders()
-        {
-            string rootPath = AssetDatabase.GUIDToAssetPath(ShaderRootGUID);
-            string pathWithoutFile = rootPath.Replace(Path.GetFileName(rootPath), "");
-            IEnumerable<string> files = Directory.EnumerateFiles(pathWithoutFile, "*.shader", SearchOption.AllDirectories);
-
-            shaderPairs = files.Select(file => file.Replace("\\", "/"))
-                .Select(shaderPath => AssetDatabase.LoadAssetAtPath<Shader>(shaderPath))
-                .Select(shaderAsset => new ShaderPair(null, shaderAsset))
-                .ToList();
-
-            shaderDictionarySO.ApplyModifiedProperties();
-            AssetDatabase.SaveAssets();
-        }
 
         private void AddDefaultStubbeds()
         {
@@ -130,8 +119,8 @@ namespace Moonstorm.EditorUtils.Settings
                     shaderPairs.Add(new ShaderPair(null, shader));
                 }
             }
+
             shaderDictionarySO.ApplyModifiedProperties();
-            AssetDatabase.SaveAssets();
         }
 
         private void AttemptToFinishDictionaryAutomatically()
