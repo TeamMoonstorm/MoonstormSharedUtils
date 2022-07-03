@@ -69,7 +69,7 @@ namespace Moonstorm
             {
                 EliteEquipmentBase equipmentBase;
                 bool flag = EquipmentModuleBase.eliteEquip.TryGetValue(def.eliteEquipmentDef, out equipmentBase);
-                if(flag)
+                if(flag && !initializedEliteEquipmentBases.Contains(equipmentBase))
                 {
                     initializedEliteEquipmentBases.Add(equipmentBase);
                 }
