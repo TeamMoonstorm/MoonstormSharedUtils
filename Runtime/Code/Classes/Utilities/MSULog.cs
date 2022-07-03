@@ -24,17 +24,26 @@ namespace Moonstorm
         {
             logger.LogFatal(logString(data, i, member));
         }
-        internal static void Info(object data)
+        internal static void Info(object data, [CallerLineNumber] int i = 0, [CallerMemberName] string member = "")
         {
-            logger.LogInfo(data);
+            if (MSUConfig.EnableDebugFeatures.Value)
+                logger.LogInfo(logString(data, i, member));
+            else
+                logger.LogInfo(data);
         }
-        internal static void Message(object data)
+        internal static void Message(object data, [CallerLineNumber] int i = 0, [CallerMemberName] string member = "")
         {
-            logger.LogMessage(data);
+            if (MSUConfig.EnableDebugFeatures.Value)
+                logger.LogMessage(logString(data, i, member));
+            else
+                logger.LogMessage(data);
         }
-        internal static void Warning(object data)
+        internal static void Warning(object data, [CallerLineNumber] int i = 0, [CallerMemberName] string member = "")
         {
-            logger.LogWarning(data);
+            if (MSUConfig.EnableDebugFeatures.Value)
+                logger.LogWarning(logString(data, i, member));
+            else
+                logger.LogWarning(data);
         }
 
         private static string logString(object data, [CallerLineNumber] int i = 0, [CallerMemberName] string member = "")
