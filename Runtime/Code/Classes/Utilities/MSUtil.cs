@@ -54,6 +54,12 @@ namespace Moonstorm
         }
 
         #region Extensions
+        /// <summary>
+        /// Ensures that the component specified in <typeparamref name="T"/> exists
+        /// Basically Gets the component, if it doesnt exist, it adds it then returns it.
+        /// </summary>
+        /// <typeparam name="T">The type of component to ensure</typeparam>
+        /// <returns>The component <typeparamref name="T"/></returns>
         public static T EnsureComponent<T>(this GameObject obj) where T : MonoBehaviour
         {
             var comp = obj.GetComponent<T>();
@@ -63,6 +69,13 @@ namespace Moonstorm
             return comp;
         }
 
+        /// <summary>
+        /// Adds the entry of type <typeparamref name="T"/> into the collection if its not already in it
+        /// </summary>
+        /// <typeparam name="T">The type of item in the collection</typeparam>
+        /// <param name="collection"></param>
+        /// <param name="entry">The entry to add if its not in the collection</param>
+        /// <returns>True if it was not in the collection and added, false otherwise</returns>
         public static bool AddIfNotInCollection<T>(this ICollection<T> collection, T entry)
         {
             if (collection.Contains(entry))
@@ -71,6 +84,13 @@ namespace Moonstorm
             return true;
         }
 
+        /// <summary>
+        /// Removes the entry of type <typeparamref name="T"/> from the collection if its in it
+        /// </summary>
+        /// <typeparam name="T">The type of item in the collection</typeparam>
+        /// <param name="collection"></param>
+        /// <param name="entry">The entry to remove if its in the collection</param>
+        /// <returns>True if it was in the collection and removed, false otherwise</returns>
         public static bool RemoveIfNotInCollection<T>(this ICollection<T> collection, T entry)
         {
             if (!collection.Contains(entry))

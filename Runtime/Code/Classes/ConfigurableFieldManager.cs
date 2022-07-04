@@ -11,6 +11,9 @@ using Moonstorm.Loaders;
 
 namespace Moonstorm
 {
+    /// <summary>
+    /// The ConfigurableFieldManager is a class that handles the usage of <see cref="ConfigurableFieldAttribute"/> in mods.
+    /// </summary>
     public static class ConfigurableFieldManager
     {
         private static bool initialized = false;
@@ -48,6 +51,12 @@ namespace Moonstorm
             }
         }
 
+        /// <summary>
+        /// Adds the mod from <paramref name="baseUnityPlugin"/> into the ConfigurableFieldManager.
+        /// <para>When added, the manager will look for Types with public static fields that implement the <see cref="ConfigurableFieldAttribute"/></para>
+        /// <para>Mods added will also have the ability to use Configuration Files created with <see cref="ConfigLoader{T}"/> for the binding process</para>
+        /// </summary>
+        /// <param name="baseUnityPlugin">Your mod's BaseUnityPlugin inheriting class</param>
         public static void AddMod(BaseUnityPlugin baseUnityPlugin)
         {
             Assembly assembly = Assembly.GetCallingAssembly();
@@ -129,24 +138,6 @@ namespace Moonstorm
                 identifierToFields.Add(identifier, fields);
             }
         }
-
-        /*private static void AddConfigFile(BaseUnityPlugin baseUnityPlugin, ConfigFile configFile, string uniqueIdentifier)
-        {
-            Assembly assembly = Assembly.GetCallingAssembly();
-            if (configFile == GetMainConfigFile(baseUnityPlugin).Item2)
-            {
-                MSULog.Error($"Cannot add config file {configFile} because its the main config file of {assembly}!" +
-                    $"The identifier of the main config file is the Mod's GUID");
-                return;
-            }
-            if (identifierToConfigFile.ContainsKey(uniqueIdentifier))
-            {
-                MSULog.Error($"Cannot add config file {configFile} because its already in the dictionary!");
-                return;
-            }
-
-            identifierToConfigFile.Add(uniqueIdentifier, configFile);
-        }*/
 
         private static (string, ConfigFile) GetMainConfigFile(BaseUnityPlugin plugin)
         {

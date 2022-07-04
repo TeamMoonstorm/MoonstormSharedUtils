@@ -5,19 +5,33 @@ using UnityEngine;
 
 namespace Moonstorm
 {
+    /// <summary>
+    /// MSU's Configuration Loader
+    /// </summary>
     public class MSUConfig : ConfigLoader<MSUConfig>
     {
+        /// <summary>
+        /// Identifier for the General config file
+        /// </summary>
         public const string general = "MSU.General";
+        /// <summary>
+        /// Identifier for the Events file
+        /// </summary>
         public const string events = "MSU.Events";
-
         public override BaseUnityPlugin MainClass => MoonstormSharedUtils.Instance;
         public override bool CreateSubFolder => true;
 
+        /// <summary>
+        /// The general config file
+        /// </summary>
         public static ConfigFile generalConfig;
         internal static ConfigEntry<bool> EnableDebugFeatures;
         internal static ConfigEntry<bool> EnableLoggingOfIDRS;
         internal static ConfigEntry<KeyCode> InstantiateMaterialTester;
 
+        /// <summary>
+        /// The events config file
+        /// </summary>
         public static ConfigFile eventsConfig;
         internal static ConfigEntry<float> maxDifficultyScaling;
         internal static ConfigEntry<bool> familyEventUsesEventAnnouncementInsteadOfChatMessage;

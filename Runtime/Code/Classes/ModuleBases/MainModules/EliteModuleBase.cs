@@ -11,13 +11,30 @@ using UnityEngine;
 
 namespace Moonstorm
 {
+    /// <summary>
+    /// The <see cref="EliteModuleBase"/> is a <see cref="ContentModule{T}"/> that handles the <see cref="EliteEquipmentBase"/> class
+    /// <para><see cref="EliteModuleBase"/>'s main job is to handle the proper addition of the EliteDefs from <see cref="EliteEquipmentBase"/> inheriting classes</para>
+    /// <para>This has an indirect dependency with <see cref="EquipmentModuleBase"/>, it is highly recommended to initialize that module before this one</para>
+    /// <para><see cref="EliteModuleBase"/> will automatically handle the use method of the Equipment by running <see cref="EquipmentBase.FireAction(EquipmentSlot)"/>, alongside adding the EliteDefs to the CombatDirector</para>
+    /// <para>Inherit from this module if you want to load and manage Elites with <see cref="EliteEquipmentBase"/> systems</para>
+    /// </summary>
     public abstract class EliteModuleBase : ContentModule<EliteEquipmentBase>
     {
         #region Propertiess and Fields
+        /// <summary>
+        /// A ReadOnlyCollection of all the EliteDefs from MSU
+        /// <para>If you want to modify classes inside this, subscribe to <see cref="OnListCreated"/> to ensure the list is not empty</para>
+        /// </summary>
         public static ReadOnlyCollection<MSEliteDef> MoonstormElites { get; private set; }
         internal static List<MSEliteDef> eliteDefs = new List<MSEliteDef>();
 
+        /// <summary>
+        /// The AssetBundle where your EliteDefs are stored
+        /// </summary>
         public abstract AssetBundle AssetBundle { get; }
+        /// <summary>
+        /// An action that gets invoked when the <see cref="MoonstormElites"/> List has been populated
+        /// </summary>
         public static Action<ReadOnlyCollection<MSEliteDef>> OnListCreated;
         #endregion
 
@@ -61,6 +78,12 @@ namespace Moonstorm
         }
 
         #region Elites
+        /// <summary>
+        /// Calling this method will look into your <see cref="AssetBundle"/> and load all the <see cref="MSEliteDef"/> from it
+        /// <para>Once all Elitedefs are loaded, it'll look for all the <see cref="EliteEquipmentBase"/> initialized that have the Elitedef in the bundle, and return them</para>
+        /// <para>This effectively means you need to call <see cref="EquipmentModuleBase.GetEliteEquipmentBases"/> and call <see cref="EquipmentModuleBase.AddEliteEquipment(EliteEquipmentBase, Dictionary{EquipmentDef, EliteEquipmentBase})"/> before calling this method</para>
+        /// </summary>
+        /// <returns>An IEnumerable of all your assembly's initialized <see cref="EliteEquipmentBase"/>s</returns>
         protected virtual IEnumerable<EliteEquipmentBase> GetInitializedEliteEquipmentBases()
         {
             MSULog.Debug($"Getting the initialized EliteEquipmentBases inside {GetType().Assembly}");
@@ -77,6 +100,11 @@ namespace Moonstorm
             return initializedEliteEquipmentBases;
         }
 
+        /// <summary>
+        /// Adds an <see cref="EliteEquipmentBase"/>'s Elitedefs to the game and to the ContentPack
+        /// </summary>
+        /// <param name="elite">The EliteEquipmentBase to add</param>
+        /// <param name="list">Optional, a list to store your initialized EliteDefs</param>
         protected void AddElite(EliteEquipmentBase elite, List<MSEliteDef> list = null)
         {
             InitializeContent(elite);
@@ -84,6 +112,11 @@ namespace Moonstorm
             MSULog.Debug($"Elite {elite} Initialized and Ensured in {SerializableContentPack.name}");
         }
 
+        /// <summary>
+        /// Adds the <see cref="MSEliteDef"/> from the <paramref name="contentClass"/> to your ContentPack
+        /// <para>Once added, it'll call <see cref="ContentBase.Initialize"/></para>
+        /// </summary>
+        /// <param name="contentClass">The content class being initialized</param>
         protected override void InitializeContent(EliteEquipmentBase contentClass)
         {
             contentClass.Initialize();

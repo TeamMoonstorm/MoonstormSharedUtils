@@ -10,6 +10,9 @@ using UnityEngine;
 
 namespace Moonstorm
 {
+    /// <summary>
+    /// The main class of MSU
+    /// </summary>
     [BepInDependency("com.bepis.r2api", BepInDependency.DependencyFlags.HardDependency)]
     [BepInDependency("iHarbHD.DebugToolkit", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInPlugin(GUID, MODNAME, VERSION)]
@@ -28,11 +31,20 @@ namespace Moonstorm
         public const string MODNAME = "Moonstorm Shared Utils";
         public const string VERSION = "1.0.0";
 
+        /// <summary>
+        /// Instance of MSU
+        /// </summary>
         public static MoonstormSharedUtils Instance { get; private set; }
+        /// <summary>
+        /// MSU's PluginInfo
+        /// </summary>
         public static PluginInfo PluginInfo { get; private set; }
+        /// <summary>
+        /// The main AssetBundle of MSU
+        /// </summary>
         public static AssetBundle MSUAssetBundle { get; private set; }
-        public static R2APISerializableContentPack MSUSerializableContentPack { get; private set; }
-        public static string AssemblyDir { get => Path.Combine(Path.GetDirectoryName(PluginInfo.Location), "assetbundles"); }
+        private static R2APISerializableContentPack MSUSerializableContentPack { get; set; }
+        private static string AssemblyDir { get => Path.Combine(Path.GetDirectoryName(PluginInfo.Location), "assetbundles"); }
 
         private void Awake()
         {

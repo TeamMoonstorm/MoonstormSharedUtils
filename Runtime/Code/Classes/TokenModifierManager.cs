@@ -6,6 +6,9 @@ using System.Reflection;
 
 namespace Moonstorm
 {
+    /// <summary>
+    /// The TokenModifierManager is a class that handles the usage of <see cref="TokenModifierAttribute"/> in mods.
+    /// </summary>
     public static class TokenModifierManager
     {
         private static bool initialized = false;
@@ -26,6 +29,10 @@ namespace Moonstorm
             RoR2Application.onLoad += () => ModifyTokensInLanguage(null);
         }
 
+        /// <summary>
+        /// Adds the calling assembly to the TokenModifierManager.
+        /// <para>When added, the manager will look for types with public static fields that implement the <see cref="TokenModifierAttribute"/></para>
+        /// </summary>
         public static void AddToManager()
         {
             Assembly assembly = Assembly.GetCallingAssembly();
