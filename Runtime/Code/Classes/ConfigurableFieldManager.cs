@@ -182,9 +182,6 @@ namespace Moonstorm
 
         private static void ConfigureField(FieldInfo field, ConfigFile config)
         {
-            MSULog.Debug($"Configuring {field.Name}\n" +
-                $"(Field Value Type: {field.FieldType.Name}\n" +
-                $"From {field.DeclaringType.Name})");
             
             var attribute = field.GetCustomAttribute<ConfigurableFieldAttribute>(true);
 
