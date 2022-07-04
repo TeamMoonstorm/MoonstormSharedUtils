@@ -64,6 +64,7 @@ namespace Moonstorm
             var asyncOp = Addressables.LoadAssetAsync<Material>(materialPair.materialAddress);
             var task = asyncOp.Task;
             var originalMaterial = await task;
+            materialPair.material.shader = originalMaterial.shader;
             materialPair.material.CopyPropertiesFromMaterial(originalMaterial);
             copiedMaterials.Add(materialPair.material);
             MSULog.Debug($"Properties from {originalMaterial} copied to {materialPair.material}");
