@@ -1,6 +1,7 @@
 ﻿using BepInEx.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace Moonstorm
@@ -15,7 +16,7 @@ namespace Moonstorm
         /// The Section of the Config, if left null, it'll use the declaring type's name.
         /// </summary>
         public string ConfigSection { get; set; }
-        
+
         /// <summary>
         /// The Name of the Config, if left null, it'll use the Field's name.
         /// </summary>
@@ -26,7 +27,7 @@ namespace Moonstorm
         /// </summary>
         public string ConfigDesc { get; set; }
         public string ConfigFileIdentifier => configFileIdentifier;
-        
+
         private string configFileIdentifier;
 
         /// <summary>
@@ -67,33 +68,58 @@ namespace Moonstorm
 
         private string Nicify(string name)
         {
-            if (string.IsNullOrEmpty(name))
-                return name;
-
-            string text = string.Empty;
-            if(char.IsLower(name[0]))
+            string origName = new string(name.ToCharArray());
+            try
             {
-                text = char.ToUpper(text[0]) + text.Substring(1);
-            }
+                if (string.IsNullOrEmpty(name))
+                    return name;
 
-            List<char> newText = new List<char>();
-            for (int i = 0; i < text.Length; i++)
-            {
-                if (i == 0)
+                List<char> nameAsChar = null;
+                if (name.StartsWith("m_", System.StringComparison.OrdinalIgnoreCase))
                 {
-                    newText.Add(text[i]);
-                    continue;
+                    nameAsChar = name.Substring("m_".Length).ToList();
                 }
-                char character = text[i];
-                if (char.IsUpper(character))
+                else
                 {
-                    newText.Add(' ');
+                    nameAsChar = name.ToList();
+                }
+
+                while (nameAsChar.First() == '_')
+                {
+                    nameAsChar.RemoveAt(0);
+                }
+                List<char> newText = new List<char>();
+                for (int i = 0; i < nameAsChar.Count; i++)
+                {
+                    char character = nameAsChar[i];
+                    if (i == 0)
+                    {
+                        if (char.IsLower(character))
+                        {
+                            newText.Add(char.ToUpper(character));
+                        }
+                        else
+                        {
+                            newText.Add(character);
+                        }
+                        continue;
+                    }
+
+                    if (char.IsUpper(character))
+                    {
+                        newText.Add(' ');
+                        newText.Add(character);
+                        continue;
+                    }
                     newText.Add(character);
-                    continue;
                 }
-                newText.Add(character);
+                return new String(newText.ToArray());
             }
-            return new string(newText.ToArray());
+            catch (Exception e)
+            {
+                MSULog.Error($"Failed to nicify {origName}: {e}");
+                return origName;
+            }
         }
     }
 }
