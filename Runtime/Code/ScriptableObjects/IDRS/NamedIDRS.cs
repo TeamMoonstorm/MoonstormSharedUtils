@@ -120,7 +120,27 @@ namespace Moonstorm
             var keyAssetList = new List<ItemDisplayRuleSet.KeyAssetRuleGroup>();
             foreach(var namedRuleGroup in namedRuleGroups)
             {
-                var keyAssetGroup = new ItemDisplayRuleSet.KeyAssetRuleGroup { keyAsset = namedRuleGroup.keyAsset.Asset };
+                var keyAsset = namedRuleGroup.keyAsset.Asset;
+                if(keyAsset is EquipmentDef ed)
+                {
+                    EquipmentIndex index = EquipmentCatalog.FindEquipmentIndex(keyAsset.name);
+                    if(index == EquipmentIndex.None)
+                    {
+                        MSULog.Debug($"Not generating key asset rule group for {keyAsset.name} as its index is none.");
+                        continue;
+                    }
+                }
+                else if(keyAsset is ItemDef id)
+                {
+                    ItemIndex index = ItemCatalog.FindItemIndex(id.name);
+                    if(index == ItemIndex.None)
+                    {
+                        MSULog.Debug($"Not generating key asset rule group for {keyAsset.name} as its index is none.");
+                        continue;
+                    }
+                }
+
+                var keyAssetGroup = new ItemDisplayRuleSet.KeyAssetRuleGroup { keyAsset = keyAsset };
 
                 for(int i = 0; i < namedRuleGroup.rules.Count; i++)
                 {

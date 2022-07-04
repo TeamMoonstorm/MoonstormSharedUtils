@@ -97,6 +97,26 @@ namespace Moonstorm
                 MSULog.Info($"Initializing ItemDisplayDictionary");
                 foreach (ItemDisplayDictionary itemDisplayDictionary in instances)
                 {
+                    var keyAsset = itemDisplayDictionary.keyAsset;
+                    if (keyAsset is EquipmentDef ed)
+                    {
+                        EquipmentIndex index = EquipmentCatalog.FindEquipmentIndex(keyAsset.name);
+                        if (index == EquipmentIndex.None)
+                        {
+                            MSULog.Debug($"Not appending values from {itemDisplayDictionary}, as its KeyAsset's index is none.");
+                            continue;
+                        }
+                    }
+                    else if (keyAsset is ItemDef id)
+                    {
+                        ItemIndex index = ItemCatalog.FindItemIndex(id.name);
+                        if (index == ItemIndex.None)
+                        {
+                            MSULog.Debug($"Not appending values from {itemDisplayDictionary}, as its KeyAsset's index is none.");
+                            continue;
+                        }
+                    }
+
                     for (int i = 0; i < itemDisplayDictionary.namedDisplayDictionary.Count; i++)
                     {
                         try
