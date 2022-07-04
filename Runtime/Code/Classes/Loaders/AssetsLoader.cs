@@ -10,8 +10,17 @@ using UnityEngine.AddressableAssets;
 
 namespace Moonstorm.Loaders
 {
+    /// <summary>
+    /// The AssetsLoader is a class that can be used to simplify the loading of assetbundles
+    /// <para>AssetsLoaders can be used to easily swap the material's stubbed shaders for the real ones</para>
+    /// <para>AssetLoader inheriting classes are treated as Singletons</para>
+    /// </summary>
+    /// <typeparam name="T">The class that's inheriting from AssetsLoader</typeparam>
     public abstract class AssetsLoader<T> : AssetsLoader where T : AssetsLoader<T>
     {
+        /// <summary>
+        /// Retrieves the instance of <typeparamref name="T"/>
+        /// </summary>
         public static T Instance { get; private set; }
 
         public AssetsLoader()
@@ -27,6 +36,10 @@ namespace Moonstorm.Loaders
             catch (Exception e) { MSULog.Error(e); }
         }
 
+        /// <summary>
+        /// Loads an asset from the AssetsLoader's MainAssetBundle
+        /// Requires an instance to exist.
+        /// </summary>
         public static TAsset LoadAsset<TAsset>(string name) where TAsset : UnityEngine.Object
         {
             if (Instance != null)
@@ -37,6 +50,10 @@ namespace Moonstorm.Loaders
             return null;
         }
 
+        /// <summary>
+        /// Loads an asset of type <typeparamref name="TAsset"/> from the AssetsLoader's MainAssetBundle
+        /// Requires an instance to exist.
+        /// </summary>
         public static TAsset[] LoadAllAssetsOfType<TAsset>() where TAsset : UnityEngine.Object
         {
             if (Instance != null)
@@ -47,12 +64,26 @@ namespace Moonstorm.Loaders
             return null;
         }
     }
+    /// <summary>
+    /// <inheritdoc cref="AssetsLoader{T}"/>
+    /// <para>You probably want to use <see cref="AssetsLoader"/> instead</para>
+    /// </summary>
     public abstract class AssetsLoader
     {
+        /// <summary>
+        /// Your mod's main assetbundle
+        /// </summary>
         public abstract AssetBundle MainAssetBundle { get; }
 
+        /// <summary>
+        /// A list of all materials that have swapped shaders
+        /// </summary>
         public static List<Material> MaterialsWithSwappedShaders { get; } = new List<Material>();
 
+        /// <summary>
+        /// Swaps the shaders from all the materials insided the specified bundle
+        /// </summary>
+        /// <param name="bundle">The bundle where the materials will be loaded from</param>
         protected void SwapShadersFromMaterialsInBundle(AssetBundle bundle)
         { 
             if(bundle.isStreamedSceneAssetBundle)
@@ -61,7 +92,7 @@ namespace Moonstorm.Loaders
                 return;
             }
 
-            Material[] assetBundleMaterials = bundle.LoadAllAssets<Material>();
+            Material[] assetBundleMaterials = bundle.LoadAllAssets<Material>().Where(mat => mat.shader.name.StartsWith("Stubbed")).ToArray();
 
             for (int i = 0; i < assetBundleMaterials.Length; i++)
             {
@@ -82,6 +113,10 @@ namespace Moonstorm.Loaders
             }
         }
 
+        /// <summary>
+        /// Swaps the shaders from the specified materials in <paramref name="materials"/>
+        /// </summary>
+        /// <param name="materials">The materials to modify</param>
         protected void SwapShadersFromMaterials(IEnumerable<Material> materials)
         { 
             foreach(Material material in materials)

@@ -10,8 +10,17 @@ using UnityEngine;
 
 namespace Moonstorm.Loaders
 {
+    /// <summary>
+    /// The ContentLoader is a class that can be used to simplify the implementation of an <see cref="IContentPackProvider"/> interface
+    /// <para>ContentLoader will automatically add your mod's ContentPack into the game</para>
+    /// <para>ContentLoader inheriting classes are treated as Singletons</para>
+    /// </summary>
+    /// <typeparam name="T">The class that's inheriting from ContentLoader</typeparam>
     public abstract class ContentLoader<T> : ContentLoader where T : ContentLoader<T>
     {
+        /// <summary>
+        /// Retrieves the instance of <typeparamref name="T"/>
+        /// </summary>
         public static T Instance { get; private set; }
 
         public ContentLoader()
@@ -30,18 +39,42 @@ namespace Moonstorm.Loaders
             }
         }
     }
+    /// <summary>
+    /// <inheritdoc cref="ContentLoader{T}"/>
+    /// <para>You probably want to use <see cref="ContentLoader{T}"/> instead</para>
+    /// </summary>
     public abstract class ContentLoader : IContentPackProvider
     {
+        /// <summary>
+        /// A unique identifier for your ContentPack
+        /// </summary>
         public abstract string identifier { get; }
 
+        /// <summary>
+        /// Retrieves the ContentPack created from this ContentLoader
+        /// </summary>
         public ContentPack ContentPack { get; private set; }
 
+        /// <summary>
+        /// Your Mod's SerialziableContentPack
+        /// </summary>
         public abstract R2APISerializableContentPack SerializableContentPack {get; protected set;}
 
+        /// <summary>
+        /// An array of actions for loading your content pieces
+        /// <para>it is recommended to call your modules' <see cref="ModuleBase{T}.Initialize"/> methods here</para>
+        /// </summary>
         public abstract Action[] LoadDispatchers { get; protected set; }
 
+        /// <summary>
+        /// An array of actions for populating fields of content pieces with your ContentPack
+        /// <para>So methods that populate fields like the ones in <see cref="RoR2Content.Items"/></para>
+        /// </summary>
         public virtual Action[] PopulateFieldsDispatchers { get; protected set; } = Array.Empty<Action>();
 
+        /// <summary>
+        /// Hooks into <see cref="ContentManager.collectContentPackProviders"/> and adds this ContentLoader to the ContentManager
+        /// </summary>
         public virtual void Init()
         {
             ContentManager.collectContentPackProviders += AddContent;
@@ -52,20 +85,20 @@ namespace Moonstorm.Loaders
             addContentPackProvider(this);
         }
 
-        public IEnumerator FinalizeAsync(FinalizeAsyncArgs args)
+        public virtual IEnumerator FinalizeAsync(FinalizeAsyncArgs args)
         {
             args.ReportProgress(1f);
             yield break;
         }
 
-        public IEnumerator GenerateContentPackAsync(GetContentPackAsyncArgs args)
+        public virtual IEnumerator GenerateContentPackAsync(GetContentPackAsyncArgs args)
         {
             ContentPack.Copy(ContentPack, args.output);
             args.ReportProgress(1f);
             yield break;
         }
 
-        public IEnumerator LoadStaticContentAsync(LoadStaticContentAsyncArgs args)
+        public virtual IEnumerator LoadStaticContentAsync(LoadStaticContentAsyncArgs args)
         {
             int j = 0;
             while (j < LoadDispatchers.Length)

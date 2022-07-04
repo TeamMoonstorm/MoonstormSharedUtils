@@ -6,8 +6,17 @@ using System.Reflection;
 
 namespace Moonstorm.Loaders
 {
+    /// <summary>
+    /// The ConfigLoader is a class that can be used to simplify the implementation of ConfigFiles from BepInEx
+    /// <para>ConfigLoader will easily create new Config files, config files created by it can be wiped between major versions</para>
+    /// <para>ConfigLoader inheriting classes are treated as Singletons</para>
+    /// </summary>
+    /// <typeparam name="T">The class that's inheriting from ConfigLoader</typeparam>
     public abstract class ConfigLoader<T> : ConfigLoader where T : ConfigLoader<T>
     {
+        /// <summary>
+        /// Retrieves the instance of <typeparamref name="T"/>
+        /// </summary>
         public static T Instance { get; private set; }
 
         public ConfigLoader()
@@ -25,11 +34,24 @@ namespace Moonstorm.Loaders
         }
     }
 
+    /// <summary>
+    /// <inheritdoc cref="ConfigLoader{T}"/>
+    /// <para>You probably want to use <see cref="ConfigLoader{T}"/> instead</para>
+    /// </summary>
     public abstract class ConfigLoader
     {
         internal static List<ConfigLoader> instances = new List<ConfigLoader>();
+        /// <summary>
+        /// Your mod's main class
+        /// </summary>
         public abstract BaseUnityPlugin MainClass { get; }
+        /// <summary>
+        /// Wether ConfigFiles created by the ConfigLoader will be created in a subfolder, or in the Bepinex's ConfigPath
+        /// </summary>
         public abstract bool CreateSubFolder { get; }
+        /// <summary>
+        /// Returns the folder where the config files for this ConfigLoader are located
+        /// </summary>
         public string ConfigFolderPath
         {
             get
@@ -37,10 +59,24 @@ namespace Moonstorm.Loaders
                 return CreateSubFolder ? System.IO.Path.Combine(Paths.ConfigPath, OwnerMetaData.Name) : Paths.ConfigPath;
             }
         }
+        /// <summary>
+        /// Retrieves the MainClass's Owner Metadata
+        /// </summary>
         public BepInPlugin OwnerMetaData { get => MainClass.Info.Metadata; }
+
+        /// <summary>
+        /// A dictionary to store a ConfigFile's identifier to its config file
+        /// </summary>
 
         public Dictionary<string, ConfigFile> identifierToConfigFile = new Dictionary<string, ConfigFile>();
 
+        /// <summary>
+        /// Creates a config file.
+        /// <para>The config file's name will be the <paramref name="identifier"/></para>
+        /// </summary>
+        /// <param name="identifier">A unique identifier for this config file</param>
+        /// <param name="wipedBetweenMinorVersions">Wether the ConfigFile is wiped between minor version changes of your mod</param>
+        /// <returns>The config file</returns>
         public ConfigFile CreateConfigFile(string identifier, bool wipedBetweenMinorVersions = true)
         {
             string fileName = identifier;
