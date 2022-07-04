@@ -45,9 +45,9 @@ namespace Moonstorm
 
         protected override void InitializeContent(DamageTypeBase contentClass)
         {
+            contentClass.SetDamageType(ReserveDamageType());
             contentClass.Initialize();
             contentClass.Delegates();
-            contentClass.SetDamageType(ReserveDamageType());
 
             damageTypes[contentClass.ModdedDamageType] = contentClass;
         }
