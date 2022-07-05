@@ -1,4 +1,5 @@
 ﻿using RoR2;
+using RoR2.ExpansionManagement;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -13,9 +14,11 @@ namespace Moonstorm
         [Header("Settings for DirectorAPI")]
         public DirectorCard directorCard;
         public InteractableCategory interactableCategory;
+        public string customCategory;
         [EnumMask(typeof(R2API.DirectorAPI.Stage))]
         public R2API.DirectorAPI.Stage stages;
         public List<string> customStages = new List<string>();
+        public List<ExpansionDef> requiredExpansions;
 
         public DirectorCardHolder DirectorCardHolder
         {

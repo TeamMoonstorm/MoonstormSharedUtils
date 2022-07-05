@@ -41,6 +41,9 @@ namespace Moonstorm
         /// An action that gets invoked when the <see cref="MoonstormInteractables"/> dictionary has been populated
         /// </summary>
         public static Action<ReadOnlyDictionary<GameObject, InteractableBase>> OnDictionaryCreated;
+
+        private static DirectorCardCategorySelection currentStageInteractables;
+        private static List<MSInteractableDirectorCard> addedInteractablesToStage;
         #endregion
 
         [SystemInitializer]
@@ -95,6 +98,26 @@ namespace Moonstorm
         #region Hooks
         private static void AddCustomInteractables(DccsPool pool, DirectorAPI.StageInfo stageInfo)
         {
+
+            foreach(var interactable in InteractablesWithCards)
+            {
+                var card = interactable.InteractableDirectorCard;
+                if(card.stages.HasFlag(stageInfo.stage))
+                {
+                    if(stageInfo.stage == DirectorAPI.Stage.Custom)
+                    {
+                        if(card.customStages.Contains(stageInfo.CustomStageName.ToLowerInvariant()))
+                        {
+                            //Add
+                            continue;
+                        }
+                    }
+                    else if(stageInfo.CheckStage(card.stages))
+                    {
+                        //Add;
+                    }
+                }
+            }
             /*int num = 0;
             foreach (var interactable in InteractablesWithCards)
             {
