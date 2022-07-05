@@ -1,9 +1,6 @@
-Shader "StubbedRoR2/Base/Shaders/HGUIBarRemap" {
+Shader "StubbedTranslucentImage/EfficientBlur" {
 	Properties {
-		_MainTex ("Gradient (R) Mask (G)", 2D) = "grey" {}
-		_RemapTex ("Color Remap Ramp (RGB)", 2D) = "grey" {}
-		_GradientScale ("Gradient Scale", Range(0, 1.5)) = 1
-		[Toggle(PINGPONG)] _PingPong ("PingPong Ramp", Float) = 0
+		_MainTex ("Texture", 2D) = "white" {}
 	}
 	//DummyShaderTextExporter
 	SubShader{
@@ -27,5 +24,4 @@ Shader "StubbedRoR2/Base/Shaders/HGUIBarRemap" {
 		}
 		ENDCG
 	}
-	Fallback "Transparent/VertexLit"
 }

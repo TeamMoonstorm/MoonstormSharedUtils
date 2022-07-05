@@ -1,7 +1,9 @@
-Shader "Hidden/FastBlur" {
+Shader "StubbedRoR2/Base/skymeadow/Fill-Linear" {
 	Properties {
 		_MainTex ("Base (RGB)", 2D) = "white" {}
-		_Bloom ("Bloom (RGB)", 2D) = "black" {}
+		_Color ("Color", Vector) = (1,1,1,1)
+		_Center ("Center", Vector) = (0,0,0,0)
+		_FillRate ("FillRate", Range(0, 1)) = 1
 	}
 	//DummyShaderTextExporter
 	SubShader{
@@ -12,17 +14,19 @@ Shader "Hidden/FastBlur" {
 #pragma target 3.0
 
 		sampler2D _MainTex;
+		fixed4 _Color;
 		struct Input
 		{
 			float2 uv_MainTex;
 		};
-
+		
 		void surf(Input IN, inout SurfaceOutputStandard o)
 		{
-			fixed4 c = tex2D(_MainTex, IN.uv_MainTex);
+			fixed4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color;
 			o.Albedo = c.rgb;
 			o.Alpha = c.a;
 		}
 		ENDCG
 	}
+	Fallback "Diffuse"
 }
