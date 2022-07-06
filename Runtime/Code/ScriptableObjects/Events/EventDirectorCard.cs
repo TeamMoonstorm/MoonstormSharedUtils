@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Moonstorm
 {
-    /*[CreateAssetMenu(menuName = "Moonstorm/Events/Event Director Card")]
+    [Obsolete("EventDirectorCard is obsolete, Upgrade to EventCard")]
     public class EventDirectorCard : ScriptableObject
     {
         public int Cost
@@ -99,5 +99,5 @@ namespace Moonstorm
                     Debug.Log(Enum.GetName(typeof(EventFlags), flag));
             }
         }
-    }*/
+    }
 }
