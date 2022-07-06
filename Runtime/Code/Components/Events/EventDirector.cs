@@ -94,7 +94,8 @@ namespace Moonstorm.Components
                     Destroy(gameObject.transform.root.gameObject);
                 }
                 EventCardSelection = EventDirectorCategorySelection.GenerateWeightedSelection();
-                Log($"Awakened with the following EventCards:\n{string.Join("\n", EventCardSelection.choices.Select(c => c.value.name))}");
+                //Log below causes issues, no idea why
+                //Log($"Awakened with the following EventCards:\n{string.Join("\n", EventCardSelection.choices.Select(c => c.value.name))}");
             }
         }
         private void OnEnable()
