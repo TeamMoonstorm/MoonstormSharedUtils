@@ -267,7 +267,7 @@ namespace Moonstorm.Components
             FindIdleStateMachine();
             if (card && TargetedStateMachine && !IsEventBeingPlayed(card))
             {
-                TargetedStateMachine.SetState(EntityStateCatalog.InstantiateState(currentEventCard.eventState));
+                TargetedStateMachine.SetState(EntityStateCatalog.InstantiateState(card.eventState));
                 return true;
             }
             return false;
