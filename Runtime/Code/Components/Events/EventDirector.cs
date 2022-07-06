@@ -272,6 +272,19 @@ namespace Moonstorm.Components
             return false;
         }
 
+        public int StopAllEvents()
+        {
+            int eventsStopped = 0;
+            foreach (var stateMachine in NetworkStateMachine.stateMachines)
+            {
+                if (!stateMachine.state.GetType().Equals(stateMachine.mainStateType.stateType))
+                {
+                    stateMachine.SetNextStateToMain();
+                    eventsStopped++;
+                }
+            }
+            return eventsStopped;
+        }
         ///Commands
         ///------------------------------------------------------------------------------------------------------------
 
@@ -320,8 +333,8 @@ namespace Moonstorm.Components
                 Debug.Log($"Event director is unavailable! Cannot stop any events");
                 return;
             }
-            /*int count = Instance.StopAllEvents();
-            Debug.Log($"Stopped {count} events");*/
+            int count = Instance.StopAllEvents();
+            Debug.Log($"Stopped {count} events");
         }
 
         public static bool DisableEventDirector => cvDisableEventDirector.value;
