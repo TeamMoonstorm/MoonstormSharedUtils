@@ -23,8 +23,8 @@ MonoBehaviour:
   availableStages: 0
   customStageNames: []
   category: 
-  selectionWeight: 0
-  cost: 0
+  selectionWeight: 1
+  cost: 1
   minimumStageCompletions: 0
   requiredUnlockableDef:
     address: 
