@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   eventFlags: 0
   eventState:
-    _typeName: 
-  startMessageToken: 
-  endMessageToken: 
-  messageColor: {r: 1, g: 1, b: 1, a: 1}
+    _typeName: EntityStates.Events.DummyEventState, MoonstormSharedUtils, Version=1.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  startMessageToken: Dummy Event Card Start
+  endMessageToken: Dummy Event Card End
+  messageColor: {r: 1, g: 0, b: 0, a: 1}
   startSound: {fileID: 0}
   availableStages: 0
   customStageNames: []
