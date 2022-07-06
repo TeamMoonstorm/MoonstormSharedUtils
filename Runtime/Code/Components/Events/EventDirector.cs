@@ -264,6 +264,7 @@ namespace Moonstorm.Components
 
         private bool AttemptForceSpawnEvent(EventCard card)
         {
+            FindIdleStateMachine();
             if (card && TargetedStateMachine && !IsEventBeingPlayed(card))
             {
                 TargetedStateMachine.SetState(EntityStateCatalog.InstantiateState(currentEventCard.eventState));

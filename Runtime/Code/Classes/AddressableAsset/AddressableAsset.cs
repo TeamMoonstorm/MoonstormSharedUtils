@@ -32,7 +32,7 @@ namespace Moonstorm.AddressableAssets
         {
             get
             {
-                if(asset == null)
+                if(asset == null && !Initialized)
                 {
                     MSULog.Warning($"Assembly {Assembly.GetCallingAssembly()} is trying to access an {GetType()} before AddressableAssets have initialize!" +
                         $"\n Consider using AddressableAsset.OnAddressableAssetsLoaded for running code that depends on AddressableAssets!");
@@ -87,6 +87,7 @@ namespace Moonstorm.AddressableAssets
     {
         internal static List<AddressableAsset> instances = new List<AddressableAsset>();
 
+        public static bool Initialized { get; private set; }
         /// <summary>
         /// An Action that gets invoked when all the AddressableAssets have been loaded
         /// </summary>
@@ -120,6 +121,7 @@ namespace Moonstorm.AddressableAssets
                 }
             }
             OnAddressableAssetsLoaded?.Invoke();
+            Initialized = true;
         }
 
         internal abstract Task Load();
