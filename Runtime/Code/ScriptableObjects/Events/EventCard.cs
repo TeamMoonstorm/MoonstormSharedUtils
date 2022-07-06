@@ -30,7 +30,7 @@ namespace Moonstorm
         public DirectorAPI.Stage availableStages;
         public List<string> customStageNames = new List<string>();
         public string category;
-        public int selectionWeight;
+        public float selectionWeight;
         public int cost;
         public int minimumStageCompletions;
         public AddressableUnlockableDef requiredUnlockableDef;
