@@ -39,7 +39,7 @@ namespace Moonstorm
                 orig(self);
             };
 
-            ClassicStageInfo.monsterFamilyChance = 1000;
+            //ClassicStageInfo.monsterFamilyChance = 1000;
             if(MSUConfig.familyEventUsesEventAnnouncementInsteadOfChatMessage.Value)
             {
                 //Make the family event message use an EventAnnouncement

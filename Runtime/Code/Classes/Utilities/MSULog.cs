@@ -26,21 +26,21 @@ namespace Moonstorm
         }
         internal static void Info(object data, [CallerLineNumber] int i = 0, [CallerMemberName] string member = "")
         {
-            if (MSUConfig.EnableDebugFeatures.Value)
+            if (MSUConfig.enableDebugFeatures.Value)
                 logger.LogInfo(logString(data, i, member));
             else
                 logger.LogInfo(data);
         }
         internal static void Message(object data, [CallerLineNumber] int i = 0, [CallerMemberName] string member = "")
         {
-            if (MSUConfig.EnableDebugFeatures.Value)
+            if (MSUConfig.enableDebugFeatures.Value)
                 logger.LogMessage(logString(data, i, member));
             else
                 logger.LogMessage(data);
         }
         internal static void Warning(object data, [CallerLineNumber] int i = 0, [CallerMemberName] string member = "")
         {
-            if (MSUConfig.EnableDebugFeatures.Value)
+            if (MSUConfig.enableDebugFeatures.Value)
                 logger.LogWarning(logString(data, i, member));
             else
                 logger.LogWarning(data);

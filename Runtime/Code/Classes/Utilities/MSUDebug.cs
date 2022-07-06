@@ -67,7 +67,7 @@ namespace Moonstorm.Utilities
 
         private void Update()
         {
-            var input0 = Input.GetKeyDown(MSUConfig.InstantiateMaterialTester.Value);
+            var input0 = Input.GetKeyDown(MSUConfig.instantiateMaterialTester.Value);
             //add more if necessary
             #region materialTester
             if (input0 && Run.instance)

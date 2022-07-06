@@ -157,6 +157,10 @@ namespace Moonstorm
         private static void Init()
         {
             AddCategories(MoonstormSharedUtils.MSUAssetBundle.LoadAllAssets<EventDirectorCategorySelection>());
+            if(MSUConfig.addDummyEvents.Value)
+            {
+                AddCard(MoonstormSharedUtils.MSUAssetBundle.LoadAsset<EventCard>("DummyEventCard"));
+            }
 
             nameToEventIndex.Clear();
             stageToCategory.Clear();

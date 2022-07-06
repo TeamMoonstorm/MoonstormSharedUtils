@@ -25,14 +25,15 @@ namespace Moonstorm
         /// The general config file
         /// </summary>
         public static ConfigFile generalConfig;
-        internal static ConfigEntry<bool> EnableDebugFeatures;
-        internal static ConfigEntry<bool> EnableLoggingOfIDRS;
-        internal static ConfigEntry<KeyCode> InstantiateMaterialTester;
+        internal static ConfigEntry<bool> enableDebugFeatures;
+        internal static ConfigEntry<bool> enableLoggingOfIDRS;
+        internal static ConfigEntry<KeyCode> instantiateMaterialTester;
 
         /// <summary>
         /// The events config file
         /// </summary>
         public static ConfigFile eventsConfig;
+        internal static ConfigEntry<bool> addDummyEvents;
         internal static ConfigEntry<float> maxDifficultyScaling;
         internal static ConfigEntry<bool> familyEventUsesEventAnnouncementInsteadOfChatMessage;
         internal static ConfigEntry<bool> eventAnnouncementsAsChatMessages;
@@ -47,7 +48,7 @@ namespace Moonstorm
 
         private static void SetConfigs()
         {
-            EnableDebugFeatures = generalConfig.Bind<bool>("MoonstormSharedUtils :: Debug Features",
+            enableDebugFeatures = generalConfig.Bind<bool>("MoonstormSharedUtils :: Debug Features",
                                                     "Enable Debug",
                                                     false,
                                                     "Enables Debug features from Moonstorm Shared Utils, Features include:" +
@@ -56,7 +57,7 @@ namespace Moonstorm
                                                     "\nAutomatic deployment of \"stage1_pod\", \"no_enemies\" & \"enable_event_logging\", assuming DebugToolkit is installed" +
                                                     "\nSpawning of the MaterialTester");
 
-            EnableLoggingOfIDRS = generalConfig.Bind<bool>("MoonstormSharedUtils :: IDRS",
+            enableLoggingOfIDRS = generalConfig.Bind<bool>("MoonstormSharedUtils :: IDRS",
                                                     "Log IDRS-Related names",
                                                     false,
                                                     "Setting this to true causes MSU to Log inportant KEY values from RoR2's IDRS system\n" +
@@ -65,11 +66,16 @@ namespace Moonstorm
                                                     "Key Assets names (ItemDefs & Equipment Defs)\n" +
                                                     "Display Prefabs");
 
-            InstantiateMaterialTester = generalConfig.Bind<KeyCode>("MoonstormSharedUtils :: Keybinds",
+            instantiateMaterialTester = generalConfig.Bind<KeyCode>("MoonstormSharedUtils :: Keybinds",
                                                              "Instantiate Material Tester",
                                                              KeyCode.Insert,
                                                              "Keybind used for instantiating the material tester." +
                                                              "Only available if EnableDebugFeatures is set to true");
+
+            addDummyEvents = eventsConfig.Bind("MoonstormSharedUtils :: Events",
+                "Add Dummy Events",
+                false,
+                "Adds a dummy event card that can be triggered manually on every stage. this event card does nothing in particular and its purely for testing purposes");
 
             maxDifficultyScaling = eventsConfig.Bind("MoonstormSharedUtils :: Events",
                 "Max Difficulty Scaling",
@@ -81,7 +87,7 @@ namespace Moonstorm
                 false,
                 "If set to true, Event announcements will appear in the chat instead of their own UI container");
 
-            familyEventUsesEventAnnouncementInsteadOfChatMessage = eventsConfig.Bind<bool>("Event Message System",
+            familyEventUsesEventAnnouncementInsteadOfChatMessage = eventsConfig.Bind<bool>("MoonstormSharedUtils :: Event Messages",
                 "Family Event chat message as Event Announcement",
                 true,
                 "Setting this to true causes the family event chat message to display as an event announcement instead");

@@ -107,24 +107,24 @@ namespace Moonstorm
             MSInteractableDirectorCard[] cards = InteractablesWithCards.Select(ib => ib.InteractableDirectorCard).ToArray();
 
             int num = 0;
-            foreach(MSInteractableDirectorCard card in cards)
+            foreach (MSInteractableDirectorCard card in cards)
             {
                 try
                 {
                     //If card cant appear, skip
-                    if(!card.IsAvailable(runExpansions))
+                    if (!card.IsAvailable(runExpansions))
                     {
                         continue;
                     }
 
-                    foreach(DirectorAPI.Stage stageValue in Enum.GetValues(typeof(DirectorAPI.Stage)))
+                    foreach (DirectorAPI.Stage stageValue in Enum.GetValues(typeof(DirectorAPI.Stage)))
                     {
                         //Card has custom stage support? add them to the dictionaries.
-                        if(stageValue == DirectorAPI.Stage.Custom)
+                        if (stageValue == DirectorAPI.Stage.Custom)
                         {
-                            foreach(string baseStageName in card.customStages)
+                            foreach (string baseStageName in card.customStages)
                             {
-                                if(!currentCustomStageToCards.ContainsKey(baseStageName))
+                                if (!currentCustomStageToCards.ContainsKey(baseStageName))
                                 {
                                     currentCustomStageToCards.Add(baseStageName, new List<MSInteractableDirectorCard>());
                                 }
@@ -134,9 +134,9 @@ namespace Moonstorm
                         }
 
                         //Card can appear in current stage? add it to the dictionary
-                        if(card.stages.HasFlag(stageValue))
+                        if (card.stages.HasFlag(stageValue))
                         {
-                            if(!currentStageToCards.ContainsKey(stageValue))
+                            if (!currentStageToCards.ContainsKey(stageValue))
                             {
                                 currentStageToCards.Add(stageValue, new List<MSInteractableDirectorCard>());
                             }
@@ -145,7 +145,7 @@ namespace Moonstorm
                     }
                     num++;
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     MSULog.Error($"{e}\nCard: {card}");
                 }
@@ -162,23 +162,30 @@ namespace Moonstorm
 
         private static void AddCustomInteractables(DccsPool pool, DirectorAPI.StageInfo stageInfo)
         {
-            List<MSInteractableDirectorCard> cards = new List<MSInteractableDirectorCard>();
-            if(stageInfo.stage == DirectorAPI.Stage.Custom)
+            try
             {
-                if(currentCustomStageToCards.TryGetValue(stageInfo.CustomStageName, out cards))
+                List<MSInteractableDirectorCard> cards = new List<MSInteractableDirectorCard>();
+                if (stageInfo.stage == DirectorAPI.Stage.Custom)
                 {
-                    AddCardsToPool(pool, cards);
+                    if (currentCustomStageToCards.TryGetValue(stageInfo.CustomStageName, out cards))
+                    {
+                        AddCardsToPool(pool, cards);
+                    }
                 }
-            }
-            else
-            {
-                if(currentStageToCards.TryGetValue(stageInfo.stage, out cards))
+                else
                 {
-                    AddCardsToPool(pool, cards);
+                    if (currentStageToCards.TryGetValue(stageInfo.stage, out cards))
+                    {
+                        AddCardsToPool(pool, cards);
+                    }
                 }
-            }
 
-            MSULog.Info(cards.Count > 0 ? $"Added a total of {cards.Count} interactable cards to stage {stageInfo.ToInternalStageName()}" : $"No interactable cards added to stage {stageInfo.ToInternalStageName()}");
+                MSULog.Info(cards.Count > 0 ? $"Added a total of {cards.Count} interactable cards to stage {stageInfo.ToInternalStageName()}" : $"No interactable cards added to stage {stageInfo.ToInternalStageName()}");
+            }
+            catch (Exception e)
+            {
+                MSULog.Error($"Failed to add custom interactables: {e}\n(Pool: {pool}, Stage: {stageInfo}, currentCustomStageToCards: {currentCustomStageToCards}, currentStageToCards: {currentStageToCards}");
+            }
         }
 
         private static void AddCardsToPool(DccsPool pool, List<MSInteractableDirectorCard> cards)
@@ -188,16 +195,16 @@ namespace Moonstorm
             var includedIfNoConditions = pool.poolCategories.SelectMany(pc => pc.includedIfNoConditionsMet.Select(pe => pe.dccs)).ToList();
 
             List<DirectorCardCategorySelection> cardSelections = alwaysIncluded.Concat(includedIfConditionsMet).Concat(includedIfNoConditions).ToList();
-            foreach(MSInteractableDirectorCard card in cards)
+            foreach (MSInteractableDirectorCard card in cards)
             {
                 try
                 {
-                    foreach(DirectorCardCategorySelection cardCategorySelection in cardSelections)
+                    foreach (DirectorCardCategorySelection cardCategorySelection in cardSelections)
                     {
                         cardCategorySelection.AddCard(card.DirectorCardHolder);
                     }
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     MSULog.Error($"{e}\n(Card: {card}");
                 }

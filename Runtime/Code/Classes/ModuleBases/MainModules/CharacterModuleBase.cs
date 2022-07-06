@@ -102,7 +102,7 @@ namespace Moonstorm
 
             contentClass.Initialize();
 
-            switch(contentClass)
+            switch (contentClass)
             {
                 case MonsterBase monster:
                     AddSafely(ref SerializableContentPack.masterPrefabs, monster.MasterPrefab, "MasterPrefabs");
@@ -169,7 +169,7 @@ namespace Moonstorm
                 }
             }
 
-            MSULog.Info(num > 0 ? $"A total of {num} interactable cards added to the run" : $"No interactable cards added to the run");
+            MSULog.Info(num > 0 ? $"A total of {num} monster cards added to the run" : $"No monster cards added to the run");
         }
 
         private static void ClearDictionaries()
@@ -179,25 +179,34 @@ namespace Moonstorm
         }
         private static void AddCustomMonsters(DccsPool pool, List<DirectorAPI.DirectorCardHolder> cardList, DirectorAPI.StageInfo stageInfo)
         {
-            List<MSMonsterDirectorCard> cards = new List<MSMonsterDirectorCard>();
-            if(stageInfo.stage == DirectorAPI.Stage.Custom)
+            try
             {
-                if(currentCustomStageToCards.TryGetValue(stageInfo.CustomStageName, out cards))
+                List<MSMonsterDirectorCard> cards = new List<MSMonsterDirectorCard>();
+                if (stageInfo.stage == DirectorAPI.Stage.Custom)
                 {
-                    AddCardsToPool(pool, cards);
+                    if (currentCustomStageToCards.TryGetValue(stageInfo.CustomStageName, out cards))
+                    {
+                        AddCardsToPool(pool, cards);
+                    }
                 }
+                else
+                {
+                    if (currentStageToCards.TryGetValue(stageInfo.stage, out cards))
+                        AddCardsToPool(pool, cards);
+                }
+
+                MSULog.Info(cards.Count > 0 ? $"Added a total of {cards.Count} monster cards to stage {stageInfo.ToInternalStageName()}" : $"No monster cards added to stage {stageInfo.ToInternalStageName()}");
             }
-            else if(currentStageToCards.TryGetValue(stageInfo.stage, out cards))
+            catch (Exception e)
             {
-                AddCardsToPool(pool, cards);
+                MSULog.Error($"Failed to add custom monsters: {e}\n(Pool: {pool}, CardList: {cardList}, Stage: {stageInfo}, currentCustomStageToCards: {currentCustomStageToCards}, currentStageToCards: {currentStageToCards}");
             }
-            MSULog.Info(cards.Count > 0 ? $"Added a total of {cards.Count} monster cards to stage {stageInfo.ToInternalStageName()}" : $"No monster cards added to stage {stageInfo.ToInternalStageName()}");
         }
 
         private static void AddCardsToPool(DccsPool pool, List<MSMonsterDirectorCard> cards)
         {
             var standardCategory = pool.poolCategories.FirstOrDefault(category => category.name == DirectorAPI.Helpers.MonsterPoolCategories.Standard);
-            if(standardCategory == null)
+            if (standardCategory == null)
             {
                 MSULog.Error($"Couldnt find standard category for current stage! not adding monsters!");
                 return;
@@ -206,16 +215,16 @@ namespace Moonstorm
                 .Concat(standardCategory.includedIfConditionsMet.Select(cpe => cpe.dccs))
                 .Concat(standardCategory.includedIfNoConditionsMet.Select(pe => pe.dccs));
 
-            foreach(MSMonsterDirectorCard card in cards)
+            foreach (MSMonsterDirectorCard card in cards)
             {
                 try
                 {
-                    foreach(DirectorCardCategorySelection categorySelection in dccs)
+                    foreach (DirectorCardCategorySelection categorySelection in dccs)
                     {
                         categorySelection.AddCard(card.DirectorCardHolder);
                     }
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     MSULog.Error($"{e}\n(Card: {card})");
                 }
