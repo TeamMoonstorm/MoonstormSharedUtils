@@ -8,17 +8,18 @@ namespace Moonstorm
 {
     /// <summary>
     /// The Configurable Field Attribute can be used to make a field Configurable using BepInEx's Config System.
+    /// <para>You should add your mod to the <see cref="ConfigurableFieldManager"/> with <seealso cref="ConfigurableFieldManager.AddMod(BepInEx.BaseUnityPlugin)"/></para>
     /// </summary>
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
     public class ConfigurableFieldAttribute : Attribute
     {
         /// <summary>
-        /// The Section of the Config, if left null, it'll use the declaring type's name.
+        /// The Section of the Config, if left null, it'll use a "Nicified" version of the declaring type's name.
         /// </summary>
         public string ConfigSection { get; set; }
 
         /// <summary>
-        /// The Name of the Config, if left null, it'll use the Field's name.
+        /// The Name of the Config, if left null, it'll use a "Nicified" version of the Field's name.
         /// </summary>
         public string ConfigName { get; set; }
 
@@ -26,6 +27,10 @@ namespace Moonstorm
         /// The Description of the Config, if left null, it'll use a generic description.
         /// </summary>
         public string ConfigDesc { get; set; }
+
+        /// <summary>
+        /// During the <see cref="ConfigurableFieldManager"/> initialization, the ConfigurableFieldManager will try to bind the config to the config file with this identifier.
+        /// </summary>
         public string ConfigFileIdentifier => configFileIdentifier;
 
         private string configFileIdentifier;
@@ -39,7 +44,7 @@ namespace Moonstorm
             configFileIdentifier = fileIdentifier;
         }
 
-        public string GetSection(Type type)
+        internal string GetSection(Type type)
         {
             if (!string.IsNullOrEmpty(ConfigSection))
             {
@@ -48,7 +53,7 @@ namespace Moonstorm
             return Nicify(type.Name);
         }
 
-        public string GetName(FieldInfo field)
+        internal string GetName(FieldInfo field)
         {
             if (!string.IsNullOrEmpty(ConfigName))
             {
@@ -57,7 +62,7 @@ namespace Moonstorm
             return Nicify(field.Name);
         }
 
-        public string GetDescription()
+        internal string GetDescription()
         {
             if (!string.IsNullOrEmpty(ConfigDesc))
             {

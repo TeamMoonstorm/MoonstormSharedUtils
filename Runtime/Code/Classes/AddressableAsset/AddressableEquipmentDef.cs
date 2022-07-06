@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace Moonstorm.AddressableAssets
 {
+    /// <summary>
+    /// <inheritdoc cref="AddressableAsset{T}"/>
+    /// The type of asset this references is an <see cref="EquipmentDef"/>, and can be loaded either via Addressables or the <see cref="EquipmentCatalog"/>
+    /// </summary>
     [Serializable]
     public class AddressableEquipmentDef : AddressableAsset<EquipmentDef>
     {

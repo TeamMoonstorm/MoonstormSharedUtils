@@ -7,16 +7,35 @@ using System.Threading.Tasks;
 
 namespace Moonstorm.AddressableAssets
 {
+    /// <summary>
+    /// <inheritdoc cref="AddressableAsset{T}"/>
+    /// The type of asset this references should be either an <see cref="ItemDef"/> or <see cref="EquipmentDef"/>, and these can be loaded either via Addressables or their respective catalogs
+    /// </summary>
     [Serializable]
     public class AddressableKeyAsset : AddressableAsset<UnityEngine.Object>
     {
+        /// <summary>
+        /// How the key asset should be loaded
+        /// </summary>
         public enum KeyAssetAddressType
         {
+            /// <summary>
+            /// Address is treated as an Equipment Name
+            /// </summary>
             EquipmentCatalog = 0,
+            /// <summary>
+            /// Address is ttreated as an Item name
+            /// </summary>
             ItemCatalog = 1,
+            /// <summary>
+            /// Address is used with Addressables loading
+            /// </summary>
             Addressables = 2
         }
 
+        /// <summary>
+        /// <inheritdoc cref="KeyAssetAddressType"/>
+        /// </summary>
         public KeyAssetAddressType loadAssetFrom;
 
         protected override async Task LoadAsset()

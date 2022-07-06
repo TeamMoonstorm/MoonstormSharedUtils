@@ -2,6 +2,10 @@
 
 namespace Moonstorm
 {
+    /// <summary>
+    /// A <see cref="ContentBase"/> that represents a DamageType implemented via <see cref="R2API.DamageAPI"/>
+    /// <para>It's tied ModuleBase is the <see cref="DamageTypeModuleBase"/></para>
+    /// </summary>
     public abstract class DamageTypeBase : ContentBase
     {
         /// <summary>
