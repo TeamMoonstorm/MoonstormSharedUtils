@@ -1,10 +1,10 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
     <ui:VisualElement name="Container" class="genericHolder">
-        <Style src="/Packages/riskofthunder-ror2editorkit/Assets/USS/Inspectors/ScriptableObjectInspector.uss" />
         <ui:Label text="Label" name="scriptType" binding-path="m_Script.displayName" tooltip="The type of this object" class="scriptType genericHolderHeader" />
         <ui:VisualElement name="EventDataHolder" class="genericHolder">
             <ui:Label text="Event Data" name="EventData" class="genericHolderHeader" />
             <uie:PropertyField name="eventState" tooltip="The entity state that gets triggered from this eventCard, needs to inherit from EventBase" binding-path="eventState" />
+            <uie:PropertyField name="category" binding-path="category" />
             <uie:PropertyField name="eventFlags" tooltip="The flags for the Event" binding-path="eventFlags" />
             <uie:PropertyField name="startSound" tooltip="The sound that plays when this event starts" binding-path="startSound" />
             <ui:Foldout text="Event Message Data" name="ChatMessageHolder" tooltip="Data for the event message" class="GenericHolderFoldout" style="padding-left: 10px;">
