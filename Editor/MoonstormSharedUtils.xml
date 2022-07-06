@@ -1,0 +1,1620 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MoonstormSharedUtils</name>
+    </assembly>
+    <members>
+        <member name="T:Moonstorm.AddressableAssets.AddressableAsset`1">
+            <summary>
+            An <see cref="T:Moonstorm.AddressableAssets.AddressableAsset"/> is a type of class thats used for referencing an Asset ingame.
+            <para>The asset referenced can be either a Direct reference or a reference via an Address</para>
+            </summary>
+            <typeparam name="T">The type of asset that's being used</typeparam>
+        </member>
+        <member name="F:Moonstorm.AddressableAssets.AddressableAsset`1.address">
+            <summary>
+            The Address thats used during the process of loading the asset specified in T
+            </summary>
+        </member>
+        <member name="P:Moonstorm.AddressableAssets.AddressableAsset`1.Asset">
+            <summary>
+            The Asset that's tied to this AddressableAsset.
+            <para>You really should use this property before <see cref="F:Moonstorm.AddressableAssets.AddressableAsset.OnAddressableAssetsLoaded"/> gets invoked.</para>
+            </summary>
+        </member>
+        <member name="M:Moonstorm.AddressableAssets.AddressableAsset`1.LoadAsset">
+            <summary>
+            Implement here how the Asset gets loaded when <see cref="P:Moonstorm.AddressableAssets.AddressableAsset`1.Asset"/> is null
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Moonstorm.AddressableAssets.AddressableAsset`1.LoadFromAddress">
+            <summary>
+            Loads the Asset via Addressables
+            </summary>
+            <returns>Returns a Task when the operation is complete</returns>
+        </member>
+        <member name="M:Moonstorm.AddressableAssets.AddressableAsset`1.SetAsset(`0)">
+            <summary>
+            Sets the Asset for this Addressable Asset
+            </summary>
+            <param name="asset">The asset</param>
+            <returns>Task.CompletedTask</returns>
+        </member>
+        <member name="T:Moonstorm.AddressableAssets.AddressableAsset">
+            <summary>
+            <inheritdoc cref="T:Moonstorm.AddressableAssets.AddressableAsset`1"/>
+            <para>You probably want to use <see cref="T:Moonstorm.AddressableAssets.AddressableAsset`1"/> instead</para>
+            </summary>
+        </member>
+        <member name="F:Moonstorm.AddressableAssets.AddressableAsset.OnAddressableAssetsLoaded">
+            <summary>
+            An Action that gets invoked when all the AddressableAssets have been loaded
+            </summary>
+        </member>
+        <member name="M:Moonstorm.AddressableAssets.AddressableAsset.#ctor">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="T:Moonstorm.AddressableAssets.AddressableBuffDef">
+            <summary>
+            <inheritdoc cref="T:Moonstorm.AddressableAssets.AddressableAsset`1"/>
+            The type of asset this references is a <see cref="T:RoR2.BuffDef"/>, and can be loaded either via Addressables or the <see cref="T:RoR2.BuffCatalog"/>
+            </summary>
+        </member>
+        <member name="T:Moonstorm.AddressableAssets.AddressableEliteDef">
+            <summary>
+            <inheritdoc cref="T:Moonstorm.AddressableAssets.AddressableAsset`1"/>
+            The type of asset this refereces is an <see cref="T:RoR2.EliteDef"/>, and can be loaded either via Addressables or the <see cref="T:RoR2.EliteCatalog"/>
+            </summary>
+        </member>
+        <member name="T:Moonstorm.AddressableAssets.AddressableEquipmentDef">
+            <summary>
+            <inheritdoc cref="T:Moonstorm.AddressableAssets.AddressableAsset`1"/>
+            The type of asset this references is an <see cref="T:RoR2.EquipmentDef"/>, and can be loaded either via Addressables or the <see cref="T:RoR2.EquipmentCatalog"/>
+            </summary>
+        </member>
+        <member name="T:Moonstorm.AddressableAssets.AddressableExpansionDef">
+            <summary>
+            <inheritdoc cref="T:Moonstorm.AddressableAssets.AddressableAsset`1"/>
+            The type of asset this references is an <see cref="T:RoR2.ExpansionManagement.ExpansionDef"/>, and can be loaded either via Addressables or the <see cref="T:RoR2.ExpansionManagement.ExpansionCatalog"/>
+            </summary>
+        </member>
+        <member name="T:Moonstorm.AddressableAssets.AddressableGameObject">
+            <summary>
+            <inheritdoc cref="T:Moonstorm.AddressableAssets.AddressableAsset`1"/>
+            The type of asset this references is a <see cref="T:UnityEngine.GameObject"/>, and can only be loaded via Addressables
+            </summary>
+        </member>
+        <member name="T:Moonstorm.AddressableAssets.AddressableIDRS">
+            <summary>
+            <inheritdoc cref="T:Moonstorm.AddressableAssets.AddressableAsset`1"/>
+            The type of asset this references is an <see cref="T:RoR2.ItemDisplayRuleSet"/> and can only be loaded via Addressables
+            </summary>
+        </member>
+        <member name="T:Moonstorm.AddressableAssets.AddressableItemDef">
+            <summary>
+            <inheritdoc cref="T:Moonstorm.AddressableAssets.AddressableAsset`1"/>
+            The type of asset this references is an <see cref="T:RoR2.ItemDef"/> and can be loaded either via Addressables or the <see cref="T:RoR2.ItemCatalog"/>
+            </summary>
+        </member>
+        <member name="T:Moonstorm.AddressableAssets.AddressableKeyAsset">
+            <summary>
+            <inheritdoc cref="T:Moonstorm.AddressableAssets.AddressableAsset`1"/>
+            The type of asset this references should be either an <see cref="T:RoR2.ItemDef"/> or <see cref="T:RoR2.EquipmentDef"/>, and these can be loaded either via Addressables or their respective catalogs
+            </summary>
+        </member>
+        <member name="T:Moonstorm.AddressableAssets.AddressableKeyAsset.KeyAssetAddressType">
+            <summary>
+            How the key asset should be loaded
+            </summary>
+        </member>
+        <member name="F:Moonstorm.AddressableAssets.AddressableKeyAsset.KeyAssetAddressType.EquipmentCatalog">
+            <summary>
+            Address is treated as an Equipment Name
+            </summary>
+        </member>
+        <member name="F:Moonstorm.AddressableAssets.AddressableKeyAsset.KeyAssetAddressType.ItemCatalog">
+            <summary>
+            Address is ttreated as an Item name
+            </summary>
+        </member>
+        <member name="F:Moonstorm.AddressableAssets.AddressableKeyAsset.KeyAssetAddressType.Addressables">
+            <summary>
+            Address is used with Addressables loading
+            </summary>
+        </member>
+        <member name="F:Moonstorm.AddressableAssets.AddressableKeyAsset.loadAssetFrom">
+            <summary>
+            <inheritdoc cref="T:Moonstorm.AddressableAssets.AddressableKeyAsset.KeyAssetAddressType"/>
+            </summary>
+        </member>
+        <member name="T:Moonstorm.AddressableAssets.AddressableUnlockableDef">
+            <summary>
+            <inheritdoc cref="T:Moonstorm.AddressableAssets.AddressableAsset`1"/>
+            the type of asset this references is an <see cref="T:RoR2.UnlockableDef"/>, and can be loaded either via Addressables or the <see cref="T:RoR2.UnlockableCatalog"/>
+            </summary>
+        </member>
+        <member name="T:Moonstorm.ConfigurableFieldAttribute">
+            <summary>
+            The Configurable Field Attribute can be used to make a field Configurable using BepInEx's Config System.
+            <para>You should add your mod to the <see cref="T:Moonstorm.ConfigurableFieldManager"/> with <seealso cref="M:Moonstorm.ConfigurableFieldManager.AddMod(BepInEx.BaseUnityPlugin)"/></para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.ConfigurableFieldAttribute.ConfigSection">
+            <summary>
+            The Section of the Config, if left null, it'll use a "Nicified" version of the declaring type's name.
+            </summary>
+        </member>
+        <member name="P:Moonstorm.ConfigurableFieldAttribute.ConfigName">
+            <summary>
+            The Name of the Config, if left null, it'll use a "Nicified" version of the Field's name.
+            </summary>
+        </member>
+        <member name="P:Moonstorm.ConfigurableFieldAttribute.ConfigDesc">
+            <summary>
+            The Description of the Config, if left null, it'll use a generic description.
+            </summary>
+        </member>
+        <member name="P:Moonstorm.ConfigurableFieldAttribute.ConfigFileIdentifier">
+            <summary>
+            During the <see cref="T:Moonstorm.ConfigurableFieldManager"/> initialization, the ConfigurableFieldManager will try to bind the config to the config file with this identifier.
+            </summary>
+        </member>
+        <member name="M:Moonstorm.ConfigurableFieldAttribute.#ctor(System.String)">
+            <summary>
+            Creates a new instance of the Configurable Field Attribute.
+            </summary>
+            <param name="fileIdentifier">The config identifier</param>
+        </member>
+        <member name="T:Moonstorm.DisabledContentAttribute">
+            <summary>
+            When <see cref="M:Moonstorm.ModuleBase`1.GetContentClasses``1(System.Type)"/> gets called, the ModuleBase will not create any instances of ContentBases that have this attribute.
+            </summary>
+        </member>
+        <member name="T:Moonstorm.StatTypes">
+            <summary>
+            A StatType for the Token Modifier, this is used to modify the value for the token.
+            </summary>
+        </member>
+        <member name="F:Moonstorm.StatTypes.Default">
+            <summary>
+            No changes are made to the field value for the token formatting
+            </summary>
+        </member>
+        <member name="F:Moonstorm.StatTypes.Percentage">
+            <summary>
+            The value of the field is multiplied by 100
+            </summary>
+        </member>
+        <member name="F:Moonstorm.StatTypes.DivideBy2">
+            <summary>
+            The value of the field is divided by 2
+            </summary>
+        </member>
+        <member name="T:Moonstorm.TokenModifierAttribute">
+            <summary>
+            Declares that the value from a field must be used for formatting a language token
+            <para>You should add your mod to the <see cref="T:Moonstorm.TokenModifierManager"/> with <seealso cref="M:Moonstorm.TokenModifierManager.AddToManager"/></para>
+            </summary>
+        </member>
+        <member name="F:Moonstorm.TokenModifierAttribute.langToken">
+            <summary>
+            The LanguageToken to be formatted
+            </summary>
+        </member>
+        <member name="F:Moonstorm.TokenModifierAttribute.statType">
+            <summary>
+            The type of stat this field has
+            </summary>
+        </member>
+        <member name="F:Moonstorm.TokenModifierAttribute.formatIndex">
+            <summary>
+            The index used during formatting process
+            </summary>
+        </member>
+        <member name="M:Moonstorm.TokenModifierAttribute.#ctor(System.String,Moonstorm.StatTypes,System.Int32)">
+            <summary>
+            Constructor for the TokenModifierAttribute
+            </summary>
+        </member>
+        <member name="T:Moonstorm.ConfigurableFieldManager">
+            <summary>
+            The ConfigurableFieldManager is a class that handles the usage of <see cref="T:Moonstorm.ConfigurableFieldAttribute"/> in mods.
+            </summary>
+        </member>
+        <member name="M:Moonstorm.ConfigurableFieldManager.AddMod(BepInEx.BaseUnityPlugin)">
+            <summary>
+            Adds the mod from <paramref name="baseUnityPlugin"/> into the ConfigurableFieldManager.
+            <para>When added, the manager will look for Types with public static fields that implement the <see cref="T:Moonstorm.ConfigurableFieldAttribute"/></para>
+            <para>Mods added will also have the ability to use Configuration Files created with <see cref="T:Moonstorm.Loaders.ConfigLoader`1"/> for the binding process</para>
+            </summary>
+            <param name="baseUnityPlugin">Your mod's BaseUnityPlugin inheriting class</param>
+        </member>
+        <member name="T:Moonstorm.ArtifactBase">
+            <summary>
+            A <see cref="T:Moonstorm.ContentBase"/> that represents an Artifact for the game, the artifact is represented via the <see cref="P:Moonstorm.ArtifactBase.ArtifactDef"/>
+            <para>It's tied ModuleBase is the <see cref="T:Moonstorm.ArtifactModuleBase"/></para>
+            <para>Contains methods to implement and remove the hooks for making your artifact work properly</para>
+            <para>Contains implementation for using <see cref="T:R2API.ArtifactCodeAPI"/> via the <see cref="P:Moonstorm.ArtifactBase.ArtifactCode"/></para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.ArtifactBase.ArtifactDef">
+            <summary>
+            The ArtifactDef associated with this ArtifactBase
+            </summary>
+        </member>
+        <member name="P:Moonstorm.ArtifactBase.ArtifactCode">
+            <summary>
+            The ArtifactCode for this ArtifactDef, used with <see cref="T:R2API.ArtifactCodeAPI"/>
+            </summary>
+        </member>
+        <member name="M:Moonstorm.ArtifactBase.OnArtifactDisabled">
+            <summary>
+            When an artifact gets disabled in a run, this method gets called
+            </summary>
+        </member>
+        <member name="M:Moonstorm.ArtifactBase.OnArtifactEnabled">
+            <summary>
+            When an artifact gets enabled in a run, this method gets called
+            </summary>
+        </member>
+        <member name="T:Moonstorm.BuffBase">
+            <summary>
+            A <see cref="T:Moonstorm.ContentBase"/> that represents a <see cref="T:RoR2.BuffDef"/> for the game, the Buff is represented via the <see cref="P:Moonstorm.BuffBase.BuffDef"/>
+            <para>Its tied ModuleBase is the <see cref="T:Moonstorm.BuffModuleBase"/></para>
+            <para>Also see <see cref="T:Moonstorm.Components.BaseBuffBodyBehavior"/></para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.BuffBase.BuffDef">
+            <summary>
+            The BuffDef associated with this BuffBase
+            </summary>
+        </member>
+        <member name="P:Moonstorm.BuffBase.OverlayMaterial">
+            <summary>
+            If supplied, this material will be applied to the body that has the buff declared in <see cref="P:Moonstorm.BuffBase.BuffDef"/>
+            </summary>
+        </member>
+        <member name="T:Moonstorm.CharacterBase">
+            <summary>
+            A <see cref="T:Moonstorm.ContentBase"/> that represents a CharacterBody and Master pair for the game
+            <para>The CharacterBody is represented via the <see cref="P:Moonstorm.CharacterBase.BodyPrefab"/>, while the CharacterMaster is represented via the <see cref="P:Moonstorm.CharacterBase.MasterPrefab"/></para>
+            <para>It's tied ModuleBase is the <see cref="T:Moonstorm.CharacterModuleBase"/></para>
+            <para>You should also see <seealso cref="T:Moonstorm.MonsterBase"/> and the <seealso cref="T:Moonstorm.SurvivorBase"/> for implementing Monsters and Survivors respectively</para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.CharacterBase.BodyPrefab">
+            <summary>
+            The CharacterBody prefab associated with this CharacterBase
+            </summary>
+        </member>
+        <member name="P:Moonstorm.CharacterBase.MasterPrefab">
+            <summary>
+            The CharacterMaster prefab aassociated with this CharacterBase
+            </summary>
+        </member>
+        <member name="M:Moonstorm.CharacterBase.Initialize">
+            <summary>
+            <inheritdoc cref="M:Moonstorm.ContentBase.Initialize"/>
+            <para>calling base also calls <see cref="M:Moonstorm.CharacterBase.ModifyPrefab"/> and <see cref="M:Moonstorm.CharacterBase.Hook"/></para>
+            </summary>
+        </member>
+        <member name="M:Moonstorm.CharacterBase.ModifyPrefab">
+            <summary>
+            Finalize your prefab here
+            </summary>
+        </member>
+        <member name="M:Moonstorm.CharacterBase.Hook">
+            <summary>
+            Implement hooks for your character to work properly here
+            </summary>
+        </member>
+        <member name="T:Moonstorm.ContentBase">
+            <summary>
+            A class which all content bases derive from
+            <para>A content base is a representation of a miscelaneous content piece from Risk of Rain 2 or general content piece</para>
+            <para>Content bases are only representation of content, to load the content or have it initialize you must use the corresponding ModuleBase associated with the ContentBase</para>
+            </summary>
+        </member>
+        <member name="M:Moonstorm.ContentBase.Initialize">
+            <summary>
+            Implement the initialization of your Content here
+            </summary>
+        </member>
+        <member name="T:Moonstorm.DamageTypeBase">
+            <summary>
+            A <see cref="T:Moonstorm.ContentBase"/> that represents a DamageType implemented via <see cref="T:R2API.DamageAPI"/>
+            <para>It's tied ModuleBase is the <see cref="T:Moonstorm.DamageTypeModuleBase"/></para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.DamageTypeBase.ModdedDamageType">
+            <summary>
+            The ModedDamageType of this DamageTypeBase
+            <para>Set by the DamageTypeModule.</para>
+            </summary>
+        </member>
+        <member name="M:Moonstorm.DamageTypeBase.Delegates">
+            <summary>
+            Subscribe here to any On. or IL. hooks to make your DamageType work properly.
+            <para>Method gets called automatically by the DamageTypeModule</para>
+            </summary>
+        </member>
+        <member name="T:Moonstorm.EliteEquipmentBase">
+            <summary>
+            <inheritdoc cref="T:Moonstorm.EquipmentBase"/>
+            <para>An EliteEquipmentBase is half-way initialized by the <see cref="T:Moonstorm.EquipmentModuleBase"/>, to finalize the initialization you must also use the <see cref="T:Moonstorm.EliteModuleBase"/></para>
+            <para>An EliteEquipmentBase contains a List of <see cref="T:Moonstorm.MSEliteDef"/> for storing the EliteDefs associated with the <see cref="T:Moonstorm.EliteEquipmentBase"/></para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.EliteEquipmentBase.EliteDefs">
+            <summary>
+            The <see cref="T:Moonstorm.MSEliteDef"/> associated with this EliteEquipmentBase
+            </summary>
+        </member>
+        <member name="T:Moonstorm.EliteTierDefBase">
+            <summary>
+            A <see cref="T:Moonstorm.ContentBase"/> that represents a <see cref="T:RoR2.CombatDirector.EliteTierDef"/> for the game. 
+            The EliteTierDef is represented via the <see cref="P:Moonstorm.EliteTierDefBase.SerializableEliteTierDef"/>
+            <para>It's tied ModuleBase is the <see cref="T:Moonstorm.EliteTierDefModuleBase"/></para>
+            <para>More information about MSU's EliteTierDef system can be found in the documentation of <see cref="P:Moonstorm.EliteTierDefBase.SerializableEliteTierDef"/></para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.EliteTierDefBase.SerializableEliteTierDef">
+            <summary>
+            The Serialized version of this EliteTierDef
+            </summary>
+        </member>
+        <member name="P:Moonstorm.EliteTierDefBase.IsAvailable">
+            <summary>
+            A function to determine wether the Elite can be used for the current spawn card's elite rules
+            </summary>
+        </member>
+        <member name="T:Moonstorm.EquipmentBase">
+            <summary>
+            A <see cref="T:Moonstorm.ContentBase"/> that represents an <see cref="T:RoR2.EquipmentDef"/> for the game, the Equipment is represented via the <see cref="P:Moonstorm.EquipmentBase.EquipmentDef"/>
+            <para>It's tied ModuleBase is the <see cref="T:Moonstorm.EquipmentModuleBase"/></para>
+            <para>Contains a method for implementing a <see cref="T:RoR2.CharacterBody.ItemBehavior"/> alongside a method that gets ran when the equipment is used</para>
+            <para>You should also see <seealso cref="T:Moonstorm.EliteEquipmentBase"/> for implementing Elites</para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.EquipmentBase.EquipmentDef">
+            <summary>
+            The EquipmentDef tied to this EquipmentBase
+            </summary>
+        </member>
+        <member name="P:Moonstorm.EquipmentBase.ItemDisplayPrefab">
+            <summary>
+            Optional, supply your equipment's ItemDisplayPrefab here.
+            </summary>
+        </member>
+        <member name="M:Moonstorm.EquipmentBase.AddBehavior(RoR2.CharacterBody@,System.Int32)">
+            <summary>
+            Optional, use this to add an <see cref="T:RoR2.CharacterBody.ItemBehavior"/> that gets added when the equipment is picked up
+            </summary>
+            <param name="body">The body that has this equipment</param>
+            <param name="stack">The amount of stacks, this is always set to 1</param>
+        </member>
+        <member name="M:Moonstorm.EquipmentBase.FireAction(RoR2.EquipmentSlot)">
+            <summary>
+            Implement your equipment's use action here.
+            </summary>
+            <param name="slot">The equipment slot that contains this equipment</param>
+            <returns>True if the equipment was succesfully used, false otherwise</returns>
+        </member>
+        <member name="T:Moonstorm.InteractableBase">
+            <summary>
+            A <see cref="T:Moonstorm.ContentBase"/> that represents an Interactable for the game. The interactable is represented via the <see cref="P:Moonstorm.InteractableBase.Interactable"/>
+            <para>It's tied ModuleBase is the <see cref="T:Moonstorm.InteractableModuleBase"/></para>
+            <para>An InteractableBase can have an <see cref="T:Moonstorm.MSInteractableDirectorCard"/>, which is used for spawning the interactable ingame with the Scene Director</para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.InteractableBase.Interactable">
+            <summary>
+            The interactable prefab for the InteractableBase
+            </summary>
+        </member>
+        <member name="P:Moonstorm.InteractableBase.InteractableDirectorCard">
+            <summary>
+            An <see cref="T:Moonstorm.MSInteractableDirectorCard"/> used for spawning the interactable
+            </summary>
+        </member>
+        <member name="T:Moonstorm.ItemBase">
+            <summary>
+            A <see cref="T:Moonstorm.ContentBase"/> that represents an <see cref="T:RoR2.ItemDef"/> for the game, the Item is represented via the <see cref="P:Moonstorm.ItemBase.ItemDef"/>
+            <para>Its tied module base is the <see cref="T:Moonstorm.ItemModuleBase"/></para>
+            <para>You should also know about the <see cref="T:RoR2.Items.BaseItemBodyBehavior"/>"/></para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.ItemBase.ItemDef">
+            <summary>
+            The ItemDef that represents this ItemBase
+            </summary>
+        </member>
+        <member name="P:Moonstorm.ItemBase.ItemDisplayPrefab">
+            <summary>
+            Optional, supply your item's ItemDisplayPrefab here
+            </summary>
+        </member>
+        <member name="T:Moonstorm.MonsterBase">
+            <summary>
+            <inheritdoc cref="T:Moonstorm.CharacterBase"/>
+            <para>A MonsterBase also contains a <see cref="P:Moonstorm.MonsterBase.MonsterDirectorCard"/>, used for spawning the monster ingame with the Combat Director</para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.MonsterBase.MonsterDirectorCard">
+            <summary>
+            The <see cref="T:Moonstorm.MSMonsterDirectorCard"/> for this Monster
+            </summary>
+        </member>
+        <member name="T:Moonstorm.ProjectileBase">
+            <summary>
+            A <see cref="T:Moonstorm.ContentBase"/> that represents a Projectile for the game, the projectile is represented via the <see cref="P:Moonstorm.ProjectileBase.ProjectilePrefab"/>
+            <para>Its tied module base is the <see cref="T:Moonstorm.ProjectileModuleBase"/></para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.ProjectileBase.ProjectilePrefab">
+            <summary>
+            The Projectile Prefab that represents this ProjectileBase
+            </summary>
+        </member>
+        <member name="T:Moonstorm.SceneBase">
+            <summary>
+            A <see cref="T:Moonstorm.ContentBase"/> that represents a <see cref="T:RoR2.SceneDef"/> for the game, the Scene is represented via the <see cref="P:Moonstorm.SceneBase.SceneDef"/>
+            <para>Its tied ModuleBase is the <see cref="T:Moonstorm.SceneModuleBase"/></para>
+            <para>Should also work with Rain of Stages' SceneDefinition</para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.SceneBase.SceneDef">
+            <summary>
+            The SceneDef associated with this SceneBase
+            <para>Can also be a Rain of Stages SceneDefinition</para>
+            </summary>
+        </member>
+        <member name="T:Moonstorm.SurvivorBase">
+            <summary>
+            <inheritdoc cref="T:Moonstorm.CharacterBase"/>
+            <para>A SurvivorBase also contains a <see cref="P:Moonstorm.SurvivorBase.SurvivorDef"/>, used for making the body a survivor.</para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.SurvivorBase.SurvivorDef">
+            <summary>
+            The <see cref="T:RoR2.SurvivorDef"/> for this SurvivorBase
+            </summary>
+        </member>
+        <member name="T:Moonstorm.UnlockableBase">
+            <summary>
+            A <see cref="T:Moonstorm.ContentBase"/> that represents a <see cref="T:RoR2.UnlockableDef"/> and <see cref="T:RoR2.AchievementDef"/> pair for the game.
+            <para>Both the <see cref="T:RoR2.UnlockableDef"/> and <see cref="T:RoR2.AchievementDef"/> are represented via the <see cref="P:Moonstorm.UnlockableBase.UnlockableDef"/></para>
+            <para>Its tied ModuleBase is the <see cref="T:Moonstorm.UnlockablesModuleBase"/></para>
+            <para>More information about MSU's unlockables system can be found in the documentation for <seealso cref="T:Moonstorm.MSUnlockableDef"/>"/></para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.UnlockableBase.UnlockableDef">
+            <summary>
+            The MSUnlockableDef associated with this UnlockableBase
+            </summary>
+        </member>
+        <member name="P:Moonstorm.UnlockableBase.RequiredTypes">
+            <summary>
+            An array of required <see cref="T:Moonstorm.ContentBase"/>s that need to be initialized for this unlockable to be added. Types are added via <see cref="M:Moonstorm.UnlockableBase.AddRequiredType``1"/>
+            <para>For example, Adding an UnlockableDef for an Item that can be disabled or enabled in a config file. You'd only want this unlockable to be implemented if the Item is enabled in the config file, as such, Adding a required type of the item that gets unlocked when this Unlockable is obtained means this Unlockable only gets added if the Required Type is also added.</para>
+            </summary>
+        </member>
+        <member name="M:Moonstorm.UnlockableBase.AddRequiredType``1">
+            <summary>
+            Adds a new RequiredType to this UnlockableBase.
+            <para>For example, Adding an UnlockableDef for an Item that can be disabled or enabled in a config file, the Item in this case would be <typeparamref name="T"/>. You'd only want this unlockable to be implemented if the Item (<typeparamref name="T"/>) is enabled in the config file, as such, Adding a required type of the item that gets unlocked when this Unlockable is obtained means this Unlockable only gets added if the Required Type is also added.</para>
+            </summary>
+            <typeparam name="T">The type that is required for adding this Unlockable to the game.</typeparam>
+        </member>
+        <member name="M:Moonstorm.UnlockableBase.OnCheckPassed">
+            <summary>
+            Called when all the required types for this unlockable are enabled.
+            </summary>
+        </member>
+        <member name="P:Moonstorm.UnlockableBase.GetAchievementDef">
+            <summary>
+            The AchievementDef tied to this Unlockable
+            </summary>
+        </member>
+        <member name="T:Moonstorm.IBodyStatArgModifier">
+            <summary>
+            An IBodyStatArgModifier can be used to modify the Stats of a characterbody using <see cref="T:R2API.RecalculateStatsAPI"/>
+            </summary>
+        </member>
+        <member name="M:Moonstorm.IBodyStatArgModifier.ModifyStatArguments(R2API.RecalculateStatsAPI.StatHookEventArgs)">
+            <summary>
+            Modify the stat arguments for this body.
+            NEVER override, only add, substract, divide or multiply.
+            </summary>
+            <param name="args">The arguments to modify</param>
+        </member>
+        <member name="T:Moonstorm.IOnIncomingDamageOtherServerReciever">
+            <summary>
+            An IOnIncomingDamageOtherServerReciever can be used to modify the DamageInfo of a victim that the player is attacking.
+            <para>Effectively allows modifications that  run during the TakeDamage method of HealthComponent</para>
+            </summary>
+        </member>
+        <member name="M:Moonstorm.IOnIncomingDamageOtherServerReciever.OnIncomingDamageOther(RoR2.HealthComponent,RoR2.DamageInfo)">
+            <summary>
+            Modify the DamageInfo of the victim
+            </summary>
+            <param name="victimHealthComponent">The soon to be victim's HealthComponent</param>
+            <param name="damageInfo">The DamageInfo to modify</param>
+        </member>
+        <member name="T:Moonstorm.IStatItemBehavior">
+            <summary>
+            An IStatItemBehavior is used by the <see cref="T:Moonstorm.Components.MoonstormContentManager"/> to run the methods <see cref="M:Moonstorm.IStatItemBehavior.RecalculateStatsEnd"/> and <see cref="M:Moonstorm.IStatItemBehavior.RecalculateStatsStart"/>
+            <para>Effectively allows you to run code before and after <see cref="M:RoR2.CharacterBody.RecalculateStats"/></para>
+            <para>If your objective is to modify the stats directly, use <see cref="T:Moonstorm.IBodyStatArgModifier"/> instead</para>
+            </summary>
+        </member>
+        <member name="M:Moonstorm.IStatItemBehavior.RecalculateStatsEnd">
+            <summary>
+            Code ran here runs after RecalculateStats()
+            </summary>
+        </member>
+        <member name="M:Moonstorm.IStatItemBehavior.RecalculateStatsStart">
+            <summary>
+            Code ran here runs before RecalculateStats()
+            </summary>
+        </member>
+        <member name="T:Moonstorm.Loaders.AssetsLoader`1">
+            <summary>
+            The AssetsLoader is a class that can be used to simplify the loading of assetbundles
+            <para>AssetsLoaders can be used to easily swap the material's stubbed shaders for the real ones</para>
+            <para>AssetLoader inheriting classes are treated as Singletons</para>
+            </summary>
+            <typeparam name="T">The class that's inheriting from AssetsLoader</typeparam>
+        </member>
+        <member name="P:Moonstorm.Loaders.AssetsLoader`1.Instance">
+            <summary>
+            Retrieves the instance of <typeparamref name="T"/>
+            </summary>
+        </member>
+        <member name="M:Moonstorm.Loaders.AssetsLoader`1.LoadAsset``1(System.String)">
+            <summary>
+            Loads an asset from the AssetsLoader's MainAssetBundle
+            Requires an instance to exist.
+            </summary>
+        </member>
+        <member name="M:Moonstorm.Loaders.AssetsLoader`1.LoadAllAssetsOfType``1">
+            <summary>
+            Loads an asset of type <typeparamref name="TAsset"/> from the AssetsLoader's MainAssetBundle
+            Requires an instance to exist.
+            </summary>
+        </member>
+        <member name="T:Moonstorm.Loaders.AssetsLoader">
+            <summary>
+            <inheritdoc cref="T:Moonstorm.Loaders.AssetsLoader`1"/>
+            <para>You probably want to use <see cref="T:Moonstorm.Loaders.AssetsLoader"/> instead</para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.Loaders.AssetsLoader.MainAssetBundle">
+            <summary>
+            Your mod's main assetbundle
+            </summary>
+        </member>
+        <member name="P:Moonstorm.Loaders.AssetsLoader.MaterialsWithSwappedShaders">
+            <summary>
+            A list of all materials that have swapped shaders
+            </summary>
+        </member>
+        <member name="M:Moonstorm.Loaders.AssetsLoader.SwapShadersFromMaterialsInBundle(UnityEngine.AssetBundle)">
+            <summary>
+            Swaps the shaders from all the materials insided the specified bundle
+            </summary>
+            <param name="bundle">The bundle where the materials will be loaded from</param>
+        </member>
+        <member name="M:Moonstorm.Loaders.AssetsLoader.SwapShadersFromMaterials(System.Collections.Generic.IEnumerable{UnityEngine.Material})">
+            <summary>
+            Swaps the shaders from the specified materials in <paramref name="materials"/>
+            </summary>
+            <param name="materials">The materials to modify</param>
+        </member>
+        <member name="T:Moonstorm.Loaders.ConfigLoader`1">
+            <summary>
+            The ConfigLoader is a class that can be used to simplify the implementation of ConfigFiles from BepInEx
+            <para>ConfigLoader will easily create new Config files, config files created by it can be wiped between major versions</para>
+            <para>ConfigLoader inheriting classes are treated as Singletons</para>
+            </summary>
+            <typeparam name="T">The class that's inheriting from ConfigLoader</typeparam>
+        </member>
+        <member name="P:Moonstorm.Loaders.ConfigLoader`1.Instance">
+            <summary>
+            Retrieves the instance of <typeparamref name="T"/>
+            </summary>
+        </member>
+        <member name="T:Moonstorm.Loaders.ConfigLoader">
+            <summary>
+            <inheritdoc cref="T:Moonstorm.Loaders.ConfigLoader`1"/>
+            <para>You probably want to use <see cref="T:Moonstorm.Loaders.ConfigLoader`1"/> instead</para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.Loaders.ConfigLoader.MainClass">
+            <summary>
+            Your mod's main class
+            </summary>
+        </member>
+        <member name="P:Moonstorm.Loaders.ConfigLoader.CreateSubFolder">
+            <summary>
+            Wether ConfigFiles created by the ConfigLoader will be created in a subfolder, or in the Bepinex's ConfigPath
+            </summary>
+        </member>
+        <member name="P:Moonstorm.Loaders.ConfigLoader.ConfigFolderPath">
+            <summary>
+            Returns the folder where the config files for this ConfigLoader are located
+            </summary>
+        </member>
+        <member name="P:Moonstorm.Loaders.ConfigLoader.OwnerMetaData">
+            <summary>
+            Retrieves the MainClass's Owner Metadata
+            </summary>
+        </member>
+        <member name="F:Moonstorm.Loaders.ConfigLoader.identifierToConfigFile">
+            <summary>
+            A dictionary to store a ConfigFile's identifier to its config file
+            </summary>
+        </member>
+        <member name="M:Moonstorm.Loaders.ConfigLoader.CreateConfigFile(System.String,System.Boolean)">
+            <summary>
+            Creates a config file.
+            <para>The config file's name will be the <paramref name="identifier"/></para>
+            </summary>
+            <param name="identifier">A unique identifier for this config file</param>
+            <param name="wipedBetweenMinorVersions">Wether the ConfigFile is wiped between minor version changes of your mod</param>
+            <returns>The config file</returns>
+        </member>
+        <member name="T:Moonstorm.Loaders.ContentLoader`1">
+            <summary>
+            The ContentLoader is a class that can be used to simplify the implementation of an <see cref="T:RoR2.ContentManagement.IContentPackProvider"/> interface
+            <para>ContentLoader will automatically add your mod's ContentPack into the game</para>
+            <para>ContentLoader inheriting classes are treated as Singletons</para>
+            </summary>
+            <typeparam name="T">The class that's inheriting from ContentLoader</typeparam>
+        </member>
+        <member name="P:Moonstorm.Loaders.ContentLoader`1.Instance">
+            <summary>
+            Retrieves the instance of <typeparamref name="T"/>
+            </summary>
+        </member>
+        <member name="T:Moonstorm.Loaders.ContentLoader">
+            <summary>
+            <inheritdoc cref="T:Moonstorm.Loaders.ContentLoader`1"/>
+            <para>You probably want to use <see cref="T:Moonstorm.Loaders.ContentLoader`1"/> instead</para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.Loaders.ContentLoader.identifier">
+            <summary>
+            A unique identifier for your ContentPack
+            </summary>
+        </member>
+        <member name="P:Moonstorm.Loaders.ContentLoader.ContentPack">
+            <summary>
+            Retrieves the ContentPack created from this ContentLoader
+            </summary>
+        </member>
+        <member name="P:Moonstorm.Loaders.ContentLoader.SerializableContentPack">
+            <summary>
+            Your Mod's SerialziableContentPack
+            </summary>
+        </member>
+        <member name="P:Moonstorm.Loaders.ContentLoader.LoadDispatchers">
+            <summary>
+            An array of actions for loading your content pieces
+            <para>it is recommended to call your modules' <see cref="M:Moonstorm.ModuleBase`1.Initialize"/> methods here</para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.Loaders.ContentLoader.PopulateFieldsDispatchers">
+            <summary>
+            An array of actions for populating fields of content pieces with your ContentPack
+            <para>So methods that populate fields like the ones in <see cref="T:RoR2.RoR2Content.Items"/></para>
+            </summary>
+        </member>
+        <member name="M:Moonstorm.Loaders.ContentLoader.Init">
+            <summary>
+            Hooks into <see cref="E:RoR2.ContentManagement.ContentManager.collectContentPackProviders"/> and adds this ContentLoader to the ContentManager
+            </summary>
+        </member>
+        <member name="T:Moonstorm.Loaders.LanguageLoader`1">
+            <summary>
+            The LanguageLoader is a class that can be used to load LanguageFiles into the game's <see cref="T:RoR2.Language"/> systems
+            <para>Loading language files this way is required for the <see cref="T:Moonstorm.TokenModifierManager"/> and <see cref="T:Moonstorm.TokenModifierAttribute"/> to work properly</para>
+            <para>LanguageLoader inheriting classes are treated as Singletons</para>
+            </summary>
+            <typeparam name="T">The class that's inheriting from LanguageLoader</typeparam>
+        </member>
+        <member name="P:Moonstorm.Loaders.LanguageLoader`1.Instance">
+            <summary>
+            Retrieves the instance of <typeparamref name="T"/>
+            </summary>
+        </member>
+        <member name="T:Moonstorm.Loaders.LanguageLoader">
+            <summary>
+            <inheritdoc cref="T:Moonstorm.Loaders.LanguageLoader`1"/>
+            <para>You probably want to use <see cref="T:Moonstorm.Loaders.LanguageLoader`1"/> instead</para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.Loaders.LanguageLoader.AssemblyDir">
+            <summary>
+            The directory where your assembly is located
+            </summary>
+        </member>
+        <member name="P:Moonstorm.Loaders.LanguageLoader.LanguagesFolderName">
+            <summary>
+            The root folder of your Language tree
+            </summary>
+        </member>
+        <member name="M:Moonstorm.Loaders.LanguageLoader.LoadLanguages">
+            <summary>
+            Hooks into <see cref="M:RoR2.Language.SetFolders(System.Collections.Generic.IEnumerable{System.String})"/> and adds the languages files that are inside <see cref="P:Moonstorm.Loaders.LanguageLoader.LanguagesFolderName"/>
+            </summary>
+        </member>
+        <member name="T:Moonstorm.BundleModule">
+            <summary>
+            A class that extends ModuleBase
+            <para>Unlike regular module bases, a BundleModule [Does Not] manage a ContentBase class.</para>
+            <para>The bundle module is used for managing miscelaneous ordeals with AssetBundles</para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.BundleModule.MainBundle">
+            <summary>
+            Your mod's main asset bundle
+            </summary>
+        </member>
+        <member name="M:Moonstorm.BundleModule.InitializeContent(Moonstorm.ContentBase)">
+            <summary>
+            Do not call this method, as stated in the <see cref="T:Moonstorm.BundleModule"/> documentation, BundleModules do not have content classes
+            <para>This throws a <see cref="T:System.NotSupportedException"/></para>
+            </summary>
+        </member>
+        <member name="M:Moonstorm.BundleModule.GetContentClasses``1(System.Type)">
+            <summary>
+            Do not call this method, as stated in the <see cref="T:Moonstorm.BundleModule"/> documentation, BundleModules do not have content classes
+            <para>This throws a <see cref="T:System.NotSupportedException"/></para>
+            </summary>
+        </member>
+        <member name="M:Moonstorm.BundleModule.Load``1(System.String)">
+            <summary>
+            Loads an asset of type <typeparamref name="TObject"/> from <see cref="P:Moonstorm.BundleModule.MainBundle"/>
+            </summary>
+            <typeparam name="TObject">The type of object to load</typeparam>
+            <param name="name">The name of the object to load</param>
+            <returns>The loaded object</returns>
+        </member>
+        <member name="M:Moonstorm.BundleModule.LoadAll``1">
+            <summary>
+            Loads all assets of type <typeparamref name="TObject"/> from <see cref="P:Moonstorm.BundleModule.MainBundle"/>
+            </summary>
+            <typeparam name="TObject">The type of objects to load</typeparam>
+            <returns>An array of all objects of type <typeparamref name="TObject"/></returns>
+        </member>
+        <member name="T:Moonstorm.ContentModule`1">
+            <summary>
+            A class that extends ModuleBase.
+            <para>A ContentModule contains extra methods and an abstract property for a <see cref="T:R2API.ScriptableObjects.R2APISerializableContentPack"/> to add specific content pieces to your mod's SerializableContentPack</para>
+            </summary>
+            <typeparam name="T">The type of content base this module base manages</typeparam>
+        </member>
+        <member name="P:Moonstorm.ContentModule`1.SerializableContentPack">
+            <summary>
+            Your mod's SerializableContentPack
+            </summary>
+        </member>
+        <member name="M:Moonstorm.ContentModule`1.AddSafely``1(``0[]@,``0,System.String)">
+            <summary>
+            The add safely method will add a piece of <paramref name="content"/> of type <typeparamref name="TAsset"/> to the array in <paramref name="contentPackArray"/>
+            The method does not add the content piece to the array if its already in said array
+            </summary>
+            <typeparam name="TAsset">The type of content piece to add, Ex: <see cref="T:RoR2.ItemDef"/></typeparam>
+            <param name="contentPackArray">The array of the SerializableContentPack to add to</param>
+            <param name="content">The piece of content being added</param>
+            <param name="correspondingArrayName">a specification of the <paramref name="contentPackArray"/>'s content type array, useful if youre adding content pieces to arrays of type GameObject and you want to specify the main component type (ex: <see cref="T:RoR2.CharacterBody"/></param>
+            <returns>True if added succesfully, false otherwise</returns>
+        </member>
+        <member name="T:Moonstorm.ArtifactModuleBase">
+            <summary>
+            The <see cref="T:Moonstorm.ArtifactModuleBase"/> is a <see cref="T:Moonstorm.ContentModule`1"/> that handles the <see cref="T:Moonstorm.ArtifactBase"/> class
+            <para>The ArtifactModule's main job is to handle the proper addition of ArtifactDefs and proper hooking usage using the game's <see cref="T:RoR2.RunArtifactManager"/></para>
+            <para>ArtifactModule also implements ArtifactCodes using <see cref="T:R2API.ArtifactCodeAPI"/></para>
+            <para>Inherit from this module if you want to load and manage Artifacts with <see cref="T:Moonstorm.ArtifactBase"/> systems</para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.ArtifactModuleBase.MoonstormArtifacts">
+            <summary>
+            A ReadOnlyDictionary that can be used for loading a specific BuffBase by giving it's tied ArtifactDef
+            <para>If you want to modify classes inside this, subscribe to <see cref="F:Moonstorm.ArtifactModuleBase.OnDictionaryCreated"/> to ensure the dictionary is not empty</para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.ArtifactModuleBase.LoadedArtifactDefs">
+            <summary>
+            Loads all the Artifactdefs from <see cref="P:Moonstorm.ArtifactModuleBase.MoonstormArtifacts"/>
+            </summary>
+        </member>
+        <member name="F:Moonstorm.ArtifactModuleBase.OnDictionaryCreated">
+            <summary>
+            An action that gets invoked when the <see cref="P:Moonstorm.ArtifactModuleBase.MoonstormArtifacts"/> has been populated
+            </summary>
+        </member>
+        <member name="M:Moonstorm.ArtifactModuleBase.GetArtifactBases">
+            <summary>
+            <inheritdoc cref="M:Moonstorm.ModuleBase`1.GetContentClasses``1(System.Type)"/>
+            <para>T in this case is <see cref="T:Moonstorm.ArtifactBase"/></para>
+            </summary>
+            <returns>An IEnumerable of all your assembly's <see cref="T:Moonstorm.ArtifactBase"/></returns>
+        </member>
+        <member name="M:Moonstorm.ArtifactModuleBase.AddArtifact(Moonstorm.ArtifactBase,System.Collections.Generic.Dictionary{RoR2.ArtifactDef,Moonstorm.ArtifactBase})">
+            <summary>
+            Adds an ArtifactBase's ArtifactDef to your mod's content pack
+            see <see cref="M:Moonstorm.ArtifactModuleBase.InitializeContent(Moonstorm.ArtifactBase)"/>
+            </summary>
+            <param name="artifact">The ArtifactBase to add</param>
+            <param name="artifactDictionary">Optional, a dictionary to add your initialized ArtifactBases and ArtifactDefs</param>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Moonstorm.ArtifactModuleBase.InitializeContent(Moonstorm.ArtifactBase)" -->
+        <member name="T:Moonstorm.BuffModuleBase">
+            <summary>
+            The <see cref="T:Moonstorm.BuffModuleBase"/> is a <see cref="T:Moonstorm.ContentModule`1"/> that handles the <see cref="T:Moonstorm.BuffBase"/> class
+            <para>The BuffModule's main job is to handle the proper addition of BuffDefs and <see cref="T:Moonstorm.Components.BaseBuffBodyBehavior"/>s</para>
+            <para>It can also tie a specific BuffDef to a Material so an overlay can appear on a body that has the buff</para>
+            <para>Inherit from this module if you want to load and manage Characters with <see cref="T:Moonstorm.CharacterBase"/> systems</para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.BuffModuleBase.MoonstormBuffs">
+            <summary>
+            A ReadOnlyDictionary that can be useed for loading a specific BuffBase by giving it's tied BuffDef
+            <para>If you want to modify classes inside this, subscribe to <see cref="F:Moonstorm.BuffModuleBase.OnDictionariesCreated"/> to ensure the dictionary is not empty</para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.BuffModuleBase.MoonstormOverlayMaterials">
+            <summary>
+            A ReadOnlyDictionary that can be used for obtaining a specific BuffDef's overlay material
+            <para>If you want to modify classes inside this, subscribe to <see cref="F:Moonstorm.BuffModuleBase.OnDictionariesCreated"/> to ensure the dictionary is not empty</para>
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "P:Moonstorm.BuffModuleBase.LoadedBuffDefs" -->
+        <member name="F:Moonstorm.BuffModuleBase.OnDictionariesCreated">
+            <summary>
+            An action that gets invoked when the <see cref="P:Moonstorm.BuffModuleBase.MoonstormBuffs"/> and <see cref="P:Moonstorm.BuffModuleBase.MoonstormOverlayMaterials"/> have been populated
+            </summary>
+        </member>
+        <member name="M:Moonstorm.BuffModuleBase.GetBuffBases">
+            <summary>
+            <inheritdoc cref="M:Moonstorm.ModuleBase`1.GetContentClasses``1(System.Type)"/>
+            <para>T in this case is <see cref="T:Moonstorm.BuffBase"/></para>
+            </summary>
+            <returns>An IEnumerable of all your assembly's <see cref="T:Moonstorm.BuffBase"/></returns>
+        </member>
+        <member name="M:Moonstorm.BuffModuleBase.AddBuff(Moonstorm.BuffBase,System.Collections.Generic.Dictionary{RoR2.BuffDef,Moonstorm.BuffBase})">
+            <summary>
+            Adds a BuffBase's BuffDef to your mod's ContentPack
+            <para>If the BuffDef implements <see cref="P:Moonstorm.BuffBase.OverlayMaterial"/>, then the material and buff def will be added to the <see cref="P:Moonstorm.BuffModuleBase.MoonstormOverlayMaterials"/> as well</para>
+            </summary>
+            <param name="buff">The BuffBase to add</param>
+            <param name="buffDictionary">Optional, a dictionary to add your initialied BuffBase and BuffDefs</param>
+        </member>
+        <member name="M:Moonstorm.BuffModuleBase.InitializeContent(Moonstorm.BuffBase)">
+            <summary>
+            Adds a BuffBase's BuffDef to your mod's ContentPack
+            <para>If the BuffDef implements <see cref="P:Moonstorm.BuffBase.OverlayMaterial"/>, then the material and buff def will be added to the <see cref="P:Moonstorm.BuffModuleBase.MoonstormOverlayMaterials"/> as well</para>
+            <para>Once added, it'll call <see cref="M:Moonstorm.ContentBase.Initialize"/></para>
+            </summary>
+            <param name="contentClass">The content class being initialized</param>
+        </member>
+        <member name="T:Moonstorm.CharacterModuleBase">
+            <summary>
+            The <see cref="T:Moonstorm.CharacterModuleBase"/> is a <see cref="T:Moonstorm.ContentModule`1"/> that handles the <see cref="T:Moonstorm.CharacterBase"/> class
+            <para>The <see cref="T:Moonstorm.CharacterModuleBase"/>'s main job is to handle the proper addition of CharacterBodies and CharacterMasters from <see cref="T:Moonstorm.CharacterBase"/> inheriting classes</para>
+            <para>For more specific uses there's the <see cref="T:Moonstorm.MonsterBase"/> class, used for adding a Monster to the game and have it spawned via the Combat Director</para>
+            <para>There's also the <see cref="T:Moonstorm.SurvivorBase"/> class, used for adding a survivor to the game via a SurvivorDef</para>
+            <para>Inherit from this module if you want to load and manage Characters with <see cref="T:Moonstorm.CharacterBase"/> systems</para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.CharacterModuleBase.MoonstormCharacters">
+            <summary>
+            A ReadOnlyDictionary that can be used for loading a specific CharacterBase by giving it's tied CharacterBody prefab
+            <para>If you want to modify classes inside this, subscribe to <see cref="F:Moonstorm.CharacterModuleBase.OnDictionaryCreated"/> to ensure the dictionary is not empty</para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.CharacterModuleBase.MoonstormMonsters">
+            <summary>
+            Returns all the MonsterBases from the <see cref="P:Moonstorm.CharacterModuleBase.MoonstormCharacters"/>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.CharacterModuleBase.MonstersWithCards">
+            <summary>
+            Returns all the MonsterBases that have <see cref="T:Moonstorm.MSMonsterDirectorCard"/>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.CharacterModuleBase.MoonstormSurvivors">
+            <summary>
+            Returns all the SurvivorBases from the <see cref="P:Moonstorm.CharacterModuleBase.MoonstormCharacters"/>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.CharacterModuleBase.LoadedCharacterBodies">
+            <summary>
+            Returns all the CharacterBody prefabs from the <see cref="P:Moonstorm.CharacterModuleBase.MoonstormCharacters"/>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.CharacterModuleBase.LoadedCharacterMasters">
+            <summary>
+            Returns all the CharacterMaster prefabs from the <see cref="P:Moonstorm.CharacterModuleBase.MoonstormCharacters"/>
+            </summary>
+        </member>
+        <member name="F:Moonstorm.CharacterModuleBase.OnDictionaryCreated">
+            <summary>
+            An action that gets invoked when the <see cref="P:Moonstorm.CharacterModuleBase.MoonstormCharacters"/> dictionary has been populated
+            </summary>
+        </member>
+        <member name="M:Moonstorm.CharacterModuleBase.GetCharacterBases">
+            <summary>
+            <inheritdoc cref="M:Moonstorm.ModuleBase`1.GetContentClasses``1(System.Type)"/>
+            <para>T in this case is <see cref="T:Moonstorm.CharacterBase"/></para>
+            </summary>
+            <returns>An IEnumerable of all your assembly's <see cref="T:Moonstorm.CharacterBase"/></returns>
+        </member>
+        <member name="M:Moonstorm.CharacterModuleBase.AddCharacter(Moonstorm.CharacterBase,System.Collections.Generic.Dictionary{UnityEngine.GameObject,Moonstorm.CharacterBase})">
+            <summary>
+            Adds a CharacterBase's CharacterBody and CharacterMaster prefabs to the game and to the ContentPack
+            <para>If the character is a <see cref="T:Moonstorm.MonsterBase"/> and it inherits <see cref="P:Moonstorm.MonsterBase.MonsterDirectorCard"/>, then it'll appear ingame using the CombatDirector</para>
+            <para>If the character is a <see cref="T:Moonstorm.SurvivorBase"/>, then it's SurvivorDef will be added to the ContentPack</para>
+            </summary>
+            <param name="character">The CharacterBase to add</param>
+            <param name="characterDictionary">Optional, a dictionary to add your initialized CharacterBase and CharacterBody game objects</param>
+        </member>
+        <member name="M:Moonstorm.CharacterModuleBase.InitializeContent(Moonstorm.CharacterBase)">
+            <summary>
+            <inheritdoc cref="M:Moonstorm.CharacterModuleBase.AddCharacter(Moonstorm.CharacterBase,System.Collections.Generic.Dictionary{UnityEngine.GameObject,Moonstorm.CharacterBase})"/>
+            </summary>
+        </member>
+        <member name="T:Moonstorm.DamageTypeModuleBase">
+            <summary>
+            The <see cref="T:Moonstorm.DamageTypeModuleBase"/> is a <see cref="T:Moonstorm.ModuleBase`1"/> that handles the <see cref="T:Moonstorm.DamageTypeBase"/> class
+            <para><see cref="T:Moonstorm.DamageTypeModuleBase"/>'s main job is to handle the proper addition of a <see cref="T:R2API.DamageAPI.ModdedDamageType"/> and implementation with the <see cref="T:Moonstorm.DamageTypeBase"/> inheriting classes using R2API's <see cref="T:R2API.DamageAPI"/></para>
+            <para>Inherit from this module if you want to load and manage DamageTypes with <see cref="T:Moonstorm.DamageTypeBase"/> systems</para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.DamageTypeModuleBase.MoonstormDamageTypes">
+            <summary>
+            A ReadOnlyDictionary that can be used for loading a specific <see cref="T:Moonstorm.DamageTypeBase"/> by giving it's tied <see cref="T:R2API.DamageAPI.ModdedDamageType"/>
+            <para>If you want to modify classes inside this, subscribe to <see cref="F:Moonstorm.DamageTypeModuleBase.OnDictionaryCreated"/> to ensure the dictionary is not empty</para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.DamageTypeModuleBase.ModdedDamageTypes">
+            <summary>
+            Returns all the ModdedDamageTypes from <see cref="P:Moonstorm.DamageTypeModuleBase.MoonstormDamageTypes"/>
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "F:Moonstorm.DamageTypeModuleBase.OnDictionaryCreated" -->
+        <member name="M:Moonstorm.DamageTypeModuleBase.GetDamageTypeBases">
+            <summary>
+            <inheritdoc cref="M:Moonstorm.ModuleBase`1.GetContentClasses``1(System.Type)"/>
+            <para>T in this case is <see cref="T:Moonstorm.DamageTypeBase"/></para>
+            </summary>
+            <returns>An IEnumerable of all your assembly's <see cref="T:Moonstorm.DamageTypeBase"/></returns>
+        </member>
+        <member name="M:Moonstorm.DamageTypeModuleBase.AddDamageType(Moonstorm.DamageTypeBase,System.Collections.Generic.Dictionary{R2API.DamageAPI.ModdedDamageType,Moonstorm.DamageTypeBase})">
+            <summary>
+            Adds a DamageType to the game
+            </summary>
+            <param name="damageType">The DamageType being added</param>
+            <param name="damageTypeDictionary">Optional, a dictionary to add your initialized ModdedDamageType and DamageTypeBase</param>
+        </member>
+        <member name="M:Moonstorm.DamageTypeModuleBase.InitializeContent(Moonstorm.DamageTypeBase)">
+            <summary>
+            Reserves and adds the <see cref="T:R2API.DamageAPI.ModdedDamageType"/> from <paramref name="contentClass"/> to the game using <see cref="T:R2API.DamageAPI"/>.
+            <para>Once added, it'll call the <see cref="M:Moonstorm.ContentBase.Initialize"/>and the <see cref="M:Moonstorm.DamageTypeBase.Delegates"/> methods</para>
+            </summary>
+            <param name="contentClass">The content class being initialized</param>
+        </member>
+        <member name="T:Moonstorm.EliteModuleBase">
+            <summary>
+            The <see cref="T:Moonstorm.EliteModuleBase"/> is a <see cref="T:Moonstorm.ContentModule`1"/> that handles the <see cref="T:Moonstorm.EliteEquipmentBase"/> class
+            <para><see cref="T:Moonstorm.EliteModuleBase"/>'s main job is to handle the proper addition of the EliteDefs from <see cref="T:Moonstorm.EliteEquipmentBase"/> inheriting classes</para>
+            <para>This has an indirect dependency with <see cref="T:Moonstorm.EquipmentModuleBase"/>, it is highly recommended to initialize that module before this one</para>
+            <para><see cref="T:Moonstorm.EliteModuleBase"/> will automatically handle the use method of the Equipment by running <see cref="M:Moonstorm.EquipmentBase.FireAction(RoR2.EquipmentSlot)"/>, alongside adding the EliteDefs to the CombatDirector</para>
+            <para>Inherit from this module if you want to load and manage Elites with <see cref="T:Moonstorm.EliteEquipmentBase"/> systems</para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.EliteModuleBase.MoonstormElites">
+            <summary>
+            A ReadOnlyCollection of all the EliteDefs from MSU
+            <para>If you want to modify classes inside this, subscribe to <see cref="F:Moonstorm.EliteModuleBase.OnListCreated"/> to ensure the list is not empty</para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.EliteModuleBase.AssetBundle">
+            <summary>
+            The AssetBundle where your EliteDefs are stored
+            </summary>
+        </member>
+        <member name="F:Moonstorm.EliteModuleBase.OnListCreated">
+            <summary>
+            An action that gets invoked when the <see cref="P:Moonstorm.EliteModuleBase.MoonstormElites"/> List has been populated
+            </summary>
+        </member>
+        <member name="M:Moonstorm.EliteModuleBase.GetInitializedEliteEquipmentBases">
+            <summary>
+            Calling this method will look into your <see cref="P:Moonstorm.EliteModuleBase.AssetBundle"/> and load all the <see cref="T:Moonstorm.MSEliteDef"/> from it
+            <para>Once all Elitedefs are loaded, it'll look for all the <see cref="T:Moonstorm.EliteEquipmentBase"/> initialized that have the Elitedef in the bundle, and return them</para>
+            <para>This effectively means you need to call <see cref="M:Moonstorm.EquipmentModuleBase.GetEliteEquipmentBases"/> and call <see cref="M:Moonstorm.EquipmentModuleBase.AddEliteEquipment(Moonstorm.EliteEquipmentBase,System.Collections.Generic.Dictionary{RoR2.EquipmentDef,Moonstorm.EliteEquipmentBase})"/> before calling this method</para>
+            </summary>
+            <returns>An IEnumerable of all your assembly's initialized <see cref="T:Moonstorm.EliteEquipmentBase"/>s</returns>
+        </member>
+        <member name="M:Moonstorm.EliteModuleBase.AddElite(Moonstorm.EliteEquipmentBase,System.Collections.Generic.List{Moonstorm.MSEliteDef})">
+            <summary>
+            Adds an <see cref="T:Moonstorm.EliteEquipmentBase"/>'s Elitedefs to the game and to the ContentPack
+            </summary>
+            <param name="elite">The EliteEquipmentBase to add</param>
+            <param name="list">Optional, a list to store your initialized EliteDefs</param>
+        </member>
+        <member name="M:Moonstorm.EliteModuleBase.InitializeContent(Moonstorm.EliteEquipmentBase)">
+            <summary>
+            Adds the <see cref="T:Moonstorm.MSEliteDef"/> from the <paramref name="contentClass"/> to your ContentPack
+            <para>Once added, it'll call <see cref="M:Moonstorm.ContentBase.Initialize"/></para>
+            </summary>
+            <param name="contentClass">The content class being initialized</param>
+        </member>
+        <member name="T:Moonstorm.EliteTierDefModuleBase">
+            <summary>
+            The <see cref="T:Moonstorm.EliteTierDefModuleBase"/> is a <see cref="!:ModuleBase&lt;T&gt;&lt;T&gt;"/> that handles the <see cref="T:Moonstorm.EliteTierDefBase"/> class
+            <para><see cref="T:Moonstorm.EliteTierDefModuleBase"/>'s main job is to handle the proper addition of EliteTierDefs from <see cref="T:Moonstorm.EliteTierDefBase"/> inheriting classes</para>
+            <para><see cref="T:Moonstorm.EliteTierDefModuleBase"/> will automatically handle the addition of new EliteTiers by using <see cref="T:R2API.EliteAPI"/></para>
+            <para>Inherit from this module if you want to load and manage EliteTiers with <see cref="T:Moonstorm.EliteTierDefBase"/> systems</para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.EliteTierDefModuleBase.MoonstormEliteTiers">
+            <summary>
+            A ReadOnlyDictionary that can be used for loading a specific <see cref="T:Moonstorm.EliteTierDefBase"/> by giving it's tied <see cref="T:Moonstorm.SerializableEliteTierDef"/>
+            <para>If you want to modify classes inside this, subscribe to <see cref="F:Moonstorm.EliteTierDefModuleBase.OnDictionaryCreated"/> to ensure the dictionary is not empty</para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.EliteTierDefModuleBase.LoadedEliteTierDefs">
+            <summary>
+            Returns all the SerializableEliteTierDefs from <see cref="P:Moonstorm.EliteTierDefModuleBase.MoonstormEliteTiers"/>
+            </summary>
+        </member>
+        <member name="F:Moonstorm.EliteTierDefModuleBase.OnDictionaryCreated">
+            <summary>
+            An action that gets invoked when the <see cref="P:Moonstorm.EliteTierDefModuleBase.MoonstormEliteTiers"/> dictionary has been populated
+            </summary>
+        </member>
+        <member name="M:Moonstorm.EliteTierDefModuleBase.GetEliteTierDefBases">
+            <summary>
+            <inheritdoc cref="M:Moonstorm.ModuleBase`1.GetContentClasses``1(System.Type)"/>
+            <para>T in this case is <see cref="T:Moonstorm.EliteTierDefBase"/></para>
+            </summary>
+            <returns>An IEnumerable of all your assembly's <see cref="T:Moonstorm.EliteTierDefBase"/></returns>
+        </member>
+        <member name="M:Moonstorm.EliteTierDefModuleBase.AddEliteTierDef(Moonstorm.EliteTierDefBase,System.Collections.Generic.Dictionary{Moonstorm.SerializableEliteTierDef,Moonstorm.EliteTierDefBase})">
+            <summary>
+            Adds an EliteTierDef to the game
+            </summary>
+            <param name="eliteTierDef">The EliteTierDefBase being added</param>
+            <param name="dictionary">Optional, a dictionary to add your initialized EliteTierDef and EliteTierDefBase</param>
+        </member>
+        <member name="M:Moonstorm.EliteTierDefModuleBase.InitializeContent(Moonstorm.EliteTierDefBase)">
+            <summary>
+            Adds the <see cref="T:RoR2.CombatDirector.EliteTierDef"/> from <paramref name="contentClass"/> to the game's CombatDirector using <see cref="T:R2API.EliteAPI"/>
+            <para>Once added, it'll call <see cref="M:Moonstorm.ContentBase.Initialize"/></para>
+            </summary>
+            <param name="contentClass">The content class being initialized</param>
+        </member>
+        <member name="T:Moonstorm.EquipmentModuleBase">
+            <summary>
+            The <see cref="T:Moonstorm.EquipmentModuleBase"/> is a <see cref="T:Moonstorm.ContentModule`1"/> that handles the <see cref="T:Moonstorm.EquipmentBase"/> class
+            <para><see cref="T:Moonstorm.EquipmentModuleBase"/>'s main job is to handle the proper addition of EquipmentDefs from <see cref="T:Moonstorm.EquipmentBase"/> inheriting classes</para>
+            <para><see cref="T:Moonstorm.EquipmentModuleBase"/> also manages the <see cref="T:Moonstorm.EliteEquipmentBase"/> class for adding the Affix Equipment, for full initialization of the elite itself, see <see cref="T:Moonstorm.EliteModuleBase"/></para>
+            <para><see cref="T:Moonstorm.EquipmentBase"/> will automatically handle the use method of the Equipment by running <see cref="M:Moonstorm.EquipmentBase.FireAction(RoR2.EquipmentSlot)"/></para>
+            <para>Inherit from this module if you want to load and manage Equipments with <see cref="T:Moonstorm.EquipmentBase"/> systems</para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.EquipmentModuleBase.NonEliteMoonstormEquipments">
+            <summary>
+            A ReadOnlyDictionary that can be used for loading a specific <see cref="T:Moonstorm.EquipmentBase"/> by giving it's tied <see cref="T:RoR2.EquipmentDef"/>
+            <para>If you want to modify classes inside this, subscribe to <see cref="!:OnDictionaryCreated"/> to ensure the dictionary is not empty</para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.EquipmentModuleBase.EliteMoonstormEquipments">
+            <summary>
+            A ReadOnlyDictionary that can be used for loading a specific <see cref="T:Moonstorm.EliteEquipmentBase"/> by giving it's tied <see cref="T:RoR2.EquipmentDef"/>
+            <para>If you want to modify classes inside this, subscribe to <see cref="!:OnDictionaryCreated"/> to ensure the dictionary is not empty</para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.EquipmentModuleBase.AllMoonstormEquipments">
+            <summary>
+            A ReadOnlyDictionary that can be used to obtain all equipment types that are being handled by MSU's systems.
+            <para>If you want to modify classes inside this, subscribe to <see cref="!:OnDictionaryCreated"/> to ensure the dictionary is not empty</para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.EquipmentModuleBase.LoadedNonEliteEquipmentDefs">
+            <summary>
+            Returns all the EquipmentDefs that are not Elite Equipments
+            </summary>
+        </member>
+        <member name="P:Moonstorm.EquipmentModuleBase.EliteEquipmentDefs">
+            <summary>
+            Returns all the EquipmentDefs that are Elite Equipments
+            </summary>
+        </member>
+        <member name="P:Moonstorm.EquipmentModuleBase.AllEquipmentDefs">
+            <summary>
+            Returns all the EquipmentDefs, regardless if theyre from Elites or not
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "F:Moonstorm.EquipmentModuleBase.OnDictionariesCreated" -->
+        <member name="M:Moonstorm.EquipmentModuleBase.GetEquipmentBases">
+            <summary>
+            <inheritdoc cref="M:Moonstorm.ModuleBase`1.GetContentClasses``1(System.Type)"/>
+            <para>T in this case is <see cref="T:Moonstorm.EquipmentBase"/></para>
+            <para>While Type in this case is <see cref="T:Moonstorm.EliteEquipmentBase"/></para>
+            </summary>
+            <returns>An IEnumerable of all your assembly's <see cref="T:Moonstorm.EquipmentBase"/></returns>
+        </member>
+        <member name="M:Moonstorm.EquipmentModuleBase.AddEquipment(Moonstorm.EquipmentBase,System.Collections.Generic.Dictionary{RoR2.EquipmentDef,Moonstorm.EquipmentBase})">
+            <summary>
+            Adds an EquipmentBase's EquipmentDef to the game and to the ContentPack
+            </summary>
+            <param name="equip">The EquipmentBase to add</param>
+            <param name="dictionary">Optional, a dictionary to add your initialized EquipmentBase and EquipmentDef</param>
+        </member>
+        <member name="M:Moonstorm.EquipmentModuleBase.GetEliteEquipmentBases">
+            <summary>
+            <inheritdoc cref="M:Moonstorm.ModuleBase`1.GetContentClasses``1(System.Type)"/>
+            <para>T in this case is <see cref="T:Moonstorm.EliteEquipmentBase"/></para>
+            </summary>
+            <returns>An IEnumerable of all your assembly's <see cref="T:Moonstorm.EliteEquipmentBase"/></returns>
+        </member>
+        <member name="M:Moonstorm.EquipmentModuleBase.AddEliteEquipment(Moonstorm.EliteEquipmentBase,System.Collections.Generic.Dictionary{RoR2.EquipmentDef,Moonstorm.EliteEquipmentBase})">
+            <summary>
+            Adds an EliteEquipmentBase's EquipmentDef to the game and to the ContentPack
+            <para>The EliteDef itself is not added, for adding the EliteDef, implement <see cref="T:Moonstorm.EliteModuleBase"/></para>
+            </summary>
+            <param name="eliteEqp">The EliteEquipmentBase to add</param>
+            <param name="dictionary">Optional, a dictionary to add your initialized EquipmentDef and EliteEquipmentBase</param>
+        </member>
+        <member name="M:Moonstorm.EquipmentModuleBase.InitializeContent(Moonstorm.EquipmentBase)">
+            <summary>
+            Adds the <see cref="T:RoR2.EquipmentDef"/> from the <paramref name="contentClass"/> to your ContentPack.
+            <para>Once added, it'll call <see cref="M:Moonstorm.ContentBase.Initialize"/>, unless if <paramref name="contentClass"/> is an EliteEquipmentBase</para>
+            </summary>
+            <param name="contentClass">The content class being initialized</param>
+        </member>
+        <member name="T:Moonstorm.InteractableModuleBase">
+            <summary>
+            The <see cref="T:Moonstorm.InteractableModuleBase"/> is a <see cref="T:Moonstorm.ContentModule`1"/> that handles the <see cref="T:Moonstorm.InteractableBase"/> class
+            <para><see cref="T:Moonstorm.InteractableModuleBase"/>'s main job is to handle the proper addition of Interactable prefabs from <see cref="T:Moonstorm.InteractableBase"/> inheriting classes</para>
+            <para><see cref="T:Moonstorm.InteractableBase"/>s that implement <see cref="P:Moonstorm.InteractableBase.InteractableDirectorCard"/> will spawn in runs</para>
+            <para>Inherit from this module if you want to load and manage Interactables with <see cref="T:Moonstorm.InteractableBase"/> systems</para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.InteractableModuleBase.MoonstormInteractables">
+            <summary>
+            A ReadOnlyDictionary that can be used for loading a specific <see cref="T:Moonstorm.InteractableBase"/> by giving it's tied <see cref="T:UnityEngine.GameObject"/>
+            <para>If you want to modify classes inside this, subscribe to <see cref="F:Moonstorm.InteractableModuleBase.OnDictionaryCreated"/> to ensure the dictionary is not empty</para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.InteractableModuleBase.InteractablesWithCards">
+            <summary>
+            Loads all the <see cref="T:Moonstorm.InteractableBase"/> from the <see cref="P:Moonstorm.InteractableModuleBase.MoonstormInteractables"/> dictionary that have a <see cref="T:Moonstorm.MSInteractableDirectorCard"/>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.InteractableModuleBase.InteractablesWithoutCards">
+            <summary>
+            Loads all the <see cref="T:Moonstorm.InteractableBase"/> from the <see cref="P:Moonstorm.InteractableModuleBase.MoonstormInteractables"/> dictionary that do not have a <see cref="T:Moonstorm.MSInteractableDirectorCard"/>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.InteractableModuleBase.LoadedInteractables">
+            <summary>
+            Loads all the interactable game objects
+            </summary>
+        </member>
+        <member name="F:Moonstorm.InteractableModuleBase.OnDictionaryCreated">
+            <summary>
+            An action that gets invoked when the <see cref="P:Moonstorm.InteractableModuleBase.MoonstormInteractables"/> dictionary has been populated
+            </summary>
+        </member>
+        <member name="M:Moonstorm.InteractableModuleBase.GetInteractableBases">
+            <summary>
+            <inheritdoc cref="M:Moonstorm.ModuleBase`1.GetContentClasses``1(System.Type)"/>
+            <para>T in this case is <see cref="T:Moonstorm.InteractableBase"/></para>
+            </summary>
+            <returns>An IEnumerable of all your assembly's <see cref="T:Moonstorm.InteractableBase"/></returns>
+        </member>
+        <member name="M:Moonstorm.InteractableModuleBase.AddInteractable(Moonstorm.InteractableBase,System.Collections.Generic.Dictionary{UnityEngine.GameObject,Moonstorm.InteractableBase})">
+            <summary>
+            Adds an InteractableBase's InteractablePrefab to the game and to the ContentPack's NetworkedObjects array
+            </summary>
+            <param name="interactableBase">The InteractableBase to add</param>
+            <param name="interactableDictionary">Optional, a dictionary to add your initialized InteractableBase and InteractablePrefab</param>
+        </member>
+        <member name="M:Moonstorm.InteractableModuleBase.InitializeContent(Moonstorm.InteractableBase)">
+            <summary>
+            Adds the InteractablePrefab of <paramref name="contentClass"/> to your mod's SerializableContentPack's NetworkedObjects array
+            <para>Once added, it'll call <see cref="M:Moonstorm.ContentBase.Initialize"/></para>
+            </summary>
+            <param name="contentClass">The content class being initialized</param>
+        </member>
+        <member name="T:Moonstorm.ItemModuleBase">
+            <summary>
+            The <see cref="T:Moonstorm.ItemModuleBase"/> is a <see cref="T:Moonstorm.ContentModule`1"/> that handles the <see cref="T:Moonstorm.ItemBase"/> class
+            <para><see cref="T:Moonstorm.ItemModuleBase"/>'s main job is to handle the proper addition of ItemDefs from <see cref="T:Moonstorm.ItemBase"/> inheriting classes</para>
+            <para>Inherit from this module if you want to load and manage ItemDefs with <see cref="T:Moonstorm.ItemBase"/> systems</para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.ItemModuleBase.MoonstormItems">
+            <summary>
+            A ReadOnlyDictionary that can be used for loading a specific <see cref="T:Moonstorm.ItemBase"/> by giving it's tied <see cref="T:RoR2.ItemDef"/>
+            <para>If you want to modify classes inside this, subscribe to <see cref="F:Moonstorm.ItemModuleBase.OnDictionaryCreated"/> to ensure the dictionary is not empty</para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.ItemModuleBase.LoadedItemDefs">
+            <summary>
+            Loads all the <see cref="T:RoR2.ItemDef"/> from the <see cref="P:Moonstorm.ItemModuleBase.MoonstormItems"/> dictionary
+            </summary>
+        </member>
+        <member name="F:Moonstorm.ItemModuleBase.OnDictionaryCreated">
+            <summary>
+            An action that gets invoked when the <see cref="P:Moonstorm.ItemModuleBase.MoonstormItems"/> dictionary has been populated
+            </summary>
+        </member>
+        <member name="M:Moonstorm.ItemModuleBase.GetItemBases">
+            <summary>
+            <inheritdoc cref="M:Moonstorm.ModuleBase`1.GetContentClasses``1(System.Type)"/>
+            <para>T in this case is <see cref="T:Moonstorm.ItemBase"/></para>
+            </summary>
+            <returns>An IEnumerable of all your assembly's <see cref="T:Moonstorm.ItemBase"/></returns>
+        </member>
+        <member name="M:Moonstorm.ItemModuleBase.AddItem(Moonstorm.ItemBase,System.Collections.Generic.Dictionary{RoR2.ItemDef,Moonstorm.ItemBase})">
+            <summary>
+            Adds an ItemBase's ItemDef to your mod's ContentPack
+            </summary>
+            <param name="item">The ItemBase to add</param>
+            <param name="dictionary">Optional, a dictionary to add your initialized ItemBase and ItemDef</param>
+        </member>
+        <member name="M:Moonstorm.ItemModuleBase.InitializeContent(Moonstorm.ItemBase)">
+            <summary>
+            Adds the <see cref="T:RoR2.ItemDef"/> of <paramref name="contentClass"/> to your mod's SerializableContentPack
+            <para>Once added, it'll call <see cref="M:Moonstorm.ContentBase.Initialize"/></para>
+            </summary>
+            <param name="contentClass">The content class being initialized</param>
+        </member>
+        <member name="T:Moonstorm.ProjectileModuleBase">
+            <summary>
+            The <see cref="T:Moonstorm.ProjectileModuleBase"/> is a <see cref="T:Moonstorm.ContentModule`1"/> that handles the <see cref="T:Moonstorm.ProjectileBase"/> class
+            <para><see cref="T:Moonstorm.ProjectileModuleBase"/>'s main job is to handle the proper addition of projectiles specified in <see cref="T:Moonstorm.ProjectileBase"/> inheriting classes</para>
+            <para>Inherit from this module if you want to load Projectiles with <see cref="T:Moonstorm.ProjectileBase"/> systems</para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.ProjectileModuleBase.MoonstormProjectiles">
+            <summary>
+            A ReadOnlyDictionary that can be used for loading a specific Projectile GameObject by giving it's tied <see cref="T:Moonstorm.ProjectileBase"/>
+            <para>If you want to modify classes inside this, subscribe to <see cref="F:Moonstorm.ProjectileModuleBase.OnDictionaryCreated"/> to ensure the dictionary is not empty</para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.ProjectileModuleBase.LoadedProjectiles">
+            <summary>
+            Loads all the Projectile GameObjects from the <see cref="!:MoonstormScenes"/> dictionary.
+            </summary>
+        </member>
+        <member name="F:Moonstorm.ProjectileModuleBase.OnDictionaryCreated">
+            <summary>
+            An action that gets invoked when the <see cref="!:MoonstormUnlockables"/> dictionary has been populated
+            </summary>
+        </member>
+        <member name="M:Moonstorm.ProjectileModuleBase.GetProjectileBases">
+            <summary>
+            <inheritdoc cref="M:Moonstorm.ModuleBase`1.GetContentClasses``1(System.Type)"/>
+            <para>T in this case is <see cref="T:Moonstorm.ProjectileBase"/></para>
+            </summary>
+            <returns>An IEnumerable of all your assembly's <see cref="T:Moonstorm.ProjectileBase"/></returns>
+        </member>
+        <member name="M:Moonstorm.ProjectileModuleBase.AddProjectile(Moonstorm.ProjectileBase,System.Collections.Generic.Dictionary{UnityEngine.GameObject,Moonstorm.ProjectileBase})">
+            <summary>
+            Adds a ProjectielBase's Projectile GameObject to your mod's ContentPack
+            </summary>
+            <param name="projectile">The ProjectielBase to add</param>
+            <param name="projectileDictionary">Optional, a dictionary to add your initialized ProjectielBase and Projectile Objects</param>
+        </member>
+        <member name="M:Moonstorm.ProjectileModuleBase.InitializeContent(Moonstorm.ProjectileBase)">
+            <summary>
+            Adds the <see cref="T:Moonstorm.ProjectileBase"/> of <paramref name="contentClass"/> to your mod's SerializableContentPack
+            <para>Once added, it'll call <see cref="M:Moonstorm.ContentBase.Initialize"/></para>
+            </summary>
+            <param name="contentClass">The content class being initialized</param>
+        </member>
+        <member name="T:Moonstorm.SceneModuleBase">
+            <summary>
+            The <see cref="T:Moonstorm.SceneModuleBase"/> is a <see cref="T:Moonstorm.ContentModule`1"/> that handles the <see cref="T:Moonstorm.SceneBase"/> class
+            <para><see cref="T:Moonstorm.SceneModuleBase"/>'s main job is to add new Scenes to the ContentPack. Works with ROS's SceneDefinitions</para>
+            <para>Inherit from this module if you want to load SceneDefs with SceneBase systems</para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.SceneModuleBase.MoonstormScenes">
+            <summary>
+            A ReadOnlyDictionary that can be used for loading a specific <see cref="T:Moonstorm.SceneBase"/> by giving it's tied <see cref="T:RoR2.SceneDef"/>
+            <para>If you want to modify classes inside this, subscribe to <see cref="F:Moonstorm.SceneModuleBase.OnDictionaryCreated"/> to ensure the dictionary is not empty</para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.SceneModuleBase.LoadedSceneDefs">
+            <summary>
+            Loads all the <see cref="T:RoR2.SceneDef"/>s from the <see cref="P:Moonstorm.SceneModuleBase.MoonstormScenes"/> dictionary.
+            </summary>
+        </member>
+        <member name="F:Moonstorm.SceneModuleBase.OnDictionaryCreated">
+            <summary>
+            An action that gets invoked when the <see cref="!:MoonstormUnlockables"/> dictionary has been populated
+            </summary>
+        </member>
+        <member name="M:Moonstorm.SceneModuleBase.GetSceneBases">
+            <summary>
+            <inheritdoc cref="M:Moonstorm.ModuleBase`1.GetContentClasses``1(System.Type)"/>
+            <para>T in this case is <see cref="T:Moonstorm.SceneBase"/></para>
+            </summary>
+            <returns>An IEnumerable of all your assembly's <see cref="T:Moonstorm.SceneBase"/></returns>
+        </member>
+        <member name="M:Moonstorm.SceneModuleBase.AddScene(Moonstorm.SceneBase,System.Collections.Generic.Dictionary{RoR2.SceneDef,Moonstorm.SceneBase})">
+            <summary>
+            Adds a SceneBase's SceneDef to your mod's ContentPack
+            </summary>
+            <param name="scene">The Scenebase to add</param>
+            <param name="sceneDictionary">Opptional, a dictionary to add your initialized SceneBase and SceneDef</param>
+        </member>
+        <member name="M:Moonstorm.SceneModuleBase.InitializeContent(Moonstorm.SceneBase)">
+            <summary>
+            Adds the <see cref="T:RoR2.SceneDef"/> of <paramref name="contentClass"/> to your mod's SerializableContentPack
+            <para>Once added, it'll call <see cref="M:Moonstorm.ContentBase.Initialize"/></para>
+            </summary>
+            <param name="contentClass">The content class being initialized</param>
+        </member>
+        <member name="T:Moonstorm.UnlockablesModuleBase">
+            <summary>
+            The <see cref="T:Moonstorm.UnlockablesModuleBase"/> is a <see cref="T:Moonstorm.ContentModule`1"/> that handles the <see cref="T:Moonstorm.UnlockableBase"/> class
+            <para><see cref="T:Moonstorm.UnlockablesModuleBase"/>'s main job is to create and handle the UnlockableBase classes, alongside adding AchievementDefs created by <see cref="T:Moonstorm.MSUnlockableDef"/></para>
+            <para>Inherit from this module if you want to use Unlockables tied to Achievements for your mod</para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.UnlockablesModuleBase.MoonstormUnlockables">
+            <summary>
+            A ReadOnlyDictionary that can be used for loading a specific <see cref="T:Moonstorm.UnlockableBase"/> by giving it's tied <see cref="T:Moonstorm.MSUnlockableDef"/>
+            <para>If you want to modify classes inside this, subscribe to <see cref="F:Moonstorm.UnlockablesModuleBase.OnDictionaryCreated"/> to ensure the dictionary is not empty</para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.UnlockablesModuleBase.LoadedUnlockables">
+            <summary>
+            Loads all the <see cref="T:Moonstorm.MSUnlockableDef"/>s from the <see cref="P:Moonstorm.UnlockablesModuleBase.MoonstormUnlockables"/> dictionary.
+            </summary>
+        </member>
+        <member name="P:Moonstorm.UnlockablesModuleBase.LoadedAchievements">
+            <summary>
+            Loads all the <see cref="T:RoR2.AchievementDef"/>s from the unlockables in <see cref="P:Moonstorm.UnlockablesModuleBase.MoonstormUnlockables"/> dictionary.
+            </summary>
+        </member>
+        <member name="F:Moonstorm.UnlockablesModuleBase.OnDictionaryCreated">
+            <summary>
+            An action that gets invoked when the <see cref="P:Moonstorm.UnlockablesModuleBase.MoonstormUnlockables"/> dictionary has been populated
+            </summary>
+        </member>
+        <member name="M:Moonstorm.UnlockablesModuleBase.GetUnlockableBases">
+            <summary>
+            <inheritdoc cref="M:Moonstorm.ModuleBase`1.GetContentClasses``1(System.Type)"/>
+            <para>T in this case is <see cref="T:Moonstorm.UnlockableBase"/></para>
+            </summary>
+            <returns>An IEnumerable of all your assembly's <see cref="T:Moonstorm.UnlockableBase"/></returns>
+        </member>
+        <member name="M:Moonstorm.UnlockablesModuleBase.AddUnlockable(Moonstorm.UnlockableBase,System.Collections.Generic.Dictionary{Moonstorm.MSUnlockableDef,Moonstorm.UnlockableBase})">
+            <summary>
+            Adds an UnlockableBase to the game.
+            <para>The UnlockableDef and AchievementDefs are only added if the required type for the unlockable base has been added</para>
+            <para>For more information regarding RequiredTypes, check <see cref="M:Moonstorm.UnlockableBase.AddRequiredType``1"/></para>
+            </summary>
+            <param name="unlockableBase">The unlockable base to add</param>
+            <param name="unlockableDictionary">Optional, an Dictionary to add your initialized unlockable bases and unlockable defs</param>
+        </member>
+        <member name="M:Moonstorm.UnlockablesModuleBase.InitializeContent(Moonstorm.UnlockableBase)">
+            <summary>
+            Adds the unlockableDef of <paramref name="contentClass"/> to your mod's SerializableContentPack.
+            <para>Once added, it'll call <see cref="M:Moonstorm.UnlockableBase.OnCheckPassed"/></para>
+            </summary>
+            <param name="contentClass">The content class being initialized</param>
+        </member>
+        <member name="M:Moonstorm.UnlockablesModuleBase.OnFailedToCheck(System.Type)">
+            <summary>
+            Overwrite this method to add your own Required Typpe checking.
+            </summary>
+            <param name="type">The class that's required for an UnlockableBase to be added</param>
+            <returns>defaults to false</returns>
+        </member>
+        <member name="T:Moonstorm.ModuleBase`1">
+            <summary>
+            A class which all module bases derive from
+            <para>A module base's main job is to get the classes from your assembly that inherit from <typeparamref name="T"/> that are not disabled, and create instances of them.</para>
+            <para>All module bases have a ContentBase class they manage, denoted by the typeParam <typeparamref name="T"/></para>
+            </summary>
+            <typeparam name="T">The type of content base this module base manages</typeparam>
+        </member>
+        <member name="M:Moonstorm.ModuleBase`1.Initialize">
+            <summary>
+            Overwrite this method to initialize your module
+            </summary>
+        </member>
+        <member name="M:Moonstorm.ModuleBase`1.GetContentClasses``1(System.Type)">
+            <summary>
+            Calling this method will scan your assembly for classes that inherit from <typeparamref name="T"/> and are not abstract
+            <para>Once it finds them, it'll create instances of each using the <see cref="M:System.Activator.CreateInstance(System.Type)"/> method</para>
+            </summary>
+            <typeparam name="T">The type of content base to search for</typeparam>
+            <param name="excludedType">
+                If specified, the method will search for types that ONLY inherit from <typeparamref name="T"/>
+                <para>An example would be the EquipmentModule, calling GetContentClasses{EquipmentBase}(typeof(EliteEquipmentBase) only collects and creates instances of classes that inherit from EquipmentBase and not classes that inherit from EliteEquipmentBase</para>
+            </param>
+            <returns></returns>
+        </member>
+        <member name="M:Moonstorm.ModuleBase`1.InitializeContent(`0)">
+            <summary>
+            A module inherit from module base must implement their own initialization process of the content class they manage
+            </summary>
+            <param name="contentClass">The content class to be initialized</param>
+        </member>
+        <member name="T:Moonstorm.TokenModifierManager">
+            <summary>
+            The TokenModifierManager is a class that handles the usage of <see cref="T:Moonstorm.TokenModifierAttribute"/> in mods.
+            </summary>
+        </member>
+        <member name="M:Moonstorm.TokenModifierManager.AddToManager">
+            <summary>
+            Adds the calling assembly to the TokenModifierManager.
+            <para>When added, the manager will look for types with public static fields that implement the <see cref="T:Moonstorm.TokenModifierAttribute"/></para>
+            </summary>
+        </member>
+        <member name="T:Moonstorm.MSUConfig">
+            <summary>
+            MSU's Configuration Loader
+            </summary>
+        </member>
+        <member name="F:Moonstorm.MSUConfig.general">
+            <summary>
+            Identifier for the General config file
+            </summary>
+        </member>
+        <member name="F:Moonstorm.MSUConfig.events">
+            <summary>
+            Identifier for the Events file
+            </summary>
+        </member>
+        <member name="F:Moonstorm.MSUConfig.generalConfig">
+            <summary>
+            The general config file
+            </summary>
+        </member>
+        <member name="F:Moonstorm.MSUConfig.eventsConfig">
+            <summary>
+            The events config file
+            </summary>
+        </member>
+        <member name="T:Moonstorm.MSUtil">
+            <summary>
+            Utility methods used by MoonstormSharedUtils
+            </summary>
+        </member>
+        <member name="M:Moonstorm.MSUtil.IsModInstalled(System.String)">
+            <summary>
+            Checks if a mod is installed in the bepinex chainloader
+            </summary>
+            <param name="GUID">The GUID of the mod to check.</param>
+            <returns>True if installed, false otherwise.</returns>
+        </member>
+        <member name="M:Moonstorm.MSUtil.InverseHyperbolicScaling(System.Single,System.Single,System.Single,System.Int32)">
+            <summary>
+            Calculates inverse hyperbolic scaling (diminishing) for the parameters passed in, and returns the result.
+            <para>Uses the formula: baseValue + (maxValue - baseValue) * (1 - 1 / (1 + additionalValue * (itemCount - 1)))</para>
+            <para>Original code by KomradeSpectre</para>
+            </summary>
+            <param name="baseValue">The starting value of the function.</param>
+            <param name="additionalValue">The value that is added per additional itemCount</param>
+            <param name="maxValue">The maximum value that the function can possibly be.</param>
+            <param name="itemCount">The amount of items/stacks that increments our function.</param>
+            <returns>A float representing the inverse hyperbolic scaling of the parameters.</returns>
+        </member>
+        <member name="M:Moonstorm.MSUtil.PlayNetworkedSFX(System.String,UnityEngine.Vector3,System.Boolean)">
+            <summary>
+            Shorthand for playing a networked sound event def
+            </summary>
+            <param name="soundEventName">The name of the sound event</param>
+            <param name="pos">Position at wich to play the sound</param>
+            <param name="transmit"></param>
+        </member>
+        <member name="M:Moonstorm.MSUtil.EnsureComponent``1(UnityEngine.GameObject)">
+            <summary>
+            Ensures that the component specified in <typeparamref name="T"/> exists
+            Basically Gets the component, if it doesnt exist, it adds it then returns it.
+            </summary>
+            <typeparam name="T">The type of component to ensure</typeparam>
+            <returns>The component <typeparamref name="T"/></returns>
+        </member>
+        <member name="M:Moonstorm.MSUtil.AddIfNotInCollection``1(System.Collections.Generic.ICollection{``0},``0)">
+            <summary>
+            Adds the entry of type <typeparamref name="T"/> into the collection if its not already in it
+            </summary>
+            <typeparam name="T">The type of item in the collection</typeparam>
+            <param name="collection"></param>
+            <param name="entry">The entry to add if its not in the collection</param>
+            <returns>True if it was not in the collection and added, false otherwise</returns>
+        </member>
+        <member name="M:Moonstorm.MSUtil.RemoveIfNotInCollection``1(System.Collections.Generic.ICollection{``0},``0)">
+            <summary>
+            Removes the entry of type <typeparamref name="T"/> from the collection if its in it
+            </summary>
+            <typeparam name="T">The type of item in the collection</typeparam>
+            <param name="collection"></param>
+            <param name="entry">The entry to remove if its in the collection</param>
+            <returns>True if it was in the collection and removed, false otherwise</returns>
+        </member>
+        <member name="T:Moonstorm.Components.DestroyOnEnable">
+            <summary>
+            Destroys the game object attatched when enabled
+            </summary>
+        </member>
+        <member name="M:Moonstorm.Components.EventDirector.ForceEvent(RoR2.ConCommandArgs)">
+            Commands
+            ------------------------------------------------------------------------------------------------------------
+        </member>
+        <member name="F:Moonstorm.Components.SetupWeatherController.blacklistedScenes">
+            <summary>
+            If a scene in the game, modded or unmodded, should not have weather changes, add it to this list.
+            </summary>
+        </member>
+        <member name="T:Moonstorm.MoonstormSharedUtils">
+            <summary>
+            The main class of MSU
+            </summary>
+        </member>
+        <member name="P:Moonstorm.MoonstormSharedUtils.Instance">
+            <summary>
+            Instance of MSU
+            </summary>
+        </member>
+        <member name="P:Moonstorm.MoonstormSharedUtils.PluginInfo">
+            <summary>
+            MSU's PluginInfo
+            </summary>
+        </member>
+        <member name="P:Moonstorm.MoonstormSharedUtils.MSUAssetBundle">
+            <summary>
+            The main AssetBundle of MSU
+            </summary>
+        </member>
+        <member name="T:EntityStates.Events.EventState">
+            <summary>
+            Base class for all event related entity states
+            </summary>
+        </member>
+        <member name="P:EntityStates.Events.EventState.HasWarned">
+            <summary>
+            Wether this event is already past the "Warned" phase
+            </summary>
+        </member>
+        <member name="P:EntityStates.Events.EventState.DiffScaledDuration">
+            <summary>
+            The actual duration of the event
+            <para>Duration is taken by remaping the current <see cref="P:EntityStates.Events.EventState.DiffScalingValue"/> capping the in value with min 1 and max 3.5, and keeping the result between min <see cref="F:EntityStates.Events.EventState.minDuration"/> and max <see cref="F:EntityStates.Events.EventState.maxDuration"/></para>
+            </summary>
+        </member>
+        <member name="P:EntityStates.Events.EventState.DiffScalingValue">
+            <summary>
+            The current run's difficulty scaling value, taken from the difficultyDef.
+            </summary>
+        </member>
+        <member name="P:EntityStates.Events.EventState.TotalDuration">
+            <summary>
+            The total duration of the event, calculated from the sum of <see cref="P:EntityStates.Events.EventState.DiffScaledDuration"/> and <see cref="F:EntityStates.Events.EventState.warningDur"/>
+            </summary>
+        </member>
+        <member name="M:EntityStates.Events.EventState.StartEvent">
+            <summary>
+            Run logic that happens when the event starts here.
+            </summary>
+        </member>
+    </members>
+</doc>
