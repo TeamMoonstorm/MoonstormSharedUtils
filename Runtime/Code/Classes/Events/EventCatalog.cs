@@ -35,7 +35,7 @@ namespace Moonstorm
             if (!initialized)
                 throw new InvalidOperationException($"EventCatalog not initialized");
 
-            if(nameToEventIndex.TryGetValue(eventName, out EventIndex eventIndex))
+            if(nameToEventIndex.TryGetValue(eventName.ToLowerInvariant(), out EventIndex eventIndex))
             {
                 return eventIndex;
             }
@@ -54,7 +54,7 @@ namespace Moonstorm
             if (!initialized)
                 throw new InvalidOperationException($"EventCatalog not initialized");
 
-            if(nameToCategoryIndex.TryGetValue(name, out var indeex))
+            if(nameToCategoryIndex.TryGetValue(name.ToLowerInvariant(), out var indeex))
             {
                 return indeex;
             }
@@ -80,7 +80,7 @@ namespace Moonstorm
                     if (string.IsNullOrEmpty(customName))
                         return null;
 
-                    if(baseSceneNameToCategory.TryGetValue(customName, out var cat1))
+                    if(baseSceneNameToCategory.TryGetValue(customName.ToLowerInvariant(), out var cat1))
                     {
                         return cat1;
                     }
@@ -109,7 +109,7 @@ namespace Moonstorm
                 DirectorAPI.Stage stage = DirectorAPI.GetStageEnumFromSceneDef(sceneDef);
                 if(stage == DirectorAPI.Stage.Custom)
                 {
-                    string key = sceneDef.baseSceneName;
+                    string key = sceneDef.baseSceneName.ToLowerInvariant();
                     return baseSceneNameToCategory[key];
                 }
                 return stageToCategory[stage];
@@ -166,8 +166,6 @@ namespace Moonstorm
             stageToCategory.Clear();
             baseSceneNameToCategory.Clear();
 
-            TurnStringsInCardsAndCategoriesToLowercase();
-
             categories = categories.OrderBy(so => so.name).ToArray();
             eventCards = eventCards.OrderBy(so => so.name).ToArray();
 
@@ -178,30 +176,6 @@ namespace Moonstorm
             eventCards = null;
 
             initialized = true;
-        }
-
-        private static void TurnStringsInCardsAndCategoriesToLowercase()
-        {
-            foreach(EventDirectorCategorySelection category in categories)
-            {
-                category.stageName = category.stageName.ToLowerInvariant();
-                for(int i = 0; i < category.categories.Length; i++)
-                {
-                    EventCategory cat = category.categories[i];
-                    cat.categoryName = cat.categoryName.ToLowerInvariant();
-                    category.categories[i] = cat;
-                }
-            }
-
-            foreach(EventCard card in eventCards)
-            {
-                card.category = card.category.ToLowerInvariant();
-                for(int i = 0; i < card.customStageNames.Count; i++)
-                {
-                    var customStageName = card.customStageNames[i];
-                    customStageName = customStageName.ToLowerInvariant();
-                }
-            }
         }
 
         private static List<EventDirectorCategorySelection> RegisterCategories(EventDirectorCategorySelection[] eventDirectorCategorySelections)
@@ -226,7 +200,7 @@ namespace Moonstorm
                     if (category.stage == DirectorAPI.Stage.Custom)
                     {
                         isCustom = true;
-                        if (baseSceneNameToCategory.ContainsKey(category.stageName))
+                        if (baseSceneNameToCategory.ContainsKey(category.stageName.ToLowerInvariant()))
                         {
                             MSULog.Warning($"Cannot add category {category.name}, since an already registered category uses the stageName {category.stageName}" +
                                 $"Already registereed category: {baseSceneNameToCategory[category.stageName].name}");
@@ -254,11 +228,11 @@ namespace Moonstorm
                     }
 
                     if (isCustom == true)
-                        baseSceneNameToCategory.Add(category.stageName, category);
+                        baseSceneNameToCategory.Add(category.stageName.ToLowerInvariant(), category);
                     else if (isCustom == false)
                         stageToCategory.Add(category.stage, category);
 
-                    nameToCategoryIndex.Add(category.name, i);
+                    nameToCategoryIndex.Add(category.name.ToLowerInvariant(), i);
                     validCategories.Add(category);
                 }
                 catch (Exception ex)
@@ -333,7 +307,7 @@ namespace Moonstorm
         private static void RegisterCard(EventCard card, EventIndex index)
         {
             card.EventIndex = index;
-            nameToEventIndex.Add(card.name, index);
+            nameToEventIndex.Add(card.name.ToLowerInvariant(), index);
         }
 
         private static void AddCardToCategories(EventCard card)
@@ -356,9 +330,9 @@ namespace Moonstorm
         {
             foreach(string customStageName in card.customStageNames)
             {
-                if(baseSceneNameToCategory.TryGetValue(customStageName, out var category))
+                if(baseSceneNameToCategory.TryGetValue(customStageName.ToLowerInvariant(), out var category))
                 {
-                    var categoryIndex = category.FindCategoryIndexByName(card.category);
+                    var categoryIndex = category.FindCategoryIndexByName(card.category.ToLowerInvariant());
 
                     if(categoryIndex == -1)
                     {
@@ -379,7 +353,7 @@ namespace Moonstorm
         {
             if (stageToCategory.TryGetValue(stage, out var category))
             {
-                var categoryIndex = category.FindCategoryIndexByName(card.category);
+                var categoryIndex = category.FindCategoryIndexByName(card.category.ToLowerInvariant());
 
                 if (categoryIndex == -1)
                 {
@@ -429,7 +403,7 @@ namespace Moonstorm
         private static void ListEvents(ConCommandArgs args)
         {
             for (int i = 0; i < RegisteredEventCount; i++)
-                Debug.Log($"[{i}]\t{registeredEventCards[i].name}");
+                Debug.Log($"[{i}]\t{registeredEventCards[i].name.ToLowerInvariant()}");
         }
         #endregion
     }

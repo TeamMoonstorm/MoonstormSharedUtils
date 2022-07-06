@@ -37,6 +37,7 @@ namespace Moonstorm
         internal static ConfigEntry<float> maxDifficultyScaling;
         internal static ConfigEntry<bool> familyEventUsesEventAnnouncementInsteadOfChatMessage;
         internal static ConfigEntry<bool> eventAnnouncementsAsChatMessages;
+        internal static ConfigEntry<KeyCode> printDebugEventMessage;
 
         internal void Init()
         {
@@ -76,6 +77,12 @@ namespace Moonstorm
                 "Add Dummy Events",
                 false,
                 "Adds a dummy event card that can be triggered manually on every stage. this event card does nothing in particular and its purely for testing purposes");
+
+            printDebugEventMessage = eventsConfig.Bind($"MoonstormSharedUtils :: Events",
+                "Print Debug Event Message",
+                KeyCode.KeypadMinus,
+                "Keybind used for printing a debug event message." +
+                "Only available if EnableDebugFeatures is set to true");
 
             maxDifficultyScaling = eventsConfig.Bind("MoonstormSharedUtils :: Events",
                 "Max Difficulty Scaling",

@@ -94,7 +94,7 @@ namespace Moonstorm.Components
                     Destroy(gameObject.transform.root.gameObject);
                 }
                 EventCardSelection = EventDirectorCategorySelection.GenerateWeightedSelection();
-                //Log($"Awakened with the following EventCards:\n{string.Join("\n", EventCardSelection.choices.Select(c => c.value.name))}");
+                Log($"Awakened with the following EventCards:\n{string.Join("\n", EventCardSelection.choices.Select(c => c.value.name))}");
             }
         }
         private void OnEnable()
@@ -165,6 +165,11 @@ namespace Moonstorm.Components
             if(currentEventCard == null)
             {
                 Log($"Current event card is null, picking new one");
+                if(EventCardSelection.Count == 0)
+                {
+                    Log($"Cannot pick a card when there's no cards in the EventCardSelection (Count: {EventCardSelection.Count})");
+                    return false;
+                }
                 canSpawn = PrepareNewEvent(EventCardSelection.Evaluate(eventRNG.nextNormalizedFloat));
 
                 if(!canSpawn)

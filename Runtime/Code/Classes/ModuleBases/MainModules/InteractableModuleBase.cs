@@ -180,7 +180,7 @@ namespace Moonstorm
                     }
                 }
 
-                MSULog.Info(cards.Count > 0 ? $"Added a total of {cards.Count} interactable cards to stage {stageInfo.ToInternalStageName()}" : $"No interactable cards added to stage {stageInfo.ToInternalStageName()}");
+                //MSULog.Info(cards.Count > 0 ? $"Added a total of {cards.Count} interactable cards to stage {stageInfo.ToInternalStageName()}" : $"No interactable cards added to stage {stageInfo.ToInternalStageName()}");
             }
             catch (Exception e)
             {

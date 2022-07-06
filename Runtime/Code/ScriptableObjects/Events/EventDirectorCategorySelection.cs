@@ -47,7 +47,7 @@ namespace Moonstorm
             for (int i = 0; i < categories.Length; i++)
             {
                 EventCategory category = categories[i];
-                if (string.CompareOrdinal(category.categoryName, categoryName) == 0)
+                if (string.Compare(category.categoryName, categoryName, StringComparison.OrdinalIgnoreCase) == 0)
                 {
                     return i;
                 }
@@ -98,7 +98,7 @@ namespace Moonstorm
         public int AddCategory(string name, float selectionWeight)
         {
             EventCategory category = default(EventCategory);
-            category.categoryName = name;
+            category.categoryName = name.ToLowerInvariant();
             category.eventCards = Array.Empty<EventCard>();
             category.selectionWeight = selectionWeight;
             EventCategory value = category;

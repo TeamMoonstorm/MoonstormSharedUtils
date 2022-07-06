@@ -81,12 +81,12 @@ namespace Moonstorm.Utilities
                 Instantiate(materialTester, position, quaternion);
             }
             #endregion
-            /*var input1 = Input.GetKeyDown(KeyCode.KeypadMinus);
+            var input1 = Input.GetKeyDown(MSUConfig.printDebugEventMessage.Value);
             if(input1)
             {
-                var go = EventHelpers.AnnounceEvent(new EventHelpers.EventAnnounceInfo(MoonstormSharedUtils.MSUAssetBundle.LoadAsset<EventCard>("TestEventState"), 15, true) { fadeOnStart = false });
+                var go = EventHelpers.AnnounceEvent(new EventHelpers.EventAnnounceInfo(MoonstormSharedUtils.MSUAssetBundle.LoadAsset<EventCard>("DummyEventCard"), 15, true) { fadeOnStart = false });
                 go.GetComponent<HGTextMeshProUGUI>().alpha = 1f;
-            }*/
+            }
         }
     }
 }
