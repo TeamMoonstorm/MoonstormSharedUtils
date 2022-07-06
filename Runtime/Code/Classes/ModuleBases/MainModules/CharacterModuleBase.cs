@@ -1,5 +1,6 @@
 ﻿using R2API;
 using RoR2;
+using RoR2.ExpansionManagement;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -30,6 +31,10 @@ namespace Moonstorm
         /// </summary>
         public static MonsterBase[] MoonstormMonsters { get => MoonstormCharacters.Values.Where(cb => cb.GetType().IsSubclassOf(typeof(MonsterBase))).Cast<MonsterBase>().ToArray(); }
         /// <summary>
+        /// Returns all the MonsterBases that have <see cref="MSMonsterDirectorCard"/>
+        /// </summary>
+        public static MonsterBase[] MonstersWithCards { get => MoonstormMonsters.Where(mb => mb.MonsterDirectorCard != null).ToArray(); }
+        /// <summary>
         /// Returns all the SurvivorBases from the <see cref="MoonstormCharacters"/>
         /// </summary>
         public static SurvivorBase[] MoonstormSurvivors { get => MoonstormCharacters.Values.Where(cb => cb.GetType().IsSubclassOf(typeof(SurvivorBase))).Cast<SurvivorBase>().ToArray(); }
@@ -45,13 +50,17 @@ namespace Moonstorm
         /// An action that gets invoked when the <see cref="MoonstormCharacters"/> dictionary has been populated
         /// </summary>
         public static Action<ReadOnlyDictionary<GameObject, CharacterBase>> OnDictionaryCreated;
+
+        private static Dictionary<DirectorAPI.Stage, List<MSMonsterDirectorCard>> currentStageToCards = new Dictionary<DirectorAPI.Stage, List<MSMonsterDirectorCard>>();
+        private static Dictionary<string, List<MSMonsterDirectorCard>> currentCustomStageToCards = new Dictionary<string, List<MSMonsterDirectorCard>>();
         #endregion
 
         [SystemInitializer(new Type[] { typeof(BodyCatalog), typeof(MasterCatalog) })]
         private static void SystemInit()
         {
             MSULog.Info("Initializing Character Module...");
-            DirectorAPI.MonsterActions += ModifyMonsters;
+            Run.onRunStartGlobal += PopulateDictionaries;
+            DirectorAPI.MonsterActions += AddCustomMonsters;
 
             MoonstormCharacters = new ReadOnlyDictionary<GameObject, CharacterBase>(characters);
             characters = null;
@@ -109,35 +118,107 @@ namespace Moonstorm
         #endregion
 
         #region Hooks
-        private static void ModifyMonsters(DccsPool pool, List<DirectorAPI.DirectorCardHolder> cardList, DirectorAPI.StageInfo stageInfo)
+        private static void PopulateDictionaries(Run run)
         {
+            ClearDictionaries();
+            ExpansionDef[] runExpansions = ExpansionCatalog.expansionDefs.Where(exp => run.IsExpansionEnabled(exp)).ToArray();
+            MSMonsterDirectorCard[] cards = MonstersWithCards.Select(mb => mb.MonsterDirectorCard).ToArray();
+
             int num = 0;
-            foreach(var monster in MoonstormMonsters)
+            foreach (MSMonsterDirectorCard card in cards)
             {
-                var card = monster.MonsterDirectorCard;
-                if(card.stages.HasFlag(stageInfo.stage))
+                try
                 {
-                    if(stageInfo.stage == DirectorAPI.Stage.Custom)
+                    //If card cant appear, skip
+                    if (!card.IsAvailable(runExpansions))
                     {
-                        if (card.customStages.Contains(stageInfo.CustomStageName.ToLowerInvariant()))
+                        continue;
+                    }
+
+                    foreach (DirectorAPI.Stage stageValue in Enum.GetValues(typeof(DirectorAPI.Stage)))
+                    {
+                        //Card has custom stage support? add them to the dictionaries.
+                        if (stageValue == DirectorAPI.Stage.Custom)
                         {
-                            num++;
-                            cardList.Add(card.DirectorCardHolder);
-                            MSULog.Debug($"Added {card} Monster");
+                            foreach (string baseStageName in card.customStages)
+                            {
+                                if (!currentCustomStageToCards.ContainsKey(baseStageName))
+                                {
+                                    currentCustomStageToCards.Add(baseStageName, new List<MSMonsterDirectorCard>());
+                                }
+                                currentCustomStageToCards[baseStageName].Add(card);
+                            }
                             continue;
                         }
+
+                        //Card can appear in current stage? add it to the dictionary
+                        if (card.stages.HasFlag(stageValue))
+                        {
+                            if (!currentStageToCards.ContainsKey(stageValue))
+                            {
+                                currentStageToCards.Add(stageValue, new List<MSMonsterDirectorCard>());
+                            }
+                            currentStageToCards[stageValue].Add(card);
+                        }
                     }
-                    else if(stageInfo.CheckStage(card.stages))
-                    {
-                        num++;
-                        cardList.Add(card.DirectorCardHolder);
-                        MSULog.Debug($"Added {card} Monster");
-                    }
+                    num++;
+                }
+                catch (Exception e)
+                {
+                    MSULog.Error($"{e}\nCard: {card}");
                 }
             }
-            if(num > 0)
+
+            MSULog.Info(num > 0 ? $"A total of {num} interactable cards added to the run" : $"No interactable cards added to the run");
+        }
+
+        private static void ClearDictionaries()
+        {
+            currentCustomStageToCards.Clear();
+            currentStageToCards.Clear();
+        }
+        private static void AddCustomMonsters(DccsPool pool, List<DirectorAPI.DirectorCardHolder> cardList, DirectorAPI.StageInfo stageInfo)
+        {
+            List<MSMonsterDirectorCard> cards = new List<MSMonsterDirectorCard>();
+            if(stageInfo.stage == DirectorAPI.Stage.Custom)
             {
-                MSULog.Debug($"Added a total of {num} Monsters");
+                if(currentCustomStageToCards.TryGetValue(stageInfo.CustomStageName, out cards))
+                {
+                    AddCardsToPool(pool, cards);
+                }
+            }
+            else if(currentStageToCards.TryGetValue(stageInfo.stage, out cards))
+            {
+                AddCardsToPool(pool, cards);
+            }
+            MSULog.Info(cards.Count > 0 ? $"Added a total of {cards.Count} monster cards to stage {stageInfo.ToInternalStageName()}" : $"No monster cards added to stage {stageInfo.ToInternalStageName()}");
+        }
+
+        private static void AddCardsToPool(DccsPool pool, List<MSMonsterDirectorCard> cards)
+        {
+            var standardCategory = pool.poolCategories.FirstOrDefault(category => category.name == DirectorAPI.Helpers.MonsterPoolCategories.Standard);
+            if(standardCategory == null)
+            {
+                MSULog.Error($"Couldnt find standard category for current stage! not adding monsters!");
+                return;
+            }
+            var dccs = standardCategory.alwaysIncluded.Select(pe => pe.dccs)
+                .Concat(standardCategory.includedIfConditionsMet.Select(cpe => cpe.dccs))
+                .Concat(standardCategory.includedIfNoConditionsMet.Select(pe => pe.dccs));
+
+            foreach(MSMonsterDirectorCard card in cards)
+            {
+                try
+                {
+                    foreach(DirectorCardCategorySelection categorySelection in dccs)
+                    {
+                        categorySelection.AddCard(card.DirectorCardHolder);
+                    }
+                }
+                catch(Exception e)
+                {
+                    MSULog.Error($"{e}\n(Card: {card})");
+                }
             }
         }
         #endregion

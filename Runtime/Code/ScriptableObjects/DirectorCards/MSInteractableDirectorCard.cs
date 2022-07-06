@@ -33,6 +33,7 @@ namespace Moonstorm
                     _directorCardHolder = new DirectorCardHolder();
                     _directorCardHolder.Card = directorCard;
                     _directorCardHolder.InteractableCategory = interactableCategory;
+                    _directorCardHolder.CustomInteractableCategory = customCategory;
                     _directorCardHolder.MonsterCategory = MonsterCategory.Invalid;
                     return _directorCardHolder;
                 }
@@ -49,6 +50,16 @@ namespace Moonstorm
         {
             directorCard.spawnCard = this as InteractableSpawnCard;
             customStages = customStages.Select(stageName => stageName.ToLowerInvariant()).ToList();
+        }
+
+        public bool IsAvailable(ExpansionDef[] expansionDefs)
+        {
+            bool available = false;
+            foreach(ExpansionDef expansion in expansionDefs)
+            {
+                available = requiredExpansions.Contains(expansion);
+            }
+            return available;
         }
     }
 }

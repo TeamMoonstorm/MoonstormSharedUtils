@@ -1,5 +1,6 @@
 ﻿using R2API;
 using RoR2;
+using RoR2.ExpansionManagement;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -42,14 +43,15 @@ namespace Moonstorm
         /// </summary>
         public static Action<ReadOnlyDictionary<GameObject, InteractableBase>> OnDictionaryCreated;
 
-        private static DirectorCardCategorySelection currentStageInteractables;
-        private static List<MSInteractableDirectorCard> addedInteractablesToStage;
+        private static Dictionary<DirectorAPI.Stage, List<MSInteractableDirectorCard>> currentStageToCards = new Dictionary<DirectorAPI.Stage, List<MSInteractableDirectorCard>>();
+        private static Dictionary<string, List<MSInteractableDirectorCard>> currentCustomStageToCards = new Dictionary<string, List<MSInteractableDirectorCard>>();
         #endregion
 
         [SystemInitializer]
         private static void SystemInit()
         {
             MSULog.Info($"Initializing Interactable Module...");
+            Run.onRunStartGlobal += PopulateDictionaries;
             DirectorAPI.InteractableActions += AddCustomInteractables;
 
             MoonstormInteractables = new ReadOnlyDictionary<GameObject, InteractableBase>(interactables);
@@ -96,59 +98,110 @@ namespace Moonstorm
         #endregion
 
         #region Hooks
+        //When the run starts, MSU looks thru the interactable cards and adds them to the dictionaries, the cards in the dictionaries are the ones used during the run.
+        private static void PopulateDictionaries(Run run)
+        {
+            ClearDictionaries();
+            //Expansions enabled in this run
+            ExpansionDef[] runExpansions = ExpansionCatalog.expansionDefs.Where(exp => run.IsExpansionEnabled(exp)).ToArray();
+            MSInteractableDirectorCard[] cards = InteractablesWithCards.Select(ib => ib.InteractableDirectorCard).ToArray();
+
+            int num = 0;
+            foreach(MSInteractableDirectorCard card in cards)
+            {
+                try
+                {
+                    //If card cant appear, skip
+                    if(!card.IsAvailable(runExpansions))
+                    {
+                        continue;
+                    }
+
+                    foreach(DirectorAPI.Stage stageValue in Enum.GetValues(typeof(DirectorAPI.Stage)))
+                    {
+                        //Card has custom stage support? add them to the dictionaries.
+                        if(stageValue == DirectorAPI.Stage.Custom)
+                        {
+                            foreach(string baseStageName in card.customStages)
+                            {
+                                if(!currentCustomStageToCards.ContainsKey(baseStageName))
+                                {
+                                    currentCustomStageToCards.Add(baseStageName, new List<MSInteractableDirectorCard>());
+                                }
+                                currentCustomStageToCards[baseStageName].Add(card);
+                            }
+                            continue;
+                        }
+
+                        //Card can appear in current stage? add it to the dictionary
+                        if(card.stages.HasFlag(stageValue))
+                        {
+                            if(!currentStageToCards.ContainsKey(stageValue))
+                            {
+                                currentStageToCards.Add(stageValue, new List<MSInteractableDirectorCard>());
+                            }
+                            currentStageToCards[stageValue].Add(card);
+                        }
+                    }
+                    num++;
+                }
+                catch(Exception e)
+                {
+                    MSULog.Error($"{e}\nCard: {card}");
+                }
+            }
+
+            MSULog.Info(num > 0 ? $"A total of {num} interactable cards added to the run" : $"No interactable cards added to the run");
+        }
+
+        private static void ClearDictionaries()
+        {
+            currentStageToCards.Clear();
+            currentCustomStageToCards.Clear();
+        }
+
         private static void AddCustomInteractables(DccsPool pool, DirectorAPI.StageInfo stageInfo)
         {
+            List<MSInteractableDirectorCard> cards = new List<MSInteractableDirectorCard>();
+            if(stageInfo.stage == DirectorAPI.Stage.Custom)
+            {
+                if(currentCustomStageToCards.TryGetValue(stageInfo.CustomStageName, out cards))
+                {
+                    AddCardsToPool(pool, cards);
+                }
+            }
+            else
+            {
+                if(currentStageToCards.TryGetValue(stageInfo.stage, out cards))
+                {
+                    AddCardsToPool(pool, cards);
+                }
+            }
 
-            foreach(var interactable in InteractablesWithCards)
+            MSULog.Info(cards.Count > 0 ? $"Added a total of {cards.Count} interactable cards to stage {stageInfo.ToInternalStageName()}" : $"No interactable cards added to stage {stageInfo.ToInternalStageName()}");
+        }
+
+        private static void AddCardsToPool(DccsPool pool, List<MSInteractableDirectorCard> cards)
+        {
+            var alwaysIncluded = pool.poolCategories.SelectMany(pc => pc.alwaysIncluded.Select(pe => pe.dccs)).ToList();
+            var includedIfConditionsMet = pool.poolCategories.SelectMany(pc => pc.includedIfConditionsMet.Select(cpe => cpe.dccs)).ToList();
+            var includedIfNoConditions = pool.poolCategories.SelectMany(pc => pc.includedIfNoConditionsMet.Select(pe => pe.dccs)).ToList();
+
+            List<DirectorCardCategorySelection> cardSelections = alwaysIncluded.Concat(includedIfConditionsMet).Concat(includedIfNoConditions).ToList();
+            foreach(MSInteractableDirectorCard card in cards)
             {
-                var card = interactable.InteractableDirectorCard;
-                if(card.stages.HasFlag(stageInfo.stage))
+                try
                 {
-                    if(stageInfo.stage == DirectorAPI.Stage.Custom)
+                    foreach(DirectorCardCategorySelection cardCategorySelection in cardSelections)
                     {
-                        if(card.customStages.Contains(stageInfo.CustomStageName.ToLowerInvariant()))
-                        {
-                            //Add
-                            continue;
-                        }
-                    }
-                    else if(stageInfo.CheckStage(card.stages))
-                    {
-                        //Add;
+                        cardCategorySelection.AddCard(card.DirectorCardHolder);
                     }
                 }
-            }
-            /*int num = 0;
-            foreach (var interactable in InteractablesWithCards)
-            {
-                var card = interactable.InteractableDirectorCard;
-                //Add stage only if the card's stage flags has its corresponding flag.
-                if (card.stages.HasFlag(stageInfo.stage))
+                catch(Exception e)
                 {
-                    //Stage is custom? check if the custom stage name is in the card's custom stages list.
-                    if (stageInfo.stage == DirectorAPI.Stage.Custom)
-                    {
-                        //If custom stages list contains the current stage's name, add it to the list.
-                        if (card.customStages.Contains(stageInfo.CustomStageName.ToLowerInvariant()))
-                        {
-                            num++;
-                            cardList.Add(card.DirectorCardHolder);
-                            MSULog.Debug($"Added {card} Interactable");
-                            continue;
-                        }
-                    }
-                    else if (stageInfo.CheckStage(card.stages))
-                    {
-                        num++;
-                        cardList.Add(card.DirectorCardHolder);
-                        MSULog.Debug($"Added {card} Interactable");
-                    }
+                    MSULog.Error($"{e}\n(Card: {card}");
                 }
             }
-            if (num > 0)
-            {
-                MSULog.Debug($"Added a total of {num} Interactables");
-            }*/
         }
         #endregion
     }
