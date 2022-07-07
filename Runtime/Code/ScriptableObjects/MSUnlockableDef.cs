@@ -6,38 +6,58 @@ using UnityEngine;
 
 namespace Moonstorm
 {
+    /// <summary>
+    /// A <see cref="MSUnlockableDef"/> is an extension of <see cref="UnlockableDef"/> that allows for easy creation of an Unlockable that gets unlocked via an Achievement
+    /// </summary>
     [CreateAssetMenu(fileName = "New ExtendedUnlockableDef", menuName = "Moonstorm/MSUnlockableDef")]
     public class MSUnlockableDef : UnlockableDef
     {
+        /// <summary>
+        /// Represents an addressable version of a prerequisite achievement
+        /// </summary>
         [Serializable]
         public struct AchievementStringAssetRef
         {
+            [Tooltip($"The prerequisite AchievementDef's identifier")]
             public string AchievementIdentifier;
+            [Tooltip($"The prerequisite MSUnlockableDef")]
             public MSUnlockableDef UnlockableDef;
         }
 
+        [Tooltip($"The BaseAchievement class that manages how this achievement is obtained")]
         [SerializableSystemType.RequiredBaseType(typeof(BaseAchievement))]
         public SerializableSystemType achievementCondition;
 
+        [Tooltip($"Wether this achievement is server tracked")]
         public bool serverTracked;
 
+        [Tooltip($"The BaseServerAchievement class that manages the networking of this achievment")]
         [SerializableSystemType.RequiredBaseType(typeof(BaseServerAchievement))]
         public SerializableSystemType baseServerAchievement;
 
+        [Tooltip($"The name of this achievement")]
         public string achievementNameToken;
 
+        [Tooltip($"The description of this achievement")]
         public string achievementDescToken;
 
+        [Obsolete("Made obsolete by the new Sprite field of UnlockableDef")]
         [HideInInspector]
         public Sprite achievedIcon;
+
+        [Obsolete("Made obsolete by the new Sprite field of UnlockableDef")]
         [HideInInspector]
         public Sprite unachievedIcon;
 
+        [Tooltip($"The prerequisite achievement for this achievement to be unlocked")]
         public AchievementStringAssetRef prerequisiteAchievement;
 
+        /// <summary>
+        /// This is the <see cref="AchievementDef"/> that's tied to this UnlockableDef
+        /// </summary>
         public AchievementDef AchievementDef { get; private set; }
 
-        public AchievementDef GetOrCreateAchievementDef()
+        internal AchievementDef GetOrCreateAchievementDef()
         {
             var achievementIdentifier = cachedName + ".Achievement";
 

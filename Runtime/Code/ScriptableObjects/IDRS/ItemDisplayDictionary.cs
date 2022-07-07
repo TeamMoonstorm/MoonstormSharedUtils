@@ -10,17 +10,33 @@ using UnityEngine;
 
 namespace Moonstorm
 {
+    /// <summary>
+    /// An <see cref="ItemDisplayDictionary"/> is used for appending a single <see cref="ItemDisplayRuleSet.KeyAssetRuleGroup"/> to multiple <see cref="ItemDisplayRuleSet"/>
+    /// <para>It works ina  similar fashion to R2API's ItemDisplayDictionary</para>
+    /// </summary>
     [CreateAssetMenu(fileName = "New ItemDisplayDictionary", menuName = "Moonstorm/IDRS/ItemDisplayDictionary")]
     public class ItemDisplayDictionary : ScriptableObject
     {
+        /// <summary>
+        /// Represents a dictionary of an IDRS to the rules that will be appended.
+        /// </summary>
         [Serializable]
         public struct NamedDisplayDictionary
         {
+            [Tooltip($"The IDRS to add the rules below to")]
             public AddressableIDRS idrs;
+            [Tooltip($"The rules for the IDRS above")]
             public List<DisplayRule> displayRules;
 
+            /// <summary>
+            /// Returns true if <see cref="displayRules"/>'s count is 0 or if its null
+            /// </summary>
             public bool IsEmpty { get => displayRules != null ? displayRules.Count == 0 : true; }
 
+            /// <summary>
+            /// Adds a new rule
+            /// </summary>
+            /// <param name="rule">The rule to add</param>
             public void AddDisplayRule(DisplayRule rule)
             {
                 if (displayRules == null)
@@ -30,22 +46,38 @@ namespace Moonstorm
             }
         }
 
+        /// <summary>
+        /// Wrapper for <see cref="ItemDisplayRule"/>
+        /// <para>The <see cref="ItemDisplayRule"/>'s display prefab will be taken from <see cref="displayPrefab"/></para>
+        /// </summary>
         [Serializable]
         public struct DisplayRule
         {
+            [Tooltip($"The type of display rule")]
             public ItemDisplayRuleType ruleType;
+            [Tooltip($"The name of the child where this display prefab will appear")]
             public string childName;
+            [Tooltip($"The local position of this display")]
             public Vector3 localPos;
+            [Tooltip($"The local angle of this display")]
             public Vector3 localAngles;
+            [Tooltip($"The local scale for this display")]
             public Vector3 localScales;
+            [Tooltip($"If supplied, this display will replace a limb, ask in the ror2 modding discord if you dont know what this does")]
             public LimbFlags limbMask;
 
+            /// <summary>
+            /// The finished rule
+            /// </summary>
             [HideInInspector]
             public ItemDisplayRule finishedRule;
 
+            /// <summary>
+            /// A constant for a <see cref="DisplayRule"/> that has no value
+            /// </summary>
             public const string NoValue = nameof(NoValue);
 
-            internal void Parse()
+            internal void CreateRule()
             {
                 if (string.IsNullOrEmpty(childName))
                 {
@@ -73,10 +105,16 @@ namespace Moonstorm
             }
         }
 
+        /// <summary>
+        /// Contains all instances of <see cref="ItemDisplayDictionary"/>
+        /// </summary>
         public static readonly List<ItemDisplayDictionary> instances = new List<ItemDisplayDictionary>();
+        [Tooltip($"The key asset provided will be appended to all the ItemDisplayRuleSets defined in namedDisplayDictionary")]
         public UnityEngine.Object keyAsset;
+        [Tooltip($"The game object that will be used as a display prefab")]
         public GameObject displayPrefab;
 
+        [Tooltip($"Implement the rules for this Dictionary")]
         [Space]
         public List<NamedDisplayDictionary> namedDisplayDictionary = new List<NamedDisplayDictionary>();
 
@@ -137,7 +175,7 @@ namespace Moonstorm
                 }
             };
         }
-        public ItemDisplayRuleSet.KeyAssetRuleGroup GetKeyAssetRuleGroup(ItemDisplayRuleSet ruleSet)
+        private ItemDisplayRuleSet.KeyAssetRuleGroup GetKeyAssetRuleGroup(ItemDisplayRuleSet ruleSet)
         {
             var keyAssetRuleGroup = new ItemDisplayRuleSet.KeyAssetRuleGroup();
             keyAssetRuleGroup.keyAsset = keyAsset;
@@ -150,7 +188,7 @@ namespace Moonstorm
                 for(int i = 0; i < namedDisplay.displayRules.Count; i++)
                 {
                     DisplayRule rule = namedDisplay.displayRules[i];
-                    rule.Parse();
+                    rule.CreateRule();
                     var finishedRule = rule.finishedRule;
                     finishedRule.followerPrefab = displayPrefab;
                     keyAssetRuleGroup.displayRuleGroup.AddDisplayRule(finishedRule);

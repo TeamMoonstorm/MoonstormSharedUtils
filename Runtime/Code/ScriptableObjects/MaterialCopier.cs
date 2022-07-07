@@ -9,13 +9,21 @@ using UnityEngine.AddressableAssets;
 
 namespace Moonstorm
 {
+    /// <summary>
+    /// A <see cref="MaterialCopier"/> is a ScriptableObject that allows the usage of vanilla materials in your project.
+    /// </summary>
     [CreateAssetMenu(menuName = "Moonstorm/MaterialCopier")]
     public class MaterialCopier : ScriptableObject
     {
+        /// <summary>
+        /// A Representation of a in-project material, and the address that the in-project material will use ingame.
+        /// </summary>
         [Serializable]
         public class MaterialPair
         {
+            [Tooltip($"The address of the material, the properties and shader of this material will be used on the material below.")]
             public string materialAddress;
+            [Tooltip($"The material in your project, the properties and shader of this material will be copied from the material address")]
             public Material material;
         }
         private static readonly List<MaterialCopier> instances = new List<MaterialCopier>();
@@ -32,18 +40,20 @@ namespace Moonstorm
             }
         }
 
+        [Tooltip($"The material pairs for this material copier")]
         public List<MaterialPair> materialPairs = new List<MaterialPair>();
-        public void Awake()
+
+        private void Awake()
         {
             instances.Add(this);
         }
 
-        public void OnDestroy()
+        private void OnDestroy()
         {
             instances.Remove(this);
         }
 
-        internal void CopyMaterials()
+        private void CopyMaterials()
         {
             foreach(MaterialPair pair in materialPairs)
             {

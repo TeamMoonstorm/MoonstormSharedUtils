@@ -60,44 +60,5 @@ namespace Moonstorm
             OncePerRun = 16U,
             Count = 32U
         }
-
-        public bool CardIsValid()
-        {
-            if (!Run.instance)
-                return false;
-            Run run = Run.instance;
-
-            bool flag = !requiredUnlockableDef || run.IsUnlockableUnlocked(requiredUnlockableDef);
-            //If it doesnt have the flag or it does and the loop is greater than 0
-            bool flag1 = !CheckFlag(EventFlags.AfterLoop) || run.loopClearCount > 0;
-            //If it doesnt have the flag or it does and the void fields have been visited
-            bool flag2 = !CheckFlag(EventFlags.AfterVoidFields) || run.GetEventFlag("ArenaPortalTaken");
-            //If it isnt one-time or the the flag isnt registered for the run
-            bool flag3 = !CheckFlag(EventFlags.OncePerRun) || !run.GetEventFlag(OncePerRunFlag);
-
-
-            return flag && (flag1 || flag2) && flag3;
-        }
-
-        public bool CheckFlag(Enum flag)
-        {
-            return eventFlags.HasFlag(flag);
-        }
-
-        public virtual EntityState InstantiateNextState()
-        {
-            EntityState entityState = EntityStateCatalog.InstantiateState(activationState);
-            return entityState;
-        }
-
-        [ContextMenu("Log Flags")]
-        private void LogFlags()
-        {
-            foreach (var flag in typeof(EventFlags).GetEnumValues())
-            {
-                if (CheckFlag((EventFlags)flag))
-                    Debug.Log(Enum.GetName(typeof(EventFlags), flag));
-            }
-        }
     }
 }

@@ -12,26 +12,34 @@ using Object = UnityEngine.Object;
 
 namespace Moonstorm
 {
-    /*
-     * TODO: editor to hide the following vanilla fields:
-     * > Renderer Infos
-     * > 
-    */
+    /// <summary>
+    /// A <see cref="VanillaSkinDef"/> is an extension of <see cref="SkinDef"/> that allows for creating of skins for vanilla characterbodies.
+    /// </summary>
     [CreateAssetMenu(fileName = "New VanillaSkinDefinition", menuName = "Moonstorm/VanillaSkinDefinition")]
     public class VanillaSkinDefinition : SkinDef
     {
         #region Internal Types
+        /// <summary>
+        /// A Wrapper for <see cref="SkinDef.baseSkins"/>
+        /// <para>Allows loading a base skin via an address</para>
+        /// </summary>
         [Serializable]
         public class MSBaseSkin
         {
+            [Tooltip($"The address of the base skin")]
             public string skinAddress;
+            public SkinDef skin;
 
-            public async Task<SkinDef> Upgrade()
+            internal async Task<SkinDef> Upgrade()
             {
-                return await Addressables.LoadAssetAsync<SkinDef>(skinAddress).Task;
+                return !skin ? await Addressables.LoadAssetAsync<SkinDef>(skinAddress).Task : skin;
             }
         }
 
+        /// <summary>
+        /// A wrapper for <see cref="SkinDef.rendererInfos"/>
+        /// <para>used for replacing materials and modifying the values of a RendererInfo.</para>
+        /// </summary>
         [Serializable]
         public class MSRendererInfo
         {
@@ -39,9 +47,10 @@ namespace Moonstorm
             public ShadowCastingMode defaultShadowCastingMode;
             public bool ignoreOverlays;
             public bool hideOnDeath;
+            [Tooltip($"The renderer index this RendererInfo is going to modify.")]
             public int rendererIndex;
 
-            public CharacterModel.RendererInfo Upgrade(CharacterModel model)
+            internal CharacterModel.RendererInfo Upgrade(CharacterModel model)
             {
                 if (rendererIndex < 0 || rendererIndex > model.baseRendererInfos.Length)
                 {
@@ -60,18 +69,26 @@ namespace Moonstorm
             }
         }
 
+        /// <summary>
+        /// A Wrapper for <see cref="SkinDef.GameObjectActivation"/>
+        /// <para>Allows for appending new GameObjects to skins via child locator entries</para>
+        /// </summary>
         [Serializable]
         public class MSGameObjectActivation
         {
+            [Tooltip($"Wether this is a custom Activation.\nCustom Activations create new ionstances of the gameObjectPrefab provided on the body, using the child locator entry as the parent.")]
             public bool isCustomActivation = false;
+            [Tooltip($"The renderer index this GameObjectActivation is going to activate")]
             public int rendererIndex;
 
+            [Tooltip($"The prefab to instantiate during the custom activation")]
             public GameObject gameObjectPrefab;
+            [Tooltip($"If isCustomActivation is set to true, then the gameObjectPrefab will be instantiated on this child")]
             public string childName;
 
             public bool shouldActivate;
 
-            public SkinDef.GameObjectActivation Upgrade(CharacterModel model, CharacterModel displayModel)
+            internal SkinDef.GameObjectActivation Upgrade(CharacterModel model, CharacterModel displayModel)
             {
                 return isCustomActivation ? CreateCustomActivation(model, displayModel) : CreateActivationFromRendererIndex(model);
             }
@@ -109,13 +126,17 @@ namespace Moonstorm
             }
         }
 
+        /// <summary>
+        /// A Wrapper for <see cref="SkinDef.MeshReplacement"/>
+        /// </summary>
         [Serializable]
         public class MSMeshReplacement
         {
             public Mesh mesh;
+            [Tooltip($"The renderer index this MeshReplacement is going to modify")]
             public int rendererIndex;
 
-            public SkinDef.MeshReplacement Upgrade(CharacterModel model)
+            internal SkinDef.MeshReplacement Upgrade(CharacterModel model)
             {
                 if (rendererIndex < 0 || rendererIndex > model.baseRendererInfos.Length)
                 {
@@ -128,13 +149,17 @@ namespace Moonstorm
             }
         }
 
+        /// <summary>
+        /// A wrapper for <see cref="SkinDef.ProjectileGhostReplacement"/>
+        /// </summary>
         [Serializable]
         public class MSProjectileGhostReplacement
         {
+            [Tooltip($"The address of the projectile to replace it's ghost")]
             public string projectilePrefabAddress;
             public GameObject projectileGhostReplacement;
 
-            public async Task<SkinDef.ProjectileGhostReplacement> Upgrade()
+            internal async Task<SkinDef.ProjectileGhostReplacement> Upgrade()
             {
                 var prefab = await Addressables.LoadAssetAsync<GameObject>(projectilePrefabAddress).Task;
                 var ghostReplacement = new SkinDef.ProjectileGhostReplacement();
@@ -144,13 +169,17 @@ namespace Moonstorm
             }
         }
 
+        /// <summary>
+        /// A Wrapper for <see cref="SkinDef.MinionSkinReplacement"/>
+        /// </summary>
         [Serializable]
         public class MSMinionSkinReplacements
         {
+            [Tooltip($"The address of the minion to apply the skin to")]
             public string minionPrefabAddress;
-            public VanillaSkinDefinition minionSkin;
+            public SkinDef minionSkin;
 
-            public async Task<SkinDef.MinionSkinReplacement> Upgrade()
+            internal async Task<SkinDef.MinionSkinReplacement> Upgrade()
             {
                 var prefab = await Addressables.LoadAssetAsync<GameObject>(minionPrefabAddress).Task;
                 var minionReplacement = new SkinDef.MinionSkinReplacement();
@@ -161,19 +190,30 @@ namespace Moonstorm
         }
         #endregion
 
+        [Tooltip($"The Address of the CharacterBody")]
         public string bodyAddress;
+        [Tooltip($"The Address of the bodyAddress' Display prefab")]
         public string displayAddress;
+        [Tooltip($"Skins to apply before this one")]
         public MSBaseSkin[] _baseSkins;
+        [Tooltip($"Modify the renderer infos' materials and properties")]
         public MSRendererInfo[] _rendererInfos;
+        [Tooltip($"Activate or Deactivate game objects")]
         public MSGameObjectActivation[] _gameObjectActivations;
+        [Tooltip($"Replace the renderer infos' meshes")]
         public MSMeshReplacement[] _meshReplacements;
+        [Tooltip($"Replace a Projectile's Ghost Prefab")]
         public MSProjectileGhostReplacement[] _projectileGhostReplacements;
+        [Tooltip($"Replace a minion's skin")]
         public MSMinionSkinReplacements[] _minionSkinReplacements;
 
+        /// <summary>
+        /// The amount of renderers the body in <see cref="bodyAddress"/> has
+        /// </summary>
         [HideInInspector]
         public int rendererAmounts;
 
-        public async void Awake()
+        private async void Awake()
         {
             if(Application.IsPlaying(this))
             {
