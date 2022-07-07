@@ -29,17 +29,17 @@ namespace Moonstorm
             [HideInInspector]
             public EventCard[] eventCards;
 
-            [Tooltip($"The weight for this category")]
+            [Tooltip("The weight for this category")]
             public float selectionWeight;
         }
 
         [Tooltip("For what stage this EventDirectorCategorySelection is used in. Set to \"Custom\" for using this in a custom stage")]
         public R2API.DirectorAPI.Stage stage;
 
-        [Tooltip($"The name of the custom stage")]
+        [Tooltip("The name of the custom stage")]
         public string stageName;
 
-        [Tooltip($"The categories that this EventDirectorCategorySelection has")]
+        [Tooltip("The categories that this EventDirectorCategorySelection has")]
         [Header("The cards categories cannot be added in the editor\nthey get added at runtime automatically by the EventCatalog")]
         public EventCategory[] categories = Array.Empty<EventCategory>();
 

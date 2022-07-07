@@ -23,9 +23,9 @@ namespace Moonstorm
         [Serializable]
         public struct NamedDisplayDictionary
         {
-            [Tooltip($"The IDRS to add the rules below to")]
+            [Tooltip("The IDRS to add the rules below to")]
             public AddressableIDRS idrs;
-            [Tooltip($"The rules for the IDRS above")]
+            [Tooltip("The rules for the IDRS above")]
             public List<DisplayRule> displayRules;
 
             /// <summary>
@@ -53,17 +53,17 @@ namespace Moonstorm
         [Serializable]
         public struct DisplayRule
         {
-            [Tooltip($"The type of display rule")]
+            [Tooltip("The type of display rule")]
             public ItemDisplayRuleType ruleType;
-            [Tooltip($"The name of the child where this display prefab will appear")]
+            [Tooltip("The name of the child where this display prefab will appear")]
             public string childName;
-            [Tooltip($"The local position of this display")]
+            [Tooltip("The local position of this display")]
             public Vector3 localPos;
-            [Tooltip($"The local angle of this display")]
+            [Tooltip("The local angle of this display")]
             public Vector3 localAngles;
-            [Tooltip($"The local scale for this display")]
+            [Tooltip("The local scale for this display")]
             public Vector3 localScales;
-            [Tooltip($"If supplied, this display will replace a limb, ask in the ror2 modding discord if you dont know what this does")]
+            [Tooltip("If supplied, this display will replace a limb, ask in the ror2 modding discord if you dont know what this does")]
             public LimbFlags limbMask;
 
             /// <summary>
@@ -109,12 +109,12 @@ namespace Moonstorm
         /// Contains all instances of <see cref="ItemDisplayDictionary"/>
         /// </summary>
         public static readonly List<ItemDisplayDictionary> instances = new List<ItemDisplayDictionary>();
-        [Tooltip($"The key asset provided will be appended to all the ItemDisplayRuleSets defined in namedDisplayDictionary")]
+        [Tooltip("The key asset provided will be appended to all the ItemDisplayRuleSets defined in namedDisplayDictionary")]
         public UnityEngine.Object keyAsset;
-        [Tooltip($"The game object that will be used as a display prefab")]
+        [Tooltip("The game object that will be used as a display prefab")]
         public GameObject displayPrefab;
 
-        [Tooltip($"Implement the rules for this Dictionary")]
+        [Tooltip("Implement the rules for this Dictionary")]
         [Space]
         public List<NamedDisplayDictionary> namedDisplayDictionary = new List<NamedDisplayDictionary>();
 

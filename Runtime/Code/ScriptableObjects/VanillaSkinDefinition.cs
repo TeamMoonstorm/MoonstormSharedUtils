@@ -26,7 +26,7 @@ namespace Moonstorm
         [Serializable]
         public class MSBaseSkin
         {
-            [Tooltip($"The address of the base skin")]
+            [Tooltip("The address of the base skin")]
             public string skinAddress;
             public SkinDef skin;
 
@@ -47,7 +47,7 @@ namespace Moonstorm
             public ShadowCastingMode defaultShadowCastingMode;
             public bool ignoreOverlays;
             public bool hideOnDeath;
-            [Tooltip($"The renderer index this RendererInfo is going to modify.")]
+            [Tooltip("The renderer index this RendererInfo is going to modify.")]
             public int rendererIndex;
 
             internal CharacterModel.RendererInfo Upgrade(CharacterModel model)
@@ -76,14 +76,14 @@ namespace Moonstorm
         [Serializable]
         public class MSGameObjectActivation
         {
-            [Tooltip($"Wether this is a custom Activation.\nCustom Activations create new ionstances of the gameObjectPrefab provided on the body, using the child locator entry as the parent.")]
+            [Tooltip("Wether this is a custom Activation.\nCustom Activations create new ionstances of the gameObjectPrefab provided on the body, using the child locator entry as the parent.")]
             public bool isCustomActivation = false;
-            [Tooltip($"The renderer index this GameObjectActivation is going to activate")]
+            [Tooltip("The renderer index this GameObjectActivation is going to activate")]
             public int rendererIndex;
 
-            [Tooltip($"The prefab to instantiate during the custom activation")]
+            [Tooltip("The prefab to instantiate during the custom activation")]
             public GameObject gameObjectPrefab;
-            [Tooltip($"If isCustomActivation is set to true, then the gameObjectPrefab will be instantiated on this child")]
+            [Tooltip("If isCustomActivation is set to true, then the gameObjectPrefab will be instantiated on this child")]
             public string childName;
 
             public bool shouldActivate;
@@ -133,7 +133,7 @@ namespace Moonstorm
         public class MSMeshReplacement
         {
             public Mesh mesh;
-            [Tooltip($"The renderer index this MeshReplacement is going to modify")]
+            [Tooltip("The renderer index this MeshReplacement is going to modify")]
             public int rendererIndex;
 
             internal SkinDef.MeshReplacement Upgrade(CharacterModel model)
@@ -155,7 +155,7 @@ namespace Moonstorm
         [Serializable]
         public class MSProjectileGhostReplacement
         {
-            [Tooltip($"The address of the projectile to replace it's ghost")]
+            [Tooltip("The address of the projectile to replace it's ghost")]
             public string projectilePrefabAddress;
             public GameObject projectileGhostReplacement;
 
@@ -175,7 +175,7 @@ namespace Moonstorm
         [Serializable]
         public class MSMinionSkinReplacements
         {
-            [Tooltip($"The address of the minion to apply the skin to")]
+            [Tooltip("The address of the minion to apply the skin to")]
             public string minionPrefabAddress;
             public SkinDef minionSkin;
 
@@ -190,21 +190,21 @@ namespace Moonstorm
         }
         #endregion
 
-        [Tooltip($"The Address of the CharacterBody")]
+        [Tooltip("The Address of the CharacterBody")]
         public string bodyAddress;
-        [Tooltip($"The Address of the bodyAddress' Display prefab")]
+        [Tooltip("The Address of the bodyAddress' Display prefab")]
         public string displayAddress;
-        [Tooltip($"Skins to apply before this one")]
+        [Tooltip("Skins to apply before this one")]
         public MSBaseSkin[] _baseSkins;
-        [Tooltip($"Modify the renderer infos' materials and properties")]
+        [Tooltip("Modify the renderer infos' materials and properties")]
         public MSRendererInfo[] _rendererInfos;
-        [Tooltip($"Activate or Deactivate game objects")]
+        [Tooltip("Activate or Deactivate game objects")]
         public MSGameObjectActivation[] _gameObjectActivations;
-        [Tooltip($"Replace the renderer infos' meshes")]
+        [Tooltip("Replace the renderer infos' meshes")]
         public MSMeshReplacement[] _meshReplacements;
-        [Tooltip($"Replace a Projectile's Ghost Prefab")]
+        [Tooltip("Replace a Projectile's Ghost Prefab")]
         public MSProjectileGhostReplacement[] _projectileGhostReplacements;
-        [Tooltip($"Replace a minion's skin")]
+        [Tooltip("Replace a minion's skin")]
         public MSMinionSkinReplacements[] _minionSkinReplacements;
 
         /// <summary>

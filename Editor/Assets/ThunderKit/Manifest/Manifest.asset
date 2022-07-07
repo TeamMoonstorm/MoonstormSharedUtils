@@ -29,7 +29,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   StagingPaths:
   - <BuildPathPlugins>
-  rootFolderName: LITLang
+  rootFolderName: MyLang
   languageFolders:
   - languageName: en
     languageFiles: []

@@ -27,7 +27,7 @@ namespace Moonstorm
         /// </summary>
         public string OncePerRunFlag { get => $"{name}:PlayedThisRun"; }
 
-        [Tooltip($"The flags for this even")]
+        [Tooltip("The flags for this even")]
         [EnumMask(typeof(EventFlags))]
         public EventFlags eventFlags;
         [Tooltip("The event's EntityState, MUST inherit from EventState")]

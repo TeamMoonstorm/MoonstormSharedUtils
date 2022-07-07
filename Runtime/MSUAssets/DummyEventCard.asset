@@ -16,8 +16,8 @@ MonoBehaviour:
   eventState:
     _typeName: EntityStates.Events.DummyEventState, MoonstormSharedUtils, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  startMessageToken: Dummy Event Card Start
-  endMessageToken: Dummy Event Card End
+  startMessageToken: '[WARNING] Something malicious is brewing....'
+  endMessageToken: ILY Mystic
   messageColor: {r: 1, g: 0, b: 0, a: 1}
   startSound: {fileID: 0}
   availableStages: 0

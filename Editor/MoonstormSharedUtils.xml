@@ -1551,18 +1551,226 @@
             <param name="entry">The entry to remove if its in the collection</param>
             <returns>True if it was in the collection and removed, false otherwise</returns>
         </member>
+        <member name="T:Moonstorm.Components.BaseBuffBodyBehavior">
+            <summary>
+            A BaseBuffBodyBehaviour is an extended version of a <see cref="T:UnityEngine.MonoBehaviour"/>
+            <para>This is the same as RoR2's <see cref="T:RoR2.Items.BaseItemBodyBehavior"/>, but for <see cref="T:RoR2.BuffDef"/>s</para>
+            </summary>
+        </member>
+        <member name="T:Moonstorm.Components.BaseBuffBodyBehavior.BuffDefAssociationAttribute">
+            <summary>
+            Allows to specify wether a <see cref="T:Moonstorm.Components.BaseBuffBodyBehavior"/> must run only on server, on client or both
+            </summary>
+        </member>
+        <member name="F:Moonstorm.Components.BaseBuffBodyBehavior.BuffDefAssociationAttribute.behaviorTypeOverride">
+            <summary>
+            the behaviour
+            </summary>
+        </member>
+        <member name="F:Moonstorm.Components.BaseBuffBodyBehavior.BuffDefAssociationAttribute.useOnServer">
+            <summary>
+            Wether this behaviour can be used on Server
+            </summary>
+        </member>
+        <member name="F:Moonstorm.Components.BaseBuffBodyBehavior.BuffDefAssociationAttribute.useOnClient">
+            <summary>
+            Wether this behaviour can be used on client
+            </summary>
+        </member>
+        <member name="F:Moonstorm.Components.BaseBuffBodyBehavior.buffStacks">
+            <summary>
+            The amount of BuffStacks associated to the tied BuffDef
+            </summary>
+        </member>
+        <member name="P:Moonstorm.Components.BaseBuffBodyBehavior.body">
+            <summary>
+            The body that has this behaviour
+            </summary>
+        </member>
+        <member name="M:Moonstorm.Components.BaseBuffBodyBehavior.Awake">
+            <summary>
+            Assigns the body
+            </summary>
+        </member>
         <member name="T:Moonstorm.Components.DestroyOnEnable">
             <summary>
             Destroys the game object attatched when enabled
+            </summary>
+        </member>
+        <member name="T:Moonstorm.Components.EventDirector">
+            <summary>
+            The <see cref="T:Moonstorm.Components.EventDirector"/> is a Singleton class that's used for managing MSU's Event system.
+            </summary>
+        </member>
+        <member name="P:Moonstorm.Components.EventDirector.Instance">
+            <summary>
+            Returns the current instance of the EventDirector
+            </summary>
+        </member>
+        <member name="P:Moonstorm.Components.EventDirector.NetworkStateMachine">
+            <summary>
+            The NetworkStateMachine tied to this Eventdirector
+            </summary>
+        </member>
+        <member name="P:Moonstorm.Components.EventDirector.EventFunctions">
+            <summary>
+            The EventFunctions tied to this EventDirector
+            </summary>
+        </member>
+        <member name="P:Moonstorm.Components.EventDirector.EventCardSelection">
+            <summary>
+            The current stage's EventCardSelection
+            </summary>
+        </member>
+        <member name="P:Moonstorm.Components.EventDirector.EventDirectorCategorySelection">
+            <summary>
+            The CategorySelection for the current stage
+            </summary>
+        </member>
+        <member name="P:Moonstorm.Components.EventDirector.TargetedStateMachine">
+            <summary>
+            The EntityStateMachine where the next event will play
+            </summary>
+        </member>
+        <member name="P:Moonstorm.Components.EventDirector.LastAttemptedEventCard">
+            <summary>
+            The last event that attempted to play
+            </summary>
+        </member>
+        <member name="P:Moonstorm.Components.EventDirector.LastSuccesfulEventCard">
+            <summary>
+            The last event that succesfully played
+            </summary>
+        </member>
+        <member name="P:Moonstorm.Components.EventDirector.TotalCreditsSpent">
+            <summary>
+            The total amount of credits spent
+            </summary>
+        </member>
+        <member name="P:Moonstorm.Components.EventDirector.MostExpensiveEventInDeck">
+            <summary>
+            Returns the cost of the most expensive event
+            </summary>
+        </member>
+        <member name="P:Moonstorm.Components.EventDirector.GetDifficultyScalingValue">
+            <summary>
+            Returns the current <see cref="F:RoR2.DifficultyDef.scalingValue"/> of the run in progress
             </summary>
         </member>
         <member name="M:Moonstorm.Components.EventDirector.ForceEvent(RoR2.ConCommandArgs)">
             Commands
             ------------------------------------------------------------------------------------------------------------
         </member>
+        <member name="P:Moonstorm.Components.EventDirector.DisableEventDirector">
+            <summary>
+            Wether the event director is disabled or enabled
+            </summary>
+        </member>
+        <member name="P:Moonstorm.Components.EventDirector.EnableInternalLogging">
+            <summary>
+            Wether the event director logs information
+            </summary>
+        </member>
+        <member name="T:Moonstorm.Components.EventTextController">
+            <summary>
+            The controller for an Event's Announcement text
+            </summary>
+        </member>
+        <member name="T:Moonstorm.Components.EventTextController.EventFadeState">
+            <summary>
+            The state of the event
+            </summary>
+        </member>
+        <member name="F:Moonstorm.Components.EventTextController.uiJuice">
+            <summary>
+            UIJuice used for fading
+            </summary>
+        </member>
+        <member name="F:Moonstorm.Components.EventTextController.fadeOnStart">
+            <summary>
+            Wether the fade begins as soon as the event gets entered
+            </summary>
+        </member>
+        <member name="F:Moonstorm.Components.EventTextController.warningDuration">
+            <summary>
+            How long the warning lasts
+            </summary>
+        </member>
+        <member name="M:Moonstorm.Components.EventTextController.BeginFade">
+            <summary>
+            Begins the EventTextController, only call this is <see cref="F:Moonstorm.Components.EventTextController.fadeOnStart"/> is false
+            </summary>
+        </member>
+        <member name="T:Moonstorm.Components.SetupWeatherController">
+            <summary>
+            Used for setting up a weather controler on a scene that doesnt have a <see cref="T:RoR2.SceneWeatherController"/>
+            </summary>
+        </member>
         <member name="F:Moonstorm.Components.SetupWeatherController.blacklistedScenes">
             <summary>
             If a scene in the game, modded or unmodded, should not have weather changes, add it to this list.
+            </summary>
+        </member>
+        <member name="T:Moonstorm.Components.MoonstormContentManager">
+            <summary>
+            The MoonstormContentManager manages the correct implementation of MSU's custom Behaviour interfaces
+            </summary>
+        </member>
+        <member name="F:Moonstorm.Components.MoonstormContentManager.statItemBehaviors">
+            <summary>
+            Contains all the current StatItemBehaviours for this body
+            </summary>
+        </member>
+        <member name="F:Moonstorm.Components.MoonstormContentManager.bodyStatArgModifiers">
+            <summary>
+            Contains all the BodyStatArgModifiers for this body
+            </summary>
+        </member>
+        <member name="M:Moonstorm.Components.MoonstormContentManager.CheckItemEquipments">
+            <summary>
+            Checks and updates the EliteBehaviour and EquipmentBehaviour for this body.
+            <para>Also updates interfaces</para>
+            </summary>
+        </member>
+        <member name="M:Moonstorm.Components.MoonstormContentManager.StartGetInterfaces">
+            <summary>
+            When called, the next frame will be used for updating all interfaces of this body
+            </summary>
+        </member>
+        <member name="M:Moonstorm.Components.MoonstormContentManager.RunStatRecalculationsStart">
+            <summary>
+            Runs <see cref="M:Moonstorm.IStatItemBehavior.RecalculateStatsStart"/>
+            </summary>
+        </member>
+        <member name="M:Moonstorm.Components.MoonstormContentManager.RunStatRecalculationsEnd">
+            <summary>
+            Runs <see cref="M:Moonstorm.IStatItemBehavior.RecalculateStatsEnd"/>
+            </summary>
+        </member>
+        <member name="M:Moonstorm.Components.MoonstormContentManager.RunStatHookEventModifiers(R2API.RecalculateStatsAPI.StatHookEventArgs)">
+            <summary>
+            Runs <see cref="M:Moonstorm.IBodyStatArgModifier.ModifyStatArguments(R2API.RecalculateStatsAPI.StatHookEventArgs)"/>
+            </summary>
+        </member>
+        <member name="T:Moonstorm.Components.MoonstormEliteBehavior">
+            <summary>
+            The EliteBehaviour used for managing the <see cref="T:Moonstorm.MSEliteDef"/> for a body
+            </summary>
+        </member>
+        <member name="P:Moonstorm.Components.MoonstormEliteBehavior.EliteRampPropertyID">
+            <summary>
+            Shorthand for Shader.PropertyToID("_EliteRamp");
+            </summary>
+        </member>
+        <member name="M:Moonstorm.Components.MoonstormEliteBehavior.SetNewElite(Moonstorm.MSEliteDef)">
+            <summary>
+            Sets a new EliteDef, changing the visual effect of the elite
+            </summary>
+            <param name="eliteDef">The new EliteDef, can be null</param>
+        </member>
+        <member name="T:Moonstorm.Components.MoonstormIDH">
+            <summary>
+            Sets default values to a CharacterModel's item display rule set entries that have a child with the name "NoValue"
             </summary>
         </member>
         <member name="T:Moonstorm.MoonstormSharedUtils">
@@ -1583,6 +1791,321 @@
         <member name="P:Moonstorm.MoonstormSharedUtils.MSUAssetBundle">
             <summary>
             The main AssetBundle of MSU
+            </summary>
+        </member>
+        <member name="T:Moonstorm.MSInteractableDirectorCard">
+            <summary>
+            A <see cref="T:Moonstorm.MSInteractableDirectorCard"/> is an extension of <see cref="T:RoR2.InteractableSpawnCard"/>
+            <para>A MSInteractableDirectorCard can be used by the <see cref="T:RoR2.SceneDirector"/> so the supplied interactable can spawn ingame</para>
+            <para>Used in the <see cref="T:Moonstorm.InteractableBase"/></para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.MSInteractableDirectorCard.DirectorCardHolder">
+            <summary>
+            The DirectorCardHolder for this MSMonsterDirectorCard
+            </summary>
+        </member>
+        <member name="M:Moonstorm.MSInteractableDirectorCard.IsAvailable(RoR2.ExpansionManagement.ExpansionDef[])">
+            <summary>
+            Wether this Monster is available for the current run
+            </summary>
+            <param name="expansionDefs">The run's enabled expansions</param>
+            <returns>True if available, false otherwise</returns>
+        </member>
+        <member name="T:Moonstorm.MSMonsterDirectorCard">
+            <summary>
+            A <see cref="T:Moonstorm.MSMonsterDirectorCard"/> is an extension of <see cref="T:RoR2.CharacterSpawnCard"/>.
+            <para>A MSMonsterDirectorCard can be used by the <see cref="T:RoR2.CombatDirector"/> so the supplied Monster can spawn ingame</para>
+            <para>Used in the <see cref="T:Moonstorm.MonsterBase"/></para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.MSMonsterDirectorCard.DirectorCardHolder">
+            <summary>
+            The DirectorCardHolder for this MSMonsterDirectorCard
+            </summary>
+        </member>
+        <member name="M:Moonstorm.MSMonsterDirectorCard.IsAvailable(RoR2.ExpansionManagement.ExpansionDef[])">
+            <summary>
+            Wether this Monster is available for the current run
+            </summary>
+            <param name="expansionDefs">The run's enabled expansions</param>
+            <returns>True if available, false otherwise</returns>
+        </member>
+        <member name="T:Moonstorm.MSEliteDef">
+            <summary>
+            A <see cref="T:Moonstorm.MSEliteDef"/> is an extension of <see cref="T:RoR2.EliteDef"/> that allows the easy implementation of an elite to vanilla tiers, ramps, overlay effects and visual effects
+            </summary>
+        </member>
+        <member name="T:Moonstorm.VanillaEliteTier">
+            <summary>
+            Represents the base game's elite tiers
+            </summary>
+        </member>
+        <member name="T:Moonstorm.SerializableEliteTierDef">
+            <summary>
+            Represents a Serialized version of a <see cref="T:RoR2.CombatDirector.EliteTierDef"/>
+            <para>Utilized by the <see cref="T:Moonstorm.EliteTierDefBase"/> and the <see cref="T:Moonstorm.EliteTierDefModuleBase"/></para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.SerializableEliteTierDef.EliteTierDef">
+            <summary>
+            The created EliteTierDef from the serialized data of a <see cref="T:Moonstorm.SerializableEliteTierDef"/> and it's tied <see cref="T:Moonstorm.EliteTierDefBase"/>
+            </summary>
+        </member>
+        <member name="T:Moonstorm.EventCard">
+            <summary>
+            Represents an EventCard for the <see cref="T:Moonstorm.Components.EventDirector"/>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.EventCard.EventIndex">
+            <summary>
+            The index of this EventCard, set by the <see cref="T:Moonstorm.EventCatalog"/>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.EventCard.OncePerRunFlag">
+            <summary>
+            A flag that's used for events that only play once in a run
+            </summary>
+        </member>
+        <member name="M:Moonstorm.EventCard.IsAvailable">
+            <summary>
+            Checks if this card can be used currently
+            </summary>
+            <returns>True if this event is available, false otherwise</returns>
+        </member>
+        <member name="T:Moonstorm.EventDirectorCategorySelection">
+            <summary>
+            An <see cref="T:Moonstorm.EventDirectorCategorySelection"/> is the <see cref="T:Moonstorm.Components.EventDirector"/>'s version of a <see cref="T:RoR2.DirectorCardCategorySelection"/>
+            <para>It is used for storing the available events for a stage.</para>
+            </summary>
+        </member>
+        <member name="T:Moonstorm.EventDirectorCategorySelection.EventCategory">
+            <summary>
+            Represents an EventCategory
+            </summary>
+        </member>
+        <member name="F:Moonstorm.EventDirectorCategorySelection.EventCategory.eventCards">
+            <summary>
+            The event cards in this category, note that these cannot be filled in the inspector, as they're filled by the <see cref="T:Moonstorm.EventCatalog"/>
+            </summary>
+        </member>
+        <member name="M:Moonstorm.EventDirectorCategorySelection.SumAllWeightsInCategory(Moonstorm.EventDirectorCategorySelection.EventCategory)">
+            <summary>
+            Sums all the weights in the given category
+            </summary>
+            <returns>The sum of all weights</returns>
+        </member>
+        <member name="M:Moonstorm.EventDirectorCategorySelection.FindCategoryIndexByName(System.String)">
+            <summary>
+            Returns a category's index via it's name
+            </summary>
+            <param name="categoryName">The name of the category</param>
+            <returns>The category's index</returns>
+        </member>
+        <member name="M:Moonstorm.EventDirectorCategorySelection.CopyFrom(Moonstorm.EventDirectorCategorySelection)">
+            <summary>
+            Copies all the categories and data from <paramref name="src"/> to this <see cref="T:Moonstorm.EventDirectorCategorySelection"/>
+            </summary>
+            <param name="src">The source to copy from</param>
+        </member>
+        <member name="M:Moonstorm.EventDirectorCategorySelection.GenerateWeightedSelection">
+            <summary>
+            Generates the WeightedSelection for this <see cref="T:Moonstorm.EventDirectorCategorySelection"/>
+            </summary>
+            <returns>A WeightedSelection of the available EventCards</returns>
+        </member>
+        <member name="M:Moonstorm.EventDirectorCategorySelection.Clear">
+            <summary>
+            Removes all categories
+            </summary>
+        </member>
+        <member name="M:Moonstorm.EventDirectorCategorySelection.AddCategory(System.String,System.Single)">
+            <summary>
+            Adds a new EventCategory
+            </summary>
+            <param name="name">The name of the category</param>
+            <param name="selectionWeight">It's selection weight</param>
+            <returns>The new EventCategory's index</returns>
+        </member>
+        <member name="M:Moonstorm.EventDirectorCategorySelection.AddCard(System.Int32,Moonstorm.EventCard)">
+            <summary>
+            Adds a new card to a category
+            </summary>
+            <param name="categoryIndex">The category index where <paramref name="card"/> will be added</param>
+            <param name="card">The card to add</param>
+            <returns>The index of <paramref name="card"/> relative to the Category's <see cref="F:Moonstorm.EventDirectorCategorySelection.EventCategory.eventCards"/></returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">When the categoryIndex is out of range</exception>
+        </member>
+        <member name="M:Moonstorm.EventDirectorCategorySelection.RemoveCardsThatFailFilter(System.Predicate{Moonstorm.EventCard})">
+            <summary>
+            Removes the cards that fail the predicate specified in <paramref name="predicate"/>
+            </summary>
+        </member>
+        <member name="M:Moonstorm.EventDirectorCategorySelection.IsAvailable">
+            <summary>
+            Wether or not this <see cref="T:Moonstorm.EventDirectorCategorySelection"/> is available
+            </summary>
+            <returns>True if available, false otherwise</returns>
+        </member>
+        <member name="M:Moonstorm.EventDirectorCategorySelection.OnSelected(R2API.DirectorAPI.StageInfo)">
+            <summary>
+            This method gets ran when this <see cref="T:Moonstorm.EventDirectorCategorySelection"/> gets chosen by the <see cref="T:Moonstorm.Components.EventDirector"/>
+            </summary>
+            <param name="stageInfo">The current stage</param>
+        </member>
+        <member name="T:Moonstorm.ItemDisplayDictionary">
+            <summary>
+            An <see cref="T:Moonstorm.ItemDisplayDictionary"/> is used for appending a single <see cref="T:RoR2.ItemDisplayRuleSet.KeyAssetRuleGroup"/> to multiple <see cref="T:RoR2.ItemDisplayRuleSet"/>
+            <para>It works ina  similar fashion to R2API's ItemDisplayDictionary</para>
+            </summary>
+        </member>
+        <member name="T:Moonstorm.ItemDisplayDictionary.NamedDisplayDictionary">
+            <summary>
+            Represents a dictionary of an IDRS to the rules that will be appended.
+            </summary>
+        </member>
+        <member name="P:Moonstorm.ItemDisplayDictionary.NamedDisplayDictionary.IsEmpty">
+            <summary>
+            Returns true if <see cref="F:Moonstorm.ItemDisplayDictionary.NamedDisplayDictionary.displayRules"/>'s count is 0 or if its null
+            </summary>
+        </member>
+        <member name="M:Moonstorm.ItemDisplayDictionary.NamedDisplayDictionary.AddDisplayRule(Moonstorm.ItemDisplayDictionary.DisplayRule)">
+            <summary>
+            Adds a new rule
+            </summary>
+            <param name="rule">The rule to add</param>
+        </member>
+        <member name="T:Moonstorm.ItemDisplayDictionary.DisplayRule">
+            <summary>
+            Wrapper for <see cref="T:RoR2.ItemDisplayRule"/>
+            <para>The <see cref="T:RoR2.ItemDisplayRule"/>'s display prefab will be taken from <see cref="F:Moonstorm.ItemDisplayDictionary.displayPrefab"/></para>
+            </summary>
+        </member>
+        <member name="F:Moonstorm.ItemDisplayDictionary.DisplayRule.finishedRule">
+            <summary>
+            The finished rule
+            </summary>
+        </member>
+        <member name="F:Moonstorm.ItemDisplayDictionary.DisplayRule.NoValue">
+            <summary>
+            A constant for a <see cref="T:Moonstorm.ItemDisplayDictionary.DisplayRule"/> that has no value
+            </summary>
+        </member>
+        <member name="F:Moonstorm.ItemDisplayDictionary.instances">
+            <summary>
+            Contains all instances of <see cref="T:Moonstorm.ItemDisplayDictionary"/>
+            </summary>
+        </member>
+        <member name="T:Moonstorm.NamedIDRS">
+            <summary>
+            A <see cref="T:Moonstorm.NamedIDRS"/> is a version of an <see cref="T:RoR2.ItemDisplayRuleSet"/> that can be populated and serialized in the editor.
+            <para>The values in <see cref="F:Moonstorm.NamedIDRS.namedRuleGroups"/> will be appended to the IDRS set in <see cref="F:Moonstorm.NamedIDRS.idrs"/></para>
+            </summary>
+        </member>
+        <member name="T:Moonstorm.NamedIDRS.AddressNamedRuleGroup">
+            <summary>
+            Wrapper for <see cref="T:RoR2.ItemDisplayRuleSet.KeyAssetRuleGroup"/>.
+            <para>The key asset can be loaded either via the <see cref="T:RoR2.ItemCatalog"/>, <see cref="T:RoR2.EquipmentCatalog"/> or via Addressables</para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.NamedIDRS.AddressNamedRuleGroup.IsEmpty">
+            <summary>
+            Returns true if <see cref="F:Moonstorm.NamedIDRS.AddressNamedRuleGroup.rules"/>'s count is 0 or if its null
+            </summary>
+        </member>
+        <member name="M:Moonstorm.NamedIDRS.AddressNamedRuleGroup.AddRule(Moonstorm.NamedIDRS.AddressNamedDisplayRule)">
+            <summary>
+            Adds a new rule
+            </summary>
+            <param name="rule">The rule to add</param>
+        </member>
+        <member name="T:Moonstorm.NamedIDRS.AddressNamedDisplayRule">
+            <summary>
+            Wrapper for <see cref="T:RoR2.ItemDisplayRule"/>
+            <param>The display prefab can be loaded via addressables or direct reference</param>
+            </summary>
+        </member>
+        <member name="F:Moonstorm.NamedIDRS.AddressNamedDisplayRule.finishedRule">
+            <summary>
+            The finished rule
+            </summary>
+        </member>
+        <member name="F:Moonstorm.NamedIDRS.AddressNamedDisplayRule.NoValue">
+            <summary>
+            A constant for an <see cref="T:Moonstorm.NamedIDRS.AddressNamedRuleGroup"/> that  has no value
+            </summary>
+        </member>
+        <member name="F:Moonstorm.NamedIDRS.instances">
+            <summary>
+            Contains all the instances of <see cref="T:Moonstorm.NamedIDRS"/>
+            </summary>
+        </member>
+        <member name="T:Moonstorm.MSUnlockableDef">
+            <summary>
+            A <see cref="T:Moonstorm.MSUnlockableDef"/> is an extension of <see cref="T:RoR2.UnlockableDef"/> that allows for easy creation of an Unlockable that gets unlocked via an Achievement
+            </summary>
+        </member>
+        <member name="T:Moonstorm.MSUnlockableDef.AchievementStringAssetRef">
+            <summary>
+            Represents an addressable version of a prerequisite achievement
+            </summary>
+        </member>
+        <member name="P:Moonstorm.MSUnlockableDef.AchievementDef">
+            <summary>
+            This is the <see cref="P:Moonstorm.MSUnlockableDef.AchievementDef"/> that's tied to this UnlockableDef
+            </summary>
+        </member>
+        <member name="T:Moonstorm.MaterialCopier">
+            <summary>
+            A <see cref="T:Moonstorm.MaterialCopier"/> is a ScriptableObject that allows the usage of vanilla materials in your project.
+            </summary>
+        </member>
+        <member name="T:Moonstorm.MaterialCopier.MaterialPair">
+            <summary>
+            A Representation of a in-project material, and the address that the in-project material will use ingame.
+            </summary>
+        </member>
+        <member name="T:Moonstorm.VanillaSkinDefinition">
+            <summary>
+            A <see cref="T:Moonstorm.VanillaSkinDef"/> is an extension of <see cref="T:RoR2.SkinDef"/> that allows for creating of skins for vanilla characterbodies.
+            </summary>
+        </member>
+        <member name="T:Moonstorm.VanillaSkinDefinition.MSBaseSkin">
+            <summary>
+            A Wrapper for <see cref="F:RoR2.SkinDef.baseSkins"/>
+            <para>Allows loading a base skin via an address</para>
+            </summary>
+        </member>
+        <member name="T:Moonstorm.VanillaSkinDefinition.MSRendererInfo">
+            <summary>
+            A wrapper for <see cref="F:RoR2.SkinDef.rendererInfos"/>
+            <para>used for replacing materials and modifying the values of a RendererInfo.</para>
+            </summary>
+        </member>
+        <member name="T:Moonstorm.VanillaSkinDefinition.MSGameObjectActivation">
+            <summary>
+            A Wrapper for <see cref="T:RoR2.SkinDef.GameObjectActivation"/>
+            <para>Allows for appending new GameObjects to skins via child locator entries</para>
+            </summary>
+        </member>
+        <member name="T:Moonstorm.VanillaSkinDefinition.MSMeshReplacement">
+            <summary>
+            A Wrapper for <see cref="T:RoR2.SkinDef.MeshReplacement"/>
+            </summary>
+        </member>
+        <member name="T:Moonstorm.VanillaSkinDefinition.MSProjectileGhostReplacement">
+            <summary>
+            A wrapper for <see cref="T:RoR2.SkinDef.ProjectileGhostReplacement"/>
+            </summary>
+        </member>
+        <member name="T:Moonstorm.VanillaSkinDefinition.MSMinionSkinReplacements">
+            <summary>
+            A Wrapper for <see cref="T:RoR2.SkinDef.MinionSkinReplacement"/>
+            </summary>
+        </member>
+        <member name="F:Moonstorm.VanillaSkinDefinition.rendererAmounts">
+            <summary>
+            The amount of renderers the body in <see cref="F:Moonstorm.VanillaSkinDefinition.bodyAddress"/> has
             </summary>
         </member>
         <member name="T:EntityStates.Events.EventState">

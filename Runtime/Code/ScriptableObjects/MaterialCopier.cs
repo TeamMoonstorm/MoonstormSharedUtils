@@ -21,9 +21,9 @@ namespace Moonstorm
         [Serializable]
         public class MaterialPair
         {
-            [Tooltip($"The address of the material, the properties and shader of this material will be used on the material below.")]
+            [Tooltip("The address of the material, the properties and shader of this material will be used on the material below.")]
             public string materialAddress;
-            [Tooltip($"The material in your project, the properties and shader of this material will be copied from the material address")]
+            [Tooltip("The material in your project, the properties and shader of this material will be copied from the material address")]
             public Material material;
         }
         private static readonly List<MaterialCopier> instances = new List<MaterialCopier>();
@@ -40,7 +40,7 @@ namespace Moonstorm
             }
         }
 
-        [Tooltip($"The material pairs for this material copier")]
+        [Tooltip("The material pairs for this material copier")]
         public List<MaterialPair> materialPairs = new List<MaterialPair>();
 
         private void Awake()

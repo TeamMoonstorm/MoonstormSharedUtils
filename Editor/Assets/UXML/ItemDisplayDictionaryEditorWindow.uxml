@@ -2,7 +2,7 @@
     <ui:VisualElement name="KeyAssetPrefabContainer" class="container" style="flex-shrink: 0;">
         <Style src="/Packages/teammoonstorm-moonstormsharedutils/Editor/Assets/USS/GenericWindow.uss" />
         <uie:ObjectField label="Key Asset" tooltip="The KeyAsset for this dictionary, it needs to be an EquipmentDef or ItemDef" name="keyAsset" binding-path="keyAsset" allow-scene-objects="false" />
-        <uie:ObjectField label="Display Prefab" name="displayPrefab" tooltip="The DisplayPrefab tied to the KeyAsset" focusable="true" allow-scene-objects="false" />
+        <uie:ObjectField label="Display Prefab" name="displayPrefab" tooltip="The DisplayPrefab tied to the KeyAsset" focusable="true" allow-scene-objects="false" binding-path="displayPrefab" />
     </ui:VisualElement>
     <ui:VisualElement name="RootContainer" class="container root-container">
         <Style src="/Packages/teammoonstorm-moonstormsharedutils/Editor/Assets/USS/GenericWindow.uss" />

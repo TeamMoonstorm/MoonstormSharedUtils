@@ -24,9 +24,9 @@ namespace Moonstorm
         [Serializable]
         public struct AddressNamedRuleGroup
         {
-            [Tooltip($"The key asset that this rule group uses")]
+            [Tooltip("The key asset that this rule group uses")]
             public AddressableKeyAsset keyAsset;
-            [Tooltip($"The rules this rule group has")]
+            [Tooltip("The rules this rule group has")]
             public List<AddressNamedDisplayRule> rules;
 
             /// <summary>
@@ -53,19 +53,19 @@ namespace Moonstorm
         [Serializable]
         public struct AddressNamedDisplayRule
         {
-            [Tooltip($"The type of display rule")]
+            [Tooltip("The type of display rule")]
             public ItemDisplayRuleType ruleType;
-            [Tooltip($"The display prefab")]
+            [Tooltip("The display prefab")]
             public AddressableGameObject displayPrefab;
-            [Tooltip($"The name of the child where this display prefab will appear")]
+            [Tooltip("The name of the child where this display prefab will appear")]
             public string childName;
-            [Tooltip($"The local position of this display")]
+            [Tooltip("The local position of this display")]
             public Vector3 localPos;
-            [Tooltip($"The local angle of this display")]
+            [Tooltip("The local angle of this display")]
             public Vector3 localAngles;
-            [Tooltip($"The local scale for this display")]
+            [Tooltip("The local scale for this display")]
             public Vector3 localScales;
-            [Tooltip($"If supplied, this display will replace a limb, ask in the ror2 modding discord if you dont know what this does")]
+            [Tooltip("If supplied, this display will replace a limb, ask in the ror2 modding discord if you dont know what this does")]
             public LimbFlags limbMask;
 
             /// <summary>
@@ -113,10 +113,10 @@ namespace Moonstorm
         /// Contains all the instances of <see cref="NamedIDRS"/>
         /// </summary>
         public static readonly List<NamedIDRS> instances = new List<NamedIDRS>();
-        [Tooltip($"The namedRuleGroups serialized in this NamedIDRS will be copied over to this IDRS")]
+        [Tooltip("The namedRuleGroups serialized in this NamedIDRS will be copied over to this IDRS")]
         public ItemDisplayRuleSet idrs;
 
-        [Tooltip($"Implement the rule groups for this IDRS")]
+        [Tooltip("Implement the rule groups for this IDRS")]
         [Space]
         public List<AddressNamedRuleGroup> namedRuleGroups = new List<AddressNamedRuleGroup>();
 

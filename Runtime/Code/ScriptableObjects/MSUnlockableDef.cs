@@ -18,27 +18,27 @@ namespace Moonstorm
         [Serializable]
         public struct AchievementStringAssetRef
         {
-            [Tooltip($"The prerequisite AchievementDef's identifier")]
+            [Tooltip("The prerequisite AchievementDef's identifier")]
             public string AchievementIdentifier;
-            [Tooltip($"The prerequisite MSUnlockableDef")]
+            [Tooltip("The prerequisite MSUnlockableDef")]
             public MSUnlockableDef UnlockableDef;
         }
 
-        [Tooltip($"The BaseAchievement class that manages how this achievement is obtained")]
+        [Tooltip("The BaseAchievement class that manages how this achievement is obtained")]
         [SerializableSystemType.RequiredBaseType(typeof(BaseAchievement))]
         public SerializableSystemType achievementCondition;
 
-        [Tooltip($"Wether this achievement is server tracked")]
+        [Tooltip("Wether this achievement is server tracked")]
         public bool serverTracked;
 
-        [Tooltip($"The BaseServerAchievement class that manages the networking of this achievment")]
+        [Tooltip("The BaseServerAchievement class that manages the networking of this achievment")]
         [SerializableSystemType.RequiredBaseType(typeof(BaseServerAchievement))]
         public SerializableSystemType baseServerAchievement;
 
-        [Tooltip($"The name of this achievement")]
+        [Tooltip("The name of this achievement")]
         public string achievementNameToken;
 
-        [Tooltip($"The description of this achievement")]
+        [Tooltip("The description of this achievement")]
         public string achievementDescToken;
 
         [Obsolete("Made obsolete by the new Sprite field of UnlockableDef")]
@@ -49,7 +49,7 @@ namespace Moonstorm
         [HideInInspector]
         public Sprite unachievedIcon;
 
-        [Tooltip($"The prerequisite achievement for this achievement to be unlocked")]
+        [Tooltip("The prerequisite achievement for this achievement to be unlocked")]
         public AchievementStringAssetRef prerequisiteAchievement;
 
         /// <summary>
