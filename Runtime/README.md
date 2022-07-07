@@ -63,7 +63,7 @@ As MSU's goals revolve around working in the editor, this means that the more ti
     * MSInteractableDirectorCard: An extended version of an InteractableSpawnCard, it allows you to easily create a card that can be used immediatly in the game via MSU's interactions with R2API.DirectorAPI.
     * MSMonsterDirectorCard: An extended version of a CharacterSpawnCard, it allows you to easily create a card that can be used immediatly in the game via MSU's interactions with R2API.DirectorAPI.
 
-* On the Editor aspect, we have MoonstormSharedEditorUtils, a complete overview of the package can be found [here]().
+* On the Editor aspect, we have MoonstormSharedEditorUtils, a complete overview of the package can be found [here](https://github.com/TeamMoonstorm/MoonstormSharedUtils/blob/main/Editor/README.md).
 
 ## Documentation & Sourcecode:
 
@@ -88,7 +88,7 @@ MSU will forever be free to use and never gated behind paywalls, however, donati
 
 ## Changelog:
 
-(Old Changelog can be found [here](https://github.com/TeamMoonstorm/MoonstormSharedUtils/blob/main/MSU/Assets/MoonstormSharedUtils/README-OLD.md))
+(Old Changelog can be found [here](https://github.com/TeamMoonstorm/MoonstormSharedUtils/blob/main/Runtime/README-OLD.md))
 
 ### '1.0.0' - Official Release
 
@@ -109,4 +109,4 @@ MSU will forever be free to use and never gated behind paywalls, however, donati
 * Removed already deprecated classes.
 * Deprecated some existing classes
 * Improved loader systems.
-* Way, way too many more changes i cant remember currently, a more complete changelog can be found [here]()!
+* Way, way too many more changes i cant remember currently, a more complete changelog can be found [here](https://github.com/TeamMoonstorm/MoonstormSharedUtils/blob/main/Runtime/1.0.0%20Changelog.md)!

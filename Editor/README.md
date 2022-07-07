@@ -40,7 +40,7 @@ We belive that a good editor experience is created by it's utilities and inspect
 
 # Changelog
 
-(Old Changelogs can be found [here]())
+(Old Changelogs can be found [here](https://github.com/TeamMoonstorm/MoonstormSharedUtils/blob/main/Editor/OLD-CHANGELOGS.md))
 
 # '2.0.0'
 
