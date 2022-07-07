@@ -12,7 +12,10 @@ using UnityEngine.Networking;
 
 namespace Moonstorm.Components
 {
-    //Most of this code is from the baseGame's BaseItemBodyBehavior, but modified to work with Buffs.
+    /// <summary>
+    /// A BaseBuffBodyBehaviour is an extended version of a <see cref="MonoBehaviour"/>
+    /// <para>This is the same as RoR2's <see cref="RoR2.Items.BaseItemBodyBehavior"/>, but for <see cref="BuffDef"/>s</para>
+    /// </summary>
     public abstract class BaseBuffBodyBehavior : MonoBehaviour
     {
         private struct BuffTypePair
@@ -34,17 +37,32 @@ namespace Moonstorm.Components
             }
         }
 
+        /// <summary>
+        /// Allows to specify wether a <see cref="BaseBuffBodyBehavior"/> must run only on server, on client or both
+        /// </summary>
         [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
         [MeansImplicitUse]
         public class BuffDefAssociationAttribute : HG.Reflection.SearchableAttribute
         {
+            /// <summary>
+            /// the behaviour
+            /// </summary>
             public Type behaviorTypeOverride;
 
+            /// <summary>
+            /// Wether this behaviour can be used on Server
+            /// </summary>
             public bool useOnServer = true;
 
+            /// <summary>
+            /// Wether this behaviour can be used on client
+            /// </summary>
             public bool useOnClient = true;
         }
 
+        /// <summary>
+        /// The amount of BuffStacks associated to the tied BuffDef
+        /// </summary>
         public int buffStacks;
 
         private static NetworkContextSet server;
@@ -57,9 +75,15 @@ namespace Moonstorm.Components
 
         private static Dictionary<UnityObjectWrapperKey<CharacterBody>, BaseBuffBodyBehavior[]> bodyToBuffBehaviors = new Dictionary<UnityObjectWrapperKey<CharacterBody>, BaseBuffBodyBehavior[]>();
 
+        /// <summary>
+        /// The body that has this behaviour
+        /// </summary>
         public CharacterBody body { get; private set; }
 
-        protected void Awake()
+        /// <summary>
+        /// Assigns the body
+        /// </summary>
+        protected virtual void Awake()
         {
             body = earlyAssignmentBody;
             earlyAssignmentBody = null;

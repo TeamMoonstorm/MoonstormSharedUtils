@@ -4,7 +4,9 @@ using UnityEngine;
 
 namespace Moonstorm.Components
 {
-    // Chances are this entire system will get shafted once they start using the weather controller
+    /// <summary>
+    /// Used for setting up a weather controler on a scene that doesnt have a <see cref="SceneWeatherController"/>
+    /// </summary>
     public class SetupWeatherController : MonoBehaviour
     {
         //It could potentially be worth it to reverse this list and add only scenes that are guaranteed to work.

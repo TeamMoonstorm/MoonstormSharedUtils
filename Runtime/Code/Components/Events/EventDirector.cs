@@ -8,18 +8,51 @@ using UnityEngine.Networking;
 
 namespace Moonstorm.Components
 {
+    /// <summary>
+    /// The <see cref="EventDirector"/> is a Singleton class that's used for managing MSU's Event system.
+    /// </summary>
     [RequireComponent(typeof(NetworkStateMachine))]
     public class EventDirector : MonoBehaviour
     {
+        /// <summary>
+        /// Returns the current instance of the EventDirector
+        /// </summary>
         public static EventDirector Instance { get; private set; }
+        /// <summary>
+        /// The NetworkStateMachine tied to this Eventdirector
+        /// </summary>
         public NetworkStateMachine NetworkStateMachine { get; private set; }
+        /// <summary>
+        /// The EventFunctions tied to this EventDirector
+        /// </summary>
         public EventFunctions EventFunctions { get; private set; }
+        /// <summary>
+        /// The current stage's EventCardSelection
+        /// </summary>
         public WeightedSelection<EventCard> EventCardSelection { get; private set; }
+        /// <summary>
+        /// The CategorySelection for the current stage
+        /// </summary>
         public EventDirectorCategorySelection EventDirectorCategorySelection { get; private set; }
+        /// <summary>
+        /// The EntityStateMachine where the next event will play
+        /// </summary>
         public EntityStateMachine TargetedStateMachine { get; private set; }
+        /// <summary>
+        /// The last event that attempted to play
+        /// </summary>
         public EventCard LastAttemptedEventCard { get; private set; }
+        /// <summary>
+        /// The last event that succesfully played
+        /// </summary>
         public EventCard LastSuccesfulEventCard { get; private set; }
+        /// <summary>
+        /// The total amount of credits spent
+        /// </summary>
         public float TotalCreditsSpent { get; private set; }
+        /// <summary>
+        /// Returns the cost of the most expensive event
+        /// </summary>
         private int MostExpensiveEventInDeck
         {
             get
@@ -35,6 +68,9 @@ namespace Moonstorm.Components
                 return cost;
             }
         }
+        /// <summary>
+        /// Returns the current <see cref="DifficultyDef.scalingValue"/> of the run in progress
+        /// </summary>
         private float GetDifficultyScalingValue
         {
             get
@@ -46,12 +82,24 @@ namespace Moonstorm.Components
             }
         }
 
+        [Tooltip("The amount of credits gained when the intervalStopWatch reaches 0")]
         public RangeFloat creditGainRange;
+
+        [Tooltip("The current amount of Credits")]
         public float eventCredits;
+
+        [Tooltip("The amount of time that takes between new credits for the director")]
         public RangeFloat intervalResetRange;
+
+        [Tooltip("The stopwatch of the EventDirector")]
         public float intervalStopWatch;
+
+        [Tooltip("The weather parameters when the scene started")]
         public SceneWeatherController.WeatherParams weatherParamsWhenSceneStarted;
+
+        [Tooltip("The RTCP when the scene started")]
         public string weatherRtpcWhenStarted = string.Empty;
+
         private Xoroshiro128Plus eventRNG;
         private EventCard currentEventCard;
 
@@ -273,7 +321,7 @@ namespace Moonstorm.Components
             return false;
         }
 
-        public int StopAllEvents()
+        private int StopAllEvents()
         {
             int eventsStopped = 0;
             foreach (var stateMachine in NetworkStateMachine.stateMachines)
@@ -338,10 +386,17 @@ namespace Moonstorm.Components
             Debug.Log($"Stopped {count} events");
         }
 
+        /// <summary>
+        /// Wether the event director is disabled or enabled
+        /// </summary>
         public static bool DisableEventDirector => cvDisableEventDirector.value;
+
+        /// <summary>
+        /// Wether the event director logs information
+        /// </summary>
         public static bool EnableInternalLogging => cvEnableInternalEventDirectorLogging.value;
-        public static readonly BoolConVar cvDisableEventDirector = new BoolConVar("disable_events", ConVarFlags.SenderMustBeServer | ConVarFlags.Cheat, "0", "Disable the Event Director");
-        public static readonly BoolConVar cvEnableInternalEventDirectorLogging = new BoolConVar("enable_event_logging", ConVarFlags.None, "0", "Enables the event director to print internal logging.");
+        private static readonly BoolConVar cvDisableEventDirector = new BoolConVar("disable_events", ConVarFlags.SenderMustBeServer | ConVarFlags.Cheat, "0", "Disable the Event Director");
+        private static readonly BoolConVar cvEnableInternalEventDirectorLogging = new BoolConVar("enable_event_logging", ConVarFlags.None, "0", "Enables the event director to print internal logging.");
     }
 }
 /*using Moonstorm.ScriptableObjects;

@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Moonstorm.Components
 {
+    /// <summary>
+    /// Sets default values to a CharacterModel's item display rule set entries that have a child with the name "NoValue"
+    /// </summary>
     [RequireComponent(typeof(CharacterModel))]
     public class MoonstormIDH : MonoBehaviour
     {
@@ -12,7 +15,7 @@ namespace Moonstorm.Components
 
         void Start()
         {
-            /*model = GetComponent<CharacterModel>();
+            model = GetComponent<CharacterModel>();
             modelIDRS = model.itemDisplayRuleSet;
             for (int i = 0; i < modelIDRS.runtimeEquipmentRuleGroups.Length; i++)
             {
@@ -22,7 +25,7 @@ namespace Moonstorm.Components
                     for (int j = 0; j < ruleGroup.rules.Length; j++)
                     {
                         ItemDisplayRule currentRule = ruleGroup.rules[j];
-                        if (currentRule.childName == NamedIDRS.NamedDisplayRule.NoValue)
+                        if (currentRule.childName == NamedIDRS.AddressNamedDisplayRule.NoValue)
                         {
                             ChildLocator childLocator = model.childLocator;
                             var firstChild = childLocator.transformPairs.FirstOrDefault().name;
@@ -32,6 +35,7 @@ namespace Moonstorm.Components
                     }
                 }
             }
+
             for (int i = 0; i < modelIDRS.runtimeItemRuleGroups.Length; i++)
             {
                 DisplayRuleGroup ruleGroup = modelIDRS.runtimeItemRuleGroups[i];
@@ -40,7 +44,7 @@ namespace Moonstorm.Components
                     for (int j = 0; j < ruleGroup.rules.Length; j++)
                     {
                         ItemDisplayRule currentRule = ruleGroup.rules[j];
-                        if (currentRule.childName == NamedIDRS.NamedDisplayRule.NoValue)
+                        if (currentRule.childName == NamedIDRS.AddressNamedDisplayRule.NoValue)
                         {
                             ChildLocator childLocator = model.childLocator;
                             var firstChild = childLocator.transformPairs.FirstOrDefault().name;
@@ -49,7 +53,7 @@ namespace Moonstorm.Components
                         }
                     }
                 }
-            }*/
+            }
         }
     }
 }

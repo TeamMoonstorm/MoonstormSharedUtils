@@ -3,9 +3,15 @@ using UnityEngine;
 
 namespace Moonstorm.Components
 {
+    /// <summary>
+    /// The EliteBehaviour used for managing the <see cref="MSEliteDef"/> for a body
+    /// </summary>
     [RequireComponent(typeof(CharacterBody))]
     public class MoonstormEliteBehavior : MonoBehaviour
     {
+        /// <summary>
+        /// Shorthand for Shader.PropertyToID("_EliteRamp");
+        /// </summary>
         public static int EliteRampPropertyID
         {
             get
@@ -14,26 +20,26 @@ namespace Moonstorm.Components
             }
         }
 
+        [Tooltip("The body that's tied to this EliteBehaviour")]
         public CharacterBody body;
+        [Tooltip("The CharacterModel that's tied to this EliteBehaviour")]
         public CharacterModel characterModel;
 
         private GameObject effectInstance;
         private MSEliteDef elite;
-        private Texture oldRamp;
 
+        /// <summary>
+        /// Sets a new EliteDef, changing the visual effect of the elite
+        /// </summary>
+        /// <param name="eliteDef">The new EliteDef, can be null</param>
         public void SetNewElite(MSEliteDef eliteDef)
         {
             if (eliteDef != elite)
             {
-                oldRamp = elite?.eliteRamp;
                 elite = eliteDef;
                 //this only gets executed if an elite def has already been loaded into the behavior
                 if (!elite)
                 {
-                    if (characterModel && characterModel.propertyStorage != null)
-                    {
-                        characterModel.propertyStorage.SetTexture(EliteRampPropertyID, Shader.GetGlobalTexture(EliteRampPropertyID));
-                    }
                     if (effectInstance)
                         Destroy(effectInstance);
                 }
@@ -45,7 +51,7 @@ namespace Moonstorm.Components
             }
         }
 
-        public void UpdateShaderRamp()
+        /*public void UpdateShaderRamp()
         {
             if (characterModel && elite)
             {
@@ -61,6 +67,6 @@ namespace Moonstorm.Components
                     characterModel.propertyStorage.Clear();
                 }
             }
-        }
+        }*/
     }
 }

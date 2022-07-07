@@ -28,6 +28,7 @@ namespace Moonstorm.Components
         public WindZone windZone;
 
         public WindParams initialWindParams;
+
         public WindParams finalWindParams;
 
         [Range(0f, 1f)]
