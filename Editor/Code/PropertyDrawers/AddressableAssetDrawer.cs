@@ -1,88 +1,140 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UIElements;
-using RoR2EditorKit.Core.PropertyDrawers;
-using RoR2EditorKit.Utilities;
-using UnityEditor;
-using UnityEditor.UIElements;
+﻿using Moonstorm.AddressableAssets;
 using System;
-using RoR2;
-using RoR2.ExpansionManagement;
-using Moonstorm.AddressableAssets;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using UnityEditor;
+using UnityEngine;
 
 namespace Moonstorm.EditorUtils.PropertyDrawers
 {
-    public abstract class AddressableAssetDrawer<T> : PropertyDrawer where T : UnityEngine.Object
+    public abstract class AddressableAssetDrawer<T> : PropertyDrawer where T : AddressableAsset
     {
-        protected virtual string addressFieldLabel { get; } =  null;
-        TextField addressField;
+        protected virtual string AddressTooltip { get; }
 
-        ObjectField assetField;
-
-        public sealed override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        protected bool usingDirectReference;
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            base.OnGUI(position, property, label);
-        }
-        public sealed override VisualElement CreatePropertyGUI(SerializedProperty property)
-        {
-            Foldout foldout = new Foldout();
-            foldout.text = property.displayName;
+            usingDirectReference = GetDirectReferenceValue(property);
 
-            addressField = new TextField(addressFieldLabel ?? "Address");
-            //addressField.BindProperty(serializedProperty.FindPropertyRelative("address"));
-            addressField.bindingPath = property.FindPropertyRelative("address").propertyPath;
-            addressField.name = "address";
-            addressField.tooltip = "An address that'll be used if the asset is null.";
-            addressField.RegisterValueChangedCallback(OnAddressSet);
-            foldout.Add(addressField);
+            EditorGUI.BeginProperty(position, label, property);
+            var fieldRect = new Rect(position.x, position.y, position.width - 16, position.height);
+            EditorGUI.PropertyField(fieldRect,
+                usingDirectReference ? property.FindPropertyRelative("asset") : property.FindPropertyRelative("address"),
+                new GUIContent(property.displayName, usingDirectReference ? string.Empty : AddressTooltip));
 
-            assetField = new ObjectField(ObjectNames.NicifyVariableName(typeof(T).Name));
-            //assetField.BindProperty(serializedProperty.FindPropertyRelative("asset"));
-            assetField.bindingPath = property.FindPropertyRelative("asset").propertyPath;
-            assetField.name = typeof(T).Name;
-            assetField.SetObjectType<T>();
-            assetField.tooltip = "The Asset to reference, if left null, the asset will be loaded from the address field.";
-            assetField.RegisterValueChangedCallback(OnAssetSet);
-            foldout.Add(assetField);
-            return foldout;
-        }
-        private void OnAddressSet(ChangeEvent<string> evt)
-        {
-            string value = evt.newValue;
-            assetField.style.display = value.IsNullOrEmptyOrWhitespace() ? DisplayStyle.Flex : DisplayStyle.None;
+            var contextRect = new Rect(fieldRect.xMax, position.y, 16, position.height);
+            EditorGUI.DrawTextureTransparent(contextRect, Constants.MSUIcon, ScaleMode.ScaleToFit);
+            if (Event.current.type == EventType.ContextClick)
+            {
+                Vector2 mousePos = Event.current.mousePosition;
+                if (contextRect.Contains(mousePos))
+                {
+                    GenericMenu menu = new GenericMenu();
+                    menu.AddItem(new GUIContent($"Use Direct Reference"), GetDirectReferenceValue(property), () =>
+                    {
+                        SetDirectReferenceValue(property, !GetDirectReferenceValue(property));
+                    });
+                    ModifyContextMenu(menu);
+                    menu.ShowAsContext();
+                    Event.current.Use();
+                }
+            }
+            EditorGUI.EndProperty();
         }
 
-        private void OnAssetSet(ChangeEvent<UnityEngine.Object> evt)
+        protected virtual void ModifyContextMenu(GenericMenu menu) { }
+
+        bool GetDirectReferenceValue(SerializedProperty prop)
         {
-            UnityEngine.Object obj = evt.newValue;
-            addressField.style.display = obj == null ? DisplayStyle.Flex : DisplayStyle.None;
+            return prop.FindPropertyRelative("useDirectReference").boolValue;
+        }
+
+        void SetDirectReferenceValue(SerializedProperty prop, bool booleanValue)
+        {
+            prop.FindPropertyRelative("useDirectReference").boolValue = booleanValue;
+            prop.serializedObject.ApplyModifiedProperties();
         }
     }
 
-    #region drawers
     [CustomPropertyDrawer(typeof(AddressableBuffDef))]
-    public sealed class AddressableBuffDefDrawer : AddressableAssetDrawer<BuffDef> { protected override string addressFieldLabel => $"Address/Name"; }
-    //-----
-    [CustomPropertyDrawer(typeof(AddressableEquipmentDef))]
-    public sealed class AddressableEquipmentDefDrawer : AddressableAssetDrawer<EquipmentDef> { protected override string addressFieldLabel => $"Address/Name"; }
-    //-----
-    [CustomPropertyDrawer(typeof(AddressableExpansionDef))]
-    public sealed class AddressableExpansionDefDrawer : AddressableAssetDrawer <ExpansionDef> { protected override string addressFieldLabel => $"Address/Name"; }
-    //-----
-    [CustomPropertyDrawer(typeof(AddressableItemDef))]
-    public sealed class AddressableItemDefDrawer : AddressableAssetDrawer<ItemDef> { protected override string addressFieldLabel => $"Address/Name"; }
-    //-----
-    [CustomPropertyDrawer(typeof(AddressableUnlockableDef))]
-    public sealed class AddressableUnlockableDefDrawer : AddressableAssetDrawer<UnlockableDef> { protected override string addressFieldLabel => $"Address/Name"; }
-    //-----
+    public sealed class AddressableBuffDefDrawer : AddressableAssetDrawer<AddressableBuffDef>
+    { 
+        protected override string AddressTooltip => "The Address or Asset Name of the Buff";
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        {
+            base.OnGUI(position, property, label);
+        }
+    }
+    //----------
     [CustomPropertyDrawer(typeof(AddressableEliteDef))]
-    public sealed class AddressableEliteDefDrawer : AddressableAssetDrawer<EliteDef> { protected override string addressFieldLabel => $"Address/Name"; }
-    //-----
+    public sealed class AddressableEliteDefDrawer : AddressableAssetDrawer<AddressableEliteDef>
+    { 
+        protected override string AddressTooltip => "The Address or Asset Name of the Elite";
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        {
+            base.OnGUI(position, property, label);
+        }
+    }
+    //----------
+    [CustomPropertyDrawer(typeof(AddressableEquipmentDef))]
+    public sealed class AddressableEquipmentDefDrawer : AddressableAssetDrawer<AddressableEquipmentDef>
+    { 
+        protected override string AddressTooltip => "The Address or Asset Name of the Equipment";
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        {
+            base.OnGUI(position, property, label);
+        }
+    }
+    //----------
+    [CustomPropertyDrawer(typeof(AddressableExpansionDef))]
+    public sealed class AddressableExpansionDefDrawer : AddressableAssetDrawer<AddressableExpansionDef>
+    { 
+        protected override string AddressTooltip => "The Address or Asset Name of the Expansion";
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        {
+            base.OnGUI(position, property, label);
+        }
+    }
+    //----------
     [CustomPropertyDrawer(typeof(AddressableGameObject))]
-    public sealed class AddressableGameObjectDrawer : AddressableAssetDrawer<GameObject> { }
-    //-----
+    public sealed class AddressableGameObjectDrawer : AddressableAssetDrawer<AddressableGameObject>
+    { 
+        protected override string AddressTooltip => "The Address of the GameObject";
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        {
+            base.OnGUI(position, property, label);
+        }
+    }
+    //----------
     [CustomPropertyDrawer(typeof(AddressableIDRS))]
-    public sealed class AddressableIDRSDrawer : AddressableAssetDrawer<ItemDisplayRuleSet> { }
-    #endregion
+    public sealed class AddressableIDRSDrawer : AddressableAssetDrawer<AddressableIDRS>
+    { 
+        protected override string AddressTooltip => "The Address of the IDRS";
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        {
+            base.OnGUI(position, property, label);
+        }
+    }
+    //----------
+    [CustomPropertyDrawer(typeof(AddressableItemDef))]
+    public sealed class AddressableItemDefDrawer : AddressableAssetDrawer<AddressableItemDef>
+    { 
+        protected override string AddressTooltip => "The Address or Asset Name of the Item";
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        {
+            base.OnGUI(position, property, label);
+        }
+    }
+    //----------
+    [CustomPropertyDrawer(typeof(AddressableUnlockableDef))]
+    public sealed class AddressableUnlockableDefDrawer : AddressableAssetDrawer<AddressableUnlockableDef>
+    { 
+        protected override string AddressTooltip => "The Address or Asset Name of the Unlockable";
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        {
+            base.OnGUI(position, property, label);
+        }
+    }
 }

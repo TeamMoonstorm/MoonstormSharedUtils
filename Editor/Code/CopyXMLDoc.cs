@@ -27,7 +27,7 @@ namespace Moonstorm.EditorUtils
             var relativePath = AssetDatabase.GUIDToAssetPath("ded440f4e5e23cd4a8bbfb38e5f13ebf");
             var fullPath = Path.GetFullPath(relativePath);
             var fileName = Path.GetFileName(fullPath);
-            var pathToCheck = Path.Combine(Constants.FolderPaths.ScriptAssembliesFolder, fileName);
+            var pathToCheck = Path.Combine(RoR2EditorKit.Common.Constants.FolderPaths.ScriptAssembliesFolder, fileName);
             return !File.Exists(pathToCheck);
         }
 

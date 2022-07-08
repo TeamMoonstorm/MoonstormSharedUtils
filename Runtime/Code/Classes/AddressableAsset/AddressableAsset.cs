@@ -21,6 +21,11 @@ namespace Moonstorm.AddressableAssets
         /// The Address thats used during the process of loading the asset specified in T
         /// </summary>
         public string address = string.Empty;
+
+        [HideInInspector]
+        [SerializeField]
+        private bool useDirectReference = true;
+
         [SerializeField]
         private T asset = null;
 

@@ -98,6 +98,16 @@ namespace Moonstorm
             collection.Remove(entry);
             return true;
         }
+
+        /// <summary>
+        /// Returns the amount of stacks of <paramref name="itemDef"/> that the body has.
+        /// </summary>
+        /// <param name="itemDef">The ItemDef to count</param>
+        /// <returns>The amount of items, returns 0 if the body doesnt have an inventory.</returns>
+        public static int GetItemCount(this CharacterBody body, ItemDef itemDef)
+        {
+            return body.inventory == null ? 0 : body.inventory.GetItemCount(itemDef);
+        }
         #endregion
     }
 }
