@@ -55,6 +55,21 @@ namespace Moonstorm
 
         #region Extensions
         /// <summary>
+        /// Plays the network sound event def.
+        /// </summary>
+        /// <param name="pos">The position where the sound will play</param>
+        /// <param name="transmit"></param>
+        public static void Play(this NetworkSoundEventDef eventDef, Vector3 pos, bool transmit = true)
+        {
+            if(eventDef.index == NetworkSoundEventIndex.Invalid)
+            {
+                MSULog.Warning($"{eventDef} has an invalid network sound event index.");
+                return;
+            }
+            EffectManager.SimpleSoundEffect(eventDef.index, pos, transmit);
+        }
+        
+        /// <summary>
         /// Ensures that the component specified in <typeparamref name="T"/> exists
         /// Basically Gets the component, if it doesnt exist, it adds it then returns it.
         /// </summary>
@@ -107,6 +122,16 @@ namespace Moonstorm
         public static int GetItemCount(this CharacterBody body, ItemDef itemDef)
         {
             return body.inventory == null ? 0 : body.inventory.GetItemCount(itemDef);
+        }
+
+        /// <summary>
+        /// Returns the amount of stacks of <paramref name="index"/> that the body has.
+        /// </summary>
+        /// <param name="index">The ItemIndex to count</param>
+        /// <returns>The amount of items, returns 0 if the body doesnt have an inventory.</returns>
+        public static int GetItemCount(this CharacterBody body, ItemIndex index)
+        {
+            return body.inventory == null ? 0 : body.inventory.GetItemCount(index);
         }
         #endregion
     }
