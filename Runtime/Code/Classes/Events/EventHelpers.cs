@@ -39,12 +39,16 @@ namespace Moonstorm
                 orig(self);
             };
 
+            HGTextMeshProUGUI tmp = EventAnnouncer.GetComponent<HGTextMeshProUGUI>();
+            tmp.fontSize = MSUConfig.eventMessageFontSize.Value;
+
             //ClassicStageInfo.monsterFamilyChance = 1000;
             if(MSUConfig.familyEventUsesEventAnnouncementInsteadOfChatMessage.Value)
             {
                 //Make the family event message use an EventAnnouncement
                 On.RoR2.ClassicStageInfo.BroadcastFamilySelection += ShowAnnouncement;
             }
+
         }
         private static System.Collections.IEnumerator ShowAnnouncement(On.RoR2.ClassicStageInfo.orig_BroadcastFamilySelection orig, ClassicStageInfo self, string familySelectionChatString)
         {

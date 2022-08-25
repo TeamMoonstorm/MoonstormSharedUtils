@@ -57,6 +57,7 @@ namespace Moonstorm.Components
                 case EventFadeState.FadeIn:
                     uiJuice.destroyOnEndOfTransition = false;
                     fading = true;
+                    uiJuice.originalAlpha = MSUConfig.maxOpacityForEventMessage.Value;
                     uiJuice.TransitionAlphaFadeIn();
                     break;
                 case EventFadeState.Wait:
@@ -101,87 +102,5 @@ namespace Moonstorm.Components
             }
             Destroy(gameObject);
         }
-        /*public enum EventFadeState
-        {
-            FadeIn,
-            Wait,
-            FadeOut,
-            DestroyASAP
-        }
-
-        [SerializeField]
-        private HGTextMeshProUGUI textToFade;
-        public bool fadeOnStart;
-
-        [Space(5)]
-        public float warningDuration;
-        public float targetAlphaValue;
-        public bool ignoreTimeScale;
-
-        private bool fading = false;
-        private EventFadeState fadeState;
-        private float internalStopwatch;
-        private float actualWarningDuration;
-        private void Start()
-        {
-            actualWarningDuration = warningDuration / 3;
-            fadeState = EventFadeState.FadeIn;
-            if (fadeOnStart)
-                BeginFade();
-        }
-
-        public void BeginFade()
-        {
-            fading = true;
-            textToFade.alpha = Mathf.Lerp(textToFade.alpha, targetAlphaValue, actualWarningDuration);
-            /*Color color = textToFade.color;
-            color.a = targetAlphaValue;
-            Debug.Log($"Fading {textToFade.color} to {color}");
-            textToFade.CrossFadeColor(color, actualWarningDuration, false, true, false);
-        }
-
-        private void Update()
-        {
-            if (fadeState == EventFadeState.DestroyASAP)
-                Destroy(gameObject);
-
-            if(fading)
-            {
-                internalStopwatch += Time.deltaTime;
-                if(internalStopwatch >= actualWarningDuration)
-                {
-                    FadeEnd();
-                }
-            }
-        }
-
-        private void FadeEnd()
-        {
-            fading = false;
-            internalStopwatch = 0;
-
-            switch(fadeState)
-            {
-                case EventFadeState.FadeIn:
-                    {
-                        fadeState = EventFadeState.Wait;
-                        BeginFade();
-                        break;
-                    }
-                case EventFadeState.Wait:
-                    {
-                        targetAlphaValue = 0;
-                        fadeState = EventFadeState.FadeOut;
-                        BeginFade();
-                        break;
-                    }
-                case EventFadeState.FadeOut:
-                    {
-                        fadeState = EventFadeState.DestroyASAP;
-                        Destroy(gameObject);
-                        break;
-                    }
-            }
-        }*/
     }
 }

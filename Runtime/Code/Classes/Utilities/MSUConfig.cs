@@ -34,10 +34,12 @@ namespace Moonstorm
         /// </summary>
         public static ConfigFile eventsConfig;
         internal static ConfigEntry<bool> addDummyEvents;
+        internal static ConfigEntry<KeyCode> printDebugEventMessage;
         internal static ConfigEntry<float> maxDifficultyScaling;
+        internal static ConfigEntry<float> maxOpacityForEventMessage;
+        internal static ConfigEntry<float> eventMessageFontSize;
         internal static ConfigEntry<bool> familyEventUsesEventAnnouncementInsteadOfChatMessage;
         internal static ConfigEntry<bool> eventAnnouncementsAsChatMessages;
-        internal static ConfigEntry<KeyCode> printDebugEventMessage;
 
         internal void Init()
         {
@@ -88,6 +90,16 @@ namespace Moonstorm
                 "Max Difficulty Scaling",
                 3.5f,
                 "The maximum difficulty scaling for events, this is used for calculating the event duration among other tidbits such as event effects");
+
+            maxOpacityForEventMessage = eventsConfig.Bind("MoonstormSharedUtils :: Events",
+                "Max Opacity for Event Message",
+                0.75f,
+                "The maximum opacity for the event message. Irrelevant if Event Announcements as Chat Messages is set to true");
+
+            eventMessageFontSize = eventsConfig.Bind("MoonstormSharedUtils :: Events",
+                "Event Message Font Size",
+                40f,
+                "The size of the font used in the event message. Irrelevant if Event Announcements as Chat Messages is set to true");
 
             eventAnnouncementsAsChatMessages = eventsConfig.Bind<bool>("MoonstormSharedUtils :: Event Messages",
                 "Event Announcements as Chat Messages",
