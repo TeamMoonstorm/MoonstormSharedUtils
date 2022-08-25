@@ -38,6 +38,7 @@ namespace Moonstorm
         internal static ConfigEntry<float> maxDifficultyScaling;
         internal static ConfigEntry<float> maxOpacityForEventMessage;
         internal static ConfigEntry<float> eventMessageFontSize;
+        internal static ConfigEntry<float> eventMessageYOffset;
         internal static ConfigEntry<bool> familyEventUsesEventAnnouncementInsteadOfChatMessage;
         internal static ConfigEntry<bool> eventAnnouncementsAsChatMessages;
 
@@ -91,15 +92,20 @@ namespace Moonstorm
                 3.5f,
                 "The maximum difficulty scaling for events, this is used for calculating the event duration among other tidbits such as event effects");
 
-            maxOpacityForEventMessage = eventsConfig.Bind("MoonstormSharedUtils :: Events",
+            maxOpacityForEventMessage = eventsConfig.Bind("MoonstormSharedUtils :: Event Messages",
                 "Max Opacity for Event Message",
                 0.75f,
-                "The maximum opacity for the event message. Irrelevant if Event Announcements as Chat Messages is set to true");
+                "The maximum opacity for the event message. Irrelevant if the Event Announcement system is disabled via configs.");
 
-            eventMessageFontSize = eventsConfig.Bind("MoonstormSharedUtils :: Events",
+            eventMessageFontSize = eventsConfig.Bind("MoonstormSharedUtils :: Event Messages",
                 "Event Message Font Size",
                 40f,
-                "The size of the font used in the event message. Irrelevant if Event Announcements as Chat Messages is set to true");
+                "The size of the font used in the event message. Irrelevant if the Event Announcement system is disabled via configs.");
+
+            eventMessageYOffset = eventsConfig.Bind("MoonstormSharedUtils :: Event Messages",
+                "Event Message Y Offset",
+                100f,
+                "The Y Offset for the event message. Irrelevant if the Event Announcement system is disabled via configs.");
 
             eventAnnouncementsAsChatMessages = eventsConfig.Bind<bool>("MoonstormSharedUtils :: Event Messages",
                 "Event Announcements as Chat Messages",

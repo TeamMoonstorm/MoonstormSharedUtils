@@ -18,7 +18,7 @@ MonoBehaviour:
   Name: MoonstormSharedUtils
   Description: An API focused with the intention of working in an editor enviroment
     using ThunderKit, MSU is a modular API system designed for ease of use and simplicity.
-  Version: 1.0.0
+  Version: 1.0.1
   Dependencies:
   - {fileID: 11400000, guid: 7fb5b3d290bed6011ed7e8daf230df89, type: 2}
 --- !u!114 &11400000

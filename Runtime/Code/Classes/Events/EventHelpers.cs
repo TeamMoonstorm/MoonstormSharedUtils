@@ -40,7 +40,10 @@ namespace Moonstorm
             };
 
             HGTextMeshProUGUI tmp = EventAnnouncer.GetComponent<HGTextMeshProUGUI>();
-            tmp.fontSize = MSUConfig.eventMessageFontSize.Value;
+            float size = MSUConfig.eventMessageFontSize.Value;
+
+            tmp.fontSize = size;
+            tmp.fontSizeMax = size;
 
             //ClassicStageInfo.monsterFamilyChance = 1000;
             if(MSUConfig.familyEventUsesEventAnnouncementInsteadOfChatMessage.Value)
@@ -56,7 +59,9 @@ namespace Moonstorm
             if(instance)
             {
                 yield return new WaitForSeconds(4);
-                instance.transform.SetParent(hudInstance.mainContainer.transform, false);
+                Transform transform = instance.transform;
+                transform.SetParent(hudInstance.mainContainer.transform, false);
+                instance.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, MSUConfig.eventMessageYOffset.Value);
                 instance.GetComponent<EventTextController>().BeginFade();
 
                 yield break;
@@ -66,7 +71,8 @@ namespace Moonstorm
 
         public static GameObject AnnounceEvent(EventAnnounceInfo announceInfo)
         {
-            GameObject eventAnnouncerInstance = UnityEngine.Object.Instantiate(EventAnnouncer, hudInstance.mainContainer.transform);
+            GameObject eventAnnouncerInstance = UnityEngine.Object.Instantiate(EventAnnouncer, hudInstance.mainContainer.transform, false);
+            eventAnnouncerInstance.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, MSUConfig.eventMessageYOffset.Value);
 
             HGTextMeshProUGUI hgText = eventAnnouncerInstance.GetComponent<HGTextMeshProUGUI>();
             string token = announceInfo.isEventStart ? announceInfo.card.startMessageToken : announceInfo.card.endMessageToken;
