@@ -1929,5 +1929,196 @@ namespace Moonstorm.Components
                 }
             }
         }
+        
+        public class CW_DX11_DoubleSidedController : MaterialController
+        {
+            public Color _Color;
+            public Color _DepthColor;
+            public float _Depth;
+            public bool _EnableFog;
+            public float _EdgeFade;
+            public Color _SpecColor;
+            [Range(0.01f, 5f)]
+            public float _Smoothness;
+
+            public Texture _BumpMap;
+            [Range(0f, 1f)]
+            public float _BumpStrength;
+            public bool _EnableLargeBump;
+            public Texture _BumpMapLarge;
+            [Range(0f, 1f)]
+            public float _BumpLargeStrength;
+            public bool _WorldSpace;
+
+            public Vector4 _Speeds;
+            public Vector4 _SpeedsLarge;
+            public float _Distortion;
+
+            public enum _DistortionQualityEnum
+            {
+                High = 0,
+                Low = 1
+            }
+            public _DistortionQualityEnum _DistortionQuality;
+
+            public enum _ReflectionTypeEnum
+            {
+                None = 0,
+                Mixed = 1,
+                RealTime = 2,
+                CubeMap = 3
+            }
+            public _ReflectionTypeEnum _ReflectionType;
+
+            public Color _CubeColor;
+            public Texture _Cube;
+            public Texture _ReflectionTex;
+            [Range(0f, 1f)]
+            public float _Reflection;
+            [Range(1f, 20f)]
+            public float _RimPower;
+
+            public bool _FOAM;
+            public Color _FoamColor;
+            public Texture _FoamTex;
+            public float _FoamSize;
+
+            public enum _DisplacementModeEnum
+            {
+                Off = 0,
+                Wave = 1,
+                Gerstner = 2
+            }
+            public _DisplacementModeEnum _DisplacementMode;
+
+            public float _Amplitude;
+            public float _Frequency;
+            public float _Speed;
+            public float _Steepness;
+            public Vector4 _WSpeed;
+            public Vector4 _WDirectionAB;
+            public Vector4 _WDirectionCD;
+
+            [Range(0f, 1f)]
+            public float _Smoothing;
+
+            [Range(1f, 32f)]
+            public float _Tess;
+
+            public void Start()
+            {
+                GrabMaterialValues();
+            }
+
+            public void GrabMaterialValues()
+            {
+                if (material)
+                {
+                    _Color = material.GetColor("_Color");
+                    _DepthColor = material.GetColor("_DepthColor");
+                    _Depth = material.GetFloat("_Depth");
+                    _EnableFog = material.IsKeywordEnabled("_DEPTHFOG_ON");
+                    _EdgeFade = material.GetFloat("_EdgeFade");
+                    _SpecColor = material.GetColor("_SpecColor");
+                    _Smoothness = material.GetFloat("_Smoothness");
+                    _BumpMap = material.GetTexture("_BumpMap");
+                    _BumpStrength = material.GetFloat("_BumpStrength");
+                    _EnableLargeBump = material.IsKeywordEnabled("_BUMPLARGE_ON");
+                    _BumpMapLarge = material.GetTexture("_BumpMapLarge");
+                    _BumpLargeStrength = material.GetFloat("_BumpLargeStrength");
+                    _WorldSpace = material.IsKeywordEnabled("_WORLDSPACE_ON");
+                    _Speeds = material.GetVector("_Speeds");
+                    _SpeedsLarge = material.GetVector("_SpeedsLarge");
+                    _Distortion = material.GetFloat("_Distortion");
+                    _DistortionQuality = (_DistortionQualityEnum)(int)material.GetFloat("_DistortionQuality");
+                    _ReflectionType = (_ReflectionTypeEnum)(int)material.GetFloat("_ReflectionType");
+                    _CubeColor = material.GetColor("_CubeColor");
+                    _Cube = material.GetTexture("_Cube");
+                    _ReflectionTex = material.GetTexture("_ReflectionTex");
+                    _Reflection = material.GetFloat("_Reflection");
+                    _RimPower = material.GetFloat("_RimPower");
+                    _FOAM = material.IsKeywordEnabled("_FOAM_ON");
+                    _FoamColor = material.GetColor("_FoamColor");
+                    _FoamTex = material.GetTexture("_FoamTex");
+                    _FoamSize = material.GetFloat("_FoamSize");
+                    _DisplacementMode = (_DisplacementModeEnum)(int)material.GetFloat("_DisplacementMode");
+                    _Amplitude = material.GetFloat("_Amplitude");
+                    _Frequency = material.GetFloat("_Frequency");
+                    _Speed = material.GetFloat("_Speed");
+                    _Steepness = material.GetFloat("_Steepness");
+                    _WSpeed = material.GetVector("_WSpeed");
+                    _WDirectionAB = material.GetVector("_WDirectionAB");
+                    _WDirectionCD = material.GetVector("_WDirectionCD");
+                    _Smoothing = material.GetFloat("_Smoothing");
+                    _Tess = material.GetFloat("_Tess");
+                }
+            }
+
+            public void Update()
+            {
+
+                if (material)
+                {
+                    if (material.name != MaterialName && renderer)
+                    {
+                        GrabMaterialValues();
+                        MaterialControllerComponents.PutMaterialIntoMeshRenderer(renderer, material);
+                    }
+
+                    material.SetColor("_Color", _Color);
+                    material.SetColor("_DepthColor", _DepthColor);
+                    material.SetFloat("_Depth", _Depth);
+                    MaterialControllerComponents.SetShaderKeywordBasedOnBool(_EnableFog, material, "_DEPTHFOG_ON");
+                    material.SetFloat("_EdgeFade", _EdgeFade);
+                    material.SetVector("_SpecColor", _SpecColor);
+                    material.SetFloat("_Smoothness", _Smoothness);
+                    if (_BumpMap)
+                        material.SetTexture("_BumpMap", _BumpMap);
+                    else
+                        material.SetTexture("_BumpMap", null);
+                    material.SetFloat("_BumpStrength", _BumpStrength);
+                    MaterialControllerComponents.SetShaderKeywordBasedOnBool(_EnableLargeBump, material, "_BUMPLARGE_ON");
+                    if (_BumpMapLarge)
+                        material.SetTexture("_BumpMapLarge", _BumpMapLarge);
+                    else
+                        material.SetTexture("_BumpMapLarge", null);
+                    material.SetFloat("_BumpLargeStrength", _BumpLargeStrength);
+                    MaterialControllerComponents.SetShaderKeywordBasedOnBool(_WorldSpace, material, "_WORLDSPACE_ON");
+                    material.SetVector("_Speeds", _Speeds);
+                    material.SetVector("_SpeedsLarge", _SpeedsLarge);
+                    material.SetFloat("_Distortion", _Distortion);
+                    material.SetFloat("_DistortionQuality", Convert.ToSingle(_DistortionQuality));
+                    material.SetFloat("_ReflectionType", Convert.ToSingle(_ReflectionType));
+                    material.SetColor("_CubeColor", _CubeColor);
+                    if (_Cube)
+                        material.SetTexture("_Cube", _Cube);
+                    else
+                        material.SetTexture("_Cube", null);
+                    if (_ReflectionTex)
+                        material.SetTexture("_ReflectionTex", _ReflectionTex);
+                    else
+                        material.SetTexture("_ReflectionTex", _ReflectionTex);
+                    material.SetFloat("_Reflection", _Reflection);
+                    material.SetFloat("_RimPower", _RimPower);
+                    MaterialControllerComponents.SetShaderKeywordBasedOnBool(_FOAM, material, "_FOAM_ON");
+                    material.SetColor("_FoamColor", _FoamColor);
+                    if (_FoamTex)
+                        material.SetTexture("_FoamTex", _FoamTex);
+                    else
+                        material.SetTexture("_FoamTex", _FoamTex);
+                    material.SetFloat("_FoamSize", _FoamSize);
+                    material.SetFloat("_DisplacementMode", Convert.ToSingle(_DisplacementMode));
+                    material.SetFloat("_Amplitude", _Amplitude);
+                    material.SetFloat("_Frequency", _Frequency);
+                    material.SetFloat("_Speed", _Speed);
+                    material.SetFloat("_Steepness", _Steepness);
+                    material.SetVector("_WSpeed", _WSpeed);
+                    material.SetVector("_WDirectionAB", _WDirectionAB);
+                    material.SetVector("_WDirectionCD", _WDirectionCD);
+                    material.SetFloat("_Smoothing", _Smoothing);
+                    material.SetFloat("_Tess", _Tess);
+                }
+            }
+        }
     }
 }
