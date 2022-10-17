@@ -53,22 +53,19 @@ namespace EntityStates.Events
             DiffScaledDuration = Util.Remap(DiffScalingValue, 1f, MSUConfig.maxDifficultyScaling.Value, minDuration, maxDuration);
 
             TotalDuration = DiffScaledDuration + warningDur;
-            if (NetworkServer.active)
+            if (!eventCard.startMessageToken.Equals(string.Empty))
             {
-                if (!eventCard.startMessageToken.Equals(string.Empty))
+                if(MSUConfig.eventAnnouncementsAsChatMessages.Value)
                 {
-                    if(MSUConfig.eventAnnouncementsAsChatMessages.Value)
+                    Chat.SimpleChatMessage messageBase = new Chat.SimpleChatMessage()
                     {
-                        Chat.SimpleChatMessage messageBase = new Chat.SimpleChatMessage()
-                        {
-                            paramTokens = Array.Empty<string>(),
-                            baseToken = Util.GenerateColoredString(Language.GetString(eventCard.startMessageToken), eventCard.messageColor)
-                        };
-                        Chat.SendBroadcastChat(messageBase);
-                    }
-                    else
-                        EventHelpers.AnnounceEvent(new EventHelpers.EventAnnounceInfo(eventCard, warningDur, true));
+                        paramTokens = Array.Empty<string>(),
+                        baseToken = Util.GenerateColoredString(Language.GetString(eventCard.startMessageToken), eventCard.messageColor)
+                    };
+                    Chat.SendBroadcastChat(messageBase);
                 }
+                else
+                    EventHelpers.AnnounceEvent(new EventHelpers.EventAnnounceInfo(eventCard, warningDur, true));
             }
         }
         public override void FixedUpdate()
