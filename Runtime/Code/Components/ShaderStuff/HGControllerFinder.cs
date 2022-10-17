@@ -22,6 +22,9 @@ namespace Moonstorm.Components
                     case "Hopoo Games/Deferred/Snow Topped":
                         materialController = gameObject.AddComponent<MaterialControllerComponents.HGSnowToppedController>();
                         break;
+                    case "Hopoo Games/Deferred/Triplanar Terrain Blend":
+                        materialController = gameObject.AddComponent<MaterialControllerComponents.HGTriplanarController>();
+                        break;
                     case "Hopoo Games/FX/Cloud Remap":
                         materialController = gameObject.AddComponent<MaterialControllerComponents.HGCloudRemapController>();
                         break;
