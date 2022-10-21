@@ -1,10 +1,12 @@
-﻿using RoR2;
+﻿using On.RoR2.Items;
+using RoR2;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine.AddressableAssets;
 
 namespace Moonstorm
 {
@@ -33,6 +35,11 @@ namespace Moonstorm
         public static Action<ReadOnlyDictionary<ItemDef, ItemBase>> OnDictionaryCreated;
         #endregion
 
+        //Due to potential timing issues, there is the posibility of the ContagiousItemManager's init to run before SystemInit, which would be too late for us to add new void items.
+        //So this travesty lies here.
+        [SystemInitializer]
+        private static void VoidItemHooks() => On.RoR2.Items.ContagiousItemManager.Init += FinishVoidItemBases;
+
         [SystemInitializer(typeof(ItemCatalog))]
         private static void SystemInit()
         {
@@ -42,6 +49,50 @@ namespace Moonstorm
             items = null;
 
             OnDictionaryCreated?.Invoke(MoonstormItems);
+        }
+
+        private static void FinishVoidItemBases(ContagiousItemManager.orig_Init orig)
+        {
+            VoidItemBase[] voidItems = items == null ? MoonstormItems.Values.OfType<VoidItemBase>().ToArray() : items.Values.OfType<VoidItemBase>().ToArray();
+            ItemRelationshipType contagiousItem = Addressables.LoadAssetAsync<ItemRelationshipType>("RoR2/DLC1/Common/ContagiousItem.asset").WaitForCompletion();
+
+            for (int i = 0; i < voidItems.Length; i++)
+            {
+                VoidItemBase itemBase = voidItems[i];
+                try
+                {
+                    ItemDef[] itemsToInfect = itemBase.LoadItemsToInfect().ToArray();
+                    if (itemsToInfect.Length == 0)
+                    {
+                        throw new Exception($"The VoidItemBase {itemBase.GetType().Name} failed to provide any item to infect, Is the function returning ItemDefs properly?");
+                    }
+
+                    for(int j = 0; j < itemsToInfect.Length; j++)
+                    {
+                        ItemDef itemToInfect = itemsToInfect[j];
+                        try
+                        {
+                            ItemDef.Pair transformation = new ItemDef.Pair
+                            {
+                                itemDef1 = itemToInfect,
+                                itemDef2 = itemBase.ItemDef
+                            };
+                            ItemDef.Pair[] existingInfections = ItemCatalog.itemRelationships[contagiousItem];
+                            HG.ArrayUtils.ArrayAppend(ref existingInfections, in transformation);
+                            ItemCatalog.itemRelationships[contagiousItem] = existingInfections;
+                        }
+                        catch(Exception e)
+                        {
+                            MSULog.Error($"Failed to add transformation of {itemToInfect} to {itemBase.ItemDef}\n{e}");
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    MSULog.Error($"VoidItemBase {item.GetType().Name} failed to intialize properly\n{e}");
+                }
+            }
+            orig();
         }
 
         #region Items
