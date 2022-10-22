@@ -89,7 +89,7 @@ namespace Moonstorm
                 }
                 catch (Exception e)
                 {
-                    MSULog.Error($"VoidItemBase {item.GetType().Name} failed to intialize properly\n{e}");
+                    MSULog.Error($"VoidItemBase {itemBase.GetType().Name} failed to intialize properly\n{e}");
                 }
             }
             orig();
