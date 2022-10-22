@@ -8,6 +8,7 @@ using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
+using RoR2EditorKit.Core;
 
 namespace Moonstorm.EditorUtils.Settings
 {
@@ -16,13 +17,13 @@ namespace Moonstorm.EditorUtils.Settings
         [Serializable]
         public class ShaderPair
         {
-            public Shader original;
-            public Shader stubbed;
+            public SerializableShaderWrapper original;
+            public SerializableShaderWrapper stubbed;
 
             public ShaderPair(Shader original, Shader stubbed)
             {
-                this.original = original;
-                this.stubbed = stubbed;
+                this.original = new SerializableShaderWrapper(original);
+                this.stubbed = new SerializableShaderWrapper(stubbed);
             }
         }
 
@@ -44,8 +45,9 @@ namespace Moonstorm.EditorUtils.Settings
             get
             {
                 return GetOrCreateSettings<ShaderDictionary>().shaderPairs
-                    .Where(sp => sp.stubbed != null && sp.original != null)
-                    .ToDictionary(k => k.original, v => v.stubbed);
+                    .Select(sp => (sp.stubbed.LoadShader(), sp.original.LoadShader()))
+                    .Where(sp => sp.Item1 && sp.Item2)
+                    .ToDictionary(k => k.Item2, v => v.Item1);
             }
         }
         public static Dictionary<Shader, Shader> StubbedToOrig
@@ -53,8 +55,9 @@ namespace Moonstorm.EditorUtils.Settings
             get
             {
                 return GetOrCreateSettings<ShaderDictionary>().shaderPairs
-                    .Where(sp => sp.stubbed != null && sp.original != null)
-                    .ToDictionary(k => k.stubbed, v => v.original);
+                    .Select(sp => (sp.stubbed.LoadShader(), sp.original.LoadShader()))
+                    .Where(sp => sp.Item1 && sp.Item2)
+                    .ToDictionary(k => k.Item1, v => v.Item2);
             }
         }
         public override void CreateSettingsUI(VisualElement rootElement)
@@ -95,10 +98,12 @@ namespace Moonstorm.EditorUtils.Settings
             var sd = GetOrCreateSettings<ShaderDictionary>();
             foreach(ShaderPair pair in sd.shaderPairs)
             {
-                if (pair.stubbed != null && !list.Contains(pair.stubbed))
-                    list.Add(pair.stubbed);
-                if (pair.original != null && !list.Contains(pair.original))
-                    list.Add(pair.original);
+                var stubbed = pair.stubbed.LoadShader();
+                var orig = pair.original.LoadShader();
+                if (stubbed != null && !list.Contains(stubbed))
+                    list.Add(stubbed);
+                if (orig != null && !list.Contains(orig))
+                    list.Add(orig);
             }
             return list;
         }
@@ -113,7 +118,7 @@ namespace Moonstorm.EditorUtils.Settings
 
             foreach(Shader shader in files)
             {
-                var stubbeds = shaderPairs.Select(sp => sp.stubbed);
+                var stubbeds = shaderPairs.Select(sp => sp.stubbed.LoadShader());
                 if(!stubbeds.Contains(shader))
                 {
                     shaderPairs.Add(new ShaderPair(null, shader));
@@ -130,10 +135,12 @@ namespace Moonstorm.EditorUtils.Settings
 
             foreach (ShaderPair pair in shaderPairs)
             {
-                if (pair.original || !pair.stubbed)
+                var orig = pair.original.LoadShader();
+                var stubbed = pair.stubbed.LoadShader();
+                if (orig || !stubbed)
                     continue;
 
-                string stubbedShaderFileName = Path.GetFileName(AssetDatabase.GetAssetPath(pair.stubbed));
+                string stubbedShaderFileName = Path.GetFileName(AssetDatabase.GetAssetPath(stubbed));
                 string origShaderFileName = stubbedShaderFileName.Replace(".shader", ".asset");
 
                 Shader origShader = allYAMLShaders.FirstOrDefault(shader =>
@@ -149,7 +156,7 @@ namespace Moonstorm.EditorUtils.Settings
                 if (!origShader)
                     continue;
 
-                pair.original = origShader;
+                pair.original = new SerializableShaderWrapper(orig);
             }
 
             shaderDictionarySO.ApplyModifiedProperties();
