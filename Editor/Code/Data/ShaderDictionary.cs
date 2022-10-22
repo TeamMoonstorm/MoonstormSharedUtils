@@ -156,7 +156,7 @@ namespace Moonstorm.EditorUtils.Settings
                 if (!origShader)
                     continue;
 
-                pair.original = new SerializableShaderWrapper(orig);
+                pair.original.SetShader(origShader);
             }
 
             shaderDictionarySO.ApplyModifiedProperties();
