@@ -81,6 +81,7 @@ namespace Moonstorm
             hgText.color = messageColor;
             hgText.outlineColor = GetOutlineColor(messageColor);
             hgText.autoSizeTextContainer = false;
+            hgText.enabled = true;
 
             EventTextController textController = eventAnnouncerInstance.GetComponent<EventTextController>();
             textController.warningDuration = announceInfo.isEventStart ? announceInfo.eventWarningDuration : announceInfo.eventWarningDuration / 2;

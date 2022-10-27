@@ -26,7 +26,6 @@ namespace Moonstorm
         /// </summary>
         public static ConfigFile generalConfig;
         internal static ConfigEntry<bool> enableDebugFeatures;
-        internal static ConfigEntry<bool> enableLoggingOfIDRS;
         internal static ConfigEntry<KeyCode> instantiateMaterialTester;
 
         /// <summary>
@@ -60,15 +59,6 @@ namespace Moonstorm
                                                     "\nAddition of the MoonstormItemDisplayHelper" +
                                                     "\nAutomatic deployment of \"stage1_pod\", \"no_enemies\" & \"enable_event_logging\", assuming DebugToolkit is installed" +
                                                     "\nSpawning of the MaterialTester");
-
-            enableLoggingOfIDRS = generalConfig.Bind<bool>("MoonstormSharedUtils :: IDRS",
-                                                    "Log IDRS-Related names",
-                                                    false,
-                                                    "Setting this to true causes MSU to Log inportant KEY values from RoR2's IDRS system\n" +
-                                                    "It'll Log:\n" +
-                                                    "IDRS names\n" +
-                                                    "Key Assets names (ItemDefs & Equipment Defs)\n" +
-                                                    "Display Prefabs");
 
             instantiateMaterialTester = generalConfig.Bind<KeyCode>("MoonstormSharedUtils :: Keybinds",
                                                              "Instantiate Material Tester",
@@ -104,7 +94,7 @@ namespace Moonstorm
 
             eventMessageYOffset = eventsConfig.Bind("MoonstormSharedUtils :: Event Messages",
                 "Event Message Y Offset",
-                100f,
+                225f,
                 "The Y Offset for the event message. Irrelevant if the Event Announcement system is disabled via configs.");
 
             eventAnnouncementsAsChatMessages = eventsConfig.Bind<bool>("MoonstormSharedUtils :: Event Messages",
