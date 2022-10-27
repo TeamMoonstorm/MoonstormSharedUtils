@@ -12,7 +12,7 @@ namespace Moonstorm.EditorUtils.ShaderSystem
         public static void Upgrade(Material material)
         {
             var currentShader = material.shader;
-            if (ShaderDictionary.OrigToStubbed.TryGetValue(currentShader, out Shader realShader))
+            if (ShaderDictionary.StubbedToOrig.TryGetValue(currentShader, out Shader realShader))
             {
                 if (realShader)
                 {
@@ -25,7 +25,7 @@ namespace Moonstorm.EditorUtils.ShaderSystem
         public static void Downgrade(Material material)
         {
             var currentShader = material.shader;
-            if (ShaderDictionary.StubbedToOrig.TryGetValue(currentShader, out Shader stubbedShader))
+            if (ShaderDictionary.OrigToStubbed.TryGetValue(currentShader, out Shader stubbedShader))
             {
                 if (stubbedShader)
                 {

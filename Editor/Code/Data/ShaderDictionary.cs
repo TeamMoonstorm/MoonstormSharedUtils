@@ -124,8 +124,6 @@ namespace Moonstorm.EditorUtils.Settings
                     shaderPairs.Add(new ShaderPair(null, shader));
                 }
             }
-
-            shaderDictionarySO.ApplyModifiedProperties();
         }
 
         private void AttemptToFinishDictionaryAutomatically()
@@ -158,8 +156,6 @@ namespace Moonstorm.EditorUtils.Settings
 
                 pair.original.SetShader(origShader);
             }
-
-            shaderDictionarySO.ApplyModifiedProperties();
         }
     }
 }
