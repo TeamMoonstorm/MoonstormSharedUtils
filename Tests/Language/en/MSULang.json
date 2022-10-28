@@ -1,0 +1,16 @@
+{
+  "strings": {
+    "MSU_EXPANSION_NAME": "Moonstorm Shared Utils Test",
+    "MSU_EXPANSION_DESC": "Enables the Test content for Moonstorm shared utils, used for testing the API's systems.",
+
+    "MSU_ITEM_GENERICITEM_NAME": "Generic White Item",
+    "MSU_ITEM_GENERICITEM_PICKUP": "Increases all stats",
+    "MSU_ITEM_GENERICITEM_DESC": "Increases all your stats by {0}% (+{0}% per stack)",
+    "MSU_ITEM_GENERICITEM_LORE": "Deez nuts",
+
+    "MSU_ITEM_GENERICVOIDITEM_NAME": "Generic Void Item",
+    "MSU_ITEM_GENERICVOIDITEM_PICKUP": "Increases all stats on low health",
+    "MSU_ITEM_GENERICVOIDITEM_DESC": "While on low health, Obtain a buff that increases all your stats by {0}% (+{0}% per stack), enemies that attack you while you have this buff become cripplied for {1} second.",
+    "MSU_ITEM_GENERICVVOIDITEM_LORE": "Its 'G'if you idiot, like \"Game\""
+  }
+}

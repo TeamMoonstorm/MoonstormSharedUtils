@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1284244208, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+  m_Name: GenericVoidItem
+  m_EditorClassIdentifier: 
+  deprecatedTier: 6
+  _itemTierDef: {fileID: 0}
+  nameToken: MSU_ITEM_GENERICVOIDITEM_NAME
+  pickupToken: MSU_ITEM_GENERICVOIDITEM_PICKUP
+  descriptionToken: MSU_ITEM_GENERICVOIDITEM_DESC
+  loreToken: MSU_ITEM_GENERICVOIDITEM_LORE
+  unlockableDef: {fileID: 0}
+  pickupModelPrefab: {fileID: 1722387690575889570, guid: 13ddcd228659c474183e5927380d5114,
+    type: 3}
+  pickupIconSprite: {fileID: 0}
+  hidden: 0
+  canRemove: 1
+  tags: 
+  requiredExpansion: {fileID: 11400000, guid: 7d5d2c6259173b0438e9d8cb1c464466, type: 2}
