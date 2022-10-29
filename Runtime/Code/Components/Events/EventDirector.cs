@@ -140,6 +140,7 @@ namespace Moonstorm.Components
                     MSULog.Error($"COULD NOT RETRIEVE EVENT CATEGORY FOR SCENE {SceneInfo.instance.sceneDef}!!!");
                     Log($"Destroying root");
                     Destroy(gameObject.transform.root.gameObject);
+                    return;
                 }
                 EventCardSelection = EventDirectorCategorySelection.GenerateWeightedSelection();
                 //Log below causes issues, no idea why

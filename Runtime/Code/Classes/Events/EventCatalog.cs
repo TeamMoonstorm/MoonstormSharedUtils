@@ -80,6 +80,7 @@ namespace Moonstorm
                     if (string.IsNullOrEmpty(customName))
                         return null;
 
+                    customName = customName.ToLowerInvariant();
                     if(baseSceneNameToCategory.TryGetValue(customName.ToLowerInvariant(), out var cat1))
                     {
                         return cat1;
@@ -110,7 +111,12 @@ namespace Moonstorm
                 if(stage == DirectorAPI.Stage.Custom)
                 {
                     string key = sceneDef.baseSceneName.ToLowerInvariant();
-                    return baseSceneNameToCategory[key];
+                    if(baseSceneNameToCategory.TryGetValue(key, out var selection))
+                    {
+                        return selection;
+                    }
+                    MSULog.Warning($"Scene {sceneDef} not found in the baseSceneNameToCategory dictionary.");
+                    return null;
                 }
                 return stageToCategory[stage];
             }
