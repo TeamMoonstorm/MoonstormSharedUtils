@@ -519,6 +519,58 @@
             The AchievementDef tied to this Unlockable
             </summary>
         </member>
+        <member name="M:Moonstorm.VoidItemBase.LoadItemsToInfect">
+            <summary>
+            Implement this method to specify what items this Void Item can infect.
+            <para>Can be used to load Items via a plethora of ways, such as Addressables, AssetBundles and the ItemCatalog.</para>
+            </summary>
+            <returns>An IEnuemrable of items that can be infected by this VoidItems, it returns an IEnumerable because certain void items corrupt multiple items (IE: Void Bands)</returns>
+        </member>
+        <member name="T:Moonstorm.EventHelpers">
+            <summary>
+            Class for handling Event Messages
+            </summary>
+        </member>
+        <member name="T:Moonstorm.EventHelpers.EventAnnounceInfo">
+            <summary>
+            Represents a Data structure for announcing an event
+            </summary>
+        </member>
+        <member name="F:Moonstorm.EventHelpers.EventAnnounceInfo.card">
+            <summary>
+            The EventCard, the text and colour are taken from this
+            </summary>
+        </member>
+        <member name="F:Moonstorm.EventHelpers.EventAnnounceInfo.eventWarningDuration">
+            <summary>
+            How long the message lasts, if <see cref="F:Moonstorm.EventHelpers.EventAnnounceInfo.isEventStart"/> is false, the duration is cut in half
+            </summary>
+        </member>
+        <member name="F:Moonstorm.EventHelpers.EventAnnounceInfo.isEventStart">
+            <summary>
+            Wether to display the start message or the end message
+            </summary>
+        </member>
+        <member name="F:Moonstorm.EventHelpers.EventAnnounceInfo.fadeOnStart">
+            <summary>
+            Wether to begin the fade in as soon as the event message becomes instantiated
+            </summary>
+        </member>
+        <member name="M:Moonstorm.EventHelpers.EventAnnounceInfo.#ctor(Moonstorm.EventCard,System.Single,System.Boolean)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="card">The EventCard, the text and colour are taken from this</param>
+            <param name="warningDuration">How long the message lasts, if <see cref="F:Moonstorm.EventHelpers.EventAnnounceInfo.isEventStart"/> is false, the duration is cut in half</param>
+            <param name="isEventStart">Wether to display the start message or the end message</param>
+        </member>
+        <member name="M:Moonstorm.EventHelpers.AnnounceEvent(Moonstorm.EventHelpers.EventAnnounceInfo)">
+            <summary>
+            Announces a new event, using the Event Message system
+            </summary>
+            <param name="announceInfo">The announcement info</param>
+            <returns>The EventMessage GameObject</returns>
+        </member>
         <member name="T:Moonstorm.IBodyStatArgModifier">
             <summary>
             An IBodyStatArgModifier can be used to modify the Stats of a characterbody using <see cref="T:R2API.RecalculateStatsAPI"/>
@@ -1525,6 +1577,13 @@
             <param name="pos">Position at wich to play the sound</param>
             <param name="transmit"></param>
         </member>
+        <member name="M:Moonstorm.MSUtil.Play(RoR2.NetworkSoundEventDef,UnityEngine.Vector3,System.Boolean)">
+            <summary>
+            Plays the network sound event def.
+            </summary>
+            <param name="pos">The position where the sound will play</param>
+            <param name="transmit"></param>
+        </member>
         <member name="M:Moonstorm.MSUtil.EnsureComponent``1(UnityEngine.GameObject)">
             <summary>
             Ensures that the component specified in <typeparamref name="T"/> exists
@@ -1550,6 +1609,20 @@
             <param name="collection"></param>
             <param name="entry">The entry to remove if its in the collection</param>
             <returns>True if it was in the collection and removed, false otherwise</returns>
+        </member>
+        <member name="M:Moonstorm.MSUtil.GetItemCount(RoR2.CharacterBody,RoR2.ItemDef)">
+            <summary>
+            Returns the amount of stacks of <paramref name="itemDef"/> that the body has.
+            </summary>
+            <param name="itemDef">The ItemDef to count</param>
+            <returns>The amount of items, returns 0 if the body doesnt have an inventory.</returns>
+        </member>
+        <member name="M:Moonstorm.MSUtil.GetItemCount(RoR2.CharacterBody,RoR2.ItemIndex)">
+            <summary>
+            Returns the amount of stacks of <paramref name="index"/> that the body has.
+            </summary>
+            <param name="index">The ItemIndex to count</param>
+            <returns>The amount of items, returns 0 if the body doesnt have an inventory.</returns>
         </member>
         <member name="T:Moonstorm.Components.BaseBuffBodyBehavior">
             <summary>
@@ -2113,6 +2186,11 @@
             Base class for all event related entity states
             </summary>
         </member>
+        <member name="P:EntityStates.Events.EventState.OverrideTimer">
+            <summary>
+            Wether or not this event should end on a timer
+            </summary>
+        </member>
         <member name="P:EntityStates.Events.EventState.HasWarned">
             <summary>
             Wether this event is already past the "Warned" phase
@@ -2134,9 +2212,59 @@
             The total duration of the event, calculated from the sum of <see cref="P:EntityStates.Events.EventState.DiffScaledDuration"/> and <see cref="F:EntityStates.Events.EventState.warningDur"/>
             </summary>
         </member>
+        <member name="E:EntityStates.Events.EventState.onEventStartGlobal">
+            <summary>
+            When an event starts, this action runs, This action runs for both Clients and Servers
+            </summary>
+        </member>
+        <member name="E:EntityStates.Events.EventState.onEventStartServer">
+            <summary>
+            When an event starts, this action runs, This action runs only for the Server
+            </summary>
+        </member>
+        <member name="E:EntityStates.Events.EventState.onEventEndGlobal">
+            <summary>
+            When an event ends, this action runs, this action runs for both Clients and Servers
+            </summary>
+        </member>
+        <member name="E:EntityStates.Events.EventState.onEventEndServer">
+            <summary>
+            When an event ends, this action runs, this action runs only for the Server.
+            </summary>
+        </member>
+        <member name="M:EntityStates.Events.EventState.OnEnter">
+            <summary>
+            Called when the event becomes the main state of the entity state machine.
+            OnEnter the following things happen:
+            <para><see cref="P:EntityStates.Events.EventState.DiffScalingValue"/> becomes populated with the DifficultyScalingValue of the run</para>
+            <para><see cref="P:EntityStates.Events.EventState.DiffScaledDuration"/> gets calculated using the min and max duration of the event</para>
+            <para><see cref="P:EntityStates.Events.EventState.TotalDuration"/> becomes populated</para>
+            <para>The event message gets instantiated</para>
+            </summary>
+        </member>
+        <member name="M:EntityStates.Events.EventState.FixedUpdate">
+            <summary>
+            Called every FixedUpdate
+            <para>On FixedUpdate the following things happen:</para>
+            <para>The timer is checked, if <see cref="P:EntityStates.Events.EventState.OverrideTimer"/> is false and fixedAge is greater than <see cref="P:EntityStates.Events.EventState.TotalDuration"/>, the event ends</para>
+            <para>If <see cref="P:EntityStates.Events.EventState.HasWarned"/> is false and fixedAge is greater than <see cref="F:EntityStates.Events.EventState.warningDur"/>, <see cref="M:EntityStates.Events.EventState.StartEvent"/> gets called</para>
+            </summary>
+        </member>
+        <member name="M:EntityStates.Events.EventState.OnExit">
+            <summary>
+            Called when the event is no longer the main state of the entity state machine.
+            OnExit the following things happen:
+            <para>The Event end message gets instantiated</para>
+            <para><see cref="E:EntityStates.Events.EventState.onEventEndGlobal"/> and <see cref="E:EntityStates.Events.EventState.onEventEndServer"/> gets invoked</para>
+            </summary>
+        </member>
         <member name="M:EntityStates.Events.EventState.StartEvent">
             <summary>
             Run logic that happens when the event starts here.
+            <para>See <see cref="M:EntityStates.Events.EventState.FixedUpdate"/> to understand when this method gets called</para>
+            <para>When StartEvent gets called, the following things happen</para>
+            <para><see cref="P:EntityStates.Events.EventState.HasWarned"/> gets set to true</para>
+            <para><see cref="E:EntityStates.Events.EventState.onEventStartGlobal"/> and <see cref="E:EntityStates.Events.EventState.onEventStartServer"/> gets invoked</para>
             </summary>
         </member>
     </members>

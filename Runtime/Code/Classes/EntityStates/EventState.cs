@@ -20,31 +20,60 @@ namespace EntityStates.Events
         [SerializeField]
         public float warningDur = 10f;
 
+        /// <summary>
+        /// Wether or not this event should end on a timer
+        /// </summary>
         public virtual bool OverrideTimer => false;
 
         /// <summary>
         /// Wether this event is already past the "Warned" phase
         /// </summary>
         public bool HasWarned { get; protected set; }
+
         /// <summary>
         /// The actual duration of the event
         /// <para>Duration is taken by remaping the current <see cref="DiffScalingValue"/> capping the in value with min 1 and max 3.5, and keeping the result between min <see cref="minDuration"/> and max <see cref="maxDuration"/></para>
         /// </summary>
         public float DiffScaledDuration { get; protected set; }
+
         /// <summary>
         /// The current run's difficulty scaling value, taken from the difficultyDef.
         /// </summary>
         public float DiffScalingValue { get; protected set; }
+
         /// <summary>
         /// The total duration of the event, calculated from the sum of <see cref="DiffScaledDuration"/> and <see cref="warningDur"/>
         /// </summary>
         public float TotalDuration { get; protected set; }
 
-        public static Action<EventCard> onEventStartGlobal;
-        public static Action<EventCard> onEventStartServer;
+        /// <summary>
+        /// When an event starts, this action runs, This action runs for both Clients and Servers
+        /// </summary>
+        public static event Action<EventCard> onEventStartGlobal;
+        
+        /// <summary>
+        /// When an event starts, this action runs, This action runs only for the Server
+        /// </summary>
+        public static event Action<EventCard> onEventStartServer;
 
-        public static Action<EventCard> onEventEndGlobal;
-        public static Action<EventCard> onEventEndServer;
+        /// <summary>
+        /// When an event ends, this action runs, this action runs for both Clients and Servers
+        /// </summary>
+        public static event Action<EventCard> onEventEndGlobal;
+        
+        /// <summary>
+        /// When an event ends, this action runs, this action runs only for the Server.
+        /// </summary>
+        public static event Action<EventCard> onEventEndServer;
+
+        /// <summary>
+        /// Called when the event becomes the main state of the entity state machine.
+        /// OnEnter the following things happen:
+        /// <para><see cref="DiffScalingValue"/> becomes populated with the DifficultyScalingValue of the run</para>
+        /// <para><see cref="DiffScaledDuration"/> gets calculated using the min and max duration of the event</para>
+        /// <para><see cref="TotalDuration"/> becomes populated</para>
+        /// <para>The event message gets instantiated</para>
+        /// </summary>
         public override void OnEnter()
         {
             base.OnEnter();
@@ -68,6 +97,13 @@ namespace EntityStates.Events
                     EventHelpers.AnnounceEvent(new EventHelpers.EventAnnounceInfo(eventCard, warningDur, true));
             }
         }
+
+        /// <summary>
+        /// Called every FixedUpdate
+        /// <para>On FixedUpdate the following things happen:</para>
+        /// <para>The timer is checked, if <see cref="OverrideTimer"/> is false and fixedAge is greater than <see cref="TotalDuration"/>, the event ends</para>
+        /// <para>If <see cref="HasWarned"/> is false and fixedAge is greater than <see cref="warningDur"/>, <see cref="StartEvent"/> gets called</para>
+        /// </summary>
         public override void FixedUpdate()
         {
             base.FixedUpdate();
@@ -80,6 +116,12 @@ namespace EntityStates.Events
                 StartEvent();
         }
 
+        /// <summary>
+        /// Called when the event is no longer the main state of the entity state machine.
+        /// OnExit the following things happen:
+        /// <para>The Event end message gets instantiated</para>
+        /// <para><see cref="onEventEndGlobal"/> and <see cref="onEventEndServer"/> gets invoked</para>
+        /// </summary>
         public override void OnExit()
         {
             base.OnExit();
@@ -106,6 +148,10 @@ namespace EntityStates.Events
 
         /// <summary>
         /// Run logic that happens when the event starts here.
+        /// <para>See <see cref="FixedUpdate"/> to understand when this method gets called</para>
+        /// <para>When StartEvent gets called, the following things happen</para>
+        /// <para><see cref="HasWarned"/> gets set to true</para>
+        /// <para><see cref="onEventStartGlobal"/> and <see cref="onEventStartServer"/> gets invoked</para>
         /// </summary>
         public virtual void StartEvent()
         {

@@ -90,6 +90,34 @@ MSU will forever be free to use and never gated behind paywalls, however, donati
 
 (Old Changelog can be found [here](https://github.com/TeamMoonstorm/MoonstormSharedUtils/blob/main/Runtime/README-OLD.md))
 
+### '1.1.0' - Void Items
+
+* General:
+    * Added Tests for MSU
+    * Not bundled with the Thunderstore Release
+    * Contains classes for testing out the systems of MSU and the API as a whole
+
+* Runtime:
+    * AddressableAssets now have a bool to check if it uses a direct reference rather than an addressable reference
+    * Added a VoidItemBase, for creating Void items
+    * Added the following extensions:
+        * Play for NetworkSoundEventDefs
+        * GetItemCount for CharacterBodies
+    * Event announcements now are properly networked
+    * Added configuration options for the Event Announcements
+        * Opacity reduced to 75%
+        * Message size set to 40
+        * Y position Offset of 225 (Messages appear right below boss health bars)
+    * Added a Tri-Planar and CalmWater material controlers, courtesy of jaceDaDorito
+    * Added missing documentation
+    * Removed most weather related components, these have been migrated to Starstorm2
+
+* Editor:
+    * Added a custom property drawer for AddressableAssetDrawers
+    * Added a Constants file
+    * Updated ShaderDictionary to use the SerializableShaderWrapper from RoR2EK
+    * MaterialShaderManager's Upgrade and Downgrade methods now use the correct dictionary
+
 ### '1.0.0' - Official Release
 
 * MSU is now a "PackageRepo" in github! this means that it is now heavily recommended to use the repository for creating mods with MSU instead of this release version.
