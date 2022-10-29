@@ -7,6 +7,7 @@ using UObject = UnityEngine.Object;
 using UnityEngine.AddressableAssets;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace Moonstorm.AddressableAssets
 {
@@ -39,8 +40,10 @@ namespace Moonstorm.AddressableAssets
             {
                 if(asset == null && !Initialized)
                 {
+                    var stackTrace = new StackTrace();
+                    var method = stackTrace.GetFrame(1).GetMethod();
                     MSULog.Warning($"Assembly {Assembly.GetCallingAssembly()} is trying to access an {GetType()} before AddressableAssets have initialize!" +
-                        $"\n Consider using AddressableAsset.OnAddressableAssetsLoaded for running code that depends on AddressableAssets!");
+                        $"\n Consider using AddressableAsset.OnAddressableAssetsLoaded for running code that depends on AddressableAssets! (Method: {method.DeclaringType.FullName}.{method.Name}()");
                     Load();
                 }
                 return asset;
@@ -125,8 +128,8 @@ namespace Moonstorm.AddressableAssets
                     MSULog.Error(e);
                 }
             }
-            OnAddressableAssetsLoaded?.Invoke();
             Initialized = true;
+            OnAddressableAssetsLoaded?.Invoke();
         }
 
         internal abstract Task Load();
