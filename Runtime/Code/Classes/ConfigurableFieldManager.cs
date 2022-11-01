@@ -90,7 +90,7 @@ namespace Moonstorm
 
             Dictionary<string, List<FieldInfo>> dict = new Dictionary<string, List<FieldInfo>>();
 
-            foreach (Type type in assembly.GetTypes().Where(type => type.GetCustomAttribute<DisabledContentAttribute>() == null))
+            foreach (Type type in assembly.GetTypesSafe().Where(type => type.GetCustomAttribute<DisabledContentAttribute>() == null))
             {
                 try
                 {

@@ -36,7 +36,7 @@ namespace Moonstorm
         {
             return GetType()
                             .Assembly
-                            .GetTypes()
+                            .GetTypesSafe()
                             .Where(type => !type.IsAbstract && type.IsSubclassOf(typeof(T)))
                             .Where(type => excludedType != null ? !type.IsSubclassOf(excludedType) : true)
                             .Where(type => !type.GetCustomAttributes(true)

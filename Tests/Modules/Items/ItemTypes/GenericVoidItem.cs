@@ -15,11 +15,11 @@ namespace Moonstorm.Items
         public override GameObject ItemDisplayPrefab => MSUTAssets.LoadAsset<GameObject>("GenericVoidItemDisplay");
 
         [ConfigurableField(MSUTConfig.items)]
-        [TokenModifier("MSU_ITEM_GENERICVOIDITEM_DESC", 0)]
+        [TokenModifier("MSU_ITEM_GENERICVOIDITEM_DESC", StatTypes.MultiplyByN, 0, "100")]
         public static float statMultiplier = 0.05f;
 
         [ConfigurableField(MSUTConfig.items)]
-        [TokenModifier("MSU_ITEM_GENERICVOIDITEM_DESC", StatTypes.Percentage, 1)]
+        [TokenModifier("MSU_ITEM_GENERICVOIDITEM_DESC", StatTypes.MultiplyByN, 0, "100")]
         public static float crippleDuration = 3f;
 
         public override IEnumerable<ItemDef> LoadItemsToInfect()

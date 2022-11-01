@@ -1,6 +1,9 @@
 ﻿using RoR2;
 using RoR2.Audio;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using UnityEngine;
 
 namespace Moonstorm
@@ -132,6 +135,24 @@ namespace Moonstorm
         public static int GetItemCount(this CharacterBody body, ItemIndex index)
         {
             return body.inventory == null ? 0 : body.inventory.GetItemCount(index);
+        }
+
+        /// <summary>
+        /// Gets all the types from an assembly safely by getting the types from a ReflectionTypeLoadException if one is thrown
+        /// </summary>
+        /// <returns>The types of the assembly</returns>
+        public static Type[] GetTypesSafe(this Assembly assembly)
+        {
+            Type[] types = null;
+            try
+            {
+                types = assembly.GetTypes();
+            }
+            catch (ReflectionTypeLoadException re)
+            {
+                types = re.Types.Where(t => t != null).ToArray();
+            }
+            return types;
         }
         #endregion
     }
