@@ -73,6 +73,7 @@ namespace Moonstorm
                 var token = kvp.Key;
                 var formattingArray = kvp.Value;
 
+                //Add token from dictionary, this replaces the array, but thats ok as this dictionary is completely empty.
                 //Empty array
                 cachedFormattingArray[token] = Array.Empty<object>();
                 var arrayFromCache = cachedFormattingArray[token];
@@ -95,8 +96,12 @@ namespace Moonstorm
                 var token = kvp.Key;
                 var formattingArray = kvp.Value;
 
-                //Empty array
-                cachedFormattingArray[token] = Array.Empty<object>();
+                //We do not overwrite the array if the token is already in the dictionary.
+                //this is due to the fact that key may already be in the dictionary due to being created from field token modifiers.
+                if(!cachedFormattingArray.ContainsKey(token))
+                {
+                    cachedFormattingArray[token] = Array.Empty<object>();
+                }
                 var arrayFromCache = cachedFormattingArray[token];
                 for (int i = 0; i < formattingArray.Length; i++)
                 {
