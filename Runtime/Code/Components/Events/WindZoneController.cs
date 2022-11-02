@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Moonstorm.Starstorm2.Components
+namespace Moonstorm.Components
 {
     public class WindZoneController : MonoBehaviour
     {

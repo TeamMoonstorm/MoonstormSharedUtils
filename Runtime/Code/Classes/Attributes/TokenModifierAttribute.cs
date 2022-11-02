@@ -77,7 +77,7 @@ namespace Moonstorm
             this.statType = statType;
             this.formatIndex = formatIndex;
         }
-
+        /// <inheritdoc cref="TokenModifierAttribute.TokenModifierAttribute(string, StatTypes, int)"/>
         public TokenModifierAttribute(string langToken, StatTypes statType, int formatIndex = 0, string extraData = "")
         {
             this.langToken = langToken;
@@ -103,10 +103,12 @@ namespace Moonstorm
                         valueForFormatting = value;
                         return (valueForFormatting, formatIndex);
                     case StatTypes.Percentage:
-                        valueForFormatting = ToPercent(CastToFloat(value));
+                        extraData = "100";
+                        valueForFormatting = MultiplyByN(CastToFloat(value));
                         return (valueForFormatting, formatIndex);
                     case StatTypes.DivideBy2:
-                        valueForFormatting = DivideBy2(CastToFloat(value));
+                        extraData = "2";
+                        valueForFormatting = DivideByN(CastToFloat(value));
                         return (valueForFormatting, formatIndex);
                     case StatTypes.MultiplyByN:
                         valueForFormatting = MultiplyByN(CastToFloat(value));
@@ -137,31 +139,33 @@ namespace Moonstorm
             }
             else
             {
-                object fieldValue = fieldInfo.GetValue(null);
-                if (fieldValue != null && IsNumber(fieldValue))
+                object value = fieldInfo.GetValue(null);
+                if (value != null && IsNumber(value))
                 {
                     switch (statType)
                     {
                         case StatTypes.Default:
-                            valueForFormatting = fieldValue;
+                            valueForFormatting = value;
                             return (valueForFormatting, formatIndex);
                         case StatTypes.Percentage:
-                            valueForFormatting = ToPercent(CastToFloat(fieldValue));
+                            extraData = "100";
+                            valueForFormatting = MultiplyByN(CastToFloat(value));
                             return (valueForFormatting, formatIndex);
                         case StatTypes.DivideBy2:
-                            valueForFormatting = DivideBy2(CastToFloat(fieldValue));
+                            extraData = "2";
+                            valueForFormatting = DivideByN(CastToFloat(value));
                             return (valueForFormatting, formatIndex);
                         case StatTypes.MultiplyByN:
-                            valueForFormatting = MultiplyByN(CastToFloat(fieldValue));
+                            valueForFormatting = MultiplyByN(CastToFloat(value));
                             return (valueForFormatting, formatIndex);
                         case StatTypes.DivideByN:
-                            valueForFormatting = DivideByN(CastToFloat(fieldValue));
+                            valueForFormatting = DivideByN(CastToFloat(value));
                             return (valueForFormatting, formatIndex);
                         case StatTypes.AddN:
-                            valueForFormatting = AddN(CastToFloat(fieldValue));
+                            valueForFormatting = AddN(CastToFloat(value));
                             return (valueForFormatting, formatIndex);
                         case StatTypes.SubtractN:
-                            valueForFormatting = SubtractN(CastToFloat(fieldValue));
+                            valueForFormatting = SubtractN(CastToFloat(value));
                             return (valueForFormatting, formatIndex);
                     }
                 }
@@ -177,18 +181,6 @@ namespace Moonstorm
         {
             float value = Convert.ToSingle(obj, CultureInfo.InvariantCulture);
             return value;
-        }
-
-        private object ToPercent(float number)
-        {
-            float num = number * 100;
-            return num;
-        }
-
-        private object DivideBy2(float number)
-        {
-            float num = number / 2;
-            return num;
         }
 
         private object MultiplyByN(float number)
