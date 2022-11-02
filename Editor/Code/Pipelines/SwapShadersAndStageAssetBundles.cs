@@ -37,160 +37,165 @@ namespace Moonstorm.EditorUtils.Pipelines
 
             AssetDatabase.SaveAssets();
 
-            var manifests = pipeline.Manifests;
-            var assetBundleDefIndices = new Dictionary<AssetBundleDefinitions, int>();
-            var assetBundleDefinitions = new List<AssetBundleDefinitions>();
-
-            for (int i = 0; i < manifests.Length; i++)
+            try
             {
-                foreach (var abd in manifests[i].Data.OfType<AssetBundleDefinitions>())
+                var manifests = pipeline.Manifests;
+                var assetBundleDefIndices = new Dictionary<AssetBundleDefinitions, int>();
+                var assetBundleDefinitions = new List<AssetBundleDefinitions>();
+
+                for (int i = 0; i < manifests.Length; i++)
                 {
-                    assetBundleDefinitions.Add(abd);
-                    assetBundleDefIndices.Add(abd, i);
-                }
-            }
-
-            var assetBundleDefs = assetBundleDefinitions.ToArray();
-            var hasValidBundles = assetBundleDefs.Any(abd => abd.assetBundles.Any(ab => !string.IsNullOrEmpty(ab.assetBundleName) && ab.assets.Any()));
-
-            if (!hasValidBundles)
-            {
-                var scriptPath = UnityWebRequest.EscapeURL(AssetDatabase.GetAssetPath(MonoScript.FromScriptableObject(this)));
-                pipeline.Log(LogLevel.Warning, $"No valid AssetBundleDefinitions defined, skipping [{nameof(SwapShadersAndStageAssetBundles)}](assetLink://{scriptPath}) Pipeline Job");
-                return Task.CompletedTask;
-            }
-
-            var bundleArtifactPath = BundleArtifactPath.Resolve(pipeline, this);
-            Directory.CreateDirectory(bundleArtifactPath);
-
-            var origToStubbed = ShaderDictionary.OrigToStubbed;
-            var stubbedToOrig = ShaderDictionary.StubbedToOrig;
-
-            var materials = GetAllMaterialsWithOrigShaders(origToStubbed.Keys.ToArray());
-
-            if (materials.Length != 0)
-            {
-                var log = SwapOrigForStubbedd(materials, origToStubbed);
-                pipeline.Log(LogLevel.Information, $"Replacing a total of {log.Count} real shaders for stubbed shaders.", log.ToArray());
-            }
-
-            var explicitAssets = assetBundleDefs.SelectMany(abd => abd.assetBundles)
-                                                .SelectMany(ab => ab.assets)
-                                                .ToArray();
-
-            var explicitAssetPaths = new List<string>();
-            PopulateWithExplicitAssets(explicitAssets, explicitAssetPaths);
-
-            var defBuildDetails = new List<string>();
-            var logBuilder = new StringBuilder();
-            var builds = new AssetBundleBuild[assetBundleDefs.Sum(abd => abd.assetBundles.Length)];
-
-            var buildsIndex = 0;
-            for (int defIndex = 0; defIndex < assetBundleDefs.Length; defIndex++)
-            {
-                var assetBundleDef = assetBundleDefs[defIndex];
-                var playerAssemblies = CompilationPipeline.GetAssemblies();
-                var assemblyFiles = playerAssemblies.Select(pa => pa.outputPath).ToArray();
-                var sourceFiles = playerAssemblies.SelectMany(pa => pa.sourceFiles).ToArray();
-
-                defBuildDetails.Clear();
-
-                for (int i = 0; i < assetBundleDef.assetBundles.Length; i++)
-                {
-                    var def = assetBundleDef.assetBundles[i];
-
-                    var build = builds[buildsIndex];
-
-                    var assets = new List<string>();
-
-                    var firstAsset = def.assets.FirstOrDefault(x => x is SceneAsset);
-
-                    if (firstAsset != null) assets.Add(AssetDatabase.GetAssetPath(firstAsset));
-                    else
+                    foreach (var abd in manifests[i].Data.OfType<AssetBundleDefinitions>())
                     {
-                        PopulateWithExplicitAssets(def.assets, assets);
+                        assetBundleDefinitions.Add(abd);
+                        assetBundleDefIndices.Add(abd, i);
+                    }
+                }
 
-                        var dependencies = assets
-                            .SelectMany(assetPath => AssetDatabase.GetDependencies(assetPath))
-                            .Where(dap => !explicitAssetPaths.Contains(dap))
+                var assetBundleDefs = assetBundleDefinitions.ToArray();
+                var hasValidBundles = assetBundleDefs.Any(abd => abd.assetBundles.Any(ab => !string.IsNullOrEmpty(ab.assetBundleName) && ab.assets.Any()));
+
+                if (!hasValidBundles)
+                {
+                    var scriptPath = UnityWebRequest.EscapeURL(AssetDatabase.GetAssetPath(MonoScript.FromScriptableObject(this)));
+                    pipeline.Log(LogLevel.Warning, $"No valid AssetBundleDefinitions defined, skipping [{nameof(SwapShadersAndStageAssetBundles)}](assetLink://{scriptPath}) Pipeline Job");
+                    return Task.CompletedTask;
+                }
+
+                var bundleArtifactPath = BundleArtifactPath.Resolve(pipeline, this);
+                Directory.CreateDirectory(bundleArtifactPath);
+
+                var origToStubbed = ShaderDictionary.OrigToStubbed;
+
+                var materials = GetAllMaterialsWithOrigShaders(origToStubbed.Keys.ToArray());
+
+                if (materials.Length != 0)
+                {
+                    var log = SwapOrigForStubbedd(materials, origToStubbed);
+                    pipeline.Log(LogLevel.Information, $"Replacing a total of {log.Count} real shaders for stubbed shaders.", log.ToArray());
+                }
+
+                var explicitAssets = assetBundleDefs.SelectMany(abd => abd.assetBundles)
+                                                    .SelectMany(ab => ab.assets)
+                                                    .ToArray();
+
+                var explicitAssetPaths = new List<string>();
+                PopulateWithExplicitAssets(explicitAssets, explicitAssetPaths);
+
+                var defBuildDetails = new List<string>();
+                var logBuilder = new StringBuilder();
+                var builds = new AssetBundleBuild[assetBundleDefs.Sum(abd => abd.assetBundles.Length)];
+
+                var buildsIndex = 0;
+                for (int defIndex = 0; defIndex < assetBundleDefs.Length; defIndex++)
+                {
+                    var assetBundleDef = assetBundleDefs[defIndex];
+                    var playerAssemblies = CompilationPipeline.GetAssemblies();
+                    var assemblyFiles = playerAssemblies.Select(pa => pa.outputPath).ToArray();
+                    var sourceFiles = playerAssemblies.SelectMany(pa => pa.sourceFiles).ToArray();
+
+                    defBuildDetails.Clear();
+
+                    for (int i = 0; i < assetBundleDef.assetBundles.Length; i++)
+                    {
+                        var def = assetBundleDef.assetBundles[i];
+
+                        var build = builds[buildsIndex];
+
+                        var assets = new List<string>();
+
+                        var firstAsset = def.assets.FirstOrDefault(x => x is SceneAsset);
+
+                        if (firstAsset != null) assets.Add(AssetDatabase.GetAssetPath(firstAsset));
+                        else
+                        {
+                            PopulateWithExplicitAssets(def.assets, assets);
+
+                            var dependencies = assets
+                                .SelectMany(assetPath => AssetDatabase.GetDependencies(assetPath))
+                                .Where(dap => !explicitAssetPaths.Contains(dap))
+                                .ToArray();
+
+                            assets.AddRange(dependencies);
+                        }
+
+                        build.assetNames = assets
+                            .Select(ap => ap.Replace("\\", "/"))
+                            .Where(dap => !ArrayUtility.Contains(excludedExtensions, Path.GetExtension(dap)) &&
+                                          !ArrayUtility.Contains(sourceFiles, dap) &&
+                                          !ArrayUtility.Contains(assemblyFiles, dap) &&
+                                          !AssetDatabase.IsValidFolder(dap))
+                            .Distinct()
                             .ToArray();
+                        build.assetBundleName = def.assetBundleName;
+                        builds[buildsIndex] = build;
+                        buildsIndex++;
 
-                        assets.AddRange(dependencies);
+                        LogBundleDetails(logBuilder, build);
+
+                        defBuildDetails.Add(logBuilder.ToString());
+                        logBuilder.Clear();
                     }
 
-                    build.assetNames = assets
-                        .Select(ap => ap.Replace("\\", "/"))
-                        .Where(dap => !ArrayUtility.Contains(excludedExtensions, Path.GetExtension(dap)) &&
-                                      !ArrayUtility.Contains(sourceFiles, dap) &&
-                                      !ArrayUtility.Contains(assemblyFiles, dap) &&
-                                      !AssetDatabase.IsValidFolder(dap))
-                        .Distinct()
-                        .ToArray();
-                    build.assetBundleName = def.assetBundleName;
-                    builds[buildsIndex] = build;
-                    buildsIndex++;
-
-                    LogBundleDetails(logBuilder, build);
-
-                    defBuildDetails.Add(logBuilder.ToString());
-                    logBuilder.Clear();
+                    var prevInd = pipeline.ManifestIndex;
+                    pipeline.ManifestIndex = assetBundleDefIndices[assetBundleDef];
+                    pipeline.Log(LogLevel.Information, $"Creating {assetBundleDef.assetBundles.Length} AssetBundles", defBuildDetails.ToArray());
+                    pipeline.ManifestIndex = prevInd;
                 }
 
-                var prevInd = pipeline.ManifestIndex;
-                pipeline.ManifestIndex = assetBundleDefIndices[assetBundleDef];
-                pipeline.Log(LogLevel.Information, $"Creating {assetBundleDef.assetBundles.Length} AssetBundles", defBuildDetails.ToArray());
-                pipeline.ManifestIndex = prevInd;
-            }
-
-            if (!simulate)
-            {
-                BuildPipeline.BuildAssetBundles(bundleArtifactPath, builds, AssetBundleBuildOptions, buildTarget);
-                for (pipeline.ManifestIndex = 0; pipeline.ManifestIndex < pipeline.Manifests.Length; pipeline.ManifestIndex++)
+                if (!simulate)
                 {
-                    var manifest = pipeline.Manifest;
-                    foreach (var assetBundleDef in manifest.Data.OfType<AssetBundleDefinitions>())
+                    BuildPipeline.BuildAssetBundles(bundleArtifactPath, builds, AssetBundleBuildOptions, buildTarget);
+                    for (pipeline.ManifestIndex = 0; pipeline.ManifestIndex < pipeline.Manifests.Length; pipeline.ManifestIndex++)
                     {
-                        var bundleNames = assetBundleDef.assetBundles.Select(ab => ab.assetBundleName).ToArray();
-                        foreach (var outputPath in assetBundleDef.StagingPaths.Select(path => path.Resolve(pipeline, this)))
+                        var manifest = pipeline.Manifest;
+                        foreach (var assetBundleDef in manifest.Data.OfType<AssetBundleDefinitions>())
                         {
-                            foreach (string dirPath in Directory.GetDirectories(bundleArtifactPath, "*", SearchOption.AllDirectories))
-                                Directory.CreateDirectory(dirPath.Replace(bundleArtifactPath, outputPath));
-
-                            foreach (string filePath in Directory.GetFiles(bundleArtifactPath, "*", SearchOption.AllDirectories))
+                            var bundleNames = assetBundleDef.assetBundles.Select(ab => ab.assetBundleName).ToArray();
+                            foreach (var outputPath in assetBundleDef.StagingPaths.Select(path => path.Resolve(pipeline, this)))
                             {
-                                bool found = false;
-                                foreach (var bundleName in bundleNames)
+                                foreach (string dirPath in Directory.GetDirectories(bundleArtifactPath, "*", SearchOption.AllDirectories))
+                                    Directory.CreateDirectory(dirPath.Replace(bundleArtifactPath, outputPath));
+
+                                foreach (string filePath in Directory.GetFiles(bundleArtifactPath, "*", SearchOption.AllDirectories))
                                 {
-                                    if (filePath.IndexOf(bundleName, System.StringComparison.OrdinalIgnoreCase) >= 0)
+                                    bool found = false;
+                                    foreach (var bundleName in bundleNames)
                                     {
-                                        found = true;
-                                        break;
+                                        if (filePath.IndexOf(bundleName, System.StringComparison.OrdinalIgnoreCase) >= 0)
+                                        {
+                                            found = true;
+                                            break;
+                                        }
                                     }
+                                    if (!found) continue;
+                                    string destFileName = filePath.Replace(bundleArtifactPath, outputPath);
+                                    Directory.CreateDirectory(Path.GetDirectoryName(destFileName));
+                                    FileUtil.ReplaceFile(filePath, destFileName);
+
                                 }
-                                if (!found) continue;
-                                string destFileName = filePath.Replace(bundleArtifactPath, outputPath);
-                                Directory.CreateDirectory(Path.GetDirectoryName(destFileName));
-                                FileUtil.ReplaceFile(filePath, destFileName);
 
+                                var manifestSource = Path.Combine(bundleArtifactPath, $"{Path.GetFileName(bundleArtifactPath)}.manifest");
+                                var manifestDestination = Path.Combine(outputPath, $"{manifest.Identity.Name}.manifest");
+                                FileUtil.ReplaceFile(manifestSource, manifestDestination);
                             }
-
-                            var manifestSource = Path.Combine(bundleArtifactPath, $"{Path.GetFileName(bundleArtifactPath)}.manifest");
-                            var manifestDestination = Path.Combine(outputPath, $"{manifest.Identity.Name}.manifest");
-                            FileUtil.ReplaceFile(manifestSource, manifestDestination);
                         }
                     }
+                    pipeline.ManifestIndex = -1;
                 }
-                pipeline.ManifestIndex = -1;
             }
-
-            materials = GetAllMaterialsWithStubbedShaders(stubbedToOrig.Keys.ToArray());
-
-            if (materials.Length != 0)
+            finally
             {
-                var log = RestoreMaterialShaders(materials, stubbedToOrig);
-                pipeline.Log(LogLevel.Information, $"Restored a total of {log.Count} stubbed shaders for real shaders.", log.ToArray());
+                var stubbedToOrig = ShaderDictionary.StubbedToOrig;
+                var materials = GetAllMaterialsWithStubbedShaders(stubbedToOrig.Keys.ToArray());
+
+                if (materials.Length != 0)
+                {
+                    var log = RestoreMaterialShaders(materials, stubbedToOrig);
+                    pipeline.Log(LogLevel.Information, $"Restored a total of {log.Count} stubbed shaders for real shaders.", log.ToArray());
+                }
+                AssetDatabase.SaveAssets();
             }
-            AssetDatabase.SaveAssets();
             return Task.CompletedTask;
         }
 
