@@ -30,9 +30,9 @@ namespace Moonstorm.EditorUtils.Settings
         const string ShaderRootGUID = "e57526cd2e529264f8e9999843849112";
 
         [InitializeOnLoadMethod]
-        static void SetupSettings()
+        static void CreateDictionaryOnDomainReload()
         {
-            GetOrCreateSettings<ShaderDictionary>();
+            GetOrCreateSettings<ShaderDictionary>().ReloadDictionaries();
         }
 
         private SerializedObject shaderDictionarySO;
@@ -44,22 +44,33 @@ namespace Moonstorm.EditorUtils.Settings
         {
             get
             {
-                return GetOrCreateSettings<ShaderDictionary>().shaderPairs
-                    .Select(sp => (sp.stubbed.LoadShader(), sp.original.LoadShader()))
-                    .Where(sp => sp.Item1 && sp.Item2)
-                    .ToDictionary(k => k.Item2, v => v.Item1);
+                if(_origToStubbed == null)
+                {
+                    _origToStubbed = GetOrCreateSettings<ShaderDictionary>().shaderPairs
+                                        .Select(sp => (sp.stubbed.LoadShader(), sp.original.LoadShader()))
+                                        .Where(sp => sp.Item1 && sp.Item2)
+                                        .ToDictionary(k => k.Item2, v => v.Item1);
+                }
+                return _origToStubbed;
             }
         }
+        private static Dictionary<Shader, Shader> _origToStubbed;
         public static Dictionary<Shader, Shader> StubbedToOrig
         {
             get
             {
-                return GetOrCreateSettings<ShaderDictionary>().shaderPairs
-                    .Select(sp => (sp.stubbed.LoadShader(), sp.original.LoadShader()))
-                    .Where(sp => sp.Item1 && sp.Item2)
-                    .ToDictionary(k => k.Item1, v => v.Item2);
+                if(_stubbedToOrig == null)
+                {
+                    _stubbedToOrig = GetOrCreateSettings<ShaderDictionary>().shaderPairs
+                                        .Select(sp => (sp.stubbed.LoadShader(), sp.original.LoadShader()))
+                                        .Where(sp => sp.Item1 && sp.Item2)
+                                        .ToDictionary(k => k.Item1, v => v.Item2);
+                }
+                return _stubbedToOrig;
             }
         }
+        private static Dictionary<Shader, Shader> _stubbedToOrig;
+
         public override void CreateSettingsUI(VisualElement rootElement)
         {
             if (shaderDictionarySO == null)
@@ -82,6 +93,14 @@ namespace Moonstorm.EditorUtils.Settings
             attemptToFinish.style.maxWidth = new StyleLength(new Length(250));
             attemptToFinish.clicked += AttemptToFinishDictionaryAutomatically;
             rootElement.Add(attemptToFinish);
+
+            var reloadDictionary = new Button();
+            reloadDictionary.text = $"Reload Internal Dictionary";
+            reloadDictionary.tooltip = $"Clears out the current dictionary loaded into memory and re-creates them with the current shader pair values." +
+                $"\nUse this after the list is created.";
+            reloadDictionary.style.maxWidth = new StyleLength(new Length(250));
+            reloadDictionary.clicked += ReloadDictionaries;
+            rootElement.Add(reloadDictionary);
 
             var shaderPair = CreateStandardField(nameof(shaderPairs));
             shaderPair.tooltip = $"The ShaderPairs that are used for the Dictionary system in MSEU's SwapShadersAndStageAssetBundles pipeline." +
@@ -156,6 +175,15 @@ namespace Moonstorm.EditorUtils.Settings
 
                 pair.original.SetShader(origShader);
             }
+        }
+
+        private void ReloadDictionaries()
+        {
+            _origToStubbed = null;
+            _stubbedToOrig = null;
+
+            _ = OrigToStubbed;
+            _ = StubbedToOrig;
         }
     }
 }
