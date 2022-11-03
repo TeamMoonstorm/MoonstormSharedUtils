@@ -38,6 +38,7 @@ namespace Moonstorm
         internal static ConfigEntry<float> maxOpacityForEventMessage;
         internal static ConfigEntry<float> eventMessageFontSize;
         internal static ConfigEntry<float> eventMessageYOffset;
+        internal static ConfigEntry<float> eventMessageXOffset;
         internal static ConfigEntry<bool> familyEventUsesEventAnnouncementInsteadOfChatMessage;
         internal static ConfigEntry<bool> eventAnnouncementsAsChatMessages;
 
@@ -96,6 +97,11 @@ namespace Moonstorm
                 "Event Message Y Offset",
                 225f,
                 "The Y Offset for the event message. Irrelevant if the Event Announcement system is disabled via configs.");
+
+            eventMessageXOffset = eventsConfig.Bind("MoonstormSharedUtils :: Event Messages",
+                "Event Message X Offset",
+                0f,
+                "The X Offset for the event message. Irrelevant if the Event Announcement system is disabled via configs.");
 
             eventAnnouncementsAsChatMessages = eventsConfig.Bind<bool>("MoonstormSharedUtils :: Event Messages",
                 "Event Announcements as Chat Messages",

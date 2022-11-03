@@ -87,7 +87,7 @@ namespace Moonstorm
                 yield return new WaitForSeconds(4);
                 Transform transform = instance.transform;
                 transform.SetParent(hudInstance.mainContainer.transform, false);
-                instance.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, MSUConfig.eventMessageYOffset.Value);
+                instance.GetComponent<RectTransform>().anchoredPosition = new Vector3(MSUConfig.eventMessageXOffset.Value, MSUConfig.eventMessageYOffset.Value);
                 instance.GetComponent<EventTextController>().BeginFade();
 
                 yield break;
@@ -103,7 +103,7 @@ namespace Moonstorm
         public static GameObject AnnounceEvent(EventAnnounceInfo announceInfo)
         {
             GameObject eventAnnouncerInstance = UnityEngine.Object.Instantiate(EventAnnouncer, hudInstance.mainContainer.transform, false);
-            eventAnnouncerInstance.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, MSUConfig.eventMessageYOffset.Value);
+            eventAnnouncerInstance.GetComponent<RectTransform>().anchoredPosition = new Vector3(MSUConfig.eventMessageXOffset.Value, MSUConfig.eventMessageYOffset.Value);
 
             HGTextMeshProUGUI hgText = eventAnnouncerInstance.GetComponent<HGTextMeshProUGUI>();
             string token = announceInfo.isEventStart ? announceInfo.card.startMessageToken : announceInfo.card.endMessageToken;
