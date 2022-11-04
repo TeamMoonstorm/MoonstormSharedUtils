@@ -85,13 +85,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   creditGainRange:
-    min: 15
+    min: 1
     max: 55
   eventCredits: 0
   intervalResetRange:
     min: 15
     max: 45
-  intervalStopWatch: 5
+  intervalStopWatch: 45
   weatherParamsWhenSceneStarted:
     sunColor: {r: 0, g: 0, b: 0, a: 0}
     sunIntensity: 0
@@ -129,9 +129,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   customName: WeatherEvent
   initialStateType:
-    _typeName: EntityStates.Idle, Assembly-CSharp
+    _typeName: EntityStates.Idle, RoR2, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   mainStateType:
-    _typeName: EntityStates.Idle, Assembly-CSharp
+    _typeName: EntityStates.Idle, RoR2, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
 --- !u!114 &6608108323168215014
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -146,9 +146,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   customName: Event0
   initialStateType:
-    _typeName: EntityStates.Idle, Assembly-CSharp
+    _typeName: EntityStates.Idle, RoR2, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   mainStateType:
-    _typeName: EntityStates.Idle, Assembly-CSharp
+    _typeName: EntityStates.Idle, RoR2, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
 --- !u!114 &6580511454466361975
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -163,9 +163,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   customName: Event1
   initialStateType:
-    _typeName: EntityStates.Idle, Assembly-CSharp
+    _typeName: EntityStates.Idle, RoR2, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   mainStateType:
-    _typeName: EntityStates.Idle, Assembly-CSharp
+    _typeName: EntityStates.Idle, RoR2, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
 --- !u!114 &1543048969364378828
 MonoBehaviour:
   m_ObjectHideFlags: 0
