@@ -25,6 +25,7 @@ namespace Moonstorm
         public static EventDirectorCategorySelection VoidLocus { get; } = Load(nameof(VoidLocus));
         public static EventDirectorCategorySelection WetlandAspect { get; } = Load(nameof(WetlandAspect));
         public static EventDirectorCategorySelection TitanicPlains { get; } = Load(nameof(TitanicPlains));
+        public static EventDirectorCategorySelection GildedCoast { get; } = Load(nameof(GildedCoast));
 
 
         public static EventDirectorCategorySelection AbandonedAqueductSimulacrum { get; } = Load(nameof(AbandonedAqueductSimulacrum));

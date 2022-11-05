@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HG.Reflection;
+using System;
 using System.Globalization;
 using System.Reflection;
 
@@ -46,7 +47,7 @@ namespace Moonstorm
     /// <para>You should add your mod to the <see cref="TokenModifierManager"/> with <seealso cref="TokenModifierManager.AddToManager"/></para>
     /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = true)]
-    public class TokenModifierAttribute : Attribute
+    public class TokenModifierAttribute : SearchableAttribute
     {
         /// <summary>
         /// The LanguageToken to be formatted
@@ -86,95 +87,52 @@ namespace Moonstorm
             this.extraData = extraData;
         }
 
-        internal (object, int) GetFormatting(PropertyInfo propertyInfo)
+        internal object GetFormattingValue()
         {
-            if (valueForFormatting != null)
+            object value = null;
+            if(target is FieldInfo fi)
             {
-                return (valueForFormatting, formatIndex);
+                value = fi.GetValue(null);
+            }
+            else if(target is PropertyInfo pi)
+            {
+                value = pi.GetMethod?.Invoke(null, null);
             }
 
-            var getMethod = propertyInfo.GetMethod;
-            object value = getMethod.Invoke(null, null);
-            if (value != null && IsNumber(value))
+            if(value != null && IsNumber(value))
             {
-                switch (statType)
+                switch(statType)
                 {
                     case StatTypes.Default:
                         valueForFormatting = value;
-                        return (valueForFormatting, formatIndex);
+                        return valueForFormatting;
                     case StatTypes.Percentage:
                         extraData = "100";
                         valueForFormatting = MultiplyByN(CastToFloat(value));
-                        return (valueForFormatting, formatIndex);
+                        return valueForFormatting;
                     case StatTypes.DivideBy2:
                         extraData = "2";
                         valueForFormatting = DivideByN(CastToFloat(value));
-                        return (valueForFormatting, formatIndex);
+                        return valueForFormatting;
                     case StatTypes.MultiplyByN:
                         valueForFormatting = MultiplyByN(CastToFloat(value));
-                        return (valueForFormatting, formatIndex);
+                        return valueForFormatting;
                     case StatTypes.DivideByN:
                         valueForFormatting = DivideByN(CastToFloat(value));
-                        return (valueForFormatting, formatIndex);
+                        return valueForFormatting;
                     case StatTypes.AddN:
                         valueForFormatting = AddN(CastToFloat(value));
-                        return (valueForFormatting, formatIndex);
+                        return valueForFormatting;
                     case StatTypes.SubtractN:
                         valueForFormatting = SubtractN(CastToFloat(value));
-                        return (valueForFormatting, formatIndex);
+                        return valueForFormatting;
                 }
             }
             else
             {
-                MSULog.Error($"The type {propertyInfo.PropertyType} is not a number, the {nameof(TokenModifierAttribute)} attribute should only be used on fields/properties that are numbers!");
+                MSULog.Error($"The Field/Property {target}'s Type is not a number, the {nameof(TokenModifierAttribute)} attribute should only be used on fields/properties that are numbers!");
             }
-            return (null, 0);
-        }
-
-        internal (object, int) GetFormatting(FieldInfo fieldInfo)
-        {
-            if (valueForFormatting != null)
-            {
-                return (valueForFormatting, formatIndex);
-            }
-            else
-            {
-                object value = fieldInfo.GetValue(null);
-                if (value != null && IsNumber(value))
-                {
-                    switch (statType)
-                    {
-                        case StatTypes.Default:
-                            valueForFormatting = value;
-                            return (valueForFormatting, formatIndex);
-                        case StatTypes.Percentage:
-                            extraData = "100";
-                            valueForFormatting = MultiplyByN(CastToFloat(value));
-                            return (valueForFormatting, formatIndex);
-                        case StatTypes.DivideBy2:
-                            extraData = "2";
-                            valueForFormatting = DivideByN(CastToFloat(value));
-                            return (valueForFormatting, formatIndex);
-                        case StatTypes.MultiplyByN:
-                            valueForFormatting = MultiplyByN(CastToFloat(value));
-                            return (valueForFormatting, formatIndex);
-                        case StatTypes.DivideByN:
-                            valueForFormatting = DivideByN(CastToFloat(value));
-                            return (valueForFormatting, formatIndex);
-                        case StatTypes.AddN:
-                            valueForFormatting = AddN(CastToFloat(value));
-                            return (valueForFormatting, formatIndex);
-                        case StatTypes.SubtractN:
-                            valueForFormatting = SubtractN(CastToFloat(value));
-                            return (valueForFormatting, formatIndex);
-                    }
-                }
-                else
-                {
-                    MSULog.Error($"The type {fieldInfo.FieldType} is not a number, the {nameof(TokenModifierAttribute)} attribute should only be used on fields that are numbers!");
-                }
-                return (null, 0);
-            }
+            return null;
         }
 
         private float CastToFloat(object obj)

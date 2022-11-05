@@ -19,10 +19,7 @@ namespace Moonstorm
     {
         private static bool initialized = false;
 
-        private static List<(List<FieldInfo>, string)> fieldsToConfigure = new List<(List<FieldInfo>, string)>();
-
         private static Dictionary<Assembly, string> assemblyToIdentifier = new Dictionary<Assembly, string>();
-        private static Dictionary<string, List<FieldInfo>> identifierToFields = new Dictionary<string, List<FieldInfo>>();
         private static Dictionary<string, ConfigFile> identifierToConfigFile = new Dictionary<string, ConfigFile>();
 
         [SystemInitializer()]
@@ -85,10 +82,7 @@ namespace Moonstorm
             MSULog.Info($"Adding mod {assembly.GetName().Name} to the configurable field manager");
 
             assemblyToIdentifier.Add(assembly, mainConfigFileIdentifier);
-
-            if (!identifierToFields.ContainsKey(mainConfigFileIdentifier))
-                identifierToConfigFile.Add(mainConfigFileIdentifier, mainConfigFile);
-
+            identifierToConfigFile.Add(mainConfigFileIdentifier, mainConfigFile);
         }
 
         private static (string, ConfigFile) GetMainConfigFile(BaseUnityPlugin plugin)
@@ -100,6 +94,7 @@ namespace Moonstorm
         private static void ConfigureFields()
         {
             var instances = SearchableAttribute.GetInstances<ConfigurableFieldAttribute>().OfType<ConfigurableFieldAttribute>();
+            MSULog.Info($"Configuring a total of {instances.Count()} fields");
 
             foreach(ConfigurableFieldAttribute configurableField in instances)
             {
