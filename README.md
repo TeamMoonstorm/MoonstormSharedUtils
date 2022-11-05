@@ -90,6 +90,37 @@ MSU will forever be free to use and never gated behind paywalls, however, donati
 
 (Old Changelog can be found [here](https://github.com/TeamMoonstorm/MoonstormSharedUtils/blob/main/Runtime/README-OLD.md))
 
+### '1.1.1' - Bug Fixes
+
+* Runtime:
+    * Event Related:
+        * Fixed null reference exception issue with the Event Director on Custom Stages.
+        * SetupWeatherController no longer causes issues with Custom Stage
+        * Added an X offset for the event messages
+        * Event director wont instantiate new events when the teleporter is charged, or when it's charging percent is over 25%
+        * Event Cards can now have multiple required Expansion Defs.
+        * Added missing EventDirectorCategorySelection for Gilded Coast
+        * Fixed most Properties in VanillaEventDirectorCategorySelection returning null
+    * Token Modifier changes:
+        * Marked "AddMod" method as obsolete
+        * Now inherits from SearchableAttribute
+        * Now works on Properties and Fields
+        * Marked StatTypes.Percentage and StatTypes.DivideBy2 as obsolete
+        * Added the following StatTypes:
+            * DivideByN
+            * MultiplyByN
+            * AddN
+            * SubtractN
+        * added a new field for representing the N in the new stat types, this allows mod creators to have a lot more control on the displayed values.
+    * ConfigurableField attribute now uses SearchableAttribute
+    * AddressableAssets changes:
+        * AddressableAssets' OnAddressableAssetsLoaded no longer runs before initialized sets to true.
+        * Added constructors for the bundled in AddressableAssets
+
+* Editor:
+    * Shader Dictionary now is kept loaded in static memory on domain reloads.
+    * SwapShadersAndStageAssetbundles will now revert swapped shaders back to normal if an exception is thrown
+
 ### '1.1.0' - Void Items
 
 * General:

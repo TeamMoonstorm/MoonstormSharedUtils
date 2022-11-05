@@ -28,10 +28,14 @@ MonoBehaviour:
   minimumStageCompletions: 0
   requiredUnlockableDef:
     address: 
+    useDirectReference: 1
     asset: {fileID: 0}
   forbiddenUnlockableDef:
     address: 
+    useDirectReference: 1
     asset: {fileID: 0}
+  requiredExpansions: []
   requiredExpansionDef:
     address: 
+    useDirectReference: 1
     asset: {fileID: 0}

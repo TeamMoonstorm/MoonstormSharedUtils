@@ -16,6 +16,16 @@
             The Address thats used during the process of loading the asset specified in T
             </summary>
         </member>
+        <member name="F:Moonstorm.AddressableAssets.AddressableAsset`1.useDirectReference">
+            <summary>
+            Wether this AddressableAsset is using a Direct Reference of an asset or not
+            </summary>
+        </member>
+        <member name="F:Moonstorm.AddressableAssets.AddressableAsset`1.asset">
+            <summary>
+            The asset, you should really load the asset using <see cref="P:Moonstorm.AddressableAssets.AddressableAsset`1.Asset"/> at runtime.
+            </summary>
+        </member>
         <member name="P:Moonstorm.AddressableAssets.AddressableAsset`1.Asset">
             <summary>
             The Asset that's tied to this AddressableAsset.
@@ -33,13 +43,6 @@
             Loads the Asset via Addressables
             </summary>
             <returns>Returns a Task when the operation is complete</returns>
-        </member>
-        <member name="M:Moonstorm.AddressableAssets.AddressableAsset`1.SetAsset(`0)">
-            <summary>
-            Sets the Asset for this Addressable Asset
-            </summary>
-            <param name="asset">The asset</param>
-            <returns>Task.CompletedTask</returns>
         </member>
         <member name="T:Moonstorm.AddressableAssets.AddressableAsset">
             <summary>
@@ -63,11 +66,45 @@
             The type of asset this references is a <see cref="T:RoR2.BuffDef"/>, and can be loaded either via Addressables or the <see cref="T:RoR2.BuffCatalog"/>
             </summary>
         </member>
+        <member name="M:Moonstorm.AddressableAssets.AddressableBuffDef.#ctor">
+            <summary>
+            Parameterless Constructor for <see cref="T:Moonstorm.AddressableAssets.AddressableBuffDef"/>
+            </summary>
+        </member>
+        <member name="M:Moonstorm.AddressableAssets.AddressableBuffDef.#ctor(RoR2.BuffDef)">
+            <summary>
+            Constructor for <see cref="T:Moonstorm.AddressableAssets.AddressableBuffDef"/> that sets the <see cref="T:RoR2.BuffDef"/> asset.
+            </summary>
+            <param name="bd">The <see cref="T:RoR2.BuffDef"/> for this <see cref="T:Moonstorm.AddressableAssets.AddressableBuffDef"/></param>
+        </member>
+        <member name="M:Moonstorm.AddressableAssets.AddressableBuffDef.#ctor(System.String)">
+            <summary>
+            Constructor for <see cref="T:Moonstorm.AddressableAssets.AddressableBuffDef"/> that sets the address that'll load the asset
+            </summary>
+            <param name="addressOrBuffDefName">The Address for the <see cref="T:RoR2.BuffDef"/>, this can also be the asset's name so it can load via the <see cref="T:RoR2.BuffCatalog"/></param>
+        </member>
         <member name="T:Moonstorm.AddressableAssets.AddressableEliteDef">
             <summary>
             <inheritdoc cref="T:Moonstorm.AddressableAssets.AddressableAsset`1"/>
             The type of asset this refereces is an <see cref="T:RoR2.EliteDef"/>, and can be loaded either via Addressables or the <see cref="T:RoR2.EliteCatalog"/>
             </summary>
+        </member>
+        <member name="M:Moonstorm.AddressableAssets.AddressableEliteDef.#ctor">
+            <summary>
+            Parameterless Constructor for <see cref="T:Moonstorm.AddressableAssets.AddressableEliteDef"/>
+            </summary>
+        </member>
+        <member name="M:Moonstorm.AddressableAssets.AddressableEliteDef.#ctor(RoR2.EliteDef)">
+            <summary>
+            Constructor for <see cref="T:Moonstorm.AddressableAssets.AddressableEliteDef"/> that sets the <see cref="T:RoR2.EliteDef"/> asset.
+            </summary>
+            <param name="ed">The <see cref="T:RoR2.EliteDef"/> for this <see cref="T:Moonstorm.AddressableAssets.AddressableEliteDef"/></param>
+        </member>
+        <member name="M:Moonstorm.AddressableAssets.AddressableEliteDef.#ctor(System.String)">
+            <summary>
+            Constructor for <see cref="T:Moonstorm.AddressableAssets.AddressableEliteDef"/> that sets the address that'll load the asset
+            </summary>        
+            <param name="addressOrEliteDefName">The Address for the <see cref="T:RoR2.EliteDef"/>, this can also be the asset's name so it can load via the <see cref="T:RoR2.EliteCatalog"/></param>
         </member>
         <member name="T:Moonstorm.AddressableAssets.AddressableEquipmentDef">
             <summary>
@@ -75,11 +112,45 @@
             The type of asset this references is an <see cref="T:RoR2.EquipmentDef"/>, and can be loaded either via Addressables or the <see cref="T:RoR2.EquipmentCatalog"/>
             </summary>
         </member>
+        <member name="M:Moonstorm.AddressableAssets.AddressableEquipmentDef.#ctor">
+            <summary>
+            Parameterless Constructor for <see cref="T:Moonstorm.AddressableAssets.AddressableEquipmentDef"/>
+            </summary>
+        </member>
+        <member name="M:Moonstorm.AddressableAssets.AddressableEquipmentDef.#ctor(RoR2.EquipmentDef)">
+            <summary>
+            Constructor for <see cref="T:Moonstorm.AddressableAssets.AddressableEquipmentDef"/> that sets the <see cref="T:RoR2.EquipmentDef"/> asset.
+            </summary>
+            <param name="ed">The <see cref="T:RoR2.EquipmentDef"/> for this <see cref="T:Moonstorm.AddressableAssets.AddressableEquipmentDef"/></param>
+        </member>
+        <member name="M:Moonstorm.AddressableAssets.AddressableEquipmentDef.#ctor(System.String)">
+            <summary>
+            Constructor for <see cref="T:Moonstorm.AddressableAssets.AddressableEquipmentDef"/> that sets the address that'll load the asset
+            </summary>
+            <param name="addressOrEquipmentDefName">The Address for the <see cref="T:RoR2.EquipmentDef"/>, this can also be the asset's name so it can load via the <see cref="T:RoR2.EquipmentCatalog"/></param>
+        </member>
         <member name="T:Moonstorm.AddressableAssets.AddressableExpansionDef">
             <summary>
             <inheritdoc cref="T:Moonstorm.AddressableAssets.AddressableAsset`1"/>
             The type of asset this references is an <see cref="T:RoR2.ExpansionManagement.ExpansionDef"/>, and can be loaded either via Addressables or the <see cref="T:RoR2.ExpansionManagement.ExpansionCatalog"/>
             </summary>
+        </member>
+        <member name="M:Moonstorm.AddressableAssets.AddressableExpansionDef.#ctor">
+            <summary>
+            Parameterless Constructor for <see cref="T:Moonstorm.AddressableAssets.AddressableExpansionDef"/>
+            </summary>
+        </member>
+        <member name="M:Moonstorm.AddressableAssets.AddressableExpansionDef.#ctor(RoR2.ExpansionManagement.ExpansionDef)">
+            <summary>
+            Constructor for <see cref="T:Moonstorm.AddressableAssets.AddressableExpansionDef"/> that sets the <see cref="T:RoR2.ExpansionManagement.ExpansionDef"/> asset.
+            </summary>
+            <param name="ed">The <see cref="T:RoR2.ExpansionManagement.ExpansionDef"/> for this <see cref="T:Moonstorm.AddressableAssets.AddressableExpansionDef"/></param>
+        </member>
+        <member name="M:Moonstorm.AddressableAssets.AddressableExpansionDef.#ctor(System.String)">
+            <summary>
+            Constructor for <see cref="T:Moonstorm.AddressableAssets.AddressableExpansionDef"/> that sets the address that'll load the asset
+            </summary>
+            <param name="addressOrExpansionDefName">The Address for the <see cref="T:RoR2.ExpansionManagement.ExpansionDef"/>, this can also be the asset's name so it can load via the <see cref="T:RoR2.ExpansionManagement.ExpansionCatalog"/></param>
         </member>
         <member name="T:Moonstorm.AddressableAssets.AddressableGameObject">
             <summary>
@@ -87,17 +158,68 @@
             The type of asset this references is a <see cref="T:UnityEngine.GameObject"/>, and can only be loaded via Addressables
             </summary>
         </member>
+        <member name="M:Moonstorm.AddressableAssets.AddressableGameObject.#ctor">
+            <summary>
+            Parameterless Constructor for <see cref="T:Moonstorm.AddressableAssets.AddressableGameObject"/>
+            </summary>
+        </member>
+        <member name="M:Moonstorm.AddressableAssets.AddressableGameObject.#ctor(UnityEngine.GameObject)">
+            <summary>
+            Constructor for <see cref="T:Moonstorm.AddressableAssets.AddressableGameObject"/> that sets the <see cref="T:UnityEngine.GameObject"/> asset.
+            </summary>
+            <param name="go">The <see cref="T:UnityEngine.GameObject"/> for this <see cref="T:Moonstorm.AddressableAssets.AddressableGameObject"/></param>
+        </member>
+        <member name="M:Moonstorm.AddressableAssets.AddressableGameObject.#ctor(System.String)">
+            <summary>
+            Constructor for <see cref="T:Moonstorm.AddressableAssets.AddressableGameObject"/> that sets the address that'll load the asset
+            </summary>
+            <param name="address">The Address for the <see cref="T:UnityEngine.GameObject"/></param>
+        </member>
         <member name="T:Moonstorm.AddressableAssets.AddressableIDRS">
             <summary>
             <inheritdoc cref="T:Moonstorm.AddressableAssets.AddressableAsset`1"/>
             The type of asset this references is an <see cref="T:RoR2.ItemDisplayRuleSet"/> and can only be loaded via Addressables
             </summary>
         </member>
+        <member name="M:Moonstorm.AddressableAssets.AddressableIDRS.#ctor">
+            <summary>
+            Parameterless Constructor for <see cref="T:Moonstorm.AddressableAssets.AddressableIDRS"/>
+            </summary>
+        </member>
+        <member name="M:Moonstorm.AddressableAssets.AddressableIDRS.#ctor(RoR2.ItemDisplayRuleSet)">
+            <summary>
+            Constructor for <see cref="T:Moonstorm.AddressableAssets.AddressableIDRS"/> that sets the <see cref="T:RoR2.ItemDisplayRuleSet"/> asset.
+            </summary>
+            <param name="id">The <see cref="T:RoR2.ItemDisplayRuleSet"/> for this <see cref="T:Moonstorm.AddressableAssets.AddressableIDRS"/></param>
+        </member>
+        <member name="M:Moonstorm.AddressableAssets.AddressableIDRS.#ctor(System.String)">
+            <summary>
+            Constructor for <see cref="T:Moonstorm.AddressableAssets.AddressableIDRS"/> that sets the address that'll load the asset
+            </summary>
+            <param name="address">The Address for the <see cref="T:RoR2.ItemDisplayRuleSet"/></param>
+        </member>
         <member name="T:Moonstorm.AddressableAssets.AddressableItemDef">
             <summary>
             <inheritdoc cref="T:Moonstorm.AddressableAssets.AddressableAsset`1"/>
             The type of asset this references is an <see cref="T:RoR2.ItemDef"/> and can be loaded either via Addressables or the <see cref="T:RoR2.ItemCatalog"/>
             </summary>
+        </member>
+        <member name="M:Moonstorm.AddressableAssets.AddressableItemDef.#ctor">
+            <summary>
+            Parameterless Constructor for <see cref="T:Moonstorm.AddressableAssets.AddressableItemDef"/>
+            </summary>
+        </member>
+        <member name="M:Moonstorm.AddressableAssets.AddressableItemDef.#ctor(RoR2.ItemDef)">
+            <summary>
+            Constructor for <see cref="T:Moonstorm.AddressableAssets.AddressableItemDef"/> that sets the <see cref="T:RoR2.ItemDef"/> asset.
+            </summary>
+            <param name="id">The <see cref="T:RoR2.ItemDef"/> for this <see cref="T:Moonstorm.AddressableAssets.AddressableItemDef"/></param>
+        </member>
+        <member name="M:Moonstorm.AddressableAssets.AddressableItemDef.#ctor(System.String)">
+            <summary>
+            Constructor for <see cref="T:Moonstorm.AddressableAssets.AddressableItemDef"/> that sets the address that'll load the asset
+            </summary>
+            <param name="addressOrItemDefName">The Address for the <see cref="T:RoR2.ItemDef"/>, this can also be the asset's name so it can load via the <see cref="T:RoR2.ItemCatalog"/></param>
         </member>
         <member name="T:Moonstorm.AddressableAssets.AddressableKeyAsset">
             <summary>
@@ -125,16 +247,62 @@
             Address is used with Addressables loading
             </summary>
         </member>
+        <member name="F:Moonstorm.AddressableAssets.AddressableKeyAsset.KeyAssetAddressType.UsingDirectReference">
+            <summary>
+            The AddressableKeyAsset is using a direct reference
+            </summary>
+        </member>
         <member name="F:Moonstorm.AddressableAssets.AddressableKeyAsset.loadAssetFrom">
             <summary>
             <inheritdoc cref="T:Moonstorm.AddressableAssets.AddressableKeyAsset.KeyAssetAddressType"/>
             </summary>
+        </member>
+        <member name="M:Moonstorm.AddressableAssets.AddressableKeyAsset.#ctor">
+            <summary>
+            Parameterless Constructor for <see cref="T:Moonstorm.AddressableAssets.AddressableKeyAsset"/>
+            </summary>
+        </member>
+        <member name="M:Moonstorm.AddressableAssets.AddressableKeyAsset.#ctor(RoR2.ItemDef)">
+            <summary>
+            Constructor for <see cref="T:Moonstorm.AddressableAssets.AddressableKeyAsset"/> that sets the Key Asset to the <see cref="T:RoR2.ItemDef"/> specified in <paramref name="id"/>
+            </summary>
+            <param name="id">The <see cref="T:RoR2.ItemDef"/> for this <see cref="T:Moonstorm.AddressableAssets.AddressableKeyAsset"/></param>
+        </member>
+        <member name="M:Moonstorm.AddressableAssets.AddressableKeyAsset.#ctor(RoR2.EquipmentDef)">
+            <summary>
+            Constructor for <see cref="T:Moonstorm.AddressableAssets.AddressableKeyAsset"/> that sets the Key Asset to the <see cref="T:RoR2.EquipmentDef"/> specified in <paramref name="ed"/>
+            </summary>
+            <param name="ed">The <see cref="T:RoR2.EquipmentDef"/> for this <see cref="T:Moonstorm.AddressableAssets.AddressableKeyAsset"/></param>
+        </member>
+        <member name="M:Moonstorm.AddressableAssets.AddressableKeyAsset.#ctor(System.String,Moonstorm.AddressableAssets.AddressableKeyAsset.KeyAssetAddressType)">
+            <summary>
+            Constructor for <see cref="T:Moonstorm.AddressableAssets.AddressableKeyAsset"/> that sets the address that'll load the asset
+            </summary>
+            <param name="addressOrEquipmentNameOrItemName">The Address for the Key Asset, this can also be the ItemDef's or EquipmentDef's name so it can load via their respective catalogs.</param>
+            <param name="addressType">Specifies how the address is used for loading the key asset.</param>
         </member>
         <member name="T:Moonstorm.AddressableAssets.AddressableUnlockableDef">
             <summary>
             <inheritdoc cref="T:Moonstorm.AddressableAssets.AddressableAsset`1"/>
             the type of asset this references is an <see cref="T:RoR2.UnlockableDef"/>, and can be loaded either via Addressables or the <see cref="T:RoR2.UnlockableCatalog"/>
             </summary>
+        </member>
+        <member name="M:Moonstorm.AddressableAssets.AddressableUnlockableDef.#ctor">
+            <summary>
+            Parameterless Constructor for <see cref="T:Moonstorm.AddressableAssets.AddressableUnlockableDef"/>
+            </summary>
+        </member>
+        <member name="M:Moonstorm.AddressableAssets.AddressableUnlockableDef.#ctor(RoR2.UnlockableDef)">
+            <summary>
+            Constructor for <see cref="T:Moonstorm.AddressableAssets.AddressableUnlockableDef"/> that sets the <see cref="T:RoR2.UnlockableDef"/> asset.
+            </summary>
+            <param name="ud">The <see cref="T:RoR2.UnlockableDef"/> for this <see cref="T:Moonstorm.AddressableAssets.AddressableUnlockableDef"/></param>
+        </member>
+        <member name="M:Moonstorm.AddressableAssets.AddressableUnlockableDef.#ctor(System.String)">
+            <summary>
+            Constructor for <see cref="T:Moonstorm.AddressableAssets.AddressableUnlockableDef"/> that sets the address that'll load the asset
+            </summary>
+            <param name="addressOrUnlockableDefName">The Address for the <see cref="T:RoR2.UnlockableDef"/>, this can also be the asset's name so it can load via the <see cref="T:RoR2.UnlockableCatalog"/></param>
         </member>
         <member name="T:Moonstorm.ConfigurableFieldAttribute">
             <summary>
@@ -180,17 +348,37 @@
         </member>
         <member name="F:Moonstorm.StatTypes.Default">
             <summary>
-            No changes are made to the field value for the token formatting
+            No changes are made to the field/property value for the token formatting
             </summary>
         </member>
         <member name="F:Moonstorm.StatTypes.Percentage">
             <summary>
-            The value of the field is multiplied by 100
+            The value of the field/property is multiplied by 100
             </summary>
         </member>
         <member name="F:Moonstorm.StatTypes.DivideBy2">
             <summary>
-            The value of the field is divided by 2
+            The value of the field/property is divided by 2
+            </summary>
+        </member>
+        <member name="F:Moonstorm.StatTypes.DivideByN">
+            <summary>
+            The value of this field/property is divided by N, where N is a float that'll be parsed from <see cref="F:Moonstorm.TokenModifierAttribute.extraData"/>
+            </summary>
+        </member>
+        <member name="F:Moonstorm.StatTypes.MultiplyByN">
+            <summary>
+            The value of this field/property is multiplied by N, where N is a float that'll be parsed from <see cref="F:Moonstorm.TokenModifierAttribute.extraData"/>
+            </summary>
+        </member>
+        <member name="F:Moonstorm.StatTypes.AddN">
+            <summary>
+            N is added to the value of this field/property, where N is a float that'll be parsed from <see cref="F:Moonstorm.TokenModifierAttribute.extraData"/>
+            </summary>
+        </member>
+        <member name="F:Moonstorm.StatTypes.SubtractN">
+            <summary>
+            N is substracted to the value of this field/property, where N is a float that'll be parsed from <see cref="F:Moonstorm.TokenModifierAttribute.extraData"/>
             </summary>
         </member>
         <member name="T:Moonstorm.TokenModifierAttribute">
@@ -214,10 +402,19 @@
             The index used during formatting process
             </summary>
         </member>
+        <member name="F:Moonstorm.TokenModifierAttribute.extraData">
+            <summary>
+            Extra data to be used during formatting, should be used depending on the chosen StatType
+            <para>Examples of stat types that use this field: <see cref="F:Moonstorm.StatTypes.DivideByN"/>, <see cref="F:Moonstorm.StatTypes.MultiplyByN"/></para>
+            </summary>
+        </member>
         <member name="M:Moonstorm.TokenModifierAttribute.#ctor(System.String,Moonstorm.StatTypes,System.Int32)">
             <summary>
             Constructor for the TokenModifierAttribute
             </summary>
+        </member>
+        <member name="M:Moonstorm.TokenModifierAttribute.#ctor(System.String,Moonstorm.StatTypes,System.Int32,System.String)">
+            <inheritdoc cref="M:Moonstorm.TokenModifierAttribute.#ctor(System.String,Moonstorm.StatTypes,System.Int32)"/>
         </member>
         <member name="T:Moonstorm.ConfigurableFieldManager">
             <summary>
@@ -1623,6 +1820,12 @@
             </summary>
             <param name="index">The ItemIndex to count</param>
             <returns>The amount of items, returns 0 if the body doesnt have an inventory.</returns>
+        </member>
+        <member name="M:Moonstorm.MSUtil.GetTypesSafe(System.Reflection.Assembly)">
+            <summary>
+            Gets all the types from an assembly safely by getting the types from a ReflectionTypeLoadException if one is thrown
+            </summary>
+            <returns>The types of the assembly</returns>
         </member>
         <member name="T:Moonstorm.Components.BaseBuffBodyBehavior">
             <summary>
