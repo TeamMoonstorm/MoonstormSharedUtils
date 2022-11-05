@@ -90,6 +90,11 @@ MSU will forever be free to use and never gated behind paywalls, however, donati
 
 (Old Changelog can be found [here](https://github.com/TeamMoonstorm/MoonstormSharedUtils/blob/main/Runtime/README-OLD.md))
 
+### '1.1.2' - Hotfix
+
+* Runtime:
+    * Fixed issue where event messages wouldnt display properly.
+
 ### '1.1.1' - Bug Fixes
 
 * Runtime:

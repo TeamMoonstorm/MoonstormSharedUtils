@@ -58,11 +58,7 @@ namespace Moonstorm
         [SystemInitializer(typeof(EventCatalog))]
         private static void SystemInit()
         {
-            On.RoR2.UI.HUD.Awake += (orig, self) =>
-            {
-                hudInstance = self;
-                orig(self);
-            };
+            On.RoR2.UI.HUD.Awake += GetHUD;
 
             HGTextMeshProUGUI tmp = EventAnnouncer.GetComponent<HGTextMeshProUGUI>();
             float size = MSUConfig.eventMessageFontSize.Value;
@@ -77,6 +73,12 @@ namespace Moonstorm
                 On.RoR2.ClassicStageInfo.BroadcastFamilySelection += ShowAnnouncement;
             }
 
+        }
+
+        private static void GetHUD(On.RoR2.UI.HUD.orig_Awake orig, HUD self)
+        {
+            orig(self);
+            hudInstance = self;
         }
 
         private static System.Collections.IEnumerator ShowAnnouncement(On.RoR2.ClassicStageInfo.orig_BroadcastFamilySelection orig, ClassicStageInfo self, string familySelectionChatString)
