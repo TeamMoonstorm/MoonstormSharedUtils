@@ -274,6 +274,22 @@ namespace Moonstorm.Components
                 Log($"No empty state machines to play event on! Aborting");
                 return false;
             }
+
+            var teleporterInstance = TeleporterInteraction.instance;
+            if(teleporterInstance)
+            {
+                if(teleporterInstance.isCharged || teleporterInstance.isInFinalSequence)
+                {
+                    Log($"Stage has a teleporter instance and the teleporter is Charged or in it's final sequence, aborting.");
+                    return false;
+                }
+
+                if(teleporterInstance.chargePercent > 25)
+                {
+                    Log($"Stage has a teleporter instance and it's charge percent is over 25%, aborting.");
+                    return false;
+                }
+            }
             return true;
         }
 
