@@ -19,12 +19,35 @@ namespace Moonstorm.AddressableAssets
             EquipmentIndex index = EquipmentCatalog.FindEquipmentIndex(address);
             if(index != EquipmentIndex.None)
             {
-                await SetAsset(EquipmentCatalog.GetEquipmentDef(index));
+                asset = EquipmentCatalog.GetEquipmentDef(index);
             }
             else
             {
                 await LoadFromAddress();
             }
+        }
+
+        /// <summary>
+        /// Parameterless Constructor for <see cref="AddressableEquipmentDef"/>
+        /// </summary>
+        public AddressableEquipmentDef() { }
+        /// <summary>
+        /// Constructor for <see cref="AddressableEquipmentDef"/> that sets the <see cref="EquipmentDef"/> asset.
+        /// </summary>
+        /// <param name="ed">The <see cref="EquipmentDef"/> for this <see cref="AddressableEquipmentDef"/></param>
+        public AddressableEquipmentDef(EquipmentDef ed)
+        {
+            asset = ed;
+            useDirectReference = true;
+        }
+        /// <summary>
+        /// Constructor for <see cref="AddressableEquipmentDef"/> that sets the address that'll load the asset
+        /// </summary>
+        /// <param name="addressOrEquipmentDefName">The Address for the <see cref="EquipmentDef"/>, this can also be the asset's name so it can load via the <see cref="EquipmentCatalog"/></param>
+        public AddressableEquipmentDef(string addressOrEquipmentDefName)
+        {
+            address = addressOrEquipmentDefName;
+            useDirectReference = false;
         }
     }
 }

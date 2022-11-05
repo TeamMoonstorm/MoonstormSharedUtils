@@ -23,12 +23,18 @@ namespace Moonstorm.AddressableAssets
         /// </summary>
         public string address = string.Empty;
 
+        /// <summary>
+        /// Wether this AddressableAsset is using a Direct Reference of an asset or not
+        /// </summary>
         [HideInInspector]
         [SerializeField]
-        private bool useDirectReference = true;
+        protected bool useDirectReference = true;
 
+        /// <summary>
+        /// The asset, you should really load the asset using <see cref="Asset"/> at runtime.
+        /// </summary>
         [SerializeField]
-        private T asset = null;
+        protected T asset = null;
 
         /// <summary>
         /// The Asset that's tied to this AddressableAsset.
@@ -74,16 +80,6 @@ namespace Moonstorm.AddressableAssets
             var asyncOp = Addressables.LoadAssetAsync<T>(address);
             var task = asyncOp.Task;
             asset = await task;
-        }
-        /// <summary>
-        /// Sets the Asset for this Addressable Asset
-        /// </summary>
-        /// <param name="asset">The asset</param>
-        /// <returns>Task.CompletedTask</returns>
-        protected async Task SetAsset(T asset)
-        {
-            this.asset = asset;
-            await Task.CompletedTask;
         }
     }
 

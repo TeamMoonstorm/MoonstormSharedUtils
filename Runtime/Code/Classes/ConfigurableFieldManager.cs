@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using Moonstorm.Loaders;
+using SearchableAttribute = HG.Reflection.SearchableAttribute;
 
 namespace Moonstorm
 {
@@ -88,55 +89,6 @@ namespace Moonstorm
             if (!identifierToFields.ContainsKey(mainConfigFileIdentifier))
                 identifierToConfigFile.Add(mainConfigFileIdentifier, mainConfigFile);
 
-            Dictionary<string, List<FieldInfo>> dict = new Dictionary<string, List<FieldInfo>>();
-
-            foreach (Type type in assembly.GetTypesSafe().Where(type => type.GetCustomAttribute<DisabledContentAttribute>() == null))
-            {
-                try
-                {
-                    var validFields = type.GetFields(BindingFlags.Public | BindingFlags.Static)
-                                          .Where(field => field.GetCustomAttribute<ConfigurableFieldAttribute>() != null)
-                                          .ToList();
-
-                    if (validFields.Count > 0)
-                    {
-                        foreach (FieldInfo field in validFields)
-                        {
-                            try
-                            {
-                                var attribute = field.GetCustomAttribute<ConfigurableFieldAttribute>();
-                                string configIdentifier = attribute.ConfigFileIdentifier ?? assemblyToIdentifier[field.DeclaringType.Assembly]; //If configFilePath is null, use the main config file's path, otherwise, use the provided one.
-                                if (!dict.ContainsKey(configIdentifier))
-                                {
-                                    dict.Add(configIdentifier, new List<FieldInfo>());
-                                }
-                                dict[configIdentifier].Add(field);
-                            }
-                            catch (Exception e) { MSULog.Error($"{e} (Field: {field.Name}"); }
-                        }
-                    }
-                }
-                catch (Exception e) { MSULog.Error($"{e} (Type: {type.Name})"); }
-            }
-
-            if (dict.Count == 0)
-            {
-                MSULog.Warning($"Found no fields that have the {nameof(ConfigurableFieldAttribute)} attribute within {assembly.GetName().Name}");
-                return;
-            }
-
-            MSULog.Debug($"Found a total of {dict.Values.SelectMany(x => x).Count()} fields with the {nameof(ConfigurableFieldAttribute)}");
-
-            foreach (var (identifier, fields) in dict)
-            {
-                if (identifierToFields.ContainsKey(identifier))
-                {
-                    MSULog.Warning($"ConfigFilePathToFields already has a key with name {identifier}! is this intentional?");
-                    identifierToFields[identifier].AddRange(fields);
-                    continue;
-                }
-                identifierToFields.Add(identifier, fields);
-            }
         }
 
         private static (string, ConfigFile) GetMainConfigFile(BaseUnityPlugin plugin)
@@ -147,35 +99,45 @@ namespace Moonstorm
 
         private static void ConfigureFields()
         {
-            List<FieldInfo> count = identifierToFields.Values.SelectMany(x => x).ToList();
+            var instances = SearchableAttribute.GetInstances<ConfigurableFieldAttribute>().OfType<ConfigurableFieldAttribute>();
 
-            MSULog.Info($"Configuring a total of {count.Count} Fields.");
-
-            foreach(var (identifier, fields) in identifierToFields)
+            foreach(ConfigurableFieldAttribute configurableField in instances)
             {
                 try
                 {
-                    if (!identifierToConfigFile.ContainsKey(identifier))
-                        throw new NullReferenceException($"Could not find a matching config file with the identifier {identifier}!");
-                    
-                    foreach(var field in fields)
+                    FieldInfo field = (FieldInfo)configurableField.target;
+                    Type declaringType = field.DeclaringType;
+
+                    //Do not configure disabled content classes.
+                    if (declaringType.GetCustomAttribute<DisabledContentAttribute>() != null)
+                        continue;
+
+                    string identifier = configurableField.ConfigFileIdentifier;
+                    if(string.IsNullOrEmpty(identifier))
                     {
-                        try
+                        if(!assemblyToIdentifier.ContainsKey(declaringType.Assembly))
                         {
-                            ConfigureField(field, identifierToConfigFile[identifier]);
+                            throw new KeyNotFoundException($"ConfigurableField for {declaringType.FullName}.{field.Name} does not have a ConfigFileIdentifier, and {declaringType.FullName}'s assembly is not in the ConfigurableFieldManager.");
                         }
-                        catch(Exception e) { MSULog.Error($"{e} (Field: {field.Name}, fieldType: {field.FieldType})"); }
+                        identifier = assemblyToIdentifier[declaringType.Assembly];
                     }
+
+                    if(!identifierToConfigFile.ContainsKey(identifier))
+                    {
+                        throw new KeyNotFoundException($"ConfigurableField for {declaringType.FullName}.{field.Name} has a ConfigFileIdentifier, but the identifier does not have a corresponding value.");
+                    }
+
+                    ConfigureField(configurableField, field, identifierToConfigFile[identifier]);
                 }
-                catch(Exception e) { MSULog.Error($"{e} (Identifier: {identifier}, Fields: {fields}"); }
+                catch(Exception e)
+                {
+                    MSULog.Error($"Error while configuring {configurableField.target}\n{e}");
+                }
             }
         }
 
-        private static void ConfigureField(FieldInfo field, ConfigFile config)
+        private static void ConfigureField(ConfigurableFieldAttribute attribute, FieldInfo field, ConfigFile config)
         {
-            
-            var attribute = field.GetCustomAttribute<ConfigurableFieldAttribute>(true);
-
             switch(field.GetValue(null))
             {
                 case String _text: Bind<String>(field, config, _text, attribute); break;

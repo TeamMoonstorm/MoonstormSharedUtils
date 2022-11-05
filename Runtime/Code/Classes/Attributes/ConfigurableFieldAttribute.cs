@@ -1,4 +1,5 @@
 ﻿using BepInEx.Configuration;
+using HG.Reflection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace Moonstorm
     /// <para>You should add your mod to the <see cref="ConfigurableFieldManager"/> with <seealso cref="ConfigurableFieldManager.AddMod(BepInEx.BaseUnityPlugin)"/></para>
     /// </summary>
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
-    public class ConfigurableFieldAttribute : Attribute
+    public class ConfigurableFieldAttribute : SearchableAttribute
     {
         /// <summary>
         /// The Section of the Config, if left null, it'll use a "Nicified" version of the declaring type's name.

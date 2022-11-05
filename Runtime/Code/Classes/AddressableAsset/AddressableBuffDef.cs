@@ -19,12 +19,35 @@ namespace Moonstorm.AddressableAssets
             BuffIndex index = BuffCatalog.FindBuffIndex(address);
             if(index != BuffIndex.None)
             {
-                await SetAsset(BuffCatalog.GetBuffDef(index));
+                asset = BuffCatalog.GetBuffDef(index);
             }
             else
             {
                 await LoadFromAddress();
             }
+        }
+
+        /// <summary>
+        /// Parameterless Constructor for <see cref="AddressableBuffDef"/>
+        /// </summary>
+        public AddressableBuffDef() { }
+        /// <summary>
+        /// Constructor for <see cref="AddressableBuffDef"/> that sets the <see cref="BuffDef"/> asset.
+        /// </summary>
+        /// <param name="bd">The <see cref="BuffDef"/> for this <see cref="AddressableBuffDef"/></param>
+        public AddressableBuffDef(BuffDef bd)
+        {
+            asset = bd;
+            useDirectReference = true;
+        }
+        /// <summary>
+        /// Constructor for <see cref="AddressableBuffDef"/> that sets the address that'll load the asset
+        /// </summary>
+        /// <param name="addressOrBuffDefName">The Address for the <see cref="BuffDef"/>, this can also be the asset's name so it can load via the <see cref="BuffCatalog"/></param>
+        public AddressableBuffDef(string addressOrBuffDefName)
+        {
+            address = addressOrBuffDefName;
+            useDirectReference = false;
         }
     }
 }

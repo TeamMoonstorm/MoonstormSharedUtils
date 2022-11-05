@@ -19,12 +19,35 @@ namespace Moonstorm.AddressableAssets
             EliteDef def = EliteCatalog.eliteDefs.FirstOrDefault(x => x.name.Equals(address, StringComparison.OrdinalIgnoreCase));
             if(def != null)
             {
-                await SetAsset(def);
+                asset = def;
             }
             else
             {
                 await LoadFromAddress();
             }
+        }
+
+/// <summary>
+        /// Parameterless Constructor for <see cref="AddressableEliteDef"/>
+        /// </summary>
+        public AddressableEliteDef() { }
+        /// <summary>
+        /// Constructor for <see cref="AddressableEliteDef"/> that sets the <see cref="EliteDef"/> asset.
+        /// </summary>
+        /// <param name="ed">The <see cref="EliteDef"/> for this <see cref="AddressableEliteDef"/></param>
+        public AddressableEliteDef(EliteDef ed)
+        {
+            asset = ed;
+            useDirectReference = true;
+        }
+        /// <summary>
+        /// Constructor for <see cref="AddressableEliteDef"/> that sets the address that'll load the asset
+        /// </summary>        
+        /// <param name="addressOrEliteDefName">The Address for the <see cref="EliteDef"/>, this can also be the asset's name so it can load via the <see cref="EliteCatalog"/></param>
+        public AddressableEliteDef(string addressOrEliteDefName)
+        {
+            address = addressOrEliteDefName;
+            useDirectReference = false;
         }
     }
 }

@@ -30,7 +30,11 @@ namespace Moonstorm.AddressableAssets
             /// <summary>
             /// Address is used with Addressables loading
             /// </summary>
-            Addressables = 2
+            Addressables = 2,
+            /// <summary>
+            /// The AddressableKeyAsset is using a direct reference
+            /// </summary>
+            UsingDirectReference = 3,
         }
 
         /// <summary>
@@ -49,7 +53,7 @@ namespace Moonstorm.AddressableAssets
                             EquipmentIndex eqpIndex = EquipmentCatalog.FindEquipmentIndex(address);
                             if(eqpIndex != EquipmentIndex.None)
                             {
-                                await SetAsset(EquipmentCatalog.GetEquipmentDef(eqpIndex));
+                                asset = EquipmentCatalog.GetEquipmentDef(eqpIndex);
                             }
                             else
                             {
@@ -63,7 +67,7 @@ namespace Moonstorm.AddressableAssets
                             ItemIndex itemIndex = ItemCatalog.FindItemIndex(address);
                             if(itemIndex != ItemIndex.None)
                             {
-                                await SetAsset(ItemCatalog.GetItemDef(itemIndex));
+                                asset = ItemCatalog.GetItemDef(itemIndex);
                             }
                             else
                             {
@@ -86,5 +90,44 @@ namespace Moonstorm.AddressableAssets
         }
 
         private Exception AddressableKeyAssetException(string message) => new NullReferenceException(message);
+
+        /// <summary>
+        /// Parameterless Constructor for <see cref="AddressableKeyAsset"/>
+        /// </summary>
+        public AddressableKeyAsset() { }
+
+        /// <summary>
+        /// Constructor for <see cref="AddressableKeyAsset"/> that sets the Key Asset to the <see cref="ItemDef"/> specified in <paramref name="id"/>
+        /// </summary>
+        /// <param name="id">The <see cref="ItemDef"/> for this <see cref="AddressableKeyAsset"/></param>
+        public AddressableKeyAsset(ItemDef id)
+        {
+            asset = id;
+            useDirectReference = true;
+            loadAssetFrom = KeyAssetAddressType.UsingDirectReference;
+        }
+
+        /// <summary>
+        /// Constructor for <see cref="AddressableKeyAsset"/> that sets the Key Asset to the <see cref="EquipmentDef"/> specified in <paramref name="ed"/>
+        /// </summary>
+        /// <param name="ed">The <see cref="EquipmentDef"/> for this <see cref="AddressableKeyAsset"/></param>
+        public AddressableKeyAsset(EquipmentDef ed)
+        {
+            asset = ed;
+            useDirectReference = true;
+            loadAssetFrom = KeyAssetAddressType.UsingDirectReference;
+        }
+
+        /// <summary>
+        /// Constructor for <see cref="AddressableKeyAsset"/> that sets the address that'll load the asset
+        /// </summary>
+        /// <param name="addressOrEquipmentNameOrItemName">The Address for the Key Asset, this can also be the ItemDef's or EquipmentDef's name so it can load via their respective catalogs.</param>
+        /// <param name="addressType">Specifies how the address is used for loading the key asset.</param>
+        public AddressableKeyAsset(string addressOrEquipmentNameOrItemName, KeyAssetAddressType addressType)
+        {
+            useDirectReference = false;
+            address = addressOrEquipmentNameOrItemName;
+            loadAssetFrom = addressType;
+        }
     }
 }
