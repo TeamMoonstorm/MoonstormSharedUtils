@@ -51,6 +51,7 @@ namespace Moonstorm.EditorUtils.ShaderSystem
 
         private static void AddressableMaterialShaderHeader(Editor obj)
         {
+            ShowAboutLabel();
             SerializedObject so = obj.serializedObject;
             SerializedProperty shaderKeywords = so.FindProperty("m_ShaderKeywords");
             shaderKeywords.stringValue = EditorGUILayout.TextField(new GUIContent("Address"), shaderKeywords.stringValue);
@@ -62,6 +63,12 @@ namespace Moonstorm.EditorUtils.ShaderSystem
                 window.materialAddress = shaderKeywords.stringValue;
                 window.ShowPopup();
             }
+        }
+
+        private static void ShowAboutLabel()
+        {
+            EditorGUILayout.LabelField(new GUIContent("About the AddressableMaterialShader (Hover me!)", "The AddressableMaterialShader is a custom addressable material solution from MSU, it stores the Addressable Material's address in the \"Address\" field.\n" +
+                "Later at Runtime, calling your AssetsLoader's FinalizeMaterialsWithAddressableMaterialShader() method will copy the properties and shader of the addressable material to this isntance, effectively allowing you to reference it ingame."));
         }
     }
 }

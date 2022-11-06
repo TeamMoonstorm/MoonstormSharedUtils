@@ -137,6 +137,10 @@ namespace Moonstorm.Loaders
             }
         }
 
+        /// <summary>
+        /// Loads all the Materials with the AddressableMaterialShader shader and finalizes them
+        /// </summary>
+        /// <param name="bundle">The bundle to use for loading the materials</param>
         protected async void FinalizeMaterialsWithAddressableMaterialShader(AssetBundle bundle)
         {
             var materials = bundle.LoadAllAssets<Material>().Where(m => m.shader.name == "AddressableMaterialShader");
@@ -155,6 +159,7 @@ namespace Moonstorm.Loaders
                     material.shader = loadedMat.shader;
                     material.CopyPropertiesFromMaterial(loadedMat);
                     MaterialsWithSwappedShaders.Add(material);
+                    MSULog.Debug($"Properties from {loadedMat} ({address}) copied to {material}");
                 }
                 catch(Exception e)
                 {

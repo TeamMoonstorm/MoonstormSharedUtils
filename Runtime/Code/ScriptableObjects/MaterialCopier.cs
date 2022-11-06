@@ -12,7 +12,7 @@ namespace Moonstorm
     /// <summary>
     /// A <see cref="MaterialCopier"/> is a ScriptableObject that allows the usage of vanilla materials in your project.
     /// </summary>
-    [CreateAssetMenu(menuName = "Moonstorm/MaterialCopier")]
+    [Obsolete("Set your material's shader to MSU's AddressableMaterialShader.")]
     public class MaterialCopier : ScriptableObject
     {
         /// <summary>
@@ -53,13 +53,30 @@ namespace Moonstorm
             instances.Remove(this);
         }
 
+        [ContextMenu("Upgrade to AddressableMaterialShader")]
+        private void Upgrade()
+        {
+            foreach(MaterialPair pair in materialPairs)
+            {
+                UpgradeSingle(pair.material, pair.materialAddress);
+            }
+            Debug.Log("Upgrade finished, remember to call \"FinalizeMaterialsWithAddressableMaterialShader\" method in your AssetsLoader!");
+        }
+
+        private void UpgradeSingle(Material material, string address)
+        {
+            Debug.Log($"Upgraded {material} to use AddressableMaterialShader");
+            var shader = Shader.Find("AddressableMaterialShader");
+            material.shader = shader;
+            material.shaderKeywords = new string[] { address };
+        }
+
         private void CopyMaterials()
         {
             foreach(MaterialPair pair in materialPairs)
             {
                 try
                 {
-                    MSULog.Debug($"{pair.materialAddress}\n{pair.material}");
                     CopyFromMaterialAddress(pair);
                 }
                 catch(Exception ex)
