@@ -49,6 +49,7 @@ namespace Moonstorm
         [Tooltip("The category of event, category must exist within the EventDirectorCategorySelection")]
         public string category;
         [Tooltip("The selection weight for this event")]
+        [Range(0, 100)]
         public float selectionWeight;
         [Tooltip("The credit cost for this event")]
         public int cost;
