@@ -61,11 +61,6 @@ namespace Moonstorm
         [Tooltip("If supplied, this event can only play if ALL expansion defs are enabled")]
         public List<AddressableExpansionDef> requiredExpansions = new List<AddressableExpansionDef>();
 
-        [Header("Required Expansion Def is obsolete and will be removed in the next major update.")]
-        [Tooltip("If supplied, this event can only play if the following ExpansionDef is enabled")]
-        [Obsolete("Use requiredExpansions instead.")]
-        public AddressableExpansionDef requiredExpansionDef;
-
         /// <summary>
         /// Checks if this card can be used currently
         /// </summary>
