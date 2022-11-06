@@ -137,6 +137,32 @@ namespace Moonstorm.Loaders
             }
         }
 
+        protected async void FinalizeMaterialsWithAddressableMaterialShader(AssetBundle bundle)
+        {
+            var materials = bundle.LoadAllAssets<Material>().Where(m => m.shader.name == "AddressableMaterialShader");
+            foreach(Material material in materials)
+            {
+                try
+                {
+                    var shaderKeywords = material.shaderKeywords;
+                    var address = shaderKeywords[0];
+                    if (string.IsNullOrEmpty(address))
+                        continue;
+
+                    var asyncOp = Addressables.LoadAssetAsync<Material>(address);
+                    var loadedMat = await asyncOp.Task;
+
+                    material.shader = loadedMat.shader;
+                    material.CopyPropertiesFromMaterial(loadedMat);
+                    MaterialsWithSwappedShaders.Add(material);
+                }
+                catch(Exception e)
+                {
+                    MSULog.Error($"Failed to finalize material {material}");
+                }
+            }
+        }
+
         private async void SwapShader(Material material)
         {
             var shaderName = material.shader.name.Substring("Stubbed".Length);

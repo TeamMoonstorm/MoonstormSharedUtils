@@ -1,4 +1,5 @@
-﻿using Moonstorm.Experimental;
+﻿using Moonstorm.EditorUtils.EditorWindows;
+using Moonstorm.Experimental;
 using RoR2EditorKit.Utilities;
 using System.IO;
 using UnityEditor;
@@ -55,13 +56,12 @@ namespace Moonstorm.EditorUtils.ShaderSystem
             shaderKeywords.stringValue = EditorGUILayout.TextField(new GUIContent("Address"), shaderKeywords.stringValue);
             so.ApplyModifiedProperties();
 
-            /*if(!shaderKeywords.stringValue.IsNullOrEmptyOrWhitespace())
+            if(GUILayout.Button("Show Preview"))
             {
-                var mat = UnityEngine.AddressableAssets.Addressables.LoadAssetAsync<Material>(shaderKeywords.stringValue).WaitForCompletion();
-                var inspectedMaterial = obj.target as Material;
-                inspectedMaterial.shader = mat.shader;
-                inspectedMaterial.CopyPropertiesFromMaterial(mat);
-            }*/
+                var window = EditorWindow.CreateWindow<AddressableMaterialPreview>();
+                window.materialAddress = shaderKeywords.stringValue;
+                window.ShowPopup();
+            }
         }
     }
 }
