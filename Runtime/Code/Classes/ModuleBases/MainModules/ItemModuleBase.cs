@@ -1,5 +1,4 @@
-﻿using On.RoR2.Items;
-using RoR2;
+﻿using RoR2;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -51,7 +50,7 @@ namespace Moonstorm
             OnDictionaryCreated?.Invoke(MoonstormItems);
         }
 
-        private static void FinishVoidItemBases(ContagiousItemManager.orig_Init orig)
+        private static void FinishVoidItemBases(On.RoR2.Items.ContagiousItemManager.orig_Init orig)
         {
             VoidItemBase[] voidItems = items == null ? MoonstormItems.Values.OfType<VoidItemBase>().ToArray() : items.Values.OfType<VoidItemBase>().ToArray();
             ItemRelationshipType contagiousItem = Addressables.LoadAssetAsync<ItemRelationshipType>("RoR2/DLC1/Common/ContagiousItem.asset").WaitForCompletion();
