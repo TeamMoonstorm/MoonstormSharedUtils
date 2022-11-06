@@ -163,7 +163,7 @@ namespace Moonstorm.Loaders
                 }
                 catch(Exception e)
                 {
-                    MSULog.Error($"Failed to finalize material {material}");
+                    MSULog.Error($"Failed to finalize material {material}: {e}");
                 }
             }
         }

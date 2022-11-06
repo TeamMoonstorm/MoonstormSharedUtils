@@ -35,7 +35,7 @@ namespace Moonstorm.Experimental
 
         private static void BuildItemListForEachItemTier()
         {
-            foreach(var (itemTierDef, itemTierBase) in itemTiers)
+            foreach(var (itemTierDef, itemTierBase) in MoonstormItemTiers)
             {
                 itemTierBase.ItemsWithThisTier.Clear();
                 foreach(ItemDef itemDef in ItemCatalog.allItemDefs)
