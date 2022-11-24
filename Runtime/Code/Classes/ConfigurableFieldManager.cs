@@ -93,7 +93,7 @@ namespace Moonstorm
 
         private static void ConfigureFields()
         {
-            var instances = SearchableAttribute.GetInstances<ConfigurableFieldAttribute>().OfType<ConfigurableFieldAttribute>();
+            var instances = SearchableAttribute.GetInstances<ConfigurableFieldAttribute>() ?? new List<SearchableAttribute>();
             MSULog.Info($"Configuring a total of {instances.Count()} fields");
 
             foreach(ConfigurableFieldAttribute configurableField in instances)
@@ -160,7 +160,7 @@ namespace Moonstorm
         private static void Bind<T>(FieldInfo field, ConfigFile config, T value, ConfigurableFieldAttribute attribute)
         {
             Type t = field.DeclaringType;
-            field.SetValue(t, config.Bind<T>(attribute.GetSection(t), attribute.GetName(field), value, attribute.GetDescription()).Value);
+            field.SetValue(t, config.Bind<T>(attribute.GetSection(), attribute.GetName(), value, attribute.GetDescription()).Value);
         }
     }
 }

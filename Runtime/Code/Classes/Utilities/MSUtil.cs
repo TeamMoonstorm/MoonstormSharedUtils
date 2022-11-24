@@ -160,6 +160,67 @@ namespace Moonstorm
             key = kvp.Key;
             value = kvp.Value;
         }
+
+        /// <summary>
+        /// Nicifies a CamelCase or pascalCase string into a human readable name
+        /// </summary>
+        /// <param name="text">The string to nicify</param>
+        /// <returns>The nicified string</returns>
+        public static string NicifyString(string text)
+        {
+            string origName = new string(text.ToCharArray());
+            try
+            {
+                if (string.IsNullOrEmpty(text))
+                    return text;
+
+                List<char> nameAsChar = null;
+                if (text.StartsWith("m_", System.StringComparison.OrdinalIgnoreCase) || text.StartsWith("k_", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    nameAsChar = text.Substring("m_".Length).ToList();
+                }
+                else
+                {
+                    nameAsChar = text.ToList();
+                }
+
+                while (nameAsChar.First() == '_')
+                {
+                    nameAsChar.RemoveAt(0);
+                }
+                List<char> newText = new List<char>();
+                for (int i = 0; i < nameAsChar.Count; i++)
+                {
+                    char character = nameAsChar[i];
+                    if (i == 0)
+                    {
+                        if (char.IsLower(character))
+                        {
+                            newText.Add(char.ToUpper(character));
+                        }
+                        else
+                        {
+                            newText.Add(character);
+                        }
+                        continue;
+                    }
+
+                    if (char.IsUpper(character))
+                    {
+                        newText.Add(' ');
+                        newText.Add(character);
+                        continue;
+                    }
+                    newText.Add(character);
+                }
+                return new String(newText.ToArray());
+            }
+            catch (Exception e)
+            {
+                MSULog.Error($"Failed to nicify {origName}: {e}");
+                return origName;
+            }
+        }
         #endregion
     }
 }

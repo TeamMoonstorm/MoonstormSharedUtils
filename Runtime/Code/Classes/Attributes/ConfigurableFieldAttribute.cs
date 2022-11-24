@@ -45,22 +45,25 @@ namespace Moonstorm
             configFileIdentifier = fileIdentifier;
         }
 
-        internal string GetSection(Type type)
+        internal string GetSection()
         {
+            FieldInfo field = (FieldInfo)target;
+            Type type = field.DeclaringType;
             if (!string.IsNullOrEmpty(ConfigSection))
             {
                 return ConfigSection;
             }
-            return Nicify(type.Name);
+            return MSUtil.NicifyString(type.Name);
         }
 
-        internal string GetName(FieldInfo field)
+        internal string GetName()
         {
+            FieldInfo field = (FieldInfo)target;
             if (!string.IsNullOrEmpty(ConfigName))
             {
                 return ConfigName;
             }
-            return Nicify(field.Name);
+            return MSUtil.NicifyString(field.Name);
         }
 
         internal string GetDescription()
@@ -70,62 +73,6 @@ namespace Moonstorm
                 return ConfigDesc;
             }
             return $"Configure this value";
-        }
-
-        private string Nicify(string name)
-        {
-            string origName = new string(name.ToCharArray());
-            try
-            {
-                if (string.IsNullOrEmpty(name))
-                    return name;
-
-                List<char> nameAsChar = null;
-                if (name.StartsWith("m_", System.StringComparison.OrdinalIgnoreCase))
-                {
-                    nameAsChar = name.Substring("m_".Length).ToList();
-                }
-                else
-                {
-                    nameAsChar = name.ToList();
-                }
-
-                while (nameAsChar.First() == '_')
-                {
-                    nameAsChar.RemoveAt(0);
-                }
-                List<char> newText = new List<char>();
-                for (int i = 0; i < nameAsChar.Count; i++)
-                {
-                    char character = nameAsChar[i];
-                    if (i == 0)
-                    {
-                        if (char.IsLower(character))
-                        {
-                            newText.Add(char.ToUpper(character));
-                        }
-                        else
-                        {
-                            newText.Add(character);
-                        }
-                        continue;
-                    }
-
-                    if (char.IsUpper(character))
-                    {
-                        newText.Add(' ');
-                        newText.Add(character);
-                        continue;
-                    }
-                    newText.Add(character);
-                }
-                return new String(newText.ToArray());
-            }
-            catch (Exception e)
-            {
-                MSULog.Error($"Failed to nicify {origName}: {e}");
-                return origName;
-            }
         }
     }
 }

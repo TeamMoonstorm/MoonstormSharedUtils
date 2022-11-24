@@ -106,7 +106,7 @@ namespace Moonstorm
         {
             propertyTokenModifiers = new List<TokenModifierAttribute>();
             fieldTokenModifiers = new List<TokenModifierAttribute>();
-            var allTokenModifiers = SearchableAttribute.GetInstances<TokenModifierAttribute>().OfType<TokenModifierAttribute>();
+            var allTokenModifiers = SearchableAttribute.GetInstances<TokenModifierAttribute>() ?? new List<SearchableAttribute>();
             foreach(TokenModifierAttribute tokenModifier in allTokenModifiers)
             {
                 if(tokenModifier.target is FieldInfo)
