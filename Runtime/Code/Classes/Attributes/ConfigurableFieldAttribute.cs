@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using RiskOfOptions;
 
 namespace Moonstorm
 {
@@ -33,8 +34,18 @@ namespace Moonstorm
         /// During the <see cref="ConfigurableFieldManager"/> initialization, the ConfigurableFieldManager will try to bind the config to the config file with this identifier.
         /// </summary>
         public string ConfigFileIdentifier => configFileIdentifier;
-
         private string configFileIdentifier;
+
+        /// <summary>
+        /// The FieldInfo that's attached to this Attribute.
+        /// </summary>
+        public FieldInfo Field => (FieldInfo)target;
+
+        /// <summary>
+        /// The ConfigEntry that's tied to this ConfigurableField.
+        /// <see cref="GetConfigEntry{T}"/>
+        /// </summary>
+        public ConfigEntryBase ConfigEntryBase { get; private set; }
 
         /// <summary>
         /// Creates a new instance of the Configurable Field Attribute.
@@ -45,10 +56,40 @@ namespace Moonstorm
             configFileIdentifier = fileIdentifier;
         }
 
-        internal string GetSection()
+        /// <summary>
+        /// Returns <see cref="ConfigEntryBase"/> as a generic ConfigEntry using casting.
+        /// </summary>
+        /// <typeparam name="T">The type to use for the generic during casting</typeparam>
+        /// <returns>The casted ConfigEntry</returns>
+        public ConfigEntry<T> GetConfigEntry<T>()
         {
-            FieldInfo field = (FieldInfo)target;
-            Type type = field.DeclaringType;
+            return ConfigEntryBase == null ? null : (ConfigEntry<T>)ConfigEntryBase;
+        }
+
+        internal void ConfigureField<T>(ConfigFile configFile, T value)
+        {
+            ConfigEntryBase = configFile.Bind<T>(GetSection(), GetName(), value, GetDescription());
+
+            var entry = GetConfigEntry<T>();
+            entry.SettingChanged += SetValue;
+
+            var riskOfOptionsInstalled = MSUtil.IsModInstalled("com.rune580.riskofoptions");
+            var riskOfOptionsAttribute = Field.GetCustomAttribute<RiskOfOptionsAttribute>();
+            if(riskOfOptionsAttribute != null && riskOfOptionsInstalled)
+            {
+                riskOfOptionsAttribute.ImplementOption<T>(entry, Field);
+            }
+        }
+
+        private void SetValue(object sender, EventArgs e)
+        {
+            var newVal = ConfigEntryBase.BoxedValue;
+            Field.SetValue(Field.DeclaringType, newVal);
+        }
+
+        private string GetSection()
+        {
+            Type type = Field.DeclaringType;
             if (!string.IsNullOrEmpty(ConfigSection))
             {
                 return ConfigSection;
@@ -56,17 +97,16 @@ namespace Moonstorm
             return MSUtil.NicifyString(type.Name);
         }
 
-        internal string GetName()
+        private string GetName()
         {
-            FieldInfo field = (FieldInfo)target;
             if (!string.IsNullOrEmpty(ConfigName))
             {
                 return ConfigName;
             }
-            return MSUtil.NicifyString(field.Name);
+            return MSUtil.NicifyString(Field.Name);
         }
 
-        internal string GetDescription()
+        private string GetDescription()
         {
             if (!string.IsNullOrEmpty(ConfigDesc))
             {

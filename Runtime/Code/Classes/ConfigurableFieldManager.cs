@@ -131,36 +131,30 @@ namespace Moonstorm
             }
         }
 
-        private static void ConfigureField(ConfigurableFieldAttribute attribute, FieldInfo field, ConfigFile config)
+        private static void ConfigureField(ConfigurableFieldAttribute attribute, ConfigFile config)
         {
-            switch(field.GetValue(null))
+            switch(attribute.Field.GetValue(null))
             {
-                case String _text: Bind<String>(field, config, _text, attribute); break;
-                case Boolean _bool: Bind<Boolean>(field, config, _bool, attribute); break;
-                case Byte _byte: Bind<Byte>(field, config, _byte, attribute); break;
-                case SByte _sbyte: Bind<SByte>(field, config, _sbyte, attribute); break;
-                case Int16 _int16: Bind<Int16>(field, config, _int16, attribute); break;
-                case UInt16 _uint16: Bind<UInt16>(field, config, _uint16, attribute); break;
-                case Int32 _int32: Bind<Int32>(field, config, _int32, attribute); break;
-                case UInt32 _uint32: Bind<UInt32>(field, config, _uint32, attribute); break;
-                case Int64 _int64: Bind<Int64>(field, config, _int64, attribute); break;
-                case UInt64 _uint64: Bind<UInt64>(field, config, _uint64, attribute); break;
-                case Single _single: Bind<Single>(field, config, _single, attribute); break;
-                case Double _double: Bind<Double>(field, config, _double, attribute); break;
-                case Decimal _decimal: Bind<Decimal>(field, config, _decimal, attribute); break;
-                case Enum _enum: Bind<Enum>(field, config, _enum, attribute); break;
-                case Color _color: Bind<Color>(field, config, _color, attribute); break;
-                case Vector2 _vector2: Bind<Vector2>(field, config, _vector2, attribute); break;
-                case Vector3 _vector3: Bind<Vector3>(field, config, _vector3, attribute); break;
-                case Vector4 _vector4: Bind<Vector4>(field, config, _vector4, attribute); break;
-                case Quaternion _quaternion: Bind<Quaternion>(field, config, _quaternion, attribute); break;
+                case String _text: attribute.ConfigureField<string>(config, _text); break;
+                case Boolean _bool: attribute.ConfigureField<bool>(config, _bool); break;
+                case Byte _byte: attribute.ConfigureField<byte>(config, _byte); break;
+                case SByte _sbyte: attribute.ConfigureField<sbyte>(config, _sbyte); break;
+                case Int16 _int16: attribute.ConfigureField<short>(config, _int16); break;
+                case UInt16 _uint16: attribute.ConfigureField<ushort>(config, _uint16); break;
+                case Int32 _int32: attribute.ConfigureField<int>(config, _int32); break;
+                case UInt32 _uint32: attribute.ConfigureField<uint>(config, _uint32); break;
+                case Int64 _int64: attribute.ConfigureField<long>(config, _int64); break;
+                case UInt64 _uint64: attribute.ConfigureField<ulong>(config, _uint64); break;
+                case Single _single: attribute.ConfigureField<float>(config, _single); break;
+                case Double _double: attribute.ConfigureField<double>(config, _double); break;
+                case Decimal _decimal: attribute.ConfigureField<decimal>(config, _decimal); break;
+                case Enum _enum: attribute.ConfigureField<Enum>(config, _enum); break;
+                case Color _color: attribute.ConfigureField<Color>(config, _color); break;
+                case Vector2 _vector2: attribute.ConfigureField<Vector2>(config, _vector2); break;
+                case Vector3 _vector3: attribute.ConfigureField<Vector3>(config, _vector3); break;
+                case Vector4 _vector4: attribute.ConfigureField<Vector4>(config, _vector4); break;
+                case Quaternion _quaternion: attribute.ConfigureField<Quaternion>(config, _quaternion); break;
             }
-        }
-
-        private static void Bind<T>(FieldInfo field, ConfigFile config, T value, ConfigurableFieldAttribute attribute)
-        {
-            Type t = field.DeclaringType;
-            field.SetValue(t, config.Bind<T>(attribute.GetSection(), attribute.GetName(), value, attribute.GetDescription()).Value);
         }
     }
 }

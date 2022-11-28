@@ -27,7 +27,8 @@
         "Unity.ResourceManager.dll",
         "Unity.TextMeshPro.dll",
         "UnityEngine.UI.dll",
-        "Unity.Postprocessing.Runtime.dll"
+        "Unity.Postprocessing.Runtime.dll",
+        "RiskOfOptions.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [],
