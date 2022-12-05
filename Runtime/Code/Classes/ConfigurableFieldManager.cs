@@ -122,7 +122,7 @@ namespace Moonstorm
                         throw new KeyNotFoundException($"ConfigurableField for {declaringType.FullName}.{field.Name} has a ConfigFileIdentifier, but the identifier does not have a corresponding value.");
                     }
 
-                    ConfigureField(configurableField, field, identifierToConfigFile[identifier]);
+                    ConfigureField(configurableField, identifierToConfigFile[identifier]);
                 }
                 catch(Exception e)
                 {
