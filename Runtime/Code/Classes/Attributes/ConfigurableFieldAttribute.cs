@@ -72,13 +72,6 @@ namespace Moonstorm
 
             var entry = GetConfigEntry<T>();
             entry.SettingChanged += SetValue;
-
-            var riskOfOptionsInstalled = MSUtil.IsModInstalled("com.rune580.riskofoptions");
-            var riskOfOptionsAttribute = Field.GetCustomAttribute<RiskOfOptionsAttribute>();
-            if(riskOfOptionsAttribute != null && riskOfOptionsInstalled)
-            {
-                riskOfOptionsAttribute.ImplementOption<T>(entry, Field);
-            }
         }
 
         private void SetValue(object sender, EventArgs e)
