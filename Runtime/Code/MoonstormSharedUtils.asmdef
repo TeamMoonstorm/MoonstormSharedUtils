@@ -28,7 +28,15 @@
         "Unity.TextMeshPro.dll",
         "UnityEngine.UI.dll",
         "Unity.Postprocessing.Runtime.dll",
-        "RiskOfOptions.dll"
+        "RiskOfOptions.dll",
+        "R2API.Core.dll",
+        "R2API.ContentManagement.dll",
+        "R2API.ArtifactCode.dll",
+        "R2API.Colors.dll",
+        "R2API.DamageType.dll",
+        "R2API.Director.dll",
+        "R2API.Elites.dll",
+        "R2API.RecalculateStats.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [],

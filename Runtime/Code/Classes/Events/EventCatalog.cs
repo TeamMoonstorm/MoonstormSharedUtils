@@ -11,9 +11,18 @@ using static Moonstorm.EventDirectorCategorySelection;
 
 namespace Moonstorm
 {
+    /// <summary>
+    /// The Event Catalog for MSU's Event System
+    /// </summary>
     public static class EventCatalog
     {
+        /// <summary>
+        /// Returns the amount of Categories that are registered
+        /// </summary>
         public static int RegisteredCategoriesCount => registeredCategories.Length;
+        /// <summary>
+        /// Returns the amount of Events that are registered.
+        /// </summary>
         public static int RegisteredEventCount => registeredEventCards.Length;
 
         private static EventDirectorCategorySelection[] categories = Array.Empty<EventDirectorCategorySelection>();
@@ -30,6 +39,12 @@ namespace Moonstorm
 
         private static bool initialized = false;
         #region GetAndFindMethods
+        /// <summary>
+        /// Returns the EventIndex tied to the string supplied in <paramref name="eventName"/>
+        /// </summary>
+        /// <param name="eventName">The name of this event</param>
+        /// <returns>An EventIndex if valid, <see cref="EventIndex.None"/> if no event matches.</returns>
+        /// <exception cref="InvalidOperationException"></exception>
         public static EventIndex FindEventIndex(string eventName)
         {
             if (!initialized)
@@ -41,6 +56,13 @@ namespace Moonstorm
             }
             return EventIndex.None;
         }
+
+        /// <summary>
+        /// Returns the EventCard that's tied to the supplied EventIndex in <paramref name="eventIndex"/>
+        /// </summary>
+        /// <param name="eventIndex">The EventIndex</param>
+        /// <returns>An event card that's tied to <paramref name="eventIndex"/></returns>
+        /// <exception cref="InvalidOperationException"></exception>
         public static EventCard GetEventCard(EventIndex eventIndex)
         {
             if (!initialized)
@@ -49,6 +71,12 @@ namespace Moonstorm
             return ArrayUtils.GetSafe(registeredEventCards, (int)eventIndex);
         }
 
+        /// <summary>
+        /// Returns the index that's tied to a CategorySelection's name by using <paramref name="name"/>
+        /// </summary>
+        /// <param name="name">The name of the category to find</param>
+        /// <returns>The index of the category, returns -1 if no category is found.</returns>
+        /// <exception cref="InvalidOperationException"></exception>
         public static int FindCategorySelectionIndex(string name)
         {
             if (!initialized)
@@ -60,6 +88,13 @@ namespace Moonstorm
             }
             return -1;
         }
+
+        /// <summary>
+        /// Returns the EventDirectorCategorySelection tied to the index provided in <paramref name="categoryIndex"/>
+        /// </summary>
+        /// <param name="categoryIndex">The index to use for the lookup</param>
+        /// <returns>The EventDirectorCategorySelection</returns>
+        /// <exception cref="InvalidOperationException"></exception>
         public static EventDirectorCategorySelection GetCategorySelection(int categoryIndex)
         {
             if (!initialized)
@@ -68,6 +103,12 @@ namespace Moonstorm
             return ArrayUtils.GetSafe(registeredCategories, categoryIndex);
         }
 
+        /// <summary>
+        /// Returns the EventDirectorCategorySelection that's tied to the given <paramref name="stage"/> or the given <paramref name="customName"/>
+        /// </summary>
+        /// <param name="stage">The Stage to obtain</param>
+        /// <param name="customName">A custom stage's name, <paramref name="stage"/> needs to be set to <see cref="DirectorAPI.Stage.Custom"/> for it to work properly</param>
+        /// <returns>The EventDirectorCategorySelection</returns>
         public static EventDirectorCategorySelection GetCategoryFromCurrentStage(DirectorAPI.Stage stage, string customName = null)
         {
             try
@@ -100,6 +141,11 @@ namespace Moonstorm
             }
         }
 
+        /// <summary>
+        /// Returns the EventDirectorCategorySelection that's tied to <paramref name="sceneDef"/>.
+        /// </summary>
+        /// <param name="sceneDef">The scene def to use for the lookup</param>
+        /// <returns>The EventDirectorCategorySelection</returns>
         public static EventDirectorCategorySelection GetCategoryFromSceneDef(SceneDef sceneDef)
         {
             try
@@ -129,6 +175,11 @@ namespace Moonstorm
         #endregion
 
         #region Add Methods
+        /// <summary>
+        /// Adds multiple cards to the EventCatalog
+        /// </summary>
+        /// <param name="cards">The cards to addd</param>
+        /// <exception cref="InvalidOperationException"></exception>
         public static void AddCards(EventCard[] cards)
         {
             if (initialized)
@@ -137,6 +188,11 @@ namespace Moonstorm
             cards.ToList().ForEach(card => AddCard(card));
         }
 
+        /// <summary>
+        /// Adds a single card to the EventCatalog
+        /// </summary>
+        /// <param name="card">The card to add</param>
+        /// <exception cref="InvalidOperationException"></exception>
         public static void AddCard(EventCard card)
         {
             if (initialized)
@@ -144,12 +200,22 @@ namespace Moonstorm
             HG.ArrayUtils.ArrayAppend(ref eventCards, card);
         }
 
+        /// <summary>
+        /// Adds multiple EventDirectorCategorySelection to the EventCatalog
+        /// </summary>
+        /// <param name="categories">The categories to add</param>
+        /// <exception cref="InvalidOperationException"></exception>
         public static void AddCategories(EventDirectorCategorySelection[] categories) 
         {
             if (initialized)
                 throw new InvalidOperationException($"EventCatalog already initialized");
             categories.ToList().ForEach(category => AddCategory(category));
         }
+        /// <summary>
+        /// Adds a single EventDirectorCategorySelection to the EventCatalog
+        /// </summary>
+        /// <param name="category">The category to add</param>
+        /// <exception cref="InvalidOperationException"></exception>
         public static void AddCategory(EventDirectorCategorySelection category) 
         {
             if (initialized)
@@ -413,195 +479,5 @@ namespace Moonstorm
         }
         #endregion
     }
-    /*public static class EventCatalog
-    {
-        private static readonly List<EventSceneDeck> loadedSceneDecks = new List<EventSceneDeck>();
-
-        //Returns the amount of available events
-        public static int eventCount
-        {
-            get
-            {
-                return eventCards.Length;
-            }
-        }
-
-        public static bool HasAnyEventRegistered { get => loadedSceneDecks.Count > 0; }
-
-        public static string[] eventNames = Array.Empty<string>();
-
-        public static readonly Dictionary<string, EventIndex> eventNameToIndex = new Dictionary<string, EventIndex>();
-
-        public static readonly Dictionary<EventIndex, EventDirectorCard> eventIndexToCard = new Dictionary<EventIndex, EventDirectorCard>();
-
-        public static readonly Dictionary<SceneDef, EventDirectorCard[]> sceneToCards = new Dictionary<SceneDef, EventDirectorCard[]>();
-
-        public static void AddEventDecks(EventSceneDeck[] decks)
-        {
-            foreach (var newDeck in decks)
-                AddEventDeck(newDeck);
-        }
-
-        public static void AddEventDeck(EventSceneDeck newDeck)
-        {
-            loadedSceneDecks.Add(newDeck);
-        }
-
-        [SystemInitializer(dependencies: typeof(SceneCatalog))]
-        private static void Init()
-        {
-            var cardCollection = new List<EventDirectorCard>();
-            foreach (var sceneDef in SceneCatalog.allStageSceneDefs)
-            {
-                var sceneCards = Array.Empty<EventDirectorCard>();
-
-                var validSceneDecks = loadedSceneDecks.Where(sceneDeck =>
-                {
-                    var sceneName = sceneDeck.sceneName.ToLower();
-
-                    if (sceneName == "all" || SceneCatalog.GetSceneDefFromSceneName(sceneName) == sceneDef)
-                        return true;
-                    return false;
-                });
-                sceneCards = validSceneDecks.SelectMany(deck => deck.sceneDeck.eventCards)
-                                            .Distinct()
-                                            .ToArray();
-
-                cardCollection.AddRange(sceneCards);
-                sceneToCards.Add(sceneDef, sceneCards);
-            }
-            SetEventCards(cardCollection.Distinct().ToArray());
-        }
-
-        private static void SetEventCards(EventDirectorCard[] newEvents)
-        {
-            eventCards = newEvents;
-            eventNames = eventCards.Select(card => card.identifier).ToArray();
-            Array.Sort(eventNames, eventCards, StringComparer.Ordinal);
-
-            for (EventIndex eventIndex = 0; eventIndex < (EventIndex)eventCards.Length; eventIndex++)
-            {
-                var eventCard = eventCards[(int)eventIndex];
-                string key = eventNames[(int)eventIndex];
-                eventCard.EventIndex = eventIndex;
-                eventNameToIndex.Add(key, eventIndex);
-                eventIndexToCard.Add(eventIndex, eventCard);
-            }
-        }
-
-        public static EventCardDeck GetCurrentStageEvents()
-        {
-            return GetStageEvents(SceneInfo.instance.sceneDef);
-        }
-
-        public static EventCardDeck GetStageEvents(SceneDef scene)
-        {
-            return new EventCardDeck
-            {
-                eventCards = sceneToCards[scene]
-            };
-        }
-
-        public static bool TryFindDirectorCard(string cardName, out EventDirectorCard card)
-        {
-            string name = cardName.ToLower();
-            EventIndex eventIndex = EventIndex.None;
-            //If the name matches exactly
-            if (eventNameToIndex.TryGetValue(name, out eventIndex))
-                return TryFindDirectorCard(eventIndex, out card);
-            //If if it is a number
-            if (int.TryParse(name, out var index) && index < eventCount)
-                return TryFindDirectorCard((EventIndex)index, out card);
-
-
-            //If the name is impartial or the case doesn't match
-            eventIndex = eventNameToIndex.Where(keyValuePair => keyValuePair.Key.ToLower().Contains(name))
-                                         .OrderBy(keyValuePair => keyValuePair.Key.ToLower().IndexOf(name))
-                                         .Select(keyValuePair => keyValuePair.Value)
-                                         .DefaultIfEmpty(EventIndex.None)
-                                         .First();
-            if (eventIndex != EventIndex.None && (int)eventIndex < eventCount)
-            {
-                card = eventIndexToCard[eventIndex];
-                return true;
-            }
-
-            card = null;
-            return false;
-        }
-
-        public static bool TryFindDirectorCard(EventIndex eventIndex, out EventDirectorCard card)
-        {
-            return eventIndexToCard.TryGetValue(eventIndex, out card);
-        }
-
-        [ConCommand(commandName = "list_events", flags = ConVarFlags.None, helpText = "Prints all loaded events")]
-        private static void ListEvents(ConCommandArgs args)
-        {
-            for (int i = 0; i < eventCount; i++)
-                Debug.Log($"[{i}]\t{eventNames[i]}");
-        }
-
-        [ConCommand(commandName = "list_scene_events", flags = ConVarFlags.None, helpText = "Prints all loaded events for this scene")]
-        private static void ListSceneEvents(ConCommandArgs args)
-        {
-            for (int i = 0; i < eventCount; i++)
-                Debug.Log($"[{i}]\t{eventNames[i]}");
-        }
-
-
-        private static EventDirectorCard[] eventCards = Array.Empty<EventDirectorCard>();
-    }
-
-
-    public enum EventIndex
-    {
-        None = -1
-    }
-
-    [Serializable]
-    public struct EventCardDeck
-    {
-        public EventDirectorCard[] eventCards;
-
-        public WeightedSelection<EventDirectorCard> GenerateDirectorCardWeightedSelection()
-        {
-            if (eventCards.Length > 0)
-            {
-                WeightedSelection<EventDirectorCard> weightedSelection = new WeightedSelection<EventDirectorCard>(8);
-                foreach (EventDirectorCard directorCard in eventCards)
-                {
-                    if (directorCard.CardIsValid())
-                        weightedSelection.AddChoice(directorCard, (float)directorCard.selectionWeight);
-                }
-                return weightedSelection;
-            }
-            return null;
-        }
-
-        public void RemoveCardsThatFailFilter(Predicate<EventDirectorCard> predicate)
-        {
-            for (int i = eventCards.Length - 1; i >= 0; i--)
-            {
-                EventDirectorCard obj = eventCards[i];
-                if (!predicate(obj))
-                {
-                    ArrayUtils.ArrayRemoveAtAndResize(ref eventCards, i, 1);
-                }
-            }
-        }
-
-        public void ValidateCards()
-        {
-            eventCards = eventCards.Where(card => card.CardIsValid()).ToArray();
-        }
-
-        public void Clear()
-        {
-            eventCards = Array.Empty<EventDirectorCard>();
-        }
-
-    }*/
-
 }
 

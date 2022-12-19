@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 
 namespace Moonstorm
 {
+    /// <summary>
+    /// <inheritdoc cref="ItemBase"/>
+    /// <para>This variation of ItemBase allows you to easily create an Infectious relationship, allowing for Void Items.</para>
+    /// </summary>
     public abstract class VoidItemBase : ItemBase
     {        
         /// <summary>

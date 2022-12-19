@@ -20,7 +20,14 @@ MonoBehaviour:
     using ThunderKit, MSU is a modular API system designed for ease of use and simplicity.
   Version: 1.1.2
   Dependencies:
-  - {fileID: 11400000, guid: 7fb5b3d290bed6011ed7e8daf230df89, type: 2}
+  - {fileID: 11400000, guid: 184f0fdf3edcd6bad171410f4e0fd947, type: 2}
+  - {fileID: 11400000, guid: 1f1d261aeee91427ddd08b6378ec4e5a, type: 2}
+  - {fileID: 11400000, guid: 96b1b0a099d0aa02c665488b89e05f9c, type: 2}
+  - {fileID: 11400000, guid: 5674b391a71ca7b6c4189c6fd99a9f26, type: 2}
+  - {fileID: 11400000, guid: cf53c440617523c88133e24838fdcb20, type: 2}
+  - {fileID: 11400000, guid: 98480314448d120c05e373472456e52b, type: 2}
+  - {fileID: 11400000, guid: c4d029bdf5bc95fb2fff2155c8689ef3, type: 2}
+  - {fileID: 11400000, guid: 19f404b4f1d413a691a8b0edda7faba9, type: 2}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0

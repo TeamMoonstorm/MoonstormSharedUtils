@@ -16,15 +16,6 @@ namespace Moonstorm
     [BepInDependency("com.bepis.r2api", BepInDependency.DependencyFlags.HardDependency)]
     [BepInDependency("iHarbHD.DebugToolkit", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInPlugin(GUID, MODNAME, VERSION)]
-    [R2APISubmoduleDependency(new string[]
-        {
-          nameof(ArtifactCodeAPI),
-          nameof(DamageAPI),
-          nameof(RecalculateStatsAPI),
-          nameof(DirectorAPI),
-          nameof(CommandHelper),
-          nameof(EliteAPI)
-        })]
     public class MoonstormSharedUtils : BaseUnityPlugin
     {
         public const string GUID = "com.TeamMoonstorm.MoonstormSharedUtils";
@@ -51,7 +42,6 @@ namespace Moonstorm
             Instance = this;
             PluginInfo = Info;
             new MSULog(Logger);
-            R2API.Utils.CommandHelper.AddToConsoleWhenReady();
             new MSUConfig().Init();
             if (MSUConfig.enableDebugFeatures.Value)
             {

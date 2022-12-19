@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Moonstorm
 {
+    /// <summary>
+    /// A static class holding all the EventDirectorCategorySelections for the Vanilla stages.
+    /// </summary>
     public static class VanillaEventDirectorCategorySelections
     {
         public static EventDirectorCategorySelection AbandonedAqueduct { get; } = Load(nameof(AbandonedAqueduct));

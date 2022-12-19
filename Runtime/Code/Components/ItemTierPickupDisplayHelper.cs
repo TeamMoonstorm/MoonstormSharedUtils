@@ -8,6 +8,9 @@ using UnityEngine;
 
 namespace Moonstorm.Experimental
 {
+    /// <summary>
+    /// A monobehaviour that displays a custom ItemTier pickup display
+    /// </summary>
     public class ItemTierPickupDisplayHelper : MonoBehaviour
     {
         [SystemInitializer(new Type[] {typeof(ItemTierCatalog), typeof(ItemTierModuleBase)})]

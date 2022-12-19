@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
+using R2API;
 //using RoR2BepInExPack.GlobalEliteRampSolution;
 
 namespace Moonstorm
@@ -120,16 +121,28 @@ namespace Moonstorm
         protected override void InitializeContent(EliteEquipmentBase contentClass)
         {
             contentClass.Initialize();
+            Dictionary<Texture2D, List<MSEliteDef>> rampToElites = new Dictionary<Texture2D, List<MSEliteDef>>();
             foreach(MSEliteDef eliteDef in contentClass.EliteDefs)
             {
-                //if (eliteDef.eliteRamp)
-                    //EliteRampManager.AddRamp(eliteDef, eliteDef.eliteRamp);
                 AddSafely(ref SerializableContentPack.eliteDefs, eliteDef);
                 eliteDefs.Add(eliteDef);
                 if (eliteDef.overlay && contentClass.EquipmentDef.passiveBuffDef)
                 {
                     BuffModuleBase.overlayMaterials[contentClass.EquipmentDef.passiveBuffDef] = eliteDef.overlay;
                 }
+                if(eliteDef.eliteRamp)
+                {
+                    if(!rampToElites.ContainsKey(eliteDef.eliteRamp))
+                    {
+                        rampToElites.Add(eliteDef.eliteRamp, new List<MSEliteDef>());
+                    }
+                    rampToElites[eliteDef.eliteRamp].Add(eliteDef);
+                }
+            }
+
+            foreach(var kvp in rampToElites)
+            {
+                EliteRamp.AddRampToMultipleElites(kvp.Value, kvp.Key);
             }
         }
         #endregion
