@@ -90,6 +90,31 @@ MSU will forever be free to use and never gated behind paywalls, however, donati
 
 (Old Changelog can be found [here](https://github.com/TeamMoonstorm/MoonstormSharedUtils/blob/main/Runtime/README-OLD.md))
 
+### '1.2.0' - Item Tier Support
+
+* Runtime:
+    * Updated to use the R2API Split Assemblies update.
+    * Added ItemTier support
+        * Support is in the form of the ItemTierModule and ItemTierBase
+        * ItemTierModule handles loading of ItemTierBases, and implements custom lists that contain the amount of items using said tier, and the current available items in a run.
+        * ItemTierBase can be used to specify custom Color entries using R2API's ColorsAPI, alongside a custom pickup display VFX
+    * Added a deconstruct method for key value pairs.
+    * Added a nicify string method to MSUtils
+    * Marked MaterialCopier as Deprecated
+    * Elites now properly have their ramps set ingame.
+    * Added the AddressableMaterialShader shader
+        * replacement for MaterialCopier
+        * Contains a custom field where the address can be inputed
+        * Calling "FinalizeMaterialsWithAddressableMaterialShader" method in your assetloader copies the addressable material's properties and shaders to your custom instance.
+   * Event Related
+        * Removed the requiredExpansionDef field from EventCard
+        * EventCard's selection weight now ranges between 0 and 100
+        * Fixed a major issue where the EventDirector prefab was set to server only (this fix makes events actually network.)
+    * Fixed TokenModifiers and ConfigurableFields crashing the game if no instance of either was found.
+    * When a field configurable by ConfigurableFied gets it's value changed, Configurablefield will now apply the new value. (this allows ConfigurableField to work with ROO)
+    * Added missing XML documentation
+
+
 ### '1.1.2' - Hotfix
 
 * Runtime:

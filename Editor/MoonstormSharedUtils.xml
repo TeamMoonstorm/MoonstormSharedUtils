@@ -330,11 +330,29 @@
             During the <see cref="T:Moonstorm.ConfigurableFieldManager"/> initialization, the ConfigurableFieldManager will try to bind the config to the config file with this identifier.
             </summary>
         </member>
+        <member name="P:Moonstorm.ConfigurableFieldAttribute.Field">
+            <summary>
+            The FieldInfo that's attached to this Attribute.
+            </summary>
+        </member>
+        <member name="P:Moonstorm.ConfigurableFieldAttribute.ConfigEntryBase">
+            <summary>
+            The ConfigEntry that's tied to this ConfigurableField.
+            <see cref="M:Moonstorm.ConfigurableFieldAttribute.GetConfigEntry``1"/>
+            </summary>
+        </member>
         <member name="M:Moonstorm.ConfigurableFieldAttribute.#ctor(System.String)">
             <summary>
             Creates a new instance of the Configurable Field Attribute.
             </summary>
             <param name="fileIdentifier">The config identifier</param>
+        </member>
+        <member name="M:Moonstorm.ConfigurableFieldAttribute.GetConfigEntry``1">
+            <summary>
+            Returns <see cref="P:Moonstorm.ConfigurableFieldAttribute.ConfigEntryBase"/> as a generic ConfigEntry using casting.
+            </summary>
+            <typeparam name="T">The type to use for the generic during casting</typeparam>
+            <returns>The casted ConfigEntry</returns>
         </member>
         <member name="T:Moonstorm.DisabledContentAttribute">
             <summary>
@@ -634,6 +652,42 @@
             Optional, supply your item's ItemDisplayPrefab here
             </summary>
         </member>
+        <member name="T:Moonstorm.ItemTierBase">
+            <summary>
+            A <see cref="T:Moonstorm.ContentBase"/> that represents an <see cref="T:RoR2.ItemTierDef"/> for the game, the ItemTierDef is represented via the <see cref="P:Moonstorm.ItemTierBase.ItemTierDef"/>
+            <para>Its tied module base is the <see cref="T:Moonstorm.ItemTierModuleBase"/></para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.ItemTierBase.ColorIndex">
+            <summary>
+            Optional, if supplied, it'll override the <see cref="F:RoR2.ItemTierDef.colorIndex"/> for this custom color.
+            </summary>
+        </member>
+        <member name="P:Moonstorm.ItemTierBase.DarkColorIndex">
+            <summary>
+            Optional, if supplied, it'll override the <see cref="F:RoR2.ItemTierDef.darkColorIndex"/> for this custom color.
+            </summary>
+        </member>
+        <member name="P:Moonstorm.ItemTierBase.ItemTierDef">
+            <summary>
+            The ItemTierDef that represents this ItemTierBase
+            </summary>
+        </member>
+        <member name="P:Moonstorm.ItemTierBase.PickupDisplayVFX">
+            <summary>
+            The pickup display for this ItemTierDef, note that this is not the droplet VFX, but the VFX that appears when the item's pickup is in the world.
+            </summary>
+        </member>
+        <member name="P:Moonstorm.ItemTierBase.ItemsWithThisTier">
+            <summary>
+            A list of all the items that have this Tier
+            </summary>
+        </member>
+        <member name="P:Moonstorm.ItemTierBase.AvailableTierDropList">
+            <summary>
+            A list of the available items that can drop in the current run, returns null or an outdated list if a run is not active.
+            </summary>
+        </member>
         <member name="T:Moonstorm.MonsterBase">
             <summary>
             <inheritdoc cref="T:Moonstorm.CharacterBase"/>
@@ -716,12 +770,138 @@
             The AchievementDef tied to this Unlockable
             </summary>
         </member>
+        <member name="T:Moonstorm.VoidItemBase">
+            <summary>
+            <inheritdoc cref="T:Moonstorm.ItemBase"/>
+            <para>This variation of ItemBase allows you to easily create an Infectious relationship, allowing for Void Items.</para>
+            </summary>
+        </member>
         <member name="M:Moonstorm.VoidItemBase.LoadItemsToInfect">
             <summary>
             Implement this method to specify what items this Void Item can infect.
             <para>Can be used to load Items via a plethora of ways, such as Addressables, AssetBundles and the ItemCatalog.</para>
             </summary>
             <returns>An IEnuemrable of items that can be infected by this VoidItems, it returns an IEnumerable because certain void items corrupt multiple items (IE: Void Bands)</returns>
+        </member>
+        <member name="T:Moonstorm.EventCatalog">
+            <summary>
+            The Event Catalog for MSU's Event System
+            </summary>
+        </member>
+        <member name="P:Moonstorm.EventCatalog.RegisteredCategoriesCount">
+            <summary>
+            Returns the amount of Categories that are registered
+            </summary>
+        </member>
+        <member name="P:Moonstorm.EventCatalog.RegisteredEventCount">
+            <summary>
+            Returns the amount of Events that are registered.
+            </summary>
+        </member>
+        <member name="M:Moonstorm.EventCatalog.FindEventIndex(System.String)">
+            <summary>
+            Returns the EventIndex tied to the string supplied in <paramref name="eventName"/>
+            </summary>
+            <param name="eventName">The name of this event</param>
+            <returns>An EventIndex if valid, <see cref="F:Moonstorm.EventIndex.None"/> if no event matches.</returns>
+            <exception cref="T:System.InvalidOperationException"></exception>
+        </member>
+        <member name="M:Moonstorm.EventCatalog.GetEventCard(Moonstorm.EventIndex)">
+            <summary>
+            Returns the EventCard that's tied to the supplied EventIndex in <paramref name="eventIndex"/>
+            </summary>
+            <param name="eventIndex">The EventIndex</param>
+            <returns>An event card that's tied to <paramref name="eventIndex"/></returns>
+            <exception cref="T:System.InvalidOperationException"></exception>
+        </member>
+        <member name="M:Moonstorm.EventCatalog.FindCategorySelectionIndex(System.String)">
+            <summary>
+            Returns the index that's tied to a CategorySelection's name by using <paramref name="name"/>
+            </summary>
+            <param name="name">The name of the category to find</param>
+            <returns>The index of the category, returns -1 if no category is found.</returns>
+            <exception cref="T:System.InvalidOperationException"></exception>
+        </member>
+        <member name="M:Moonstorm.EventCatalog.GetCategorySelection(System.Int32)">
+            <summary>
+            Returns the EventDirectorCategorySelection tied to the index provided in <paramref name="categoryIndex"/>
+            </summary>
+            <param name="categoryIndex">The index to use for the lookup</param>
+            <returns>The EventDirectorCategorySelection</returns>
+            <exception cref="T:System.InvalidOperationException"></exception>
+        </member>
+        <member name="M:Moonstorm.EventCatalog.GetCategoryFromCurrentStage(R2API.DirectorAPI.Stage,System.String)">
+            <summary>
+            Returns the EventDirectorCategorySelection that's tied to the given <paramref name="stage"/> or the given <paramref name="customName"/>
+            </summary>
+            <param name="stage">The Stage to obtain</param>
+            <param name="customName">A custom stage's name, <paramref name="stage"/> needs to be set to <see cref="F:R2API.DirectorAPI.Stage.Custom"/> for it to work properly</param>
+            <returns>The EventDirectorCategorySelection</returns>
+        </member>
+        <member name="M:Moonstorm.EventCatalog.GetCategoryFromSceneDef(RoR2.SceneDef)">
+            <summary>
+            Returns the EventDirectorCategorySelection that's tied to <paramref name="sceneDef"/>.
+            </summary>
+            <param name="sceneDef">The scene def to use for the lookup</param>
+            <returns>The EventDirectorCategorySelection</returns>
+        </member>
+        <member name="M:Moonstorm.EventCatalog.AddCards(Moonstorm.EventCard[])">
+            <summary>
+            Adds multiple cards to the EventCatalog
+            </summary>
+            <param name="cards">The cards to addd</param>
+            <exception cref="T:System.InvalidOperationException"></exception>
+        </member>
+        <member name="M:Moonstorm.EventCatalog.AddCard(Moonstorm.EventCard)">
+            <summary>
+            Adds a single card to the EventCatalog
+            </summary>
+            <param name="card">The card to add</param>
+            <exception cref="T:System.InvalidOperationException"></exception>
+        </member>
+        <member name="M:Moonstorm.EventCatalog.AddCategories(Moonstorm.EventDirectorCategorySelection[])">
+            <summary>
+            Adds multiple EventDirectorCategorySelection to the EventCatalog
+            </summary>
+            <param name="categories">The categories to add</param>
+            <exception cref="T:System.InvalidOperationException"></exception>
+        </member>
+        <member name="M:Moonstorm.EventCatalog.AddCategory(Moonstorm.EventDirectorCategorySelection)">
+            <summary>
+            Adds a single EventDirectorCategorySelection to the EventCatalog
+            </summary>
+            <param name="category">The category to add</param>
+            <exception cref="T:System.InvalidOperationException"></exception>
+        </member>
+        <member name="T:Moonstorm.EventFlags">
+            <summary>
+            Represents flags for events.
+            </summary>
+        </member>
+        <member name="F:Moonstorm.EventFlags.WeatherRelated">
+            <summary>
+            This event needs to run on the exclusive "Weather" entity state machine
+            </summary>
+        </member>
+        <member name="F:Moonstorm.EventFlags.AfterVoidFields">
+            <summary>
+            This event can only run after void fields
+            </summary>
+        </member>
+        <member name="F:Moonstorm.EventFlags.AfterLoop">
+            <summary>
+            This event can only run after looping at least once
+            </summary>
+        </member>
+        <member name="F:Moonstorm.EventFlags.EnemySpawn">
+            <summary>
+            This event spawns enemies
+            </summary>
+        </member>
+        <member name="F:Moonstorm.EventFlags.OncePerRun">
+            <summary>
+            This event can only happen once per run
+            </summary>
         </member>
         <member name="T:Moonstorm.EventHelpers">
             <summary>
@@ -767,6 +947,21 @@
             </summary>
             <param name="announceInfo">The announcement info</param>
             <returns>The EventMessage GameObject</returns>
+        </member>
+        <member name="T:Moonstorm.EventIndex">
+            <summary>
+            An event index, get this from <see cref="P:Moonstorm.EventCard.EventIndex"/> directly or via <see cref="M:Moonstorm.EventCatalog.FindEventIndex(System.String)"/>
+            </summary>
+        </member>
+        <member name="F:Moonstorm.EventIndex.None">
+            <summary>
+            Represents an invalid event.
+            </summary>
+        </member>
+        <member name="T:Moonstorm.VanillaEventDirectorCategorySelections">
+            <summary>
+            A static class holding all the EventDirectorCategorySelections for the Vanilla stages.
+            </summary>
         </member>
         <member name="T:Moonstorm.IBodyStatArgModifier">
             <summary>
@@ -862,6 +1057,12 @@
             Swaps the shaders from the specified materials in <paramref name="materials"/>
             </summary>
             <param name="materials">The materials to modify</param>
+        </member>
+        <member name="M:Moonstorm.Loaders.AssetsLoader.FinalizeMaterialsWithAddressableMaterialShader(UnityEngine.AssetBundle)">
+            <summary>
+            Loads all the Materials with the AddressableMaterialShader shader and finalizes them
+            </summary>
+            <param name="bundle">The bundle to use for loading the materials</param>
         </member>
         <member name="T:Moonstorm.Loaders.ConfigLoader`1">
             <summary>
@@ -1529,6 +1730,52 @@
             </summary>
             <param name="contentClass">The content class being initialized</param>
         </member>
+        <member name="T:Moonstorm.ItemTierModuleBase">
+            <summary>
+            The <see cref="T:Moonstorm.ItemTierModuleBase"/> is a <see cref="T:Moonstorm.ContentModule`1"/> that handles the <see cref="T:Moonstorm.ItemTierBase"/> class
+            <para><see cref="T:Moonstorm.ItemTierModuleBase"/>'s main job is to handle the proper addition of ItemTiers from <see cref="T:Moonstorm.ItemTierBase"/> inheriting classes</para>
+            <para>ItemTiers managed by this module also have unique pickup display VFX, alongside a list of the items that use the tier and the available drop list.</para>
+            <para>Inherit from this module if you want to load and manage ItemTierDefs with <see cref="T:Moonstorm.ItemTierBase"/> systems</para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.ItemTierModuleBase.MoonstormItemTiers">
+            <summary>
+            A ReadOnlyDictioanry that can be used for loading a specific <see cref="T:Moonstorm.ItemTierBase"/> by giving it's tied <see cref="T:RoR2.ItemTierDef"/>
+            <para>If you want to modify classes inside this, subscribe to <see cref="E:Moonstorm.ItemTierModuleBase.OnDictionaryCreated"/> to ensure the dictionary is not empty.</para>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.ItemTierModuleBase.LoadedItemTierDefs">
+            <summary>
+            Loads all the <see cref="T:RoR2.ItemTierDef"/> from the <see cref="P:Moonstorm.ItemTierModuleBase.MoonstormItemTiers"/> dictionary
+            </summary>
+        </member>
+        <member name="E:Moonstorm.ItemTierModuleBase.OnDictionaryCreated">
+            <summary>
+            An action that gets invoked when the <see cref="P:Moonstorm.ItemTierModuleBase.MoonstormItemTiers"/> dictionary has been populated.
+            </summary>
+        </member>
+        <member name="M:Moonstorm.ItemTierModuleBase.GetItemTierBases">
+            <summary>
+            <inheritdoc cref="M:Moonstorm.ModuleBase`1.GetContentClasses``1(System.Type)"/>
+            <para>T in this case is <see cref="T:Moonstorm.ItemTierBase"/></para>
+            </summary>
+            <returns>An IEnumerable of all your assembly's <see cref="T:Moonstorm.ItemTierBase"/></returns>
+        </member>
+        <member name="M:Moonstorm.ItemTierModuleBase.AddItemTier(Moonstorm.ItemTierBase,System.Collections.Generic.Dictionary{RoR2.ItemTierDef,Moonstorm.ItemTierBase})">
+            <summary>
+            Adds an <see cref="T:Moonstorm.ItemTierBase"/>'s ItemTierDef to your mod's ContentPack
+            </summary>
+            <param name="itemTier">The ItemTierBase to add</param>
+            <param name="dictionary">Optional, a dictionary to add your initialized ItemTierBase and ItemTierDef</param>
+        </member>
+        <member name="M:Moonstorm.ItemTierModuleBase.InitializeContent(Moonstorm.ItemTierBase)">
+            <summary>
+            Adds the <see cref="T:RoR2.ItemTierDef"/> of <paramref name="contentClass"/> to your mod's SerializablecontentPack
+            <para>Once added, it'll call <see cref="M:Moonstorm.ContentBase.Initialize"/></para>
+            <para>It'll also override the ItemTierDef's colorIndex and darkColorIndex, if <see cref="P:Moonstorm.ItemTierBase.ColorIndex"/> and <see cref="P:Moonstorm.ItemTierBase.DarkColorIndex"/> where supplied</para>
+            </summary>
+            <param name="contentClass">The content class being initialized</param>
+        </member>
         <member name="T:Moonstorm.ProjectileModuleBase">
             <summary>
             The <see cref="T:Moonstorm.ProjectileModuleBase"/> is a <see cref="T:Moonstorm.ContentModule`1"/> that handles the <see cref="T:Moonstorm.ProjectileBase"/> class
@@ -1827,6 +2074,13 @@
             </summary>
             <returns>The types of the assembly</returns>
         </member>
+        <member name="M:Moonstorm.MSUtil.NicifyString(System.String)">
+            <summary>
+            Nicifies a CamelCase or pascalCase string into a human readable name
+            </summary>
+            <param name="text">The string to nicify</param>
+            <returns>The nicified string</returns>
+        </member>
         <member name="T:Moonstorm.Components.BaseBuffBodyBehavior">
             <summary>
             A BaseBuffBodyBehaviour is an extended version of a <see cref="T:UnityEngine.MonoBehaviour"/>
@@ -2047,6 +2301,11 @@
         <member name="T:Moonstorm.Components.MoonstormIDH">
             <summary>
             Sets default values to a CharacterModel's item display rule set entries that have a child with the name "NoValue"
+            </summary>
+        </member>
+        <member name="T:Moonstorm.Experimental.ItemTierPickupDisplayHelper">
+            <summary>
+            A monobehaviour that displays a custom ItemTier pickup display
             </summary>
         </member>
         <member name="T:Moonstorm.MoonstormSharedUtils">
