@@ -13,7 +13,14 @@ namespace Moonstorm
     /// <summary>
     /// The main class of MSU
     /// </summary>
-    [BepInDependency("com.bepis.r2api", BepInDependency.DependencyFlags.HardDependency)]
+    [BepInDependency("com.bepis.r2api.artifactcode")]
+    [BepInDependency("com.bepis.r2api.colors")]
+    [BepInDependency("com.bepis.r2api.content_management")]
+    [BepInDependency("com.bepis.r2api")]
+    [BepInDependency("com.bepis.r2api.damagetype")]
+    [BepInDependency("com.bepis.r2api.director")]
+    [BepInDependency("com.bepis.r2api.elites")]
+    [BepInDependency("com.bepis.r2api.recalculatestats")]
     [BepInDependency("iHarbHD.DebugToolkit", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInPlugin(GUID, MODNAME, VERSION)]
     public class MoonstormSharedUtils : BaseUnityPlugin
