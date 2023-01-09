@@ -1,5 +1,6 @@
 ﻿using RoR2;
 using RoR2.Audio;
+using RoR2.ExpansionManagement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,8 @@ namespace Moonstorm
     /// </summary>
     public static class MSUtil
     {
+        private static Run currentRun;
+        private static ExpansionDef[] currentRunExpansionDefs;
         /// <summary>
         /// Checks if a mod is installed in the bepinex chainloader
         /// </summary>
@@ -54,6 +57,23 @@ namespace Moonstorm
                 return;
             }
             EffectManager.SimpleSoundEffect(soundID, pos, transmit);
+        }
+
+        /// <summary>
+        /// Returns all the enabled expansions for the current run
+        /// </summary>
+        /// <param name="run">The current run</param>
+        /// <returns>An array of expansionDefs</returns>
+        public static ExpansionDef[] GetEnabledExpansions(this Run run)
+        {
+            if(currentRun == run)
+            {
+                return currentRunExpansionDefs;
+            }
+
+            currentRun = run;
+            currentRunExpansionDefs = ExpansionCatalog.expansionDefs.Where(x => run.IsExpansionEnabled(x)).ToArray();
+            return currentRunExpansionDefs;
         }
 
         #region Extensions
