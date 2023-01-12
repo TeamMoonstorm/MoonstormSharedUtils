@@ -69,31 +69,65 @@ namespace Moonstorm
         public bool IsAvailable()
         {
             if (!Run.instance)
-                return false;
-
-            bool flag0 = !requiredUnlockableDef.Asset || Run.instance.IsUnlockableUnlocked(requiredUnlockableDef.Asset);
-            bool flag1 = forbiddenUnlockableDef.Asset && Run.instance.DoesEveryoneHaveThisUnlockableUnlocked(forbiddenUnlockableDef.Asset);
-            //if enough stages are cleared, and unlock requirements are met
-            if(Run.instance.stageClearCount >= minimumStageCompletions && flag0 && !flag1)
             {
-                //If it doesnt have the flag or it does and the loop is greater than 0
-                bool flag2 = !eventFlags.HasFlag(EventFlags.AfterLoop) || Run.instance.loopClearCount > 0;
-                //If it doesnt have the flag or it does and the void fields have been visited
-                bool flag3 = !eventFlags.HasFlag(EventFlags.AfterVoidFields) || Run.instance.GetEventFlag("ArenaPortalTaken");
-                //If it isnt one-time or the the flag isnt registered for the run
-                bool flag4 = !eventFlags.HasFlag(EventFlags.OncePerRun) || !Run.instance.GetEventFlag(OncePerRunFlag);
-
-                if (!((flag2 || flag3) && flag4))
-                    return false;
-
-                var expansionsEnabled = true;
-                foreach(AddressableExpansionDef expansionDef in requiredExpansions)
-                {
-                    expansionsEnabled = Run.instance.IsExpansionEnabled(expansionDef.Asset);
-                }
-                return expansionsEnabled;
+                MSULog.Warning($"{this} No run");
+                return false;
             }
-            return false;
+
+            if(Run.instance.stageClearCount >= minimumStageCompletions)
+            {
+                MSULog.Warning($"{this} not enough stages cleared");
+                return false;
+            }
+
+            var expansionsEnabled = true;
+            foreach(AddressableExpansionDef ed in requiredExpansions)
+            {
+                expansionsEnabled = Run.instance.IsExpansionEnabled(ed.Asset);
+            }
+            if (!expansionsEnabled)
+            {
+                MSULog.Warning($"{this} not all expansions enabled");
+                return false;
+            }
+
+            bool requiredUnlockableUnlocked = !requiredUnlockableDef || Run.instance.IsUnlockableUnlocked(requiredUnlockableDef);
+            MSULog.Info($"Is required unlockable unlocked?: {requiredUnlockableUnlocked}");
+            bool forbiddenUnlockableUnlocked = forbiddenUnlockableDef && Run.instance.DoesEveryoneHaveThisUnlockableUnlocked(forbiddenUnlockableDef);
+            MSULog.Info($"Is forbidden unlockable unlocked?: {forbiddenUnlockableUnlocked}");
+            if(!(requiredUnlockableUnlocked && !forbiddenUnlockableUnlocked))
+            {
+                MSULog.Warning("Not all unlockable requirements met");
+                return false;
+            }
+
+            if(eventFlags.HasFlag(EventFlags.OncePerRun))
+            {
+                MSULog.Info("event has once per run flag");
+                if(Run.instance.GetEventFlag(OncePerRunFlag))
+                {
+                    MSULog.Warning("Event already ran");
+                    return false;
+                }
+            }
+
+
+
+            //If it doesnt have the flag or it does and the loop is greater than 0
+            bool flag2 = !eventFlags.HasFlag(EventFlags.AfterLoop) || Run.instance.loopClearCount > 0;
+            //If it doesnt have the flag or it does and the void fields have been visited
+            bool flag3 = !eventFlags.HasFlag(EventFlags.AfterVoidFields) || Run.instance.GetEventFlag("ArenaPortalTaken");
+
+            if (!(flag2 || flag3))
+            {
+                MSULog.Warning("After loop or after void fields flags failed to check.");
+                MSULog.Warning($"Has AfterLoop?: {eventFlags.HasFlag(EventFlags.AfterLoop)}, Loop Clear Count: {Run.instance.loopClearCount}");
+                MSULog.Warning($"Has AfterVoidFields?: {eventFlags.HasFlag(EventFlags.AfterVoidFields)}, ArenaPortalTaken event flag: {Run.instance.GetEventFlag("ArenaPortalTaken")}");
+                return false;
+            }
+
+            MSULog.Info(":D");
+            return true;
         }
     }
 }

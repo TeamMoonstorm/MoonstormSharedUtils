@@ -14,6 +14,7 @@ namespace Moonstorm.AddressableAssets
     /// <summary>
     /// An <see cref="AddressableAsset"/> is a type of class thats used for referencing an Asset ingame.
     /// <para>The asset referenced can be either a Direct reference or a reference via an Address</para>
+    /// <para>An <see cref="AddressableAsset"/> has implicit operators for casting to it's <typeparamref name="T"/> Type, and for casting into Boolean (using unity's boolean cast operator)</para>
     /// </summary>
     /// <typeparam name="T">The type of asset that's being used</typeparam>
     public abstract class AddressableAsset<T> : AddressableAsset where T : UObject
@@ -38,7 +39,7 @@ namespace Moonstorm.AddressableAssets
 
         /// <summary>
         /// The Asset that's tied to this AddressableAsset.
-        /// <para>You really should use this property before <see cref="AddressableAsset.OnAddressableAssetsLoaded"/> gets invoked.</para>
+        /// <para>You really shouldn't use this property before <see cref="AddressableAsset.OnAddressableAssetsLoaded"/> gets invoked.</para>
         /// </summary>
         public T Asset
         {
@@ -80,6 +81,16 @@ namespace Moonstorm.AddressableAssets
             var asyncOp = Addressables.LoadAssetAsync<T>(address);
             var task = asyncOp.Task;
             asset = await task;
+        }
+
+        public static implicit operator bool(AddressableAsset<T> asset)
+        {
+            return asset.Asset;
+        }
+
+        public static implicit operator T(AddressableAsset<T> addressableAsset)
+        {
+            return (T)addressableAsset.Asset;
         }
     }
 
