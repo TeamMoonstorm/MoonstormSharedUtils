@@ -10,13 +10,19 @@ using Object = UnityEngine.Object;
 
 namespace Moonstorm.Components.Addressables
 {
+    /// <summary>
+    /// Component that injects an AddressableAsset to a component's field
+    /// </summary>
     [ExecuteAlways]
     public class AddressableInjector : MonoBehaviour
     {
+        [Tooltip("The address used for injecting")]
         public string address;
         private Object _asset;
 
+        [Tooltip("The component that will be injected")]
         [SerializeField] private Component targetComponent;
+        [Tooltip("The member info that'll be injected")]
         [SerializeField] private string targetMemberInfoName;
 
         private MemberInfo cachedMemberInfo;
@@ -25,6 +31,9 @@ namespace Moonstorm.Components.Addressables
         private void OnEnable() => Refresh();
         private void OnDisable() => RemoveReferencesEditor();
 
+        /// <summary>
+        /// Refreshes and re-injects the asset specified in <see cref="address"/>
+        /// </summary>
         public void Refresh()
         {
             if (string.IsNullOrWhiteSpace(address) || string.IsNullOrEmpty(address))
@@ -69,7 +78,7 @@ namespace Moonstorm.Components.Addressables
 
         private MemberInfo GetMemberInfo()
         {
-            if (cachedMemberInfo == null)
+            if (cachedMemberInfo == null && targetComponent)
             {
                 cachedMemberInfo = targetComponent.GetType()
                     .GetMembers(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy)

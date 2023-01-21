@@ -5,6 +5,10 @@ using UnityEngine.AddressableAssets;
 
 namespace Moonstorm.Components.Addressables
 {
+    /// <summary>
+    /// Instantiates the RoR2 main camera, which allows preview of post processing effects
+    /// <para>Do not leave this on finalized builds, as it causes errors</para>
+    /// </summary>
     [ExecuteAlways]
     public class CameraInstantiator : MonoBehaviour
     {
@@ -14,6 +18,9 @@ namespace Moonstorm.Components.Addressables
         private void OnEnable() => Refresh();
         private void OnDisable() => DestroyImmediate(cameraInstance, true);
 
+        /// <summary>
+        /// Instantiates the camera or destroys the attached game object if the component is instantiated at runtime and not in the editor.
+        /// </summary>
         public void Refresh()
         {
             if (Application.isPlaying && !Application.isEditor)

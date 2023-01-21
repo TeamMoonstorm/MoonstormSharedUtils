@@ -9,14 +9,23 @@ using UnityEngine.Networking;
 
 namespace Moonstorm.Components.Addressables
 {
+    /// <summary>
+    /// Instantiates the prefab specified in <see cref="address"/>
+    /// </summary>
     [ExecuteAlways]
     public class InstantiateAddressablePrefab : MonoBehaviour
     {
+        [Tooltip("The address to use to load the prefab")]
         [SerializeField] private string address;
+        [Tooltip("When the prefab is instantiated, and this is true, the prefab's position and rotation will be set to 0")]
         [SerializeField] private bool setPositionAndRotationToZero;
+        [Tooltip("Wether the Refresh method will be called in the editor")]
         [SerializeField] private bool refreshInEditor;
         [SerializeField, HideInInspector] private bool hasNetworkIdentity;
 
+        /// <summary>
+        /// The instantiated prefab
+        /// </summary>
         public GameObject Instance => instance;
         private GameObject instance;
 
@@ -27,7 +36,10 @@ namespace Moonstorm.Components.Addressables
             if (instance)
                 DestroyImmediate(instance, true);
         }
-        private void Refresh()
+        /// <summary>
+        /// Destroys the instantiated object and re-instantiates using the prefab that's loaded via <see cref="address"/>
+        /// </summary>
+        public void Refresh()
         {
             if (Application.isEditor && !refreshInEditor)
                 return;
@@ -60,11 +72,14 @@ namespace Moonstorm.Components.Addressables
             }
 
             instance.hideFlags |= (HideFlags.DontSaveInEditor | HideFlags.DontSaveInBuild | HideFlags.NotEditable);
+            foreach(Transform t in instance.transform)
+            {
+                t.hideFlags = HideFlags.HideInHierarchy | HideFlags.HideInInspector | HideFlags.NotEditable;
+            }
             if(setPositionAndRotationToZero)
             {
                 Transform t = instance.transform;
-                t.position = Vector3.zero;
-                t.rotation = Quaternion.identity;
+                t.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
             }
         }
     }
