@@ -70,13 +70,11 @@ namespace Moonstorm
         {
             if (!Run.instance)
             {
-                MSULog.Warning($"{this} No run");
                 return false;
             }
 
             if(Run.instance.stageClearCount >= minimumStageCompletions)
             {
-                MSULog.Warning($"{this} not enough stages cleared");
                 return false;
             }
 
@@ -87,26 +85,20 @@ namespace Moonstorm
             }
             if (!expansionsEnabled)
             {
-                MSULog.Warning($"{this} not all expansions enabled");
                 return false;
             }
 
             bool requiredUnlockableUnlocked = !requiredUnlockableDef || Run.instance.IsUnlockableUnlocked(requiredUnlockableDef);
-            MSULog.Info($"Is required unlockable unlocked?: {requiredUnlockableUnlocked}");
             bool forbiddenUnlockableUnlocked = forbiddenUnlockableDef && Run.instance.DoesEveryoneHaveThisUnlockableUnlocked(forbiddenUnlockableDef);
-            MSULog.Info($"Is forbidden unlockable unlocked?: {forbiddenUnlockableUnlocked}");
             if(!(requiredUnlockableUnlocked && !forbiddenUnlockableUnlocked))
             {
-                MSULog.Warning("Not all unlockable requirements met");
                 return false;
             }
 
             if(eventFlags.HasFlag(EventFlags.OncePerRun))
             {
-                MSULog.Info("event has once per run flag");
                 if(Run.instance.GetEventFlag(OncePerRunFlag))
                 {
-                    MSULog.Warning("Event already ran");
                     return false;
                 }
             }
@@ -120,13 +112,9 @@ namespace Moonstorm
 
             if (!(flag2 || flag3))
             {
-                MSULog.Warning("After loop or after void fields flags failed to check.");
-                MSULog.Warning($"Has AfterLoop?: {eventFlags.HasFlag(EventFlags.AfterLoop)}, Loop Clear Count: {Run.instance.loopClearCount}");
-                MSULog.Warning($"Has AfterVoidFields?: {eventFlags.HasFlag(EventFlags.AfterVoidFields)}, ArenaPortalTaken event flag: {Run.instance.GetEventFlag("ArenaPortalTaken")}");
                 return false;
             }
 
-            MSULog.Info(":D");
             return true;
         }
     }

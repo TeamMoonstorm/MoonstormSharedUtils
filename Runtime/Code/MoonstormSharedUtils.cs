@@ -16,6 +16,7 @@ namespace Moonstorm
     [BepInDependency("com.bepis.r2api.artifactcode")]
     [BepInDependency("com.bepis.r2api.colors")]
     [BepInDependency("com.bepis.r2api.content_management")]
+    [BepInDependency("com.bepis.r2api.commandhelper")]
     [BepInDependency("com.bepis.r2api")]
     [BepInDependency("com.bepis.r2api.damagetype")]
     [BepInDependency("com.bepis.r2api.director")]
@@ -56,7 +57,6 @@ namespace Moonstorm
             }
             MSUAssetBundle = AssetBundle.LoadFromFile(Path.Combine(AssemblyDir, "msuassets"));
             R2API.ContentManagement.R2APIContentManager.AddPreExistingSerializableContentPack(MSUAssetBundle.LoadAsset<R2APISerializableContentPack>("MSUSCP"));
-            //Events.Init();
         }
     }
 }

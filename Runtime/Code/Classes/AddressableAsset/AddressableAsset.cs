@@ -85,12 +85,12 @@ namespace Moonstorm.AddressableAssets
 
         public static implicit operator bool(AddressableAsset<T> asset)
         {
-            return asset.Asset;
+            return asset != null && asset.Asset;
         }
 
         public static implicit operator T(AddressableAsset<T> addressableAsset)
         {
-            return (T)addressableAsset.Asset;
+            return addressableAsset?.Asset;
         }
     }
 
