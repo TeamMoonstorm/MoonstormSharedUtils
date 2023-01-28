@@ -13,7 +13,8 @@ namespace Moonstorm
     {
         public static EventDirectorCategorySelection AbandonedAqueduct { get; } = Load(nameof(AbandonedAqueduct));
         public static EventDirectorCategorySelection AbyssalDepths { get; } = Load(nameof(AbyssalDepths));
-        public static EventDirectorCategorySelection AphelianSanctuary { get; } = Load(nameof (AphelianSanctuary));
+        public static EventDirectorCategorySelection AphelianSanctuary { get; } = Load(nameof(AphelianSanctuary));
+        public static EventDirectorCategorySelection ArtifactReliquary { get; } = Load(nameof(ArtifactReliquary));
         public static EventDirectorCategorySelection Commencement { get; } = Load(nameof (Commencement));
         public static EventDirectorCategorySelection DistantRoost { get; } = Load(nameof(DistantRoost));
         public static EventDirectorCategorySelection RallypointDelta { get; } = Load(nameof(RallypointDelta));

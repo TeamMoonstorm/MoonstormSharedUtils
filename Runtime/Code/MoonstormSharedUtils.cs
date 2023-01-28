@@ -57,6 +57,7 @@ namespace Moonstorm
             }
             MSUAssetBundle = AssetBundle.LoadFromFile(Path.Combine(AssemblyDir, "msuassets"));
             R2API.ContentManagement.R2APIContentManager.AddPreExistingSerializableContentPack(MSUAssetBundle.LoadAsset<R2APISerializableContentPack>("MSUSCP"));
+            R2API.Utils.CommandHelper.AddToConsoleWhenReady();
         }
     }
 }
