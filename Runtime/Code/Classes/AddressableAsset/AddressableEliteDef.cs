@@ -27,7 +27,7 @@ namespace Moonstorm.AddressableAssets
             }
         }
 
-/// <summary>
+        /// <summary>
         /// Parameterless Constructor for <see cref="AddressableEliteDef"/>
         /// </summary>
         public AddressableEliteDef() { }

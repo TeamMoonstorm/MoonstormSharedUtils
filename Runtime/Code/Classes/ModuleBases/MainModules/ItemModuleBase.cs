@@ -31,7 +31,12 @@ namespace Moonstorm
         /// <summary>
         /// An action that gets invoked when the <see cref="MoonstormItems"/> dictionary has been populated
         /// </summary>
+        [Obsolete("use \"ModuleAvailability.CallWhenAvailable()\" instead")]
         public static Action<ReadOnlyDictionary<ItemDef, ItemBase>> OnDictionaryCreated;
+        /// <summary>
+        /// Call ModuleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
+        /// </summary>
+        public static ResourceAvailability ModuleAvailability { get; } = default(ResourceAvailability);
         #endregion
 
         //Due to potential timing issues, there is the posibility of the ContagiousItemManager's init to run before SystemInit, which would be too late for us to add new void items.
@@ -48,6 +53,7 @@ namespace Moonstorm
             items = null;
 
             OnDictionaryCreated?.Invoke(MoonstormItems);
+            ModuleAvailability.MakeAvailable();
         }
 
         private static void FinishVoidItemBases(On.RoR2.Items.ContagiousItemManager.orig_Init orig)
@@ -102,7 +108,9 @@ namespace Moonstorm
         /// <returns>An IEnumerable of all your assembly's <see cref="ItemBase"/></returns>
         protected virtual IEnumerable<ItemBase> GetItemBases()
         {
+#if DEBUG
             MSULog.Debug($"Getting the Items found inside {GetType().Assembly}");
+#endif
             return GetContentClasses<ItemBase>();
         }
 
@@ -115,7 +123,9 @@ namespace Moonstorm
         {
             InitializeContent(item);
             dictionary?.Add(item.ItemDef, item);
+#if DEBUG
             MSULog.Debug($"Item {item.ItemDef} Initialized and Ensured in {SerializableContentPack.name}");
+#endif
         }
 
         /// <summary>

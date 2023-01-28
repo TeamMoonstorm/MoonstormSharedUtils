@@ -125,18 +125,21 @@ namespace EntityStates.Events
         public override void OnExit()
         {
             base.OnExit();
-            if(MSUConfig.eventAnnouncementsAsChatMessages.Value)
+            if(!eventCard.startMessageToken.Equals(string.Empty))
             {
-                Chat.SimpleChatMessage messageBase = new Chat.SimpleChatMessage()
+                if(MSUConfig.eventAnnouncementsAsChatMessages.Value)
                 {
-                    paramTokens = Array.Empty<string>(),
-                    baseToken = Util.GenerateColoredString(Language.GetString(eventCard.endMessageToken), eventCard.messageColor)
-                };
-                Chat.SendBroadcastChat(messageBase);
-            }
-            else
-            {
-                EventHelpers.AnnounceEvent(new EventHelpers.EventAnnounceInfo(eventCard, warningDur, false));
+                    Chat.SimpleChatMessage messageBase = new Chat.SimpleChatMessage()
+                    {
+                        paramTokens = Array.Empty<string>(),
+                        baseToken = Util.GenerateColoredString(Language.GetString(eventCard.endMessageToken), eventCard.messageColor)
+                    };
+                    Chat.SendBroadcastChat(messageBase);
+                }
+                else
+                {
+                    EventHelpers.AnnounceEvent(new EventHelpers.EventAnnounceInfo(eventCard, warningDur, false));
+                }
             }
 
             if (NetworkServer.active)

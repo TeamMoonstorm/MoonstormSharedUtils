@@ -40,7 +40,12 @@ namespace Moonstorm
         /// <summary>
         /// An action that gets invoked when the <see cref="MoonstormBuffs"/> and <see cref="MoonstormOverlayMaterials"/> have been populated
         /// </summary>
+        [Obsolete("use \"ModuleAvailability.CallWhenAvailable()\" instead")]
         public static Action<ReadOnlyDictionary<BuffDef, BuffBase>, ReadOnlyDictionary<BuffDef, Material>> OnDictionariesCreated;
+        /// <summary>
+        /// Call ModuleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
+        /// </summary>
+        public static ResourceAvailability ModuleAvailability { get; } = default(ResourceAvailability);
         #endregion
 
         [SystemInitializer(typeof(BuffCatalog))]
@@ -57,6 +62,7 @@ namespace Moonstorm
             overlayMaterials = null;
             
             OnDictionariesCreated?.Invoke(MoonstormBuffs, MoonstormOverlayMaterials);
+            ModuleAvailability.MakeAvailable();
         }
 
         #region Buffs
@@ -67,7 +73,9 @@ namespace Moonstorm
         /// <returns>An IEnumerable of all your assembly's <see cref="BuffBase"/></returns>
         protected virtual IEnumerable<BuffBase> GetBuffBases()
         {
+#if DEBUG
             MSULog.Debug($"Getting the Buffs found inside {GetType().Assembly}...");
+#endif
             return GetContentClasses<BuffBase>();
         }
 
@@ -82,7 +90,9 @@ namespace Moonstorm
             InitializeContent(buff);
             buffDictionary?.Add(buff.BuffDef, buff);
 
+#if DEBUG
             MSULog.Debug($"Buff {buff.BuffDef} Initialized and ensured in {SerializableContentPack.name}");
+#endif
         }
 
         /// <summary>

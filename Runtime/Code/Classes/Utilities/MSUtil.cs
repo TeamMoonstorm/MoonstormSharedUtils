@@ -122,6 +122,12 @@ namespace Moonstorm
             return true;
         }
 
+        [Obsolete("Method is wrongly named, use RemoveIfInCollection instead")]
+        public static bool RemoveIfNotInCollection<T>(this ICollection<T> collection, T entry)
+        {
+            return RemoveIfInCollection(collection, entry);
+        }
+
         /// <summary>
         /// Removes the entry of type <typeparamref name="T"/> from the collection if its in it
         /// </summary>
@@ -129,7 +135,7 @@ namespace Moonstorm
         /// <param name="collection"></param>
         /// <param name="entry">The entry to remove if its in the collection</param>
         /// <returns>True if it was in the collection and removed, false otherwise</returns>
-        public static bool RemoveIfNotInCollection<T>(this ICollection<T> collection, T entry)
+        public static bool RemoveIfInCollection<T>(this ICollection<T> collection, T entry)
         {
             if (!collection.Contains(entry))
                 return false;

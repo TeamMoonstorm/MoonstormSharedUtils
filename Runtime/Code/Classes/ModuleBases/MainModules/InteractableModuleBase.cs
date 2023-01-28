@@ -41,8 +41,12 @@ namespace Moonstorm
         /// <summary>
         /// An action that gets invoked when the <see cref="MoonstormInteractables"/> dictionary has been populated
         /// </summary>
+        [Obsolete("use \"ModuleAvailability.CallWhenAvailable()\" instead")]
         public static Action<ReadOnlyDictionary<GameObject, InteractableBase>> OnDictionaryCreated;
-
+        /// <summary>
+        /// Call ModuleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
+        /// </summary>
+        public static ResourceAvailability ModuleAvailability { get; } = default(ResourceAvailability);
         private static Dictionary<DirectorAPI.Stage, List<MSInteractableDirectorCard>> currentStageToCards = new Dictionary<DirectorAPI.Stage, List<MSInteractableDirectorCard>>();
         private static Dictionary<string, List<MSInteractableDirectorCard>> currentCustomStageToCards = new Dictionary<string, List<MSInteractableDirectorCard>>();
         #endregion
@@ -58,6 +62,7 @@ namespace Moonstorm
             interactables = null;
 
             OnDictionaryCreated?.Invoke(MoonstormInteractables);
+            ModuleAvailability.MakeAvailable();
         }
 
 
@@ -69,7 +74,9 @@ namespace Moonstorm
         /// <returns>An IEnumerable of all your assembly's <see cref="InteractableBase"/></returns>
         protected virtual IEnumerable<InteractableBase> GetInteractableBases()
         {
+#if DEBUG
             MSULog.Debug($"Getting the Interactables found inside {GetType().Assembly}...");
+#endif
             return GetContentClasses<InteractableBase>();
         }
         /// <summary>
@@ -81,7 +88,9 @@ namespace Moonstorm
         {
             InitializeContent(interactableBase);
             interactableDictionary?.Add(interactableBase.Interactable, interactableBase);
+#if DEBUG
             MSULog.Debug($"Interactable {interactableBase} Initialized and Ensured in {SerializableContentPack.name}");
+#endif
         }
 
         /// <summary>
@@ -150,8 +159,9 @@ namespace Moonstorm
                     MSULog.Error($"{e}\nCard: {card}");
                 }
             }
-
+#if DEBUG
             MSULog.Info(num > 0 ? $"A total of {num} interactable cards added to the run" : $"No interactable cards added to the run");
+#endif
         }
 
         private static void ClearDictionaries()

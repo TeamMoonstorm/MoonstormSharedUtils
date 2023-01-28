@@ -144,7 +144,9 @@ namespace Moonstorm
                             HG.ArrayUtils.ArrayAppend(ref namedIdrs.idrs.keyAssetRuleGroups, keyAssetRuleGroup);
                         }
                         namedIdrs.idrs.GenerateRuntimeValues();
+#if DEBUG
                         MSULog.Debug($"Finished appending values from {namedIdrs} to {namedIdrs.idrs}");
+#endif
                     }
                     catch(Exception e)
                     {
@@ -165,7 +167,9 @@ namespace Moonstorm
                     EquipmentIndex index = EquipmentCatalog.FindEquipmentIndex(keyAsset.name);
                     if(index == EquipmentIndex.None)
                     {
+#if DEBUG
                         MSULog.Debug($"Not generating key asset rule group for {keyAsset.name} as its index is none.");
+#endif
                         continue;
                     }
                 }
@@ -174,7 +178,9 @@ namespace Moonstorm
                     ItemIndex index = ItemCatalog.FindItemIndex(id.name);
                     if(index == ItemIndex.None)
                     {
+#if DEBUG
                         MSULog.Debug($"Not generating key asset rule group for {keyAsset.name} as its index is none.");
+#endif
                         continue;
                     }
                 }

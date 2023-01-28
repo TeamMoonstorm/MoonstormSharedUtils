@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#if DEBUG
+using UnityEngine;
 
 namespace Moonstorm.Components
 {
@@ -61,3 +62,4 @@ namespace Moonstorm.Components
         }
     }
 }
+#endif

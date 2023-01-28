@@ -32,7 +32,12 @@ namespace Moonstorm
         /// <summary>
         /// An action that gets invoked when the <see cref="MoonstormEliteTiers"/> dictionary has been populated
         /// </summary>
+        [Obsolete("use \"ModuleAvailability.CallWhenAvailable()\" instead")]
         public static Action<ReadOnlyDictionary<SerializableEliteTierDef, EliteTierDefBase>> OnDictionaryCreated;
+        /// <summary>
+        /// Call ModuleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
+        /// </summary>
+        public static ResourceAvailability ModuleAvailability { get; } = default(ResourceAvailability);
         #endregion
 
         [SystemInitializer]
@@ -48,6 +53,7 @@ namespace Moonstorm
                 eliteTierDefs = null;
 
                 OnDictionaryCreated?.Invoke(MoonstormEliteTiers);
+                ModuleAvailability.MakeAvailable();
             };
         }
 
@@ -71,7 +77,9 @@ namespace Moonstorm
         /// <returns>An IEnumerable of all your assembly's <see cref="EliteTierDefBase"/></returns>
         protected virtual IEnumerable<EliteTierDefBase> GetEliteTierDefBases()
         {
+#if DEBUG
             MSULog.Debug($"Getting the EliteTierDefs found inside {GetType().Assembly}...");
+#endif
             return GetContentClasses<EliteTierDefBase>();
         }
 
@@ -84,7 +92,9 @@ namespace Moonstorm
         {
             InitializeContent(eliteTierDef);
             dictionary?.Add(eliteTierDef.SerializableEliteTierDef, eliteTierDef);
+#if DEBUG
             MSULog.Debug($"EliteTierDef {eliteTierDef.SerializableEliteTierDef} added to the game");
+#endif
         }
 
         /// <summary>

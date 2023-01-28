@@ -104,10 +104,12 @@ namespace Moonstorm
             return null;
         }
 
+#if DEBUG
         [ContextMenu("Migrate from sprite fields to vanilla field")]
         private void UpdateSpritesToVanillaIconField()
         {
             achievementIcon = achievedIcon;
         }
+#endif
     }
 }

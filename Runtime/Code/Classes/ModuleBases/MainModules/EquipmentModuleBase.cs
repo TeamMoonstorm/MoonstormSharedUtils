@@ -60,7 +60,12 @@ namespace Moonstorm
         /// <summary>
         /// An action that gets invoked when the <see cref="NonEliteMoonstormEquipments"/> & <see cref="EliteMoonstormEquipments"/> dictionaries have been populated
         /// </summary>
+        [Obsolete("use \"ModuleAvailability.CallWhenAvailable()\" instead")]
         public static Action<ReadOnlyDictionary<EquipmentDef, EquipmentBase>, ReadOnlyDictionary<EquipmentDef, EliteEquipmentBase>> OnDictionariesCreated;
+        /// <summary>
+        /// Call ModuleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
+        /// </summary>
+        public static ResourceAvailability ModuleAvailability { get; } = default(ResourceAvailability);
         #endregion
 
         [SystemInitializer(typeof(EquipmentCatalog))]
@@ -81,6 +86,7 @@ namespace Moonstorm
             allMoonstormEquipments = new ReadOnlyDictionary<EquipmentDef, EquipmentBase>(mergedDictionary);
 
             OnDictionariesCreated?.Invoke(NonEliteMoonstormEquipments, EliteMoonstormEquipments);
+            ModuleAvailability.MakeAvailable();
         }
 
         #region Equipments
@@ -92,7 +98,9 @@ namespace Moonstorm
         /// <returns>An IEnumerable of all your assembly's <see cref="EquipmentBase"/></returns>
         protected virtual IEnumerable<EquipmentBase> GetEquipmentBases()
         {
+#if DEBUG
             MSULog.Debug($"Getting the Equipments found inside {GetType().Assembly}");
+#endif
             return GetContentClasses<EquipmentBase>(typeof(EliteEquipmentBase));
         }
 
@@ -115,7 +123,9 @@ namespace Moonstorm
         /// <returns>An IEnumerable of all your assembly's <see cref="EliteEquipmentBase"/></returns>
         protected virtual IEnumerable<EliteEquipmentBase> GetEliteEquipmentBases()
         {
+#if DEBUG
             MSULog.Debug($"Getting the Elite Equipments found inside {GetType().Assembly}");
+#endif
             return GetContentClasses<EliteEquipmentBase>();
         }
 
@@ -144,14 +154,18 @@ namespace Moonstorm
             if(contentClass is EliteEquipmentBase eeb)
             {
                 eliteEquip[eeb.EquipmentDef] = eeb;
+#if DEBUG
                 MSULog.Debug($"EliteEquipmentBase {eeb}'s equipment def ensured in {SerializableContentPack.name}" +
                     $"\nBe sure to create an EliteModule to finalize the initialization of the elite equipment base!");
+#endif
                 return;
             }
 
             nonEliteEquip[contentClass.EquipmentDef] = contentClass;
             contentClass.Initialize();
+#if DEBUG
             MSULog.Debug($"Equipment {contentClass} Initialized and ensured in {SerializableContentPack.name}");
+#endif
         }
         #endregion
 

@@ -32,10 +32,12 @@ namespace Moonstorm
         [SystemInitializer]
         private static void Initialize()
         {
-            MSULog.Debug($"Material Copier Initialized");
+            MSULog.Info($"Material Copier Initialized");
             foreach(MaterialCopier copier in instances)
             {
+#if DEBUG
                 MSULog.Debug($"Copying materials from {copier}");
+#endif
                 copier.CopyMaterials();
             }
         }
@@ -45,14 +47,15 @@ namespace Moonstorm
 
         private void Awake()
         {
-            instances.Add(this);
+            instances.AddIfNotInCollection(this);
         }
 
         private void OnDestroy()
         {
-            instances.Remove(this);
+            instances.RemoveIfInCollection(this);
         }
 
+#if DEBUG
         [ContextMenu("Upgrade to AddressableMaterialShader")]
         private void Upgrade()
         {
@@ -62,10 +65,13 @@ namespace Moonstorm
             }
             Debug.Log("Upgrade finished, remember to call \"FinalizeMaterialsWithAddressableMaterialShader\" method in your AssetsLoader!");
         }
+#endif
 
         private void UpgradeSingle(Material material, string address)
         {
+#if DEBUG
             Debug.Log($"Upgraded {material} to use AddressableMaterialShader");
+#endif
             var shader = Shader.Find("AddressableMaterialShader");
             material.shader = shader;
             material.shaderKeywords = new string[] { address };
@@ -94,7 +100,9 @@ namespace Moonstorm
             materialPair.material.shader = originalMaterial.shader;
             materialPair.material.CopyPropertiesFromMaterial(originalMaterial);
             copiedMaterials.Add(materialPair.material);
+#if DEBUG
             MSULog.Debug($"Properties from {originalMaterial} copied to {materialPair.material}");
+#endif
         }
     }
 }

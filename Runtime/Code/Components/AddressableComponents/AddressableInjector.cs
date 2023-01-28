@@ -29,7 +29,6 @@ namespace Moonstorm.Components.Addressables
 
         private void Awake() => Refresh();
         private void OnEnable() => Refresh();
-        private void OnDisable() => RemoveReferencesEditor();
 
         /// <summary>
         /// Refreshes and re-injects the asset specified in <see cref="address"/>
@@ -38,26 +37,54 @@ namespace Moonstorm.Components.Addressables
         {
             if (string.IsNullOrWhiteSpace(address) || string.IsNullOrEmpty(address))
             {
-                Debug.LogWarning($"Invalid address in {this}, address is null, empty, or white space");
+#if DEBUG
+                string msg = $"Invalid address in {this}, address is null, empty, or white space";
+#if UNITY_EDITOR
+                Debug.LogWarning(msg);
+#else
+                MSULog.Warning(msg);
+#endif
+#endif
                 return;
             }
 
             if(!targetComponent)
             {
-                Debug.LogWarning("No Target Component set");
+#if DEBUG
+                string msg = $"No Target Component Set in {this}";
+#if UNITY_EDITOR
+                Debug.LogWarning(msg);
+#else
+                MSULog.Warninig(msg);
+#endif
+#endif
                 return;
             }
 
             if(string.IsNullOrEmpty(targetMemberInfoName) || string.IsNullOrWhiteSpace(targetMemberInfoName))
             {
-                Debug.LogWarning($"{this}'s targetMemberInfoName is null, empty or white space");
+#if DEBUG
+                string msg = $"{this}'s targetMemberInfoName is null, empty or white space";
+#if UNITY_EDITOR
+                Debug.LogWarning(msg);
+#else
+                MSULog.Warning(msg);
+#endif
+#endif
                 return;
             }
 
             var memberInfo = GetMemberInfo();
-            if(memberInfo == null)
+            if (memberInfo == null)
             {
-                Debug.LogWarning($"{this} failed finding the MemberInfo to target based on the name \"{targetMemberInfoName}\". Target Component: {targetComponent}");
+#if DEBUG
+                string msg = $"{this} failed finding the MemberInfo to target based on the name \"{targetMemberInfoName}\". Target Component: {targetComponent}";
+#if UNITY_EDITOR
+                Debug.LogWarning(msg);
+#else
+                MSULog.Warning(msg);
+#endif
+#endif
                 return;
             }
 
@@ -93,6 +120,8 @@ namespace Moonstorm.Components.Addressables
             return cachedMemberInfo;
         }
 
+#if UNITY_EDITOR
+        private void OnDisable() => RemoveReferencesEditor();
         private void RemoveReferencesEditor()
         {
             var memberInfo = GetMemberInfo();
@@ -107,5 +136,6 @@ namespace Moonstorm.Components.Addressables
                     break;
             }
         }
+#endif
     }
 }

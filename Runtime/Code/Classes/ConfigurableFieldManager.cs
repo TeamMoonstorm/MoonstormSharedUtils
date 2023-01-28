@@ -32,7 +32,9 @@ namespace Moonstorm
 
             foreach(ConfigLoader loader in ConfigLoader.instances)
             {
+#if DEBUG
                 MSULog.Info($"Managing extra config files from {loader.OwnerMetaData.Name}'s ConfigLoader");
+#endif
                 foreach(var kvp in loader.identifierToConfigFile)
                 {
                     try
@@ -42,7 +44,9 @@ namespace Moonstorm
                             throw new InvalidOperationException($"Cannot add ConfigFile {kvp.Value} to the identifierToConfigFile because the identifier {kvp.Key} is already being used!");
                         }
                         identifierToConfigFile.Add(kvp.Key, kvp.Value);
+#if DEBUG
                         MSULog.Debug($"Added config file {kvp.Value} with identifier {kvp.Key}");
+#endif
                     }
                     catch (Exception ex) { MSULog.Error($"{ex} (Key: {kvp.Key}, Value: {kvp.Value})"); }
                 }
@@ -65,21 +69,29 @@ namespace Moonstorm
 
             if (initialized)
             {
+#if DEBUG
                 MSULog.Warning($"Cannot add {assembly.GetName().Name} to the ConfigurableFieldManager as the manager has already been initialized.");
+#endif
                 return;
             }
             if (assemblyToIdentifier.ContainsKey(assembly))
             {
+#if DEBUG
                 MSULog.Warning($"Assembly {assembly.GetName().Name} has already been added to the ConfigurableFieldManager!");
+#endif
                 return;
             }
             if (mainConfigFile == null)
             {
+#if DEBUG
                 MSULog.Error($"Cannot add {assembly.GetName().Name} to the ConfigurableFieldManager as the assembly either does not have a type with the BepInPlugin attribute, or the type with the Attribute does not inherit from BaseUnityPlugin.");
+#endif
                 return;
             }
 
+#if DEBUG
             MSULog.Info($"Adding mod {assembly.GetName().Name} to the configurable field manager");
+#endif
 
             assemblyToIdentifier.Add(assembly, mainConfigFileIdentifier);
             identifierToConfigFile.Add(mainConfigFileIdentifier, mainConfigFile);

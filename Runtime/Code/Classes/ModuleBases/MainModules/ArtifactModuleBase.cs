@@ -34,7 +34,12 @@ namespace Moonstorm
         /// <summary>
         /// An action that gets invoked when the <see cref="MoonstormArtifacts"/> has been populated
         /// </summary>
+        [Obsolete("use \"ModuleAvailability.CallWhenAvailable()\" instead")]
         public static Action<ReadOnlyDictionary<ArtifactDef, ArtifactBase>> OnDictionaryCreated;
+        /// <summary>
+        /// Call ModuleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
+        /// </summary>
+        public static ResourceAvailability ModuleAvailability { get; } = default(ResourceAvailability);
         #endregion
 
         [SystemInitializer(typeof(ArtifactCatalog))]
@@ -48,6 +53,7 @@ namespace Moonstorm
             artifacts = null;
 
             OnDictionaryCreated?.Invoke(MoonstormArtifacts);
+            ModuleAvailability.MakeAvailable();
         }
 
 
@@ -60,7 +66,9 @@ namespace Moonstorm
         /// <returns>An IEnumerable of all your assembly's <see cref="ArtifactBase"/></returns>
         protected virtual IEnumerable<ArtifactBase> GetArtifactBases()
         {
+#if DEBUG
             MSULog.Debug($"Getting the Artifacts found inside {GetType().Assembly}...");
+#endif
             return GetContentClasses<ArtifactBase>();
         }
 
@@ -74,8 +82,10 @@ namespace Moonstorm
         {
             InitializeContent(artifact);
             artifactDictionary?.Add(artifact.ArtifactDef, artifact);
-            
+
+#if DEBUG
             MSULog.Debug($"Artifact {artifact.ArtifactDef} Initialized and ensured in {SerializableContentPack.name}");
+#endif
         }
 
         /// <summary>
@@ -104,7 +114,9 @@ namespace Moonstorm
             {
                 if (!(artifactDef != kvp.Key) && NetworkServer.active)
                 {
+#if DEBUG
                     MSULog.Info($"Running OnArtifactEnabled() for artifact {kvp.Key.cachedName}");
+#endif
                     kvp.Value.OnArtifactEnabled();
                 }
             }
@@ -116,7 +128,9 @@ namespace Moonstorm
             {
                 if (!(artifactDef != kvp.Key))
                 {
+#if DEBUG
                     MSULog.Info($"Running OnArtifactDisabled() for artifact {kvp.Key.cachedName}");
+#endif
                     kvp.Value.OnArtifactDisabled();
                 }
             }

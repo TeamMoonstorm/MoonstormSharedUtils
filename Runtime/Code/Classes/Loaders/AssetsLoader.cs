@@ -99,7 +99,9 @@ namespace Moonstorm.Loaders
                 var material = assetBundleMaterials[i];
                 if(!material.shader.name.StartsWith("Stubbed"))
                 {
+#if DEBUG
                     MSULog.Warning($"The material {material} has a shader which's name doesnt start with \"Stubbed\" ({material.shader.name}), this is not allowed for stubbed shaders for MSU. not swapping shader.");
+#endif
                     continue;
                 }
                 try
@@ -123,7 +125,9 @@ namespace Moonstorm.Loaders
             {
                 if(!material.shader.name.StartsWith("Stubbed"))
                 {
+#if DEBUG
                     MSULog.Warning($"The material {material} has a shader which's name doesnt start with \"Stubbed\" ({material.shader.name}), this is not allowed for stubbed shaders for MSU. not swapping shader.");
+#endif
                     continue;
                 }
                 try
@@ -159,7 +163,9 @@ namespace Moonstorm.Loaders
                     material.shader = loadedMat.shader;
                     material.CopyPropertiesFromMaterial(loadedMat);
                     MaterialsWithSwappedShaders.Add(material);
+#if DEBUG
                     MSULog.Debug($"Properties from {loadedMat} ({address}) copied to {material}");
+#endif
                 }
                 catch(Exception e)
                 {

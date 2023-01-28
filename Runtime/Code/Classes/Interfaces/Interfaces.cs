@@ -28,7 +28,9 @@ namespace Moonstorm
             c.Emit(OpCodes.Ldarg_1);
             c.EmitDelegate<Action<HealthComponent, DamageInfo>>(RunOnIncomingDamageOther);
 
+#if DEBUG
             MSULog.Debug($"{nameof(IOnIncomingDamageOtherServerReciever)} succesfully set up.");
+#endif
         }
 
         private static void RunOnIncomingDamageOther(HealthComponent healthComponent, DamageInfo damageInfo)

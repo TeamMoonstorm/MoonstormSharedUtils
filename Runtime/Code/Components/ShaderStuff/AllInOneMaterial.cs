@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#if DEBUG
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Moonstorm.Components
@@ -707,3 +708,4 @@ namespace Moonstorm.Components
         }
     }
 }
+#endif

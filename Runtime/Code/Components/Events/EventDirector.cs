@@ -121,7 +121,9 @@ namespace Moonstorm.Components
                     var thisComponent = go.GetComponent<EventDirector>();
                     if (!thisComponent.isActiveAndEnabled)
                         thisComponent.enabled = true;
+#if DEBUG
                     thisComponent.Log("Spawned");
+#endif
                 }
             };
         }
@@ -138,12 +140,16 @@ namespace Moonstorm.Components
                 if(EventDirectorCategorySelection == null)
                 {
                     MSULog.Error($"COULD NOT RETRIEVE EVENT CATEGORY FOR SCENE {SceneInfo.instance.sceneDef}!!!");
+#if DEBUG
                     Log($"Destroying root");
+#endif
                     Destroy(gameObject.transform.root.gameObject);
                     return;
                 }
                 EventCardSelection = EventDirectorCategorySelection.GenerateWeightedSelection();
+#if DEBUG
                 Log("Final Card Selection: " + string.Join("\n", EventCardSelection.choices.Select(x => x.value)));
+#endif
                 //Log below causes issues, no idea why
                 //Log($"Awakened with the following EventCards:\n{string.Join("\n", EventCardSelection.choices.Select(c => c.value.name))}");
             }
@@ -176,22 +182,25 @@ namespace Moonstorm.Components
                     if (intervalStopWatch <= 0)
                     {
                         float newStopwatchVal = eventRNG.RangeFloat(intervalResetRange.min, intervalResetRange.max);
+#if DEBUG
                         Log($"EventDirector: new stopwatch value: {newStopwatchVal}");
+#endif
                         intervalStopWatch = newStopwatchVal;
 
                         float compensatedDifficultyCoefficient = Run.instance.compensatedDifficultyCoefficient;
 
                         float eventScaling = compensatedDifficultyCoefficient / Run.instance.participatingPlayerCount;
 
+#if DEBUG
                         Log($"Event Director: compensated difficulty coefficient: {compensatedDifficultyCoefficient}" +
                                 $"\nevent scaling: {eventScaling}");
-
+#endif
                         float newCredits = eventRNG.RangeFloat(creditGainRange.min, creditGainRange.max) * eventScaling;
                         eventCredits += newCredits;
-
+#if DEBUG
                         Log($"Event Director: new Credits: {newCredits}" +
                                 $"\nTotal credits so far: {eventCredits}");
-
+#endif
                         Simulate();
                     }
                 }
@@ -204,8 +213,10 @@ namespace Moonstorm.Components
             {
                 float amount = eventRNG.RangeFloat(intervalResetRange.min, intervalResetRange.max) * 10;
                 intervalStopWatch += amount;
+#if DEBUG
                 Log($"Added {amount} to interval stopwatch" +
                     $"\n(New value: {intervalStopWatch})");
+#endif
                 return;
             }
             currentEventCard = null;
@@ -215,10 +226,14 @@ namespace Moonstorm.Components
             bool canSpawn = false;
             if(currentEventCard == null)
             {
+#if DEBUG
                 Log($"Current event card is null, picking new one");
+#endif
                 if(EventCardSelection.Count == 0)
                 {
+#if DEBUG
                     Log($"Cannot pick a card when there's no cards in the EventCardSelection (Count: {EventCardSelection.Count})");
+#endif
                     return false;
                 }
                 canSpawn = PrepareNewEvent(EventCardSelection.Evaluate(eventRNG.nextNormalizedFloat));
@@ -227,13 +242,17 @@ namespace Moonstorm.Components
                     return false;
             }
 
+#if DEBUG
             Log($"Playing event {currentEventCard}" +
                 $"\n(Event state: {currentEventCard.eventState})");
+#endif
             TargetedStateMachine.SetState(EntityStateCatalog.InstantiateState(currentEventCard.eventState));
 
             if (currentEventCard.eventFlags.HasFlag(EventFlags.OncePerRun))
             {
+#if DEBUG
                 Log($"Card {currentEventCard} has OncePerRun flag, setting flag.");
+#endif
                 EventFunctions.RunSetFlag(currentEventCard.OncePerRunFlag);
             }
 
@@ -241,38 +260,50 @@ namespace Moonstorm.Components
 
             eventCredits -= currentEventCard.cost;
             TotalCreditsSpent += currentEventCard.cost;
+#if DEBUG
             Log($"Subtracted {currentEventCard.cost} credits" +
                 $"\nTotal credits spent: {TotalCreditsSpent}");
+#endif
 
             return true;
         }
 
         private bool PrepareNewEvent(EventCard card)
         {
+#if DEBUG
             Log($"Preparing event {card}");
+#endif
             currentEventCard = card;
             if(!card.IsAvailable())
             {
+#if DEBUG
                 Log($"Event card {card.name} is not available! Aborting.");
+#endif
                 LastAttemptedEventCard = LastAttemptedEventCard;
                 return false;
             }
             if(eventCredits < currentEventCard.cost)
             {
+#if DEBUG
                 Log($"Event card {card.name} is too expensive! Aborting");
+#endif
                 LastAttemptedEventCard = LastAttemptedEventCard;
                 return false;
             }
             if(IsEventBeingPlayed(card))
             {
+#if DEBUG
                 Log($"Event card {card.name} is already playing! Aborting");
+#endif
                 LastAttemptedEventCard = LastAttemptedEventCard;
                 return false;
             }
             FindIdleStateMachine();
             if (card.eventFlags.HasFlag(EventFlags.WeatherRelated) && TargetedStateMachine.customName != "WeatherEvent")
             {
+#if DEBUG
                 Log($"No empty state machines to play event on! Aborting");
+#endif
                 return false;
             }
 
@@ -281,13 +312,17 @@ namespace Moonstorm.Components
             {
                 if(teleporterInstance.isCharged || teleporterInstance.isInFinalSequence)
                 {
+#if DEBUG
                     Log($"Stage has a teleporter instance and the teleporter is Charged or in it's final sequence, aborting.");
+#endif
                     return false;
                 }
 
                 if(teleporterInstance.chargePercent > 25)
                 {
+#if DEBUG
                     Log($"Stage has a teleporter instance and it's charge percent is over 25%, aborting.");
+#endif
                     return false;
                 }
             }
@@ -322,11 +357,6 @@ namespace Moonstorm.Components
             }
         }
 
-        private void Log(string msg)
-        {
-            if (EnableInternalLogging)
-                MSULog.Info($"\n-----o-----\nEvent Director: {msg}\n-----o-----");
-        }
 
         private bool AttemptForceSpawnEvent(EventCard card)
         {
@@ -351,6 +381,11 @@ namespace Moonstorm.Components
                 }
             }
             return eventsStopped;
+        }
+#if DEBUG
+        private void Log(string msg)
+        {
+            MSULog.Info($"\n-----o-----\nEvent Director: {msg}\n-----o-----");
         }
         ///Commands
         ///------------------------------------------------------------------------------------------------------------
@@ -403,17 +438,6 @@ namespace Moonstorm.Components
             int count = Instance.StopAllEvents();
             Debug.Log($"Stopped {count} events");
         }
-
-        /// <summary>
-        /// Wether the event director is disabled or enabled
-        /// </summary>
-        public static bool DisableEventDirector => cvDisableEventDirector.value;
-
-        /// <summary>
-        /// Wether the event director logs information
-        /// </summary>
-        public static bool EnableInternalLogging => cvEnableInternalEventDirectorLogging.value;
-        private static BoolConVar cvDisableEventDirector = new BoolConVar("disable_events", ConVarFlags.SenderMustBeServer | ConVarFlags.Cheat, "0", "Disable the Event Director");
-        private static BoolConVar cvEnableInternalEventDirectorLogging = new BoolConVar("enable_event_logging", ConVarFlags.None, "0", "Enables the event director to print internal logging.");
+#endif
     }
 }

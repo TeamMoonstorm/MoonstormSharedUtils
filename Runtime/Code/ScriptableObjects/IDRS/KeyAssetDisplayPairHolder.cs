@@ -15,24 +15,6 @@ namespace Moonstorm
         {
             public Object keyAsset;
             public List<GameObject> displayPrefabs;
-
-            internal void AddKeyAssetDisplayPrefabsToIDRS()
-            {
-                /*var keyAssetName = keyAsset.name.ToLowerInvariant();
-
-                if (keyAsset is ItemDef itemDef)
-                    ItemDisplayModuleBase.itemKeyAssets.Add(keyAssetName, itemDef);
-                else if (keyAsset is EquipmentDef eqpDef)
-                    ItemDisplayModuleBase.equipKeyAssets.Add(keyAssetName, eqpDef);
-                else
-                    return;
-
-                for (int i = 0; i < displayPrefabs.Count; i++)
-                {
-                    var constructedName = $"{keyAssetName}DisplayPrefab_{i}".ToLowerInvariant();
-                    ItemDisplayModuleBase.moonstormItemDisplayPrefabs.Add(constructedName, displayPrefabs[i]);
-                }*/
-            }
         }
 
         public KeyAssetDisplayPair[] KeyAssetDisplayPairs;

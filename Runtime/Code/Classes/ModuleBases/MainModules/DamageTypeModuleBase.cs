@@ -29,7 +29,12 @@ namespace Moonstorm
         /// <summary>
         /// An action that gets invoked when the <see cref="MoonstormDamageTypes" dictionary has been populated
         /// </summary>
+        [Obsolete("use \"ModuleAvailability.CallWhenAvailable()\" instead")]
         public static Action<ReadOnlyDictionary<ModdedDamageType, DamageTypeBase>> OnDictionaryCreated;
+        /// <summary>
+        /// Call ModuleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
+        /// </summary>
+        public static ResourceAvailability ModuleAvailability { get; } = default(ResourceAvailability);
         #endregion
 
         [SystemInitializer]
@@ -41,6 +46,7 @@ namespace Moonstorm
             damageTypes = null;
 
             OnDictionaryCreated?.Invoke(MoonstormDamageTypes);
+            ModuleAvailability.MakeAvailable();
         }
 
 
@@ -52,7 +58,9 @@ namespace Moonstorm
         /// <returns>An IEnumerable of all your assembly's <see cref="DamageTypeBase"/></returns>
         protected virtual IEnumerable<DamageTypeBase> GetDamageTypeBases()
         {
+#if DEBUG
             MSULog.Debug($"Getting the Damage Types found inside {GetType().Assembly}...");
+#endif
             return GetContentClasses<DamageTypeBase>();
         }
 
@@ -65,7 +73,9 @@ namespace Moonstorm
         {
             InitializeContent(damageType);
             damageTypeDictionary?.Add(damageType.ModdedDamageType, damageType);
+#if DEBUG
             MSULog.Debug($"Damage type {damageType} added to the game");
+#endif
         }
 
         /// <summary>

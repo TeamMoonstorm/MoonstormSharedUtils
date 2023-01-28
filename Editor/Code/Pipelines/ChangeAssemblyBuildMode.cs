@@ -8,6 +8,7 @@ using ThunderKit.Core.Manifests.Datums;
 using UnityEngine;
 using System.Linq;
 using RoR2EditorKit.Utilities;
+using UnityEditor;
 
 namespace Moonstorm.EditorUtils.Pipelines
 {
@@ -32,7 +33,7 @@ namespace Moonstorm.EditorUtils.Pipelines
         {
             var result = new ChangeAssemblyBuildModeResult();
             FindAndSetBuildMode(pipeline.Jobs.ToArray(), result);
-            pipeline.Log(LogLevel.Information, $"Finished changing a total of {result.totalStageAssemblyJobs} with a total of {result.totalRecursions} recursions.", result.context.ToArray());
+            pipeline.Log(LogLevel.Information, $"Finished changing a total of {result.totalStageAssemblyJobs} stage assemblies jobs with a total of {result.totalRecursions} recursions.", result.context.ToArray());
             return Task.CompletedTask;
         }
 
@@ -45,6 +46,7 @@ namespace Moonstorm.EditorUtils.Pipelines
                 AssemblyBuildMode previousBuildMode = stageAssemblies.releaseBuild ? AssemblyBuildMode.Release : AssemblyBuildMode.Debug;
                 result.totalStageAssemblyJobs++;
                 stageAssemblies.releaseBuild = buildMode == AssemblyBuildMode.Release;
+                EditorUtility.SetDirty(stageAssemblies);
                 result.context.Add($"Modified {MarkdownUtils.GenerateAssetLink(stageAssemblies)}'s StageAssemblies pipeline job (previous mode: {previousBuildMode}, new mode: {buildMode})");
             }
 

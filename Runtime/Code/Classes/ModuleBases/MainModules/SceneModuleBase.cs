@@ -9,7 +9,7 @@ namespace Moonstorm
 {
     /// <summary>
     /// The <see cref="SceneModuleBase"/> is a <see cref="ContentModule{T}"/> that handles the <see cref="SceneBase"/> class
-    /// <para><see cref="SceneModuleBase"/>'s main job is to add new Scenes to the ContentPack. Works with ROS's SceneDefinitions</para>
+    /// <para><see cref="SceneModuleBase"/>'s main job is to add new Scenes to the ContentPack.</para>
     /// <para>Inherit from this module if you want to load SceneDefs with SceneBase systems</para>
     /// </summary>
     public abstract class SceneModuleBase : ContentModule<SceneBase>
@@ -29,7 +29,12 @@ namespace Moonstorm
         /// <summary>
         /// An action that gets invoked when the <see cref="MoonstormUnlockables"/> dictionary has been populated
         /// </summary>
+        [Obsolete("use \"ModuleAvailability.CallWhenAvailable()\" instead")]
         public static Action<ReadOnlyDictionary<SceneDef, SceneBase>> OnDictionaryCreated;
+        /// <summary>
+        /// Call ModuleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
+        /// </summary>
+        public static ResourceAvailability ModuleAvailability { get; } = default(ResourceAvailability);
         #endregion
 
         [SystemInitializer(typeof(SceneCatalog))]
@@ -41,6 +46,7 @@ namespace Moonstorm
             scenes = null;
 
             OnDictionaryCreated?.Invoke(MoonstormScenes);
+            ModuleAvailability.MakeAvailable();
         }
 
         #region Scenes
@@ -51,7 +57,9 @@ namespace Moonstorm
         /// <returns>An IEnumerable of all your assembly's <see cref="SceneBase"/></returns>
         public virtual IEnumerable<SceneBase> GetSceneBases()
         {
+#if DEBUG
             MSULog.Debug($"Getting the Scenes found inside {GetType().Assembly.GetName().Name}");
+#endif
             return GetContentClasses<SceneBase>();
         }
 
@@ -64,7 +72,9 @@ namespace Moonstorm
         {
             InitializeContent(scene);
             sceneDictionary?.Add(scene.SceneDef, scene);
+#if DEBUG
             MSULog.Debug($"Scene {scene.SceneDef} added to {SerializableContentPack.name}");
+#endif
         }
 
         /// <summary>

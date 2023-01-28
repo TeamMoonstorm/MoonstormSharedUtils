@@ -33,8 +33,10 @@ namespace Moonstorm
         {
             if (contentPackArray.Contains(content)) //Content already in the contentPack for whatever reason? return true;
             {
+#if DEBUG
                 MSULog.Warning($"Content {content} was already in {SerializableContentPack}'s {correspondingArrayName ?? content.GetType().Name} array!\n" +
                     $"MSU automatically adds the content piece to its corresponding array in initialization, do not add it beforehand.");
+#endif
                 return true;
             }
 

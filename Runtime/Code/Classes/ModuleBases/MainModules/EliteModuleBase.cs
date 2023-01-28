@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
 using R2API;
-//using RoR2BepInExPack.GlobalEliteRampSolution;
 
 namespace Moonstorm
 {
@@ -36,7 +35,12 @@ namespace Moonstorm
         /// <summary>
         /// An action that gets invoked when the <see cref="MoonstormElites"/> List has been populated
         /// </summary>
+        [Obsolete("use \"ModuleAvailability.CallWhenAvailable()\" instead")]
         public static Action<ReadOnlyCollection<MSEliteDef>> OnListCreated;
+        /// <summary>
+        /// Call ModuleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
+        /// </summary>
+        public static ResourceAvailability ModuleAvailability { get; } = default(ResourceAvailability);
         #endregion
 
         [SystemInitializer(new Type[] { typeof(BuffCatalog), typeof(EquipmentCatalog), typeof(EliteCatalog) })]
@@ -49,6 +53,7 @@ namespace Moonstorm
             eliteDefs = null;
 
             OnListCreated?.Invoke(MoonstormElites);
+            ModuleAvailability.MakeAvailable();
         }
 
         private static void AddElitesViaDirectorAPI()
@@ -59,22 +64,21 @@ namespace Moonstorm
                 switch(eliteDef.eliteTier)
                 {
                     case VanillaEliteTier.HonorDisabled:
-                        MSULog.Debug($"Added {eliteDef} to the NotEliteOnlyArtifactEnabled tier (1)");
                         HG.ArrayUtils.ArrayAppend(ref vanillaTiers[1].eliteTypes, eliteDef);
                         break;
                     case VanillaEliteTier.HonorActive:
-                        MSULog.Debug($"Added {eliteDef} to the EliteOnlyArtifactEnabled tier (2)");
                         HG.ArrayUtils.ArrayAppend(ref vanillaTiers[2].eliteTypes, eliteDef);
                         break;
                     case VanillaEliteTier.PostLoop:
-                        MSULog.Debug($"Added {eliteDef} to the Post Loop tier (3)");
                         HG.ArrayUtils.ArrayAppend(ref vanillaTiers[3].eliteTypes, eliteDef);
                         break;
                     case VanillaEliteTier.Lunar:
-                        MSULog.Debug($"Added {eliteDef} to the Lunar tier (4)");
                         HG.ArrayUtils.ArrayAppend(ref vanillaTiers[4].eliteTypes, eliteDef);
                         break;
                 }
+#if DEBUG
+                MSULog.Debug($"Added {eliteDef} to the {eliteDef.eliteTier} tier");
+#endif
             }
         }
 
@@ -87,7 +91,9 @@ namespace Moonstorm
         /// <returns>An IEnumerable of all your assembly's initialized <see cref="EliteEquipmentBase"/>s</returns>
         protected virtual IEnumerable<EliteEquipmentBase> GetInitializedEliteEquipmentBases()
         {
+#if DEBUG
             MSULog.Debug($"Getting the initialized EliteEquipmentBases inside {GetType().Assembly}");
+#endif
             var initializedEliteEquipmentBases = new List<EliteEquipmentBase>();
             foreach(MSEliteDef def in AssetBundle.LoadAllAssets<MSEliteDef>())
             {
@@ -110,7 +116,9 @@ namespace Moonstorm
         {
             InitializeContent(elite);
             list?.AddRange(elite.EliteDefs);
+#if DEBUG
             MSULog.Debug($"Elite {elite} Initialized and Ensured in {SerializableContentPack.name}");
+#endif
         }
 
         /// <summary>

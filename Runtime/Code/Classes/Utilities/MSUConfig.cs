@@ -25,7 +25,6 @@ namespace Moonstorm
         /// The general config file
         /// </summary>
         public static ConfigFile generalConfig;
-        internal static ConfigEntry<bool> enableDebugFeatures;
         internal static ConfigEntry<KeyCode> instantiateMaterialTester;
 
         /// <summary>
@@ -52,15 +51,6 @@ namespace Moonstorm
 
         private static void SetConfigs()
         {
-            enableDebugFeatures = generalConfig.Bind<bool>("MoonstormSharedUtils :: Debug Features",
-                                                    "Enable Debug",
-                                                    false,
-                                                    "Enables Debug features from Moonstorm Shared Utils, Features include:" +
-                                                    "\nAbility to connect to yourself via a second instance of the game" +
-                                                    "\nAddition of the MoonstormItemDisplayHelper" +
-                                                    "\nAutomatic deployment of \"stage1_pod\", \"no_enemies\" & \"enable_event_logging\", assuming DebugToolkit is installed" +
-                                                    "\nSpawning of the MaterialTester");
-
             instantiateMaterialTester = generalConfig.Bind<KeyCode>("MoonstormSharedUtils :: Keybinds",
                                                              "Instantiate Material Tester",
                                                              KeyCode.Insert,

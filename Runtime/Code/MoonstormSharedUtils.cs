@@ -51,10 +51,9 @@ namespace Moonstorm
             PluginInfo = Info;
             new MSULog(Logger);
             new MSUConfig().Init();
-            if (MSUConfig.enableDebugFeatures.Value)
-            {
-                gameObject.AddComponent<MSUDebug>();
-            }
+#if DEBUG
+            gameObject.AddComponent<MSUDebug>();
+#endif
             MSUAssetBundle = AssetBundle.LoadFromFile(Path.Combine(AssemblyDir, "msuassets"));
             R2API.ContentManagement.R2APIContentManager.AddPreExistingSerializableContentPack(MSUAssetBundle.LoadAsset<R2APISerializableContentPack>("MSUSCP"));
             R2API.Utils.CommandHelper.AddToConsoleWhenReady();

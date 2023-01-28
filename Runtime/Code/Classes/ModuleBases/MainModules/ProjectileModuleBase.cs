@@ -30,7 +30,12 @@ namespace Moonstorm
         /// <summary>
         /// An action that gets invoked when the <see cref="MoonstormUnlockables"/> dictionary has been populated
         /// </summary>
+        [Obsolete("use \"ModuleAvailability.CallWhenAvailable()\" instead")]
         public static Action<ReadOnlyDictionary<GameObject, ProjectileBase>> OnDictionaryCreated;
+        /// <summary>
+        /// Call ModuleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
+        /// </summary>
+        public static ResourceAvailability ModuleAvailability { get; } = default(ResourceAvailability);
         #endregion
 
         [SystemInitializer(typeof(ProjectileCatalog))]
@@ -42,6 +47,7 @@ namespace Moonstorm
             projectiles = null;
 
             OnDictionaryCreated?.Invoke(MoonstormProjectiles);
+            ModuleAvailability.MakeAvailable();
         }
 
 
@@ -53,7 +59,9 @@ namespace Moonstorm
         /// <returns>An IEnumerable of all your assembly's <see cref="ProjectileBase"/></returns>
         protected virtual IEnumerable<ProjectileBase> GetProjectileBases()
         {
+#if DEBUG
             MSULog.Debug($"Getting the Projectiles found inside {GetType().Assembly}...");
+#endif
             return GetContentClasses<ProjectileBase>();
         }
         /// <summary>
@@ -81,7 +89,9 @@ namespace Moonstorm
                 AddSafely(ref SerializableContentPack.bodyPrefabs, contentClass.ProjectilePrefab, "BodyPrefabs");
 
             projectiles.Add(contentClass.ProjectilePrefab, contentClass);
+#if DEBUG
             MSULog.Debug($"Projectile {contentClass} Initialized and ensured in {SerializableContentPack.name}");
+#endif
         }
         #endregion
     }

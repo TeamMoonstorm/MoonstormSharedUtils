@@ -173,10 +173,14 @@ namespace Moonstorm
 
                     if (!lang.stringsByToken.ContainsKey(token))
                     {
+#if DEBUG
                         MSULog.Error($"Token {token} could not be found in the tokenToModifiers dictionary in {lang.name}! Either the mod that implements the token doesnt support the language {lang.name} or theyre adding their tokens via R2Api's LanguageAPI");
+#endif
                         continue;
                     }
+#if DEBUG
                     MSULog.Debug($"Modifying {token}");
+#endif
                     FormatToken(lang, token, formattingArray);
                 }
                 catch (Exception e) { MSULog.Error(e); }

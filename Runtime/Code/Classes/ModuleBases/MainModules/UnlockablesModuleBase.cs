@@ -33,7 +33,12 @@ namespace Moonstorm
         /// <summary>
         /// An action that gets invoked when the <see cref="MoonstormUnlockables"/> dictionary has been populated
         /// </summary>
+        [Obsolete("use \"ModuleAvailability.CallWhenAvailable()\" instead")]
         public static Action<ReadOnlyDictionary<MSUnlockableDef, UnlockableBase>> OnDictionaryCreated;
+        /// <summary>
+        /// Call ModuleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
+        /// </summary>
+        public static ResourceAvailability ModuleAvailability { get; } = default(ResourceAvailability);
         #endregion
 
         [SystemInitializer(typeof(UnlockableCatalog))]
@@ -46,6 +51,7 @@ namespace Moonstorm
             unlocks = null;
 
             OnDictionaryCreated?.Invoke(MoonstormUnlockables);
+            ModuleAvailability.MakeAvailable();
         }
 
         private static void AddMSUDefs(List<string> arg1, Dictionary<string, AchievementDef> arg2, List<AchievementDef> arg3)
@@ -66,7 +72,9 @@ namespace Moonstorm
         /// <returns>An IEnumerable of all your assembly's <see cref="UnlockableBase"/></returns>
         protected virtual IEnumerable<UnlockableBase> GetUnlockableBases()
         {
+#if DEBUG
             MSULog.Debug($"Getting the Unlockables found inside {GetType().Assembly}");
+#endif
             return GetContentClasses<UnlockableBase>();
         }
 
@@ -83,13 +91,17 @@ namespace Moonstorm
 
             if(!CheckIfRequiredTypeIsAdded(unlockableBase))
             {
+# if DEBUG
                 MSULog.Debug($"Not adding {unlockableBase.UnlockableDef} since one of its required types is not added to the game.");
+#endif
                 return;
             }
 
             InitializeContent(unlockableBase);
             unlockableDictionary?.Add(unlockableBase.UnlockableDef, unlockableBase);
+#if DEBUG
             MSULog.Debug($"Unlockable {unlockableBase} Initialized and ensured in {SerializableContentPack.name}");
+#endif
         }
 
         /// <summary>

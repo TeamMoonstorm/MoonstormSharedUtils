@@ -33,7 +33,12 @@ namespace Moonstorm
         /// <summary>
         /// An action that gets invoked when the <see cref="MoonstormItemTiers"/> dictionary has been populated.
         /// </summary>
+        [Obsolete("use \"ModuleAvailability.CallWhenAvailable()\" instead")]
         public static event Action<ReadOnlyDictionary<ItemTierDef, ItemTierBase>> OnDictionaryCreated;
+        /// <summary>
+        /// Call ModuleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
+        /// </summary>
+        public static ResourceAvailability ModuleAvailability { get; } = default(ResourceAvailability);
         #endregion
 
         [SystemInitializer(typeof(ItemTierCatalog), typeof(ItemCatalog))]
@@ -47,6 +52,7 @@ namespace Moonstorm
 
 
             OnDictionaryCreated?.Invoke(MoonstormItemTiers);
+            ModuleAvailability.MakeAvailable();
         }
 
 
@@ -75,7 +81,9 @@ namespace Moonstorm
         /// <returns>An IEnumerable of all your assembly's <see cref="ItemTierBase"/></returns>
         protected virtual IEnumerable<ItemTierBase> GetItemTierBases()
         {
+#if DEBUG
             MSULog.Debug($"Getting the Item Tiers fond inside {GetType().Assembly}");
+#endif
             return GetContentClasses<ItemTierBase>();
         }
 
@@ -88,7 +96,9 @@ namespace Moonstorm
         {
             InitializeContent(itemTier);
             dictionary?.Add(itemTier.ItemTierDef, itemTier);
+#if DEBUG
             MSULog.Debug($"Item Tier {itemTier.ItemTierDef} Initialized and Ensured in {SerializableContentPack.name}");
+#endif
         }
 
         /// <summary>

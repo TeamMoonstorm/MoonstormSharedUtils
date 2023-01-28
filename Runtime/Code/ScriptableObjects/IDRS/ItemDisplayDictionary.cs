@@ -12,7 +12,7 @@ namespace Moonstorm
 {
     /// <summary>
     /// An <see cref="ItemDisplayDictionary"/> is used for appending a single <see cref="ItemDisplayRuleSet.KeyAssetRuleGroup"/> to multiple <see cref="ItemDisplayRuleSet"/>
-    /// <para>It works ina  similar fashion to R2API's ItemDisplayDictionary</para>
+    /// <para>It works in a similar fashion to R2API's ItemDisplayDictionary</para>
     /// </summary>
     [CreateAssetMenu(fileName = "New ItemDisplayDictionary", menuName = "Moonstorm/IDRS/ItemDisplayDictionary")]
     public class ItemDisplayDictionary : ScriptableObject
@@ -133,6 +133,7 @@ namespace Moonstorm
             AddressableAssets.AddressableAsset.OnAddressableAssetsLoaded += () =>
             {
                 MSULog.Info($"Initializing ItemDisplayDictionary");
+                List<ItemDisplayRuleSet> idrsToRegenerateRuntimeValues = new List<ItemDisplayRuleSet>();
                 foreach (ItemDisplayDictionary itemDisplayDictionary in instances)
                 {
                     var keyAsset = itemDisplayDictionary.keyAsset;
@@ -141,7 +142,9 @@ namespace Moonstorm
                         EquipmentIndex index = EquipmentCatalog.FindEquipmentIndex(keyAsset.name);
                         if (index == EquipmentIndex.None)
                         {
+#if DEBUG
                             MSULog.Debug($"Not appending values from {itemDisplayDictionary}, as its KeyAsset's index is none.");
+#endif
                             continue;
                         }
                     }
@@ -150,7 +153,9 @@ namespace Moonstorm
                         ItemIndex index = ItemCatalog.FindItemIndex(id.name);
                         if (index == ItemIndex.None)
                         {
+#if DEBUG
                             MSULog.Debug($"Not appending values from {itemDisplayDictionary}, as its KeyAsset's index is none.");
+#endif
                             continue;
                         }
                     }
@@ -162,16 +167,27 @@ namespace Moonstorm
                             var current = itemDisplayDictionary.namedDisplayDictionary[i];
                             var keyAssetRuleGroup = itemDisplayDictionary.GetKeyAssetRuleGroup(current.idrs.Asset);
                             HG.ArrayUtils.ArrayAppend(ref current.idrs.Asset.keyAssetRuleGroups, keyAssetRuleGroup);
-
-                            current.idrs.Asset.GenerateRuntimeValues();
+                            idrsToRegenerateRuntimeValues.AddIfNotInCollection(current.idrs);
+#if DEBUG
                             MSULog.Debug($"Finished appending values from {itemDisplayDictionary}'s {i} entry into {current.idrs.Asset}");
+#endif
                         }
                         catch(Exception e)
                         {
                             MSULog.Error($"{e}\n({itemDisplayDictionary} index {i}");
                         }
                     }
+#if DEBUG
                     MSULog.Debug($"Finished appending values of {itemDisplayDictionary}");
+#endif
+                }
+
+                foreach(var idrs in idrsToRegenerateRuntimeValues)
+                {
+                    idrs.GenerateRuntimeValues();
+#if DEBUG
+                    MSULog.Debug($"Regenerated runtime values for {idrs}");
+#endif
                 }
             };
         }

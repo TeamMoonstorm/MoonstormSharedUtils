@@ -50,23 +50,5 @@ namespace Moonstorm.Components
                 }
             }
         }
-
-        /*public void UpdateShaderRamp()
-        {
-            if (characterModel && elite)
-            {
-                characterModel.propertyStorage.SetTexture(EliteRampPropertyID, elite.eliteRamp);
-            }
-            else if (characterModel)
-            {
-                if (!oldRamp)
-                    return;
-
-                if (characterModel.propertyStorage.GetTexture(EliteRampPropertyID) == oldRamp)
-                {
-                    characterModel.propertyStorage.Clear();
-                }
-            }
-        }*/
     }
 }
