@@ -1,11 +1,12 @@
-﻿using Moonstorm.Components;
+﻿#if DEBUG
+using Moonstorm.Components;
 using RoR2;
 using RoR2.UI;
 using System;
 using System.Linq;
 using UnityEngine;
 
-namespace Moonstorm.Utilities
+namespace Moonstorm
 {
     internal class MSUDebug : MonoBehaviour
     {
@@ -90,3 +91,4 @@ namespace Moonstorm.Utilities
         }
     }
 }
+#endif

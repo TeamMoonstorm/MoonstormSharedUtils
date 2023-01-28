@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Name: Release
   m_EditorClassIdentifier: 
   Data:
+  - {fileID: 8922929287147351453}
   - {fileID: 2795398002312913296}
   - {fileID: 3526975474243183003}
   - {fileID: -640416070249004058}
@@ -79,3 +80,17 @@ MonoBehaviour:
   m_Name: StageThunderstoreManifest
   m_EditorClassIdentifier: 
   Active: 1
+--- !u!114 &8922929287147351453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dba11a23eb01c7a4aa61a8ab800c27dd, type: 3}
+  m_Name: ChangeAssemblyBuildMode
+  m_EditorClassIdentifier: 
+  Active: 1
+  buildMode: 1

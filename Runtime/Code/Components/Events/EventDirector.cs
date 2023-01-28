@@ -174,7 +174,7 @@ namespace Moonstorm.Components
 
         private void FixedUpdate()
         {
-            if (!cvDisableEventDirector.value && NetworkServer.active && Run.instance)
+            if (NetworkServer.active && Run.instance)
             {
                 if(!Run.instance.isRunStopwatchPaused)
                 {

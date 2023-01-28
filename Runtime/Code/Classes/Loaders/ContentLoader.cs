@@ -201,8 +201,8 @@ namespace Moonstorm.Loaders
             {
                 MSULog.Debug($"There where {notAssignedAssets.Count} Assets that have not been assigned to fields inside {typeToPopulate.FullName}, listing assets:");
                 notAssignedAssets.ForEach(asset => MSULog.Debug(asset));
-#endif
             }
+#endif
         }
     }
 }
