@@ -55,7 +55,7 @@ namespace Moonstorm.Components.Addressables
 #if UNITY_EDITOR
                 Debug.LogWarning(msg);
 #else
-                MSULog.Warninig(msg);
+                MSULog.Warning(msg);
 #endif
 #endif
                 return;
