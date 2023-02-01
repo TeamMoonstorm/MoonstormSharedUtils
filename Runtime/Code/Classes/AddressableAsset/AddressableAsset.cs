@@ -83,9 +83,9 @@ namespace Moonstorm.AddressableAssets
             asset = await task;
         }
 
-        public static implicit operator bool(AddressableAsset<T> asset)
+        public static implicit operator bool(AddressableAsset<T> addressableAsset)
         {
-            return asset != null && asset.Asset;
+            return addressableAsset?.Asset;
         }
 
         public static implicit operator T(AddressableAsset<T> addressableAsset)

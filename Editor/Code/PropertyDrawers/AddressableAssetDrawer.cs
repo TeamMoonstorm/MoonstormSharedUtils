@@ -137,4 +137,14 @@ namespace Moonstorm.EditorUtils.PropertyDrawers
             base.OnGUI(position, property, label);
         }
     }
+    //----------
+    [CustomPropertyDrawer(typeof(AddressableSpawnCard))]
+    public sealed class AddressableSpawnCardDrawer : AddressableAssetDrawer<AddressableSpawnCard>
+    {
+        protected override string AddressTooltip => "The Address of the Spawn Card";
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        {
+            base.OnGUI(position, property, label);
+        }
+    }
 }

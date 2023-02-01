@@ -11,6 +11,7 @@ namespace Moonstorm.AddressableAssets
     /// <inheritdoc cref="AddressableAsset{T}"/>
     /// the type of asset this references is an <see cref="UnlockableDef"/>, and can be loaded either via Addressables or the <see cref="UnlockableCatalog"/>
     /// </summary>
+    [Serializable]
     public class AddressableUnlockableDef : AddressableAsset<UnlockableDef>
     {
         protected override async Task LoadAsset()

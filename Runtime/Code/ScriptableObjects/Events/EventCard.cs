@@ -9,6 +9,7 @@ using RoR2;
 using EntityStates;
 using RoR2.ExpansionManagement;
 using Moonstorm.AddressableAssets;
+using System.Runtime.CompilerServices;
 
 namespace Moonstorm
 {
@@ -73,7 +74,7 @@ namespace Moonstorm
                 return false;
             }
 
-            if(Run.instance.stageClearCount >= minimumStageCompletions)
+            if(Run.instance.stageClearCount <= minimumStageCompletions)
             {
                 return false;
             }
