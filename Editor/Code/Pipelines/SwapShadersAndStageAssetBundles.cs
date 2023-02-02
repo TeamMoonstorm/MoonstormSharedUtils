@@ -73,6 +73,7 @@ namespace Moonstorm.EditorUtils.Pipelines
                 {
                     var log = SwapOrigForStubbedd(materials, origToStubbed);
                     pipeline.Log(LogLevel.Information, $"Replacing a total of {log.Count} real shaders for stubbed shaders.", log.ToArray());
+                    AssetDatabase.SaveAssets();
                 }
 
                 var explicitAssets = assetBundleDefs.SelectMany(abd => abd.assetBundles)
