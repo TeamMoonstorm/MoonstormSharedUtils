@@ -3,8 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static RoR2.CombatDirector;
 
 namespace Moonstorm
@@ -24,7 +22,7 @@ namespace Moonstorm
         /// </summary>
         public static ReadOnlyDictionary<SerializableEliteTierDef, EliteTierDefBase> MoonstormEliteTiers { get; private set; }
         internal static Dictionary<SerializableEliteTierDef, EliteTierDefBase> eliteTierDefs = new Dictionary<SerializableEliteTierDef, EliteTierDefBase>();
-        
+
         /// <summary>
         /// Returns all the SerializableEliteTierDefs from <see cref="MoonstormEliteTiers"/>
         /// </summary>
@@ -59,7 +57,7 @@ namespace Moonstorm
 
         private static void CreateAndAddTiers()
         {
-            foreach(var eliteTierDefBase in eliteTierDefs.Values)
+            foreach (var eliteTierDefBase in eliteTierDefs.Values)
             {
                 SerializableEliteTierDef serializableEliteTierDef = eliteTierDefBase.SerializableEliteTierDef;
                 serializableEliteTierDef.Create();

@@ -1,10 +1,6 @@
-﻿using RoR2;
-using RoR2.ContentManagement;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -23,6 +19,9 @@ namespace Moonstorm.Loaders
         /// </summary>
         public static T Instance { get; private set; }
 
+        /// <summary>
+        /// Parameterless Constructor for AssetsLoader, this will throw an invalid operation exception if an instancec of <typeparamref name="T"/> already exists
+        /// </summary>
         public AssetsLoader()
         {
             try
@@ -85,8 +84,8 @@ namespace Moonstorm.Loaders
         /// </summary>
         /// <param name="bundle">The bundle where the materials will be loaded from</param>
         protected void SwapShadersFromMaterialsInBundle(AssetBundle bundle)
-        { 
-            if(bundle.isStreamedSceneAssetBundle)
+        {
+            if (bundle.isStreamedSceneAssetBundle)
             {
                 MSULog.Warning($"Cannot swap material shaders from a streamed scene assetbundle.");
                 return;
@@ -97,7 +96,7 @@ namespace Moonstorm.Loaders
             for (int i = 0; i < assetBundleMaterials.Length; i++)
             {
                 var material = assetBundleMaterials[i];
-                if(!material.shader.name.StartsWith("Stubbed"))
+                if (!material.shader.name.StartsWith("Stubbed"))
                 {
 #if DEBUG
                     MSULog.Warning($"The material {material} has a shader which's name doesnt start with \"Stubbed\" ({material.shader.name}), this is not allowed for stubbed shaders for MSU. not swapping shader.");
@@ -108,7 +107,7 @@ namespace Moonstorm.Loaders
                 {
                     SwapShader(material);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     MSULog.Error($"Failed to swap shader of material {material}: {ex}");
                 }
@@ -120,10 +119,10 @@ namespace Moonstorm.Loaders
         /// </summary>
         /// <param name="materials">The materials to modify</param>
         protected void SwapShadersFromMaterials(IEnumerable<Material> materials)
-        { 
-            foreach(Material material in materials)
+        {
+            foreach (Material material in materials)
             {
-                if(!material.shader.name.StartsWith("Stubbed"))
+                if (!material.shader.name.StartsWith("Stubbed"))
                 {
 #if DEBUG
                     MSULog.Warning($"The material {material} has a shader which's name doesnt start with \"Stubbed\" ({material.shader.name}), this is not allowed for stubbed shaders for MSU. not swapping shader.");
@@ -148,7 +147,7 @@ namespace Moonstorm.Loaders
         protected async void FinalizeMaterialsWithAddressableMaterialShader(AssetBundle bundle)
         {
             var materials = bundle.LoadAllAssets<Material>().Where(m => m.shader.name == "AddressableMaterialShader");
-            foreach(Material material in materials)
+            foreach (Material material in materials)
             {
                 try
                 {
@@ -167,7 +166,7 @@ namespace Moonstorm.Loaders
                     MSULog.Debug($"Properties from {loadedMat} ({address}) copied to {material}");
 #endif
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     MSULog.Error($"Failed to finalize material {material}: {e}");
                 }

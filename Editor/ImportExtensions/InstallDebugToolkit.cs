@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using ThunderKit.Integrations.Thunderstore;
+﻿using ThunderKit.Integrations.Thunderstore;
 
 namespace Moonstorm.EditorUtils.Importers
 {

@@ -1,25 +1,35 @@
 ﻿using Moonstorm.AddressableAssets;
 using RoR2;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 namespace Moonstorm
 {
+    /// <summary>
+    /// A <see cref="MSDCCSPool"/> is a version of a <see cref="DccsPool"/> that can be created from the editor itself, it allows you to create complex DccsPools using Addressables and your own existing spawn cards.
+    /// <para>All the values from this pool will be added to the <see cref="DccsPool"/> specified in <see cref="targetPool"/></para>
+    /// <para>You should also see <see cref="MSDirectorCardCategorySelection"/></para>
+    /// </summary>
     [CreateAssetMenu(fileName = "New MSDCCSPool", menuName = "Moonstorm/Director Cards/MSDCCSPool")]
     public class MSDCCSPool : ScriptableObject
     {
+        [Tooltip("The DccsPool that will be overriden with the values stored in this MSDCCSPool")]
         public DccsPool targetPool;
 
+        /// <summary>
+        /// Represents a version of <see cref="DccsPool.PoolEntry"/> that uses <see cref="MSDirectorCardCategorySelection"/> for representing a pool entry
+        /// </summary>
         [Serializable]
         public class MSPoolEntry
         {
+            [Tooltip("The DCCS for this pool entry")]
             public MSDirectorCardCategorySelection dccs;
+            [Tooltip("The weight of this pool entry relative to the others")]
             public float weight;
 
-            public virtual DccsPool.PoolEntry Upgrade()
+            internal virtual DccsPool.PoolEntry Upgrade()
             {
                 DccsPool.PoolEntry returnValue = new DccsPool.PoolEntry();
                 returnValue.dccs = dccs.targetCardCategorySelection;
@@ -27,6 +37,9 @@ namespace Moonstorm
                 return returnValue;
             }
         }
+        /// <summary>
+        /// Represents a category of DirectorCardCategorySelections for this pool
+        /// </summary>
         [Serializable]
         public class MSCategory
         {
@@ -41,7 +54,7 @@ namespace Moonstorm
             [Tooltip("These entries are considered only if no entries from 'includedIfConditionsMet' have been included.")]
             public MSPoolEntry[] includedIfNoConditionsMet = Array.Empty<MSPoolEntry>();
 
-            public DccsPool.Category Upgrade()
+            internal DccsPool.Category Upgrade()
             {
                 DccsPool.Category returnValue = new DccsPool.Category();
                 returnValue.name = name;
@@ -52,13 +65,17 @@ namespace Moonstorm
                 return returnValue;
             }
         }
+        /// <summary>
+        /// Represents a conditional version of a <see cref="MSPoolEntry"/>
+        /// <para>Contains a <see cref="requiredExpansions"/> array that's populated using <see cref="AddressableExpansionDef"/>s</para>
+        /// </summary>
         [Serializable]
         public class MSConditionalPoolEntry : MSPoolEntry
         {
             [Tooltip("ALL expansions in this list must be enabled for this run for this entry to be considered.")]
             public AddressableExpansionDef[] requiredExpansions = Array.Empty<AddressableExpansionDef>();
 
-            public override DccsPool.PoolEntry Upgrade()
+            internal override DccsPool.PoolEntry Upgrade()
             {
                 DccsPool.ConditionalPoolEntry returnValue = new DccsPool.ConditionalPoolEntry();
                 returnValue.weight = weight;
@@ -68,6 +85,7 @@ namespace Moonstorm
             }
         }
 
+        [Tooltip("The categories for this pool")]
         public MSCategory[] poolCategories = Array.Empty<MSCategory>();
         private void Upgrade()
         {
@@ -84,7 +102,7 @@ namespace Moonstorm
             AddressableAsset.OnAddressableAssetsLoaded += () =>
             {
                 MSULog.Info("Initializing MSDCCSPool");
-                foreach(MSDCCSPool pool in instances)
+                foreach (MSDCCSPool pool in instances)
                 {
                     pool.Upgrade();
                 }

@@ -66,7 +66,7 @@ namespace Moonstorm
         /// <returns>An array of expansionDefs</returns>
         public static ExpansionDef[] GetEnabledExpansions(this Run run)
         {
-            if(currentRun == run)
+            if (currentRun == run)
             {
                 return currentRunExpansionDefs;
             }
@@ -84,14 +84,14 @@ namespace Moonstorm
         /// <param name="transmit"></param>
         public static void Play(this NetworkSoundEventDef eventDef, Vector3 pos, bool transmit = true)
         {
-            if(eventDef.index == NetworkSoundEventIndex.Invalid)
+            if (eventDef.index == NetworkSoundEventIndex.Invalid)
             {
                 MSULog.Warning($"{eventDef} has an invalid network sound event index.");
                 return;
             }
             EffectManager.SimpleSoundEffect(eventDef.index, pos, transmit);
         }
-        
+
         /// <summary>
         /// Ensures that the component specified in <typeparamref name="T"/> exists
         /// Basically Gets the component, if it doesnt exist, it adds it then returns it.
@@ -181,6 +181,14 @@ namespace Moonstorm
             return types;
         }
 
+        /// <summary>
+        /// Deconstruct a KeyValuePair into two variables, useful for iterating over a dictionary
+        /// </summary>
+        /// <typeparam name="TKey">The type of Key of the KeyValuePair</typeparam>
+        /// <typeparam name="TValue">The type of Value of the KeyValuePair</typeparam>
+        /// <param name="kvp">The KeyValuePair to deconstruct</param>
+        /// <param name="key">The Key of the KeyValuePair</param>
+        /// <param name="value">The Value of the KeyValuePair</param>
         public static void Deconstruct<TKey, TValue>(this KeyValuePair<TKey, TValue> kvp, out TKey key, out TValue value)
         {
             key = kvp.Key;

@@ -90,18 +90,18 @@ namespace Moonstorm
         internal object GetFormattingValue()
         {
             object value = null;
-            if(target is FieldInfo fi)
+            if (target is FieldInfo fi)
             {
                 value = fi.GetValue(null);
             }
-            else if(target is PropertyInfo pi)
+            else if (target is PropertyInfo pi)
             {
                 value = pi.GetMethod?.Invoke(null, null);
             }
 
-            if(value != null && IsNumber(value))
+            if (value != null && IsNumber(value))
             {
-                switch(statType)
+                switch (statType)
                 {
                     case StatTypes.Default:
                         valueForFormatting = value;

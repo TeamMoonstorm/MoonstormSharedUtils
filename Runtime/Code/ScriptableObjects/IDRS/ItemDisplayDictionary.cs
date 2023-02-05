@@ -2,10 +2,6 @@
 using RoR2;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Moonstorm
@@ -172,7 +168,7 @@ namespace Moonstorm
                             MSULog.Debug($"Finished appending values from {itemDisplayDictionary}'s {i} entry into {current.idrs.Asset}");
 #endif
                         }
-                        catch(Exception e)
+                        catch (Exception e)
                         {
                             MSULog.Error($"{e}\n({itemDisplayDictionary} index {i}");
                         }
@@ -182,7 +178,7 @@ namespace Moonstorm
 #endif
                 }
 
-                foreach(var idrs in idrsToRegenerateRuntimeValues)
+                foreach (var idrs in idrsToRegenerateRuntimeValues)
                 {
                     idrs.GenerateRuntimeValues();
 #if DEBUG
@@ -198,10 +194,10 @@ namespace Moonstorm
             keyAssetRuleGroup.displayRuleGroup = new DisplayRuleGroup();
 
             var index = namedDisplayDictionary.FindIndex(x => x.idrs.Asset == ruleSet);
-            if(index >= 0)
+            if (index >= 0)
             {
                 var namedDisplay = namedDisplayDictionary[index];
-                for(int i = 0; i < namedDisplay.displayRules.Count; i++)
+                for (int i = 0; i < namedDisplay.displayRules.Count; i++)
                 {
                     DisplayRule rule = namedDisplay.displayRules[i];
                     rule.CreateRule();

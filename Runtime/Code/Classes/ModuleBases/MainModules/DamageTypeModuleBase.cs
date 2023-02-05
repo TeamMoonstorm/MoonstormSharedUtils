@@ -21,7 +21,7 @@ namespace Moonstorm
         /// </summary>
         public static ReadOnlyDictionary<ModdedDamageType, DamageTypeBase> MoonstormDamageTypes { get; private set; }
         internal static Dictionary<ModdedDamageType, DamageTypeBase> damageTypes = new Dictionary<ModdedDamageType, DamageTypeBase>();
-        
+
         /// <summary>
         /// Returns all the ModdedDamageTypes from <see cref="MoonstormDamageTypes"/>
         /// </summary>

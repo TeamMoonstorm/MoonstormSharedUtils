@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using EntityStates;
+using Moonstorm.AddressableAssets;
 using R2API;
 using RoR2;
-using EntityStates;
-using RoR2.ExpansionManagement;
-using Moonstorm.AddressableAssets;
-using System.Runtime.CompilerServices;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace Moonstorm
 {
@@ -74,13 +68,13 @@ namespace Moonstorm
                 return false;
             }
 
-            if(Run.instance.stageClearCount <= minimumStageCompletions)
+            if (Run.instance.stageClearCount <= minimumStageCompletions)
             {
                 return false;
             }
 
             var expansionsEnabled = true;
-            foreach(AddressableExpansionDef ed in requiredExpansions)
+            foreach (AddressableExpansionDef ed in requiredExpansions)
             {
                 expansionsEnabled = Run.instance.IsExpansionEnabled(ed.Asset);
             }
@@ -91,14 +85,14 @@ namespace Moonstorm
 
             bool requiredUnlockableUnlocked = !requiredUnlockableDef || Run.instance.IsUnlockableUnlocked(requiredUnlockableDef);
             bool forbiddenUnlockableUnlocked = forbiddenUnlockableDef && Run.instance.DoesEveryoneHaveThisUnlockableUnlocked(forbiddenUnlockableDef);
-            if(!(requiredUnlockableUnlocked && !forbiddenUnlockableUnlocked))
+            if (!(requiredUnlockableUnlocked && !forbiddenUnlockableUnlocked))
             {
                 return false;
             }
 
-            if(eventFlags.HasFlag(EventFlags.OncePerRun))
+            if (eventFlags.HasFlag(EventFlags.OncePerRun))
             {
-                if(Run.instance.GetEventFlag(OncePerRunFlag))
+                if (Run.instance.GetEventFlag(OncePerRunFlag))
                 {
                     return false;
                 }

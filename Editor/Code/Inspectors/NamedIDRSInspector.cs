@@ -1,16 +1,7 @@
-﻿using RoR2EditorKit.Core.Inspectors;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
-using UnityEngine.UIElements;
-using UnityEditor;
-using UnityEditor.UIElements;
-using RoR2EditorKit.Utilities;
-using Moonstorm.EditorUtils.EditorWindows;
+﻿using Moonstorm.EditorUtils.EditorWindows;
 using RoR2EditorKit.Core.EditorWindows;
+using UnityEditor;
+using UnityEngine.UIElements;
 
 namespace Moonstorm.EditorUtils.Inspectors
 {

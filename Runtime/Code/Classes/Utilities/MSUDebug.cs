@@ -3,7 +3,6 @@ using Moonstorm.Components;
 using RoR2;
 using RoR2.UI;
 using System;
-using System.Linq;
 using UnityEngine;
 
 namespace Moonstorm
@@ -25,7 +24,7 @@ namespace Moonstorm
             //Adds the item display helper to all the character bodies.
             RoR2Application.onLoad += () =>
             {
-                foreach(GameObject prefab in BodyCatalog.allBodyPrefabs)
+                foreach (GameObject prefab in BodyCatalog.allBodyPrefabs)
                 {
                     try
                     {
@@ -46,7 +45,7 @@ namespace Moonstorm
 
                         mdlPrefab.EnsureComponent<MoonstormIDH>();
                     }
-                    catch(Exception e) { MSULog.Error(e); }
+                    catch (Exception e) { MSULog.Error(e); }
                 }
             };
             #endregion
@@ -83,7 +82,7 @@ namespace Moonstorm
             }
             #endregion
             var input1 = Input.GetKeyDown(MSUConfig.printDebugEventMessage.Value);
-            if(input1)
+            if (input1)
             {
                 var go = EventHelpers.AnnounceEvent(new EventHelpers.EventAnnounceInfo(MoonstormSharedUtils.MSUAssetBundle.LoadAsset<EventCard>("DummyEventCard"), 15, true) { fadeOnStart = false });
                 go.GetComponent<HGTextMeshProUGUI>().alpha = 1f;

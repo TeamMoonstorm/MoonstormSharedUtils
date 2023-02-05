@@ -41,7 +41,7 @@ namespace Moonstorm.Components
                     case "Hopoo Games/FX/Opaque Cloud Remap":
                         materialController = gameObject.AddComponent<MaterialControllerComponents.HGOpaqueCloudRemap>();
                         break;
-                        
+
                     //not a hg shader but still applies
                     case "CalmWater/Calm Water [DX11] [Double Sided]":
                         materialController = gameObject.AddComponent<MaterialControllerComponents.CW_DX11_DoubleSidedController>();

@@ -1,9 +1,7 @@
 ﻿using RoR2EditorKit.Core.Inspectors;
-using RoR2EditorKit.Utilities;
-using UnityEngine;
-using UnityEngine.UIElements;
 using UnityEditor;
 using UnityEditor.UIElements;
+using UnityEngine.UIElements;
 
 namespace Moonstorm.EditorUtils.Inspectors
 {

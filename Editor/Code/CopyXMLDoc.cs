@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 using UnityEditor;
 using UnityEngine;
-using System.IO;
-using RoR2EditorKit.Common;
 
 namespace Moonstorm.EditorUtils
 {
@@ -15,7 +9,7 @@ namespace Moonstorm.EditorUtils
     {
         static CopyXMLDoc()
         {
-            if(ShouldCopy())
+            if (ShouldCopy())
             {
                 Debug.Log($"Copying over the MSU XML Doc");
                 DoCopy();

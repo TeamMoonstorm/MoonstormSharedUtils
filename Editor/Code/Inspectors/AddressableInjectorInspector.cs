@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
-using UnityEngine;
-using Moonstorm.Components.Addressables;
-using System.Reflection;
+﻿using Moonstorm.Components.Addressables;
 using System;
 using System.Linq;
+using System.Reflection;
+using UnityEditor;
+using UnityEngine;
 
 namespace Moonstorm.EditorUtils.Inspectors
 {

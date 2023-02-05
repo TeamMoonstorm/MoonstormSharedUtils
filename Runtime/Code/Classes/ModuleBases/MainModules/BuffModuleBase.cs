@@ -1,7 +1,5 @@
 ﻿using Moonstorm.Components;
-using R2API.ScriptableObjects;
 using RoR2;
-using RoR2.ContentManagement;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -60,7 +58,7 @@ namespace Moonstorm
 
             MoonstormOverlayMaterials = new ReadOnlyDictionary<BuffDef, Material>(overlayMaterials);
             overlayMaterials = null;
-            
+
             OnDictionariesCreated?.Invoke(MoonstormBuffs, MoonstormOverlayMaterials);
             ModuleAvailability.MakeAvailable();
         }
@@ -107,7 +105,7 @@ namespace Moonstorm
 
             contentClass.Initialize();
 
-            if(contentClass.OverlayMaterial)
+            if (contentClass.OverlayMaterial)
                 overlayMaterials[contentClass.BuffDef] = contentClass.OverlayMaterial;
 
             buffs[contentClass.BuffDef] = contentClass;

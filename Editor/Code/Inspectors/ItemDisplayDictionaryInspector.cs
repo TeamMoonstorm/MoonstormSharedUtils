@@ -1,12 +1,7 @@
-﻿using RoR2;
-using RoR2EditorKit.Core.Inspectors;
-using RoR2EditorKit.Utilities;
-using UnityEngine;
-using UnityEngine.UIElements;
-using UnityEditor;
-using UnityEditor.UIElements;
+﻿using Moonstorm.EditorUtils.EditorWindows;
 using RoR2EditorKit.Core.EditorWindows;
-using Moonstorm.EditorUtils.EditorWindows;
+using UnityEditor;
+using UnityEngine.UIElements;
 
 namespace Moonstorm.EditorUtils.Inspectors
 {
@@ -18,7 +13,7 @@ namespace Moonstorm.EditorUtils.Inspectors
         {
             Button button = new Button(() =>
             {
-                if(Instance == null)
+                if (Instance == null)
                 {
                     Instance = ObjectEditingEditorWindow<ItemDisplayDictionary>.OpenEditorWindow<ItemDisplayDictionaryEditorWindow>(target);
                 }

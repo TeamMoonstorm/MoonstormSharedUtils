@@ -1,9 +1,5 @@
 ﻿using BepInEx;
-using R2API;
 using R2API.ScriptableObjects;
-using R2API.Utils;
-using RoR2.ContentManagement;
-using System.Collections;
 using System.IO;
 using UnityEngine;
 

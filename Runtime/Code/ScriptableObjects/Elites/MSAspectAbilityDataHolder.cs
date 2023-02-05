@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace Moonstorm
 {
-    [CreateAssetMenu(fileName = "New AspectAbilityDataHolder", menuName = "Moonstorm/Elites/AspectAbilityDataHolder")]
     [Obsolete("MSU no longer handles automatic usage of the MSAspectAbilityDataHolder, implementation is up to the end user.")]
     public class MSAspectAbilityDataHolder : ScriptableObject
     {

@@ -1,7 +1,5 @@
-﻿using RoR2EditorKit.Utilities;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEditor.UIElements;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Moonstorm.EditorUtils.PropertyDrawers
@@ -12,7 +10,7 @@ namespace Moonstorm.EditorUtils.PropertyDrawers
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
             SerializedProperty skinAddress = property.FindPropertyRelative(nameof(VanillaSkinDefinition.MSBaseSkin.skinAddress));
-            
+
             TextField textField = new TextField();
             textField.name = property.name;
             textField.label = skinAddress.displayName;

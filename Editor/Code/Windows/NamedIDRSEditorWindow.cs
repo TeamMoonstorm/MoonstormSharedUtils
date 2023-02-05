@@ -1,18 +1,16 @@
-﻿using RoR2EditorKit.Core.EditorWindows;
-using RoR2EditorKit.Utilities;
-using UnityEngine;
-using UnityEngine.UIElements;
-using UnityEditor;
-using UnityEditor.UIElements;
-using RoR2EditorKit.Core.Inspectors;
-using System;
-using ThunderKit.Markdown;
-using Moonstorm.AddressableAssets;
-using System.Text.RegularExpressions;
-using System.Linq;
+﻿using Moonstorm.AddressableAssets;
 using RoR2;
+using RoR2EditorKit.Core.Inspectors;
+using RoR2EditorKit.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
+using ThunderKit.Markdown;
+using UnityEditor;
+using UnityEditor.UIElements;
+using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Moonstorm.EditorUtils.EditorWindows
 {
@@ -31,7 +29,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
             get => _inspectedNamedRuleGroup;
             set
             {
-                if(_inspectedNamedRuleGroup != value)
+                if (_inspectedNamedRuleGroup != value)
                 {
                     _inspectedNamedRuleGroup = value;
                     OnInspectedNamedRuleGroupChanged();
@@ -45,7 +43,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
             get => _inspectedRule;
             set
             {
-                if(_inspectedRule != value)
+                if (_inspectedRule != value)
                 {
                     _inspectedRule = value;
                     OnInspectedRuleChanged();
@@ -133,7 +131,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
             var mdElement = ruleGroupContainer.Q<MarkdownElement>("noNamedRuleGroupSelected");
             var subContainer = ruleGroupContainer.Q<VisualElement>("SubContainer");
 
-            if(InspectedNamedRuleGroup == null)
+            if (InspectedNamedRuleGroup == null)
             {
                 mdElement.SetDisplay(DisplayStyle.Flex);
                 subContainer.SetDisplay(DisplayStyle.None);
@@ -164,14 +162,14 @@ namespace Moonstorm.EditorUtils.EditorWindows
             var mdElement = ruleDisplayContainer.Q<MarkdownElement>("noDisplayRuleSelected");
             var subContainer = ruleDisplayContainer.Q<VisualElement>("SubContainer");
 
-            if(InspectedRule == null)
+            if (InspectedRule == null)
             {
                 mdElement.SetDisplay(DisplayStyle.Flex);
                 subContainer.SetDisplay(DisplayStyle.None);
                 return;
             }
             var inspectedRulesParentGroup = InspectedRule.GetParentProperty().GetParentProperty();
-            if(inspectedRulesParentGroup.propertyPath != InspectedNamedRuleGroup.propertyPath)
+            if (inspectedRulesParentGroup.propertyPath != InspectedNamedRuleGroup.propertyPath)
             {
                 mdElement.SetDisplay(DisplayStyle.Flex);
                 subContainer.SetDisplay(DisplayStyle.None);
@@ -198,7 +196,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
             displayPrefab.Clear();
             displayPrefab.bindingPath = InspectedRule.FindPropertyRelative(nameof(NamedIDRS.AddressNamedDisplayRule.displayPrefab)).propertyPath;
 
-            
+
             subContainer.Bind(SerializedObject);
 
             var foldoutContainer = displayPrefab.Q<Foldout>().Q<VisualElement>("unity-content");
@@ -212,7 +210,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
         {
             var targetIdrs = rootVisualElement.Q<PropertyField>("targetIdrs");
             targetIdrs.RegisterCallback<ChangeEvent<UnityEngine.Object>>(OnIDRSSet);
-            OnIDRSSet(); 
+            OnIDRSSet();
         }
 
         private void OnIDRSSet(ChangeEvent<UnityEngine.Object> evt = null)
@@ -303,7 +301,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
             {
                 button.text = objectProperty.objectReferenceValue.name;
             }
-            else if(!addressProperty.stringValue.IsNullOrEmptyOrWhitespace())
+            else if (!addressProperty.stringValue.IsNullOrEmptyOrWhitespace())
             {
                 string[] split = addressProperty.stringValue.Split('/');
                 button.text = split[split.Length - 1];

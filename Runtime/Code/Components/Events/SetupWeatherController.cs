@@ -38,15 +38,15 @@ namespace Moonstorm.Components
                 weatherController.fogMaterial = GetFogMaterial();
                 weatherController.initialWeatherParams = GetInitialParams();
                 weatherController.weatherLerpOverChargeTime = MoonstormSharedUtils.MSUAssetBundle.LoadAsset<AnimationCurveAsset>("curveLinear").value;
-                
-                if(EventDirector.Instance)
+
+                if (EventDirector.Instance)
                     EventDirector.Instance.weatherParamsWhenSceneStarted = weatherController.initialWeatherParams;
-                
+
                 weatherController.weatherLerp = 0f;
-                
-                if(EventDirector.Instance)
+
+                if (EventDirector.Instance)
                     EventDirector.Instance.weatherRtpcWhenStarted = (weatherController.rtpcWeather is null) ? "" : weatherController.rtpcWeather;
-                
+
                 weatherController.rtpcWeather = "";
             }
             Destroy(this);

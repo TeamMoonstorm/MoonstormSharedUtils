@@ -1,8 +1,7 @@
-﻿using RoR2;
-using System.Collections;
+﻿using R2API.ScriptableObjects;
+using RoR2;
 using System.Collections.Generic;
 using UnityEngine;
-using R2API.ScriptableObjects;
 
 namespace Moonstorm
 {

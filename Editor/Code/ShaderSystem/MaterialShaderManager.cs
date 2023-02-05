@@ -1,8 +1,7 @@
-﻿using RoR2EditorKit;
+﻿using Moonstorm.EditorUtils.Settings;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
-using Moonstorm.EditorUtils.Settings;
 using UnityEngine;
 
 namespace Moonstorm.EditorUtils.ShaderSystem

@@ -1,11 +1,9 @@
-﻿using RoR2;
+﻿using R2API;
+using RoR2;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using UnityEngine;
-using R2API;
 
 namespace Moonstorm
 {
@@ -58,12 +56,12 @@ namespace Moonstorm
 
         private static void BuildItemListForEachItemTier()
         {
-            foreach(var (itemTierDef, itemTierBase) in MoonstormItemTiers)
+            foreach (var (itemTierDef, itemTierBase) in MoonstormItemTiers)
             {
                 itemTierBase.ItemsWithThisTier.Clear();
-                foreach(ItemDef itemDef in ItemCatalog.allItemDefs)
+                foreach (ItemDef itemDef in ItemCatalog.allItemDefs)
                 {
-                    if(itemDef.tier == itemTierDef.tier)
+                    if (itemDef.tier == itemTierDef.tier)
                     {
                         itemTierBase.ItemsWithThisTier.Add(itemDef.itemIndex);
                         itemTierBase.AvailableTierDropList.Add(PickupCatalog.FindPickupIndex(itemDef.itemIndex));
@@ -110,13 +108,13 @@ namespace Moonstorm
         protected override void InitializeContent(ItemTierBase contentClass)
         {
             AddSafely(ref SerializableContentPack.itemTierDefs, contentClass.ItemTierDef);
-            if(contentClass.ColorIndex)
+            if (contentClass.ColorIndex)
             {
                 ColorsAPI.AddSerializableColor(contentClass.ColorIndex);
                 contentClass.ItemTierDef.colorIndex = contentClass.ColorIndex.ColorIndex;
             }
 
-            if(contentClass.DarkColorIndex)
+            if (contentClass.DarkColorIndex)
             {
                 ColorsAPI.AddSerializableColor(contentClass.DarkColorIndex);
                 contentClass.ItemTierDef.darkColorIndex = contentClass.DarkColorIndex.ColorIndex;

@@ -1,8 +1,5 @@
 ﻿using RoR2;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Moonstorm.AddressableAssets
@@ -17,7 +14,7 @@ namespace Moonstorm.AddressableAssets
         protected override async Task LoadAsset()
         {
             ItemIndex index = ItemCatalog.FindItemIndex(address);
-            if(index != ItemIndex.None)
+            if (index != ItemIndex.None)
             {
                 asset = ItemCatalog.GetItemDef(index);
             }

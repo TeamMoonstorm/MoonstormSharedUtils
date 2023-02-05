@@ -1,13 +1,9 @@
-﻿using System.Collections;
+﻿using RoR2EditorKit.Utilities;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using ThunderKit.Core.Attributes;
 using ThunderKit.Core.Pipelines;
 using ThunderKit.Core.Pipelines.Jobs;
-using ThunderKit.Core.Manifests.Datums;
-using UnityEngine;
-using System.Linq;
-using RoR2EditorKit.Utilities;
 using UnityEditor;
 
 namespace Moonstorm.EditorUtils.Pipelines
@@ -52,7 +48,7 @@ namespace Moonstorm.EditorUtils.Pipelines
 
             ExecutePipeline[] executePipelineJobs = jobs.OfType<ExecutePipeline>().ToArray();
             PipelineJob[] executePipelinesPipelineJobs = executePipelineJobs.SelectMany(executePipeline => executePipeline.targetpipeline.Jobs).ToArray();
-            if(executePipelinesPipelineJobs.Length > 0)
+            if (executePipelinesPipelineJobs.Length > 0)
             {
                 result.totalRecursions++;
                 FindAndSetBuildMode(executePipelinesPipelineJobs, result);

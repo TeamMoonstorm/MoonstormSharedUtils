@@ -1,8 +1,5 @@
 ﻿using RoR2;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Moonstorm.AddressableAssets
@@ -51,7 +48,7 @@ namespace Moonstorm.AddressableAssets
                     case KeyAssetAddressType.EquipmentCatalog:
                         {
                             EquipmentIndex eqpIndex = EquipmentCatalog.FindEquipmentIndex(address);
-                            if(eqpIndex != EquipmentIndex.None)
+                            if (eqpIndex != EquipmentIndex.None)
                             {
                                 asset = EquipmentCatalog.GetEquipmentDef(eqpIndex);
                             }
@@ -65,7 +62,7 @@ namespace Moonstorm.AddressableAssets
                     case KeyAssetAddressType.ItemCatalog:
                         {
                             ItemIndex itemIndex = ItemCatalog.FindItemIndex(address);
-                            if(itemIndex != ItemIndex.None)
+                            if (itemIndex != ItemIndex.None)
                             {
                                 asset = ItemCatalog.GetItemDef(itemIndex);
                             }

@@ -1,4 +1,5 @@
-﻿using RoR2EditorKit;
+﻿using Moonstorm.EditorUtils.Settings;
+using RoR2EditorKit.Utilities;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,10 +14,7 @@ using UnityEditor;
 using UnityEditor.Compilation;
 using UnityEngine;
 using UnityEngine.Networking;
-using RoR2EditorKit.Utilities;
 using Object = UnityEngine.Object;
-using Moonstorm.EditorUtils.ShaderSystem;
-using Moonstorm.EditorUtils.Settings;
 
 namespace Moonstorm.EditorUtils.Pipelines
 {

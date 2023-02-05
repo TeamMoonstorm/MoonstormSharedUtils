@@ -3,8 +3,6 @@ using R2API;
 using RoR2;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Linq;
 using UnityEngine;
 using static Moonstorm.EventDirectorCategorySelection;
@@ -54,7 +52,7 @@ namespace Moonstorm
             if (!initialized)
                 throw new InvalidOperationException($"EventCatalog not initialized");
 
-            if(nameToEventIndex.TryGetValue(eventName.ToLowerInvariant(), out EventIndex eventIndex))
+            if (nameToEventIndex.TryGetValue(eventName.ToLowerInvariant(), out EventIndex eventIndex))
             {
                 return eventIndex;
             }
@@ -86,7 +84,7 @@ namespace Moonstorm
             if (!initialized)
                 throw new InvalidOperationException($"EventCatalog not initialized");
 
-            if(nameToCategoryIndex.TryGetValue(name.ToLowerInvariant(), out var index))
+            if (nameToCategoryIndex.TryGetValue(name.ToLowerInvariant(), out var index))
             {
                 return index;
             }
@@ -120,25 +118,25 @@ namespace Moonstorm
                 if (!initialized)
                     throw new InvalidOperationException($"EventCatalog not initialized");
 
-                if(stage == DirectorAPI.Stage.Custom)
+                if (stage == DirectorAPI.Stage.Custom)
                 {
                     if (string.IsNullOrEmpty(customName))
                         return null;
 
                     customName = customName.ToLowerInvariant();
-                    if(baseSceneNameToCategory.TryGetValue(customName.ToLowerInvariant(), out var cat1))
+                    if (baseSceneNameToCategory.TryGetValue(customName.ToLowerInvariant(), out var cat1))
                     {
                         return cat1;
                     }
                     return null;
                 }
-                if(stageToCategory.TryGetValue(stage, out var cat2))
+                if (stageToCategory.TryGetValue(stage, out var cat2))
                 {
                     return cat2;
                 }
                 return null;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MSULog.Error(ex);
                 return null;
@@ -158,10 +156,10 @@ namespace Moonstorm
                     throw new InvalidOperationException($"EventCatalog not initialized");
 
                 DirectorAPI.Stage stage = DirectorAPI.GetStageEnumFromSceneDef(sceneDef);
-                if(stage == DirectorAPI.Stage.Custom)
+                if (stage == DirectorAPI.Stage.Custom)
                 {
                     string key = sceneDef.baseSceneName.ToLowerInvariant();
-                    if(baseSceneNameToCategory.TryGetValue(key, out var selection))
+                    if (baseSceneNameToCategory.TryGetValue(key, out var selection))
                     {
                         return selection;
                     }
@@ -209,7 +207,7 @@ namespace Moonstorm
         /// </summary>
         /// <param name="categories">The categories to add</param>
         /// <exception cref="InvalidOperationException"></exception>
-        public static void AddCategories(EventDirectorCategorySelection[] categories) 
+        public static void AddCategories(EventDirectorCategorySelection[] categories)
         {
             if (initialized)
                 throw new InvalidOperationException($"EventCatalog already initialized");
@@ -220,7 +218,7 @@ namespace Moonstorm
         /// </summary>
         /// <param name="category">The category to add</param>
         /// <exception cref="InvalidOperationException"></exception>
-        public static void AddCategory(EventDirectorCategorySelection category) 
+        public static void AddCategory(EventDirectorCategorySelection category)
         {
             if (initialized)
                 throw new InvalidOperationException($"EventCatalog already initialized");
@@ -234,7 +232,7 @@ namespace Moonstorm
         {
             AddCategories(MoonstormSharedUtils.MSUAssetBundle.LoadAllAssets<EventDirectorCategorySelection>());
 #if DEBUG
-            if(MSUConfig.addDummyEvents.Value)
+            if (MSUConfig.addDummyEvents.Value)
             {
                 AddCard(MoonstormSharedUtils.MSUAssetBundle.LoadAsset<EventCard>("DummyEventCard"));
             }
@@ -293,7 +291,7 @@ namespace Moonstorm
                     else
                     {
                         isCustom = false;
-                        if(stageToCategory.ContainsKey(category.stage))
+                        if (stageToCategory.ContainsKey(category.stage))
                         {
 #if DEBUG
                             MSULog.Warning($"Cannot add category {category.name}, since an already registered category uses the stage enum {category.stage}!" +
@@ -339,8 +337,8 @@ namespace Moonstorm
                 try
                 {
                     EventCard card = eventCards[i];
-                
-                    if(card.selectionWeight <= 0)
+
+                    if (card.selectionWeight <= 0)
                     {
 #if DEBUG
                         MSULog.Warning($"Cannot add EventCard {card.name} because it's selectionWeight is less or equal to 0!" +
@@ -349,7 +347,7 @@ namespace Moonstorm
                         continue;
                     }
 
-                    if(card.cost <= 0)
+                    if (card.cost <= 0)
                     {
 #if DEBUG
                         MSULog.Warning($"Cannot add EventCard {card.name} because it's cost is less or equal to 0!" +
@@ -358,7 +356,7 @@ namespace Moonstorm
                         continue;
                     }
 
-                    if(card.eventState.stateType == null)
+                    if (card.eventState.stateType == null)
                     {
 #if DEBUG
                         MSULog.Warning($"Cannot add EventCard {card.name} because it's eventState is null!");
@@ -366,7 +364,7 @@ namespace Moonstorm
                         continue;
                     }
 
-                    if(!card.eventState.stateType.IsSubclassOf(typeof(EntityStates.Events.EventState)))
+                    if (!card.eventState.stateType.IsSubclassOf(typeof(EntityStates.Events.EventState)))
                     {
 #if DEBUG
                         MSULog.Warning($"Cannot add EventCard {card.name} because it's eventState does not inherit from \"EntityStates.Events.EventState\"!" +
@@ -377,21 +375,21 @@ namespace Moonstorm
 
                     validCards.Add(card);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     MSULog.Error(ex);
                 }
             }
 
             int cardAmount = validCards.ToArray().Length;
-            for(EventIndex eventIndex = (EventIndex)0; (int)eventIndex < cardAmount; eventIndex++)
+            for (EventIndex eventIndex = (EventIndex)0; (int)eventIndex < cardAmount; eventIndex++)
             {
                 try
                 {
                     RegisterCard(validCards[(int)eventIndex], eventIndex);
                     AddCardToCategories(validCards[(int)eventIndex]);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     MSULog.Error(ex);
                 }
@@ -407,11 +405,11 @@ namespace Moonstorm
 
         private static void AddCardToCategories(EventCard card)
         {
-            foreach(DirectorAPI.Stage stage in Enum.GetValues(typeof(DirectorAPI.Stage)))
+            foreach (DirectorAPI.Stage stage in Enum.GetValues(typeof(DirectorAPI.Stage)))
             {
-                if(card.availableStages.HasFlag(stage))
+                if (card.availableStages.HasFlag(stage))
                 {
-                    if(stage == DirectorAPI.Stage.Custom)
+                    if (stage == DirectorAPI.Stage.Custom)
                     {
                         AddCardToCustomStages(card);
                         continue;
@@ -423,13 +421,13 @@ namespace Moonstorm
 
         private static void AddCardToCustomStages(EventCard card)
         {
-            foreach(string customStageName in card.customStageNames)
+            foreach (string customStageName in card.customStageNames)
             {
-                if(baseSceneNameToCategory.TryGetValue(customStageName.ToLowerInvariant(), out var category))
+                if (baseSceneNameToCategory.TryGetValue(customStageName.ToLowerInvariant(), out var category))
                 {
                     var categoryIndex = category.FindCategoryIndexByName(card.category.ToLowerInvariant());
 
-                    if(categoryIndex == -1)
+                    if (categoryIndex == -1)
                     {
 #if DEBUG
                         MSULog.Warning($"Cannot add card {card.name}, because the EventCategory specified ({card.category}) does not exist in the EventDirectorCategorySelection {category.name}!" +
@@ -493,7 +491,7 @@ namespace Moonstorm
             int flagAmount = -1;
             var enumValues = Enum.GetValues(typeof(DirectorAPI.Stage));
 
-            foreach(DirectorAPI.Stage enumValue in enumValues)
+            foreach (DirectorAPI.Stage enumValue in enumValues)
             {
                 if (stage.HasFlag(enumValue))
                     flagAmount++;

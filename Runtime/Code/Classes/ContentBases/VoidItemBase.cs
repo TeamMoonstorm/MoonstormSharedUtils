@@ -1,10 +1,5 @@
-﻿using Moonstorm;
-using RoR2;
-using System;
+﻿using RoR2;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Moonstorm
 {
@@ -13,7 +8,7 @@ namespace Moonstorm
     /// <para>This variation of ItemBase allows you to easily create an Infectious relationship, allowing for Void Items.</para>
     /// </summary>
     public abstract class VoidItemBase : ItemBase
-    {        
+    {
         /// <summary>
         /// Implement this method to specify what items this Void Item can infect.
         /// <para>Can be used to load Items via a plethora of ways, such as Addressables, AssetBundles and the ItemCatalog.</para>

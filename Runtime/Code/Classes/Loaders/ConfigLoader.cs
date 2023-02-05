@@ -19,6 +19,9 @@ namespace Moonstorm.Loaders
         /// </summary>
         public static T Instance { get; private set; }
 
+        /// <summary>
+        /// Parameterless Constructor for ConfigLoader, this will throw an invalid operation exception if an instance of <typeparamref name="T"/> already exists
+        /// </summary>
         public ConfigLoader()
         {
             try
@@ -80,7 +83,7 @@ namespace Moonstorm.Loaders
         public ConfigFile CreateConfigFile(string identifier, bool wipedBetweenMinorVersions = true)
         {
             string fileName = identifier;
-            if(!fileName.EndsWith(".cfg", StringComparison.OrdinalIgnoreCase))
+            if (!fileName.EndsWith(".cfg", StringComparison.OrdinalIgnoreCase))
             {
                 fileName += ".cfg";
             }
@@ -98,11 +101,11 @@ namespace Moonstorm.Loaders
             ConfigDefinition configDef = new ConfigDefinition("Version", "Config File Version");
             string configVersionValue = $"{OwnerMetaData.Version.Major}.{OwnerMetaData.Version.Minor}";
             ConfigEntry<string> versionEntry = null;
-            if(configFile.TryGetEntry<string>(configDef, out versionEntry))
+            if (configFile.TryGetEntry<string>(configDef, out versionEntry))
             {
                 string currentValue = versionEntry.Value;
 
-                if(currentValue != configVersionValue)
+                if (currentValue != configVersionValue)
                 {
                     WipeConfig(configFile);
                     versionEntry.Value = configVersionValue;

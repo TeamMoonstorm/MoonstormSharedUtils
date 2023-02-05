@@ -1,7 +1,6 @@
 ﻿using RoR2;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using SearchableAttribute = HG.Reflection.SearchableAttribute;
 
@@ -82,7 +81,7 @@ namespace Moonstorm
 
                 //We do not overwrite the array if the token is already in the dictionary.
                 //this is due to the fact that key may already be in the dictionary due to being created from field token modifiers.
-                if(!cachedFormattingArray.ContainsKey(token))
+                if (!cachedFormattingArray.ContainsKey(token))
                 {
                     cachedFormattingArray[token] = Array.Empty<object>();
                 }
@@ -107,9 +106,9 @@ namespace Moonstorm
             propertyTokenModifiers = new List<TokenModifierAttribute>();
             fieldTokenModifiers = new List<TokenModifierAttribute>();
             var allTokenModifiers = SearchableAttribute.GetInstances<TokenModifierAttribute>() ?? new List<SearchableAttribute>();
-            foreach(TokenModifierAttribute tokenModifier in allTokenModifiers)
+            foreach (TokenModifierAttribute tokenModifier in allTokenModifiers)
             {
-                if(tokenModifier.target is FieldInfo)
+                if (tokenModifier.target is FieldInfo)
                 {
                     fieldTokenModifiers.Add(tokenModifier);
                 }
@@ -126,20 +125,20 @@ namespace Moonstorm
             if (tokenModifiers.Count == 0)
                 return dictionary;
 
-            foreach(TokenModifierAttribute tokenModifier in tokenModifiers)
+            foreach (TokenModifierAttribute tokenModifier in tokenModifiers)
             {
                 try
                 {
                     var token = tokenModifier.langToken;
                     var formattingIndex = tokenModifier.formatIndex;
                     var formattingValue = tokenModifier.GetFormattingValue();
-                    if(!dictionary.ContainsKey(token)) //If the token is not in the dictionary, add it with an empty array.
+                    if (!dictionary.ContainsKey(token)) //If the token is not in the dictionary, add it with an empty array.
                     {
                         dictionary[token] = Array.Empty<object>();
                     }
 
                     var dictArray = dictionary[token];
-                    if(dictArray.Length < formattingIndex + 1) //Resize array if needed
+                    if (dictArray.Length < formattingIndex + 1) //Resize array if needed
                     {
                         Array.Resize(ref dictArray, formattingIndex + 1);
                     }
@@ -150,7 +149,7 @@ namespace Moonstorm
                     }
                     dictionary[token] = dictArray;
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     MSULog.Error(e);
                 }
@@ -195,4 +194,3 @@ namespace Moonstorm
         }
     }
 }
-        

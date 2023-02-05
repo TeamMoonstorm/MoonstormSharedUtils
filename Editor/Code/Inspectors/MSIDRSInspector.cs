@@ -1,17 +1,15 @@
-﻿using RoR2EditorKit.Core.Inspectors;
-using System;
+﻿using Moonstorm.AddressableAssets;
+using RoR2;
+using RoR2EditorKit.Core.Inspectors;
+using RoR2EditorKit.Utilities;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using UnityEngine;
-using UnityEngine.UIElements;
 using UnityEditor;
 using UnityEditor.UIElements;
-using RoR2EditorKit.Utilities;
-using RoR2;
-using Moonstorm.AddressableAssets;
-using System.Globalization;
+using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Moonstorm.EditorUtils.Inspectors
 {
@@ -47,14 +45,14 @@ namespace Moonstorm.EditorUtils.Inspectors
             NamedIDRS namedIDRS = CreateInstance<NamedIDRS>();
             namedIDRS.name = $"named{idrsField.value.name}";
             namedIDRS.idrs = (ItemDisplayRuleSet)idrsField.value;
-            
-            for(int i = 0; i < TargetType.MSUKeyAssetRuleGroup.Count; i++)
+
+            for (int i = 0; i < TargetType.MSUKeyAssetRuleGroup.Count; i++)
             {
                 MSIDRS.KeyAssetRuleGroup karg = TargetType.MSUKeyAssetRuleGroup[i];
                 NamedIDRS.AddressNamedRuleGroup namedRuleGroup = new NamedIDRS.AddressNamedRuleGroup { keyAsset = new AddressableKeyAsset() };
                 namedRuleGroup.keyAsset.loadAssetFrom = AddressableKeyAsset.KeyAssetAddressType.ItemCatalog;
                 namedRuleGroup.keyAsset.address = karg.keyAssetName;
-                foreach(MSIDRS.ItemDisplayRule idr in karg.rules)
+                foreach (MSIDRS.ItemDisplayRule idr in karg.rules)
                 {
                     namedRuleGroup.AddRule(await CreateRule(idr));
                 }

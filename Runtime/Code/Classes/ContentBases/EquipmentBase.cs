@@ -26,9 +26,7 @@ namespace Moonstorm
         /// </summary>
         /// <param name="body">The body that has this equipment</param>
         /// <param name="stack">The amount of stacks, this is always set to 1</param>
-        public virtual void AddBehavior(ref CharacterBody body, int stack)
-        {
-        }
+        public virtual void AddBehavior(ref CharacterBody body, int stack) { }
 
         /// <summary>
         /// Implement your equipment's use action here.

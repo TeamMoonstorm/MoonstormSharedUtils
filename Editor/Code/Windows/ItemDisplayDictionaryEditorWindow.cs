@@ -1,18 +1,15 @@
-﻿using RoR2EditorKit.Core.EditorWindows;
-using RoR2EditorKit.Utilities;
-using UnityEngine;
-using UnityEngine.UIElements;
-using UnityEditor;
-using UnityEditor.UIElements;
+﻿using RoR2;
 using RoR2EditorKit.Core.Inspectors;
+using RoR2EditorKit.Utilities;
 using System;
-using ThunderKit.Markdown;
-using Moonstorm.AddressableAssets;
-using System.Text.RegularExpressions;
-using System.Linq;
-using RoR2;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
+using ThunderKit.Markdown;
+using UnityEditor;
+using UnityEditor.UIElements;
+using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Moonstorm.EditorUtils.EditorWindows
 {
@@ -32,7 +29,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
             get => _inspectedDictionaryEntry;
             set
             {
-                if(_inspectedDictionaryEntry != value)
+                if (_inspectedDictionaryEntry != value)
                 {
                     _inspectedDictionaryEntry = value;
                     OnInspectedDictionaryEntryChanged();
@@ -159,11 +156,11 @@ namespace Moonstorm.EditorUtils.EditorWindows
             {
                 var value = evt == null ? TargetType.keyAsset : evt.newValue;
 
-                if(value)
+                if (value)
                 {
                     var flag0 = value is ItemDef;
                     var flag1 = value is EquipmentDef;
-                    if(!flag0 && !flag1)
+                    if (!flag0 && !flag1)
                     {
                         EditorUtility.DisplayDialog($"Invalid KeyAsset", $"An IDRS KeyAsset must be either an EquipmentDef or ItemDef, the selected KeyAsset is {value.GetType().Name} \nThe field will has been set to \"None\"", "Ok");
 
@@ -175,7 +172,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
 
                 var noKADP = rootContainer.Q<MarkdownElement>("noKADP");
 
-                if(value && TargetType.displayPrefab)
+                if (value && TargetType.displayPrefab)
                 {
                     noKADP.SetDisplay(false);
                     dictionaryContainer.SetDisplay(true);
@@ -242,7 +239,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
                 string name = split[split.Length - 1];
                 return name;
             }
-            
+
             void SetInspectedDictionaryEntry()
             {
                 InspectedDictionaryEntry = prop;
@@ -295,7 +292,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
             var mdElement = displayRulesContainer.Q<MarkdownElement>("noEntrySelected");
             var subContainer = displayRulesContainer.Q<VisualElement>("SubContainer");
 
-            if(InspectedDictionaryEntry == null)
+            if (InspectedDictionaryEntry == null)
             {
                 mdElement.SetDisplay(true);
                 subContainer.SetDisplay(false);
@@ -326,7 +323,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
             var mdElement = ruleDisplayContainer.Q<MarkdownElement>("noDisplayRuleSelected");
             var subContainer = ruleDisplayContainer.Q<VisualElement>("SubContainer");
 
-            if(InspectedRule == null || InspectedRule.GetParentProperty().GetParentProperty().propertyPath != InspectedDictionaryEntry.propertyPath)
+            if (InspectedRule == null || InspectedRule.GetParentProperty().GetParentProperty().propertyPath != InspectedDictionaryEntry.propertyPath)
             {
                 mdElement.SetDisplay(true);
                 subContainer.SetDisplay(false);

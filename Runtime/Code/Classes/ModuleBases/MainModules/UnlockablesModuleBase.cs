@@ -1,5 +1,4 @@
 ﻿using RoR2;
-using RoR2.ContentManagement;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -56,7 +55,7 @@ namespace Moonstorm
 
         private static void AddMSUDefs(List<string> arg1, Dictionary<string, AchievementDef> arg2, List<AchievementDef> arg3)
         {
-            foreach(AchievementDef def in LoadedAchievements)
+            foreach (AchievementDef def in LoadedAchievements)
             {
                 arg1.Add(def.identifier);
                 arg2.Add(def.identifier, def);
@@ -89,7 +88,7 @@ namespace Moonstorm
         {
             unlockableBase.Initialize();
 
-            if(!CheckIfRequiredTypeIsAdded(unlockableBase))
+            if (!CheckIfRequiredTypeIsAdded(unlockableBase))
             {
 # if DEBUG
                 MSULog.Debug($"Not adding {unlockableBase.UnlockableDef} since one of its required types is not added to the game.");

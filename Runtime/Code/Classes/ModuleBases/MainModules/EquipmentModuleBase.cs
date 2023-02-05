@@ -3,8 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine.Networking;
 
 namespace Moonstorm
@@ -151,7 +149,7 @@ namespace Moonstorm
         {
             AddSafely(ref SerializableContentPack.equipmentDefs, contentClass.EquipmentDef);
 
-            if(contentClass is EliteEquipmentBase eeb)
+            if (contentClass is EliteEquipmentBase eeb)
             {
                 eliteEquip[eeb.EquipmentDef] = eeb;
 #if DEBUG
@@ -172,14 +170,14 @@ namespace Moonstorm
         #region Hooks
         private static bool PerformAction(On.RoR2.EquipmentSlot.orig_PerformEquipmentAction orig, EquipmentSlot self, EquipmentDef equipmentDef)
         {
-            if(!NetworkServer.active)
+            if (!NetworkServer.active)
             {
                 MSULog.Warning($"[Server] function 'System.Boolean RoR2.EquipmentSlot::PerformEquipmentAction(RoR2.EquipmentDef)' called on client");
                 return false;
             }
 
             EquipmentBase equip;
-            if(AllMoonstormEquipments.TryGetValue(equipmentDef, out equip))
+            if (AllMoonstormEquipments.TryGetValue(equipmentDef, out equip))
             {
                 var body = self.characterBody;
                 return equip.FireAction(self);

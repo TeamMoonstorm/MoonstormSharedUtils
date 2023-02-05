@@ -11,13 +11,13 @@ namespace EntityStates.Events
     /// </summary>
     public abstract class EventState : EntityState
     {
-        [SerializeField]
+        [SerializeField, Tooltip("The EventCard that triggers this EventState")]
         public EventCard eventCard;
-        [SerializeField]
+        [SerializeField, Tooltip("The minimum duration for this EventState")]
         public float minDuration = 30f;
-        [SerializeField]
+        [SerializeField, Tooltip("The maximum duration for this EventState")]
         public float maxDuration = 90f;
-        [SerializeField]
+        [SerializeField, Tooltip("The amount of time before the event officially starts")]
         public float warningDur = 10f;
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace EntityStates.Events
         /// When an event starts, this action runs, This action runs for both Clients and Servers
         /// </summary>
         public static event Action<EventCard> onEventStartGlobal;
-        
+
         /// <summary>
         /// When an event starts, this action runs, This action runs only for the Server
         /// </summary>
@@ -60,7 +60,7 @@ namespace EntityStates.Events
         /// When an event ends, this action runs, this action runs for both Clients and Servers
         /// </summary>
         public static event Action<EventCard> onEventEndGlobal;
-        
+
         /// <summary>
         /// When an event ends, this action runs, this action runs only for the Server.
         /// </summary>
@@ -84,7 +84,7 @@ namespace EntityStates.Events
             TotalDuration = DiffScaledDuration + warningDur;
             if (!eventCard.startMessageToken.Equals(string.Empty))
             {
-                if(MSUConfig.eventAnnouncementsAsChatMessages.Value)
+                if (MSUConfig.eventAnnouncementsAsChatMessages.Value)
                 {
                     Chat.SimpleChatMessage messageBase = new Chat.SimpleChatMessage()
                     {
@@ -125,9 +125,9 @@ namespace EntityStates.Events
         public override void OnExit()
         {
             base.OnExit();
-            if(!eventCard.startMessageToken.Equals(string.Empty))
+            if (!eventCard.startMessageToken.Equals(string.Empty))
             {
-                if(MSUConfig.eventAnnouncementsAsChatMessages.Value)
+                if (MSUConfig.eventAnnouncementsAsChatMessages.Value)
                 {
                     Chat.SimpleChatMessage messageBase = new Chat.SimpleChatMessage()
                     {

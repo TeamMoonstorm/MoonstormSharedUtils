@@ -2,10 +2,6 @@
 using R2API;
 using RoR2;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Moonstorm
@@ -40,7 +36,7 @@ namespace Moonstorm
 
                     BodyCatalog.bodyPrefabs[i] = bodyPrefab;
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     MSULog.Error(ex);
                 }

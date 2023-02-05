@@ -1,14 +1,12 @@
-﻿using RoR2;
-using RoR2EditorKit.Core.PropertyDrawers;
+﻿using Moonstorm.AddressableAssets;
+using RoR2;
 using RoR2EditorKit.Utilities;
-using UnityEngine;
-using UnityEngine.UIElements;
+using System;
 using UnityEditor;
 using UnityEditor.UIElements;
-using Moonstorm.AddressableAssets;
+using UnityEngine;
 using UnityEngine.AddressableAssets;
-using System;
-using Object = UnityEngine.Object;
+using UnityEngine.UIElements;
 
 namespace Moonstorm.EditorUtils.PropertyDrawers
 {
@@ -21,7 +19,7 @@ namespace Moonstorm.EditorUtils.PropertyDrawers
 
         SerializedProperty property;
 
-        public  override VisualElement CreatePropertyGUI(SerializedProperty property)
+        public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
             this.property = property;
             Foldout foldout = new Foldout();
@@ -67,10 +65,10 @@ namespace Moonstorm.EditorUtils.PropertyDrawers
             {
                 var flag0 = newValue is ItemDef;
                 var flag1 = newValue is EquipmentDef;
-                if(!flag0 && !flag1)
+                if (!flag0 && !flag1)
                 {
                     EditorUtility.DisplayDialog($"Invalid KeyAsset", $"An IDRS KeyAsset must be either an EquipmentDef or ItemDef, the selected KeyAsset is {newValue.GetType().Name} \nThe field will has been set to \"None\"", "Ok");
-                
+
                     newValue = null;
                     (evt.target as ObjectField).value = newValue;
                 }
@@ -87,7 +85,7 @@ namespace Moonstorm.EditorUtils.PropertyDrawers
             var newValue = evt == null ? property.FindPropertyRelative("address").stringValue : evt.newValue;
 
             var enumValue = (AddressableKeyAsset.KeyAssetAddressType)property.FindPropertyRelative(nameof(AddressableKeyAsset.loadAssetFrom)).enumValueIndex;
-            
+
             if (enumValue == AddressableKeyAsset.KeyAssetAddressType.Addressables && !newValue.IsNullOrEmptyOrWhitespace())
             {
                 try
@@ -103,7 +101,7 @@ namespace Moonstorm.EditorUtils.PropertyDrawers
                 {
                     Debug.LogError($"Addressables Exception: {ex}");
                     newValue = String.Empty;
-                    if(evt != null)
+                    if (evt != null)
                         (evt.target as TextField).value = newValue;
                 }
             }
@@ -118,8 +116,8 @@ namespace Moonstorm.EditorUtils.PropertyDrawers
                 if (property == null)
                     return;
                 var type = evt != null ? (AddressableKeyAsset.KeyAssetAddressType)evt.newValue : (AddressableKeyAsset.KeyAssetAddressType)property.FindPropertyRelative(nameof(AddressableKeyAsset.loadAssetFrom)).enumValueIndex;
-            
-                switch(type)
+
+                switch (type)
                 {
                     case AddressableKeyAsset.KeyAssetAddressType.Addressables:
                         addressField.label = $"Address";
@@ -132,7 +130,7 @@ namespace Moonstorm.EditorUtils.PropertyDrawers
                         break;
                 }
             }
-            catch(Exception ex) { }
+            catch (Exception ex) { }
         }
     }
 }

@@ -1,13 +1,12 @@
 ﻿using RoR2;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using UObject = UnityEngine.Object;
-using UnityEngine.AddressableAssets;
+using System.Diagnostics;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Diagnostics;
+using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UObject = UnityEngine.Object;
 
 namespace Moonstorm.AddressableAssets
 {
@@ -45,7 +44,7 @@ namespace Moonstorm.AddressableAssets
         {
             get
             {
-                if(asset == null && !Initialized)
+                if (asset == null && !Initialized)
                 {
                     var stackTrace = new StackTrace();
                     var method = stackTrace.GetFrame(1).GetMethod();
@@ -83,11 +82,17 @@ namespace Moonstorm.AddressableAssets
             asset = await task;
         }
 
+        /// <summary>
+        /// Implicit casting operator for casting an AddressableAsset to a boolean value
+        /// </summary>
         public static implicit operator bool(AddressableAsset<T> addressableAsset)
         {
             return addressableAsset?.Asset;
         }
 
+        /// <summary>
+        /// Implicit casting operator for casting an AddressableAsset to it's own managed asset
+        /// </summary>
         public static implicit operator T(AddressableAsset<T> addressableAsset)
         {
             return addressableAsset?.Asset;
@@ -124,7 +129,7 @@ namespace Moonstorm.AddressableAssets
 
         private static async void FinishAdressableAssets()
         {
-            foreach(AddressableAsset instance in instances)
+            foreach (AddressableAsset instance in instances)
             {
                 try
                 {

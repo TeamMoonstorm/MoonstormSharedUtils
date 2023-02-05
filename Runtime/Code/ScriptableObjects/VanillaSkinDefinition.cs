@@ -1,9 +1,6 @@
 ﻿using RoR2;
 using RoR2.Projectile;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -215,7 +212,7 @@ namespace Moonstorm
 
         private async void Awake()
         {
-            if(Application.IsPlaying(this))
+            if (Application.IsPlaying(this))
             {
                 try
                 {
@@ -234,7 +231,7 @@ namespace Moonstorm
                         HG.ArrayUtils.ArrayAppend(ref baseSkins, skin);
                     }
                     rootObject = modelObject;
-                    foreach(var item in _rendererInfos)
+                    foreach (var item in _rendererInfos)
                     {
                         HG.ArrayUtils.ArrayAppend(ref rendererInfos, item.Upgrade(model));
                     }
@@ -267,7 +264,7 @@ namespace Moonstorm
                     if (controller)
                         HG.ArrayUtils.ArrayAppend(ref controller.skins, this);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     MSULog.Error(e);
                 }
@@ -308,7 +305,7 @@ namespace Moonstorm
             {
                 var obj = await Addressables.LoadAssetAsync<GameObject>(displayAddress).Task;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Debug.LogError($"Failed to validate Display Address for {this}: {e}");
             }
@@ -332,19 +329,19 @@ namespace Moonstorm
 
         private async void ValidateProjectileAddresses()
         {
-            for(int i = 0; i < _projectileGhostReplacements.Length; i++)
+            for (int i = 0; i < _projectileGhostReplacements.Length; i++)
             {
                 UnityEngine.Object obj = null;
                 try
                 {
                     obj = await Addressables.LoadAssetAsync<GameObject>(_projectileGhostReplacements[i].projectilePrefabAddress).Task;
                     var projectile = (GameObject)obj;
-                    if(!projectile.GetComponent<ProjectileController>())
+                    if (!projectile.GetComponent<ProjectileController>())
                     {
                         throw new InvalidOperationException($"Projectile Ghost Replacement provides an address for a game object that does not have a ProjectileController component.");
                     }
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Debug.LogError($"Failed to validate projectile ghost replacement index {i}: {e}");
                 }
@@ -360,7 +357,7 @@ namespace Moonstorm
                 {
                     obj = await Addressables.LoadAssetAsync<GameObject>(_minionSkinReplacements[i].minionPrefabAddress).Task;
                     var body = (GameObject)obj;
-                    if(!body.GetComponent<CharacterBody>())
+                    if (!body.GetComponent<CharacterBody>())
                     {
                         throw new InvalidOperationException($"Minion Skin Replacement provides an address for a game object that does not have a CharacterBody component.");
                     }

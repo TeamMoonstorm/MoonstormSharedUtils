@@ -1,13 +1,9 @@
-using Mono.Cecil.Cil;
-using MonoMod.Cil;
-using Moonstorm.Components;
+using R2API;
 using RoR2;
-using RoR2.ContentManagement;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
-using R2API;
 
 namespace Moonstorm
 {
@@ -61,7 +57,7 @@ namespace Moonstorm
             CombatDirector.EliteTierDef[] vanillaTiers = R2API.EliteAPI.VanillaEliteTiers;
             foreach (MSEliteDef eliteDef in eliteDefs)
             {
-                switch(eliteDef.eliteTier)
+                switch (eliteDef.eliteTier)
                 {
                     case VanillaEliteTier.HonorDisabled:
                         HG.ArrayUtils.ArrayAppend(ref vanillaTiers[1].eliteTypes, eliteDef);
@@ -95,11 +91,11 @@ namespace Moonstorm
             MSULog.Debug($"Getting the initialized EliteEquipmentBases inside {GetType().Assembly}");
 #endif
             var initializedEliteEquipmentBases = new List<EliteEquipmentBase>();
-            foreach(MSEliteDef def in AssetBundle.LoadAllAssets<MSEliteDef>())
+            foreach (MSEliteDef def in AssetBundle.LoadAllAssets<MSEliteDef>())
             {
                 EliteEquipmentBase equipmentBase;
                 bool flag = EquipmentModuleBase.eliteEquip.TryGetValue(def.eliteEquipmentDef, out equipmentBase);
-                if(flag && !initializedEliteEquipmentBases.Contains(equipmentBase))
+                if (flag && !initializedEliteEquipmentBases.Contains(equipmentBase))
                 {
                     initializedEliteEquipmentBases.Add(equipmentBase);
                 }
@@ -130,7 +126,7 @@ namespace Moonstorm
         {
             contentClass.Initialize();
             Dictionary<Texture2D, List<MSEliteDef>> rampToElites = new Dictionary<Texture2D, List<MSEliteDef>>();
-            foreach(MSEliteDef eliteDef in contentClass.EliteDefs)
+            foreach (MSEliteDef eliteDef in contentClass.EliteDefs)
             {
                 AddSafely(ref SerializableContentPack.eliteDefs, eliteDef);
                 eliteDefs.Add(eliteDef);
@@ -138,9 +134,9 @@ namespace Moonstorm
                 {
                     BuffModuleBase.overlayMaterials[contentClass.EquipmentDef.passiveBuffDef] = eliteDef.overlay;
                 }
-                if(eliteDef.eliteRamp)
+                if (eliteDef.eliteRamp)
                 {
-                    if(!rampToElites.ContainsKey(eliteDef.eliteRamp))
+                    if (!rampToElites.ContainsKey(eliteDef.eliteRamp))
                     {
                         rampToElites.Add(eliteDef.eliteRamp, new List<MSEliteDef>());
                     }
@@ -148,7 +144,7 @@ namespace Moonstorm
                 }
             }
 
-            foreach(var kvp in rampToElites)
+            foreach (var kvp in rampToElites)
             {
                 EliteRamp.AddRampToMultipleElites(kvp.Value, kvp.Key);
             }

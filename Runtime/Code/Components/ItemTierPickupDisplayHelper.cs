@@ -1,9 +1,5 @@
 ﻿using RoR2;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Moonstorm.Experimental
@@ -13,7 +9,7 @@ namespace Moonstorm.Experimental
     /// </summary>
     public class ItemTierPickupDisplayHelper : MonoBehaviour
     {
-        [SystemInitializer(new Type[] {typeof(ItemTierCatalog), typeof(ItemTierModuleBase)})]
+        [SystemInitializer(new Type[] { typeof(ItemTierCatalog), typeof(ItemTierModuleBase) })]
         private static void SystemInitializer()
         {
             On.RoR2.PickupDisplay.DestroyModel += PickupDisplay_DestroyModel;
@@ -46,13 +42,13 @@ namespace Moonstorm.Experimental
         {
             PickupDef pickupDef = PickupCatalog.GetPickupDef(display.pickupIndex);
             ItemIndex itemIndex = pickupDef?.itemIndex ?? ItemIndex.None;
-            if(itemIndex != ItemIndex.None)
+            if (itemIndex != ItemIndex.None)
             {
                 ItemTier itemTier = ItemCatalog.GetItemDef(itemIndex).tier;
                 ItemTierDef itemTierDef = ItemTierCatalog.GetItemTierDef(itemTier);
-                if(itemTierDef && ItemTierModuleBase.MoonstormItemTiers.TryGetValue(itemTierDef, out var itemTierBase))
+                if (itemTierDef && ItemTierModuleBase.MoonstormItemTiers.TryGetValue(itemTierDef, out var itemTierBase))
                 {
-                    if(itemTierBase != null && itemTierBase.PickupDisplayVFX)
+                    if (itemTierBase != null && itemTierBase.PickupDisplayVFX)
                     {
                         effectInstance = Instantiate(itemTierBase.PickupDisplayVFX, display.gameObject.transform);
                         effectInstance.transform.position = Vector3.zero;
@@ -63,7 +59,7 @@ namespace Moonstorm.Experimental
 
         private void OnPickupDisplayDestroyModel()
         {
-            if(effectInstance)
+            if (effectInstance)
             {
                 Destroy(effectInstance);
             }

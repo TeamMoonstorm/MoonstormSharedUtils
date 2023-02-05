@@ -1,5 +1,4 @@
 ﻿using RoR2;
-using RoR2.ContentManagement;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -85,7 +84,7 @@ namespace Moonstorm
             AddSafely(ref SerializableContentPack.projectilePrefabs, contentClass.ProjectilePrefab, "ProjectilePrefabs");
             contentClass.Initialize();
 
-            if(contentClass.ProjectilePrefab.GetComponent<CharacterBody>())
+            if (contentClass.ProjectilePrefab.GetComponent<CharacterBody>())
                 AddSafely(ref SerializableContentPack.bodyPrefabs, contentClass.ProjectilePrefab, "BodyPrefabs");
 
             projectiles.Add(contentClass.ProjectilePrefab, contentClass);

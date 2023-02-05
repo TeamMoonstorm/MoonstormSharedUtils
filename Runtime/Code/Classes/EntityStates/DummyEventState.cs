@@ -1,12 +1,8 @@
-﻿using EntityStates.Events;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EntityStates.Events
+﻿namespace EntityStates.Events
 {
+    /// <summary>
+    /// A dummy event state, this state overrides nothing
+    /// </summary>
     public sealed class DummyEventState : EventState
     {
 

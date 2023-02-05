@@ -1,7 +1,4 @@
 ﻿using Moonstorm.EditorUtils.EditorWindows;
-using Moonstorm.Experimental;
-using RoR2EditorKit.Utilities;
-using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -26,14 +23,14 @@ namespace Moonstorm.EditorUtils.ShaderSystem
 
             Material targetMaterial = materialEditor.target as Material;
             Shader shader = targetMaterial.shader;
-            if(shader.name.StartsWith("Stubbed"))
+            if (shader.name.StartsWith("Stubbed"))
             {
-                if(GUILayout.Button("Upgrade to Real Shader"))
+                if (GUILayout.Button("Upgrade to Real Shader"))
                 {
                     MaterialShaderManager.Upgrade((Material)materialEditor.target);
                 }
             }
-            if(shader.name == "AddressableMaterialShader")
+            if (shader.name == "AddressableMaterialShader")
             {
                 AddressableMaterialShaderHeader(obj);
             }
@@ -57,7 +54,7 @@ namespace Moonstorm.EditorUtils.ShaderSystem
             shaderKeywords.stringValue = EditorGUILayout.TextField(new GUIContent("Address"), shaderKeywords.stringValue);
             so.ApplyModifiedProperties();
 
-            if(GUILayout.Button("Show Preview"))
+            if (GUILayout.Button("Show Preview"))
             {
                 var window = EditorWindow.CreateWindow<AddressableMaterialPreview>();
                 window.materialAddress = shaderKeywords.stringValue;

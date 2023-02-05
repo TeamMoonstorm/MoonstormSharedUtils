@@ -1,9 +1,7 @@
-﻿using RoR2EditorKit.Core.PropertyDrawers;
-using UnityEngine;
-using UnityEngine.UIElements;
+﻿using Moonstorm.EditorUtils.Settings;
 using UnityEditor;
-using Moonstorm.EditorUtils.Settings;
 using UnityEditor.UIElements;
+using UnityEngine.UIElements;
 
 namespace Moonstorm.EditorUtils.PropertyDrawers
 {

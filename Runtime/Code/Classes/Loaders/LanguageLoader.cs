@@ -3,8 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Path = System.IO.Path;
 
 namespace Moonstorm.Loaders
@@ -22,6 +20,9 @@ namespace Moonstorm.Loaders
         /// </summary>
         public static T Instance { get; private set; }
 
+        /// <summary>
+        /// Parameterless Constructor for LanguageLoader, this will throw an invalid operation exception if an instancec of <typeparamref name="T"/> already exists
+        /// </summary>
         public LanguageLoader()
         {
             try
@@ -64,7 +65,7 @@ namespace Moonstorm.Loaders
 
         private void AddLanguageFile(On.RoR2.Language.orig_SetFolders orig, Language self, IEnumerable<string> newFolders)
         {
-            if(Directory.Exists(Path.Combine(AssemblyDir, LanguagesFolderName)))
+            if (Directory.Exists(Path.Combine(AssemblyDir, LanguagesFolderName)))
             {
                 var dirs = Directory.EnumerateDirectories(Path.Combine(AssemblyDir, LanguagesFolderName), self.name);
                 orig(self, newFolders.Union(dirs));

@@ -1,13 +1,12 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
+using Moonstorm.Loaders;
 using RoR2;
-using R2API.MiscHelpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
-using Moonstorm.Loaders;
 using SearchableAttribute = HG.Reflection.SearchableAttribute;
 
 namespace Moonstorm
@@ -30,16 +29,16 @@ namespace Moonstorm
             MSULog.Info($"Initializing ConfigurableFieldManager");
             RoR2Application.onLoad += ConfigureFields;
 
-            foreach(ConfigLoader loader in ConfigLoader.instances)
+            foreach (ConfigLoader loader in ConfigLoader.instances)
             {
 #if DEBUG
                 MSULog.Info($"Managing extra config files from {loader.OwnerMetaData.Name}'s ConfigLoader");
 #endif
-                foreach(var kvp in loader.identifierToConfigFile)
+                foreach (var kvp in loader.identifierToConfigFile)
                 {
                     try
                     {
-                        if(identifierToConfigFile.ContainsKey(kvp.Key))
+                        if (identifierToConfigFile.ContainsKey(kvp.Key))
                         {
                             throw new InvalidOperationException($"Cannot add ConfigFile {kvp.Value} to the identifierToConfigFile because the identifier {kvp.Key} is already being used!");
                         }
@@ -108,7 +107,7 @@ namespace Moonstorm
             var instances = SearchableAttribute.GetInstances<ConfigurableFieldAttribute>() ?? new List<SearchableAttribute>();
             MSULog.Info($"Configuring a total of {instances.Count()} fields");
 
-            foreach(ConfigurableFieldAttribute configurableField in instances)
+            foreach (ConfigurableFieldAttribute configurableField in instances)
             {
                 try
                 {
@@ -120,23 +119,23 @@ namespace Moonstorm
                         continue;
 
                     string identifier = configurableField.ConfigFileIdentifier;
-                    if(string.IsNullOrEmpty(identifier))
+                    if (string.IsNullOrEmpty(identifier))
                     {
-                        if(!assemblyToIdentifier.ContainsKey(declaringType.Assembly))
+                        if (!assemblyToIdentifier.ContainsKey(declaringType.Assembly))
                         {
                             throw new KeyNotFoundException($"ConfigurableField for {declaringType.FullName}.{field.Name} does not have a ConfigFileIdentifier, and {declaringType.FullName}'s assembly is not in the ConfigurableFieldManager.");
                         }
                         identifier = assemblyToIdentifier[declaringType.Assembly];
                     }
 
-                    if(!identifierToConfigFile.ContainsKey(identifier))
+                    if (!identifierToConfigFile.ContainsKey(identifier))
                     {
                         throw new KeyNotFoundException($"ConfigurableField for {declaringType.FullName}.{field.Name} has a ConfigFileIdentifier, but the identifier does not have a corresponding value.");
                     }
 
                     ConfigureField(configurableField, identifierToConfigFile[identifier]);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     MSULog.Error($"Error while configuring {configurableField.target}\n{e}");
                 }
@@ -145,7 +144,7 @@ namespace Moonstorm
 
         private static void ConfigureField(ConfigurableFieldAttribute attribute, ConfigFile config)
         {
-            switch(attribute.Field.GetValue(null))
+            switch (attribute.Field.GetValue(null))
             {
                 case String _text: attribute.ConfigureField<string>(config, _text); break;
                 case Boolean _bool: attribute.ConfigureField<bool>(config, _bool); break;

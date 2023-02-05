@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections;
+﻿using RoR2EditorKit.Core;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,7 +8,6 @@ using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
-using RoR2EditorKit.Core;
 
 namespace Moonstorm.EditorUtils.Settings
 {
@@ -44,7 +43,7 @@ namespace Moonstorm.EditorUtils.Settings
         {
             get
             {
-                if(_origToStubbed == null)
+                if (_origToStubbed == null)
                 {
                     _origToStubbed = GetOrCreateSettings<ShaderDictionary>().shaderPairs
                                         .Select(sp => (sp.stubbed.LoadShader(), sp.original.LoadShader()))
@@ -59,7 +58,7 @@ namespace Moonstorm.EditorUtils.Settings
         {
             get
             {
-                if(_stubbedToOrig == null)
+                if (_stubbedToOrig == null)
                 {
                     _stubbedToOrig = GetOrCreateSettings<ShaderDictionary>().shaderPairs
                                         .Select(sp => (sp.stubbed.LoadShader(), sp.original.LoadShader()))
@@ -115,7 +114,7 @@ namespace Moonstorm.EditorUtils.Settings
         {
             List<Shader> list = new List<Shader>();
             var sd = GetOrCreateSettings<ShaderDictionary>();
-            foreach(ShaderPair pair in sd.shaderPairs)
+            foreach (ShaderPair pair in sd.shaderPairs)
             {
                 var stubbed = pair.stubbed.LoadShader();
                 var orig = pair.original.LoadShader();
@@ -135,10 +134,10 @@ namespace Moonstorm.EditorUtils.Settings
                 .Select(file => file.Replace("\\", "/"))
                 .Select(shaderPath => AssetDatabase.LoadAssetAtPath<Shader>(shaderPath));
 
-            foreach(Shader shader in files)
+            foreach (Shader shader in files)
             {
                 var stubbeds = shaderPairs.Select(sp => sp.stubbed.LoadShader());
-                if(!stubbeds.Contains(shader))
+                if (!stubbeds.Contains(shader))
                 {
                     shaderPairs.Add(new ShaderPair(null, shader));
                 }

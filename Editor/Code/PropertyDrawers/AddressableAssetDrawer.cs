@@ -1,9 +1,4 @@
 ﻿using Moonstorm.AddressableAssets;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
@@ -60,7 +55,7 @@ namespace Moonstorm.EditorUtils.PropertyDrawers
 
     [CustomPropertyDrawer(typeof(AddressableBuffDef))]
     public sealed class AddressableBuffDefDrawer : AddressableAssetDrawer<AddressableBuffDef>
-    { 
+    {
         protected override string AddressTooltip => "The Address or Asset Name of the Buff";
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
@@ -70,7 +65,7 @@ namespace Moonstorm.EditorUtils.PropertyDrawers
     //----------
     [CustomPropertyDrawer(typeof(AddressableEliteDef))]
     public sealed class AddressableEliteDefDrawer : AddressableAssetDrawer<AddressableEliteDef>
-    { 
+    {
         protected override string AddressTooltip => "The Address or Asset Name of the Elite";
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
@@ -80,7 +75,7 @@ namespace Moonstorm.EditorUtils.PropertyDrawers
     //----------
     [CustomPropertyDrawer(typeof(AddressableEquipmentDef))]
     public sealed class AddressableEquipmentDefDrawer : AddressableAssetDrawer<AddressableEquipmentDef>
-    { 
+    {
         protected override string AddressTooltip => "The Address or Asset Name of the Equipment";
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
@@ -90,7 +85,7 @@ namespace Moonstorm.EditorUtils.PropertyDrawers
     //----------
     [CustomPropertyDrawer(typeof(AddressableExpansionDef))]
     public sealed class AddressableExpansionDefDrawer : AddressableAssetDrawer<AddressableExpansionDef>
-    { 
+    {
         protected override string AddressTooltip => "The Address or Asset Name of the Expansion";
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
@@ -100,7 +95,7 @@ namespace Moonstorm.EditorUtils.PropertyDrawers
     //----------
     [CustomPropertyDrawer(typeof(AddressableGameObject))]
     public sealed class AddressableGameObjectDrawer : AddressableAssetDrawer<AddressableGameObject>
-    { 
+    {
         protected override string AddressTooltip => "The Address of the GameObject";
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
@@ -110,7 +105,7 @@ namespace Moonstorm.EditorUtils.PropertyDrawers
     //----------
     [CustomPropertyDrawer(typeof(AddressableIDRS))]
     public sealed class AddressableIDRSDrawer : AddressableAssetDrawer<AddressableIDRS>
-    { 
+    {
         protected override string AddressTooltip => "The Address of the IDRS";
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
@@ -120,7 +115,7 @@ namespace Moonstorm.EditorUtils.PropertyDrawers
     //----------
     [CustomPropertyDrawer(typeof(AddressableItemDef))]
     public sealed class AddressableItemDefDrawer : AddressableAssetDrawer<AddressableItemDef>
-    { 
+    {
         protected override string AddressTooltip => "The Address or Asset Name of the Item";
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
@@ -130,7 +125,7 @@ namespace Moonstorm.EditorUtils.PropertyDrawers
     //----------
     [CustomPropertyDrawer(typeof(AddressableUnlockableDef))]
     public sealed class AddressableUnlockableDefDrawer : AddressableAssetDrawer<AddressableUnlockableDef>
-    { 
+    {
         protected override string AddressTooltip => "The Address or Asset Name of the Unlockable";
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {

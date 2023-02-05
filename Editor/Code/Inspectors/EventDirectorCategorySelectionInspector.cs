@@ -1,13 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using R2API;
 using RoR2EditorKit.Core.Inspectors;
-using UnityEditor;
-using Moonstorm;
-using UnityEditor.UIElements;
 using System;
+using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine.UIElements;
-using R2API;
 
 namespace Moonstorm.EditorUtils.Inspectors
 {
@@ -50,7 +46,7 @@ namespace Moonstorm.EditorUtils.Inspectors
         private void OnStageSet(ChangeEvent<string> evt)
         {
             string val = evt.newValue.Replace(" ", "");
-            if(Enum.TryParse<DirectorAPI.Stage>(val, out DirectorAPI.Stage result))
+            if (Enum.TryParse<DirectorAPI.Stage>(val, out DirectorAPI.Stage result))
             {
                 stageNameField.style.display = result == DirectorAPI.Stage.Custom ? DisplayStyle.Flex : DisplayStyle.None;
             }

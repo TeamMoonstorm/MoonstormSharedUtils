@@ -1,7 +1,6 @@
 ﻿using Moonstorm.AddressableAssets;
 using RoR2;
 using RoR2.ExpansionManagement;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -44,7 +43,7 @@ namespace Moonstorm
         {
             get
             {
-                if(_directorCardHolder != null)
+                if (_directorCardHolder != null)
                 {
                     return _directorCardHolder;
                 }

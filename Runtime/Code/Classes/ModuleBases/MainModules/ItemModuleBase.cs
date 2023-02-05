@@ -3,8 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine.AddressableAssets;
 
 namespace Moonstorm
@@ -72,7 +70,7 @@ namespace Moonstorm
                         throw new Exception($"The VoidItemBase {itemBase.GetType().Name} failed to provide any item to infect, Is the function returning ItemDefs properly?");
                     }
 
-                    for(int j = 0; j < itemsToInfect.Length; j++)
+                    for (int j = 0; j < itemsToInfect.Length; j++)
                     {
                         ItemDef itemToInfect = itemsToInfect[j];
                         try
@@ -86,7 +84,7 @@ namespace Moonstorm
                             HG.ArrayUtils.ArrayAppend(ref existingInfections, in transformation);
                             ItemCatalog.itemRelationships[contagiousItem] = existingInfections;
                         }
-                        catch(Exception e)
+                        catch (Exception e)
                         {
                             MSULog.Error($"Failed to add transformation of {itemToInfect} to {itemBase.ItemDef}\n{e}");
                         }

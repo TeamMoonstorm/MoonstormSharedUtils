@@ -1727,7 +1727,7 @@ namespace Moonstorm.Components
                 material.SetFloat("_ExternalAlpha", _ExternalAlpha);
             }
         }
-        
+
         public class HGTriplanarController : MaterialController
         {
             public bool _ColorsOn;
@@ -1855,10 +1855,10 @@ namespace Moonstorm.Components
 
             public void Update()
             {
-            
+
                 if (material)
                 {
-                    if(material.name != MaterialName && renderer)
+                    if (material.name != MaterialName && renderer)
                     {
                         GrabMaterialValues();
                         MaterialControllerComponents.PutMaterialIntoMeshRenderer(renderer, material);
@@ -1894,7 +1894,7 @@ namespace Moonstorm.Components
                     material.SetFloat("_RedChannelBias", _RedChannelBias);
 
                     if (_GreenChannelTex)
-                    material.SetTexture("_GreenChannelTex", _GreenChannelTex);
+                        material.SetTexture("_GreenChannelTex", _GreenChannelTex);
                     else
                         material.SetTexture("_GreenChannelTex", null);
                     material.SetFloat("_GreenChannelSmoothness", _GreenChannelSmoothness);
@@ -1917,7 +1917,7 @@ namespace Moonstorm.Components
                     material.SetFloat("_Depth", _Depth);
 
                     if (_SplatmapTex)
-                    material.SetTexture("_SplatmapTex", _SplatmapTex);
+                        material.SetTexture("_SplatmapTex", _SplatmapTex);
                     else
                         material.SetTexture("_SplatmapTex", null);
 
@@ -1930,7 +1930,7 @@ namespace Moonstorm.Components
                 }
             }
         }
-        
+
         public class CW_DX11_DoubleSidedController : MaterialController
         {
             public Color _Color;

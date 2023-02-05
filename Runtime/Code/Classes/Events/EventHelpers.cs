@@ -1,13 +1,8 @@
-﻿using RoR2;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
-using TMPro;
+﻿using Moonstorm.Components;
+using RoR2;
 using RoR2.UI;
-using Moonstorm.Components;
+using System;
+using UnityEngine;
 
 namespace Moonstorm
 {
@@ -67,7 +62,7 @@ namespace Moonstorm
             tmp.fontSizeMax = size;
 
             //ClassicStageInfo.monsterFamilyChance = 1000;
-            if(MSUConfig.familyEventUsesEventAnnouncementInsteadOfChatMessage.Value)
+            if (MSUConfig.familyEventUsesEventAnnouncementInsteadOfChatMessage.Value)
             {
                 //Make the family event message use an EventAnnouncement
                 On.RoR2.ClassicStageInfo.BroadcastFamilySelection += ShowAnnouncement;
@@ -84,7 +79,7 @@ namespace Moonstorm
         private static System.Collections.IEnumerator ShowAnnouncement(On.RoR2.ClassicStageInfo.orig_BroadcastFamilySelection orig, ClassicStageInfo self, string familySelectionChatString)
         {
             GameObject instance = AnnounceFamilyEvent(familySelectionChatString, Color.white, 9);
-            if(instance)
+            if (instance)
             {
                 yield return new WaitForSeconds(4);
                 Transform transform = instance.transform;
@@ -157,7 +152,7 @@ namespace Moonstorm
         {
             Color.RGBToHSV(messageColor, out float hue, out float sat, out float light);
 
-            if(light > 0.5)
+            if (light > 0.5)
             {
                 float newSat = Mathf.Clamp01(sat - 0.5f);
                 float newLight = Mathf.Clamp01(light - 0.5f);

@@ -1,7 +1,4 @@
-﻿
-using BepInEx.Logging;
-using RoR2;
-using RoR2.ConVar;
+﻿using RoR2;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -50,15 +47,12 @@ namespace Moonstorm.Components
         /// The total amount of credits spent
         /// </summary>
         public float TotalCreditsSpent { get; private set; }
-        /// <summary>
-        /// Returns the cost of the most expensive event
-        /// </summary>
         private int MostExpensiveEventInDeck
         {
             get
             {
                 int cost = 0;
-                for(int i = 0; i < EventCardSelection.Count; i++)
+                for (int i = 0; i < EventCardSelection.Count; i++)
                 {
                     EventCard card = EventCardSelection.GetChoice(i).value;
                     int cardCost = card.cost;
@@ -68,9 +62,6 @@ namespace Moonstorm.Components
                 return cost;
             }
         }
-        /// <summary>
-        /// Returns the current <see cref="DifficultyDef.scalingValue"/> of the run in progress
-        /// </summary>
         private float GetDifficultyScalingValue
         {
             get
@@ -109,12 +100,12 @@ namespace Moonstorm.Components
         {
             SceneDirector.onPrePopulateSceneServer += (director) =>
             {
-                if(EventCatalog.RegisteredEventCount <= 0)
+                if (EventCatalog.RegisteredEventCount <= 0)
                 {
                     return;
                 }
 
-                if(Run.instance && SceneInfo.instance.countsAsStage && NetworkServer.active)
+                if (Run.instance && SceneInfo.instance.countsAsStage && NetworkServer.active)
                 {
                     var go = Object.Instantiate(MoonstormSharedUtils.MSUAssetBundle.LoadAsset<GameObject>("MSUEventDirector"));
                     NetworkServer.Spawn(go);
@@ -130,14 +121,14 @@ namespace Moonstorm.Components
 
         private void Awake()
         {
-            if(NetworkServer.active && Run.instance && SceneInfo.instance && SceneInfo.instance.sceneDef)
+            if (NetworkServer.active && Run.instance && SceneInfo.instance && SceneInfo.instance.sceneDef)
             {
                 NetworkStateMachine = GetComponent<NetworkStateMachine>();
                 EventFunctions = GetComponent<EventFunctions>();
 
                 eventRNG = new Xoroshiro128Plus(Run.instance.stageRng.nextUlong);
                 EventDirectorCategorySelection = EventCatalog.GetCategoryFromSceneDef(SceneInfo.instance.sceneDef);
-                if(EventDirectorCategorySelection == null)
+                if (EventDirectorCategorySelection == null)
                 {
                     MSULog.Error($"COULD NOT RETRIEVE EVENT CATEGORY FOR SCENE {SceneInfo.instance.sceneDef}!!!");
 #if DEBUG
@@ -156,7 +147,7 @@ namespace Moonstorm.Components
         }
         private void OnEnable()
         {
-            if(!Instance)
+            if (!Instance)
             {
                 Instance = this;
                 return;
@@ -166,7 +157,7 @@ namespace Moonstorm.Components
 
         private void OnDisable()
         {
-            if(Instance == this)
+            if (Instance == this)
             {
                 Instance = null;
             }
@@ -176,7 +167,7 @@ namespace Moonstorm.Components
         {
             if (NetworkServer.active && Run.instance)
             {
-                if(!Run.instance.isRunStopwatchPaused)
+                if (!Run.instance.isRunStopwatchPaused)
                 {
                     intervalStopWatch -= Time.fixedDeltaTime;
                     if (intervalStopWatch <= 0)
@@ -209,7 +200,7 @@ namespace Moonstorm.Components
 
         private void Simulate()
         {
-            if(AttemptSpawnEvent())
+            if (AttemptSpawnEvent())
             {
                 float amount = eventRNG.RangeFloat(intervalResetRange.min, intervalResetRange.max) * 10;
                 intervalStopWatch += amount;
@@ -224,12 +215,12 @@ namespace Moonstorm.Components
         private bool AttemptSpawnEvent()
         {
             bool canSpawn = false;
-            if(currentEventCard == null)
+            if (currentEventCard == null)
             {
 #if DEBUG
                 Log($"Current event card is null, picking new one");
 #endif
-                if(EventCardSelection.Count == 0)
+                if (EventCardSelection.Count == 0)
                 {
 #if DEBUG
                     Log($"Cannot pick a card when there's no cards in the EventCardSelection (Count: {EventCardSelection.Count})");
@@ -238,7 +229,7 @@ namespace Moonstorm.Components
                 }
                 canSpawn = PrepareNewEvent(EventCardSelection.Evaluate(eventRNG.nextNormalizedFloat));
 
-                if(!canSpawn)
+                if (!canSpawn)
                     return false;
             }
 
@@ -274,7 +265,7 @@ namespace Moonstorm.Components
             Log($"Preparing event {card}");
 #endif
             currentEventCard = card;
-            if(!card.IsAvailable())
+            if (!card.IsAvailable())
             {
 #if DEBUG
                 Log($"Event card {card.name} is not available! Aborting.");
@@ -282,7 +273,7 @@ namespace Moonstorm.Components
                 LastAttemptedEventCard = LastAttemptedEventCard;
                 return false;
             }
-            if(eventCredits < currentEventCard.cost)
+            if (eventCredits < currentEventCard.cost)
             {
 #if DEBUG
                 Log($"Event card {card.name} is too expensive! Aborting");
@@ -290,7 +281,7 @@ namespace Moonstorm.Components
                 LastAttemptedEventCard = LastAttemptedEventCard;
                 return false;
             }
-            if(IsEventBeingPlayed(card))
+            if (IsEventBeingPlayed(card))
             {
 #if DEBUG
                 Log($"Event card {card.name} is already playing! Aborting");
@@ -308,9 +299,9 @@ namespace Moonstorm.Components
             }
 
             var teleporterInstance = TeleporterInteraction.instance;
-            if(teleporterInstance)
+            if (teleporterInstance)
             {
-                if(teleporterInstance.isCharged || teleporterInstance.isInFinalSequence)
+                if (teleporterInstance.isCharged || teleporterInstance.isInFinalSequence)
                 {
 #if DEBUG
                     Log($"Stage has a teleporter instance and the teleporter is Charged or in it's final sequence, aborting.");
@@ -318,7 +309,7 @@ namespace Moonstorm.Components
                     return false;
                 }
 
-                if(teleporterInstance.chargePercent > 25)
+                if (teleporterInstance.chargePercent > 25)
                 {
 #if DEBUG
                     Log($"Stage has a teleporter instance and it's charge percent is over 25%, aborting.");
@@ -331,9 +322,9 @@ namespace Moonstorm.Components
 
         private bool IsEventBeingPlayed(EventCard card)
         {
-            if(NetworkStateMachine)
+            if (NetworkStateMachine)
             {
-                foreach(var statemachine in NetworkStateMachine.stateMachines)
+                foreach (var statemachine in NetworkStateMachine.stateMachines)
                 {
                     if (statemachine.state.GetType().Equals(card.eventState.stateType))
                         return true;
@@ -344,11 +335,11 @@ namespace Moonstorm.Components
 
         private void FindIdleStateMachine()
         {
-            if(NetworkStateMachine)
+            if (NetworkStateMachine)
             {
-                foreach(var stateMachine in NetworkStateMachine.stateMachines)
+                foreach (var stateMachine in NetworkStateMachine.stateMachines)
                 {
-                    if(stateMachine.state.GetType().Equals(stateMachine.mainStateType.stateType))
+                    if (stateMachine.state.GetType().Equals(stateMachine.mainStateType.stateType))
                     {
                         TargetedStateMachine = stateMachine;
                         return;
@@ -393,34 +384,34 @@ namespace Moonstorm.Components
         [ConCommand(commandName = "force_event", flags = ConVarFlags.ExecuteOnServer, helpText = "Forces a gamewide event to begin. Argument is the event card's name")]
         private static void ForceEvent(ConCommandArgs args)
         {
-            if(!Instance)
+            if (!Instance)
             {
                 Debug.Log($"Event director is unavailable! Cannot start any events.");
                 return;
             }
 
             string evArg = args.TryGetArgString(0).ToLowerInvariant();
-            if(string.IsNullOrEmpty(evArg))
+            if (string.IsNullOrEmpty(evArg))
             {
                 Debug.Log($"Command requires one string argument (Event card name)");
                 return;
             }
 
             EventIndex eventIndex = EventCatalog.FindEventIndex(evArg);
-            if(eventIndex == EventIndex.None)
+            if (eventIndex == EventIndex.None)
             {
                 Debug.Log($"Could not find an EventCard of name {evArg} (FindEventIndex returned EventIndex.None)");
                 return;
             }
 
             EventCard card = EventCatalog.GetEventCard(eventIndex);
-            if(card == null)
+            if (card == null)
             {
                 Debug.Log($"Could not get eventCard of name {evArg} (EventIndex {eventIndex} isnt tied to any event cards)");
                 return;
             }
 
-            if(!Instance.AttemptForceSpawnEvent(card))
+            if (!Instance.AttemptForceSpawnEvent(card))
             {
                 Debug.Log($"Could not start event. too many events are playing.");
                 return;
@@ -430,7 +421,7 @@ namespace Moonstorm.Components
         [ConCommand(commandName = "stop_events", flags = ConVarFlags.ExecuteOnServer, helpText = "Forces all active events to stop")]
         private static void StopEvents(ConCommandArgs args)
         {
-            if(!Instance)
+            if (!Instance)
             {
                 Debug.Log($"Event director is unavailable! Cannot stop any events");
                 return;

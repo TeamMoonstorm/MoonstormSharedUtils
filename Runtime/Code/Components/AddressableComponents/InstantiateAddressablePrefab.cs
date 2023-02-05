@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
-using UnityEngine.AddressableAssets;
+﻿using UnityEngine;
 using UnityEngine.Networking;
 
 namespace Moonstorm.Components.Addressables
@@ -44,7 +38,7 @@ namespace Moonstorm.Components.Addressables
             if (Application.isEditor && !refreshInEditor)
                 return;
 
-            if(instance)
+            if (instance)
             {
                 DestroyImmediate(instance, true);
             }
@@ -60,7 +54,7 @@ namespace Moonstorm.Components.Addressables
 
             if (hasNetworkIdentity && !Application.isEditor)
             {
-                if(NetworkServer.active)
+                if (NetworkServer.active)
                 {
                     instance = Instantiate(prefab, transform);
                     NetworkServer.Spawn(instance);
@@ -72,11 +66,11 @@ namespace Moonstorm.Components.Addressables
             }
 
             instance.hideFlags |= (HideFlags.DontSaveInEditor | HideFlags.DontSaveInBuild | HideFlags.NotEditable);
-            foreach(Transform t in instance.transform)
+            foreach (Transform t in instance.transform)
             {
                 t.hideFlags = HideFlags.HideInHierarchy | HideFlags.HideInInspector | HideFlags.NotEditable;
             }
-            if(setPositionAndRotationToZero)
+            if (setPositionAndRotationToZero)
             {
                 Transform t = instance.transform;
                 t.SetPositionAndRotation(Vector3.zero, Quaternion.identity);

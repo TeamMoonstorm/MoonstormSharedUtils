@@ -1,6 +1,4 @@
 ﻿using RoR2;
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Moonstorm
@@ -32,10 +30,25 @@ namespace Moonstorm
     /// </summary>
     public enum VanillaEliteTier
     {
+        /// <summary>
+        /// This elite will not be added to any tiers
+        /// </summary>
         None = 0,
+        /// <summary>
+        /// The tier thats normally used for non artifact runs, includes Blazing, Overloading, Mending and Glacial elites
+        /// </summary>
         HonorDisabled = 1,
+        /// <summary>
+        /// The tier that's used when the Artifact of Honor is active, includes weaker versions of Blazing, Overloading, Mending and Glacial elites
+        /// </summary>
         HonorActive = 2,
+        /// <summary>
+        /// The tier that's used when the first loop is complete, includes Malachite and Celestine elites
+        /// </summary>
         PostLoop = 4,
+        /// <summary>
+        /// The tier that's used in Commencement, includes the Perfected elite
+        /// </summary>
         Lunar = 8,
     }
 }

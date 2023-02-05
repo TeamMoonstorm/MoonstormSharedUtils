@@ -1,12 +1,7 @@
 ﻿using RoR2;
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Networking;
 
 namespace Moonstorm.Components
 {
@@ -47,9 +42,9 @@ namespace Moonstorm.Components
             if (!hasMaster)
                 return;
 
-            foreach(var equipment in EquipmentModuleBase.AllMoonstormEquipments)
+            foreach (var equipment in EquipmentModuleBase.AllMoonstormEquipments)
             {
-                if(body.inventory.GetEquipmentIndex() == equipment.Key.equipmentIndex)
+                if (body.inventory.GetEquipmentIndex() == equipment.Key.equipmentIndex)
                 {
                     //this is stupid
                     var bod = body;
@@ -81,9 +76,9 @@ namespace Moonstorm.Components
         private void CheckEliteBehavior()
         {
             bool isElite = false;
-            foreach(var eliteEqp in EquipmentModuleBase.EliteMoonstormEquipments)
+            foreach (var eliteEqp in EquipmentModuleBase.EliteMoonstormEquipments)
             {
-                if(body.inventory.GetEquipmentIndex() == eliteEqp.Key.equipmentIndex)
+                if (body.inventory.GetEquipmentIndex() == eliteEqp.Key.equipmentIndex)
                 {
                     isElite = true;
                     break;
@@ -94,9 +89,9 @@ namespace Moonstorm.Components
 
             eliteBehavior.characterModel.UpdateOverlays();
             body.RecalculateStats();
-            foreach(var eliteDef in EliteModuleBase.MoonstormElites)
+            foreach (var eliteDef in EliteModuleBase.MoonstormElites)
             {
-                if(body.isElite && eliteBehavior.characterModel.myEliteIndex == eliteDef.eliteIndex)
+                if (body.isElite && eliteBehavior.characterModel.myEliteIndex == eliteDef.eliteIndex)
                 {
                     eliteBehavior.SetNewElite(eliteDef);
                 }
@@ -126,7 +121,7 @@ namespace Moonstorm.Components
         /// </summary>
         public void RunStatHookEventModifiers(R2API.RecalculateStatsAPI.StatHookEventArgs args)
         {
-            foreach(var statModifier in bodyStatArgModifiers)
+            foreach (var statModifier in bodyStatArgModifiers)
             {
                 statModifier.ModifyStatArguments(args);
             }

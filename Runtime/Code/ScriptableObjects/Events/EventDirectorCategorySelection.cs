@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using JetBrains.Annotations;
+using System;
 using UnityEngine;
-using System.Linq;
-using JetBrains.Annotations;
 
 namespace Moonstorm
 {
@@ -50,9 +47,9 @@ namespace Moonstorm
         public float SumAllWeightsInCategory(EventCategory category)
         {
             float sum = 0f;
-            for(int i = 0; i < category.eventCards.Length; i++)
+            for (int i = 0; i < category.eventCards.Length; i++)
             {
-                if(category.eventCards[i].IsAvailable())
+                if (category.eventCards[i].IsAvailable())
                 {
                     sum += (float)category.eventCards[i].selectionWeight;
                 }
@@ -82,11 +79,11 @@ namespace Moonstorm
         /// Copies all the categories and data from <paramref name="src"/> to this <see cref="EventDirectorCategorySelection"/>
         /// </summary>
         /// <param name="src">The source to copy from</param>
-        public void CopyFrom([NotNull]EventDirectorCategorySelection src)
+        public void CopyFrom([NotNull] EventDirectorCategorySelection src)
         {
             EventCategory[] array = src.categories;
             Array.Resize(ref categories, src.categories.Length);
-            for(int i = 0; i < categories.Length; i++)
+            for (int i = 0; i < categories.Length; i++)
             {
                 ref EventCategory reference = ref categories[i];
                 reference = array[i];
@@ -101,7 +98,7 @@ namespace Moonstorm
         public WeightedSelection<EventCard> GenerateWeightedSelection()
         {
             WeightedSelection<EventCard> weightedSelection = new WeightedSelection<EventCard>();
-            for(int i = 0; i < categories.Length; i++)
+            for (int i = 0; i < categories.Length; i++)
             {
                 ref EventCategory reference = ref categories[i];
                 float totalWeight = SumAllWeightsInCategory(reference);
@@ -110,9 +107,9 @@ namespace Moonstorm
                     continue;
 
                 EventCard[] cards = reference.eventCards;
-                foreach(EventCard card in cards)
+                foreach (EventCard card in cards)
                 {
-                    if(card.IsAvailable())
+                    if (card.IsAvailable())
                     {
                         weightedSelection.AddChoice(card, card.selectionWeight * actualWeight);
                     }
@@ -155,11 +152,11 @@ namespace Moonstorm
         /// <exception cref="ArgumentOutOfRangeException">When the categoryIndex is out of range</exception>
         public int AddCard(int categoryIndex, EventCard card)
         {
-            if(categoryIndex >= categories.Length || categoryIndex < 0)
+            if (categoryIndex >= categories.Length || categoryIndex < 0)
             {
                 throw new ArgumentOutOfRangeException("categoryIndex");
             }
-            ref EventCard[] cards  = ref categories[categoryIndex].eventCards;
+            ref EventCard[] cards = ref categories[categoryIndex].eventCards;
             HG.ArrayUtils.ArrayAppend(ref cards, in card);
             return cards.Length - 1;
         }
@@ -169,13 +166,13 @@ namespace Moonstorm
         /// </summary>
         public void RemoveCardsThatFailFilter(Predicate<EventCard> predicate)
         {
-            for(int i = 0; i < categories.Length; i++)
+            for (int i = 0; i < categories.Length; i++)
             {
                 ref EventCategory reference = ref categories[i];
-                for(int j = reference.eventCards.Length -1; j >= 0; j--)
+                for (int j = reference.eventCards.Length - 1; j >= 0; j--)
                 {
                     EventCard card = reference.eventCards[j];
-                    if(!predicate(card))
+                    if (!predicate(card))
                     {
                         HG.ArrayUtils.ArrayRemoveAtAndResize(ref reference.eventCards, j);
                     }
@@ -197,15 +194,15 @@ namespace Moonstorm
         /// </summary>
         /// <param name="stageInfo">The current stage</param>
         public virtual void OnSelected(R2API.DirectorAPI.StageInfo stageInfo)
-        { 
+        {
         }
 
         private void OnValidate()
         {
-            for(int i = 0; i < categories.Length; i++)
+            for (int i = 0; i < categories.Length; i++)
             {
                 EventCategory category = categories[i];
-                if(category.selectionWeight <= 0f)
+                if (category.selectionWeight <= 0f)
                 {
                     Debug.LogError($"{category.categoryName} in {this} has no weight!");
                 }

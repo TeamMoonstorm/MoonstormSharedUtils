@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEditor;
-using UnityEngine.AddressableAssets;
+﻿using UnityEditor;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace Moonstorm.EditorUtils.EditorWindows
 {
@@ -47,12 +42,12 @@ namespace Moonstorm.EditorUtils.EditorWindows
         }
         void OnGUI()
         {
-            if(material == null)
+            if (material == null)
             {
                 material = Addressables.LoadAssetAsync<Material>(materialAddress).WaitForCompletion();
             }
 
-            if(outputTexture == null)
+            if (outputTexture == null)
             {
                 Preview();
             }

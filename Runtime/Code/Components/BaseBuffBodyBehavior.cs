@@ -3,10 +3,7 @@ using JetBrains.Annotations;
 using RoR2;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -102,53 +99,53 @@ namespace Moonstorm.Components
             Type typeFromHandle = typeof(BaseBuffBodyBehavior);
             Type typeFromHandle2 = typeof(BuffDef);
 
-            foreach(BuffDefAssociationAttribute attribute in attributes)
+            foreach (BuffDefAssociationAttribute attribute in attributes)
             {
                 MethodInfo methodInfo;
-                if((methodInfo = attribute.target as MethodInfo) == null)
+                if ((methodInfo = attribute.target as MethodInfo) == null)
                 {
                     MSULog.Error($"BuffDefAssociationAttribute cannot be applied to object of type '{attribute?.GetType().FullName}'");
                     continue;
                 }
-                if(!methodInfo.IsStatic)
+                if (!methodInfo.IsStatic)
                 {
                     MSULog.Error($"BuffDefAssociationAttribute cannot be applied to method '{methodInfo.DeclaringType.FullName}.{methodInfo.Name}': Method is not static.");
                     continue;
                 }
                 Type type = attribute.behaviorTypeOverride ?? methodInfo.DeclaringType;
-                if(!typeFromHandle.IsAssignableFrom(type))
+                if (!typeFromHandle.IsAssignableFrom(type))
                 {
                     MSULog.Error($"BuffDefAssociationAttribute cannot be applied to method '{methodInfo.DeclaringType.FullName}.{methodInfo.Name}': {methodInfo.DeclaringType.FullName} does not derive from {typeFromHandle.FullName}.");
                     continue;
                 }
-                if(type.IsAbstract)
+                if (type.IsAbstract)
                 {
                     MSULog.Error($"BuffDefAssociationAttribute cannot be applied to method '{methodInfo.DeclaringType.FullName}.{methodInfo.Name}': {methodInfo.DeclaringType.FullName} is an abstract type.");
                     continue;
                 }
-                if(!typeFromHandle2.IsAssignableFrom(methodInfo.ReturnType))
+                if (!typeFromHandle2.IsAssignableFrom(methodInfo.ReturnType))
                 {
                     MSULog.Error($"BuffDefAssociationAttribute cannot be applied to method '{methodInfo.DeclaringType.FullName}.{methodInfo.Name}': {methodInfo.DeclaringType.FullName}.{methodInfo.Name} returns type '{methodInfo.ReturnType?.FullName ?? "void"} instead of {typeFromHandle2.FullName}");
                     continue;
                 }
-                if(methodInfo.GetGenericArguments().Length != 0)
+                if (methodInfo.GetGenericArguments().Length != 0)
                 {
                     MSULog.Error($"BuffDefAssociationAttribute cannot be applied to method '{methodInfo.DeclaringType.FullName}.{methodInfo.Name}': {methodInfo.DeclaringType.FullName}.{methodInfo.Name} must take no arguments.");
                     continue;
                 }
                 BuffDef buffDef = (BuffDef)methodInfo.Invoke(null, Array.Empty<object>());
-                if(!buffDef)
+                if (!buffDef)
                 {
                     MSULog.Error($"{methodInfo.DeclaringType.FullName}.{methodInfo.Name} returned null.");
                     continue;
                 }
-                if(buffDef.buffIndex < (BuffIndex)0)
+                if (buffDef.buffIndex < (BuffIndex)0)
                 {
                     MSULog.Error($"{methodInfo.DeclaringType.FullName}.{methodInfo.Name} returned a BuffDef that's not registered in the Buffcatalog. result={buffDef}");
                     continue;
                 }
                 BuffTypePair buff;
-                if(attribute.useOnServer)
+                if (attribute.useOnServer)
                 {
                     buff = new BuffTypePair
                     {
@@ -157,7 +154,7 @@ namespace Moonstorm.Components
                     };
                     serverList.Add(buff);
                 }
-                if(attribute.useOnClient)
+                if (attribute.useOnClient)
                 {
                     buff = new BuffTypePair
                     {
@@ -192,15 +189,15 @@ namespace Moonstorm.Components
             bool serverActive = NetworkServer.active;
             bool clientActive = NetworkClient.active;
 
-            if(serverActive)
+            if (serverActive)
             {
-                if(clientActive)
+                if (clientActive)
                 {
                     return ref shared;
                 }
                 return ref server;
             }
-            if(clientActive)
+            if (clientActive)
             {
                 return ref client;
             }
@@ -215,12 +212,12 @@ namespace Moonstorm.Components
         private static void OnBodyDestroyGlobal(CharacterBody body)
         {
             BaseBuffBodyBehavior[] behaviors = bodyToBuffBehaviors[body];
-            for(int i = 0; i < behaviors.Length; i++)
+            for (int i = 0; i < behaviors.Length; i++)
             {
                 UnityEngine.Object.Destroy(behaviors[i]);
             }
             bodyToBuffBehaviors.Remove(body);
-            if(NetworkServer.active || NetworkClient.active)
+            if (NetworkServer.active || NetworkClient.active)
             {
                 GetNetworkContext().behaviorArraysPool.Return(behaviors);
             }
@@ -240,9 +237,9 @@ namespace Moonstorm.Components
             ref NetworkContextSet networkContext = ref GetNetworkContext();
             BaseBuffBodyBehavior[] array = bodyToBuffBehaviors[body];
             BuffTypePair[] buffTypePairs = networkContext.buffTypePairs;
-            if(body)
+            if (body)
             {
-                for(int i = 0; i < buffTypePairs.Length; i++)
+                for (int i = 0; i < buffTypePairs.Length; i++)
                 {
                     BuffTypePair buffTypePair = buffTypePairs[i];
                     if (buffTypePair.buffIndex != index)
@@ -252,10 +249,10 @@ namespace Moonstorm.Components
                 }
                 return;
             }
-            for(int j = 0; j < buffTypePairs.Length; j++)
+            for (int j = 0; j < buffTypePairs.Length; j++)
             {
                 ref BaseBuffBodyBehavior reference = ref array[j];
-                if(reference != null)
+                if (reference != null)
                 {
                     Destroy(reference);
                     reference = null;
@@ -264,9 +261,9 @@ namespace Moonstorm.Components
         }
         private static void SetBuffStack(CharacterBody body, ref BaseBuffBodyBehavior behavior, Type behaviorType, int stacks)
         {
-            if(behavior == null != stacks <= 0)
+            if (behavior == null != stacks <= 0)
             {
-                if(stacks <= 0)
+                if (stacks <= 0)
                 {
                     Destroy(behavior);
                     behavior = null;
@@ -278,7 +275,7 @@ namespace Moonstorm.Components
                     earlyAssignmentBody = null;
                 }
             }
-            if(behavior != null)
+            if (behavior != null)
             {
                 behavior.buffStacks = stacks;
             }

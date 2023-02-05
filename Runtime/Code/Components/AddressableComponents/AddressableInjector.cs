@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using Object = UnityEngine.Object;
 
 namespace Moonstorm.Components.Addressables
@@ -48,7 +43,7 @@ namespace Moonstorm.Components.Addressables
                 return;
             }
 
-            if(!targetComponent)
+            if (!targetComponent)
             {
 #if DEBUG
                 string msg = $"No Target Component Set in {this}";
@@ -61,7 +56,7 @@ namespace Moonstorm.Components.Addressables
                 return;
             }
 
-            if(string.IsNullOrEmpty(targetMemberInfoName) || string.IsNullOrWhiteSpace(targetMemberInfoName))
+            if (string.IsNullOrEmpty(targetMemberInfoName) || string.IsNullOrWhiteSpace(targetMemberInfoName))
             {
 #if DEBUG
                 string msg = $"{this}'s targetMemberInfoName is null, empty or white space";
@@ -92,7 +87,7 @@ namespace Moonstorm.Components.Addressables
             if (!_asset)
                 return;
 
-            switch(memberInfo)
+            switch (memberInfo)
             {
                 case PropertyInfo pInfo:
                     pInfo.SetValue(targetComponent, _asset);

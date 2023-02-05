@@ -1,17 +1,14 @@
-﻿using RoR2EditorKit.Core.Inspectors;
+﻿using Moonstorm.AddressableAssets;
+using RoR2EditorKit.Core.Inspectors;
 using RoR2EditorKit.Utilities;
-using UnityEngine.UIElements;
-using UnityEngine;
-using UnityEditor.UIElements;
-using UnityEditor;
-using RoR2;
-using System.Threading.Tasks;
-using System.Linq;
-using Moonstorm.AddressableAssets;
-using System;
-using UnityEngine.AddressableAssets;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
+using UnityEditor;
+using UnityEditor.UIElements;
+using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Moonstorm.EditorUtils.Inspectors
 {
@@ -56,12 +53,12 @@ namespace Moonstorm.EditorUtils.Inspectors
             itemDisplayDictionary.displayPrefab = (GameObject)displayPrefab.value;
             itemDisplayDictionary.keyAsset = keyAsset.value;
 
-            for(int i = 0; i < TargetType.singleItemDisplayRules.Count; i++)
+            for (int i = 0; i < TargetType.singleItemDisplayRules.Count; i++)
             {
                 MSSingleItemDisplayRule.SingleKeyAssetRuleGroup skarg = TargetType.singleItemDisplayRules[i];
                 ItemDisplayDictionary.NamedDisplayDictionary namedDisplayDictionary = new ItemDisplayDictionary.NamedDisplayDictionary { idrs = new AddressableIDRS() };
                 namedDisplayDictionary.idrs.address = skarg.vanillaIDRSKey;
-                foreach(var sidr in skarg.itemDisplayRules)
+                foreach (var sidr in skarg.itemDisplayRules)
                 {
                     namedDisplayDictionary.AddDisplayRule(await CreateRule(sidr));
                 }

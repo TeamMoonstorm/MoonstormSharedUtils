@@ -1,8 +1,5 @@
 ﻿using RoR2.UI;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace Moonstorm.Components
 {
@@ -46,13 +43,13 @@ namespace Moonstorm.Components
             if (fadeOnStart)
                 BeginFade();
         }
-        
+
         /// <summary>
         /// Begins the EventTextController, only call this is <see cref="fadeOnStart"/> is false
         /// </summary>
         public void BeginFade()
         {
-            switch(fadeState)
+            switch (fadeState)
             {
                 case EventFadeState.FadeIn:
                     uiJuice.destroyOnEndOfTransition = false;
@@ -73,10 +70,10 @@ namespace Moonstorm.Components
 
         private void Update()
         {
-            if(fading)
+            if (fading)
             {
                 internalStopwatch += Time.unscaledDeltaTime;
-                if(internalStopwatch > warningDuration)
+                if (internalStopwatch > warningDuration)
                 {
                     FadeEnd();
                 }
@@ -88,13 +85,13 @@ namespace Moonstorm.Components
             fading = false;
             internalStopwatch = 0;
 
-            if(fadeState == EventFadeState.FadeIn)
+            if (fadeState == EventFadeState.FadeIn)
             {
                 fadeState = EventFadeState.Wait;
                 BeginFade();
                 return;
             }
-            else if(fadeState == EventFadeState.Wait)
+            else if (fadeState == EventFadeState.Wait)
             {
                 fadeState = EventFadeState.FadeOut;
                 BeginFade();

@@ -6,7 +6,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using UnityEngine;
 
 namespace Moonstorm.Loaders
 {
@@ -23,6 +22,9 @@ namespace Moonstorm.Loaders
         /// </summary>
         public static T Instance { get; private set; }
 
+        /// <summary>
+        /// Parameterless Constructor for ContentLoader, this will throw an invalid operation exception if an instancec of <typeparamref name="T"/> already exists
+        /// </summary>
         public ContentLoader()
         {
             try
@@ -58,7 +60,7 @@ namespace Moonstorm.Loaders
         /// <summary>
         /// Your Mod's SerialziableContentPack
         /// </summary>
-        public abstract R2APISerializableContentPack SerializableContentPack {get; protected set;}
+        public abstract R2APISerializableContentPack SerializableContentPack { get; protected set; }
 
         /// <summary>
         /// An array of actions for loading your content pieces

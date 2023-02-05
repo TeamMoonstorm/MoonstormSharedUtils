@@ -1,9 +1,6 @@
 ﻿using RoR2;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -33,7 +30,7 @@ namespace Moonstorm
         private static void Initialize()
         {
             MSULog.Info($"Material Copier Initialized");
-            foreach(MaterialCopier copier in instances)
+            foreach (MaterialCopier copier in instances)
             {
 #if DEBUG
                 MSULog.Debug($"Copying materials from {copier}");
@@ -59,7 +56,7 @@ namespace Moonstorm
         [ContextMenu("Upgrade to AddressableMaterialShader")]
         private void Upgrade()
         {
-            foreach(MaterialPair pair in materialPairs)
+            foreach (MaterialPair pair in materialPairs)
             {
                 UpgradeSingle(pair.material, pair.materialAddress);
             }
@@ -79,13 +76,13 @@ namespace Moonstorm
 
         private void CopyMaterials()
         {
-            foreach(MaterialPair pair in materialPairs)
+            foreach (MaterialPair pair in materialPairs)
             {
                 try
                 {
                     CopyFromMaterialAddress(pair);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     MSULog.Error(ex);
                 }

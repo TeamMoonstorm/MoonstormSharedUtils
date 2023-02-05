@@ -2,10 +2,6 @@
 using RoR2;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Moonstorm
@@ -81,7 +77,7 @@ namespace Moonstorm
 
             internal void CreateRule()
             {
-                if(string.IsNullOrEmpty(childName))
+                if (string.IsNullOrEmpty(childName))
                 {
                     finishedRule = new ItemDisplayRule
                     {
@@ -148,7 +144,7 @@ namespace Moonstorm
                         MSULog.Debug($"Finished appending values from {namedIdrs} to {namedIdrs.idrs}");
 #endif
                     }
-                    catch(Exception e)
+                    catch (Exception e)
                     {
                         MSULog.Error($"{e}\n({namedIdrs}");
                     }
@@ -159,13 +155,13 @@ namespace Moonstorm
         internal ItemDisplayRuleSet.KeyAssetRuleGroup[] GetKeyAssetRuleGroups()
         {
             var keyAssetList = new List<ItemDisplayRuleSet.KeyAssetRuleGroup>();
-            foreach(var namedRuleGroup in namedRuleGroups)
+            foreach (var namedRuleGroup in namedRuleGroups)
             {
                 var keyAsset = namedRuleGroup.keyAsset.Asset;
-                if(keyAsset is EquipmentDef ed)
+                if (keyAsset is EquipmentDef ed)
                 {
                     EquipmentIndex index = EquipmentCatalog.FindEquipmentIndex(keyAsset.name);
-                    if(index == EquipmentIndex.None)
+                    if (index == EquipmentIndex.None)
                     {
 #if DEBUG
                         MSULog.Debug($"Not generating key asset rule group for {keyAsset.name} as its index is none.");
@@ -173,10 +169,10 @@ namespace Moonstorm
                         continue;
                     }
                 }
-                else if(keyAsset is ItemDef id)
+                else if (keyAsset is ItemDef id)
                 {
                     ItemIndex index = ItemCatalog.FindItemIndex(id.name);
-                    if(index == ItemIndex.None)
+                    if (index == ItemIndex.None)
                     {
 #if DEBUG
                         MSULog.Debug($"Not generating key asset rule group for {keyAsset.name} as its index is none.");
@@ -187,7 +183,7 @@ namespace Moonstorm
 
                 var keyAssetGroup = new ItemDisplayRuleSet.KeyAssetRuleGroup { keyAsset = keyAsset };
 
-                for(int i = 0; i < namedRuleGroup.rules.Count; i++)
+                for (int i = 0; i < namedRuleGroup.rules.Count; i++)
                 {
                     AddressNamedDisplayRule rule = namedRuleGroup.rules[i];
                     rule.CreateRule();

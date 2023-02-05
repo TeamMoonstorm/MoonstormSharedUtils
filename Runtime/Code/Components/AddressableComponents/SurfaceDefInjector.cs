@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Moonstorm.AddressableAssets;
-using System.Threading.Tasks;
+﻿using RoR2;
 using UnityEngine;
-using RoR2;
-using UnityEngine.AddressableAssets;
 
 namespace Moonstorm.Components.Addressables
 {
@@ -29,7 +22,7 @@ namespace Moonstorm.Components.Addressables
         /// </summary>
         public void Refresh()
         {
-            if(string.IsNullOrWhiteSpace(surfaceDefAddress) || string.IsNullOrEmpty(surfaceDefAddress))
+            if (string.IsNullOrWhiteSpace(surfaceDefAddress) || string.IsNullOrEmpty(surfaceDefAddress))
             {
                 Debug.LogWarning($"Invalid address in {this}, address is null, empty, or white space");
                 return;
@@ -40,7 +33,7 @@ namespace Moonstorm.Components.Addressables
             if (!loadedSurfaceDef)
                 return;
 
-            foreach(var provider in GetComponentsInChildren<SurfaceDefProvider>())
+            foreach (var provider in GetComponentsInChildren<SurfaceDefProvider>())
             {
                 provider.surfaceDef = loadedSurfaceDef;
             }
@@ -48,10 +41,10 @@ namespace Moonstorm.Components.Addressables
 
         private void RemoveReferencesEditor()
         {
-            if(!Application.isEditor)
+            if (!Application.isEditor)
                 return;
 
-            foreach(SurfaceDefProvider provider in GetComponentsInChildren<SurfaceDefProvider>())
+            foreach (SurfaceDefProvider provider in GetComponentsInChildren<SurfaceDefProvider>())
             {
                 provider.surfaceDef = null;
             }
