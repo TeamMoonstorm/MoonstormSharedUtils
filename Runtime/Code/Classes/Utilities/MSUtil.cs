@@ -255,6 +255,17 @@ namespace Moonstorm
                 return origName;
             }
         }
+
+        /// <summary>
+        /// Returns the weighted selection's choices' values.
+        /// </summary>
+        /// <typeparam name="T">The type that's used in the WeightedSelection</typeparam>
+        /// <param name="selection">The weighted selectiton instance</param>
+        /// <returns>An IEnumerable will all the weighted selectiton's values that are not null.</returns>
+        public static IEnumerable<T> GetValues<T>(this WeightedSelection<T> selection)
+        {
+            return selection.choices.Select(x => x.value).Where(x => x != null);
+        }
         #endregion
     }
 }

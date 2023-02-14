@@ -22,7 +22,7 @@ namespace Moonstorm
         /// </summary>
         public string OncePerRunFlag { get => $"{name}:PlayedThisRun"; }
 
-        [Tooltip("The flags for this even")]
+        [Tooltip("The flags for this event")]
         [EnumMask(typeof(EventFlags))]
         public EventFlags eventFlags;
         [Tooltip("The event's EntityState, MUST inherit from EventState")]
@@ -48,6 +48,8 @@ namespace Moonstorm
         public float selectionWeight;
         [Tooltip("The credit cost for this event")]
         public int cost;
+        [Tooltip("If this has already played in the current stage, the cost will be multiplied by this amount.")]
+        public float repeatedSelectionCostCoefficient;
         [Tooltip("How many stages need to pass before this event can be played")]
         public int minimumStageCompletions;
         [Tooltip("If supplied, this event can only play if this unlockableDef has been unlocked")]
@@ -111,6 +113,21 @@ namespace Moonstorm
             }
 
             return true;
+        }
+
+
+        /// <summary>
+        /// When an event is played, internally the director adds it to a dictionary to keep track how many times it has played.
+        /// <para>Depending on how many times it has played, the card will increase in cost, use this method to get the Effective cost of this card.</para>
+        /// </summary>
+        /// <param name="totalRepetitions">The total amount of times this event has repeated.</param>
+        /// <returns>The actual cost of the card</returns>
+        public float GetEffectiveCost(int totalRepetitions)
+        {
+            if (totalRepetitions <= 0)
+                return cost;
+
+            return cost + (cost * repeatedSelectionCostCoefficient * totalRepetitions);
         }
     }
 }

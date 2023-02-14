@@ -1,4 +1,5 @@
 ﻿using RoR2;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -93,6 +94,7 @@ namespace Moonstorm.Components
 
         private Xoroshiro128Plus eventRNG;
         private EventCard currentEventCard;
+        private Dictionary<EventIndex, int> eventToAmountsPlayed = new Dictionary<EventIndex, int>();
 
 
         [SystemInitializer(typeof(EventCatalog))]
@@ -138,6 +140,7 @@ namespace Moonstorm.Components
                     return;
                 }
                 EventCardSelection = EventDirectorCategorySelection.GenerateWeightedSelection();
+                eventToAmountsPlayed = EventCardSelection.GetValues().ToDictionary(x => x.EventIndex, y => 0);
 #if DEBUG
                 Log("Final Card Selection: " + string.Join("\n", EventCardSelection.choices.Select(x => x.value)));
 #endif
@@ -232,7 +235,7 @@ namespace Moonstorm.Components
                 if (!canSpawn)
                     return false;
             }
-
+            float effectiveCost = currentEventCard.GetEffectiveCost(eventToAmountsPlayed[currentEventCard.EventIndex]);
 #if DEBUG
             Log($"Playing event {currentEventCard}" +
                 $"\n(Event state: {currentEventCard.eventState})");
@@ -247,12 +250,14 @@ namespace Moonstorm.Components
                 EventFunctions.RunSetFlag(currentEventCard.OncePerRunFlag);
             }
 
+            eventToAmountsPlayed[currentEventCard.EventIndex]++;
+
             LastSuccesfulEventCard = currentEventCard;
 
-            eventCredits -= currentEventCard.cost;
-            TotalCreditsSpent += currentEventCard.cost;
+            eventCredits -= effectiveCost;
+            TotalCreditsSpent += effectiveCost;
 #if DEBUG
-            Log($"Subtracted {currentEventCard.cost} credits" +
+            Log($"Subtracted {effectiveCost} credits" +
                 $"\nTotal credits spent: {TotalCreditsSpent}");
 #endif
 
@@ -273,10 +278,11 @@ namespace Moonstorm.Components
                 LastAttemptedEventCard = LastAttemptedEventCard;
                 return false;
             }
-            if (eventCredits < currentEventCard.cost)
+            float effectiveCost = currentEventCard.GetEffectiveCost(eventToAmountsPlayed[currentEventCard.EventIndex]);
+            if (eventCredits < effectiveCost)
             {
 #if DEBUG
-                Log($"Event card {card.name} is too expensive! Aborting");
+                Log($"Event card {card.name} is too expensive! (It costs {effectiveCost}, current credits are {eventCredits}), Aborting");
 #endif
                 LastAttemptedEventCard = LastAttemptedEventCard;
                 return false;
@@ -286,6 +292,12 @@ namespace Moonstorm.Components
 #if DEBUG
                 Log($"Event card {card.name} is already playing! Aborting");
 #endif
+                LastAttemptedEventCard = LastAttemptedEventCard;
+                return false;
+            }
+            if(Run.instance.GetEventFlag(currentEventCard.OncePerRunFlag))
+            {
+                Log($"Event card {card.name} already played! Aborting");
                 LastAttemptedEventCard = LastAttemptedEventCard;
                 return false;
             }
