@@ -48,7 +48,7 @@ MonoBehaviour:
   - {fileID: 158583965153880286}
   - {fileID: 3240393688467726566}
   identity: {fileID: -2777874201675461593}
-  QuickAccess: 0
+  QuickAccess: 1
 --- !u!114 &158583965153880286
 MonoBehaviour:
   m_ObjectHideFlags: 0

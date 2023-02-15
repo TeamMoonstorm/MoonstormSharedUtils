@@ -297,7 +297,9 @@ namespace Moonstorm.Components
             }
             if(Run.instance.GetEventFlag(currentEventCard.OncePerRunFlag))
             {
+#if DEBUG
                 Log($"Event card {card.name} already played! Aborting");
+#endif
                 LastAttemptedEventCard = LastAttemptedEventCard;
                 return false;
             }
