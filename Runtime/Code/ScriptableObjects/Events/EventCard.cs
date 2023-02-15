@@ -49,9 +49,9 @@ namespace Moonstorm
         [Tooltip("The credit cost for this event")]
         public int cost;
         [Tooltip("If this has already played in the current stage, the cost will be multiplied by this amount.")]
-        public float repeatedSelectionCostCoefficient;
+        public float repeatedSelectionCostCoefficient = 1;
         [Tooltip("How many stages need to pass before this event can be played")]
-        public int minimumStageCompletions;
+        public int minimumStageCompletions = 0;
         [Tooltip("If supplied, this event can only play if this unlockableDef has been unlocked")]
         public AddressableUnlockableDef requiredUnlockableDef;
         [Tooltip("If supplied, this event CANNOT play if this unlockableDef has been unlocked")]
@@ -60,10 +60,11 @@ namespace Moonstorm
         public List<AddressableExpansionDef> requiredExpansions = new List<AddressableExpansionDef>();
 
         /// <summary>
-        /// Checks if this card can be used currently
+        /// Checks if this card can be used currently.
+        /// Override this to implement more checks on a custom, subclassed version of EventCard
         /// </summary>
         /// <returns>True if this event is available, false otherwise</returns>
-        public bool IsAvailable()
+        public virtual bool IsAvailable()
         {
             if (!Run.instance)
             {

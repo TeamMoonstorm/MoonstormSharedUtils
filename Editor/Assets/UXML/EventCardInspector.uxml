@@ -19,6 +19,7 @@
             <uie:PropertyField name="customStageNames" binding-path="customStageNames" tooltip="When &quot;Available Stages&quot; is set to custom, the data from this list is used." class="GenericHolderFoldout" />
             <uie:PropertyField name="selectionWeight" tooltip="The weight of this card" binding-path="selectionWeight" />
             <uie:PropertyField name="cost" tooltip="The credit cost of this event" binding-path="cost" />
+            <uie:PropertyField name="repeatedSelectionCostCoefficient" tooltip="If this has already played in the current stage, the cost will be multiplied by this amount." binding-path="repeatedSelectionCostCoefficient" />
             <uie:PropertyField name="minimumStageCompletions" tooltip="The minimum amount of stages completed for this event to occur" binding-path="minimumStageCompletions" />
             <uie:PropertyField name="requiredUnlockableDef" binding-path="requiredUnlockableDef" tooltip="If this unlockable has not been unlocked, this event cannot play" />
             <uie:PropertyField name="forbiddenUnlockableDef" binding-path="forbiddenUnlockableDef" tooltip="If this unlockable has been unlocked, this event cannot play" />

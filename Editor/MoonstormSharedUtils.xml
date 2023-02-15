@@ -8,6 +8,7 @@
             <summary>
             An <see cref="T:Moonstorm.AddressableAssets.AddressableAsset"/> is a type of class thats used for referencing an Asset ingame.
             <para>The asset referenced can be either a Direct reference or a reference via an Address</para>
+            <para>An <see cref="T:Moonstorm.AddressableAssets.AddressableAsset"/> has implicit operators for casting to it's <typeparamref name="T"/> Type, and for casting into Boolean (using unity's boolean cast operator)</para>
             </summary>
             <typeparam name="T">The type of asset that's being used</typeparam>
         </member>
@@ -29,7 +30,7 @@
         <member name="P:Moonstorm.AddressableAssets.AddressableAsset`1.Asset">
             <summary>
             The Asset that's tied to this AddressableAsset.
-            <para>You really should use this property before <see cref="F:Moonstorm.AddressableAssets.AddressableAsset.OnAddressableAssetsLoaded"/> gets invoked.</para>
+            <para>You really shouldn't use this property before <see cref="F:Moonstorm.AddressableAssets.AddressableAsset.OnAddressableAssetsLoaded"/> gets invoked.</para>
             </summary>
         </member>
         <member name="M:Moonstorm.AddressableAssets.AddressableAsset`1.LoadAsset">
@@ -43,6 +44,16 @@
             Loads the Asset via Addressables
             </summary>
             <returns>Returns a Task when the operation is complete</returns>
+        </member>
+        <member name="M:Moonstorm.AddressableAssets.AddressableAsset`1.op_Implicit(Moonstorm.AddressableAssets.AddressableAsset{`0})~System.Boolean">
+            <summary>
+            Implicit casting operator for casting an AddressableAsset to a boolean value
+            </summary>
+        </member>
+        <member name="M:Moonstorm.AddressableAssets.AddressableAsset`1.op_Implicit(Moonstorm.AddressableAssets.AddressableAsset{`0})~`0">
+            <summary>
+            Implicit casting operator for casting an AddressableAsset to it's own managed asset
+            </summary>
         </member>
         <member name="T:Moonstorm.AddressableAssets.AddressableAsset">
             <summary>
@@ -280,6 +291,29 @@
             </summary>
             <param name="addressOrEquipmentNameOrItemName">The Address for the Key Asset, this can also be the ItemDef's or EquipmentDef's name so it can load via their respective catalogs.</param>
             <param name="addressType">Specifies how the address is used for loading the key asset.</param>
+        </member>
+        <member name="T:Moonstorm.AddressableAssets.AddressableSpawnCard">
+            <summary>
+            <inheritdoc cref="T:Moonstorm.AddressableAssets.AddressableAsset`1"/>
+            The type of asset this references is a <see cref="T:RoR2.SpawnCard"/>, these spawn cards can only be loaded from addressables
+            </summary>
+        </member>
+        <member name="M:Moonstorm.AddressableAssets.AddressableSpawnCard.#ctor">
+            <summary>
+            Parameterless Constructor for <see cref="T:Moonstorm.AddressableAssets.AddressableSpawnCard"/>
+            </summary>
+        </member>
+        <member name="M:Moonstorm.AddressableAssets.AddressableSpawnCard.#ctor(RoR2.SpawnCard)">
+            <summary>
+            Constructor for <see cref="T:Moonstorm.AddressableAssets.AddressableSpawnCard"/> that sets the <see cref="T:RoR2.SpawnCard"/> asset.
+            </summary>
+            <param name="sc">The <see cref="T:RoR2.SpawnCard"/> for this <see cref="T:Moonstorm.AddressableAssets.AddressableSpawnCard"/></param>
+        </member>
+        <member name="M:Moonstorm.AddressableAssets.AddressableSpawnCard.#ctor(System.String)">
+            <summary>
+            Constructor for <see cref="T:Moonstorm.AddressableAssets.AddressableSpawnCard"/> that sets the address that'll load the asset
+            </summary>
+            <param name="address">The Addressables address for loading the spawn card</param>
         </member>
         <member name="T:Moonstorm.AddressableAssets.AddressableUnlockableDef">
             <summary>
@@ -798,6 +832,11 @@
             Returns the amount of Events that are registered.
             </summary>
         </member>
+        <member name="P:Moonstorm.EventCatalog.ResourceAvailability">
+            <summary>
+            Call ResourceAvailability.CallWhenAvailable() to run a method after the EventCatalog is initialized
+            </summary>
+        </member>
         <member name="M:Moonstorm.EventCatalog.FindEventIndex(System.String)">
             <summary>
             Returns the EventIndex tied to the string supplied in <paramref name="eventName"/>
@@ -963,6 +1002,144 @@
             A static class holding all the EventDirectorCategorySelections for the Vanilla stages.
             </summary>
         </member>
+        <member name="P:Moonstorm.VanillaEventDirectorCategorySelections.AbandonedAqueduct">
+            <summary>
+            <inheritdoc cref="M:Moonstorm.VanillaEventDirectorCategorySelections.Load(System.String)"/>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.VanillaEventDirectorCategorySelections.AbyssalDepths">
+            <summary>
+            <inheritdoc cref="M:Moonstorm.VanillaEventDirectorCategorySelections.Load(System.String)"/>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.VanillaEventDirectorCategorySelections.AphelianSanctuary">
+            <summary>
+            <inheritdoc cref="M:Moonstorm.VanillaEventDirectorCategorySelections.Load(System.String)"/>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.VanillaEventDirectorCategorySelections.ArtifactReliquary">
+            <summary>
+            <inheritdoc cref="M:Moonstorm.VanillaEventDirectorCategorySelections.Load(System.String)"/>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.VanillaEventDirectorCategorySelections.Commencement">
+            <summary>
+            <inheritdoc cref="M:Moonstorm.VanillaEventDirectorCategorySelections.Load(System.String)"/>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.VanillaEventDirectorCategorySelections.DistantRoost">
+            <summary>
+            <inheritdoc cref="M:Moonstorm.VanillaEventDirectorCategorySelections.Load(System.String)"/>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.VanillaEventDirectorCategorySelections.RallypointDelta">
+            <summary>
+            <inheritdoc cref="M:Moonstorm.VanillaEventDirectorCategorySelections.Load(System.String)"/>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.VanillaEventDirectorCategorySelections.ScorchedAcres">
+            <summary>
+            <inheritdoc cref="M:Moonstorm.VanillaEventDirectorCategorySelections.Load(System.String)"/>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.VanillaEventDirectorCategorySelections.SiphonedForest">
+            <summary>
+            <inheritdoc cref="M:Moonstorm.VanillaEventDirectorCategorySelections.Load(System.String)"/>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.VanillaEventDirectorCategorySelections.SirensCall">
+            <summary>
+            <inheritdoc cref="M:Moonstorm.VanillaEventDirectorCategorySelections.Load(System.String)"/>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.VanillaEventDirectorCategorySelections.SkyMeadow">
+            <summary>
+            <inheritdoc cref="M:Moonstorm.VanillaEventDirectorCategorySelections.Load(System.String)"/>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.VanillaEventDirectorCategorySelections.SulphurPools">
+            <summary>
+            <inheritdoc cref="M:Moonstorm.VanillaEventDirectorCategorySelections.Load(System.String)"/>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.VanillaEventDirectorCategorySelections.SunderedGrove">
+            <summary>
+            <inheritdoc cref="M:Moonstorm.VanillaEventDirectorCategorySelections.Load(System.String)"/>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.VanillaEventDirectorCategorySelections.ThePlanetarium">
+            <summary>
+            <inheritdoc cref="M:Moonstorm.VanillaEventDirectorCategorySelections.Load(System.String)"/>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.VanillaEventDirectorCategorySelections.VoidCell">
+            <summary>
+            <inheritdoc cref="M:Moonstorm.VanillaEventDirectorCategorySelections.Load(System.String)"/>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.VanillaEventDirectorCategorySelections.VoidLocus">
+            <summary>
+            <inheritdoc cref="M:Moonstorm.VanillaEventDirectorCategorySelections.Load(System.String)"/>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.VanillaEventDirectorCategorySelections.WetlandAspect">
+            <summary>
+            <inheritdoc cref="M:Moonstorm.VanillaEventDirectorCategorySelections.Load(System.String)"/>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.VanillaEventDirectorCategorySelections.TitanicPlains">
+            <summary>
+            <inheritdoc cref="M:Moonstorm.VanillaEventDirectorCategorySelections.Load(System.String)"/>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.VanillaEventDirectorCategorySelections.GildedCoast">
+            <summary>
+            <inheritdoc cref="M:Moonstorm.VanillaEventDirectorCategorySelections.Load(System.String)"/>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.VanillaEventDirectorCategorySelections.AbandonedAqueductSimulacrum">
+            <summary>
+            <inheritdoc cref="M:Moonstorm.VanillaEventDirectorCategorySelections.Load(System.String)"/>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.VanillaEventDirectorCategorySelections.AbyssalDepthsSimulacrum">
+            <summary>
+            <inheritdoc cref="M:Moonstorm.VanillaEventDirectorCategorySelections.Load(System.String)"/>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.VanillaEventDirectorCategorySelections.AphelianSanctuarySimulacrum">
+            <summary>
+            <inheritdoc cref="M:Moonstorm.VanillaEventDirectorCategorySelections.Load(System.String)"/>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.VanillaEventDirectorCategorySelections.CommencementSimulacrum">
+            <summary>
+            <inheritdoc cref="M:Moonstorm.VanillaEventDirectorCategorySelections.Load(System.String)"/>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.VanillaEventDirectorCategorySelections.RallypointDeltaSimulacrum">
+            <summary>
+            <inheritdoc cref="M:Moonstorm.VanillaEventDirectorCategorySelections.Load(System.String)"/>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.VanillaEventDirectorCategorySelections.SkyMeadowSimulacrum">
+            <summary>
+            <inheritdoc cref="M:Moonstorm.VanillaEventDirectorCategorySelections.Load(System.String)"/>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.VanillaEventDirectorCategorySelections.TitanicPlainsSimulacrum">
+            <summary>
+            <inheritdoc cref="M:Moonstorm.VanillaEventDirectorCategorySelections.Load(System.String)"/>
+            </summary>
+        </member>
+        <member name="M:Moonstorm.VanillaEventDirectorCategorySelections.Load(System.String)">
+            <summary>
+            <inheritdoc cref="M:Moonstorm.VanillaEventDirectorCategorySelections.Load(System.String)"/>
+            </summary>
+            <summary>
+            Loads the EventDirecttorCategorySelection for the stage specified in the property name
+            </summary>
+        </member>
         <member name="T:Moonstorm.IBodyStatArgModifier">
             <summary>
             An IBodyStatArgModifier can be used to modify the Stats of a characterbody using <see cref="T:R2API.RecalculateStatsAPI"/>
@@ -1016,6 +1193,11 @@
         <member name="P:Moonstorm.Loaders.AssetsLoader`1.Instance">
             <summary>
             Retrieves the instance of <typeparamref name="T"/>
+            </summary>
+        </member>
+        <member name="M:Moonstorm.Loaders.AssetsLoader`1.#ctor">
+            <summary>
+            Parameterless Constructor for AssetsLoader, this will throw an invalid operation exception if an instancec of <typeparamref name="T"/> already exists
             </summary>
         </member>
         <member name="M:Moonstorm.Loaders.AssetsLoader`1.LoadAsset``1(System.String)">
@@ -1077,6 +1259,11 @@
             Retrieves the instance of <typeparamref name="T"/>
             </summary>
         </member>
+        <member name="M:Moonstorm.Loaders.ConfigLoader`1.#ctor">
+            <summary>
+            Parameterless Constructor for ConfigLoader, this will throw an invalid operation exception if an instance of <typeparamref name="T"/> already exists
+            </summary>
+        </member>
         <member name="T:Moonstorm.Loaders.ConfigLoader">
             <summary>
             <inheritdoc cref="T:Moonstorm.Loaders.ConfigLoader`1"/>
@@ -1130,6 +1317,11 @@
             Retrieves the instance of <typeparamref name="T"/>
             </summary>
         </member>
+        <member name="M:Moonstorm.Loaders.ContentLoader`1.#ctor">
+            <summary>
+            Parameterless Constructor for ContentLoader, this will throw an invalid operation exception if an instancec of <typeparamref name="T"/> already exists
+            </summary>
+        </member>
         <member name="T:Moonstorm.Loaders.ContentLoader">
             <summary>
             <inheritdoc cref="T:Moonstorm.Loaders.ContentLoader`1"/>
@@ -1179,6 +1371,11 @@
         <member name="P:Moonstorm.Loaders.LanguageLoader`1.Instance">
             <summary>
             Retrieves the instance of <typeparamref name="T"/>
+            </summary>
+        </member>
+        <member name="M:Moonstorm.Loaders.LanguageLoader`1.#ctor">
+            <summary>
+            Parameterless Constructor for LanguageLoader, this will throw an invalid operation exception if an instancec of <typeparamref name="T"/> already exists
             </summary>
         </member>
         <member name="T:Moonstorm.Loaders.LanguageLoader">
@@ -1288,6 +1485,11 @@
             An action that gets invoked when the <see cref="P:Moonstorm.ArtifactModuleBase.MoonstormArtifacts"/> has been populated
             </summary>
         </member>
+        <member name="P:Moonstorm.ArtifactModuleBase.ModuleAvailability">
+            <summary>
+            Call ModuleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
+            </summary>
+        </member>
         <member name="M:Moonstorm.ArtifactModuleBase.GetArtifactBases">
             <summary>
             <inheritdoc cref="M:Moonstorm.ModuleBase`1.GetContentClasses``1(System.Type)"/>
@@ -1328,6 +1530,11 @@
         <member name="F:Moonstorm.BuffModuleBase.OnDictionariesCreated">
             <summary>
             An action that gets invoked when the <see cref="P:Moonstorm.BuffModuleBase.MoonstormBuffs"/> and <see cref="P:Moonstorm.BuffModuleBase.MoonstormOverlayMaterials"/> have been populated
+            </summary>
+        </member>
+        <member name="P:Moonstorm.BuffModuleBase.ModuleAvailability">
+            <summary>
+            Call ModuleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
             </summary>
         </member>
         <member name="M:Moonstorm.BuffModuleBase.GetBuffBases">
@@ -1398,6 +1605,11 @@
             An action that gets invoked when the <see cref="P:Moonstorm.CharacterModuleBase.MoonstormCharacters"/> dictionary has been populated
             </summary>
         </member>
+        <member name="P:Moonstorm.CharacterModuleBase.ModuleAvailability">
+            <summary>
+            Call ModuleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
+            </summary>
+        </member>
         <member name="M:Moonstorm.CharacterModuleBase.GetCharacterBases">
             <summary>
             <inheritdoc cref="M:Moonstorm.ModuleBase`1.GetContentClasses``1(System.Type)"/>
@@ -1438,6 +1650,11 @@
             </summary>
         </member>
         <!-- Badly formed XML comment ignored for member "F:Moonstorm.DamageTypeModuleBase.OnDictionaryCreated" -->
+        <member name="P:Moonstorm.DamageTypeModuleBase.ModuleAvailability">
+            <summary>
+            Call ModuleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
+            </summary>
+        </member>
         <member name="M:Moonstorm.DamageTypeModuleBase.GetDamageTypeBases">
             <summary>
             <inheritdoc cref="M:Moonstorm.ModuleBase`1.GetContentClasses``1(System.Type)"/>
@@ -1484,6 +1701,11 @@
             An action that gets invoked when the <see cref="P:Moonstorm.EliteModuleBase.MoonstormElites"/> List has been populated
             </summary>
         </member>
+        <member name="P:Moonstorm.EliteModuleBase.ModuleAvailability">
+            <summary>
+            Call ModuleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
+            </summary>
+        </member>
         <member name="M:Moonstorm.EliteModuleBase.GetInitializedEliteEquipmentBases">
             <summary>
             Calling this method will look into your <see cref="P:Moonstorm.EliteModuleBase.AssetBundle"/> and load all the <see cref="T:Moonstorm.MSEliteDef"/> from it
@@ -1528,6 +1750,11 @@
         <member name="F:Moonstorm.EliteTierDefModuleBase.OnDictionaryCreated">
             <summary>
             An action that gets invoked when the <see cref="P:Moonstorm.EliteTierDefModuleBase.MoonstormEliteTiers"/> dictionary has been populated
+            </summary>
+        </member>
+        <member name="P:Moonstorm.EliteTierDefModuleBase.ModuleAvailability">
+            <summary>
+            Call ModuleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
             </summary>
         </member>
         <member name="M:Moonstorm.EliteTierDefModuleBase.GetEliteTierDefBases">
@@ -1594,6 +1821,11 @@
             </summary>
         </member>
         <!-- Badly formed XML comment ignored for member "F:Moonstorm.EquipmentModuleBase.OnDictionariesCreated" -->
+        <member name="P:Moonstorm.EquipmentModuleBase.ModuleAvailability">
+            <summary>
+            Call ModuleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
+            </summary>
+        </member>
         <member name="M:Moonstorm.EquipmentModuleBase.GetEquipmentBases">
             <summary>
             <inheritdoc cref="M:Moonstorm.ModuleBase`1.GetContentClasses``1(System.Type)"/>
@@ -1665,6 +1897,11 @@
             An action that gets invoked when the <see cref="P:Moonstorm.InteractableModuleBase.MoonstormInteractables"/> dictionary has been populated
             </summary>
         </member>
+        <member name="P:Moonstorm.InteractableModuleBase.ModuleAvailability">
+            <summary>
+            Call ModuleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
+            </summary>
+        </member>
         <member name="M:Moonstorm.InteractableModuleBase.GetInteractableBases">
             <summary>
             <inheritdoc cref="M:Moonstorm.ModuleBase`1.GetContentClasses``1(System.Type)"/>
@@ -1707,6 +1944,11 @@
         <member name="F:Moonstorm.ItemModuleBase.OnDictionaryCreated">
             <summary>
             An action that gets invoked when the <see cref="P:Moonstorm.ItemModuleBase.MoonstormItems"/> dictionary has been populated
+            </summary>
+        </member>
+        <member name="P:Moonstorm.ItemModuleBase.ModuleAvailability">
+            <summary>
+            Call ModuleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
             </summary>
         </member>
         <member name="M:Moonstorm.ItemModuleBase.GetItemBases">
@@ -1754,6 +1996,11 @@
             An action that gets invoked when the <see cref="P:Moonstorm.ItemTierModuleBase.MoonstormItemTiers"/> dictionary has been populated.
             </summary>
         </member>
+        <member name="P:Moonstorm.ItemTierModuleBase.ModuleAvailability">
+            <summary>
+            Call ModuleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
+            </summary>
+        </member>
         <member name="M:Moonstorm.ItemTierModuleBase.GetItemTierBases">
             <summary>
             <inheritdoc cref="M:Moonstorm.ModuleBase`1.GetContentClasses``1(System.Type)"/>
@@ -1799,6 +2046,11 @@
             An action that gets invoked when the <see cref="!:MoonstormUnlockables"/> dictionary has been populated
             </summary>
         </member>
+        <member name="P:Moonstorm.ProjectileModuleBase.ModuleAvailability">
+            <summary>
+            Call ModuleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
+            </summary>
+        </member>
         <member name="M:Moonstorm.ProjectileModuleBase.GetProjectileBases">
             <summary>
             <inheritdoc cref="M:Moonstorm.ModuleBase`1.GetContentClasses``1(System.Type)"/>
@@ -1823,7 +2075,7 @@
         <member name="T:Moonstorm.SceneModuleBase">
             <summary>
             The <see cref="T:Moonstorm.SceneModuleBase"/> is a <see cref="T:Moonstorm.ContentModule`1"/> that handles the <see cref="T:Moonstorm.SceneBase"/> class
-            <para><see cref="T:Moonstorm.SceneModuleBase"/>'s main job is to add new Scenes to the ContentPack. Works with ROS's SceneDefinitions</para>
+            <para><see cref="T:Moonstorm.SceneModuleBase"/>'s main job is to add new Scenes to the ContentPack.</para>
             <para>Inherit from this module if you want to load SceneDefs with SceneBase systems</para>
             </summary>
         </member>
@@ -1841,6 +2093,11 @@
         <member name="F:Moonstorm.SceneModuleBase.OnDictionaryCreated">
             <summary>
             An action that gets invoked when the <see cref="!:MoonstormUnlockables"/> dictionary has been populated
+            </summary>
+        </member>
+        <member name="P:Moonstorm.SceneModuleBase.ModuleAvailability">
+            <summary>
+            Call ModuleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
             </summary>
         </member>
         <member name="M:Moonstorm.SceneModuleBase.GetSceneBases">
@@ -1890,6 +2147,11 @@
         <member name="F:Moonstorm.UnlockablesModuleBase.OnDictionaryCreated">
             <summary>
             An action that gets invoked when the <see cref="P:Moonstorm.UnlockablesModuleBase.MoonstormUnlockables"/> dictionary has been populated
+            </summary>
+        </member>
+        <member name="P:Moonstorm.UnlockablesModuleBase.ModuleAvailability">
+            <summary>
+            Call ModuleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
             </summary>
         </member>
         <member name="M:Moonstorm.UnlockablesModuleBase.GetUnlockableBases">
@@ -2021,6 +2283,13 @@
             <param name="pos">Position at wich to play the sound</param>
             <param name="transmit"></param>
         </member>
+        <member name="M:Moonstorm.MSUtil.GetEnabledExpansions(RoR2.Run)">
+            <summary>
+            Returns all the enabled expansions for the current run
+            </summary>
+            <param name="run">The current run</param>
+            <returns>An array of expansionDefs</returns>
+        </member>
         <member name="M:Moonstorm.MSUtil.Play(RoR2.NetworkSoundEventDef,UnityEngine.Vector3,System.Boolean)">
             <summary>
             Plays the network sound event def.
@@ -2045,7 +2314,7 @@
             <param name="entry">The entry to add if its not in the collection</param>
             <returns>True if it was not in the collection and added, false otherwise</returns>
         </member>
-        <member name="M:Moonstorm.MSUtil.RemoveIfNotInCollection``1(System.Collections.Generic.ICollection{``0},``0)">
+        <member name="M:Moonstorm.MSUtil.RemoveIfInCollection``1(System.Collections.Generic.ICollection{``0},``0)">
             <summary>
             Removes the entry of type <typeparamref name="T"/> from the collection if its in it
             </summary>
@@ -2074,12 +2343,76 @@
             </summary>
             <returns>The types of the assembly</returns>
         </member>
+        <member name="M:Moonstorm.MSUtil.Deconstruct``2(System.Collections.Generic.KeyValuePair{``0,``1},``0@,``1@)">
+            <summary>
+            Deconstruct a KeyValuePair into two variables, useful for iterating over a dictionary
+            </summary>
+            <typeparam name="TKey">The type of Key of the KeyValuePair</typeparam>
+            <typeparam name="TValue">The type of Value of the KeyValuePair</typeparam>
+            <param name="kvp">The KeyValuePair to deconstruct</param>
+            <param name="key">The Key of the KeyValuePair</param>
+            <param name="value">The Value of the KeyValuePair</param>
+        </member>
         <member name="M:Moonstorm.MSUtil.NicifyString(System.String)">
             <summary>
             Nicifies a CamelCase or pascalCase string into a human readable name
             </summary>
             <param name="text">The string to nicify</param>
             <returns>The nicified string</returns>
+        </member>
+        <member name="M:Moonstorm.MSUtil.GetValues``1(WeightedSelection{``0})">
+            <summary>
+            Returns the weighted selection's choices' values.
+            </summary>
+            <typeparam name="T">The type that's used in the WeightedSelection</typeparam>
+            <param name="selection">The weighted selectiton instance</param>
+            <returns>An IEnumerable will all the weighted selectiton's values that are not null.</returns>
+        </member>
+        <member name="T:Moonstorm.Components.Addressables.AddressableInjector">
+            <summary>
+            Component that injects an AddressableAsset to a component's field
+            </summary>
+        </member>
+        <member name="M:Moonstorm.Components.Addressables.AddressableInjector.Refresh">
+            <summary>
+            Refreshes and re-injects the asset specified in <see cref="F:Moonstorm.Components.Addressables.AddressableInjector.address"/>
+            </summary>
+        </member>
+        <member name="T:Moonstorm.Components.Addressables.CameraInstantiator">
+            <summary>
+            Instantiates the RoR2 main camera, which allows preview of post processing effects
+            <para>Do not leave this on finalized builds, as it causes errors</para>
+            </summary>
+        </member>
+        <member name="M:Moonstorm.Components.Addressables.CameraInstantiator.Refresh">
+            <summary>
+            Instantiates the camera or destroys the attached game object if the component is instantiated at runtime and not in the editor.
+            </summary>
+        </member>
+        <member name="T:Moonstorm.Components.Addressables.InstantiateAddressablePrefab">
+            <summary>
+            Instantiates the prefab specified in <see cref="F:Moonstorm.Components.Addressables.InstantiateAddressablePrefab.address"/>
+            </summary>
+        </member>
+        <member name="P:Moonstorm.Components.Addressables.InstantiateAddressablePrefab.Instance">
+            <summary>
+            The instantiated prefab
+            </summary>
+        </member>
+        <member name="M:Moonstorm.Components.Addressables.InstantiateAddressablePrefab.Refresh">
+            <summary>
+            Destroys the instantiated object and re-instantiates using the prefab that's loaded via <see cref="F:Moonstorm.Components.Addressables.InstantiateAddressablePrefab.address"/>
+            </summary>
+        </member>
+        <member name="T:Moonstorm.Components.Addressables.SurfaceDefInjector">
+            <summary>
+            Injects a surface def specified in <see cref="F:Moonstorm.Components.Addressables.SurfaceDefInjector.surfaceDefAddress"/> to all SurfaceDefProviders that are children of the attached game object
+            </summary>
+        </member>
+        <member name="M:Moonstorm.Components.Addressables.SurfaceDefInjector.Refresh">
+            <summary>
+            Reloads the surface def and updates the SurfaceDefProvider components found in children of the attached game object
+            </summary>
         </member>
         <member name="T:Moonstorm.Components.BaseBuffBodyBehavior">
             <summary>
@@ -2177,29 +2510,9 @@
             The total amount of credits spent
             </summary>
         </member>
-        <member name="P:Moonstorm.Components.EventDirector.MostExpensiveEventInDeck">
-            <summary>
-            Returns the cost of the most expensive event
-            </summary>
-        </member>
-        <member name="P:Moonstorm.Components.EventDirector.GetDifficultyScalingValue">
-            <summary>
-            Returns the current <see cref="F:RoR2.DifficultyDef.scalingValue"/> of the run in progress
-            </summary>
-        </member>
         <member name="M:Moonstorm.Components.EventDirector.ForceEvent(RoR2.ConCommandArgs)">
             Commands
             ------------------------------------------------------------------------------------------------------------
-        </member>
-        <member name="P:Moonstorm.Components.EventDirector.DisableEventDirector">
-            <summary>
-            Wether the event director is disabled or enabled
-            </summary>
-        </member>
-        <member name="P:Moonstorm.Components.EventDirector.EnableInternalLogging">
-            <summary>
-            Wether the event director logs information
-            </summary>
         </member>
         <member name="T:Moonstorm.Components.EventTextController">
             <summary>
@@ -2328,6 +2641,51 @@
             The main AssetBundle of MSU
             </summary>
         </member>
+        <member name="T:Moonstorm.MSDCCSPool">
+            <summary>
+            A <see cref="T:Moonstorm.MSDCCSPool"/> is a version of a <see cref="T:RoR2.DccsPool"/> that can be created from the editor itself, it allows you to create complex DccsPools using Addressables and your own existing spawn cards.
+            <para>All the values from this pool will be added to the <see cref="T:RoR2.DccsPool"/> specified in <see cref="F:Moonstorm.MSDCCSPool.targetPool"/></para>
+            <para>You should also see <see cref="T:Moonstorm.MSDirectorCardCategorySelection"/></para>
+            </summary>
+        </member>
+        <member name="T:Moonstorm.MSDCCSPool.MSPoolEntry">
+            <summary>
+            Represents a version of <see cref="T:RoR2.DccsPool.PoolEntry"/> that uses <see cref="T:Moonstorm.MSDirectorCardCategorySelection"/> for representing a pool entry
+            </summary>
+        </member>
+        <member name="T:Moonstorm.MSDCCSPool.MSCategory">
+            <summary>
+            Represents a category of DirectorCardCategorySelections for this pool
+            </summary>
+        </member>
+        <member name="T:Moonstorm.MSDCCSPool.MSConditionalPoolEntry">
+            <summary>
+            Represents a conditional version of a <see cref="T:Moonstorm.MSDCCSPool.MSPoolEntry"/>
+            <para>Contains a <see cref="F:Moonstorm.MSDCCSPool.MSConditionalPoolEntry.requiredExpansions"/> array that's populated using <see cref="T:Moonstorm.AddressableAssets.AddressableExpansionDef"/>s</para>
+            </summary>
+        </member>
+        <member name="T:Moonstorm.MSDirectorCard">
+            <summary>
+            Represents a <see cref="T:RoR2.DirectorCard"/> that can be created from using AddressableAssets, specifically <see cref="T:Moonstorm.AddressableAssets.AddressableSpawnCard"/> and <see cref="T:Moonstorm.AddressableAssets.AddressableUnlockableDef"/>
+            </summary>
+        </member>
+        <member name="T:Moonstorm.MSDirectorCardCategorySelection">
+            <summary>
+            A <see cref="T:Moonstorm.MSDirectorCardCategorySelection"/> is a version of a <see cref="T:RoR2.DirectorCardCategorySelection"/> that can be used for creating a custom, and complex DirectorCardCategorySelection for stages, using addressables to load and spawn vanilla enemies for custom stages.
+            <para>All the values from this category selection will be added to the <see cref="T:RoR2.DirectorCardCategorySelection"/> specified in <see cref="F:Moonstorm.MSDirectorCardCategorySelection.targetCardCategorySelection"/></para>
+            <para>You should also see <see cref="T:Moonstorm.MSDCCSPool"/></para>
+            </summary>
+        </member>
+        <member name="T:Moonstorm.MSDirectorCardCategorySelection.Category">
+            <summary>
+            Represents a category of spawn cards
+            </summary>
+        </member>
+        <member name="F:Moonstorm.MSDirectorCardCategorySelection.targetCardCategorySelection">
+            <summary>
+            The target <see cref="T:RoR2.DirectorCardCategorySelection"/> that will be overriden with the values stored in this MSDirectorCardCategorySelection
+            </summary>
+        </member>
         <member name="T:Moonstorm.MSInteractableDirectorCard">
             <summary>
             A <see cref="T:Moonstorm.MSInteractableDirectorCard"/> is an extension of <see cref="T:RoR2.InteractableSpawnCard"/>
@@ -2376,6 +2734,31 @@
             Represents the base game's elite tiers
             </summary>
         </member>
+        <member name="F:Moonstorm.VanillaEliteTier.None">
+            <summary>
+            This elite will not be added to any tiers
+            </summary>
+        </member>
+        <member name="F:Moonstorm.VanillaEliteTier.HonorDisabled">
+            <summary>
+            The tier thats normally used for non artifact runs, includes Blazing, Overloading, Mending and Glacial elites
+            </summary>
+        </member>
+        <member name="F:Moonstorm.VanillaEliteTier.HonorActive">
+            <summary>
+            The tier that's used when the Artifact of Honor is active, includes weaker versions of Blazing, Overloading, Mending and Glacial elites
+            </summary>
+        </member>
+        <member name="F:Moonstorm.VanillaEliteTier.PostLoop">
+            <summary>
+            The tier that's used when the first loop is complete, includes Malachite and Celestine elites
+            </summary>
+        </member>
+        <member name="F:Moonstorm.VanillaEliteTier.Lunar">
+            <summary>
+            The tier that's used in Commencement, includes the Perfected elite
+            </summary>
+        </member>
         <member name="T:Moonstorm.SerializableEliteTierDef">
             <summary>
             Represents a Serialized version of a <see cref="T:RoR2.CombatDirector.EliteTierDef"/>
@@ -2404,9 +2787,18 @@
         </member>
         <member name="M:Moonstorm.EventCard.IsAvailable">
             <summary>
-            Checks if this card can be used currently
+            Checks if this card can be used currently.
+            Override this to implement more checks on a custom, subclassed version of EventCard
             </summary>
             <returns>True if this event is available, false otherwise</returns>
+        </member>
+        <member name="M:Moonstorm.EventCard.GetEffectiveCost(System.Int32)">
+            <summary>
+            When an event is played, internally the director adds it to a dictionary to keep track how many times it has played.
+            <para>Depending on how many times it has played, the card will increase in cost, use this method to get the Effective cost of this card.</para>
+            </summary>
+            <param name="totalRepetitions">The total amount of times this event has repeated.</param>
+            <returns>The actual cost of the card</returns>
         </member>
         <member name="T:Moonstorm.EventDirectorCategorySelection">
             <summary>
@@ -2491,7 +2883,7 @@
         <member name="T:Moonstorm.ItemDisplayDictionary">
             <summary>
             An <see cref="T:Moonstorm.ItemDisplayDictionary"/> is used for appending a single <see cref="T:RoR2.ItemDisplayRuleSet.KeyAssetRuleGroup"/> to multiple <see cref="T:RoR2.ItemDisplayRuleSet"/>
-            <para>It works ina  similar fashion to R2API's ItemDisplayDictionary</para>
+            <para>It works in a similar fashion to R2API's ItemDisplayDictionary</para>
             </summary>
         </member>
         <member name="T:Moonstorm.ItemDisplayDictionary.NamedDisplayDictionary">
@@ -2641,6 +3033,11 @@
         <member name="F:Moonstorm.VanillaSkinDefinition.rendererAmounts">
             <summary>
             The amount of renderers the body in <see cref="F:Moonstorm.VanillaSkinDefinition.bodyAddress"/> has
+            </summary>
+        </member>
+        <member name="T:EntityStates.Events.DummyEventState">
+            <summary>
+            A dummy event state, this state overrides nothing
             </summary>
         </member>
         <member name="T:EntityStates.Events.EventState">
