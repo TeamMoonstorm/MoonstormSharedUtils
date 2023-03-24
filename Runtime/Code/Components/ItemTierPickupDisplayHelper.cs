@@ -40,6 +40,9 @@ namespace Moonstorm.Experimental
 
         private void OnPickupDisplayRebuildModel()
         {
+            if (!display)
+                return;
+
             PickupDef pickupDef = PickupCatalog.GetPickupDef(display.pickupIndex);
             ItemIndex itemIndex = pickupDef?.itemIndex ?? ItemIndex.None;
             if (itemIndex != ItemIndex.None)

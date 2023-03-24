@@ -42,8 +42,20 @@ namespace Moonstorm
                 }
             }
             CharacterBody.onBodyStartGlobal += OnBodyStart;
-            On.RoR2.CharacterBody.RecalculateStats += OnRecaluclateStats;
-            R2API.RecalculateStatsAPI.GetStatCoefficients += OnGetStatCoefficients;
+
+            if(MSUtil.IsModInstalled("xyz.yekoc.Holy"))
+            {
+#if DEBUG
+                MSULog.Info("Holy installed, using custom RecalculateStats support");
+#endif
+                On.RoR2.CharacterBody.RecalculateStats += HolyfiedRecalculateStats;
+                R2API.RecalculateStatsAPI.GetStatCoefficients += HolyfiedGetStatCoefficients;
+            }
+            else
+            {
+                On.RoR2.CharacterBody.RecalculateStats += OnRecaluclateStats;
+                R2API.RecalculateStatsAPI.GetStatCoefficients += OnGetStatCoefficients;
+            }
         }
 
         //Has master needs to be set here because we cant guarantee a body has a singular master (A body can have multiple possible masters)
@@ -64,18 +76,31 @@ namespace Moonstorm
         private static void OnRecaluclateStats(On.RoR2.CharacterBody.orig_RecalculateStats orig, CharacterBody self)
         {
             var manager = self.GetComponent<MoonstormContentManager>();
-            manager?.RunStatRecalculationsStart();
+            manager.AsValidOrNull()?.RunStatRecalculationsStart();
             orig(self);
-            manager?.RunStatRecalculationsEnd();
+            manager.AsValidOrNull()?.RunStatRecalculationsEnd();
+        }
+
+        private static void HolyfiedRecalculateStats(On.RoR2.CharacterBody.orig_RecalculateStats orig, CharacterBody self)
+        {
+            orig(self);
+            var manager = self.GetComponent<MoonstormContentManager>();
+            manager.AsValidOrNull()?.RunStatRecalculationsEnd();
         }
 
         private static void OnGetStatCoefficients(CharacterBody sender, RecalculateStatsAPI.StatHookEventArgs args)
         {
             var manager = sender.GetComponent<MoonstormContentManager>();
-            if (!manager)
-                return;
+            manager.AsValidOrNull()?.RunStatHookEventModifiers(args);
+        }
 
-            manager.RunStatHookEventModifiers(args);
+        private static void HolyfiedGetStatCoefficients(CharacterBody sender, RecalculateStatsAPI.StatHookEventArgs
+             args)
+        {
+            var manager = sender.GetComponent<MoonstormContentManager>();
+
+            manager.AsValidOrNull()?.RunStatRecalculationsStart();
+            manager.AsValidOrNull()?.RunStatHookEventModifiers(args);
         }
     }
 }

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Active: 1
   stageDebugDatabases: 1
-  releaseBuild: 1
+  releaseBuild: 0
   assemblyArtifactPath: <AssemblyStaging>
   buildTarget: 5
 --- !u!114 &11400000
@@ -30,8 +30,8 @@ MonoBehaviour:
   m_Name: BasicBuild
   m_EditorClassIdentifier: 
   Data:
-  - {fileID: 6307070179732563969}
   - {fileID: -3332458586933666445}
+  - {fileID: 6307070179732563969}
   QuickAccess: 0
   manifest: {fileID: 11400000, guid: 5ceb1d8ed3af40d4d806e9756b403649, type: 2}
 --- !u!114 &6307070179732563969

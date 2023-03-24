@@ -266,6 +266,11 @@ namespace Moonstorm
         {
             return selection.choices.Select(x => x.value).Where(x => x != null);
         }
+
+        public static T AsValidOrNull<T>(this T obj) where T : UnityEngine.Object
+        {
+            return obj ? obj : null;
+        }
         #endregion
     }
 }
