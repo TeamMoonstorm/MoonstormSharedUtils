@@ -1,4 +1,4 @@
-﻿using RoR2EditorKit.Utilities;
+﻿using RoR2EditorKit;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;

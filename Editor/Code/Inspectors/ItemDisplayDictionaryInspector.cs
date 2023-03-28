@@ -1,5 +1,5 @@
 ﻿using Moonstorm.EditorUtils.EditorWindows;
-using RoR2EditorKit.Core.EditorWindows;
+using RoR2EditorKit.EditorWindows;
 using UnityEditor;
 using UnityEngine.UIElements;
 
@@ -13,11 +13,11 @@ namespace Moonstorm.EditorUtils.Inspectors
         {
             Button button = new Button(() =>
             {
-                if (Instance == null)
+                /*if (Instance == null)
                 {
                     Instance = ObjectEditingEditorWindow<ItemDisplayDictionary>.OpenEditorWindow<ItemDisplayDictionaryEditorWindow>(target);
                 }
-                Instance.Focus();
+                Instance.Focus();*/
             });
             button.text = $"Open ItemDisplayDictionary Editor Window";
             return button;

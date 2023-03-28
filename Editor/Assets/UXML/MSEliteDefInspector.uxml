@@ -4,7 +4,7 @@
         <ui:Label text="Label" name="scriptType" binding-path="m_Script.displayName" tooltip="The type of this object" class="scriptType genericHolderHeader" />
         <ui:VisualElement name="InspectorDataContainer" class="genericHolder">
             <ui:Label text="Vanilla Properties" name="VanillaProperties" class="genericHolderHeader separatorLabel" />
-            <uie:PropertyField name="eliteEquipmentDef" binding-path="eliteEquipmentDef" />
+            <RoR2EditorKit.VisualElements.ValidatingPropertyField name="eliteEquipmentDef" binding-path="eliteEquipmentDef" />
             <uie:PropertyField name="color" binding-path="color" />
             <uie:PropertyField name="modifierToken" binding-path="modifierToken" />
             <ui:Foldout text="Stat Coefficients" name="StatCoefficientContainer" class="genericHolderFoldout">

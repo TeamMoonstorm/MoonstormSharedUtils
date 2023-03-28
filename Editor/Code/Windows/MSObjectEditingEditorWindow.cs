@@ -1,4 +1,4 @@
-﻿using RoR2EditorKit.Core.EditorWindows;
+﻿using RoR2EditorKit.EditorWindows;
 
 namespace Moonstorm.EditorUtils.EditorWindows
 {
@@ -6,7 +6,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
     {
         protected sealed override bool ValidateUXMLPath(string path)
         {
-            return path.StartsWith("Packages/teammoonstorm-moonstormsharedutils/Editor");
+            return true;
         }
     }
 }

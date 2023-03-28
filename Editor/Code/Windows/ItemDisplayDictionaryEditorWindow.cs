@@ -1,6 +1,6 @@
 ﻿using RoR2;
-using RoR2EditorKit.Core.Inspectors;
-using RoR2EditorKit.Utilities;
+using RoR2EditorKit.Inspectors;
+using RoR2EditorKit;
 using System;
 using System.Collections.Generic;
 using System.Globalization;

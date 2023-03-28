@@ -1,7 +1,8 @@
 ﻿using Moonstorm.AddressableAssets;
+using Moonstorm.EditorUtils.VisualElements;
 using RoR2;
-using RoR2EditorKit.Core.Inspectors;
-using RoR2EditorKit.Utilities;
+using RoR2EditorKit.Inspectors;
+using RoR2EditorKit;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -16,7 +17,36 @@ namespace Moonstorm.EditorUtils.EditorWindows
 {
     public class NamedIDRSEditorWindow : MSObjectEditingEditorWindow<NamedIDRS>
     {
-        VisualElement rootContainer;
+        private NamedIDRSField namedIDRSField;
+        private void OnEnable()
+        {
+            Selection.selectionChanged += CheckForNamedIDRS;
+        }
+        protected override void OnDisable()
+        {
+            Selection.selectionChanged -= CheckForNamedIDRS;
+        }
+
+        private void CheckForNamedIDRS()
+        {
+            using(SelectionChangeEvent evt = SelectionChangeEvent.GetPooled())
+            {
+                rootVisualElement.panel.visualTree.SendEvent(evt);
+            }
+        }
+        protected override void CreateGUI()
+        {
+            base.CreateGUI();
+            namedIDRSField = rootVisualElement.Q<NamedIDRSField>(nameof(NamedIDRSField));
+            CheckForNamedIDRS();
+            namedIDRSField.OnIDRSFieldValueSet += OnIDRSFieldValueSet;
+        }
+
+        private void OnIDRSFieldValueSet(ItemDisplayRuleSet obj)
+        {
+
+        }
+        /*VisualElement rootContainer;
         VisualElement namedRuleGroupContainer;
         VisualElement ruleGroupContainer;
         VisualElement ruleDisplayContainer;
@@ -332,6 +362,6 @@ namespace Moonstorm.EditorUtils.EditorWindows
                 arrayProp.serializedObject.ApplyModifiedProperties();
                 namedRuleGroupsHelper.Refresh();
             }
-        }
+        }*/
     }
 }

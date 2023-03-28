@@ -1,11 +1,12 @@
 ﻿using RoR2;
-using RoR2EditorKit.Core.Inspectors;
-using RoR2EditorKit.Utilities;
+using RoR2EditorKit.Inspectors;
+using RoR2EditorKit;
 using System;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 using Base = RoR2EditorKit.RoR2Related.Inspectors.EliteDefInspector;
+using RoR2EditorKit.VisualElements;
 
 namespace Moonstorm.EditorUtils.Inspectors
 {
@@ -17,7 +18,7 @@ namespace Moonstorm.EditorUtils.Inspectors
 
         VisualElement inspectorData;
         PropertyField eliteTierDefs;
-        PropertyValidator<UnityEngine.Object> equipValidator;
+        ValidatingPropertyField equipValidator;
         protected override void OnEnable()
         {
             base.OnEnable();
@@ -27,7 +28,7 @@ namespace Moonstorm.EditorUtils.Inspectors
                 var container = DrawInspectorElement.Q<VisualElement>("Container");
                 inspectorData = container.Q<VisualElement>("InspectorDataContainer");
                 eliteTierDefs = inspectorData.Q<PropertyField>("eliteTierDefIdentifiers");
-                equipValidator = new PropertyValidator<UnityEngine.Object>(inspectorData.Q<PropertyField>("eliteEquipmentDef"), DrawInspectorElement);
+                equipValidator = inspectorData.Q<ValidatingPropertyField>("eliteEquipmentDef");
             };
         }
 
@@ -42,18 +43,18 @@ namespace Moonstorm.EditorUtils.Inspectors
             equipValidator.ForceValidation();
 
             var modifierToken = inspectorData.Q<PropertyField>("modifierToken");
-            AddSimpleContextMenu(modifierToken, new ContextMenuData(
+            modifierToken.AddSimpleContextMenu(new RoR2EditorKit.ContextMenuData(
                 "Set Token",
                 SetToken,
                 statusCheck =>
                 {
-                    if (Settings.TokenPrefix.IsNullOrEmptyOrWhitespace())
+                    if (Settings.tokenPrefix.IsNullOrEmptyOrWhitespace())
                         return DropdownMenuAction.Status.Disabled;
                     return DropdownMenuAction.Status.Normal;
                 }));
 
             var eliteColor = inspectorData.Q<PropertyField>("color");
-            AddSimpleContextMenu(eliteColor, new ContextMenuData(
+            eliteColor.AddSimpleContextMenu(new RoR2EditorKit.ContextMenuData(
                 "Set Color to Buff Color",
                 SetColor,
                 statusCheck =>
@@ -67,7 +68,7 @@ namespace Moonstorm.EditorUtils.Inspectors
             BuildContextMenu(statCoefficients);
         }
 
-        private void SetupEquipValidator(PropertyValidator<UnityEngine.Object> validator)
+        private void SetupEquipValidator(ValidatingPropertyField validator)
         {
             validator.AddValidator(() =>
             {
@@ -116,10 +117,9 @@ namespace Moonstorm.EditorUtils.Inspectors
 
             void Add(string name)
             {
-                AddSimpleContextMenu(statCoefficients, new ContextMenuData($"Set Coefficients To/{name}", SetCoefficients, check =>
-                {
-                    return AddressablesUtils.AddressableCatalogExists ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.None;
-                }));
+                statCoefficients.AddSimpleContextMenu(new RoR2EditorKit.ContextMenuData($"Set Coefficients To/{name}",
+                    SetCoefficients,
+                    check => AddressablesUtils.AddressableCatalogExists ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.None));
             }
         }
 

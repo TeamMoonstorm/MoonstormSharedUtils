@@ -1,4 +1,4 @@
-﻿using RoR2EditorKit.Core;
+﻿using RoR2EditorKit;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -146,7 +146,7 @@ namespace Moonstorm.EditorUtils.Settings
 
         private void AttemptToFinishDictionaryAutomatically()
         {
-            Shader[] allYAMLShaders = RoR2EditorKit.Utilities.AssetDatabaseUtils.FindAssetsByType<Shader>()
+            Shader[] allYAMLShaders = AssetDatabaseUtils.FindAssetsByType<Shader>()
                 .Where(shader => AssetDatabase.GetAssetPath(shader).EndsWith(".asset")).ToArray();
 
             foreach (ShaderPair pair in shaderPairs)

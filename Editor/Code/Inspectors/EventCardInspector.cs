@@ -1,5 +1,5 @@
 ﻿using R2API;
-using RoR2EditorKit.Core.Inspectors;
+using RoR2EditorKit;
 using System;
 using UnityEditor;
 using UnityEditor.UIElements;
@@ -49,7 +49,7 @@ namespace Moonstorm.EditorUtils.Inspectors
             {
                 var origName = TargetType.name;
                 TargetType.name = Prefix + origName;
-                RoR2EditorKit.Utilities.AssetDatabaseUtils.UpdateNameOfObject(TargetType);
+                AssetDatabaseUtils.UpdateNameOfObject(TargetType);
             });
         }
     }

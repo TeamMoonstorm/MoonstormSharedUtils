@@ -1,5 +1,6 @@
 ﻿using R2API;
-using RoR2EditorKit.Core.Inspectors;
+using RoR2EditorKit;
+using RoR2EditorKit.VisualElements;
 using System;
 using UnityEditor;
 using UnityEditor.UIElements;
@@ -38,7 +39,7 @@ namespace Moonstorm.EditorUtils.Inspectors
             category.tooltip = $"The Event categories for this selection.";
             DrawInspectorElement.Add(category);
 
-            var container = CreateHelpBox($"The EventCards for categories cannot be added in the editor\nThey get added at runtime instead by the EventCatalog", MessageType.Info);
+            var container = new HelpBox("The EventCards for categories cannot be added in the Editor\nThey get added at runtime instead by the EventCatalog using the EventCard's Settings", MessageType.Info, true);
             RootVisualElement.Add(container);
             container.BringToFront();
         }
@@ -58,7 +59,7 @@ namespace Moonstorm.EditorUtils.Inspectors
             {
                 var origName = TargetType.name;
                 TargetType.name = Prefix + origName;
-                RoR2EditorKit.Utilities.AssetDatabaseUtils.UpdateNameOfObject(TargetType);
+                AssetDatabaseUtils.UpdateNameOfObject(TargetType);
             });
         }
     }

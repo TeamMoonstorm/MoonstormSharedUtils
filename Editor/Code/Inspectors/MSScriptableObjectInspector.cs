@@ -1,4 +1,4 @@
-﻿using RoR2EditorKit.Core.Inspectors;
+﻿using RoR2EditorKit.Inspectors;
 using UnityEngine;
 
 namespace Moonstorm.EditorUtils.Inspectors

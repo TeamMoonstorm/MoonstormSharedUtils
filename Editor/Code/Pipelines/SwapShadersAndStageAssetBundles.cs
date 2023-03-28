@@ -1,5 +1,5 @@
 ﻿using Moonstorm.EditorUtils.Settings;
-using RoR2EditorKit.Utilities;
+using RoR2EditorKit;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;

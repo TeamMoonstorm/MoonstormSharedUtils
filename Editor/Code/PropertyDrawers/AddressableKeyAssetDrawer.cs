@@ -1,6 +1,6 @@
 ﻿using Moonstorm.AddressableAssets;
 using RoR2;
-using RoR2EditorKit.Utilities;
+using RoR2EditorKit;
 using System;
 using UnityEditor;
 using UnityEditor.UIElements;
