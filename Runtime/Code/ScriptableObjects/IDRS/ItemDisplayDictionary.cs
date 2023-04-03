@@ -184,7 +184,7 @@ namespace Moonstorm
                             HG.ArrayUtils.ArrayAppend(ref target.keyAssetRuleGroups, keyAssetRuleGroup);
                             idrsToRegenerateRuntimeValues.AddIfNotInCollection(target);
 #if DEBUG
-                            MSULog.Debug($"Finished appending values from {itemDisplayDictionary}'s {i} entry into {current.idrs.Asset}");
+                            MSULog.Debug($"Finished appending values from {itemDisplayDictionary}'s {i} entry into {target}");
 #endif
                         }
                         catch (Exception e)

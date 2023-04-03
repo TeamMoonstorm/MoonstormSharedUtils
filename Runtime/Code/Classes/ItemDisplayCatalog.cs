@@ -50,6 +50,12 @@ namespace Moonstorm
 
         public static void AddDisplay(ItemDisplayDictionary idd)
         {
+            if (!idd)
+                return;
+
+            if (!idd.keyAsset || !idd.displayPrefab)
+                return;
+
             if(displayDictionary.ContainsKey(idd.keyAsset.name))
             {
 #if DEBUG
