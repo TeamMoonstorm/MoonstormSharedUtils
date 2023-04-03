@@ -1,4 +1,5 @@
-﻿using Moonstorm.AddressableAssets;
+﻿using BepInEx;
+using Moonstorm.AddressableAssets;
 using RoR2;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,8 @@ namespace Moonstorm
         public struct NamedDisplayDictionary
         {
             [Tooltip("The IDRS to add the rules below to")]
-            public AddressableIDRS idrs;
+            public string idrsName;
+            [Obsolete("Use idrsName instead")] public AddressableIDRS idrs;
             [Tooltip("The rules for the IDRS above")]
             public List<DisplayRule> displayRules;
 
@@ -65,7 +67,7 @@ namespace Moonstorm
             /// <summary>
             /// The finished rule
             /// </summary>
-            [HideInInspector]
+            [HideInInspector, NonSerialized]
             public ItemDisplayRule finishedRule;
 
             /// <summary>
@@ -79,7 +81,7 @@ namespace Moonstorm
                 {
                     finishedRule = new ItemDisplayRule
                     {
-                        childName = "NoValue",
+                        childName = NoValue,
                         localAngles = Vector3.zero,
                         localPos = Vector3.zero,
                         localScale = Vector3.zero,
@@ -105,6 +107,7 @@ namespace Moonstorm
         /// Contains all instances of <see cref="ItemDisplayDictionary"/>
         /// </summary>
         public static readonly List<ItemDisplayDictionary> instances = new List<ItemDisplayDictionary>();
+
         [Tooltip("The key asset provided will be appended to all the ItemDisplayRuleSets defined in namedDisplayDictionary")]
         public UnityEngine.Object keyAsset;
         [Tooltip("The game object that will be used as a display prefab")]
@@ -117,17 +120,24 @@ namespace Moonstorm
         private void Awake()
         {
             instances.AddIfNotInCollection(this);
+            ItemDisplayCatalog.AddDisplay(this);
+
+#if DEBUG
+#if !UNITY_EDITOR
+            Upgrade();
+#endif
+#endif
         }
         private void OnDestroy()
         {
-            instances.RemoveIfNotInCollection(this);
+            instances.RemoveIfInCollection(this);
         }
 
         [SystemInitializer]
         private static void SystemInitializer()
         {
 
-            ItemDisplayCatalog.CatalogAvailability.CallWhenAvailable(() =>
+            ItemDisplayCatalog.catalogAvailability.CallWhenAvailable(() =>
             {
                 MSULog.Info($"Initializing ItemDisplayDictionary");
                 List<ItemDisplayRuleSet> idrsToRegenerateRuntimeValues = new List<ItemDisplayRuleSet>();
@@ -162,9 +172,17 @@ namespace Moonstorm
                         try
                         {
                             var current = itemDisplayDictionary.namedDisplayDictionary[i];
-                            var keyAssetRuleGroup = itemDisplayDictionary.GetKeyAssetRuleGroup(current.idrs.Asset);
-                            HG.ArrayUtils.ArrayAppend(ref current.idrs.Asset.keyAssetRuleGroups, keyAssetRuleGroup);
-                            idrsToRegenerateRuntimeValues.AddIfNotInCollection(current.idrs);
+                            ItemDisplayRuleSet target = ItemDisplayCatalog.GetItemDisplayRuleSet(current.idrsName);
+                            if (!target)
+                            {
+#if DEBUG
+                                MSULog.Warning($"Not appending values of {itemDisplayDictionary}'s {i} index, as the target idrs is null.");
+                                continue;
+#endif
+                            }
+                            var keyAssetRuleGroup = itemDisplayDictionary.GetKeyAssetRuleGroup(current.idrsName);
+                            HG.ArrayUtils.ArrayAppend(ref target.keyAssetRuleGroups, keyAssetRuleGroup);
+                            idrsToRegenerateRuntimeValues.AddIfNotInCollection(target);
 #if DEBUG
                             MSULog.Debug($"Finished appending values from {itemDisplayDictionary}'s {i} entry into {current.idrs.Asset}");
 #endif
@@ -188,13 +206,13 @@ namespace Moonstorm
                 }
             });
         }
-        private ItemDisplayRuleSet.KeyAssetRuleGroup GetKeyAssetRuleGroup(ItemDisplayRuleSet ruleSet)
+        private ItemDisplayRuleSet.KeyAssetRuleGroup GetKeyAssetRuleGroup(string key)
         {
             var keyAssetRuleGroup = new ItemDisplayRuleSet.KeyAssetRuleGroup();
             keyAssetRuleGroup.keyAsset = keyAsset;
             keyAssetRuleGroup.displayRuleGroup = new DisplayRuleGroup();
 
-            var index = namedDisplayDictionary.FindIndex(x => x.idrs.Asset == ruleSet);
+            var index = namedDisplayDictionary.FindIndex(x => x.idrsName == key);
             if (index >= 0)
             {
                 var namedDisplay = namedDisplayDictionary[index];
@@ -209,5 +227,47 @@ namespace Moonstorm
             }
             return keyAssetRuleGroup;
         }
+
+#if DEBUG
+        [ContextMenu("Upgrade for SerializedItemDisplayCatalog")]
+        private void Upgrade()
+        {
+            for (int i = 0; i < namedDisplayDictionary.Count; i++)
+            {
+                namedDisplayDictionary[i] = UpgradeNamedDisplayDictionary(namedDisplayDictionary[i], i);
+            }
+
+            NamedDisplayDictionary UpgradeNamedDisplayDictionary(NamedDisplayDictionary input, int index)
+            {
+                var copy = input;
+                try
+                {
+                    if (!input.idrsName.IsNullOrWhiteSpace())
+                        return input;
+
+                    string idrsName = null;
+
+                    if (!input.idrs.address.IsNullOrWhiteSpace())
+                    {
+                        string[] split = input.idrs.address.Split('/');
+                        split = split[split.Length - 1].Split('.');
+                        idrsName = split[0];
+                    }
+                    else
+
+                    {
+                        idrsName = input.idrs.Asset.name;
+                    }
+                    input.idrsName = idrsName;
+                    return input;
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"Failed to upgrade AddressNamedRuleGroup at index {index} for {this}.\n{e}");
+                    return copy;
+                }
+            }
+        }
+#endif
     }
 }

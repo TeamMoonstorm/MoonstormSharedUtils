@@ -23,19 +23,53 @@ namespace Moonstorm
         public static Dictionary<string, List<string>> equipmentToDisplayPrefabs = new Dictionary<string, List<string>>();
         public static Dictionary<string, List<string>> eliteEquipmentToDisplayPrefabs = new Dictionary<string, List<string>>();
 #endif
-        public static ResourceAvailability CatalogAvailability { get; private set; }
-        [SystemInitializer]
-        public static void SystemInitializer()
+        public static ResourceAvailability catalogAvailability;
+
+        public static GameObject GetItemDisplay(string key)
         {
-            AddressableAssets.AddressableAsset.OnAddressableAssetsLoaded += FillCatalog;
+            if (!displayDictionary.ContainsKey(key))
+            {
+#if DEBUG
+                MSULog.Warning($"The following key was not present in the displayDictionary: {key}");
+#endif
+                return null;
+            }
+            return displayDictionary[key];
+        }
+        public static ItemDisplayRuleSet GetItemDisplayRuleSet(string key)
+        {
+            if (!idrsDictionary.ContainsKey(key))
+            {
+#if DEBUG
+                MSULog.Warning($"The following key was not present in the displayDictionary: {key}");
+#endif
+                return null;
+            }
+            return idrsDictionary[key];
+        }
+
+        public static void AddDisplay(ItemDisplayDictionary idd)
+        {
+            if(displayDictionary.ContainsKey(idd.keyAsset.name))
+            {
+#if DEBUG
+                MSULog.Warning($"The following idd was not added to the ItemDisplayCatalog, since it's key ({idd.keyAsset})'s name is already pressent: {idd}");
+                return;
+#endif
+            }
+            displayDictionary.Add(idd.keyAsset.name, idd.displayPrefab);
+        }
+        [SystemInitializer]
+        private static void SystemInitializer()
+        {
+            RoR2Application.onLoad += FillCatalog;
         }
 
         private static void FillCatalog()
         {
             CreateIDRSDictionary();
             CreateDisplayDictionary();
-            CatalogAvailability.MakeAvailable();
-
+            catalogAvailability.MakeAvailable();
 #if DEBUG
             SerializeCatalog();
             itemToDisplayPrefabs.Clear();
@@ -50,7 +84,7 @@ namespace Moonstorm
 
         private static void CreateIDRSDictionary()
         {
-            foreach(var body in BodyCatalog.bodyPrefabs)
+            foreach (var body in BodyCatalog.bodyPrefabs)
             {
                 var characterModel = body.GetComponentInChildren<CharacterModel>();
                 if (!characterModel)
@@ -61,12 +95,12 @@ namespace Moonstorm
                     continue;
 
                 string key = idrs.name.IsNullOrWhiteSpace() ? $"idrs{body.name}" : idrs.name;
-                if(!idrsDictionary.ContainsKey(key))
+                if (!idrsDictionary.ContainsKey(key))
                     idrsDictionary.Add(key, idrs);
 
 #if DEBUG
                 var def = SurvivorCatalog.FindSurvivorDefFromBody(body);
-                if(def)
+                if (def)
                 {
                     survivorRuleSets.AddIfNotInCollection(key);
                 }
@@ -112,7 +146,7 @@ namespace Moonstorm
                                 continue;
 
                             int startingIndex = i - 1;
-                            while(displayDictionary.ContainsKey(key))
+                            while (displayDictionary.ContainsKey(key))
                             {
                                 startingIndex++;
                                 key = $"{ruleGroup.keyAsset.name}Display_{startingIndex}";
@@ -132,7 +166,7 @@ namespace Moonstorm
         {
             ScriptableObject keyAsset = (ScriptableObject)ruleGroup.keyAsset;
             Dictionary<string, List<string>> target = null;
-            switch(keyAsset)
+            switch (keyAsset)
             {
                 case ItemDef id:
                     target = itemToDisplayPrefabs;
@@ -142,13 +176,13 @@ namespace Moonstorm
                     break;
             }
             string keyName = keyAsset.name;
-            if(!target.ContainsKey(keyName))
+            if (!target.ContainsKey(keyName))
             {
                 target[keyName] = new List<string>();
             }
 
             var rulesArray = ruleGroup.displayRuleGroup.rules;
-            for(int i = 0; i < rulesArray.Length; i++)
+            for (int i = 0; i < rulesArray.Length; i++)
             {
                 var rule = rulesArray[i];
                 var displayPrefab = rule.followerPrefab;

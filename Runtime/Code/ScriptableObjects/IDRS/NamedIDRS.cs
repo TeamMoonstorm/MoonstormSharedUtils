@@ -4,7 +4,6 @@ using RoR2;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static RoR2.HoverVehicleMotor;
 
 namespace Moonstorm
 {
@@ -24,7 +23,7 @@ namespace Moonstorm
         {
             [Tooltip("The Key Asset, usually an ItemDef or EquipmentDef name")]
             public string keyAssetName;
-            [HideInInspector, Obsolete("use keyAssetNameInstead")]public AddressableKeyAsset keyAsset;
+            [Obsolete("Use keyAssetName instead")] public AddressableKeyAsset keyAsset;
             [Tooltip("The rules this rule group has")]
             public List<AddressNamedDisplayRule> rules;
 
@@ -56,7 +55,7 @@ namespace Moonstorm
             public ItemDisplayRuleType ruleType;
             [Tooltip("The Display Prefab")]
             public string displayPrefabName;
-            [HideInInspector, Obsolete("Use displayPrefabName instead")]public AddressableGameObject displayPrefab;
+            [Obsolete("Use displayPrefabName instead")] public AddressableGameObject displayPrefab;
             [Tooltip("The name of the child where this display prefab will appear")]
             public string childName;
             [Tooltip("The local position of this display")]
@@ -81,15 +80,16 @@ namespace Moonstorm
 
             internal void CreateRule()
             {
+                GameObject prefab = ItemDisplayCatalog.GetItemDisplay(displayPrefabName);
                 if (string.IsNullOrEmpty(childName))
                 {
                     finishedRule = new ItemDisplayRule
                     {
-                        childName = "NoValue",
+                        childName = NoValue,
                         localAngles = Vector3.zero,
                         localPos = Vector3.zero,
                         localScale = Vector3.zero,
-                        followerPrefab = ItemDisplayCatalog.displayDictionary[displayPrefabName],
+                        followerPrefab = prefab,
                         limbMask = limbMask,
                         ruleType = ruleType
                     };
@@ -102,7 +102,7 @@ namespace Moonstorm
                     localAngles = localAngles,
                     localPos = localPos,
                     localScale = localScales,
-                    followerPrefab = ItemDisplayCatalog.displayDictionary[displayPrefabName],
+                    followerPrefab = prefab,
                     limbMask = limbMask,
                     ruleType = ruleType
                 };
@@ -137,7 +137,7 @@ namespace Moonstorm
         [SystemInitializer]
         private static void SystemInitializer()
         {
-            ItemDisplayCatalog.CatalogAvailability.CallWhenAvailable(() =>
+            ItemDisplayCatalog.catalogAvailability.CallWhenAvailable(() =>
             {
                 MSULog.Info($"Initializing NamedIDRS");
                 foreach (NamedIDRS namedIdrs in instances)
@@ -169,20 +169,20 @@ namespace Moonstorm
                 var keyAssetName = namedRuleGroup.keyAssetName;
                 UnityEngine.Object keyAsset = null;
                 var equipmentIndex = EquipmentCatalog.FindEquipmentIndex(keyAssetName);
-                if(equipmentIndex != EquipmentIndex.None && !keyAsset)
+                if (equipmentIndex != EquipmentIndex.None && !keyAsset)
                 {
                     keyAsset = EquipmentCatalog.GetEquipmentDef(equipmentIndex);
                 }
                 var itemIndex = ItemCatalog.FindItemIndex(keyAssetName);
-                if(itemIndex != ItemIndex.None && !keyAsset)
+                if (itemIndex != ItemIndex.None && !keyAsset)
                 {
                     keyAsset = ItemCatalog.GetItemDef(itemIndex);
                 }
 
-                if(!keyAsset)
+                if (!keyAsset)
                 {
 #if DEBUG
-                    MSULog.Warning($"Could not get key asset of name {keyAssetName}. {this}");
+                    MSULog.Warning($"Could not get key asset of name {keyAssetName} (Index: {namedRuleGroups.IndexOf(namedRuleGroup)}). {this}");
 #endif
                     continue;
                 }
@@ -205,10 +205,10 @@ namespace Moonstorm
         [ContextMenu("Upgrade for SerializedItemDisplayCatalog")]
         private void Upgrade()
         {
-            for(int i = 0; i < namedRuleGroups.Count; i++)
+            for (int i = 0; i < namedRuleGroups.Count; i++)
             {
                 namedRuleGroups[i] = UpgradeRuleGroup(namedRuleGroups[i], i);
-                for(int j = 0; j < namedRuleGroups[i].rules.Count; j++)
+                for (int j = 0; j < namedRuleGroups[i].rules.Count; j++)
                 {
                     namedRuleGroups[i].rules[j] = UpgradeRule(namedRuleGroups[i].rules[j], i, j);
                 }
@@ -240,7 +240,7 @@ namespace Moonstorm
                     input.keyAssetName = keyAssetName;
                     return input;
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Debug.LogError($"Failed to upgrade AddressNamedRuleGroup at index {index} for {this}.\n{e}");
                     return copy;
@@ -252,13 +252,13 @@ namespace Moonstorm
                 var copy = input;
                 try
                 {
-                    if(!input.displayPrefabName.IsNullOrWhiteSpace())
+                    if (!input.displayPrefabName.IsNullOrWhiteSpace())
                     {
                         return input;
                     }
 
                     string displayPrefabName = null;
-                    if(input.displayPrefab.UseDirectReference)
+                    if (input.displayPrefab.address.IsNullOrWhiteSpace())
                     {
                         displayPrefabName = input.displayPrefab.Asset.name;
                     }
@@ -272,7 +272,7 @@ namespace Moonstorm
                     input.displayPrefabName = displayPrefabName;
                     return input;
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Debug.LogError($"Failed to upgrade AddressNamedDisplayRule from group index {groupIndex} at {index} for {this}.\n{e}");
                     Debug.LogError(e);
