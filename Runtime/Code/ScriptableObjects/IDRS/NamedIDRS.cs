@@ -124,7 +124,9 @@ namespace Moonstorm
         {
             instances.AddIfNotInCollection(this);
 #if DEBUG
+#if !UNITY_EDITOR
             Upgrade();
+#endif
 #endif
         }
         private void OnDestroy()
