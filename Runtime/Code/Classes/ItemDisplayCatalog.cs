@@ -102,7 +102,23 @@ namespace Moonstorm
                         string key = displayPrefab.name.IsNullOrWhiteSpace() ? $"{ruleGroup.keyAsset.name}Display_{i}" : displayPrefab.name;
 
                         if (!displayDictionary.ContainsKey(key))
+                        {
                             displayDictionary.Add(key, displayPrefab);
+                        }
+                        else
+                        {
+                            var existingPrefab = displayDictionary[key];
+                            if (existingPrefab == displayPrefab)
+                                continue;
+
+                            int startingIndex = i - 1;
+                            while(displayDictionary.ContainsKey(key))
+                            {
+                                startingIndex++;
+                                key = $"{ruleGroup.keyAsset.name}Display_{startingIndex}";
+                            }
+                            displayDictionary.Add(key, displayPrefab);
+                        }
                     }
 #if DEBUG
                     AddKeyAssetAndDisplaysForDictionary(ruleGroup);
