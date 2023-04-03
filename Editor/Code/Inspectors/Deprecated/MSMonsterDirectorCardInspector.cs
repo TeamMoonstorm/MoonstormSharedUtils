@@ -42,7 +42,7 @@ namespace Moonstorm.EditorUtils.Inspectors
             EditorGUILayout.BeginVertical("box");
             EditorGUILayout.BeginVertical("box");
             Header("Director Card Data", "Data of the Director Card associated to this Monster Spawn Card");
-            var dCard = serializedObject.FindProperty("directorCard");
+            var dCard = _serializedObject.FindProperty("directorCard");
             DrawField(dCard, "selectionWeight");
             DrawField(dCard, "spawnDistance");
             DrawField(dCard, "preventOverhead");

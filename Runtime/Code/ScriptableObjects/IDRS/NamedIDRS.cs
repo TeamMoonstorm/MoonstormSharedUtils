@@ -1,8 +1,10 @@
-﻿using Moonstorm.AddressableAssets;
+﻿using BepInEx;
+using Moonstorm.AddressableAssets;
 using RoR2;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static RoR2.HoverVehicleMotor;
 
 namespace Moonstorm
 {
@@ -20,8 +22,9 @@ namespace Moonstorm
         [Serializable]
         public struct AddressNamedRuleGroup
         {
-            [Tooltip("The key asset that this rule group uses")]
-            public AddressableKeyAsset keyAsset;
+            [Tooltip("The Key Asset, usually an ItemDef or EquipmentDef name")]
+            public string keyAssetName;
+            [HideInInspector, Obsolete("use keyAssetNameInstead")]public AddressableKeyAsset keyAsset;
             [Tooltip("The rules this rule group has")]
             public List<AddressNamedDisplayRule> rules;
 
@@ -51,8 +54,9 @@ namespace Moonstorm
         {
             [Tooltip("The type of display rule")]
             public ItemDisplayRuleType ruleType;
-            [Tooltip("The display prefab")]
-            public AddressableGameObject displayPrefab;
+            [Tooltip("The Display Prefab")]
+            public string displayPrefabName;
+            [HideInInspector, Obsolete("Use displayPrefabName instead")]public AddressableGameObject displayPrefab;
             [Tooltip("The name of the child where this display prefab will appear")]
             public string childName;
             [Tooltip("The local position of this display")]
@@ -67,7 +71,7 @@ namespace Moonstorm
             /// <summary>
             /// The finished rule
             /// </summary>
-            [HideInInspector]
+            [HideInInspector, NonSerialized]
             public ItemDisplayRule finishedRule;
 
             /// <summary>
@@ -85,7 +89,7 @@ namespace Moonstorm
                         localAngles = Vector3.zero,
                         localPos = Vector3.zero,
                         localScale = Vector3.zero,
-                        followerPrefab = displayPrefab.Asset,
+                        followerPrefab = ItemDisplayCatalog.displayDictionary[displayPrefabName],
                         limbMask = limbMask,
                         ruleType = ruleType
                     };
@@ -98,7 +102,7 @@ namespace Moonstorm
                     localAngles = localAngles,
                     localPos = localPos,
                     localScale = localScales,
-                    followerPrefab = displayPrefab.Asset,
+                    followerPrefab = ItemDisplayCatalog.displayDictionary[displayPrefabName],
                     limbMask = limbMask,
                     ruleType = ruleType
                 };
@@ -119,16 +123,19 @@ namespace Moonstorm
         private void Awake()
         {
             instances.AddIfNotInCollection(this);
+#if DEBUG
+            Upgrade();
+#endif
         }
         private void OnDestroy()
         {
-            instances.RemoveIfNotInCollection(this);
+            instances.RemoveIfInCollection(this);
         }
 
         [SystemInitializer]
         private static void SystemInitializer()
         {
-            AddressableAssets.AddressableAsset.OnAddressableAssetsLoaded += () =>
+            ItemDisplayCatalog.CatalogAvailability.CallWhenAvailable(() =>
             {
                 MSULog.Info($"Initializing NamedIDRS");
                 foreach (NamedIDRS namedIdrs in instances)
@@ -149,7 +156,7 @@ namespace Moonstorm
                         MSULog.Error($"{e}\n({namedIdrs}");
                     }
                 }
-            };
+            });
         }
 
         internal ItemDisplayRuleSet.KeyAssetRuleGroup[] GetKeyAssetRuleGroups()
@@ -157,28 +164,25 @@ namespace Moonstorm
             var keyAssetList = new List<ItemDisplayRuleSet.KeyAssetRuleGroup>();
             foreach (var namedRuleGroup in namedRuleGroups)
             {
-                var keyAsset = namedRuleGroup.keyAsset.Asset;
-                if (keyAsset is EquipmentDef ed)
+                var keyAssetName = namedRuleGroup.keyAssetName;
+                UnityEngine.Object keyAsset = null;
+                var equipmentIndex = EquipmentCatalog.FindEquipmentIndex(keyAssetName);
+                if(equipmentIndex != EquipmentIndex.None && !keyAsset)
                 {
-                    EquipmentIndex index = EquipmentCatalog.FindEquipmentIndex(keyAsset.name);
-                    if (index == EquipmentIndex.None)
-                    {
-#if DEBUG
-                        MSULog.Debug($"Not generating key asset rule group for {keyAsset.name} as its index is none.");
-#endif
-                        continue;
-                    }
+                    keyAsset = EquipmentCatalog.GetEquipmentDef(equipmentIndex);
                 }
-                else if (keyAsset is ItemDef id)
+                var itemIndex = ItemCatalog.FindItemIndex(keyAssetName);
+                if(itemIndex != ItemIndex.None && !keyAsset)
                 {
-                    ItemIndex index = ItemCatalog.FindItemIndex(id.name);
-                    if (index == ItemIndex.None)
-                    {
+                    keyAsset = ItemCatalog.GetItemDef(itemIndex);
+                }
+
+                if(!keyAsset)
+                {
 #if DEBUG
-                        MSULog.Debug($"Not generating key asset rule group for {keyAsset.name} as its index is none.");
+                    MSULog.Warning($"Could not get key asset of name {keyAssetName}. {this}");
 #endif
-                        continue;
-                    }
+                    continue;
                 }
 
                 var keyAssetGroup = new ItemDisplayRuleSet.KeyAssetRuleGroup { keyAsset = keyAsset };
@@ -194,5 +198,86 @@ namespace Moonstorm
             namedRuleGroups.Clear();
             return keyAssetList.ToArray();
         }
+
+#if DEBUG
+        [ContextMenu("Upgrade for SerializedItemDisplayCatalog")]
+        private void Upgrade()
+        {
+            for(int i = 0; i < namedRuleGroups.Count; i++)
+            {
+                namedRuleGroups[i] = UpgradeRuleGroup(namedRuleGroups[i], i);
+                for(int j = 0; j < namedRuleGroups[i].rules.Count; j++)
+                {
+                    namedRuleGroups[i].rules[j] = UpgradeRule(namedRuleGroups[i].rules[j], i, j);
+                }
+            }
+
+            AddressNamedRuleGroup UpgradeRuleGroup(AddressNamedRuleGroup input, int index)
+            {
+                var copy = input;
+                try
+                {
+                    if (!input.keyAssetName.IsNullOrWhiteSpace())
+                        return input;
+
+                    string keyAssetName = null;
+                    switch (input.keyAsset.loadAssetFrom)
+                    {
+                        case AddressableKeyAsset.KeyAssetAddressType.UsingDirectReference:
+                            keyAssetName = input.keyAsset.Asset.name;
+                            break;
+                        case AddressableKeyAsset.KeyAssetAddressType.Addressables:
+                            string[] split = input.keyAsset.address.Split('/');
+                            split = split[split.Length - 1].Split('.');
+                            keyAssetName = split[0];
+                            break;
+                        default:
+                            keyAssetName = input.keyAsset.address;
+                            break;
+                    }
+                    input.keyAssetName = keyAssetName;
+                    return input;
+                }
+                catch(Exception e)
+                {
+                    Debug.LogError($"Failed to upgrade AddressNamedRuleGroup at index {index} for {this}.\n{e}");
+                    return copy;
+                }
+            }
+
+            AddressNamedDisplayRule UpgradeRule(AddressNamedDisplayRule input, int groupIndex, int index)
+            {
+                var copy = input;
+                try
+                {
+                    if(!input.displayPrefabName.IsNullOrWhiteSpace())
+                    {
+                        return input;
+                    }
+
+                    string displayPrefabName = null;
+                    if(input.displayPrefab.UseDirectReference)
+                    {
+                        displayPrefabName = input.displayPrefab.Asset.name;
+                    }
+                    else
+                    {
+                        string[] split = input.displayPrefab.address.Split('/');
+                        split = split[split.Length - 1].Split('.');
+                        displayPrefabName = split[0];
+                    }
+
+                    input.displayPrefabName = displayPrefabName;
+                    return input;
+                }
+                catch(Exception e)
+                {
+                    Debug.LogError($"Failed to upgrade AddressNamedDisplayRule from group index {groupIndex} at {index} for {this}.\n{e}");
+                    Debug.LogError(e);
+                    return copy;
+                }
+            }
+        }
+#endif
     }
 }

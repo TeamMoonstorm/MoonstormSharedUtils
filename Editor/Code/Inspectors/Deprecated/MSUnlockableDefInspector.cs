@@ -20,7 +20,7 @@ namespace Moonstorm.EditorUtils.Inspectors
             EditorGUILayout.BeginVertical("box");
 
             DrawField("achievementCondition");
-            var serverTrackedProp = serializedObject.FindProperty("serverTracked");
+            var serverTrackedProp = _serializedObject.FindProperty("serverTracked");
             EditorGUILayout.PropertyField(serverTrackedProp);
             if (serverTrackedProp.boolValue)
             {

@@ -26,6 +26,12 @@ namespace Moonstorm.AddressableAssets
         /// <summary>
         /// Wether this AddressableAsset is using a Direct Reference of an asset or not
         /// </summary>
+        public bool UseDirectReference => useDirectReference;
+
+
+        /// <summary>
+        /// <inheritdoc cref="UseDirectReference"/>
+        /// </summary>
         [HideInInspector]
         [SerializeField]
         protected bool useDirectReference = true;

@@ -10,16 +10,14 @@ using UnityEditor;
 using RoR2;
 using System;
 using RoR2EditorKit.VisualElements;
-using UObject = UnityEngine.Object;
+using Moonstorm.AddressableAssets;
 
 [assembly: UxmlNamespacePrefix("Moonstorm.EditorUtils.VisualElements", "msu")]
 namespace Moonstorm.EditorUtils.VisualElements
 {
-    public class NamedIDRSField : VisualElement, IBindable
+    public class NamedIDRS_IDRSField : VisualElement, IBindable
     {
-        public new class UxmlFactory : UxmlFactory<NamedIDRSField, UxmlTraits>
-        {
-        }
+        public new class UxmlFactory : UxmlFactory<NamedIDRS_IDRSField, UxmlTraits> { }
 
         public new class UxmlTraits : VisualElement.UxmlTraits
         {
@@ -33,9 +31,7 @@ namespace Moonstorm.EditorUtils.VisualElements
             public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
             {
                 base.Init(ve, bag, cc);
-                NamedIDRSField field = (NamedIDRSField)ve;
-
-                field.ObjectField.SetObjectType<ItemDisplayRuleSet>();
+                NamedIDRS_IDRSField field = (NamedIDRS_IDRSField)ve;
                 field.bindingPath = m_idrsPropertyPath.GetValueFromBag(bag, cc);
             }
         }
@@ -47,38 +43,61 @@ namespace Moonstorm.EditorUtils.VisualElements
         public event Action<ItemDisplayRuleSet> OnIDRSFieldValueSet;
 
 
-        private void OnAttach(AttachToPanelEvent evt)
+        public void CheckForNamedIDRS(SerializedObject serializedObject)
         {
-            ObjectField.RegisterValueChangedCallback(OnIDRSSet);
-            RegisterCallback<SelectionChangeEvent>(OnSelectionChanged, TrickleDown.TrickleDown);
+            if(!(serializedObject?.targetObject is NamedIDRS))
+            {
+                ObjectField.SetDisplay(false);
+                HelpBox.SetDisplay(true);
+                HelpBox.messageType = MessageType.Warning;
+                HelpBox.message = "No NamedIDRS Selected, Please Select a NamedIDRS";
+                return;
+            }
+
+            ObjectField.SetDisplay(true);
+            if(!ObjectField.value)
+            {
+                HelpBox.SetDisplay(true);
+                HelpBox.message = "No IDRS Set, Cannot show data.";
+                HelpBox.messageType = MessageType.Info;
+            }
+            else
+            {
+                HelpBox.SetDisplay(false);
+            }
         }
 
-        private void OnSelectionChanged(SelectionChangeEvent evt)
+        private void OnIDRSSet(ChangeEvent<UnityEngine.Object> evt)
         {
+            var idrs = (ItemDisplayRuleSet)evt.newValue;
+            HelpBox.SetDisplay(!idrs);
+            HelpBox.message = idrs ? string.Empty : "No IDRS Set, Cannot show data.";
+            HelpBox.messageType = idrs ? MessageType.None : MessageType.Info;
+            OnIDRSFieldValueSet?.Invoke(idrs);
+        }
 
+        private void OnAttach(AttachToPanelEvent evt)
+        {
+            ObjectField.SetObjectType<ItemDisplayRuleSet>();
+            ObjectField.RegisterValueChangedCallback(OnIDRSSet);
         }
         private void OnDetach(DetachFromPanelEvent evt)
         {
             ObjectField.UnregisterValueChangedCallback(OnIDRSSet);
         }
 
-        private void OnIDRSSet(ChangeEvent<UnityEngine.Object> evt)
+        public NamedIDRS_IDRSField()
         {
-            var idrs = (ItemDisplayRuleSet)evt.newValue;
-            OnIDRSFieldValueSet?.Invoke(idrs);
-        }
-
-        public NamedIDRSField()
-        {
-            TemplateHelpers.GetTemplateInstance(nameof(NamedIDRSField), this, (pth) => true);
+            TemplateHelpers.GetTemplateInstance(nameof(NamedIDRS_IDRSField), this, (pth) => true);
 
             ObjectField = this.Q<ObjectField>();
             HelpBox = this.Q<HelpBox>();
+
             RegisterCallback<AttachToPanelEvent>(OnAttach);
             RegisterCallback<DetachFromPanelEvent>(OnDetach);
         }
 
-        ~NamedIDRSField()
+        ~NamedIDRS_IDRSField()
         {
             UnregisterCallback<AttachToPanelEvent>(OnAttach);
             UnregisterCallback<DetachFromPanelEvent>(OnDetach);

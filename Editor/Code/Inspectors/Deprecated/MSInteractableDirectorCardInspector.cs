@@ -29,7 +29,7 @@ namespace Moonstorm.EditorUtils.Inspectors
 
             EditorGUILayout.BeginVertical("box");
             Header("Director Card Data", "Data of the Director Card associated to this Interactable Spawn Card");
-            var dCard = serializedObject.FindProperty("directorCard");
+            var dCard = _serializedObject.FindProperty("directorCard");
             DrawField(dCard, "selectionWeight");
             DrawField(dCard, "minimumStageCompletions");
             DrawField(dCard, "requiredUnlockableDef");

@@ -126,7 +126,8 @@ namespace Moonstorm
         [SystemInitializer]
         private static void SystemInitializer()
         {
-            AddressableAssets.AddressableAsset.OnAddressableAssetsLoaded += () =>
+
+            ItemDisplayCatalog.CatalogAvailability.CallWhenAvailable(() =>
             {
                 MSULog.Info($"Initializing ItemDisplayDictionary");
                 List<ItemDisplayRuleSet> idrsToRegenerateRuntimeValues = new List<ItemDisplayRuleSet>();
@@ -185,7 +186,7 @@ namespace Moonstorm
                     MSULog.Debug($"Regenerated runtime values for {idrs}");
 #endif
                 }
-            };
+            });
         }
         private ItemDisplayRuleSet.KeyAssetRuleGroup GetKeyAssetRuleGroup(ItemDisplayRuleSet ruleSet)
         {
