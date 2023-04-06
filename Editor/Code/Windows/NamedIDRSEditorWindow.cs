@@ -22,6 +22,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
         private NamedIDRS_NamedRuleGroup namedRuleGroup;
         private NamedIDRS_NamedRule namedRule;
 
+        private ItemDisplayCatalog catalog;
         [SerializeField]
         private string serializedObjectGUID;
 
@@ -30,6 +31,12 @@ namespace Moonstorm.EditorUtils.EditorWindows
         private void OnEnable()
         {
             Selection.selectionChanged += CheckForNamedIDRS;
+            catalog = ItemDisplayCatalog.LoadCatalog();
+            if (catalog == null)
+            {
+                Close();
+                return;
+            }
         }
         protected override void OnDisable()
         {
@@ -85,10 +92,22 @@ namespace Moonstorm.EditorUtils.EditorWindows
             CheckForNamedIDRS();
             OnIDRSFieldValueSet(TargetType?.idrs);
             namedIDRSField.OnIDRSFieldValueSet += OnIDRSFieldValueSet;
+            namedRuleGroupList.OnForceCatalogUpdate += UpdateCatalog;
             namedRuleGroupList.OnNamedRuleGroupButtonClicked += OnNamedRuleGroupClicked;
             namedRuleGroupList.ExtendedListView.collectionSizeField.RegisterValueChangedCallback(OnNamedRuleGroupListSizeChanged);
+            namedRuleGroupList.Catalog = catalog;
             namedRuleGroup.OnNamedRuleButtonClicked += OnNamedRuleClicked;
             namedRuleGroup.ExtendedListView.collectionSizeField.RegisterValueChangedCallback(OnNamedRuleGroupSizeChanged);
+            namedRuleGroup.Catalog = catalog;
+            namedRule.Catalog = catalog;
+        }
+
+        private void UpdateCatalog()
+        {
+            catalog = ItemDisplayCatalog.LoadCatalog();
+            namedRuleGroupList.Catalog = catalog;
+            namedRuleGroup.Catalog = catalog;
+            namedRule.Catalog = catalog;
         }
 
         private void OnNamedRuleClicked(CollectionButtonEntry obj)
@@ -98,6 +117,9 @@ namespace Moonstorm.EditorUtils.EditorWindows
 
         private void OnNamedRuleGroupClicked(CollectionButtonEntry obj)
         {
+            if (namedRuleGroup.CurrentEntry == obj)
+                return;
+
             namedRuleGroup.CurrentEntry = obj;
             namedRule.CurrentEntry = null;
         }
@@ -116,7 +138,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
 
             string indexString = namedRuleGroup.CurrentEntry.name.Substring("element".Length);
             int index = int.Parse(indexString, CultureInfo.InvariantCulture);
-            if(e.newValue < index)
+            if(e.newValue < index || e.newValue == 0)
             {
                 namedRuleGroup.CurrentEntry = null;
                 namedRule.CurrentEntry = null;
@@ -130,7 +152,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
 
             string indexString = namedRule.CurrentEntry.name.Substring("element".Length);
             int index = int.Parse(indexString, CultureInfo.InvariantCulture);
-            if (e.newValue < index)
+            if (e.newValue < index || e.newValue == 0)
             {
                 namedRule.CurrentEntry = null;
             }

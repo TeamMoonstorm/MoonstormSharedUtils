@@ -32,6 +32,7 @@ namespace Moonstorm.EditorUtils.VisualElements
             }
         }
         private SerializedProperty _serializedProperty;
+        public object extraData { get; set; }
         public Action<CollectionButtonEntry> UpdateRepresentation;
 
         public CollectionButtonEntry()

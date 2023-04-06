@@ -14,38 +14,40 @@ namespace Moonstorm
 {
     internal static class ItemDisplayCatalog
     {
-        public static Dictionary<string, ItemDisplayRuleSet> idrsDictionary = new Dictionary<string, ItemDisplayRuleSet>();
-        public static Dictionary<string, GameObject> displayDictionary = new Dictionary<string, GameObject>();
+        private static Dictionary<string, ItemDisplayRuleSet> idrsDictionary = new Dictionary<string, ItemDisplayRuleSet>();
+        private static Dictionary<string, GameObject> displayDictionary = new Dictionary<string, GameObject>();
 #if DEBUG
-        public static List<string> survivorRuleSets = new List<string>();
-        public static List<string> enemyRuleSets = new List<string>();
-        public static Dictionary<string, List<string>> itemToDisplayPrefabs = new Dictionary<string, List<string>>();
-        public static Dictionary<string, List<string>> equipmentToDisplayPrefabs = new Dictionary<string, List<string>>();
-        public static Dictionary<string, List<string>> eliteEquipmentToDisplayPrefabs = new Dictionary<string, List<string>>();
+        private static List<string> survivorRuleSets = new List<string>();
+        private static List<string> enemyRuleSets = new List<string>();
+        private static Dictionary<string, List<string>> itemToDisplayPrefabs = new Dictionary<string, List<string>>();
+        private static Dictionary<string, List<string>> equipmentToDisplayPrefabs = new Dictionary<string, List<string>>();
+        private static Dictionary<string, List<string>> eliteEquipmentToDisplayPrefabs = new Dictionary<string, List<string>>();
 #endif
         public static ResourceAvailability catalogAvailability;
 
         public static GameObject GetItemDisplay(string key)
         {
-            if (!displayDictionary.ContainsKey(key))
+            var lowerInvariant = key.ToLowerInvariant();
+            if (!displayDictionary.ContainsKey(lowerInvariant))
             {
 #if DEBUG
                 MSULog.Warning($"The following key was not present in the displayDictionary: {key}");
 #endif
                 return null;
             }
-            return displayDictionary[key];
+            return displayDictionary[lowerInvariant];
         }
         public static ItemDisplayRuleSet GetItemDisplayRuleSet(string key)
         {
-            if (!idrsDictionary.ContainsKey(key))
+            var lowerInvariant = key.ToLowerInvariant();
+            if (!idrsDictionary.ContainsKey(lowerInvariant))
             {
 #if DEBUG
                 MSULog.Warning($"The following key was not present in the displayDictionary: {key}");
 #endif
                 return null;
             }
-            return idrsDictionary[key];
+            return idrsDictionary[lowerInvariant];
         }
 
         public static void AddDisplay(ItemDisplayDictionary idd)
@@ -53,17 +55,41 @@ namespace Moonstorm
             if (!idd)
                 return;
 
-            if (!idd.keyAsset || !idd.displayPrefab)
+            for(int i = 0; i < idd.displayPrefabs.Length; i++)
+            {
+                var go = idd.displayPrefabs[i];
+                string key = go.name;
+                string lowerInvariant = key.ToLowerInvariant();
+
+                if(displayDictionary.ContainsKey(lowerInvariant))
+                {
+#if DEBUG
+                    MSULog.Warning($"The following DisplayPrefab from an ItemDisplayDictionary was not added to the ItemDisplayCatalog, since it's key ({key}) was already present. (idd: {idd}, index: {i})");
+#endif
+                    continue;
+                }
+                displayDictionary.Add(lowerInvariant, go);
+            }
+
+            //I could put this in the original for loop, but i cant be arsed.
+#if DEBUG
+            if (!idd.keyAsset)
                 return;
 
-            if(displayDictionary.ContainsKey(idd.keyAsset.name))
+            string serializedkey = idd.keyAsset.name;
+            if(!itemToDisplayPrefabs.ContainsKey(serializedkey))
             {
-#if DEBUG
-                MSULog.Warning($"The following idd was not added to the ItemDisplayCatalog, since it's key ({idd.keyAsset})'s name is already pressent: {idd}");
-                return;
-#endif
+                itemToDisplayPrefabs[serializedkey] = new List<string>();
             }
-            displayDictionary.Add(idd.keyAsset.name, idd.displayPrefab);
+
+            for(int i = 0; i < idd.displayPrefabs.Length; i++)
+            {
+                var go = idd.displayPrefabs[i];
+                string goName = go.name;
+
+                itemToDisplayPrefabs[serializedkey].AddIfNotInCollection(goName);
+            }
+#endif
         }
         [SystemInitializer]
         private static void SystemInitializer()
@@ -101,8 +127,9 @@ namespace Moonstorm
                     continue;
 
                 string key = idrs.name.IsNullOrWhiteSpace() ? $"idrs{body.name}" : idrs.name;
-                if (!idrsDictionary.ContainsKey(key))
-                    idrsDictionary.Add(key, idrs);
+                string lowerInvariant = key.ToLowerInvariant();
+                if (!idrsDictionary.ContainsKey(lowerInvariant))
+                    idrsDictionary.Add(lowerInvariant, idrs);
 
 #if DEBUG
                 var def = SurvivorCatalog.FindSurvivorDefFromBody(body);
@@ -120,15 +147,13 @@ namespace Moonstorm
 
         private static void CreateDisplayDictionary()
         {
-            PopulateFrom("Commando");
-            PopulateFrom("Croco");
-            PopulateFrom("Mage");
-            PopulateFrom("LunarExploder");
-
-            void PopulateFrom(string address)
+            foreach(ItemDisplayRuleSet item in idrsDictionary.Values)
             {
-                var idrs = Addressables.LoadAssetAsync<ItemDisplayRuleSet>($"RoR2/Base/{address}/idrs{address}.asset").WaitForCompletion();
+                PopulateFrom(item);
+            }
 
+            void PopulateFrom(ItemDisplayRuleSet idrs)
+            {
                 foreach (var ruleGroup in idrs.keyAssetRuleGroups)
                 {
                     var rulesArray = ruleGroup.displayRuleGroup.rules;
@@ -140,24 +165,26 @@ namespace Moonstorm
                             continue;
 
                         string key = displayPrefab.name.IsNullOrWhiteSpace() ? $"{ruleGroup.keyAsset.name}Display_{i}" : displayPrefab.name;
+                        string lowerInvariant = key.ToLowerInvariant();
 
-                        if (!displayDictionary.ContainsKey(key))
+                        if (!displayDictionary.ContainsKey(lowerInvariant))
                         {
-                            displayDictionary.Add(key, displayPrefab);
+                            displayDictionary.Add(lowerInvariant, displayPrefab);
                         }
                         else
                         {
-                            var existingPrefab = displayDictionary[key];
+                            var existingPrefab = displayDictionary[lowerInvariant];
                             if (existingPrefab == displayPrefab)
                                 continue;
 
                             int startingIndex = i - 1;
-                            while (displayDictionary.ContainsKey(key))
+                            while (displayDictionary.ContainsKey(lowerInvariant))
                             {
                                 startingIndex++;
                                 key = $"{ruleGroup.keyAsset.name}Display_{startingIndex}";
+                                lowerInvariant = key.ToLowerInvariant();
                             }
-                            displayDictionary.Add(key, displayPrefab);
+                            displayDictionary.Add(lowerInvariant, displayPrefab);
                         }
                     }
 #if DEBUG

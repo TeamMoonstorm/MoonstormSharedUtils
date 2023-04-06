@@ -4,6 +4,7 @@ using RoR2EditorKit;
 using RoR2EditorKit.VisualElements;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,16 +21,18 @@ namespace Moonstorm.EditorUtils.VisualElements
 {
     public class NamedIDRS_NamedRuleGroupList : VisualElement
     {
-        public const string COMMANDO_IDRS = "RoR2/Base/Commando/idrsCommando.asset";
         public new class UxmlFactory : UxmlFactory<NamedIDRS_NamedRuleGroupList, UxmlTraits> { }
         public new class UxmlTraits : VisualElement.UxmlTraits { }
-
+        public ItemDisplayCatalog Catalog { get; internal set; }
+        public Button ForceCatalogUpdate { get; }
+        public Button SortByName { get; }
         public Button AddAllEquipmentsButton { get; }
         public Button AddAllItemsButton { get; }
         public Button AddOnlyEliteEquipmentsButton { get; }
         public Button AddMissingEntriesButton { get; }
         public ExtendedListView ExtendedListView { get; }
         public event Action<CollectionButtonEntry> OnNamedRuleGroupButtonClicked;
+        public event Action OnForceCatalogUpdate;
 
         private VisualElement _buttonContainer;
         private SerializedObject _serializedObject;
@@ -67,7 +70,10 @@ namespace Moonstorm.EditorUtils.VisualElements
             entry.style.height = ExtendedListView.listViewItemHeight;
             entry.Button.style.height = ExtendedListView.listViewItemHeight;
             entry.UpdateRepresentation = UpdateButtonDisplay;
+            entry.extraData = Catalog.GetKeyAssetDisplays(property.FindPropertyRelative("keyAssetName").stringValue);
             entry.SerializedProperty = property;
+
+
             entry.Button.clickable.clicked += () => OnNamedRuleGroupButtonClicked?.Invoke(entry);
         }
 
@@ -77,133 +83,120 @@ namespace Moonstorm.EditorUtils.VisualElements
                 return;
 
             buttonEntry.SerializedProperty.serializedObject.ApplyModifiedProperties();
-            var addressableKeyAsset = buttonEntry.SerializedProperty.FindPropertyRelative("keyAsset");
-            if (addressableKeyAsset.FindPropertyRelative("useDirectReference").boolValue)
+            buttonEntry.extraData = Catalog.GetKeyAssetDisplays(buttonEntry.SerializedProperty.FindPropertyRelative("keyAssetName").stringValue);
+            if(buttonEntry.extraData == null)
             {
-                var asset = addressableKeyAsset.FindPropertyRelative("asset");
-                if (asset.objectReferenceValue)
-                {
-                    buttonEntry.HelpBox.SetDisplay(false);
-                    buttonEntry.Button.text = asset.objectReferenceValue.name;
-                }
-                else
-                {
-                    buttonEntry.HelpBox.SetDisplay(true);
-                    buttonEntry.HelpBox.messageType = MessageType.Warning;
-                    buttonEntry.HelpBox.message = "Key Asset Not Set";
-                    buttonEntry.Button.text = "Invalid Entry";
-                }
+                buttonEntry.HelpBox.SetDisplay(true);
+                buttonEntry.HelpBox.messageType = MessageType.Warning;
+                buttonEntry.HelpBox.message = "This Entry doesnt have a KeyAsset set.";
+                buttonEntry.Button.text = "Invalid Rule Group";
             }
             else
             {
-                var address = addressableKeyAsset.FindPropertyRelative("address").stringValue;
-                var loadAssetFrom = (AddressableKeyAsset.KeyAssetAddressType)addressableKeyAsset.FindPropertyRelative("loadAssetFrom").enumValueIndex;
-                if (address.IsNullOrEmptyOrWhitespace())
-                {
-                    buttonEntry.HelpBox.SetDisplay(true);
-                    buttonEntry.HelpBox.messageType = MessageType.Warning;
-                    buttonEntry.HelpBox.message = "Key Asset Not Set";
-                    buttonEntry.Button.text = "Invalid Entry";
-                    return;
-                }
-                else
-                {
-                    buttonEntry.HelpBox.SetDisplay(false);
-                    if (loadAssetFrom == AddressableKeyAsset.KeyAssetAddressType.Addressables)
-                    {
-                        string[] split = address.Split('/');
-                        buttonEntry.Button.text = split[split.Length - 1];
-                        return;
-                    }
-                    buttonEntry.Button.text = address;
-                }
+                buttonEntry.HelpBox.SetDisplay(false);
+                buttonEntry.HelpBox.messageType = MessageType.None;
+                buttonEntry.HelpBox.message = string.Empty;
+                buttonEntry.Button.text = buttonEntry.SerializedProperty.FindPropertyRelative("keyAssetName").stringValue;
             }
         }
 
-        private async void AddAllEquipments()
+        private void SortEntries()
         {
             if (_serializedObject == null)
                 return;
 
-            var commandoIDRS = await AddressablesUtils.LoadAssetFromCatalog<ItemDisplayRuleSet>(COMMANDO_IDRS);
+            if (!(_serializedObject.targetObject is NamedIDRS))
+                return;
+
             NamedIDRS namedIDRS = (NamedIDRS)_serializedObject.targetObject;
-            var catalog = await Addressables.LoadContentCatalogAsync(System.IO.Path.GetFullPath("Assets/StreamingAssets/aa/catalog.json")).Task;
-            Undo.RecordObject(namedIDRS, "Add All Equipments");
-            for(int i = 0; i < commandoIDRS.keyAssetRuleGroups.Length; i++)
-            {
-                var keyAssetRuleGroup = commandoIDRS.keyAssetRuleGroups[i];
-                if(keyAssetRuleGroup.keyAsset is EquipmentDef ed)
-                {
-                    if (ed.passiveBuffDef.AsValidOrNull()?.eliteDef)
-                        continue;
+            Undo.RecordObject(namedIDRS, "Sort Entries By Name");
 
-                    string keyAssetName = ed.name;
-                    if (!namedIDRS.namedRuleGroups.Any(x => x.keyAsset.address == keyAssetName))
-                    {
-                        var addressNamedRuleGroup = new NamedIDRS.AddressNamedRuleGroup
-                        {
-                            keyAsset = new AddressableKeyAsset(keyAssetName, AddressableKeyAsset.KeyAssetAddressType.EquipmentCatalog),
-                            rules = new List<NamedIDRS.AddressNamedDisplayRule>()
-                        };
+            namedIDRS.namedRuleGroups = namedIDRS.namedRuleGroups.OrderBy(entry => entry.keyAssetName).ToList();
 
-                        foreach(var rule in keyAssetRuleGroup.displayRuleGroup.rules)
-                        {
+            _serializedObject.ApplyAndUpdate();
+            ExtendedListView.Refresh();
+        }
+        private void AddAllEquipments()
+        {
+            if (_serializedObject == null)
+                return;
 
-                        }
-                        namedIDRS.namedRuleGroups.Add(new NamedIDRS.AddressNamedRuleGroup
-                        {
-                            keyAsset = new AddressableKeyAsset(keyAssetName, AddressableKeyAsset.KeyAssetAddressType.EquipmentCatalog)
-                        });
-                    }
-                }
-            }
+            if (!(_serializedObject.targetObject is NamedIDRS))
+                return;
+
+            NamedIDRS namedIDRS = (NamedIDRS)_serializedObject.targetObject;
+            Undo.RecordObject(namedIDRS, "Add Non-Elite Equipments");
+
+            AddMissing(namedIDRS, Catalog.EquipmentToDisplayPrefabs);
         }
 
         private void AddAllItems()
         {
             if (_serializedObject == null)
                 return;
+
+            if (!(_serializedObject.targetObject is NamedIDRS))
+                return;
+
+            NamedIDRS namedIDRS = (NamedIDRS)_serializedObject.targetObject;
+            Undo.RecordObject(namedIDRS, "Add Items");
+
+            AddMissing(namedIDRS, Catalog.ItemToDisplayPrefabs);
         }
 
-        private void AddOnlyEliteEquipments()
+        private void AddEliteEquipments()
         {
             if (_serializedObject == null)
                 return;
 
-            var cancer = new Cancer();
-            try
-            {
-                Addressables.AddResourceLocator(cancer);
-                var cat = Addressables.LoadContentCatalogAsync(System.IO.Path.GetFullPath("Assets/StreamingAssets/aa/catalog.json")).WaitForCompletion();
-                var str = FindDisplayPrefabKey(cat, "DisplayPotion");
-            }
-            catch(Exception e)
-            {
-                Debug.LogError(e);
-            }
-            finally
-            {
-                Addressables.RemoveResourceLocator(cancer);
-            }
+            if (!(_serializedObject.targetObject is NamedIDRS))
+                return;
+
+            NamedIDRS namedIDRS = (NamedIDRS)_serializedObject.targetObject;
+            Undo.RecordObject(namedIDRS, "Add Elite Equipments");
+
+            AddMissing(namedIDRS, Catalog.EliteEquipmentToDisplayPrefabs);
         }
 
         private void AddMissingEntries()
         {
             if (_serializedObject == null)
                 return;
+
+            if (!(_serializedObject.targetObject is NamedIDRS))
+                return;
+
+            NamedIDRS namedIDRS = (NamedIDRS)_serializedObject.targetObject;
+            Undo.RecordObject(namedIDRS, "Add Missing Entries");
+
+            var finalDict = Catalog.EquipmentToDisplayPrefabs.Concat(Catalog.ItemToDisplayPrefabs).Concat
+                (Catalog.EliteEquipmentToDisplayPrefabs).ToDictionary(k => k.Key, v => v.Value);
+            AddMissing(namedIDRS, new ReadOnlyDictionary<string, ReadOnlyCollection<string>>(finalDict));
         }
 
-        private string FindDisplayPrefabKey(IResourceLocator locator, string prefab)
+        private void AddMissing(NamedIDRS target, ReadOnlyDictionary<string, ReadOnlyCollection<string>> dict)
         {
-            string key = (string)locator.Keys.FirstOrDefault(obj =>
+            foreach(var (keyAsset, displayPrefabs) in dict)
             {
-                if (obj is string address)
+                if (target.namedRuleGroups.Any(x => x.keyAssetName == keyAsset) || displayPrefabs.Count == 0)
+                    continue;
+
+                var newEntry = new NamedIDRS.AddressNamedRuleGroup();
+                newEntry.keyAssetName = keyAsset;
+                newEntry.AddRule(new NamedIDRS.AddressNamedDisplayRule
                 {
-                    return address.Contains(prefab);
-                }
-                return false;
-            });
-            return key;
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    displayPrefabName = displayPrefabs[0],
+                    childName = string.Empty,
+                    localPos = Vector3.zero,
+                    localAngles = Vector3.zero,
+                    localScales = Vector3.zero,
+                    limbMask = LimbFlags.None
+                });
+                target.namedRuleGroups.Add(newEntry);
+            }
+            _serializedObject.ApplyAndUpdate();
+            ExtendedListView.Refresh();
         }
         private void OnAttach(AttachToPanelEvent evt)
         {
@@ -212,9 +205,11 @@ namespace Moonstorm.EditorUtils.VisualElements
             ExtendedListView.CreateElement = CreateButton;
             ExtendedListView.BindElement = BindButton;
 
+            ForceCatalogUpdate.clicked += () => OnForceCatalogUpdate?.Invoke();
+            SortByName.clicked += SortEntries;
             AddAllEquipmentsButton.clicked += AddAllEquipments;
             AddAllItemsButton.clicked += AddAllItems;
-            AddOnlyEliteEquipmentsButton.clicked += AddOnlyEliteEquipments;
+            AddOnlyEliteEquipmentsButton.clicked += AddEliteEquipments;
             AddMissingEntriesButton.clicked += AddMissingEntries;
             _buttonContainer.SetDisplay(AddressablesUtils.AddressableCatalogExists);
         }
@@ -228,6 +223,8 @@ namespace Moonstorm.EditorUtils.VisualElements
         {
             TemplateHelpers.GetTemplateInstance(nameof(NamedIDRS_NamedRuleGroupList), this, (pth) => true);
             ExtendedListView = this.Q<ExtendedListView>();
+            ForceCatalogUpdate = this.Q<Button>("ForceUpdateCatalog");
+            SortByName = this.Q<Button>("SortByName");
             AddAllEquipmentsButton = this.Q<Button>("AddAllEquipments");
             AddAllItemsButton = this.Q<Button>("AddAllItems");
             AddOnlyEliteEquipmentsButton = this.Q<Button>("AddOnlyEliteEquipments");

@@ -3,6 +3,7 @@ using RoR2EditorKit;
 using RoR2EditorKit.VisualElements;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -20,6 +21,7 @@ namespace Moonstorm.EditorUtils.VisualElements
     {
         public new class UxmlFactory : UxmlFactory<NamedIDRS_NamedRule, UxmlTraits> { }
         public new class UxmlTraits : VisualElement.UxmlTraits { }
+        public ItemDisplayCatalog Catalog { get; internal set; }
         public CollectionButtonEntry CurrentEntry
         {
             get
@@ -38,11 +40,23 @@ namespace Moonstorm.EditorUtils.VisualElements
             }
         }
         private CollectionButtonEntry _currentEntry;
+        public ReadOnlyCollection<string> AvailableDisplayPrefabs
+        {
+            get
+            {
+                return CurrentEntry?.extraData as ReadOnlyCollection<string>;
+            }
+            set
+            {
+                if(CurrentEntry != null)
+                {
+                    CurrentEntry.extraData = value;
+                }
+            }
+        }
         public SerializedProperty SerializedProperty { get; private set; }
         public HelpBox HelpBox { get; }
-        public Toggle UseDirectReference { get; }
-        public ObjectField PrefabField { get; }
-        public TextField AddressField { get; }
+        public IMGUIContainer DisplayPrefab { get; }
         public EnumField ItemDisplayRuleType { get; }
         public Button PasteButton { get; }
         public TextField ChildName { get; }
@@ -53,9 +67,7 @@ namespace Moonstorm.EditorUtils.VisualElements
 
         private VisualElement standardViewContainer;
         private SerializedProperty ruleType;
-        private SerializedProperty useDirectReference;
-        private SerializedProperty asset;
-        private SerializedProperty address;
+        private SerializedProperty displayPrefab;
         private SerializedProperty childName;
         private SerializedProperty localPos;
         private SerializedProperty localRot;
@@ -65,18 +77,14 @@ namespace Moonstorm.EditorUtils.VisualElements
             if(SerializedProperty == null)
             {
                 ruleType = null;
-                useDirectReference = null;
-                asset = null;
-                address = null;
+                displayPrefab = null;
                 childName = null;
                 localPos = null;
                 localRot = null;
                 localScale = null;
                 HelpBox.SetDisplay(true);
                 standardViewContainer.SetDisplay(false);
-                UseDirectReference.Unbind();
-                PrefabField.Unbind();
-                AddressField.Unbind();
+                DisplayPrefab.onGUIHandler = null;
                 ItemDisplayRuleType.Unbind();
                 PasteButton.Unbind();
                 ChildName.Unbind();
@@ -88,19 +96,14 @@ namespace Moonstorm.EditorUtils.VisualElements
             }
 
             ruleType = SerializedProperty.FindPropertyRelative("ruleType");
-            var addressablePrefab = SerializedProperty.FindPropertyRelative("displayPrefab");
-            useDirectReference = addressablePrefab.FindPropertyRelative("useDirectReference");
-            asset = addressablePrefab.FindPropertyRelative("asset");
-            address = addressablePrefab.FindPropertyRelative("address");
+            displayPrefab = SerializedProperty.FindPropertyRelative("displayPrefabName");
             childName = SerializedProperty.FindPropertyRelative("childName");
             localPos = SerializedProperty.FindPropertyRelative("localPos");
             localRot = SerializedProperty.FindPropertyRelative("localAngles");
             localScale = SerializedProperty.FindPropertyRelative("localScales");
 
-            UseDirectReference.BindProperty(useDirectReference);
-            PrefabField.BindProperty(asset);
-            AddressField.BindProperty(address);
             ItemDisplayRuleType.BindProperty(ruleType);
+            DisplayPrefab.onGUIHandler = DrawDropDown;
             ChildName.BindProperty(childName);
             LocalPos.BindProperty(localPos);
             LocalRot.BindProperty(localRot);
@@ -110,7 +113,6 @@ namespace Moonstorm.EditorUtils.VisualElements
             HelpBox.SetDisplay(false);
             standardViewContainer.SetDisplay(true);
 
-            OnUseDirectReferenceChange(null, useDirectReference.boolValue);
             OnRuleTypeChange(null, (ItemDisplayRuleType?)ruleType.enumValueIndex);
         }
 
@@ -133,21 +135,6 @@ namespace Moonstorm.EditorUtils.VisualElements
             }
         }
 
-        private void OnUseDirectReferenceChange(ChangeEvent<bool> changeEvent, bool? defaultValue)
-        {
-            if (changeEvent == null && !defaultValue.HasValue)
-            {
-                UpdateButton(changeEvent);
-                return;
-            }
-            bool newValue = changeEvent?.newValue ?? defaultValue.Value;
-            useDirectReference.boolValue = newValue;
-            PrefabField.SetDisplay(newValue);
-            AddressField.SetDisplay(!newValue);
-
-            UpdateButton(changeEvent);
-        }
-
         private void OnRuleTypeChange(ChangeEvent<Enum> evt, ItemDisplayRuleType? defaultValue)
         {
             if((evt == null || evt.newValue == null) && !defaultValue.HasValue)
@@ -160,46 +147,6 @@ namespace Moonstorm.EditorUtils.VisualElements
             LimbMask.SetDisplay(ruleType == RoR2.ItemDisplayRuleType.LimbMask);
         }
 
-        private void OnPrefabSet(ChangeEvent<UnityEngine.Object> evt)
-        {
-            var value = evt.newValue;
-            if(!value)
-            {
-                asset.objectReferenceValue = value;
-                UpdateButton(evt);
-                return;
-            }
-
-            if(value is GameObject gameObject)
-            {
-                if(!gameObject.GetComponent<ItemDisplay>())
-                {
-                    Debug.LogWarning("Supplied GameObject does not have an ItemDisplay component!");
-                }
-                asset.objectReferenceValue = value;
-                UpdateButton(evt);
-            }
-        }
-
-        private void OnAddressSet(ChangeEvent<string> evt)
-        {
-            var val = evt.newValue;
-            if(AddressablesUtils.AddressableCatalogExists && !useDirectReference.boolValue)
-            {
-                Addressables.LoadAssetAsync<GameObject>(val);
-            }
-
-            address.stringValue = evt.newValue;
-            UpdateButton(evt);
-        }
-
-        private void UpdateButton(EventBase evt)
-        {
-            if(CurrentEntry != null && CurrentEntry.parent != null)
-            {
-                CurrentEntry.UpdateRepresentation?.Invoke(CurrentEntry);
-            }
-        }
 
         private void PasteValues()
         {
@@ -227,18 +174,38 @@ namespace Moonstorm.EditorUtils.VisualElements
             }
         }
 
+        private void DrawDropDown()
+        {
+            if (AvailableDisplayPrefabs == null)
+                return;
+
+            int currentIndex = AvailableDisplayPrefabs.IndexOf(displayPrefab.stringValue);
+            if (currentIndex == -1 && displayPrefab.stringValue.IsNullOrEmptyOrWhitespace())
+            {
+                currentIndex = 0;
+                displayPrefab.stringValue = AvailableDisplayPrefabs[currentIndex];
+                displayPrefab.serializedObject.ApplyModifiedProperties();
+                return;
+            }
+            else if(!AvailableDisplayPrefabs.Contains(displayPrefab.stringValue))
+            {
+                EditorGUILayout.LabelField(new GUIContent($"Display Prefab of name \"{displayPrefab.stringValue}\" could not be found.", $"The available Display Prefabs are:\n{string.Join("\n", AvailableDisplayPrefabs)}"), EditorStyles.boldLabel);
+                return;
+            }
+            int newIndex = EditorGUILayout.Popup("Display Prefab", currentIndex, AvailableDisplayPrefabs.ToArray());
+            string newDisplayPrefab = AvailableDisplayPrefabs[newIndex];
+            displayPrefab.stringValue = newDisplayPrefab;
+            if (displayPrefab.serializedObject.ApplyModifiedProperties())
+                CurrentEntry?.UpdateRepresentation?.Invoke(CurrentEntry);
+        }
+
         private void OnAttach(AttachToPanelEvent evt)
         {
             HelpBox.SetDisplay(SerializedProperty == null);
             standardViewContainer.SetDisplay(SerializedProperty != null);
 
-            PrefabField.SetObjectType<GameObject>();
-            PrefabField.allowSceneObjects = false;
-            PrefabField.RegisterValueChangedCallback(OnPrefabSet);
-            UseDirectReference.RegisterValueChangedCallback((x) => OnUseDirectReferenceChange(x, null));
-            AddressField.RegisterValueChangedCallback(OnAddressSet);
+            DisplayPrefab.onGUIHandler = DrawDropDown;
             ItemDisplayRuleType.RegisterValueChangedCallback((x) => OnRuleTypeChange(x, null));
-            AddressField.isDelayed = true;
             ChildName.isDelayed = true;
             PasteButton.clickable.clicked += PasteValues;
         }
@@ -253,9 +220,7 @@ namespace Moonstorm.EditorUtils.VisualElements
 
             HelpBox = this.Q<HelpBox>();
             standardViewContainer = this.Q<VisualElement>("StandardView");
-            UseDirectReference = this.Q<Toggle>();
-            PrefabField = this.Q<ObjectField>();
-            AddressField = this.Q<TextField>("Address");
+            DisplayPrefab = this.Q<IMGUIContainer>();
             PasteButton = this.Q<Button>();
             ChildName = this.Q<TextField>("ChildName");
             LocalPos = this.Q<Vector3Field>("LocalPos");

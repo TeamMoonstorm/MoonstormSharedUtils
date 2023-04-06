@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <RoR2EditorKit.VisualElements.HelpBox message-type="Info" message="Please Select a NamedRuleGroup Entry from the SideBar" name="HelpBox" style="display: flex;" />
+    <ui:VisualElement name="StandardView" style="height: 100%;">
+        <ui:TextField picking-mode="Ignore" label="Key Asset" name="KeyAsset" readonly="true" />
+        <RoR2EditorKit.VisualElements.ExtendedListView name="RuleListView" list-view-item-height="32" show-height-handle-bar="false" collection-resizable="true" style="height: 100%; padding-top: 5px;" />
+    </ui:VisualElement>
+</ui:UXML>

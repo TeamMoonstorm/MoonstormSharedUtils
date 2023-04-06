@@ -275,7 +275,6 @@ namespace Moonstorm
                 catch (Exception e)
                 {
                     Debug.LogError($"Failed to upgrade AddressNamedDisplayRule from group index {groupIndex} at {index} for {this}.\n{e}");
-                    Debug.LogError(e);
                     return copy;
                 }
             }

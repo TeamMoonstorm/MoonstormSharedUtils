@@ -53,6 +53,8 @@ namespace Moonstorm
         {
             [Tooltip("The type of display rule")]
             public ItemDisplayRuleType ruleType;
+            [Tooltip("The index of the display prefab, taken from the Display Prefabs arrays")]
+            public int displayPrefabIndex;
             [Tooltip("The name of the child where this display prefab will appear")]
             public string childName;
             [Tooltip("The local position of this display")]
@@ -75,13 +77,14 @@ namespace Moonstorm
             /// </summary>
             public const string NoValue = nameof(NoValue);
 
-            internal void CreateRule()
+            internal void CreateRule(GameObject[] displayPrefabs)
             {
                 if (string.IsNullOrEmpty(childName))
                 {
                     finishedRule = new ItemDisplayRule
                     {
                         childName = NoValue,
+                        followerPrefab = displayPrefabs[displayPrefabIndex],
                         localAngles = Vector3.zero,
                         localPos = Vector3.zero,
                         localScale = Vector3.zero,
@@ -94,6 +97,7 @@ namespace Moonstorm
                 finishedRule = new ItemDisplayRule
                 {
                     childName = childName,
+                    followerPrefab = displayPrefabs[displayPrefabIndex],
                     localAngles = localAngles,
                     localPos = localPos,
                     localScale = localScales,
@@ -110,7 +114,9 @@ namespace Moonstorm
 
         [Tooltip("The key asset provided will be appended to all the ItemDisplayRuleSets defined in namedDisplayDictionary")]
         public UnityEngine.Object keyAsset;
-        [Tooltip("The game object that will be used as a display prefab")]
+        [Tooltip("An array of valid display prefabs for this Item")]
+        public GameObject[] displayPrefabs = Array.Empty<GameObject>();
+        [Obsolete("Use DisplayPrefabs and specify the displayPrefabIndex on the DisplayRule")]
         public GameObject displayPrefab;
 
         [Tooltip("Implement the rules for this Dictionary")]
@@ -120,7 +126,9 @@ namespace Moonstorm
         private void Awake()
         {
             instances.AddIfNotInCollection(this);
+#if !UNITY_EDITOR
             ItemDisplayCatalog.AddDisplay(this);
+#endif
 
 #if DEBUG
 #if !UNITY_EDITOR
@@ -219,9 +227,8 @@ namespace Moonstorm
                 for (int i = 0; i < namedDisplay.displayRules.Count; i++)
                 {
                     DisplayRule rule = namedDisplay.displayRules[i];
-                    rule.CreateRule();
+                    rule.CreateRule(displayPrefabs);
                     var finishedRule = rule.finishedRule;
-                    finishedRule.followerPrefab = displayPrefab;
                     keyAssetRuleGroup.displayRuleGroup.AddDisplayRule(finishedRule);
                 }
             }
@@ -232,9 +239,16 @@ namespace Moonstorm
         [ContextMenu("Upgrade for SerializedItemDisplayCatalog")]
         private void Upgrade()
         {
+            int indexOfDisplayPrefab = displayPrefabs.Length;
+            HG.ArrayUtils.ArrayAppend(ref displayPrefabs, displayPrefab);
+
             for (int i = 0; i < namedDisplayDictionary.Count; i++)
             {
                 namedDisplayDictionary[i] = UpgradeNamedDisplayDictionary(namedDisplayDictionary[i], i);
+                for(int j = 0; j < namedDisplayDictionary[i].displayRules.Count; j++)
+                {
+                    namedDisplayDictionary[i].displayRules[j] = UpgradeDisplayRule(namedDisplayDictionary[i].displayRules[j], i, j);
+                }
             }
 
             NamedDisplayDictionary UpgradeNamedDisplayDictionary(NamedDisplayDictionary input, int index)
@@ -264,6 +278,26 @@ namespace Moonstorm
                 catch (Exception e)
                 {
                     Debug.LogError($"Failed to upgrade AddressNamedRuleGroup at index {index} for {this}.\n{e}");
+                    return copy;
+                }
+            }
+
+            DisplayRule UpgradeDisplayRule(DisplayRule input, int dictionaryIndex, int ruleIndex)
+            {
+                var copy = input;
+                try
+                {
+                    if(input.displayPrefabIndex == indexOfDisplayPrefab)
+                    {
+                        return input;
+                    }
+
+                    input.displayPrefabIndex = indexOfDisplayPrefab;
+                    return input;
+                }
+                catch(Exception e)
+                {
+                    Debug.LogError($"Failed to upgrade Displayrule from dictionary index {dictionaryIndex} at {ruleIndex} for {this}.\n{e}");
                     return copy;
                 }
             }

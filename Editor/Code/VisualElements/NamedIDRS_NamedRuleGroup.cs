@@ -5,6 +5,7 @@ using RoR2EditorKit.Data;
 using RoR2EditorKit.VisualElements;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,6 +22,7 @@ namespace Moonstorm.EditorUtils.VisualElements
 	{
         public new class UxmlFactory : UxmlFactory<NamedIDRS_NamedRuleGroup, UxmlTraits> { }
         public new class UxmlTraits : VisualElement.UxmlTraits { }
+        public ItemDisplayCatalog Catalog { get; internal set; }
         public CollectionButtonEntry CurrentEntry
         {
             get
@@ -41,51 +43,48 @@ namespace Moonstorm.EditorUtils.VisualElements
         private CollectionButtonEntry _currentEntry;
         public SerializedProperty SerializedProperty { get; private set; }
         public HelpBox HelpBox { get; }
-        public Toggle UseDirectReference { get; }
-        public ObjectField AssetField { get; }
-        public TextField AddressField { get; }
-        public EnumField LoadAssetFromField { get; }
+        public TextField KeyAsset { get; }
+        public ReadOnlyCollection<string> DisplayPrefabs
+        {
+            get
+            {
+                return CurrentEntry?.extraData as ReadOnlyCollection<string>;
+            }
+            set
+            {
+                if(CurrentEntry != null)
+                {
+                    CurrentEntry.extraData = value;
+                }
+            }
+        }
         public ExtendedListView ExtendedListView { get; }
         public event Action<CollectionButtonEntry> OnNamedRuleButtonClicked;
 
         private VisualElement standardViewContainer;
         private VisualElement keyAssetContainer;
         private VisualElement addressContainer;
-        private SerializedProperty useDirectReference;
-        private SerializedProperty asset;
-        private SerializedProperty address;
-        private SerializedProperty loadAssetFrom;
+        private SerializedProperty keyAsset;
         private void UpdateBinding()
         {
             if(SerializedProperty == null)
             {
                 ExtendedListView.collectionProperty = null;
-                useDirectReference = null;
-                asset = null;
-                address = null;
-                loadAssetFrom = null;
+                keyAsset = null;
                 HelpBox.SetDisplay(true);
+                HelpBox.message = "Please Select a NamedRuleGroup Entry from the SideBar";
+                HelpBox.messageType = MessageType.Info;
                 standardViewContainer.SetDisplay(false);
-                UseDirectReference.Unbind();
-                AssetField.Unbind();
-                AddressField.Unbind();
-                LoadAssetFromField.Unbind();
+                KeyAsset.Unbind();
                 return;
             }
             ExtendedListView.collectionProperty = SerializedProperty.FindPropertyRelative("rules");
-            var addressableKeyAsset = SerializedProperty.FindPropertyRelative("keyAsset");
-            useDirectReference = addressableKeyAsset.FindPropertyRelative("useDirectReference");
-            asset = addressableKeyAsset.FindPropertyRelative("asset");
-            address = addressableKeyAsset.FindPropertyRelative("address");
-            loadAssetFrom = addressableKeyAsset.FindPropertyRelative("loadAssetFrom");
-            UseDirectReference.BindProperty(useDirectReference);
-            AssetField.BindProperty(asset);
-            AddressField.BindProperty(address);
-            LoadAssetFromField.BindProperty(loadAssetFrom);
+            keyAsset = SerializedProperty.FindPropertyRelative("keyAssetName");
+            KeyAsset.BindProperty(keyAsset);
             HelpBox.SetDisplay(false);
             standardViewContainer.SetDisplay(true);
 
-            OnUseDirectReferenceChange(null, useDirectReference.boolValue);
+            OnKeyAssetNameChange(null, keyAsset.stringValue);
         }
 
         public void OnIDRSFieldValueSet(ItemDisplayRuleSet obj)
@@ -107,80 +106,6 @@ namespace Moonstorm.EditorUtils.VisualElements
             }
         }
 
-        private void OnUseDirectReferenceChange(ChangeEvent<bool> changeEvent, bool? defaultValue = null)
-        {
-            if (changeEvent == null && !defaultValue.HasValue)
-            {
-                UpdateButton(changeEvent);
-                return;
-            }
-            bool newValue = changeEvent?.newValue ?? defaultValue.Value;
-            useDirectReference.boolValue = newValue;
-            keyAssetContainer.SetDisplay(newValue);
-            addressContainer.SetDisplay(!newValue);
-            LoadAssetFromField.SetValueWithoutNotify(newValue ? AddressableAssets.AddressableKeyAsset.KeyAssetAddressType.UsingDirectReference : AddressableAssets.AddressableKeyAsset.KeyAssetAddressType.Addressables);
-
-            UpdateButton(changeEvent);
-        }
-
-        private void OnKeyAssetSet(ChangeEvent<UnityEngine.Object> evt)
-        {
-            var value = evt.newValue;
-            if(!value)
-            {
-                asset.objectReferenceValue = value;
-                UpdateButton(evt);
-                return;
-            }
-
-            if((value is ItemDef) || (value is EquipmentDef))
-            {
-                asset.objectReferenceValue = value;
-                UpdateButton(evt);
-                return;
-            }
-
-            Debug.LogWarning("Only EquipmentDefs or ItemDefs can be used as key assets");
-            INotifyValueChanged<ScriptableObject> obj = evt.target as INotifyValueChanged<ScriptableObject>;
-            obj.SetValueWithoutNotify((ScriptableObject)evt.previousValue);
-        }
-
-        private void OnAddressSet(ChangeEvent<string> evt)
-        {
-            AddressableKeyAsset.KeyAssetAddressType addressType = (AddressableKeyAsset.KeyAssetAddressType)LoadAssetFromField.value;
-
-            if (addressType == AddressableKeyAsset.KeyAssetAddressType.EquipmentCatalog || addressType == AddressableKeyAsset.KeyAssetAddressType.ItemCatalog)
-            {
-                address.stringValue = evt.newValue;
-                UpdateButton(evt);
-                return;
-            }
-
-            var newAddress = evt.newValue;
-            if(AddressablesUtils.AddressableCatalogExists && !useDirectReference.boolValue)
-            {
-                try
-                {
-                    Addressables.LoadAssetAsync<ScriptableObject>(newAddress);
-                }
-                catch(InvalidKeyException ex)
-                {
-                    Debug.LogError($"The current address is not a valid address. {ex}");
-                }
-            }
-
-            address.stringValue = evt.newValue;
-            UpdateButton(evt);
-        }
-
-        private void UpdateButton(EventBase changeEvent)
-        {
-            if(CurrentEntry != null && CurrentEntry.parent != null)
-            {
-                CurrentEntry.UpdateRepresentation?.Invoke(CurrentEntry);
-            }
-        }
-
         private VisualElement CreateElement()
         {
             return new CollectionButtonEntry();
@@ -192,6 +117,7 @@ namespace Moonstorm.EditorUtils.VisualElements
             entry.style.height = ExtendedListView.listViewItemHeight;
             entry.Button.style.height = ExtendedListView.listViewItemHeight;
             entry.UpdateRepresentation = UpdateButtonDisplay;
+            entry.extraData = DisplayPrefabs;
             entry.SerializedProperty = property;
             entry.Button.clickable.clicked += () => OnNamedRuleButtonClicked?.Invoke(entry);
         }
@@ -201,58 +127,66 @@ namespace Moonstorm.EditorUtils.VisualElements
             if (entry.SerializedProperty == null)
                 return;
 
-            bool validEntry = false;
-            string prefabName = string.Empty;
-            entry.SerializedProperty.serializedObject.ApplyModifiedProperties();
-            var addressableGameObject = entry.SerializedProperty.FindPropertyRelative("displayPrefab");
-            if(addressableGameObject.FindPropertyRelative("useDirectReference").boolValue)
+            var displayName = entry.SerializedProperty.FindPropertyRelative("displayPrefabName");
+            var displays = entry.extraData as ReadOnlyCollection<string>;
+
+            if(displays == null)
             {
-                var asset = addressableGameObject.FindPropertyRelative("asset");
-                if(asset.objectReferenceValue)
-                {
-                    validEntry = true;
-                    prefabName = asset.objectReferenceValue.name;
-                }
-                else
-                {
-                    validEntry = false;
-                    prefabName = null;
-                }
+                entry.Button.text = "Invalid Rule";
+                entry.HelpBox.messageType = MessageType.Warning;
+                entry.HelpBox.message = "This Rule may be Invalid, looks like the DisplayPrefab could not be found in the ItemDisplayCatalog, are you sure your catalog is up to date?";
+                return;
+            }
+            displayName.stringValue = displayName.stringValue.IsNullOrEmptyOrWhitespace() ? displays.FirstOrDefault() : displayName.stringValue;
+            if(displays.Contains(displayName.stringValue))
+            {
+                string childName = CheckChildName();
+                entry.Button.text = $"{displayName.stringValue}|{childName}";
+                return;
             }
             else
             {
-                var address = addressableGameObject.FindPropertyRelative("address").stringValue;
-                if(address.IsNullOrEmptyOrWhitespace())
-                {
-                    validEntry = false;
-                    prefabName = null;
-                }
-                else
-                {
-                    validEntry = true;
-                    string[] split = address.Split('/');
-                    prefabName = split[split.Length - 1];
-                }
+                entry.Button.text = "Invalid Rule";
+                entry.HelpBox.messageType = MessageType.Warning;
+                entry.HelpBox.message = "This Rule may be Invalid, looks like the DisplayPrefab could not be found in the ItemDisplayCatalog, are you sure your catalog is up to date?";
             }
 
-            if(validEntry)
+            string CheckChildName()
             {
                 var childNameProp = entry.SerializedProperty.FindPropertyRelative("childName");
-                string childName = childNameProp.stringValue.IsNullOrEmptyOrWhitespace() ? "RuntimeSetup" : childNameProp.stringValue;
-                entry.Button.text = prefabName + " | " + childName;
+                var childName = childNameProp.stringValue.IsNullOrEmptyOrWhitespace() ? "RuntimeSetup" : childNameProp.stringValue;
+
                 entry.HelpBox.SetDisplay(childName == "RuntimeSetup");
-                entry.HelpBox.messageType = childName == "RuntimeSetup" ? MessageType.Info : MessageType.None ;
+                entry.HelpBox.messageType = childName == "RuntimeSetup" ? MessageType.Info : MessageType.None;
                 entry.HelpBox.message = childName == "RuntimeSetup" ? "No child specified, this entry will be modified to attach to the first childLocator entry of the model, useful for getting the values from the IDPH" : string.Empty;
-            }
-            else
-            {
-                entry.HelpBox.SetDisplay(true);
-                entry.HelpBox.messageType = MessageType.Warning;
-                entry.HelpBox.message = "Display Prefab not Set";
-                entry.Button.text = "Invalid Rule";
+
+                return childName;
             }
         }
 
+        private void OnKeyAssetNameChange(ChangeEvent<string> evt, string defaultVal = null)
+        {
+            string newVal = evt?.newValue ?? defaultVal;
+            keyAsset.stringValue = newVal;
+            var potentialCollection = Catalog.GetKeyAssetDisplays(newVal);
+            if(potentialCollection == null)
+            {
+                HelpBox.message = "The KeyAsset value for this entry may be invalid, as the value wasnt found in the ItemDisplayCatalog, are your sure your ItemDisplayCatalog is up to date?";
+                HelpBox.messageType = MessageType.Info;
+                HelpBox.SetDisplay(true);
+                KeyAsset.isReadOnly = false;
+            }
+            else
+            {
+                HelpBox.message = "Please Select a NamedRuleGroup Entry from the SideBar";
+                HelpBox.messageType = MessageType.Info;
+                HelpBox.SetDisplay(false);
+                KeyAsset.isReadOnly = true;
+            }
+            DisplayPrefabs = potentialCollection;
+            ExtendedListView.Refresh();
+            CurrentEntry.UpdateRepresentation?.Invoke(CurrentEntry);
+        }
         private void OnAttach(AttachToPanelEvent evt)
         {
             ListView listView = ExtendedListView.Q<ListView>();
@@ -260,11 +194,8 @@ namespace Moonstorm.EditorUtils.VisualElements
             HelpBox.SetDisplay(SerializedProperty == null);
             standardViewContainer.SetDisplay(SerializedProperty != null);
 
-            AssetField.SetObjectType<ScriptableObject>();
-            AssetField.RegisterValueChangedCallback(OnKeyAssetSet);
-            UseDirectReference.RegisterValueChangedCallback((x) => OnUseDirectReferenceChange(x));
-            AddressField.RegisterValueChangedCallback(OnAddressSet);
-            AddressField.isDelayed = true;
+            KeyAsset.isDelayed = true;
+            KeyAsset.RegisterValueChangedCallback((txt) => OnKeyAssetNameChange(txt, null));
 
             ExtendedListView.CreateElement = CreateElement;
             ExtendedListView.BindElement = BindElement;
@@ -279,15 +210,8 @@ namespace Moonstorm.EditorUtils.VisualElements
             TemplateHelpers.GetTemplateInstance(nameof(NamedIDRS_NamedRuleGroup), this, (_) => true);
             HelpBox = this.Q<HelpBox>();
             ExtendedListView = this.Q<ExtendedListView>();
-            AddressField = this.Q<TextField>();
-            AssetField = this.Q<ObjectField>();
-            UseDirectReference = this.Q<Toggle>();
-            keyAssetContainer = this.Q<VisualElement>("KeyAssetContainer");
-            addressContainer = this.Q<VisualElement>("AddressContainer");
+            KeyAsset = this.Q<TextField>();
             standardViewContainer = this.Q<VisualElement>("StandardView");
-
-            LoadAssetFromField = new EnumField("Load Asset From", AddressableAssets.AddressableKeyAsset.KeyAssetAddressType.UsingDirectReference);
-            addressContainer.Add(LoadAssetFromField);
 
             RegisterCallback<AttachToPanelEvent>(OnAttach);
             RegisterCallback<DetachFromPanelEvent>(OnDetach);
