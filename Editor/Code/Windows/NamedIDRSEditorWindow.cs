@@ -26,7 +26,6 @@ namespace Moonstorm.EditorUtils.EditorWindows
         [SerializeField]
         private string serializedObjectGUID;
 
-        private bool NamedIDRSSelected => SerializedObject?.targetObject is NamedIDRS;
 
         private void OnEnable()
         {
@@ -40,6 +39,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
         }
         protected override void OnDisable()
         {
+            base.OnDisable();
             Selection.selectionChanged -= CheckForNamedIDRS;
         }
 
@@ -48,11 +48,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
             var obj = Selection.activeObject;
             if(obj == null && SerializedObject == null)
             {
-                OnIDRSFieldValueSet(null);
-                namedIDRSField.CheckForNamedIDRS(null);
-                namedRuleGroupList.CheckForNamedIDRS(null);
-                namedRuleGroup.CheckForNamedIDRS(null);
-                namedRule.CheckForNamedIDRS(null);
+                SetSerializedObject(null);
                 return;
             }
 
@@ -64,7 +60,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
             if(obj is NamedIDRS namedIDRS)
             {
                 SetSerializedObject(namedIDRS);
-                serializedObjectGUID = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(namedIDRS));
+                serializedObjectGUID = AssetDatabaseUtils.GetGUIDFromAsset(obj);
             }
             else if(!serializedObjectGUID.IsNullOrEmptyOrWhitespace())
             {
@@ -73,8 +69,8 @@ namespace Moonstorm.EditorUtils.EditorWindows
 
             void SetSerializedObject(NamedIDRS _namedIDRS)
             {
-                SerializedObject = new SerializedObject(_namedIDRS);
-                OnIDRSFieldValueSet(TargetType.idrs);
+                SerializedObject = _namedIDRS ? new SerializedObject(_namedIDRS) : null;
+                OnIDRSFieldValueSet(TargetType.AsValidOrNull()?.idrs);
                 namedIDRSField.CheckForNamedIDRS(SerializedObject);
                 namedRuleGroupList.CheckForNamedIDRS(SerializedObject);
                 namedRuleGroup.CheckForNamedIDRS(SerializedObject);

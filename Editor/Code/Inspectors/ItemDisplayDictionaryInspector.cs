@@ -8,19 +8,24 @@ namespace Moonstorm.EditorUtils.Inspectors
     [CustomEditor(typeof(ItemDisplayDictionary))]
     public class ItemDisplayDictionaryInspector : Editor
     {
-        private static ItemDisplayDictionaryEditorWindow Instance;
         public override VisualElement CreateInspectorGUI()
         {
-            Button button = new Button(() =>
-            {
-                /*if (Instance == null)
-                {
-                    Instance = ObjectEditingEditorWindow<ItemDisplayDictionary>.OpenEditorWindow<ItemDisplayDictionaryEditorWindow>(target);
-                }
-                Instance.Focus();*/
-            });
+            VisualElement element = new VisualElement();
+            Button button = new Button(Open);
             button.text = $"Open ItemDisplayDictionary Editor Window";
-            return button;
+            element.Add(button);
+            return element;
+        }
+
+        private void Open()
+        {
+            ExtendedEditorWindow.OpenEditorWindow<ItemDisplayDictionaryEditorWindow>(serializedObject);
+        }
+
+        [MenuItem("Tools/MSEU/Windows/ItemDisplayDictionary Editor Window")]
+        private static void OpenStatic()
+        {
+            ExtendedEditorWindow.OpenEditorWindow<ItemDisplayDictionaryEditorWindow>(false);
         }
     }
 }

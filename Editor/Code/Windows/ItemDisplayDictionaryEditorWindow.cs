@@ -10,12 +10,91 @@ using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Moonstorm.EditorUtils.VisualElements;
 
 namespace Moonstorm.EditorUtils.EditorWindows
 {
     public class ItemDisplayDictionaryEditorWindow : MSObjectEditingEditorWindow<ItemDisplayDictionary>
     {
-        VisualElement keyAssetContainer;
+        private ItemDisplayDictionary_KeyAssetField keyAssetField;
+        //private ItemDisplayDictionary_NamedDisplayDictionaryList namedDisplayDictionaryList;
+        //private ItemDisplayDictionary_NamedDisplayDictionary namedDisplayDictionary;
+        //private ItemDisplayDictionary_DisplayRule displayRule;
+
+        private ItemDisplayCatalog catalog;
+        [SerializeField]
+        private string serializedObjectGUID;
+
+        private void OnEnable()
+        {
+            Selection.selectionChanged += CheckForItemDisplayDictionary;
+            catalog = ItemDisplayCatalog.LoadCatalog();
+            if(catalog == null)
+            {
+                Close();
+                return;
+            }
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            Selection.selectionChanged -= CheckForItemDisplayDictionary;
+        }
+
+        private void CheckForItemDisplayDictionary()
+        {
+            var obj = Selection.activeObject;
+            if(obj == null && SerializedObject == null)
+            {
+                SetSerializedObject(null);
+                return;
+            }
+
+            if (SerializedObject != null && SerializedObject.targetObject == obj)
+                return;
+
+            if(obj is ItemDisplayDictionary idd)
+            {
+                SetSerializedObject(idd);
+                serializedObjectGUID = AssetDatabaseUtils.GetGUIDFromAsset(obj);
+            }
+            else if(!serializedObjectGUID.IsNullOrEmptyOrWhitespace())
+            {
+                SetSerializedObject(AssetDatabaseUtils.LoadAssetFromGUID<ItemDisplayDictionary>(serializedObjectGUID));
+            }
+
+            void SetSerializedObject(ItemDisplayDictionary dictionary)
+            {
+                SerializedObject = dictionary ? new SerializedObject(dictionary) : null;
+                OnKeyAssetSet(TargetType.AsValidOrNull()?.keyAsset as ScriptableObject);
+                keyAssetField.CheckForIDD(SerializedObject);
+            }
+        }
+
+        protected override void CreateGUI()
+        {
+            base.CreateGUI();
+            keyAssetField = rootVisualElement.Q<ItemDisplayDictionary_KeyAssetField>();
+
+            CheckForItemDisplayDictionary();
+            OnKeyAssetSet(TargetType.AsValidOrNull()?.keyAsset as ScriptableObject);
+
+            keyAssetField.OnKeyAssetValueSet += OnKeyAssetSet;
+        }
+
+        private void OnKeyAssetSet(ScriptableObject scriptableObject)
+        {
+
+        }
+        private void UpdateCatalog()
+        {
+            catalog = ItemDisplayCatalog.LoadCatalog();
+            //Assign catalog tto conttrols
+        }
+
+
+        /*VisualElement keyAssetContainer;
         VisualElement rootContainer;
         VisualElement dictionaryContainer;
         VisualElement displayRulesContainer;
@@ -351,6 +430,6 @@ namespace Moonstorm.EditorUtils.EditorWindows
             idphValuesContainer.Q<TextField>("childName").RegisterValueChangedCallback(_ => displayRulesHelper.TiedListView.Refresh());
 
             SerializedObject.ApplyModifiedProperties();
-        }
+        }*/
     }
 }
