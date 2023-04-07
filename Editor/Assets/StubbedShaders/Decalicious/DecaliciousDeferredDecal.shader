@@ -1,4 +1,4 @@
-Shader "StubbedDecalicious/DecaliciousUnlitDecal" {
+Shader "StubbedDecalicious/DecaliciousDeferredDecal" {
 	Properties {
 		_MaskTex ("Mask", 2D) = "white" {}
 		[PerRendererData] _MaskMultiplier ("Mask (Multiplier)", Float) = 1
