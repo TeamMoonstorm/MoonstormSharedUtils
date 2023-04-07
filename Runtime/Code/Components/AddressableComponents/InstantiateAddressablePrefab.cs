@@ -13,6 +13,8 @@ namespace Moonstorm.Components.Addressables
         [SerializeField] private string address;
         [Tooltip("When the prefab is instantiated, and this is true, the prefab's position and rotation will be set to 0")]
         [SerializeField] private bool setPositionAndRotationToZero;
+        [Tooltip("setPositionAndRotationToZero would work relative to it's parent")]
+        [SerializeField] private bool useLocalPositionAndRotation;
         [Tooltip("Wether the Refresh method will be called in the editor")]
         [SerializeField] private bool refreshInEditor;
         [SerializeField, HideInInspector] private bool hasNetworkIdentity;
@@ -68,12 +70,20 @@ namespace Moonstorm.Components.Addressables
             instance.hideFlags |= (HideFlags.DontSaveInEditor | HideFlags.DontSaveInBuild | HideFlags.NotEditable);
             foreach (Transform t in instance.transform)
             {
-                t.hideFlags = HideFlags.HideInHierarchy | HideFlags.HideInInspector | HideFlags.NotEditable;
+                t.hideFlags = HideFlags.DontSaveInEditor | HideFlags.DontSaveInBuild | HideFlags.NotEditable;
             }
             if (setPositionAndRotationToZero)
             {
                 Transform t = instance.transform;
-                t.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+                if (useLocalPositionAndRotation)
+                {
+                    t.localPosition = Vector3.zero;
+                    t.localRotation = Quaternion.identity;
+                }
+                else
+                {
+                    t.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+                }
             }
         }
     }
