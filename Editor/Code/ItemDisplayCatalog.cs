@@ -36,7 +36,13 @@ namespace Moonstorm.EditorUtils
         public ReadOnlyDictionary<string, ReadOnlyCollection<string>> ItemToDisplayPrefabs { get; private set; }
         public ReadOnlyDictionary<string, ReadOnlyCollection<string>> EquipmentToDisplayPrefabs { get; private set; }
         public ReadOnlyDictionary<string, ReadOnlyCollection<string>> EliteEquipmentToDisplayPrefabs { get; private set; }
-
+        public bool DoesIDRSExist(string idrsKey)
+        {
+            if (SurvivorItemDisplayRuleSets.Contains(idrsKey))
+                return true;
+            else
+                return EnemyItemDisplayRuleSets.Contains(idrsKey);
+        }
         public ReadOnlyCollection<string> GetKeyAssetDisplays(string key)
         {
             if (key.IsNullOrEmptyOrWhitespace())

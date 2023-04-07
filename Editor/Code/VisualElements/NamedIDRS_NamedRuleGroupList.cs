@@ -34,7 +34,6 @@ namespace Moonstorm.EditorUtils.VisualElements
         public event Action<CollectionButtonEntry> OnNamedRuleGroupButtonClicked;
         public event Action OnForceCatalogUpdate;
 
-        private VisualElement _buttonContainer;
         private SerializedObject _serializedObject;
         internal void OnIDRSFieldValueSet(ItemDisplayRuleSet obj)
         {
@@ -211,7 +210,6 @@ namespace Moonstorm.EditorUtils.VisualElements
             AddAllItemsButton.clicked += AddAllItems;
             AddOnlyEliteEquipmentsButton.clicked += AddEliteEquipments;
             AddMissingEntriesButton.clicked += AddMissingEntries;
-            _buttonContainer.SetDisplay(AddressablesUtils.AddressableCatalogExists);
         }
 
         private void OnDetach(DetachFromPanelEvent evt)
@@ -224,12 +222,11 @@ namespace Moonstorm.EditorUtils.VisualElements
             TemplateHelpers.GetTemplateInstance(nameof(NamedIDRS_NamedRuleGroupList), this, (pth) => true);
             ExtendedListView = this.Q<ExtendedListView>();
             ForceCatalogUpdate = this.Q<Button>("ForceUpdateCatalog");
-            SortByName = this.Q<Button>("SortByName");
+            SortByName = this.Q<Button>("SortByNameButton");
             AddAllEquipmentsButton = this.Q<Button>("AddAllEquipments");
             AddAllItemsButton = this.Q<Button>("AddAllItems");
             AddOnlyEliteEquipmentsButton = this.Q<Button>("AddOnlyEliteEquipments");
             AddMissingEntriesButton = this.Q<Button>("AddMissingEntries");
-            _buttonContainer = this.Q<VisualElement>("Buttons");
 
             RegisterCallback<AttachToPanelEvent>(OnAttach);
             RegisterCallback<DetachFromPanelEvent>(OnDetach);

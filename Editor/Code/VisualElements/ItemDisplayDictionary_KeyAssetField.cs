@@ -62,7 +62,13 @@ namespace Moonstorm.EditorUtils.VisualElements
         public void OnKeyAssetSet(ChangeEvent<UnityEngine.Object> evt)
         {
             ScriptableObject so = (ScriptableObject)evt.newValue;
-            if(!(so is ItemDef) || !(so is EquipmentDef))
+            if(!so)
+            {
+                HelpBox.SetDisplay(false);
+                HelpBox.message = "No KeyAsset Set, Cannot show data.";
+                HelpBox.messageType = MessageType.Info;
+            }
+            else if(!(so is ItemDef ^ so is EquipmentDef))
             {
                 Debug.LogWarning("KeyAsset MUST be either an ItemDef or EquipmentDef!");
                 KeyAsset.SetValueWithoutNotify(evt.previousValue);
@@ -71,7 +77,7 @@ namespace Moonstorm.EditorUtils.VisualElements
             HelpBox.SetDisplay(!so);
             HelpBox.message = so ? string.Empty : "No KeyAsset Set, Cannot show data.";
             HelpBox.messageType = so ? MessageType.None : MessageType.Info;
-            OnKeyAssetValueSet.Invoke(so);
+            OnKeyAssetValueSet?.Invoke(so);
         }
 
         private VisualElement CreateObjectField() => new ObjectField();
@@ -81,6 +87,8 @@ namespace Moonstorm.EditorUtils.VisualElements
             objField.allowSceneObjects = false;
             objField.SetObjectType<GameObject>();
             objField.style.height = DisplayPrefabs.listViewItemHeight;
+            objField.label = property.displayName;
+            objField.BindProperty(property);
         }
         public void OnAttach(AttachToPanelEvent evt)
         {

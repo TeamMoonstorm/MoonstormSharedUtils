@@ -135,11 +135,13 @@ namespace Moonstorm
                 var def = SurvivorCatalog.FindSurvivorDefFromBody(body);
                 if (def)
                 {
-                    survivorRuleSets.AddIfNotInCollection(key);
+                    if(!enemyRuleSets.Contains(key))
+                        survivorRuleSets.AddIfNotInCollection(key);
                 }
                 else
                 {
-                    enemyRuleSets.AddIfNotInCollection(key);
+                    if(!survivorRuleSets.Contains(key))
+                        enemyRuleSets.AddIfNotInCollection(key);
                 }
 #endif
             }

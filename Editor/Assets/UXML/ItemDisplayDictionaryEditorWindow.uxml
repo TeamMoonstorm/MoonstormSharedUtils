@@ -1,0 +1,18 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <ui:VisualElement name="Header" class="container_border-5">
+        <Style src="/Packages/teammoonstorm-moonstormsharedutils/Editor/Assets/UXML/CustomControls/IDRSUSS.uss" />
+        <Moonstorm.EditorUtils.VisualElements.ItemDisplayDictionary_KeyAssetField name="ItemDisplayDictionary_KeyAssetField" />
+    </ui:VisualElement>
+    <ui:VisualElement name="Center" class="percent_height-100 percent_width-100 container_border-3" style="flex-direction: row; width: auto;">
+        <Style src="/Packages/teammoonstorm-moonstormsharedutils/Editor/Assets/UXML/CustomControls/IDRSUSS.uss" />
+        <ui:VisualElement name="SideBar" class="container_border-1" style="width: auto; min-width: 350px;">
+            <Moonstorm.EditorUtils.VisualElements.ItemDisplayDictionary_NamedDisplayDictionaryList name="ItemDisplayDictionary_NamedDisplayDictionaryList" style="height: 100%; width: auto;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="Entries" class="container_border-1" style="width: 50%;">
+            <Moonstorm.EditorUtils.VisualElements.ItemDisplayDictionary_NamedDisplayDictionary name="ItemDisplayDictionary_NamedDisplayDictionary" style="height: 100%;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="Rules" class="container_border-1" style="width: 50%;">
+            <Moonstorm.EditorUtils.VisualElements.ItemDisplayDictionary_DisplayRule name="ItemDisplayDictionary_DisplayRule" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

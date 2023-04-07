@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <RoR2EditorKit.VisualElements.HelpBox name="HelpBox" message="Please Select a NamedDisplayDictionary Entry from the SideBar" message-type="Info" />
+    <ui:VisualElement name="StandardView" style="height: 100%;">
+        <ui:TextField picking-mode="Ignore" label="IDRS Name" name="IDRSName" readonly="true" />
+        <RoR2EditorKit.VisualElements.ExtendedListView name="ExtendedListView" list-view-item-height="36" show-height-handle-bar="false" style="height: 100%;" />
+    </ui:VisualElement>
+</ui:UXML>
