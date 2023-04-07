@@ -123,10 +123,8 @@ namespace Moonstorm
         private void Awake()
         {
             instances.AddIfNotInCollection(this);
-#if DEBUG
 #if !UNITY_EDITOR
             Upgrade();
-#endif
 #endif
         }
         private void OnDestroy()
@@ -201,7 +199,6 @@ namespace Moonstorm
             return keyAssetList.ToArray();
         }
 
-#if DEBUG
         [ContextMenu("Upgrade for SerializedItemDisplayCatalog")]
         private void Upgrade()
         {
@@ -279,6 +276,5 @@ namespace Moonstorm
                 }
             }
         }
-#endif
     }
 }

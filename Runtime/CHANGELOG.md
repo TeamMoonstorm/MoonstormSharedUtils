@@ -1,3 +1,37 @@
+### '1.4.0' - IDRS Utility and Stabilization
+
+* Finally updated the ``package.json`` file to properly display the Runtime version
+
+* Editor:
+    * Updated to use RoR2EK 4.0.1
+    * Fixed issue where ``BasicBuild`` would Stage Assetbundles before Staging the Assembly
+    * Fixed issue where the ``GenericContributorBuild`` wouldn't have MSU in its whitelist
+    * Stubbed Shaders are now included in the MSU AssetBundle to avoid duplicate assets across multiple bundles
+    * ``CameraInstantiator`` now doesnt save in Editor (thanks Cacapexac)
+    * Added ``ItemDisplayCatalog`` class, which is populated by the ``ItemDisplayCatalog.json`` which is created at Run time when building MSU in Debug mode.
+    * Added a new and improved version of the NamedIDRS window that uses the ItemDisplayCatalog
+    * Added a new and improved version of the ItemDisplayDictionary window that uses ItemDisplayCatalog
+    * Fixed issue where ``DecaliciousDeferredDecal`` would have the wrong shader name
+
+* Runtime:
+    * Fixed an issue where the ``ItemTierPickupDisplayHelper`` would throw an NRE under specific situations
+    * Added HOLY.dll support
+        * Internally fixes issues where interfaces implementing ``IStatItemBehaviour.RecalculateStatsStart()`` would run after ``orig(self)``
+    * Added an ``AsValidOrNull`` extension method which allows the ussage of the ``?.`` and ``??`` operators with unity objects
+    * Improved the ``InstantiateAddressablePrefab`` (thanks Caxapexac)
+    * Marked ``AddressableKeyAsset`` and ``AddressableIDRS`` as Obsolete
+    * Marked ``NamedIDRS.AddressNamedRuleGroup.keyAsset`` and ``NamedIDRS.addressNamedDisplayRule.displayPrefab`` as Obsolete
+    * ``ItemDisplayDictionary`` can now have multiple display prefabs, the selected one is chosen via indices.
+    * Marked ``ItemDisplayDictionary.NamedDisplayDictionary.idrs`` and ``ItemDisplayDictionary.displayPrefabs`` as Obsolete
+    * Added ``ItemDisplayCatalog``
+        * The ``ItemDisplayCatalog`` is used at Runtime for appending the item display data of ``ItemDisplayDictionary`` and ``NamedIDRS`` to their respective target
+        * This is done via collecting all the IDRS in the game and assigning string keys, alongside collecting all the display prefabs, and assigning string keys that correspond to their key asset
+        * In ``DEBUG`` mode, the ItemDisplayCatalog serializes all the data collected into an ``ItemDisplayCatalog.json``
+        * The ``ItemDisplayCatalog.json`` is then used in the Editor for adding data and manipulating existing ``ItemDisplayDictionary`` and ``NamedIDRS`` assets
+    * Added ContextMenus for ``ItemDisplayDictionary`` and ``NamedIDRS`` for updating to the ``ItemDisplayCatalog`` system
+        * This is also ran at runtime awake to ensure previous, non updated mods dont break.
+    * Fixed issue where moduleAvailability didnt work at all
+
 ### '1.3.0' - Stage Creation Utilities
 
 * Removed MSUTests, as it wasnt an actual tests package, it'll come back soon(tm)

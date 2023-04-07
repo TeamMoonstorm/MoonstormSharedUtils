@@ -40,12 +40,12 @@ namespace Moonstorm
         /// <summary>
         /// An action that gets invoked when the <see cref="MoonstormInteractables"/> dictionary has been populated
         /// </summary>
-        [Obsolete("use \"ModuleAvailability.CallWhenAvailable()\" instead")]
+        [Obsolete("use \"moduleAvailability.CallWhenAvailable()\" instead")]
         public static Action<ReadOnlyDictionary<GameObject, InteractableBase>> OnDictionaryCreated;
         /// <summary>
-        /// Call ModuleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
+        /// Call moduleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
         /// </summary>
-        public static ResourceAvailability ModuleAvailability { get; } = default(ResourceAvailability);
+        public static ResourceAvailability moduleAvailability;
         private static Dictionary<DirectorAPI.Stage, List<MSInteractableDirectorCard>> currentStageToCards = new Dictionary<DirectorAPI.Stage, List<MSInteractableDirectorCard>>();
         private static Dictionary<string, List<MSInteractableDirectorCard>> currentCustomStageToCards = new Dictionary<string, List<MSInteractableDirectorCard>>();
         #endregion
@@ -61,7 +61,7 @@ namespace Moonstorm
             interactables = null;
 
             OnDictionaryCreated?.Invoke(MoonstormInteractables);
-            ModuleAvailability.MakeAvailable();
+            moduleAvailability.MakeAvailable();
         }
 
 

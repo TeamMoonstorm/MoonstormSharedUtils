@@ -38,12 +38,12 @@ namespace Moonstorm
         /// <summary>
         /// An action that gets invoked when the <see cref="MoonstormBuffs"/> and <see cref="MoonstormOverlayMaterials"/> have been populated
         /// </summary>
-        [Obsolete("use \"ModuleAvailability.CallWhenAvailable()\" instead")]
+        [Obsolete("use \"moduleAvailability.CallWhenAvailable()\" instead")]
         public static Action<ReadOnlyDictionary<BuffDef, BuffBase>, ReadOnlyDictionary<BuffDef, Material>> OnDictionariesCreated;
         /// <summary>
-        /// Call ModuleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
+        /// Call moduleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
         /// </summary>
-        public static ResourceAvailability ModuleAvailability { get; } = default(ResourceAvailability);
+        public static ResourceAvailability moduleAvailability;
         #endregion
 
         [SystemInitializer(typeof(BuffCatalog))]
@@ -60,7 +60,7 @@ namespace Moonstorm
             overlayMaterials = null;
 
             OnDictionariesCreated?.Invoke(MoonstormBuffs, MoonstormOverlayMaterials);
-            ModuleAvailability.MakeAvailable();
+            moduleAvailability.MakeAvailable();
         }
 
         #region Buffs

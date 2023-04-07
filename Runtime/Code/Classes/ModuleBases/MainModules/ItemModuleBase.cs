@@ -29,12 +29,12 @@ namespace Moonstorm
         /// <summary>
         /// An action that gets invoked when the <see cref="MoonstormItems"/> dictionary has been populated
         /// </summary>
-        [Obsolete("use \"ModuleAvailability.CallWhenAvailable()\" instead")]
+        [Obsolete("use \"moduleAvailability.CallWhenAvailable()\" instead")]
         public static Action<ReadOnlyDictionary<ItemDef, ItemBase>> OnDictionaryCreated;
         /// <summary>
-        /// Call ModuleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
+        /// Call moduleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
         /// </summary>
-        public static ResourceAvailability ModuleAvailability { get; } = default(ResourceAvailability);
+        public static ResourceAvailability moduleAvailability;
         #endregion
 
         //Due to potential timing issues, there is the posibility of the ContagiousItemManager's init to run before SystemInit, which would be too late for us to add new void items.
@@ -51,7 +51,7 @@ namespace Moonstorm
             items = null;
 
             OnDictionaryCreated?.Invoke(MoonstormItems);
-            ModuleAvailability.MakeAvailable();
+            moduleAvailability.MakeAvailable();
         }
 
         private static void FinishVoidItemBases(On.RoR2.Items.ContagiousItemManager.orig_Init orig)

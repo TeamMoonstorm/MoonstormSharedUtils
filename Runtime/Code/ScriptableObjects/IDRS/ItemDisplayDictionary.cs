@@ -128,12 +128,7 @@ namespace Moonstorm
             instances.AddIfNotInCollection(this);
 #if !UNITY_EDITOR
             ItemDisplayCatalog.AddDisplay(this);
-#endif
-
-#if DEBUG
-#if !UNITY_EDITOR
             Upgrade();
-#endif
 #endif
         }
         private void OnDestroy()
@@ -235,7 +230,6 @@ namespace Moonstorm
             return keyAssetRuleGroup;
         }
 
-#if DEBUG
         [ContextMenu("Upgrade for SerializedItemDisplayCatalog")]
         private void Upgrade()
         {
@@ -302,6 +296,5 @@ namespace Moonstorm
                 }
             }
         }
-#endif
     }
 }

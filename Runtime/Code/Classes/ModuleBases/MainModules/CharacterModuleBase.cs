@@ -49,12 +49,12 @@ namespace Moonstorm
         /// <summary>
         /// An action that gets invoked when the <see cref="MoonstormCharacters"/> dictionary has been populated
         /// </summary>
-        [Obsolete("use \"ModuleAvailability.CallWhenAvailable()\" instead")]
+        [Obsolete("use \"moduleAvailability.CallWhenAvailable()\" instead")]
         public static Action<ReadOnlyDictionary<GameObject, CharacterBase>> OnDictionaryCreated;
         /// <summary>
-        /// Call ModuleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
+        /// Call moduleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
         /// </summary>
-        public static ResourceAvailability ModuleAvailability { get; } = default(ResourceAvailability);
+        public static ResourceAvailability moduleAvailability;
 
         private static Dictionary<DirectorAPI.Stage, List<MSMonsterDirectorCard>> currentStageToCards = new Dictionary<DirectorAPI.Stage, List<MSMonsterDirectorCard>>();
         private static Dictionary<string, List<MSMonsterDirectorCard>> currentCustomStageToCards = new Dictionary<string, List<MSMonsterDirectorCard>>();
@@ -71,7 +71,7 @@ namespace Moonstorm
             characters = null;
 
             OnDictionaryCreated?.Invoke(MoonstormCharacters);
-            ModuleAvailability.MakeAvailable();
+            moduleAvailability.MakeAvailable();
         }
 
         #region Characters

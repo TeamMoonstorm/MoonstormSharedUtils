@@ -29,12 +29,12 @@ namespace Moonstorm
         /// <summary>
         /// An action that gets invoked when the <see cref="MoonstormUnlockables"/> dictionary has been populated
         /// </summary>
-        [Obsolete("use \"ModuleAvailability.CallWhenAvailable()\" instead")]
+        [Obsolete("use \"moduleAvailability.CallWhenAvailable()\" instead")]
         public static Action<ReadOnlyDictionary<GameObject, ProjectileBase>> OnDictionaryCreated;
         /// <summary>
-        /// Call ModuleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
+        /// Call moduleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
         /// </summary>
-        public static ResourceAvailability ModuleAvailability { get; } = default(ResourceAvailability);
+        public static ResourceAvailability moduleAvailability;
         #endregion
 
         [SystemInitializer(typeof(ProjectileCatalog))]
@@ -46,7 +46,7 @@ namespace Moonstorm
             projectiles = null;
 
             OnDictionaryCreated?.Invoke(MoonstormProjectiles);
-            ModuleAvailability.MakeAvailable();
+            moduleAvailability.MakeAvailable();
         }
 
 
