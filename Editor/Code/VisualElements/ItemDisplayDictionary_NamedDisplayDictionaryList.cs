@@ -199,7 +199,7 @@ namespace Moonstorm.EditorUtils.VisualElements
             _serializedObject.ApplyAndUpdate();
             ExtendedListView.Refresh();
         }
-
+        private void ForceCatalogUpdate() => OnForceCatalogUpdate?.Invoke();
         private void OnAttach(AttachToPanelEvent evt)
         {
             ListView listView = ExtendedListView.Q<ListView>();
@@ -207,7 +207,7 @@ namespace Moonstorm.EditorUtils.VisualElements
             ExtendedListView.CreateElement = CreateButton;
             ExtendedListView.BindElement = BindButton;
 
-            ForceCatalogUpdateButton.clicked += () => OnForceCatalogUpdate?.Invoke();
+            ForceCatalogUpdateButton.clicked += ForceCatalogUpdate;
             SortByNameButton.clicked += SortEntries;
             AddSurvivorIDRSButton.clicked += AddSurvivorIDRS;
             AddEnemyIDRSButton.clicked += AddEnemyIDRS;
@@ -217,12 +217,20 @@ namespace Moonstorm.EditorUtils.VisualElements
 
         private void OnDetach(DetachFromPanelEvent evt)
         {
+            ExtendedListView.CreateElement = null;
+            ExtendedListView.BindElement = null;
 
+            ForceCatalogUpdateButton.clicked -= ForceCatalogUpdate;
+            SortByNameButton.clicked -= SortEntries;
+            AddSurvivorIDRSButton.clicked -= AddSurvivorIDRS;
+            AddEnemyIDRSButton.clicked -= AddEnemyIDRS;
+            AddBasedOnKeyAssetButton.clicked -= AddIDRSBasedOnKeyAsset;
+            AddMissingIDRSButton.clicked -= AddAllIDRS;
         }
 
         public ItemDisplayDictionary_NamedDisplayDictionaryList()
         {
-            TemplateHelpers.GetTemplateInstance(nameof(ItemDisplayDictionary_NamedDisplayDictionaryList), this, (pth) => true);
+            TemplateHelpers.GetTemplateInstance(nameof(ItemDisplayDictionary_NamedDisplayDictionaryList), this, (pth) => pth.ValidateUXMLPath());
             ForceCatalogUpdateButton = this.Q<Button>("ForceCatalogReload");
             SortByNameButton = this.Q<Button>("SortByName");
             AddSurvivorIDRSButton = this.Q<Button>("AddSurvivorIDRS");

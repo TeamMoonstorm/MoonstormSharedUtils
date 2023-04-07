@@ -167,6 +167,7 @@ namespace Moonstorm.EditorUtils.VisualElements
             CurrentEntry.UpdateRepresentation?.Invoke(CurrentEntry);
         }
 
+        private void IDRSNameChange(ChangeEvent<string> evt) => OnIDRSNameChange(evt, null);
         private void OnAttach(AttachToPanelEvent evt)
         {
             ListView listView = ExtendedListView.Q<ListView>();
@@ -175,16 +176,22 @@ namespace Moonstorm.EditorUtils.VisualElements
             standardViewContainer.SetDisplay(SerializedProperty != null);
 
             IDRSName.isDelayed = true;
-            IDRSName.RegisterValueChangedCallback((txt) => OnIDRSNameChange(txt, null));
+            IDRSName.RegisterValueChangedCallback(IDRSNameChange);
 
             ExtendedListView.CreateElement = CreateElement;
             ExtendedListView.BindElement = BindElement;
         }
-        private void OnDetach(DetachFromPanelEvent evt) { }
+        private void OnDetach(DetachFromPanelEvent evt)
+        {
+            IDRSName.UnregisterValueChangedCallback(IDRSNameChange);
+
+            ExtendedListView.CreateElement = null;
+            ExtendedListView.BindElement = null;
+        }
 
         public ItemDisplayDictionary_NamedDisplayDictionary()
         {
-            TemplateHelpers.GetTemplateInstance(nameof(ItemDisplayDictionary_NamedDisplayDictionary), this, (_) => true);
+            TemplateHelpers.GetTemplateInstance(nameof(ItemDisplayDictionary_NamedDisplayDictionary), this, (pth) => pth.ValidateUXMLPath());
             HelpBox = this.Q<HelpBox>();
             ExtendedListView = this.Q<ExtendedListView>();
             IDRSName = this.Q<TextField>();

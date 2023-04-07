@@ -101,10 +101,12 @@ namespace Moonstorm.EditorUtils.VisualElements
         public void OnDetach(DetachFromPanelEvent evt)
         {
             KeyAsset.UnregisterValueChangedCallback(OnKeyAssetSet);
+            DisplayPrefabs.CreateElement = null;
+            DisplayPrefabs.BindElement = null;
         }
         public ItemDisplayDictionary_KeyAssetField()
         {
-            TemplateHelpers.GetTemplateInstance(GetType().Name, this, (_) => true);
+            TemplateHelpers.GetTemplateInstance(GetType().Name, this, (pth) => pth.ValidateUXMLPath());
             
             _container = this.Q<VisualElement>("ContentContainer");
             HelpBox = this.Q<HelpBox>();

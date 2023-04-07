@@ -185,6 +185,7 @@ namespace Moonstorm.EditorUtils.VisualElements
             ExtendedListView.Refresh();
             CurrentEntry.UpdateRepresentation?.Invoke(CurrentEntry);
         }
+        private void KeyAssetNameChange(ChangeEvent<string> evt) => OnKeyAssetNameChange(evt, null);
         private void OnAttach(AttachToPanelEvent evt)
         {
             ListView listView = ExtendedListView.Q<ListView>();
@@ -193,19 +194,22 @@ namespace Moonstorm.EditorUtils.VisualElements
             standardViewContainer.SetDisplay(SerializedProperty != null);
 
             KeyAsset.isDelayed = true;
-            KeyAsset.RegisterValueChangedCallback((txt) => OnKeyAssetNameChange(txt, null));
+            KeyAsset.RegisterValueChangedCallback(KeyAssetNameChange);
 
             ExtendedListView.CreateElement = CreateElement;
             ExtendedListView.BindElement = BindElement;
         }
         private void OnDetach(DetachFromPanelEvent evt)
         {
+            KeyAsset.UnregisterValueChangedCallback(KeyAssetNameChange);
 
+            ExtendedListView.CreateElement = null;
+            ExtendedListView.BindElement = null;
         }
 
         public NamedIDRS_NamedRuleGroup()
         {
-            TemplateHelpers.GetTemplateInstance(nameof(NamedIDRS_NamedRuleGroup), this, (_) => true);
+            TemplateHelpers.GetTemplateInstance(nameof(NamedIDRS_NamedRuleGroup), this, (pth) => pth.ValidateUXMLPath());
             HelpBox = this.Q<HelpBox>();
             ExtendedListView = this.Q<ExtendedListView>();
             KeyAsset = this.Q<TextField>();

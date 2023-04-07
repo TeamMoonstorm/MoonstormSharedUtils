@@ -186,27 +186,31 @@ namespace Moonstorm.EditorUtils.VisualElements
                 CurrentEntry?.UpdateRepresentation?.Invoke(CurrentEntry);
             }
         }
-
+        private void RuleTypeChange(ChangeEvent<Enum> evt) => OnRuleTypeChange(evt, null);
+        private void UpdateRepresentation(ChangeEvent<string> _) => CurrentEntry?.UpdateRepresentation?.Invoke(CurrentEntry);
         private void OnAttach(AttachToPanelEvent evt)
         {
             HelpBox.SetDisplay(SerializedProperty == null);
             standardViewContainer.SetDisplay(SerializedProperty != null);
 
-            DisplayPrefab.onGUIHandler = DrawDropDown;
-            ItemDisplayRuleType.RegisterValueChangedCallback((x) => OnRuleTypeChange(x, null));
             ChildName.isDelayed = true;
-            ChildName.RegisterValueChangedCallback((_) => CurrentEntry?.UpdateRepresentation?.Invoke(CurrentEntry));
+            DisplayPrefab.onGUIHandler = DrawDropDown;
             PasteButton.clicked += PasteValues;
+            ItemDisplayRuleType.RegisterValueChangedCallback(RuleTypeChange);
+            ChildName.RegisterValueChangedCallback(UpdateRepresentation);
         }
 
         private void OnDetach(DetachFromPanelEvent evt)
         {
-
+            DisplayPrefab.onGUIHandler = null;
+            PasteButton.clicked -= PasteValues;
+            ItemDisplayRuleType.UnregisterValueChangedCallback(RuleTypeChange);
+            ChildName.UnregisterValueChangedCallback(UpdateRepresentation);
         }
 
         public ItemDisplayDictionary_DisplayRule()
         {
-            TemplateHelpers.GetTemplateInstance(nameof(ItemDisplayDictionary_DisplayRule), this, (_) => true);
+            TemplateHelpers.GetTemplateInstance(nameof(ItemDisplayDictionary_DisplayRule), this, (pth) => pth.ValidateUXMLPath());
             HelpBox = this.Q<HelpBox>();
             standardViewContainer = this.Q<VisualElement>("StandardView");
             DisplayPrefab = this.Q<IMGUIContainer>();

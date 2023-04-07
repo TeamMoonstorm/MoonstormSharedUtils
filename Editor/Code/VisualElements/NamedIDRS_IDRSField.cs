@@ -88,7 +88,7 @@ namespace Moonstorm.EditorUtils.VisualElements
 
         public NamedIDRS_IDRSField()
         {
-            TemplateHelpers.GetTemplateInstance(nameof(NamedIDRS_IDRSField), this, (pth) => true);
+            TemplateHelpers.GetTemplateInstance(nameof(NamedIDRS_IDRSField), this, (pth) => pth.ValidateUXMLPath());
 
             ObjectField = this.Q<ObjectField>();
             HelpBox = this.Q<HelpBox>();

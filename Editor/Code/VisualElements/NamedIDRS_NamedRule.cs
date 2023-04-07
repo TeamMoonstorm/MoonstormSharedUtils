@@ -199,24 +199,27 @@ namespace Moonstorm.EditorUtils.VisualElements
                 CurrentEntry?.UpdateRepresentation?.Invoke(CurrentEntry);
         }
 
+        private void RuleTypeChange(ChangeEvent<Enum> evt) => OnRuleTypeChange(evt, null);
         private void OnAttach(AttachToPanelEvent evt)
         {
             HelpBox.SetDisplay(SerializedProperty == null);
             standardViewContainer.SetDisplay(SerializedProperty != null);
+            ChildName.isDelayed = true;
 
             DisplayPrefab.onGUIHandler = DrawDropDown;
-            ItemDisplayRuleType.RegisterValueChangedCallback((x) => OnRuleTypeChange(x, null));
-            ChildName.isDelayed = true;
+            ItemDisplayRuleType.RegisterValueChangedCallback(RuleTypeChange);
             PasteButton.clickable.clicked += PasteValues;
         }
 
         private void OnDetach(DetachFromPanelEvent evt)
         {
-
+            DisplayPrefab.onGUIHandler = null;
+            ItemDisplayRuleType.UnregisterValueChangedCallback((x) => OnRuleTypeChange(x, null));
+            PasteButton.clickable.clicked -= PasteValues;
         }
         public NamedIDRS_NamedRule()
         {
-            TemplateHelpers.GetTemplateInstance(nameof(NamedIDRS_NamedRule), this, (_) => true);
+            TemplateHelpers.GetTemplateInstance(nameof(NamedIDRS_NamedRule), this, (pth) => pth.ValidateUXMLPath());
 
             HelpBox = this.Q<HelpBox>();
             standardViewContainer = this.Q<VisualElement>("StandardView");

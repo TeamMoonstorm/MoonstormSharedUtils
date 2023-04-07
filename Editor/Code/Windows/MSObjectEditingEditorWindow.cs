@@ -6,7 +6,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
     {
         protected sealed override bool ValidateUXMLPath(string path)
         {
-            return true;
+            return path.ValidateUXMLPath();
         }
     }
 }

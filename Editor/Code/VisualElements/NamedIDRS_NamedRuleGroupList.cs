@@ -197,6 +197,8 @@ namespace Moonstorm.EditorUtils.VisualElements
             _serializedObject.ApplyAndUpdate();
             ExtendedListView.Refresh();
         }
+
+        private void UpdateCatalog() => OnForceCatalogUpdate?.Invoke();
         private void OnAttach(AttachToPanelEvent evt)
         {
             ListView listView = ExtendedListView.Q<ListView>();
@@ -204,7 +206,7 @@ namespace Moonstorm.EditorUtils.VisualElements
             ExtendedListView.CreateElement = CreateButton;
             ExtendedListView.BindElement = BindButton;
 
-            ForceCatalogUpdate.clicked += () => OnForceCatalogUpdate?.Invoke();
+            ForceCatalogUpdate.clicked += UpdateCatalog;
             SortByName.clicked += SortEntries;
             AddAllEquipmentsButton.clicked += AddAllEquipments;
             AddAllItemsButton.clicked += AddAllItems;
@@ -214,12 +216,21 @@ namespace Moonstorm.EditorUtils.VisualElements
 
         private void OnDetach(DetachFromPanelEvent evt)
         {
+            ExtendedListView.CreateElement = null;
+            ExtendedListView.BindElement = null;
 
+            ForceCatalogUpdate.clicked -= UpdateCatalog;
+            SortByName.clicked -= SortEntries;
+            AddAllEquipmentsButton.clicked -= AddAllEquipments;
+            AddAllItemsButton.clicked -= AddAllItems;
+            AddOnlyEliteEquipmentsButton.clicked -= AddEliteEquipments;
+            AddMissingEntriesButton.clicked -= AddMissingEntries;
         }
 
         public NamedIDRS_NamedRuleGroupList()
         {
-            TemplateHelpers.GetTemplateInstance(nameof(NamedIDRS_NamedRuleGroupList), this, (pth) => true);
+            TemplateHelpers.GetTemplateInstance(nameof(NamedIDRS_NamedRuleGroupList), this, (pth) => pth.ValidateUXMLPath());
+
             ExtendedListView = this.Q<ExtendedListView>();
             ForceCatalogUpdate = this.Q<Button>("ForceUpdateCatalog");
             SortByName = this.Q<Button>("SortByNameButton");
