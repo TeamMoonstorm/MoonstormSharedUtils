@@ -67,10 +67,10 @@ namespace Moonstorm.Components.Addressables
                 instance = Instantiate(prefab, transform);
             }
 
-            instance.hideFlags |= (HideFlags.DontSaveInEditor | HideFlags.DontSaveInBuild | HideFlags.NotEditable);
-            foreach (Transform t in instance.transform)
+            instance.hideFlags |= HideFlags.DontSaveInEditor | HideFlags.DontSaveInBuild | HideFlags.NotEditable;
+            foreach (Transform t in instance.GetComponentsInChildren<Transform>())
             {
-                t.hideFlags = HideFlags.DontSaveInEditor | HideFlags.DontSaveInBuild | HideFlags.NotEditable;
+                t.gameObject.hideFlags = instance.hideFlags;
             }
             if (setPositionAndRotationToZero)
             {

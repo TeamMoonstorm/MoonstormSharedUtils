@@ -87,6 +87,8 @@ namespace Moonstorm.Components.Addressables
             if (!_asset)
                 return;
 
+            _asset.hideFlags = HideFlags.DontSaveInEditor | HideFlags.NotEditable | HideFlags.DontSaveInBuild;
+
             switch (memberInfo)
             {
                 case PropertyInfo pInfo:

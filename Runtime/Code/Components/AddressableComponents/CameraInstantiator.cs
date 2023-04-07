@@ -34,10 +34,10 @@ namespace Moonstorm.Components.Addressables
             var go = UnityEngine.AddressableAssets.Addressables.LoadAssetAsync<GameObject>(CAMERA_ADDRESS).WaitForCompletion();
             cameraInstance = Instantiate(go, transform);
             cameraInstance.name = $"[EDITOR ONLY] {cameraInstance.name}";
-            cameraInstance.hideFlags |= (HideFlags.DontSaveInEditor | HideFlags.DontSaveInBuild);
-            foreach (Transform t in cameraInstance.transform)
+            cameraInstance.hideFlags |= HideFlags.DontSaveInEditor | HideFlags.DontSaveInBuild | HideFlags.NotEditable;
+            foreach (Transform t in cameraInstance.GetComponentsInChildren<Transform>())
             {
-                t.hideFlags = HideFlags.DontSaveInEditor | HideFlags.DontSaveInBuild;
+                t.gameObject.hideFlags = cameraInstance.hideFlags | HideFlags.HideInHierarchy;
             }
         }
     }

@@ -33,6 +33,7 @@ namespace Moonstorm.Components.Addressables
             if (!loadedSurfaceDef)
                 return;
 
+            loadedSurfaceDef.hideFlags |= HideFlags.DontSaveInEditor | HideFlags.DontSaveInBuild | HideFlags.NotEditable;
             foreach (var provider in GetComponentsInChildren<SurfaceDefProvider>())
             {
                 provider.surfaceDef = loadedSurfaceDef;
