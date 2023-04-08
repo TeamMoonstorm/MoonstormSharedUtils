@@ -199,6 +199,9 @@ namespace Moonstorm
 #if DEBUG
         private static void AddKeyAssetAndDisplaysForDictionary(ItemDisplayRuleSet.KeyAssetRuleGroup ruleGroup)
         {
+            if (!(ruleGroup.keyAsset is ScriptableObject))
+                return;
+
             ScriptableObject keyAsset = (ScriptableObject)ruleGroup.keyAsset;
             Dictionary<string, List<string>> target = null;
             switch (keyAsset)

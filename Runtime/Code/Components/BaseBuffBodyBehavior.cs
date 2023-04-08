@@ -230,9 +230,10 @@ namespace Moonstorm.Components
 
         private static void UpdateBodyBuffBehaviorStacks(CharacterBody body, int buffStacks, BuffIndex index)
         {
-            //I have a feeling this is the reason why it returns null
-            if (!body)
+            if (body == null || !bodyToBuffBehaviors.ContainsKey(body))
+            {
                 return;
+            }
 
             ref NetworkContextSet networkContext = ref GetNetworkContext();
             BaseBuffBodyBehavior[] array = bodyToBuffBehaviors[body];
