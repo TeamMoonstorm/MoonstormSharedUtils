@@ -23,7 +23,7 @@ namespace Moonstorm
     {
         public const string GUID = "com.TeamMoonstorm.MoonstormSharedUtils";
         public const string MODNAME = "Moonstorm Shared Utils";
-        public const string VERSION = "1.4.0";
+        public const string VERSION = "1.4.1";
 
         /// <summary>
         /// Instance of MSU

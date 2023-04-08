@@ -1,3 +1,7 @@
+### '1.4.1' - Whoops
+
+* Fixed an NRE that could occur under specific circumstances caused by the ItemDisplayCatalog
+
 ### '1.4.0' - IDRS Utility and Stabilization
 
 * Finally updated the ``package.json`` file to properly display the Runtime version
@@ -14,6 +18,7 @@
     * Fixed issue where ``DecaliciousDeferredDecal`` would have the wrong shader name
 
 * Runtime:
+    * Objects loaded/instantiated by the AddressableComponents no longer save in editor and builds. theyre not editable but do show up in the hierarchy
     * Fixed an issue where the ``ItemTierPickupDisplayHelper`` would throw an NRE under specific situations
     * Added HOLY.dll support
         * Internally fixes issues where interfaces implementing ``IStatItemBehaviour.RecalculateStatsStart()`` would run after ``orig(self)``

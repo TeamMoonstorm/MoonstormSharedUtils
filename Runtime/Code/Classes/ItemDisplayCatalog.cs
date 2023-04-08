@@ -158,6 +158,9 @@ namespace Moonstorm
             {
                 foreach (var ruleGroup in idrs.keyAssetRuleGroups)
                 {
+                    if (ruleGroup.displayRuleGroup.isEmpty)
+                        continue;
+
                     var rulesArray = ruleGroup.displayRuleGroup.rules;
                     for (int i = 0; i < rulesArray.Length; i++)
                     {
@@ -199,6 +202,9 @@ namespace Moonstorm
 #if DEBUG
         private static void AddKeyAssetAndDisplaysForDictionary(ItemDisplayRuleSet.KeyAssetRuleGroup ruleGroup)
         {
+            if (ruleGroup.displayRuleGroup.isEmpty)
+                return;
+
             if (!(ruleGroup.keyAsset is ScriptableObject))
                 return;
 
