@@ -25,7 +25,7 @@ namespace Moonstorm.Components.Addressables
         public GameObject Instance => instance;
         private GameObject instance;
 
-        private void Awake() => Refresh();
+        //private void Awake() => Refresh();
         private void OnEnable() => Refresh();
         private void OnDisable()
         {
