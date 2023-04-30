@@ -28,7 +28,6 @@ namespace Moonstorm.AddressableAssets
         /// </summary>
         public bool UseDirectReference => useDirectReference;
 
-
         /// <summary>
         /// <inheritdoc cref="UseDirectReference"/>
         /// </summary>

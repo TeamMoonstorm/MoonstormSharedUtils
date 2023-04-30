@@ -1,4 +1,5 @@
 ﻿using RoR2;
+using RoR2.ConVar;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -168,6 +169,10 @@ namespace Moonstorm.Components
 
         private void FixedUpdate()
         {
+            if(!enableEvents.value)
+            {
+                return;
+            }
             if (NetworkServer.active && Run.instance)
             {
                 if (!Run.instance.isRunStopwatchPaused)
@@ -443,6 +448,8 @@ namespace Moonstorm.Components
             int count = Instance.StopAllEvents();
             Debug.Log($"Stopped {count} events");
         }
+
+        private static BoolConVar enableEvents = new BoolConVar("enable_events", ConVarFlags.ExecuteOnServer | ConVarFlags.SenderMustBeServer, "true", "Enable or Disable Events");
 #endif
     }
 }
