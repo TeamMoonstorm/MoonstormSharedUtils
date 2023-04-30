@@ -233,7 +233,7 @@ namespace Moonstorm.EditorUtils.VisualElements
 
             ExtendedListView = this.Q<ExtendedListView>();
             ForceCatalogUpdate = this.Q<Button>("ForceUpdateCatalog");
-            SortByName = this.Q<Button>("SortByNameButton");
+            SortByName = this.Q<Button>("SortByName");
             AddAllEquipmentsButton = this.Q<Button>("AddAllEquipments");
             AddAllItemsButton = this.Q<Button>("AddAllItems");
             AddOnlyEliteEquipmentsButton = this.Q<Button>("AddOnlyEliteEquipments");
