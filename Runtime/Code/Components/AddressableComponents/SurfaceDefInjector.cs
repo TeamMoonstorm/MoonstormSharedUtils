@@ -13,7 +13,6 @@ namespace Moonstorm.Components.Addressables
         public string surfaceDefAddress;
         private SurfaceDef loadedSurfaceDef;
 
-        private void Awake() => Refresh();
         private void OnEnable() => Refresh();
         private void OnDisable() => RemoveReferencesEditor();
 
@@ -32,7 +31,9 @@ namespace Moonstorm.Components.Addressables
 
             if (!loadedSurfaceDef)
                 return;
-
+#if UNITY_EDITOR
+            loadedSurfaceDef = Instantiate(loadedSurfaceDef);
+#endif
             loadedSurfaceDef.hideFlags |= HideFlags.DontSaveInEditor | HideFlags.DontSaveInBuild | HideFlags.NotEditable;
             foreach (var provider in GetComponentsInChildren<SurfaceDefProvider>())
             {

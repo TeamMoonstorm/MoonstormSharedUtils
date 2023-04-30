@@ -22,7 +22,6 @@ namespace Moonstorm.Components.Addressables
 
         private MemberInfo cachedMemberInfo;
 
-        private void Awake() => Refresh();
         private void OnEnable() => Refresh();
 
         /// <summary>
@@ -86,7 +85,9 @@ namespace Moonstorm.Components.Addressables
             _asset = UnityEngine.AddressableAssets.Addressables.LoadAssetAsync<Object>(address).WaitForCompletion();
             if (!_asset)
                 return;
-
+#if UNITY_EDITOR
+            _asset = Instantiate(_asset);
+#endif
             _asset.hideFlags = HideFlags.DontSaveInEditor | HideFlags.NotEditable | HideFlags.DontSaveInBuild;
 
             switch (memberInfo)

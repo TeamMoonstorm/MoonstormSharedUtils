@@ -11,7 +11,6 @@ namespace Moonstorm.Components.Addressables
     {
         public const string CAMERA_ADDRESS = "RoR2/Base/Core/Main Camera.prefab";
         [SerializeField, HideInInspector] private GameObject cameraInstance;
-        private void Awake() => Refresh();
         private void OnEnable() => Refresh();
         private void OnDisable() => DestroyImmediate(cameraInstance, true);
 
