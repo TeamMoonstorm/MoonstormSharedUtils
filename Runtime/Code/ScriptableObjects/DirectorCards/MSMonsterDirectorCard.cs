@@ -78,11 +78,11 @@ namespace Moonstorm
         /// <returns>True if available, false otherwise</returns>
         public bool IsAvailable(ExpansionDef[] expansionDefs)
         {
-            bool available = false;
+            bool available = true;
             var reqExpansions = requiredExpansions.Where(exp => exp.Asset != null).Select(exp => exp.Asset);
-            foreach (ExpansionDef expansion in expansionDefs)
+            foreach (ExpansionDef ed in reqExpansions)
             {
-                available = reqExpansions.Contains(expansion);
+                available = expansionDefs.Contains(ed);
             }
             return available;
         }
