@@ -169,10 +169,12 @@ namespace Moonstorm.Components
 
         private void FixedUpdate()
         {
+#if DEBUG
             if(!enableEvents.value)
             {
                 return;
             }
+#endif
             if (NetworkServer.active && Run.instance)
             {
                 if (!Run.instance.isRunStopwatchPaused)

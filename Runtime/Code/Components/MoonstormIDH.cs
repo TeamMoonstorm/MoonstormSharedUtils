@@ -30,10 +30,11 @@ namespace Moonstorm.Components
                             ChildLocator childLocator = model.childLocator;
                             var firstChild = childLocator.transformPairs.FirstOrDefault().name;
                             currentRule.childName = firstChild;
-                            ruleGroup.rules[j] = currentRule;
                         }
+                        ruleGroup.rules[j] = currentRule;
                     }
                 }
+                modelIDRS.runtimeEquipmentRuleGroups[i] = ruleGroup;
             }
 
             for (int i = 0; i < modelIDRS.runtimeItemRuleGroups.Length; i++)
@@ -49,10 +50,11 @@ namespace Moonstorm.Components
                             ChildLocator childLocator = model.childLocator;
                             var firstChild = childLocator.transformPairs.FirstOrDefault().name;
                             currentRule.childName = firstChild;
-                            ruleGroup.rules[j] = currentRule;
                         }
+                        ruleGroup.rules[j] = currentRule;
                     }
                 }
+                modelIDRS.runtimeItemRuleGroups[i] = ruleGroup;
             }
         }
     }

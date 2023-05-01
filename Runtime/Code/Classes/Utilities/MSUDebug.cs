@@ -15,11 +15,6 @@ namespace Moonstorm
             //you can connect to yourself with a second instance of the game by hosting a private game with one and opening the console on the other and typing connect localhost:7777
             On.RoR2.Networking.NetworkManagerSystem.OnClientConnect += (self, user, t) => { };
             #endregion networking
-        }
-
-        private void Start()
-        {
-            Run.onRunStartGlobal += OnRunStart;
             #region Item display helper adder
             //Adds the item display helper to all the character bodies.
             RoR2Application.onLoad += () =>
@@ -28,27 +23,24 @@ namespace Moonstorm
                 {
                     try
                     {
-                        var modelLocator = gameObject.GetComponent<ModelLocator>();
-                        if (!modelLocator)
-                            continue;
-
-                        var mdlPrefab = modelLocator.modelTransform.gameObject;
-                        if (!mdlPrefab)
-                            continue;
-
-                        var charModel = mdlPrefab.GetComponent<CharacterModel>();
-                        if (!charModel)
+                        var charModel = prefab.GetComponentInChildren<CharacterModel>();
+                        if (charModel == null)
                             continue;
 
                         if (charModel.itemDisplayRuleSet == null)
                             continue;
 
-                        mdlPrefab.EnsureComponent<MoonstormIDH>();
+                        charModel.gameObject.EnsureComponent<MoonstormIDH>();
                     }
                     catch (Exception e) { MSULog.Error(e); }
                 }
             };
             #endregion
+        }
+
+        private void Start()
+        {
+            Run.onRunStartGlobal += OnRunStart;
         }
 
         private void OnRunStart(Run obj)
