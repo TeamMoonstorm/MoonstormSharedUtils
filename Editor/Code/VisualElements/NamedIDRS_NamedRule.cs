@@ -214,7 +214,7 @@ namespace Moonstorm.EditorUtils.VisualElements
         private void OnDetach(DetachFromPanelEvent evt)
         {
             DisplayPrefab.onGUIHandler = null;
-            ItemDisplayRuleType.UnregisterValueChangedCallback((x) => OnRuleTypeChange(x, null));
+            ItemDisplayRuleType.UnregisterValueChangedCallback(RuleTypeChange);
             PasteButton.clickable.clicked -= PasteValues;
         }
         public NamedIDRS_NamedRule()

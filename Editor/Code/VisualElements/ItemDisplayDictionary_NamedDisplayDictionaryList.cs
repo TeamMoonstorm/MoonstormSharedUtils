@@ -29,9 +29,11 @@ namespace Moonstorm.EditorUtils.VisualElements
         public event Action OnForceCatalogUpdate;
 
         private SerializedObject _serializedObject;
+        private ScriptableObject _keyAsset;
 
         public void OnKeyAssetFieldValueSet(ScriptableObject keyAsset)
         {
+            _keyAsset = keyAsset;
             this.SetDisplay(keyAsset);
         }
 

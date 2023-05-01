@@ -79,6 +79,7 @@ namespace Moonstorm.EditorUtils.VisualElements
             {
                 this.SetDisplay(false);
                 SerializedProperty = null;
+                UpdateBinding();
             }
             else
             {
@@ -148,7 +149,6 @@ namespace Moonstorm.EditorUtils.VisualElements
         private void OnIDRSNameChange(ChangeEvent<string> evt, string defaultVal = null)
         {
             string newVal = evt?.newValue ?? defaultVal;
-            idrsName.stringValue = newVal;
             if(!Catalog.DoesIDRSExist(newVal))
             {
                 HelpBox.message = "The IDRSName value for this entry may be invalid, as the value wasnt found in the ItemDisplayCatalog, are you sure your ItemDisplayCattalog is up to date?";

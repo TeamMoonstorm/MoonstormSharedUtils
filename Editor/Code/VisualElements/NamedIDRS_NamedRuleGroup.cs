@@ -96,6 +96,7 @@ namespace Moonstorm.EditorUtils.VisualElements
             {
                 this.SetDisplay(false);
                 SerializedProperty = null;
+                UpdateBinding();
             }
             else
             {
@@ -165,7 +166,6 @@ namespace Moonstorm.EditorUtils.VisualElements
         private void OnKeyAssetNameChange(ChangeEvent<string> evt, string defaultVal = null)
         {
             string newVal = evt?.newValue ?? defaultVal;
-            keyAsset.stringValue = newVal;
             var potentialCollection = Catalog.GetKeyAssetDisplays(newVal);
             if(potentialCollection == null)
             {
@@ -202,7 +202,6 @@ namespace Moonstorm.EditorUtils.VisualElements
         private void OnDetach(DetachFromPanelEvent evt)
         {
             KeyAsset.UnregisterValueChangedCallback(KeyAssetNameChange);
-
             ExtendedListView.CreateElement = null;
             ExtendedListView.BindElement = null;
         }

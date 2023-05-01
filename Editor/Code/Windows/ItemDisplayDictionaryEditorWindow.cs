@@ -12,6 +12,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using Moonstorm.EditorUtils.VisualElements;
 using static Moonstorm.ItemDisplayDictionary;
+using R2API.Utils;
 
 namespace Moonstorm.EditorUtils.EditorWindows
 {
@@ -29,12 +30,6 @@ namespace Moonstorm.EditorUtils.EditorWindows
         private void OnEnable()
         {
             Selection.selectionChanged += CheckForItemDisplayDictionary;
-            catalog = ItemDisplayCatalog.LoadCatalog();
-            if(catalog == null)
-            {
-                Close();
-                return;
-            }
         }
 
         protected override void OnDisable()
@@ -46,39 +41,62 @@ namespace Moonstorm.EditorUtils.EditorWindows
         private void CheckForItemDisplayDictionary()
         {
             var obj = Selection.activeObject;
-            if(obj == null && SerializedObject == null)
-            {
-                SetSerializedObject(null);
+
+            if (!obj)
                 return;
+
+            UnityEngine.Object currentTarget = null;
+            if (SerializedObject != null)
+            {
+                var ptr = SerializedObject.GetFieldValue<IntPtr>("m_NativeObjectPtr");
+                if (((int)ptr) == 0x0)
+                {
+                    SerializedObject = null;
+                    SetSerializedObject(null);
+                    return;
+                }
+                currentTarget = SerializedObject.targetObject;
             }
 
-            if (SerializedObject != null && SerializedObject.targetObject == obj)
+            if (currentTarget == obj)
                 return;
 
             if(obj is ItemDisplayDictionary idd)
             {
+                SerializedObject?.ApplyModifiedProperties();
                 SetSerializedObject(idd);
                 serializedObjectGUID = AssetDatabaseUtils.GetGUIDFromAsset(obj);
+                return;
             }
             else if(!serializedObjectGUID.IsNullOrEmptyOrWhitespace())
             {
                 SetSerializedObject(AssetDatabaseUtils.LoadAssetFromGUID<ItemDisplayDictionary>(serializedObjectGUID));
+                return;
             }
+            SetSerializedObject(null);
 
             void SetSerializedObject(ItemDisplayDictionary dictionary)
             {
-                SerializedObject = dictionary ? new SerializedObject(dictionary) : null;
+                var so = dictionary ? new SerializedObject(dictionary) : null;
                 OnKeyAssetSet(TargetType.AsValidOrNull()?.keyAsset as ScriptableObject);
-                keyAssetField.CheckForIDD(SerializedObject);
-                namedDisplayDictionaryList.CheckForIDD(SerializedObject);
-                namedDisplayDictionary.CheckForIDD(SerializedObject);
-                displayRule.CheckForIDD(SerializedObject);
+                keyAssetField.CheckForIDD(so);
+                namedDisplayDictionaryList.CheckForIDD(so);
+                namedDisplayDictionary.CheckForIDD(so);
+                displayRule.CheckForIDD(so);
+                SerializedObject = so;
             }
         }
 
         protected override void CreateGUI()
         {
             base.CreateGUI();
+            catalog = ItemDisplayCatalog.LoadCatalog();
+            if (catalog == null)
+            {
+                Close();
+                return;
+            }
+
             keyAssetField = rootVisualElement.Q<ItemDisplayDictionary_KeyAssetField>();
             namedDisplayDictionaryList = rootVisualElement.Q<ItemDisplayDictionary_NamedDisplayDictionaryList>();
             namedDisplayDictionary = rootVisualElement.Q<ItemDisplayDictionary_NamedDisplayDictionary>();

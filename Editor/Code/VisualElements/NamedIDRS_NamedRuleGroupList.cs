@@ -35,9 +35,11 @@ namespace Moonstorm.EditorUtils.VisualElements
         public event Action OnForceCatalogUpdate;
 
         private SerializedObject _serializedObject;
+        private ItemDisplayRuleSet idrs;
         internal void OnIDRSFieldValueSet(ItemDisplayRuleSet obj)
         {
-            this.SetDisplay(obj);
+            idrs = obj;
+            this.SetDisplay(idrs);
         }
 
         public void CheckForNamedIDRS(SerializedObject serializedObject)
@@ -52,7 +54,7 @@ namespace Moonstorm.EditorUtils.VisualElements
 
             if(_serializedObject.targetObject is NamedIDRS)
             {
-                this.SetDisplay(true);
+                this.SetDisplay(idrs);
                 ExtendedListView.collectionProperty = serializedObject.FindProperty("namedRuleGroups");
             }
         }
@@ -69,7 +71,7 @@ namespace Moonstorm.EditorUtils.VisualElements
             entry.style.height = ExtendedListView.listViewItemHeight;
             entry.Button.style.height = ExtendedListView.listViewItemHeight;
             entry.UpdateRepresentation = UpdateButtonDisplay;
-            entry.extraData = Catalog.GetKeyAssetDisplays(property.FindPropertyRelative("keyAssetName").stringValue);
+            entry.extraData = Catalog.GetKeyAssetDisplays(property?.FindPropertyRelative("keyAssetName").stringValue);
             entry.SerializedProperty = property;
 
 

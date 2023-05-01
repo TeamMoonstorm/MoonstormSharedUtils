@@ -1,15 +1,10 @@
-﻿using Moonstorm.AddressableAssets;
-using Moonstorm.EditorUtils.VisualElements;
+﻿using Moonstorm.EditorUtils.VisualElements;
+using R2API.Utils;
 using RoR2;
-using RoR2EditorKit.Inspectors;
 using RoR2EditorKit;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using ThunderKit.Markdown;
 using UnityEditor;
-using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -30,12 +25,6 @@ namespace Moonstorm.EditorUtils.EditorWindows
         private void OnEnable()
         {
             Selection.selectionChanged += CheckForNamedIDRS;
-            catalog = ItemDisplayCatalog.LoadCatalog();
-            if (catalog == null)
-            {
-                Close();
-                return;
-            }
         }
         protected override void OnDisable()
         {
@@ -46,40 +35,61 @@ namespace Moonstorm.EditorUtils.EditorWindows
         private void CheckForNamedIDRS()
         {
             var obj = Selection.activeObject;
-            if(obj == null && SerializedObject == null)
+            if(!obj)
+                return;
+
+            UnityEngine.Object currentTarget = null;
+            if(SerializedObject != null)
             {
-                SetSerializedObject(null);
+                var ptr = SerializedObject.GetFieldValue<IntPtr>("m_NativeObjectPtr");
+                if (((int)ptr) == 0x0)
+                {
+                    SerializedObject = null;
+                    SetSerializedObject(null);
+                    return;
+                }
+                currentTarget = SerializedObject.targetObject;
+            }
+
+            if(currentTarget == obj)
+            {
                 return;
             }
 
-            if(SerializedObject != null && SerializedObject.targetObject == obj)
+            if (obj is NamedIDRS namedIDRS)
             {
-                return;
-            }
-
-            if(obj is NamedIDRS namedIDRS)
-            {
+                SerializedObject?.ApplyModifiedProperties();
                 SetSerializedObject(namedIDRS);
                 serializedObjectGUID = AssetDatabaseUtils.GetGUIDFromAsset(obj);
+                return;
             }
-            else if(!serializedObjectGUID.IsNullOrEmptyOrWhitespace())
+            else if (!serializedObjectGUID.IsNullOrEmptyOrWhitespace())
             {
                 SetSerializedObject(AssetDatabase.LoadAssetAtPath<NamedIDRS>(AssetDatabase.GUIDToAssetPath(serializedObjectGUID)));
+                return;
             }
-
+            SetSerializedObject(null);
             void SetSerializedObject(NamedIDRS _namedIDRS)
             {
-                SerializedObject = _namedIDRS ? new SerializedObject(_namedIDRS) : null;
+                var so = _namedIDRS ? new SerializedObject(_namedIDRS) : null;
                 OnIDRSFieldValueSet(TargetType.AsValidOrNull()?.idrs);
-                namedIDRSField.CheckForNamedIDRS(SerializedObject);
-                namedRuleGroupList.CheckForNamedIDRS(SerializedObject);
-                namedRuleGroup.CheckForNamedIDRS(SerializedObject);
-                namedRule.CheckForNamedIDRS(SerializedObject);
+                namedIDRSField.CheckForNamedIDRS(so);
+                namedRuleGroupList.CheckForNamedIDRS(so);
+                namedRuleGroup.CheckForNamedIDRS(so);
+                namedRule.CheckForNamedIDRS(so);
+                SerializedObject = so;
             }
         }
         protected override void CreateGUI()
         {
             base.CreateGUI();
+            catalog = ItemDisplayCatalog.LoadCatalog();
+            if(catalog == null)
+            {
+                Close();
+                return;
+            }    
+
             namedIDRSField = rootVisualElement.Q<NamedIDRS_IDRSField>(nameof(NamedIDRS_IDRSField));
             namedRuleGroupList = rootVisualElement.Q<NamedIDRS_NamedRuleGroupList>(nameof(NamedIDRS_NamedRuleGroupList));
             namedRuleGroup = rootVisualElement.Q<NamedIDRS_NamedRuleGroup>(nameof(NamedIDRS_NamedRuleGroup));
@@ -88,6 +98,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
             CheckForNamedIDRS();
             OnIDRSFieldValueSet(TargetType?.idrs);
             namedIDRSField.OnIDRSFieldValueSet += OnIDRSFieldValueSet;
+            namedRuleGroupList.Catalog = catalog;
             namedRuleGroupList.OnForceCatalogUpdate += UpdateCatalog;
             namedRuleGroupList.OnNamedRuleGroupButtonClicked += OnNamedRuleGroupClicked;
             namedRuleGroupList.ExtendedListView.collectionSizeField.RegisterValueChangedCallback(OnNamedRuleGroupListSizeChanged);
