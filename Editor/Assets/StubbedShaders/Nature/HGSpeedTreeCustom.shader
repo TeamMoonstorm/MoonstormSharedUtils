@@ -3,7 +3,7 @@
 // NOTE: This is *not* a valid shader file
 //
 ///////////////////////////////////////////
-Shader "StubbedRoR2/Base/Shaders/SpeedTreeCustom.shader" {
+Shader "StubbedRoR2/Base/Shaders/SpeedTreeCustom" {
 Properties {
 _Color ("Main Color", Color) = (1,1,1,1)
 _HueVariation ("Hue Variation", Color) = (1,0.5,0,0.1)
