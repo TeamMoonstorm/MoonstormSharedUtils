@@ -88,6 +88,7 @@ namespace Moonstorm.EditorUtils.VisualElements
             objField.SetObjectType<GameObject>();
             objField.style.height = DisplayPrefabs.listViewItemHeight;
             objField.label = property.displayName;
+            objField.RegisterValueChangedCallback((x) => property.serializedObject.ApplyModifiedProperties());
             objField.BindProperty(property);
         }
         public void OnAttach(AttachToPanelEvent evt)

@@ -76,7 +76,7 @@ namespace Moonstorm
         /// </summary>
         /// <param name="expansionDefs">The run's enabled expansions</param>
         /// <returns>True if available, false otherwise</returns>
-        public bool IsAvailable(ExpansionDef[] expansionDefs)
+        public virtual bool IsAvailable(ExpansionDef[] expansionDefs)
         {
             bool available = true;
             var reqExpansions = requiredExpansions.Where(exp => exp.Asset != null).Select(exp => exp.Asset);

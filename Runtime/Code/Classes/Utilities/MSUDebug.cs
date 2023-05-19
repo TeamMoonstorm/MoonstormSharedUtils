@@ -3,6 +3,7 @@ using Moonstorm.Components;
 using RoR2;
 using RoR2.UI;
 using System;
+using System.Linq;
 using UnityEngine;
 
 namespace Moonstorm
@@ -46,16 +47,21 @@ namespace Moonstorm
         private void OnRunStart(Run obj)
         {
             #region Command Invoking
-            if (MSUtil.IsModInstalled("iHarbHD.DebugToolkit"))
-            {
-                InvokeCommand("stage1_pod", "0");
-                InvokeCommand("no_enemies");
-                InvokeCommand("enable_event_logging", "1");
-            }
+            InvokeCommand("stage1_pod", "0");
+            InvokeCommand("no_enemies");
+            InvokeCommand("enable_event_logging", "1");
             #endregion
         }
 
-        private void InvokeCommand(string commandName, params string[] arguments) => DebugToolkit.DebugToolkit.InvokeCMD(NetworkUser.instancesList[0], commandName, arguments);
+        private void InvokeCommand(string commandName, params string[] arguments)
+        {
+            if (!RoR2.Console.instance)
+                return;
+
+            var args = arguments.ToList();
+            var consoleUser = new RoR2.Console.CmdSender();
+            RoR2.Console.instance.RunCmd(consoleUser, commandName, args);
+        } 
 
         private void Update()
         {

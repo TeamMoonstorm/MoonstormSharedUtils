@@ -1,3 +1,19 @@
+### '1.4.2' - Fixes and Improvements
+
+* Editor:
+    * Fixed general issues with the NamedIDRS and ItemDisplayDictionary editor windows
+    * Removed InstallDebugToolkit import extension
+
+* Runtime:
+    * Fixed issue where instantiate addressable prefab wouldnt properly instantiate the prefab under multiplayer circumstances
+    * Added back the enable event con var
+    * AddressableInjector, CameraInstantiator and SurfaceDefInjector now properly wont save the instantiated assets
+    * Fixed interactable and monster director cards not working properly
+    * Made the ``bool IsAvailable()`` method of Interactable and Monster director cards virtual
+    * Fixed the MoonstormIDH component not working properly
+    * Added new stubbed speed tree shaders
+    * Fixed MSUDebug having an unintended dependency on DebugToolkit
+
 ### '1.4.1' - Whoops
 
 * Fixed an NRE that could occur under specific circumstances caused by the ItemDisplayCatalog
