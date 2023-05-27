@@ -1,6 +1,7 @@
 ﻿using RoR2;
 using RoR2.ConVar;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -170,7 +171,7 @@ namespace Moonstorm.Components
         private void FixedUpdate()
         {
 #if DEBUG
-            if(!enableEvents.value)
+            if(!msEnableEvents.value)
             {
                 return;
             }
@@ -369,7 +370,12 @@ namespace Moonstorm.Components
             }
         }
 
-
+#if DEBUG
+        private void Log(string msg)
+        {
+            if(msEnableEventLogging.value)
+                MSULog.Info($"\n-----o-----\nEvent Director: {msg}\n-----o-----");
+        }
         private bool AttemptForceSpawnEvent(EventCard card)
         {
             FindIdleStateMachine();
@@ -394,15 +400,158 @@ namespace Moonstorm.Components
             }
             return eventsStopped;
         }
-#if DEBUG
-        private void Log(string msg)
+
+        private bool PlayEventDebug(EventCard card)
         {
-            MSULog.Info($"\n-----o-----\nEvent Director: {msg}\n-----o-----");
+            bool canSpawn = false;
+            canSpawn = PrepareNewEventDebug(card);
+            if (!canSpawn)
+                return false;
+
+            float effectiveCost = card.GetEffectiveCost(eventToAmountsPlayed[card.EventIndex]);
+
+            Log($"Playing event {card}\n(Event state: {card.eventState})");
+
+            TargetedStateMachine.SetState(EntityStateCatalog.InstantiateState(card.eventState));
+
+            if (card.eventFlags.HasFlag(EventFlags.OncePerRun))
+            {
+#if DEBUG
+                Log($"Card {card} has OncePerRun flag, setting flag.");
+#endif
+                EventFunctions.RunSetFlag(card.OncePerRunFlag);
+            }
+
+            eventToAmountsPlayed[card.EventIndex]++;
+
+            eventCredits -= effectiveCost;
+            TotalCreditsSpent += effectiveCost;
+
+#if DEBUG
+            Log($"Subtracted {effectiveCost} credits" +
+                $"\nTotal credits spent: {TotalCreditsSpent}");
+#endif
+
+            return true;
+        }
+
+        private bool PrepareNewEventDebug(EventCard card)
+        {
+#if DEBUG
+            Log($"Preparing event {card}");
+#endif
+            if (!card.IsAvailable())
+            {
+#if DEBUG
+                Log($"Event card {card.name} is not available! Aborting.");
+#endif
+                return false;
+            }
+            float effectiveCost = card.GetEffectiveCost(eventToAmountsPlayed[card.EventIndex]);
+            if (eventCredits < effectiveCost)
+            {
+#if DEBUG
+                Log($"Event card {card.name} is too expensive! (It costs {effectiveCost}, current credits are {eventCredits}), Aborting");
+#endif
+                return false;
+            }
+            if (IsEventBeingPlayed(card))
+            {
+#if DEBUG
+                Log($"Event card {card.name} is already playing! Aborting");
+#endif
+                return false;
+            }
+            if (Run.instance.GetEventFlag(card.OncePerRunFlag))
+            {
+#if DEBUG
+                Log($"Event card {card.name} already played! Aborting");
+#endif
+                return false;
+            }
+            FindIdleStateMachine();
+            if (card.eventFlags.HasFlag(EventFlags.WeatherRelated) && TargetedStateMachine.customName != "WeatherEvent")
+            {
+#if DEBUG
+                Log($"No empty state machines to play event on! Aborting");
+#endif
+                return false;
+            }
+
+            var teleporterInstance = TeleporterInteraction.instance;
+            if (teleporterInstance)
+            {
+                if (teleporterInstance.isCharged || teleporterInstance.isInFinalSequence)
+                {
+#if DEBUG
+                    Log($"Stage has a teleporter instance and the teleporter is Charged or in it's final sequence, aborting.");
+#endif
+                    return false;
+                }
+
+                if (teleporterInstance.chargePercent > 25)
+                {
+#if DEBUG
+                    Log($"Stage has a teleporter instance and it's charge percent is over 25%, aborting.");
+#endif
+                    return false;
+                }
+            }
+            return true;
         }
         ///Commands
         ///------------------------------------------------------------------------------------------------------------
 
-        [ConCommand(commandName = "force_event", flags = ConVarFlags.ExecuteOnServer, helpText = "Forces a gamewide event to begin. Argument is the event card's name")]
+        [ConCommand(commandName = "msAdd_Credits", flags = ConVarFlags.ExecuteOnServer, helpText = "Adds the desired amount of credits to the Event Director. Argument is a float value, can be negative.")]
+        private static void AddCredits(ConCommandArgs args)
+        {
+            if (!Instance)
+            {
+                Debug.Log($"Event director is unavailable! Cannot start any events.");
+                return;
+            }
+
+            string num = args.TryGetArgString(0);
+            if(float.TryParse(num, NumberStyles.Float, CultureInfo.InvariantCulture, out float creditsToAdd))
+            {
+                Instance.eventCredits += creditsToAdd;
+                Debug.Log($"Added {creditsToAdd} to Event Director's Credits.");
+                return;
+            }
+
+            Debug.Log($"Float parse error, could not parse {num}");
+        }
+        [ConCommand(commandName = "msPlay_Event", flags = ConVarFlags.ExecuteOnServer, helpText = "Tries to start an event, following the regular checks before it starts. Argument is the event card's name")]
+        private static void PlayEvent(ConCommandArgs args)
+        {
+            if(!Instance)
+            {
+                Debug.Log($"Event director is unavailable! Cannot start any events.");
+                return;
+            }
+
+            string cardName = args.TryGetArgString(0)?.ToLowerInvariant();
+            if(string.IsNullOrEmpty(cardName))
+            {
+                Debug.Log($"Command requires one string argument (Event card name)");
+                return;
+            }
+
+            EventIndex eventIndex = EventCatalog.FindEventIndex(cardName);
+            if(eventIndex == EventIndex.None)
+            {
+                Debug.Log($"Could not find an EventCard of name {cardName} (FindEventIndex returned EventIndex.None)");
+                return;
+            }
+
+            EventCard card = EventCatalog.GetEventCard(eventIndex);
+            if(!Instance.PlayEventDebug(card))
+            {
+                Debug.Log($"Could not start event.");
+                return;
+            }
+        }
+        [ConCommand(commandName = "msForce_Event", flags = ConVarFlags.ExecuteOnServer, helpText = "Forces a gamewide event to begin. Argument is the event card's name")]
         private static void ForceEvent(ConCommandArgs args)
         {
             if (!Instance)
@@ -411,7 +560,7 @@ namespace Moonstorm.Components
                 return;
             }
 
-            string evArg = args.TryGetArgString(0).ToLowerInvariant();
+            string evArg = args.TryGetArgString(0)?.ToLowerInvariant();
             if (string.IsNullOrEmpty(evArg))
             {
                 Debug.Log($"Command requires one string argument (Event card name)");
@@ -439,7 +588,7 @@ namespace Moonstorm.Components
             }
         }
 
-        [ConCommand(commandName = "stop_events", flags = ConVarFlags.ExecuteOnServer, helpText = "Forces all active events to stop")]
+        [ConCommand(commandName = "msStop_Events", flags = ConVarFlags.ExecuteOnServer, helpText = "Forces all active events to stop")]
         private static void StopEvents(ConCommandArgs args)
         {
             if (!Instance)
@@ -451,7 +600,9 @@ namespace Moonstorm.Components
             Debug.Log($"Stopped {count} events");
         }
 
-        private static BoolConVar enableEvents = new BoolConVar("enable_events", ConVarFlags.ExecuteOnServer | ConVarFlags.SenderMustBeServer, "true", "Enable or Disable Events");
+        private static BoolConVar msEnableEvents = new BoolConVar("msEnable_Events", ConVarFlags.ExecuteOnServer | ConVarFlags.SenderMustBeServer, "true", "Enable or Disable Events");
+
+        private static BoolConVar msEnableEventLogging = new BoolConVar("msEnable_Event_Logging", ConVarFlags.ExecuteOnServer, "true", "Enable or Disable verbose logging of the Event Director");
 #endif
     }
 }

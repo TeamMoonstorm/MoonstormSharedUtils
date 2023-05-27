@@ -49,7 +49,7 @@ namespace Moonstorm
             #region Command Invoking
             InvokeCommand("stage1_pod", "0");
             InvokeCommand("no_enemies");
-            InvokeCommand("enable_event_logging", "1");
+            InvokeCommand("msEnable_Event_Logging", "1");
             #endregion
         }
 
