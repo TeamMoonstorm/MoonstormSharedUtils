@@ -6,13 +6,18 @@
 
 * Runtime:
     * Fixed issue where instantiate addressable prefab wouldnt properly instantiate the prefab under multiplayer circumstances
-    * Added back the enable event con var
     * AddressableInjector, CameraInstantiator and SurfaceDefInjector now properly wont save the instantiated assets
     * Fixed interactable and monster director cards not working properly
     * Made the ``bool IsAvailable()`` method of Interactable and Monster director cards virtual
-    * Fixed the MoonstormIDH component not working properly
     * Added new stubbed speed tree shaders
-    * Fixed MSUDebug having an unintended dependency on DebugToolkit
+    * Debug Build Exclusive:
+        * Prefixed debug commands and convars with ``ms``
+        * Fixed the MoonstormIDH component not working properly
+        * Fixed MSUDebug having an unintended dependency on DebugToolkit
+        * Added back the EnableEvents conVar
+        * Added ``msEnableEventLogging`` BoolConVar
+        * Added ``msPlay_Event`` command, which tries to play an event while following the regular availability checks
+        * Added ``msAdd_Credits`` command, which allows you to add or subtract credits from the Event Director.
 
 ### '1.4.1' - Whoops
 
