@@ -10,14 +10,18 @@
     * Fixed interactable and monster director cards not working properly
     * Made the ``bool IsAvailable()`` method of Interactable and Monster director cards virtual
     * Added new stubbed speed tree shaders
+    * Deprecated ``EventFlags.WeatherRelated``
+    * Event Cards can now specify the name of the entity state machine it must play on
+    * Added a method to the EventDirectorClass to add new EntityStateMachines.
+    * Fixed issue where the Event director wouldn't pick new cards after getting a valid one. causing repeating events without checking availability
     * Debug Build Exclusive:
         * Prefixed debug commands and convars with ``ms``
         * Fixed the MoonstormIDH component not working properly
         * Fixed MSUDebug having an unintended dependency on DebugToolkit
         * Added back the EnableEvents conVar
-        * Added ``msEnableEventLogging`` BoolConVar
-        * Added ``msPlay_Event`` command, which tries to play an event while following the regular availability checks
-        * Added ``msAdd_Credits`` command, which allows you to add or subtract credits from the Event Director.
+        * Added ``ms_enable_event_logging`` BoolConVar
+        * Added ``ms_play_event`` command, which tries to play an event while following the regular availability checks
+        * Added ``ms_add_credits`` command, which allows you to add or subtract credits from the Event Director.
 
 ### '1.4.1' - Whoops
 
