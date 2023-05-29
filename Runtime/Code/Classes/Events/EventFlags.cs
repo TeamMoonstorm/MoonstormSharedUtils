@@ -11,6 +11,7 @@ namespace Moonstorm
         /// <summary>
         /// This event needs to run on the exclusive "Weather" entity state machine
         /// </summary>
+        [Obsolete("Set your EventCard's \"Required State Machine\" to \"Weather\"")]
         WeatherRelated = 1U,
         /// <summary>
         /// This event can only run after void fields

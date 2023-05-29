@@ -1,8 +1,10 @@
-﻿using RoR2;
+﻿using BepInEx;
+using RoR2;
 using RoR2.ConVar;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -98,6 +100,9 @@ namespace Moonstorm.Components
         private EventCard currentEventCard;
         private Dictionary<EventIndex, int> eventToAmountsPlayed = new Dictionary<EventIndex, int>();
 
+#if DEBUG
+        private StringBuilder log = new StringBuilder();
+#endif
 
         [SystemInitializer(typeof(EventCatalog))]
         private static void SystemInit()
@@ -137,6 +142,7 @@ namespace Moonstorm.Components
                     MSULog.Error($"COULD NOT RETRIEVE EVENT CATEGORY FOR SCENE {SceneInfo.instance.sceneDef}!!!");
 #if DEBUG
                     Log($"Destroying root");
+                    Log(null);
 #endif
                     Destroy(gameObject.transform.root.gameObject);
                     return;
@@ -144,7 +150,8 @@ namespace Moonstorm.Components
                 EventCardSelection = EventDirectorCategorySelection.GenerateWeightedSelection();
                 eventToAmountsPlayed = EventCardSelection.GetValues().ToDictionary(x => x.EventIndex, y => 0);
 #if DEBUG
-                Log("Final Card Selection: " + string.Join("\n", EventCardSelection.choices.Select(x => x.value)));
+                Log("Final Card Selection: " + string.Join("\n", EventCardSelection.choices.Where(x => x.value).Select(x => x.value)));
+                Log(null);
 #endif
                 //Log below causes issues, no idea why
                 //Log($"Awakened with the following EventCards:\n{string.Join("\n", EventCardSelection.choices.Select(c => c.value.name))}");
@@ -183,9 +190,12 @@ namespace Moonstorm.Components
                     intervalStopWatch -= Time.fixedDeltaTime;
                     if (intervalStopWatch <= 0)
                     {
+#if DEBUG
+                        Log($"Stopwatch Ended, beggin Logging.\n-------o-Event Director Log-o-------");
+#endif
                         float newStopwatchVal = eventRNG.RangeFloat(intervalResetRange.min, intervalResetRange.max);
 #if DEBUG
-                        Log($"EventDirector: new stopwatch value: {newStopwatchVal}");
+                        Log($">new stopwatch value: {newStopwatchVal}");
 #endif
                         intervalStopWatch = newStopwatchVal;
 
@@ -194,16 +204,19 @@ namespace Moonstorm.Components
                         float eventScaling = compensatedDifficultyCoefficient / Run.instance.participatingPlayerCount;
 
 #if DEBUG
-                        Log($"Event Director: compensated difficulty coefficient: {compensatedDifficultyCoefficient}" +
+                        Log($">compensated difficulty coefficient: {compensatedDifficultyCoefficient}" +
                                 $"\nevent scaling: {eventScaling}");
 #endif
                         float newCredits = eventRNG.RangeFloat(creditGainRange.min, creditGainRange.max) * eventScaling;
                         eventCredits += newCredits;
 #if DEBUG
-                        Log($"Event Director: new Credits: {newCredits}" +
+                        Log($">new Credits: {newCredits}" +
                                 $"\nTotal credits so far: {eventCredits}");
 #endif
                         Simulate();
+#if DEBUG
+                        Log(null);
+#endif
                     }
                 }
             }
@@ -213,28 +226,25 @@ namespace Moonstorm.Components
         {
             if (AttemptSpawnEvent())
             {
-                float amount = eventRNG.RangeFloat(intervalResetRange.min, intervalResetRange.max) * 10;
-                intervalStopWatch += amount;
 #if DEBUG
-                Log($"Added {amount} to interval stopwatch" +
-                    $"\n(New value: {intervalStopWatch})");
+                Log($">Spawn succesful, setting currentEventCard to Null");
 #endif
+                currentEventCard = null;
                 return;
             }
-            currentEventCard = null;
         }
         private bool AttemptSpawnEvent()
         {
             bool canSpawn = false;
-            if (currentEventCard == null)
+            if (currentEventCard == null || currentEventCard == LastAttemptedEventCard)
             {
 #if DEBUG
-                Log($"Current event card is null, picking new one");
+                Log($">Current event card is null, picking new one");
 #endif
                 if (EventCardSelection.Count == 0)
                 {
 #if DEBUG
-                    Log($"Cannot pick a card when there's no cards in the EventCardSelection (Count: {EventCardSelection.Count})");
+                    Log($">Cannot pick a card when there's no cards in the EventCardSelection (Count: {EventCardSelection.Count})");
 #endif
                     return false;
                 }
@@ -245,7 +255,7 @@ namespace Moonstorm.Components
             }
             float effectiveCost = currentEventCard.GetEffectiveCost(eventToAmountsPlayed[currentEventCard.EventIndex]);
 #if DEBUG
-            Log($"Playing event {currentEventCard}" +
+            Log($">Playing event {currentEventCard}" +
                 $"\n(Event state: {currentEventCard.eventState})");
 #endif
             TargetedStateMachine.SetState(EntityStateCatalog.InstantiateState(currentEventCard.eventState));
@@ -253,7 +263,7 @@ namespace Moonstorm.Components
             if (currentEventCard.eventFlags.HasFlag(EventFlags.OncePerRun))
             {
 #if DEBUG
-                Log($"Card {currentEventCard} has OncePerRun flag, setting flag.");
+                Log($">Card {currentEventCard} has OncePerRun flag, setting flag.");
 #endif
                 EventFunctions.RunSetFlag(currentEventCard.OncePerRunFlag);
             }
@@ -265,7 +275,7 @@ namespace Moonstorm.Components
             eventCredits -= effectiveCost;
             TotalCreditsSpent += effectiveCost;
 #if DEBUG
-            Log($"Subtracted {effectiveCost} credits" +
+            Log($">Subtracted {effectiveCost} credits" +
                 $"\nTotal credits spent: {TotalCreditsSpent}");
 #endif
 
@@ -275,48 +285,49 @@ namespace Moonstorm.Components
         private bool PrepareNewEvent(EventCard card)
         {
 #if DEBUG
-            Log($"Preparing event {card}");
+            Log($">Preparing event {card}");
 #endif
             currentEventCard = card;
             if (!card.IsAvailable())
             {
 #if DEBUG
-                Log($"Event card {card.name} is not available! Aborting.");
+                Log($">Event card {card.name} is not available! Aborting.");
 #endif
-                LastAttemptedEventCard = LastAttemptedEventCard;
+                LastAttemptedEventCard = currentEventCard;
                 return false;
             }
             float effectiveCost = currentEventCard.GetEffectiveCost(eventToAmountsPlayed[currentEventCard.EventIndex]);
             if (eventCredits < effectiveCost)
             {
 #if DEBUG
-                Log($"Event card {card.name} is too expensive! (It costs {effectiveCost}, current credits are {eventCredits}), Aborting");
+                Log($">Event card {card.name} is too expensive! (It costs {effectiveCost}, current credits are {eventCredits}), Aborting");
 #endif
-                LastAttemptedEventCard = LastAttemptedEventCard;
+                LastAttemptedEventCard = currentEventCard;
                 return false;
             }
             if (IsEventBeingPlayed(card))
             {
 #if DEBUG
-                Log($"Event card {card.name} is already playing! Aborting");
+                Log($">Event card {card.name} is already playing! Aborting");
 #endif
-                LastAttemptedEventCard = LastAttemptedEventCard;
+                LastAttemptedEventCard = currentEventCard;
                 return false;
             }
             if(Run.instance.GetEventFlag(currentEventCard.OncePerRunFlag))
             {
 #if DEBUG
-                Log($"Event card {card.name} already played! Aborting");
+                Log($">Event card {card.name} already played! Aborting");
 #endif
-                LastAttemptedEventCard = LastAttemptedEventCard;
+                LastAttemptedEventCard = currentEventCard;
                 return false;
             }
-            FindIdleStateMachine();
-            if (card.eventFlags.HasFlag(EventFlags.WeatherRelated) && TargetedStateMachine.customName != "WeatherEvent")
+            FindIdleStateMachine(currentEventCard);
+            if (!TargetedStateMachine)
             {
 #if DEBUG
-                Log($"No empty state machines to play event on! Aborting");
+                Log($">No empty state machines to play event on! Aborting");
 #endif
+                LastAttemptedEventCard = currentEventCard;
                 return false;
             }
 
@@ -326,16 +337,18 @@ namespace Moonstorm.Components
                 if (teleporterInstance.isCharged || teleporterInstance.isInFinalSequence)
                 {
 #if DEBUG
-                    Log($"Stage has a teleporter instance and the teleporter is Charged or in it's final sequence, aborting.");
+                    Log($">Stage has a teleporter instance and the teleporter is Charged or in it's final sequence, aborting.");
 #endif
+                    LastAttemptedEventCard = currentEventCard;
                     return false;
                 }
 
                 if (teleporterInstance.chargePercent > 25)
                 {
 #if DEBUG
-                    Log($"Stage has a teleporter instance and it's charge percent is over 25%, aborting.");
+                    Log($">Stage has a teleporter instance and it's charge percent is over 25%, aborting.");
 #endif
+                    LastAttemptedEventCard = currentEventCard;
                     return false;
                 }
             }
@@ -355,30 +368,88 @@ namespace Moonstorm.Components
             return false;
         }
 
-        private void FindIdleStateMachine()
+        private void FindIdleStateMachine(EventCard card)
         {
-            if (NetworkStateMachine)
+            if (card.eventFlags.HasFlag(EventFlags.WeatherRelated))
             {
-                foreach (var stateMachine in NetworkStateMachine.stateMachines)
+                EntityStateMachine weatherRelatedMachine = EntityStateMachine.FindByCustomName(gameObject, "Weather");
+                bool isInMainState = weatherRelatedMachine.state.GetType().Equals(weatherRelatedMachine.mainStateType.stateType);
+                TargetedStateMachine = isInMainState ? weatherRelatedMachine : null;
+            }
+
+            if(!card.requiredStateMachine.IsNullOrWhiteSpace())
+            { 
+                EntityStateMachine requiredStateMachine = EntityStateMachine.FindByCustomName(gameObject, currentEventCard.requiredStateMachine);
+                if(!requiredStateMachine)
                 {
-                    if (stateMachine.state.GetType().Equals(stateMachine.mainStateType.stateType))
-                    {
-                        TargetedStateMachine = stateMachine;
-                        return;
-                    }
+#if DEBUG
+                    MSULog.Error($"The card {card} requires a state machine with the name {card.requiredStateMachine}, but no such machine exists in the event director!");
+#endif
+                    TargetedStateMachine = null;
+                    return;
+                }
+                TargetedStateMachine = requiredStateMachine;
+                return;
+            }
+
+            foreach (var stateMachine in NetworkStateMachine.stateMachines)
+            {
+                if (stateMachine.customName.StartsWith("Generic") && stateMachine.state.GetType().Equals(stateMachine.mainStateType.stateType))
+                {
+                    TargetedStateMachine = stateMachine;
+                    return;
                 }
             }
         }
 
+        /// <summary>
+        /// Adds a new EntityStateMachine to the EventDirector with the name <paramref name="stateMachineName"/>
+        /// <para>Intended to be used with <see cref="EventCard.requiredStateMachine"/> to make certain events only play on a specific machine (IE: Weather events from Starstorm2)</para>
+        /// <para>If you want your new state machine to be used for events that dont specify a requiredStateMachine, make sure that <paramref name="stateMachineName"/> starts with "Generic"</para>
+        /// </summary>
+        /// <param name="stateMachineName">The name of the State Machine</param>
+        /// <returns>True if added succesfully, false otherwise.</returns>
+        public static bool AddNewEntityStateMachine(string stateMachineName)
+        {
+            GameObject prefab = MoonstormSharedUtils.MSUAssetBundle.LoadAsset<GameObject>("MSUEventDirector");
+            bool machineWithNameExists = EntityStateMachine.FindByCustomName(prefab, stateMachineName);
+            if(machineWithNameExists)
+            {
+#if DEBUG
+                MSULog.Warning($"An entity state machine with name {stateMachineName} already exists in the EventDirector.");
+#endif
+                return false;
+            }
+
+            NetworkStateMachine networker = prefab.GetComponent<NetworkStateMachine>();
+            EntityStateMachine newMachine = prefab.AddComponent<EntityStateMachine>();
+            newMachine.customName = stateMachineName;
+            var idleState = new EntityStates.SerializableEntityStateType(typeof(EntityStates.Idle));
+            newMachine.initialStateType = idleState;
+            newMachine.mainStateType = idleState;
+            HG.ArrayUtils.ArrayAppend(ref networker.stateMachines, newMachine);
+#if DEBUG
+            MSULog.Info($"Succesfully added custom state machine named {stateMachineName} to the EventDirector");
+#endif
+            return true;
+        }
 #if DEBUG
         private void Log(string msg)
         {
-            if(msEnableEventLogging.value)
-                MSULog.Info($"\n-----o-----\nEvent Director: {msg}\n-----o-----");
+            if(!msEnableEventLogging.value)
+            {
+                return;
+            }
+            if(string.IsNullOrEmpty(msg))
+            {
+                MSULog.Info(log.ToString());
+                log.Clear();
+            }
+            log.AppendLine(msg + "\n");
         }
         private bool AttemptForceSpawnEvent(EventCard card)
         {
-            FindIdleStateMachine();
+            FindIdleStateMachine(card);
             if (card && TargetedStateMachine && !IsEventBeingPlayed(card))
             {
                 TargetedStateMachine.SetState(EntityStateCatalog.InstantiateState(card.eventState));
@@ -410,14 +481,14 @@ namespace Moonstorm.Components
 
             float effectiveCost = card.GetEffectiveCost(eventToAmountsPlayed[card.EventIndex]);
 
-            Log($"Playing event {card}\n(Event state: {card.eventState})");
+            Log($">Playing event {card}\n(Event state: {card.eventState})");
 
             TargetedStateMachine.SetState(EntityStateCatalog.InstantiateState(card.eventState));
 
             if (card.eventFlags.HasFlag(EventFlags.OncePerRun))
             {
 #if DEBUG
-                Log($"Card {card} has OncePerRun flag, setting flag.");
+                Log($">Card {card} has OncePerRun flag, setting flag.");
 #endif
                 EventFunctions.RunSetFlag(card.OncePerRunFlag);
             }
@@ -428,7 +499,7 @@ namespace Moonstorm.Components
             TotalCreditsSpent += effectiveCost;
 
 #if DEBUG
-            Log($"Subtracted {effectiveCost} credits" +
+            Log($">Subtracted {effectiveCost} credits" +
                 $"\nTotal credits spent: {TotalCreditsSpent}");
 #endif
 
@@ -438,12 +509,12 @@ namespace Moonstorm.Components
         private bool PrepareNewEventDebug(EventCard card)
         {
 #if DEBUG
-            Log($"Preparing event {card}");
+            Log($">Preparing event {card}");
 #endif
             if (!card.IsAvailable())
             {
 #if DEBUG
-                Log($"Event card {card.name} is not available! Aborting.");
+                Log($">Event card {card.name} is not available! Aborting.");
 #endif
                 return false;
             }
@@ -451,29 +522,29 @@ namespace Moonstorm.Components
             if (eventCredits < effectiveCost)
             {
 #if DEBUG
-                Log($"Event card {card.name} is too expensive! (It costs {effectiveCost}, current credits are {eventCredits}), Aborting");
+                Log($">Event card {card.name} is too expensive! (It costs {effectiveCost}, current credits are {eventCredits}), Aborting");
 #endif
                 return false;
             }
             if (IsEventBeingPlayed(card))
             {
 #if DEBUG
-                Log($"Event card {card.name} is already playing! Aborting");
+                Log($">Event card {card.name} is already playing! Aborting");
 #endif
                 return false;
             }
             if (Run.instance.GetEventFlag(card.OncePerRunFlag))
             {
 #if DEBUG
-                Log($"Event card {card.name} already played! Aborting");
+                Log($">Event card {card.name} already played! Aborting");
 #endif
                 return false;
             }
-            FindIdleStateMachine();
-            if (card.eventFlags.HasFlag(EventFlags.WeatherRelated) && TargetedStateMachine.customName != "WeatherEvent")
+            FindIdleStateMachine(card);
+            if (!TargetedStateMachine)
             {
 #if DEBUG
-                Log($"No empty state machines to play event on! Aborting");
+                Log($">No empty state machines to play event on! Aborting");
 #endif
                 return false;
             }
@@ -484,7 +555,7 @@ namespace Moonstorm.Components
                 if (teleporterInstance.isCharged || teleporterInstance.isInFinalSequence)
                 {
 #if DEBUG
-                    Log($"Stage has a teleporter instance and the teleporter is Charged or in it's final sequence, aborting.");
+                    Log($">Stage has a teleporter instance and the teleporter is Charged or in it's final sequence, aborting.");
 #endif
                     return false;
                 }
@@ -492,7 +563,7 @@ namespace Moonstorm.Components
                 if (teleporterInstance.chargePercent > 25)
                 {
 #if DEBUG
-                    Log($"Stage has a teleporter instance and it's charge percent is over 25%, aborting.");
+                    Log($">Stage has a teleporter instance and it's charge percent is over 25%, aborting.");
 #endif
                     return false;
                 }
@@ -502,7 +573,7 @@ namespace Moonstorm.Components
         ///Commands
         ///------------------------------------------------------------------------------------------------------------
 
-        [ConCommand(commandName = "msAdd_Credits", flags = ConVarFlags.ExecuteOnServer, helpText = "Adds the desired amount of credits to the Event Director. Argument is a float value, can be negative.")]
+        [ConCommand(commandName = "ms_add_credits", flags = ConVarFlags.ExecuteOnServer, helpText = "Adds the desired amount of credits to the Event Director. Argument is a float value, can be negative.")]
         private static void AddCredits(ConCommandArgs args)
         {
             if (!Instance)
@@ -521,7 +592,7 @@ namespace Moonstorm.Components
 
             Debug.Log($"Float parse error, could not parse {num}");
         }
-        [ConCommand(commandName = "msPlay_Event", flags = ConVarFlags.ExecuteOnServer, helpText = "Tries to start an event, following the regular checks before it starts. Argument is the event card's name")]
+        [ConCommand(commandName = "ms_play_event", flags = ConVarFlags.ExecuteOnServer, helpText = "Tries to start an event, following the regular checks before it starts. Argument is the event card's name")]
         private static void PlayEvent(ConCommandArgs args)
         {
             if(!Instance)
@@ -548,10 +619,10 @@ namespace Moonstorm.Components
             if(!Instance.PlayEventDebug(card))
             {
                 Debug.Log($"Could not start event.");
-                return;
             }
+            Instance.Log(null);
         }
-        [ConCommand(commandName = "msForce_Event", flags = ConVarFlags.ExecuteOnServer, helpText = "Forces a gamewide event to begin. Argument is the event card's name")]
+        [ConCommand(commandName = "ms_force_event", flags = ConVarFlags.ExecuteOnServer, helpText = "Forces a gamewide event to begin. Argument is the event card's name")]
         private static void ForceEvent(ConCommandArgs args)
         {
             if (!Instance)
@@ -588,7 +659,7 @@ namespace Moonstorm.Components
             }
         }
 
-        [ConCommand(commandName = "msStop_Events", flags = ConVarFlags.ExecuteOnServer, helpText = "Forces all active events to stop")]
+        [ConCommand(commandName = "ms_stop_events", flags = ConVarFlags.ExecuteOnServer, helpText = "Forces all active events to stop")]
         private static void StopEvents(ConCommandArgs args)
         {
             if (!Instance)
@@ -600,9 +671,9 @@ namespace Moonstorm.Components
             Debug.Log($"Stopped {count} events");
         }
 
-        private static BoolConVar msEnableEvents = new BoolConVar("msEnable_Events", ConVarFlags.ExecuteOnServer | ConVarFlags.SenderMustBeServer, "true", "Enable or Disable Events");
+        private static BoolConVar msEnableEvents = new BoolConVar("ms_enable_events", ConVarFlags.ExecuteOnServer | ConVarFlags.SenderMustBeServer, "1", "Enable or Disable Events");
 
-        private static BoolConVar msEnableEventLogging = new BoolConVar("msEnable_Event_Logging", ConVarFlags.ExecuteOnServer, "true", "Enable or Disable verbose logging of the Event Director");
+        private static BoolConVar msEnableEventLogging = new BoolConVar("ms_enable_event_logging", ConVarFlags.ExecuteOnServer, "1", "Enable or Disable verbose logging of the Event Director");
 #endif
     }
 }

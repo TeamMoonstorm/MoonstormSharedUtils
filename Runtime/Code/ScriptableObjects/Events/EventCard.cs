@@ -27,6 +27,8 @@ namespace Moonstorm
         public EventFlags eventFlags;
         [Tooltip("The event's EntityState, MUST inherit from EventState")]
         public SerializableEntityStateType eventState;
+        [Tooltip("If specified, the event can only play on the specified state machine. MSU by default adds the \"Weather\" state machine.")]
+        public string requiredStateMachine;
         [Tooltip("The token that gets displayed at the start of the event")]
         public string startMessageToken;
         [Tooltip("The token that gets displayed at the end of the event")]
