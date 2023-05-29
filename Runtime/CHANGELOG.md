@@ -1,3 +1,8 @@
+### '1.4.3' - No one will ever know!
+
+* Runtime:
+    * Added a Return statement on EventDirector's FindIdleStateMachine when the event card's event flags has the WeatherRelated flag.
+
 ### '1.4.2' - Fixes and Improvements
 
 * Editor:

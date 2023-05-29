@@ -375,6 +375,7 @@ namespace Moonstorm.Components
                 EntityStateMachine weatherRelatedMachine = EntityStateMachine.FindByCustomName(gameObject, "Weather");
                 bool isInMainState = weatherRelatedMachine.state.GetType().Equals(weatherRelatedMachine.mainStateType.stateType);
                 TargetedStateMachine = isInMainState ? weatherRelatedMachine : null;
+                return;
             }
 
             if(!card.requiredStateMachine.IsNullOrWhiteSpace())
