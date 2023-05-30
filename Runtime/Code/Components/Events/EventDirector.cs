@@ -1,4 +1,5 @@
 ﻿using BepInEx;
+using Moonstorm.Config;
 using RoR2;
 using RoR2.ConVar;
 using System.Collections.Generic;

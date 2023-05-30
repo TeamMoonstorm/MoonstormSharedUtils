@@ -43,7 +43,7 @@ namespace Moonstorm
             }
             CharacterBody.onBodyStartGlobal += OnBodyStart;
 
-            if(MSUtil.IsModInstalled("xyz.yekoc.Holy"))
+            if(MSUtil.HolyDLLInstalled)
             {
 #if DEBUG
                 MSULog.Info("Holy installed, using custom RecalculateStats support");

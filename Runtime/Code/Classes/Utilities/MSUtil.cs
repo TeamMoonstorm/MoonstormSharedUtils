@@ -14,6 +14,9 @@ namespace Moonstorm
     /// </summary>
     public static class MSUtil
     {
+        public static bool HolyDLLInstalled => IsModInstalled("xyz.yekoc.Holy");
+        public static bool RiskOfOptionsInstalled => IsModInstalled("com.rune580.riskofoptions");
+
         private static Run currentRun;
         private static ExpansionDef[] currentRunExpansionDefs;
         /// <summary>

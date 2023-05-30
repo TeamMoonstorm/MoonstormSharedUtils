@@ -18,7 +18,7 @@ namespace Moonstorm
     {
         private static bool initialized = false;
 
-        private static Dictionary<Assembly, string> assemblyToIdentifier = new Dictionary<Assembly, string>();
+        private static Dictionary<Assembly, (PluginInfo, ConfigFile)> assemblyToPluginInfoConfigFile = new Dictionary<Assembly, (PluginInfo, ConfigFile)>();
         private static Dictionary<string, ConfigFile> identifierToConfigFile = new Dictionary<string, ConfigFile>();
 
         [SystemInitializer()]
@@ -61,10 +61,7 @@ namespace Moonstorm
         public static void AddMod(BaseUnityPlugin baseUnityPlugin)
         {
             Assembly assembly = Assembly.GetCallingAssembly();
-            var tuple = GetMainConfigFile(baseUnityPlugin);
-
-            ConfigFile mainConfigFile = tuple.Item2;
-            string mainConfigFileIdentifier = tuple.Item1;
+            var tuple = GetValueForAssembly(baseUnityPlugin);
 
             if (initialized)
             {
@@ -73,33 +70,35 @@ namespace Moonstorm
 #endif
                 return;
             }
-            if (assemblyToIdentifier.ContainsKey(assembly))
+            if (assemblyToPluginInfoConfigFile.ContainsKey(assembly))
             {
 #if DEBUG
                 MSULog.Warning($"Assembly {assembly.GetName().Name} has already been added to the ConfigurableFieldManager!");
 #endif
                 return;
             }
-            if (mainConfigFile == null)
-            {
-#if DEBUG
-                MSULog.Error($"Cannot add {assembly.GetName().Name} to the ConfigurableFieldManager as the assembly either does not have a type with the BepInPlugin attribute, or the type with the Attribute does not inherit from BaseUnityPlugin.");
-#endif
-                return;
-            }
-
 #if DEBUG
             MSULog.Info($"Adding mod {assembly.GetName().Name} to the configurable field manager");
 #endif
 
-            assemblyToIdentifier.Add(assembly, mainConfigFileIdentifier);
-            identifierToConfigFile.Add(mainConfigFileIdentifier, mainConfigFile);
+            assemblyToPluginInfoConfigFile.Add(assembly, tuple);
+            identifierToConfigFile.Add(tuple.Item1.Metadata.GUID, tuple.Item2);
         }
 
-        private static (string, ConfigFile) GetMainConfigFile(BaseUnityPlugin plugin)
+        public static ConfigFile GetConfigFile(string configIdentifier)
+        {
+            if(identifierToConfigFile.TryGetValue(configIdentifier, out ConfigFile configFile))
+            {
+                return configFile;
+            }
+
+            return null;
+        }
+
+        private static (PluginInfo, ConfigFile) GetValueForAssembly(BaseUnityPlugin plugin)
         {
             plugin.Config.Save();
-            return (plugin.Info.Metadata.GUID, plugin.Config);
+            return (plugin.Info, plugin.Config);
         }
 
         private static void ConfigureFields()
@@ -121,11 +120,11 @@ namespace Moonstorm
                     string identifier = configurableField.ConfigFileIdentifier;
                     if (string.IsNullOrEmpty(identifier))
                     {
-                        if (!assemblyToIdentifier.ContainsKey(declaringType.Assembly))
+                        if (!assemblyToPluginInfoConfigFile.ContainsKey(declaringType.Assembly))
                         {
                             throw new KeyNotFoundException($"ConfigurableField for {declaringType.FullName}.{field.Name} does not have a ConfigFileIdentifier, and {declaringType.FullName}'s assembly is not in the ConfigurableFieldManager.");
                         }
-                        identifier = assemblyToIdentifier[declaringType.Assembly];
+                        identifier = assemblyToPluginInfoConfigFile[declaringType.Assembly].Item1.Metadata.GUID;
                     }
 
                     if (!identifierToConfigFile.ContainsKey(identifier))
@@ -133,7 +132,14 @@ namespace Moonstorm
                         throw new KeyNotFoundException($"ConfigurableField for {declaringType.FullName}.{field.Name} has a ConfigFileIdentifier, but the identifier does not have a corresponding value.");
                     }
 
-                    ConfigureField(configurableField, identifierToConfigFile[identifier]);
+                    if(configurableField is RooConfigurableFieldAttribute att)
+                    {
+                        PluginInfo pInfo = assemblyToPluginInfoConfigFile[declaringType.Assembly].Item1;
+                        att.OwnerGUID = pInfo.Metadata.GUID;
+                        att.OwnerName = pInfo.Metadata.Name;
+                    }
+
+                    ConfigureField(configurableField, GetConfigFile(identifier));
                 }
                 catch (Exception e)
                 {

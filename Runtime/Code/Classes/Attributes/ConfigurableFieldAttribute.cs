@@ -1,7 +1,12 @@
 ﻿using BepInEx.Configuration;
 using HG.Reflection;
+using RiskOfOptions;
+using RiskOfOptions.Components.Options;
+using RiskOfOptions.OptionConfigs;
+using RiskOfOptions.Options;
 using System;
 using System.Reflection;
+using UnityEngine;
 
 namespace Moonstorm
 {
@@ -9,7 +14,7 @@ namespace Moonstorm
     /// The Configurable Field Attribute can be used to make a field Configurable using BepInEx's Config System.
     /// <para>You should add your mod to the <see cref="ConfigurableFieldManager"/> with <seealso cref="ConfigurableFieldManager.AddMod(BepInEx.BaseUnityPlugin)"/></para>
     /// </summary>
-    [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
     public class ConfigurableFieldAttribute : SearchableAttribute
     {
         /// <summary>
@@ -66,11 +71,11 @@ namespace Moonstorm
         internal void ConfigureField<T>(ConfigFile configFile, T value)
         {
             ConfigEntryBase = configFile.Bind<T>(GetSection(), GetName(), value, GetDescription());
-
+            OnConfigured(configFile, value);
             var entry = GetConfigEntry<T>();
             entry.SettingChanged += SetValue;
         }
-
+        protected virtual void OnConfigured(ConfigFile configFile, object value) { }
         private void SetValue(object sender, EventArgs e)
         {
             var newVal = ConfigEntryBase.BoxedValue;
@@ -103,6 +108,45 @@ namespace Moonstorm
                 return ConfigDesc;
             }
             return $"Configure this value";
+        }
+    }
+
+    public class RooConfigurableFieldAttribute : ConfigurableFieldAttribute
+    {
+        /// <summary>
+        /// The GUID of the mod that owns this ConfigurableField
+        /// </summary>
+        public string OwnerGUID { get; internal set; }
+
+        /// <summary>
+        /// The Name of the mod that owns this ConfigurableField
+        /// </summary>
+        public string OwnerName { get; internal set; }
+
+        protected override void OnConfigured(ConfigFile file, object value)
+        {
+
+            switch (value)
+            {
+                case Boolean _bool:
+                    ModSettingsManager.AddOption(new CheckBoxOption(GetConfigEntry<bool>()), OwnerGUID, OwnerName);
+                    break;
+                case float _float:
+                    ModSettingsManager.AddOption(new SliderOption(GetConfigEntry<float>()), OwnerGUID, OwnerName);
+                    break;
+                case int _int:
+                    ModSettingsManager.AddOption(new IntSliderOption(GetConfigEntry<int>()), OwnerGUID, OwnerName);
+                    break;
+                case string _string:
+                    ModSettingsManager.AddOption(new StringInputFieldOption(GetConfigEntry<string>()), OwnerGUID, OwnerName);
+                    break;
+                case Color _color:
+                    ModSettingsManager.AddOption(new ColorOption(GetConfigEntry<Color>()), OwnerGUID, OwnerName);
+                    break;
+                case Enum _enum:
+                    ModSettingsManager.AddOption(new ChoiceOption(ConfigEntryBase), OwnerGUID, OwnerName);
+                    break;
+            }
         }
     }
 }
