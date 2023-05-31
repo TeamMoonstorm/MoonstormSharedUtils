@@ -1,4 +1,5 @@
-﻿using HG.Reflection;
+﻿using BepInEx;
+using HG.Reflection;
 using System;
 using System.Globalization;
 using System.Reflection;
@@ -61,11 +62,15 @@ namespace Moonstorm
         /// The index used during formatting process
         /// </summary>
         public int formatIndex;
-        /// <summary>
-        /// Extra data to be used during formatting, should be used depending on the chosen StatType
-        /// <para>Examples of stat types that use this field: <see cref="StatTypes.DivideByN"/>, <see cref="StatTypes.MultiplyByN"/></para>
-        /// </summary>
+
+        [Obsolete("Creating floats from strings is error prone, use \"operationData\" instead.")]
         public string extraData;
+
+        /// <summary>
+        /// Operation data to be used during formatting, should be used depending on the chosen StatType
+        /// <para>Examples of StatTypes that use this field: <see cref="StatTypes.DivideByN"/>, <see cref="StatTypes.MultiplyByN"/></para>
+        /// </summary>
+        public float operationData = float.NaN;
 
         private object valueForFormatting;
 
@@ -84,7 +89,14 @@ namespace Moonstorm
             this.langToken = langToken;
             this.statType = statType;
             this.formatIndex = formatIndex;
-            this.extraData = extraData;
+            this.operationData = float.Parse(extraData, CultureInfo.InvariantCulture);
+        }
+        public TokenModifierAttribute(string langToken, StatTypes statType, int formatIndex = 0, float operationData = 1f)
+        {
+            this.langToken = langToken;
+            this.statType = statType;
+            this.formatIndex = formatIndex;
+            this.operationData = operationData;
         }
 
         internal object GetFormattingValue()
@@ -99,6 +111,12 @@ namespace Moonstorm
                 value = pi.GetMethod?.Invoke(null, null);
             }
 
+            if(!extraData.IsNullOrWhiteSpace() && float.IsNaN(operationData))
+            {
+                operationData = float.Parse(extraData, CultureInfo.InvariantCulture);
+                extraData = string.Empty;
+            }
+
             if (value != null && IsNumber(value))
             {
                 switch (statType)
@@ -107,24 +125,24 @@ namespace Moonstorm
                         valueForFormatting = value;
                         return valueForFormatting;
                     case StatTypes.Percentage:
-                        extraData = "100";
+                        operationData = 100f;
                         valueForFormatting = MultiplyByN(CastToFloat(value));
                         return valueForFormatting;
                     case StatTypes.DivideBy2:
-                        extraData = "2";
+                        operationData = 2f;
                         valueForFormatting = DivideByN(CastToFloat(value));
                         return valueForFormatting;
                     case StatTypes.MultiplyByN:
-                        valueForFormatting = MultiplyByN(CastToFloat(value));
+                        valueForFormatting = float.IsNaN(operationData) ? value : MultiplyByN(CastToFloat(value));
                         return valueForFormatting;
                     case StatTypes.DivideByN:
-                        valueForFormatting = DivideByN(CastToFloat(value));
+                        valueForFormatting = float.IsNaN(operationData) ? value : DivideByN(CastToFloat(value));
                         return valueForFormatting;
                     case StatTypes.AddN:
-                        valueForFormatting = AddN(CastToFloat(value));
+                        valueForFormatting = float.IsNaN(operationData) ? value : AddN(CastToFloat(value));
                         return valueForFormatting;
                     case StatTypes.SubtractN:
-                        valueForFormatting = SubtractN(CastToFloat(value));
+                        valueForFormatting = float.IsNaN(operationData) ? value : SubtractN(CastToFloat(value));
                         return valueForFormatting;
                 }
             }
@@ -143,28 +161,28 @@ namespace Moonstorm
 
         private object MultiplyByN(float number)
         {
-            var coef = float.Parse(extraData, CultureInfo.InvariantCulture);
+            var coef = operationData;
             float num = number * coef;
             return num;
         }
 
         private object DivideByN(float number)
         {
-            var dividend = float.Parse(extraData, CultureInfo.InvariantCulture);
+            var dividend = operationData;
             float num = number / dividend;
             return num;
         }
 
         private object AddN(float number)
         {
-            var addend = float.Parse(extraData, CultureInfo.InvariantCulture);
+            var addend = operationData;
             float num = number + addend;
             return num;
         }
 
         private object SubtractN(float number)
         {
-            var substrahend = float.Parse(extraData, CultureInfo.InvariantCulture);
+            var substrahend = operationData;
             float num = number - substrahend;
             return num;
         }

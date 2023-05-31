@@ -111,10 +111,6 @@
         /// </summary>
         public static EventDirectorCategorySelection TitanicPlainsSimulacrum { get; } = Load(nameof(TitanicPlainsSimulacrum));
         /// <summary>
-        /// <inheritdoc cref="Load(string)"/>
-        /// </summary>
-
-        /// <summary>
         /// Loads the EventDirecttorCategorySelection for the stage specified in the property name
         /// </summary>
         private static EventDirectorCategorySelection Load(string name) => MoonstormSharedUtils.MSUAssetBundle.LoadAsset<EventDirectorCategorySelection>($"edcs{name}");

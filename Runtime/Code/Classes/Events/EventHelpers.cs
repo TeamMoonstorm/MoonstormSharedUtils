@@ -55,19 +55,26 @@ namespace Moonstorm
         {
             On.RoR2.UI.HUD.Awake += GetHUD;
 
-            HGTextMeshProUGUI tmp = EventAnnouncer.GetComponent<HGTextMeshProUGUI>();
-            float size = MSUConfig.eventMessageFontSize.Value;
-
-            tmp.fontSize = size;
-            tmp.fontSizeMax = size;
+            MSUConfig.eventMessageFontSize.OnConfigChanged += (f) =>
+            {
+                HGTextMeshProUGUI tmp = EventAnnouncer.GetComponent<HGTextMeshProUGUI>();
+                tmp.fontSize = f;
+                tmp.fontSizeMax = f;
+            };
 
             //ClassicStageInfo.monsterFamilyChance = 1000;
-            if (MSUConfig.familyEventUsesEventAnnouncementInsteadOfChatMessage.Value)
+            MSUConfig.familyEventUsesEventAnnouncementInsteadOfChatMessage.OnConfigChanged += (val) =>
             {
-                //Make the family event message use an EventAnnouncement
-                On.RoR2.ClassicStageInfo.BroadcastFamilySelection += ShowAnnouncement;
-            }
-
+                if (val)
+                {
+                    On.RoR2.ClassicStageInfo.BroadcastFamilySelection -= ShowAnnouncement;
+                    On.RoR2.ClassicStageInfo.BroadcastFamilySelection += ShowAnnouncement;
+                }
+                else
+                {
+                    On.RoR2.ClassicStageInfo.BroadcastFamilySelection -= ShowAnnouncement;
+                }
+            };
         }
 
         private static void GetHUD(On.RoR2.UI.HUD.orig_Awake orig, HUD self)
@@ -84,7 +91,7 @@ namespace Moonstorm
                 yield return new WaitForSeconds(4);
                 Transform transform = instance.transform;
                 transform.SetParent(hudInstance.mainContainer.transform, false);
-                instance.GetComponent<RectTransform>().anchoredPosition = new Vector3(MSUConfig.eventMessageXOffset.Value, MSUConfig.eventMessageYOffset.Value);
+                instance.GetComponent<RectTransform>().anchoredPosition = new Vector3(MSUConfig.eventMessageXOffset, MSUConfig.eventMessageYOffset);
                 instance.GetComponent<EventTextController>().BeginFade();
 
                 yield break;
@@ -100,7 +107,7 @@ namespace Moonstorm
         public static GameObject AnnounceEvent(EventAnnounceInfo announceInfo)
         {
             GameObject eventAnnouncerInstance = UnityEngine.Object.Instantiate(EventAnnouncer, hudInstance.mainContainer.transform, false);
-            eventAnnouncerInstance.GetComponent<RectTransform>().anchoredPosition = new Vector3(MSUConfig.eventMessageXOffset.Value, MSUConfig.eventMessageYOffset.Value);
+            eventAnnouncerInstance.GetComponent<RectTransform>().anchoredPosition = new Vector3(MSUConfig.eventMessageXOffset, MSUConfig.eventMessageYOffset);
 
             HGTextMeshProUGUI hgText = eventAnnouncerInstance.GetComponent<HGTextMeshProUGUI>();
             string token = announceInfo.isEventStart ? announceInfo.card.startMessageToken : announceInfo.card.endMessageToken;

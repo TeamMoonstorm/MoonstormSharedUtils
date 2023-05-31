@@ -1,5 +1,4 @@
 ﻿using BepInEx;
-using Moonstorm.Config;
 using RoR2;
 using RoR2.ConVar;
 using System.Collections.Generic;
@@ -179,7 +178,7 @@ namespace Moonstorm.Components
         private void FixedUpdate()
         {
 #if DEBUG
-            if(!msEnableEvents.value)
+            if (!msEnableEvents.value)
             {
                 return;
             }
@@ -314,7 +313,7 @@ namespace Moonstorm.Components
                 LastAttemptedEventCard = currentEventCard;
                 return false;
             }
-            if(Run.instance.GetEventFlag(currentEventCard.OncePerRunFlag))
+            if (Run.instance.GetEventFlag(currentEventCard.OncePerRunFlag))
             {
 #if DEBUG
                 Log($">Event card {card.name} already played! Aborting");
@@ -379,10 +378,10 @@ namespace Moonstorm.Components
                 return;
             }
 
-            if(!card.requiredStateMachine.IsNullOrWhiteSpace())
-            { 
+            if (!card.requiredStateMachine.IsNullOrWhiteSpace())
+            {
                 EntityStateMachine requiredStateMachine = EntityStateMachine.FindByCustomName(gameObject, currentEventCard.requiredStateMachine);
-                if(!requiredStateMachine)
+                if (!requiredStateMachine)
                 {
 #if DEBUG
                     MSULog.Error($"The card {card} requires a state machine with the name {card.requiredStateMachine}, but no such machine exists in the event director!");
@@ -415,7 +414,7 @@ namespace Moonstorm.Components
         {
             GameObject prefab = MoonstormSharedUtils.MSUAssetBundle.LoadAsset<GameObject>("MSUEventDirector");
             bool machineWithNameExists = EntityStateMachine.FindByCustomName(prefab, stateMachineName);
-            if(machineWithNameExists)
+            if (machineWithNameExists)
             {
 #if DEBUG
                 MSULog.Warning($"An entity state machine with name {stateMachineName} already exists in the EventDirector.");
@@ -438,11 +437,11 @@ namespace Moonstorm.Components
 #if DEBUG
         private void Log(string msg)
         {
-            if(!msEnableEventLogging.value)
+            if (!msEnableEventLogging.value)
             {
                 return;
             }
-            if(string.IsNullOrEmpty(msg))
+            if (string.IsNullOrEmpty(msg))
             {
                 MSULog.Info(log.ToString());
                 log.Clear();
@@ -585,7 +584,7 @@ namespace Moonstorm.Components
             }
 
             string num = args.TryGetArgString(0);
-            if(float.TryParse(num, NumberStyles.Float, CultureInfo.InvariantCulture, out float creditsToAdd))
+            if (float.TryParse(num, NumberStyles.Float, CultureInfo.InvariantCulture, out float creditsToAdd))
             {
                 Instance.eventCredits += creditsToAdd;
                 Debug.Log($"Added {creditsToAdd} to Event Director's Credits.");
@@ -597,28 +596,28 @@ namespace Moonstorm.Components
         [ConCommand(commandName = "ms_play_event", flags = ConVarFlags.ExecuteOnServer, helpText = "Tries to start an event, following the regular checks before it starts. Argument is the event card's name")]
         private static void PlayEvent(ConCommandArgs args)
         {
-            if(!Instance)
+            if (!Instance)
             {
                 Debug.Log($"Event director is unavailable! Cannot start any events.");
                 return;
             }
 
             string cardName = args.TryGetArgString(0)?.ToLowerInvariant();
-            if(string.IsNullOrEmpty(cardName))
+            if (string.IsNullOrEmpty(cardName))
             {
                 Debug.Log($"Command requires one string argument (Event card name)");
                 return;
             }
 
             EventIndex eventIndex = EventCatalog.FindEventIndex(cardName);
-            if(eventIndex == EventIndex.None)
+            if (eventIndex == EventIndex.None)
             {
                 Debug.Log($"Could not find an EventCard of name {cardName} (FindEventIndex returned EventIndex.None)");
                 return;
             }
 
             EventCard card = EventCatalog.GetEventCard(eventIndex);
-            if(!Instance.PlayEventDebug(card))
+            if (!Instance.PlayEventDebug(card))
             {
                 Debug.Log($"Could not start event.");
             }

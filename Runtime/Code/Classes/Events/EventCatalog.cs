@@ -38,7 +38,7 @@ namespace Moonstorm
         /// <summary>
         /// Call ResourceAvailability.CallWhenAvailable() to run a method after the EventCatalog is initialized
         /// </summary>
-        public static ResourceAvailability ResourceAvailability { get; } = default(ResourceAvailability);
+        public static ResourceAvailability resourceAvailability = default(ResourceAvailability);
         private static bool initialized = false;
         #region GetAndFindMethods
         /// <summary>
@@ -232,7 +232,7 @@ namespace Moonstorm
         {
             AddCategories(MoonstormSharedUtils.MSUAssetBundle.LoadAllAssets<EventDirectorCategorySelection>());
 #if DEBUG
-            if (MSUConfig.addDummyEvents.Value)
+            if (MSUConfig.addDummyEvent)
             {
                 AddCard(MoonstormSharedUtils.MSUAssetBundle.LoadAsset<EventCard>("DummyEventCard"));
             }
@@ -252,7 +252,7 @@ namespace Moonstorm
             eventCards = null;
 
             initialized = true;
-            ResourceAvailability.MakeAvailable();
+            resourceAvailability.MakeAvailable();
         }
 
         private static List<EventDirectorCategorySelection> RegisterCategories(EventDirectorCategorySelection[] eventDirectorCategorySelections)
@@ -500,13 +500,15 @@ namespace Moonstorm
             return flagAmount <= -1 || flagAmount >= 1;
         }
 
-        [ConCommand(commandName = "list_events", flags = ConVarFlags.None, helpText = "Prints all loaded events")]
+#if DEBUG
+        [ConCommand(commandName = "ms_list_events", flags = ConVarFlags.None, helpText = "Prints all loaded events")]
         private static void ListEvents(ConCommandArgs args)
         {
             for (int i = 0; i < RegisteredEventCount; i++)
                 Debug.Log($"[{i}]\t{registeredEventCards[i].name.ToLowerInvariant()}");
         }
-        #endregion
+#endif
+#endregion
     }
 }
 

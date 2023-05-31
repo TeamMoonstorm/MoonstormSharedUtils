@@ -1,6 +1,9 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
+using Moonstorm.Config;
 using Moonstorm.Loaders;
+using RiskOfOptions;
+using RiskOfOptions.OptionConfigs;
 using UnityEngine;
 
 namespace Moonstorm
@@ -25,83 +28,153 @@ namespace Moonstorm
         /// The general config file
         /// </summary>
         public static ConfigFile generalConfig;
-        internal static ConfigEntry<KeyCode> instantiateMaterialTester;
-
         /// <summary>
         /// The events config file
         /// </summary>
         public static ConfigFile eventsConfig;
-        internal static ConfigEntry<bool> addDummyEvents;
-        internal static ConfigEntry<KeyCode> printDebugEventMessage;
-        internal static ConfigEntry<float> maxDifficultyScaling;
-        internal static ConfigEntry<float> maxOpacityForEventMessage;
-        internal static ConfigEntry<float> eventMessageFontSize;
-        internal static ConfigEntry<float> eventMessageYOffset;
-        internal static ConfigEntry<float> eventMessageXOffset;
-        internal static ConfigEntry<bool> familyEventUsesEventAnnouncementInsteadOfChatMessage;
-        internal static ConfigEntry<bool> eventAnnouncementsAsChatMessages;
+
+#if DEBUG
+        internal static ConfigurableEnum<KeyCode> instantiateMaterialTester;
+        internal static ConfigurableEnum<KeyCode> printDebugEventMessage;
+        internal static ConfigurableBool addDummyEvent;
+#endif
+
+        internal static ConfigurableFloat maxDifficultyScaling;
+        internal static ConfigurableFloat maxOpacityForEventMessage;
+        internal static ConfigurableFloat eventMessageFontSize;
+        internal static ConfigurableFloat eventMessageYOffset;
+        internal static ConfigurableFloat eventMessageXOffset;
+        internal static ConfigurableBool eventAnnouncementsAsChatMessages;
+        internal static ConfigurableBool familyEventUsesEventAnnouncementInsteadOfChatMessage;
 
         internal void Init()
         {
             generalConfig = CreateConfigFile(general, false);
             eventsConfig = CreateConfigFile(events, false);
-
             SetConfigs();
+
+            ModSettingsManager.SetModIcon(MoonstormSharedUtils.MSUAssetBundle.LoadAsset<Sprite>("icon"));
+            ModSettingsManager.SetModDescription("An API focused with the intention of working in an editor enviroment using ThunderKit, MSU is a modular API system designed for ease of use and simplicity.");
         }
 
         private static void SetConfigs()
         {
-            instantiateMaterialTester = generalConfig.Bind<KeyCode>("MoonstormSharedUtils :: Keybinds",
-                                                             "Instantiate Material Tester",
-                                                             KeyCode.Insert,
-                                                             "Keybind used for instantiating the material tester." +
-                                                             "Only available if EnableDebugFeatures is set to true");
+#if DEBUG
+            instantiateMaterialTester = new ConfigurableEnum<KeyCode>(KeyCode.Insert)
+            {
+                Section = "KeyBinds",
+                Description = "Keybind used for instantiating the material tester.",
+                ConfigFile = generalConfig,
+            };
 
-            addDummyEvents = eventsConfig.Bind("MoonstormSharedUtils :: Events",
-                "Add Dummy Events",
-                false,
-                "Adds a dummy event card that can be triggered manually on every stage. this event card does nothing in particular and its purely for testing purposes");
+            printDebugEventMessage = new ConfigurableEnum<KeyCode>(KeyCode.KeypadMinus)
+            {
+                Section = "Events",
+                Description = "Keybind used for printing a debug event message.",
+                ConfigFile = eventsConfig
+            };
 
-            printDebugEventMessage = eventsConfig.Bind($"MoonstormSharedUtils :: Events",
-                "Print Debug Event Message",
-                KeyCode.KeypadMinus,
-                "Keybind used for printing a debug event message." +
-                "Only available if EnableDebugFeatures is set to true");
+            addDummyEvent = new ConfigurableBool(false)
+            {
+                Section = "Events",
+                Description = "Adds a Dummy event card that can be triggered manually on every stage. this event card does nothing in particular and its purely for testing purposes",
+                Key = "Add Dummy Event",
+                ConfigFile = eventsConfig,
+                CheckBoxConfig = new CheckBoxConfig
+                {
+                    restartRequired = true,
+                },
+                ModGUID = MoonstormSharedUtils.GUID,
+                ModName = MoonstormSharedUtils.MODNAME,
+            }.DoConfigure();
+#endif
 
-            maxDifficultyScaling = eventsConfig.Bind("MoonstormSharedUtils :: Events",
-                "Max Difficulty Scaling",
-                3.5f,
-                "The maximum difficulty scaling for events, this is used for calculating the event duration among other tidbits such as event effects");
+            maxDifficultyScaling = new ConfigurableFloat(3.5f)
+            {
+                Section = "Events",
+                Description = "The maximum difficulty scaling for vents, this is used for calculating event duration and other tidbits such as event effects.",
+                ConfigFile = eventsConfig,
+                UseStepSlider = false,
+                SliderConfig = new SliderConfig
+                {
+                    min = 1f,
+                    max = 10f,
+                    formatString = "{0:0.00}", 
+                }
+            };
 
-            maxOpacityForEventMessage = eventsConfig.Bind("MoonstormSharedUtils :: Event Messages",
-                "Max Opacity for Event Message",
-                0.75f,
-                "The maximum opacity for the event message. Irrelevant if the Event Announcement system is disabled via configs.");
+            maxOpacityForEventMessage = new ConfigurableFloat(0.75f)
+            {
+                Section = "Event Messages",
+                Description = "The Maximum opacity for the event message.",
+                ConfigFile = eventsConfig,
+                UseStepSlider = false,
+                SliderConfig = new SliderConfig
+                {
+                    min = 0f,
+                    max = 1f,
+                    formatString = "{0:0.0%}",
+                    checkIfDisabled = () => eventAnnouncementsAsChatMessages
+                }
+            };
 
-            eventMessageFontSize = eventsConfig.Bind("MoonstormSharedUtils :: Event Messages",
-                "Event Message Font Size",
-                40f,
-                "The size of the font used in the event message. Irrelevant if the Event Announcement system is disabled via configs.");
+            eventMessageFontSize = new ConfigurableFloat(40f)
+            {
+                Section = "Event Messages",
+                Description = "The Size of the font used in the event message.",
+                ConfigFile = eventsConfig,
+                UseStepSlider = false,
+                SliderConfig = new SliderConfig
+                {
+                    min = 0f,
+                    max = 100f,
+                    checkIfDisabled = () => eventAnnouncementsAsChatMessages
+                }
+            };
 
-            eventMessageYOffset = eventsConfig.Bind("MoonstormSharedUtils :: Event Messages",
-                "Event Message Y Offset",
-                225f,
-                "The Y Offset for the event message. Irrelevant if the Event Announcement system is disabled via configs.");
+            eventMessageYOffset = new ConfigurableFloat(225f)
+            {
+                Section = "Event Messages",
+                Description = "The Y Offset for the event message.",
+                ConfigFile = eventsConfig,
+                UseStepSlider = false,
+                SliderConfig = new SliderConfig
+                {
+                    min = 0f,
+                    max = 4320f,
+                    formatString = "{0:0.0}",
+                    checkIfDisabled = () => eventAnnouncementsAsChatMessages
+                }
+            };
 
-            eventMessageXOffset = eventsConfig.Bind("MoonstormSharedUtils :: Event Messages",
-                "Event Message X Offset",
-                0f,
-                "The X Offset for the event message. Irrelevant if the Event Announcement system is disabled via configs.");
+            eventMessageXOffset = new ConfigurableFloat(0f)
+            {
+                Section = "Event Messages",
+                Description = "The X Offset for the event message.",
+                ConfigFile = eventsConfig,
+                UseStepSlider = false,
+                SliderConfig = new SliderConfig
+                {
+                    min = -2560f,
+                    max = 2560f,
+                    formatString = "{0:0.0}",
+                    checkIfDisabled = () => eventAnnouncementsAsChatMessages
+                }
+            };
 
-            eventAnnouncementsAsChatMessages = eventsConfig.Bind<bool>("MoonstormSharedUtils :: Event Messages",
-                "Event Announcements as Chat Messages",
-                false,
-                "If set to true, Event announcements will appear in the chat instead of their own UI container");
+            eventAnnouncementsAsChatMessages = new ConfigurableBool(false)
+            {
+                Section = "Event Messages",
+                Description = "If set to true, Event Announcements will appear in the chat instead of their own UI container",
+                ConfigFile = eventsConfig,
+            };
 
-            familyEventUsesEventAnnouncementInsteadOfChatMessage = eventsConfig.Bind<bool>("MoonstormSharedUtils :: Event Messages",
-                "Family Event chat message as Event Announcement",
-                true,
-                "Setting this to true causes the family event chat message to display as an event announcement instead");
+            familyEventUsesEventAnnouncementInsteadOfChatMessage = new ConfigurableBool(true)
+            {
+                Section = "Event Messages",
+                Description = "Setting this to true causes the family event chat message to display as an event announcement instead.",
+                ConfigFile = eventsConfig
+            };
         }
     }
 }

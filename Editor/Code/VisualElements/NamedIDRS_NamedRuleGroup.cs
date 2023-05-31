@@ -1,25 +1,18 @@
-﻿using Moonstorm.AddressableAssets;
-using RoR2;
+﻿using RoR2;
 using RoR2EditorKit;
-using RoR2EditorKit.Data;
 using RoR2EditorKit.VisualElements;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ThunderKit.Core.UIElements;
 using UnityEditor;
 using UnityEditor.UIElements;
-using UnityEngine;
-using UnityEngine.AddressableAssets;
 using UnityEngine.UIElements;
 
 namespace Moonstorm.EditorUtils.VisualElements
 {
-	public class NamedIDRS_NamedRuleGroup : VisualElement
-	{
+    public class NamedIDRS_NamedRuleGroup : VisualElement
+    {
         public new class UxmlFactory : UxmlFactory<NamedIDRS_NamedRuleGroup, UxmlTraits> { }
         public new class UxmlTraits : VisualElement.UxmlTraits { }
         public ItemDisplayCatalog Catalog { get; internal set; }
@@ -31,7 +24,7 @@ namespace Moonstorm.EditorUtils.VisualElements
             }
             set
             {
-                if(_currentEntry != value)
+                if (_currentEntry != value)
                 {
                     _currentEntry = value;
                     SerializedProperty?.serializedObject.ApplyModifiedProperties();
@@ -52,7 +45,7 @@ namespace Moonstorm.EditorUtils.VisualElements
             }
             set
             {
-                if(CurrentEntry != null)
+                if (CurrentEntry != null)
                 {
                     CurrentEntry.extraData = value;
                 }
@@ -65,7 +58,7 @@ namespace Moonstorm.EditorUtils.VisualElements
         private SerializedProperty keyAsset;
         private void UpdateBinding()
         {
-            if(SerializedProperty == null)
+            if (SerializedProperty == null)
             {
                 ExtendedListView.collectionProperty = null;
                 keyAsset = null;
@@ -129,7 +122,7 @@ namespace Moonstorm.EditorUtils.VisualElements
             var displayName = entry.SerializedProperty.FindPropertyRelative("displayPrefabName");
             var displays = entry.extraData as ReadOnlyCollection<string>;
 
-            if(displays == null)
+            if (displays == null)
             {
                 entry.Button.text = "Invalid Rule";
                 entry.HelpBox.messageType = MessageType.Warning;
@@ -137,7 +130,7 @@ namespace Moonstorm.EditorUtils.VisualElements
                 return;
             }
             displayName.stringValue = displayName.stringValue.IsNullOrEmptyOrWhitespace() ? displays.FirstOrDefault() : displayName.stringValue;
-            if(displays.Contains(displayName.stringValue))
+            if (displays.Contains(displayName.stringValue))
             {
                 string childName = CheckChildName();
                 entry.Button.text = $"{displayName.stringValue}|{childName}";
@@ -167,7 +160,7 @@ namespace Moonstorm.EditorUtils.VisualElements
         {
             string newVal = evt?.newValue ?? defaultVal;
             var potentialCollection = Catalog.GetKeyAssetDisplays(newVal);
-            if(potentialCollection == null)
+            if (potentialCollection == null)
             {
                 HelpBox.message = "The KeyAsset value for this entry may be invalid, as the value wasnt found in the ItemDisplayCatalog, are your sure your ItemDisplayCatalog is up to date?";
                 HelpBox.messageType = MessageType.Info;

@@ -1,11 +1,9 @@
 ﻿using BepInEx;
 using RoR2;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 #if DEBUG
 using Path = System.IO.Path;
 #endif
@@ -55,13 +53,13 @@ namespace Moonstorm
             if (!idd)
                 return;
 
-            for(int i = 0; i < idd.displayPrefabs.Length; i++)
+            for (int i = 0; i < idd.displayPrefabs.Length; i++)
             {
                 var go = idd.displayPrefabs[i];
                 string key = go.name;
                 string lowerInvariant = key.ToLowerInvariant();
 
-                if(displayDictionary.ContainsKey(lowerInvariant))
+                if (displayDictionary.ContainsKey(lowerInvariant))
                 {
 #if DEBUG
                     MSULog.Warning($"The following DisplayPrefab from an ItemDisplayDictionary was not added to the ItemDisplayCatalog, since it's key ({key}) was already present. (idd: {idd}, index: {i})");
@@ -77,12 +75,12 @@ namespace Moonstorm
                 return;
 
             string serializedkey = idd.keyAsset.name;
-            if(!itemToDisplayPrefabs.ContainsKey(serializedkey))
+            if (!itemToDisplayPrefabs.ContainsKey(serializedkey))
             {
                 itemToDisplayPrefabs[serializedkey] = new List<string>();
             }
 
-            for(int i = 0; i < idd.displayPrefabs.Length; i++)
+            for (int i = 0; i < idd.displayPrefabs.Length; i++)
             {
                 var go = idd.displayPrefabs[i];
                 string goName = go.name;
@@ -135,12 +133,12 @@ namespace Moonstorm
                 var def = SurvivorCatalog.FindSurvivorDefFromBody(body);
                 if (def)
                 {
-                    if(!enemyRuleSets.Contains(key))
+                    if (!enemyRuleSets.Contains(key))
                         survivorRuleSets.AddIfNotInCollection(key);
                 }
                 else
                 {
-                    if(!survivorRuleSets.Contains(key))
+                    if (!survivorRuleSets.Contains(key))
                         enemyRuleSets.AddIfNotInCollection(key);
                 }
 #endif
@@ -149,7 +147,7 @@ namespace Moonstorm
 
         private static void CreateDisplayDictionary()
         {
-            foreach(ItemDisplayRuleSet item in idrsDictionary.Values)
+            foreach (ItemDisplayRuleSet item in idrsDictionary.Values)
             {
                 PopulateFrom(item);
             }

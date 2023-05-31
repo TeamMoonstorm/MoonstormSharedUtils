@@ -239,7 +239,7 @@ namespace Moonstorm
             for (int i = 0; i < namedDisplayDictionary.Count; i++)
             {
                 namedDisplayDictionary[i] = UpgradeNamedDisplayDictionary(namedDisplayDictionary[i], i);
-                for(int j = 0; j < namedDisplayDictionary[i].displayRules.Count; j++)
+                for (int j = 0; j < namedDisplayDictionary[i].displayRules.Count; j++)
                 {
                     namedDisplayDictionary[i].displayRules[j] = UpgradeDisplayRule(namedDisplayDictionary[i].displayRules[j], i, j);
                 }
@@ -281,7 +281,7 @@ namespace Moonstorm
                 var copy = input;
                 try
                 {
-                    if(input.displayPrefabIndex == indexOfDisplayPrefab)
+                    if (input.displayPrefabIndex == indexOfDisplayPrefab)
                     {
                         return input;
                     }
@@ -289,7 +289,7 @@ namespace Moonstorm
                     input.displayPrefabIndex = indexOfDisplayPrefab;
                     return input;
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Debug.LogError($"Failed to upgrade Displayrule from dictionary index {dictionaryIndex} at {ruleIndex} for {this}.\n{e}");
                     return copy;

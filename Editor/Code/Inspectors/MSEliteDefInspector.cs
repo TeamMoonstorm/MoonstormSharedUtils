@@ -1,12 +1,11 @@
 ﻿using RoR2;
-using RoR2EditorKit.Inspectors;
 using RoR2EditorKit;
+using RoR2EditorKit.VisualElements;
 using System;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 using Base = RoR2EditorKit.RoR2Related.Inspectors.EliteDefInspector;
-using RoR2EditorKit.VisualElements;
 
 namespace Moonstorm.EditorUtils.Inspectors
 {

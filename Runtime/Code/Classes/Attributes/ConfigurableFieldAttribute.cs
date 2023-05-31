@@ -1,18 +1,17 @@
 ﻿using BepInEx.Configuration;
 using HG.Reflection;
 using RiskOfOptions;
-using RiskOfOptions.Components.Options;
-using RiskOfOptions.OptionConfigs;
 using RiskOfOptions.Options;
 using System;
 using System.Reflection;
+using Moonstorm.Config;
 using UnityEngine;
 
 namespace Moonstorm
 {
     /// <summary>
     /// The Configurable Field Attribute can be used to make a field Configurable using BepInEx's Config System.
-    /// <para>You should add your mod to the <see cref="ConfigurableFieldManager"/> with <seealso cref="ConfigurableFieldManager.AddMod(BepInEx.BaseUnityPlugin)"/></para>
+    /// <para>You should add your mod to the <see cref="ConfigSystem"/> with <seealso cref="ConfigSystem.AddMod(BepInEx.BaseUnityPlugin)"/></para>
     /// </summary>
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
     public class ConfigurableFieldAttribute : SearchableAttribute
@@ -33,7 +32,7 @@ namespace Moonstorm
         public string ConfigDesc { get; set; }
 
         /// <summary>
-        /// During the <see cref="ConfigurableFieldManager"/> initialization, the ConfigurableFieldManager will try to bind the config to the config file with this identifier.
+        /// During the <see cref="ConfigSystem"/> initialization, the ConfigSystem will try to bind the config to the config file with this identifier.
         /// </summary>
         public string ConfigFileIdentifier => configFileIdentifier;
         private string configFileIdentifier;
@@ -44,15 +43,14 @@ namespace Moonstorm
         public FieldInfo Field => (FieldInfo)target;
 
         /// <summary>
-        /// The ConfigEntry that's tied to this ConfigurableField.
-        /// <see cref="GetConfigEntry{T}"/>
+        /// The ConfigEntry that's tied to this ConfigurableField. See <see cref="GetConfigEntry{T}"/> as well.
         /// </summary>
         public ConfigEntryBase ConfigEntryBase { get; private set; }
 
         /// <summary>
         /// Creates a new instance of the Configurable Field Attribute.
         /// </summary>
-        /// <param name="fileIdentifier">The config identifier</param>
+        /// <param name="fileIdentifier">The config identifier, the config file that has this identifier will be the file used for the binding process</param>
         public ConfigurableFieldAttribute(string fileIdentifier = null)
         {
             configFileIdentifier = fileIdentifier;
@@ -65,7 +63,15 @@ namespace Moonstorm
         /// <returns>The casted ConfigEntry</returns>
         public ConfigEntry<T> GetConfigEntry<T>()
         {
-            return ConfigEntryBase == null ? null : (ConfigEntry<T>)ConfigEntryBase;
+            try
+            {
+                return ConfigEntryBase == null ? null : (ConfigEntry<T>)ConfigEntryBase;
+            }
+            catch (Exception ex)
+            {
+                MSULog.Error(ex);
+                return null;
+            }
         }
 
         internal void ConfigureField<T>(ConfigFile configFile, T value)
@@ -75,6 +81,12 @@ namespace Moonstorm
             var entry = GetConfigEntry<T>();
             entry.SettingChanged += SetValue;
         }
+
+        /// <summary>
+        /// When the ConfigSystem configures this ConfigurableFieldAttribute, OnConfigured gets called
+        /// </summary>
+        /// <param name="configFile">The ConfigFile that this ConfigurableFieldAttribute was bound to</param>
+        /// <param name="value">The value for this ConfigurableField's field</param>
         protected virtual void OnConfigured(ConfigFile configFile, object value) { }
         private void SetValue(object sender, EventArgs e)
         {
@@ -107,19 +119,25 @@ namespace Moonstorm
             {
                 return ConfigDesc;
             }
-            return $"Configure this value";
+            return string.Empty;
         }
     }
 
+    /// <summary>
+    /// <inheritdoc cref="ConfigurableFieldAttribute"/>
+    /// <para>The <see cref="RooConfigurableFieldAttribute"/>, otherwise known as the <see cref="RiskOfOptions"/>ConfigurableFieldAttribute, is an extended version of the <see cref="ConfigurableFieldAttribute"/> that allows the created ConfigEntry to be shown on the RiskOfOptions' Options menu.</para>
+    /// <para>It does this by looking the Type of the field and adding generic options to the <see cref="ModSettingsManager"/></para>
+    /// <para>If you need more control over the Options on your Options menu, consider using <see cref="ConfigurableVariable{T}"/> and it's derivatives</para>
+    /// </summary>
     public class RooConfigurableFieldAttribute : ConfigurableFieldAttribute
     {
         /// <summary>
-        /// The GUID of the mod that owns this ConfigurableField
+        /// The GUID of the mod that owns this ConfigurableField, Set automatically by the <see cref="ConfigSystem"/>.
         /// </summary>
         public string OwnerGUID { get; internal set; }
 
         /// <summary>
-        /// The Name of the mod that owns this ConfigurableField
+        /// The Name of the mod that owns this ConfigurableField, Set automatically by the <see cref="ConfigSystem"/>.
         /// </summary>
         public string OwnerName { get; internal set; }
 
@@ -149,6 +167,10 @@ namespace Moonstorm
             }
         }
 
+        /// <summary>
+        /// Creates a new instance of the Risk of Options Configurable Field Attribute.
+        /// </summary>
+        /// <param name="identifier"><inheritdoc cref="ConfigurableFieldAttribute.ConfigurableFieldAttribute(string)"/></param>
         public RooConfigurableFieldAttribute(string identifier = null) : base(identifier)
         {
 

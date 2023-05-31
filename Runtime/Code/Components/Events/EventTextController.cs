@@ -54,7 +54,7 @@ namespace Moonstorm.Components
                 case EventFadeState.FadeIn:
                     uiJuice.destroyOnEndOfTransition = false;
                     fading = true;
-                    uiJuice.originalAlpha = MSUConfig.maxOpacityForEventMessage.Value;
+                    uiJuice.originalAlpha = MSUConfig.maxOpacityForEventMessage;
                     uiJuice.TransitionAlphaFadeIn();
                     break;
                 case EventFadeState.Wait:

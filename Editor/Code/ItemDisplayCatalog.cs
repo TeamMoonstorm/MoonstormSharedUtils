@@ -1,10 +1,7 @@
 ﻿using RoR2EditorKit;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using ThunderKit.Core.Data;
 using UnityEditor;
 using UnityEngine;
 
@@ -64,7 +61,7 @@ namespace Moonstorm.EditorUtils
         }
         public static ItemDisplayCatalog LoadCatalog()
         {
-            if(!CatalogExists)
+            if (!CatalogExists)
             {
                 EditorUtility.DisplayDialog("No ItemDisplayCatalog Found", "The ItemDisplayCatalog could not be found in the Project.\nThe ItemDisplayCatalog at runtime creates a serialized .json version that's used in the Editor context.\nTo Create the serialized version of the ItemDisplayCatalog, build MSU on Debug mode and run your profile, the json file will be created on the same folder where MSU's dll is located.\nAfter creating it, place the file inside your ThunderKitSettings folder.", "Ok");
                 return null;

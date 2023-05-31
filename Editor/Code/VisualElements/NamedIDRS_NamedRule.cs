@@ -2,17 +2,13 @@
 using RoR2EditorKit;
 using RoR2EditorKit.VisualElements;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ThunderKit.Core.UIElements;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using UnityEngine.UIElements;
 
 namespace Moonstorm.EditorUtils.VisualElements
@@ -30,7 +26,7 @@ namespace Moonstorm.EditorUtils.VisualElements
             }
             set
             {
-                if(_currentEntry != value)
+                if (_currentEntry != value)
                 {
                     _currentEntry = value;
                     SerializedProperty?.serializedObject.ApplyModifiedProperties();
@@ -48,7 +44,7 @@ namespace Moonstorm.EditorUtils.VisualElements
             }
             set
             {
-                if(CurrentEntry != null)
+                if (CurrentEntry != null)
                 {
                     CurrentEntry.extraData = value;
                 }
@@ -74,7 +70,7 @@ namespace Moonstorm.EditorUtils.VisualElements
         private SerializedProperty localScale;
         private void UpdateBinding()
         {
-            if(SerializedProperty == null)
+            if (SerializedProperty == null)
             {
                 ruleType = null;
                 displayPrefab = null;
@@ -137,7 +133,7 @@ namespace Moonstorm.EditorUtils.VisualElements
 
         private void OnRuleTypeChange(ChangeEvent<Enum> evt, ItemDisplayRuleType? defaultValue)
         {
-            if((evt == null || evt.newValue == null) && !defaultValue.HasValue)
+            if ((evt == null || evt.newValue == null) && !defaultValue.HasValue)
             {
                 return;
             }
@@ -163,7 +159,7 @@ namespace Moonstorm.EditorUtils.VisualElements
                 localScale.vector3Value = CreateVector3FromArray(new string[3] { split[7], split[8], split[9] });
                 SerializedProperty.serializedObject.ApplyModifiedProperties();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Debug.LogError($"Failed to paste clipboard contents ({clipboardContent}) to {CurrentEntry.Button.text}'s values!\n{ex}");
             }
@@ -187,7 +183,7 @@ namespace Moonstorm.EditorUtils.VisualElements
                 displayPrefab.serializedObject.ApplyModifiedProperties();
                 return;
             }
-            else if(!AvailableDisplayPrefabs.Contains(displayPrefab.stringValue))
+            else if (!AvailableDisplayPrefabs.Contains(displayPrefab.stringValue))
             {
                 EditorGUILayout.LabelField(new GUIContent($"Display Prefab of name \"{displayPrefab.stringValue}\" could not be found.", $"The available Display Prefabs are:\n{string.Join("\n", AvailableDisplayPrefabs)}"), EditorStyles.boldLabel);
                 return;

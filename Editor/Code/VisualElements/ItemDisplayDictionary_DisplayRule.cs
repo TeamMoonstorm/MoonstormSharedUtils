@@ -2,11 +2,8 @@
 using RoR2EditorKit;
 using RoR2EditorKit.VisualElements;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ThunderKit.Core.UIElements;
 using UnityEditor;
 using UnityEditor.UIElements;
@@ -168,13 +165,13 @@ namespace Moonstorm.EditorUtils.VisualElements
                 return;
 
             int currentIndex = displayPrefabIndex.intValue;
-            if(currentIndex == -1)
+            if (currentIndex == -1)
             {
                 displayPrefabIndex.intValue = 0;
                 displayPrefabIndex.serializedObject.ApplyModifiedProperties();
                 return;
             }
-            else if(currentIndex >= idd.displayPrefabs.Length)
+            else if (currentIndex >= idd.displayPrefabs.Length)
             {
                 EditorGUILayout.LabelField(new GUIContent($"Display Prefab Index is Out of Range.", $"Display Prefab Index is {displayPrefabIndex.intValue}, Display Prefabs array length is {idd.displayPrefabs.Length}"), EditorStyles.boldLabel);
                 return;

@@ -1,13 +1,6 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
-using Moonstorm.Loaders;
-using RoR2;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using UnityEngine;
-using SearchableAttribute = HG.Reflection.SearchableAttribute;
 
 namespace Moonstorm
 {

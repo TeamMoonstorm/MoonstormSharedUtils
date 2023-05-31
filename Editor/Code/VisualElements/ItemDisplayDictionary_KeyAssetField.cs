@@ -2,10 +2,6 @@
 using RoR2EditorKit;
 using RoR2EditorKit.VisualElements;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ThunderKit.Core.UIElements;
 using UnityEditor;
 using UnityEditor.UIElements;
@@ -29,7 +25,7 @@ namespace Moonstorm.EditorUtils.VisualElements
         private VisualElement _container;
         public void CheckForIDD(SerializedObject serializedObject)
         {
-            if(!(serializedObject?.targetObject is ItemDisplayDictionary))
+            if (!(serializedObject?.targetObject is ItemDisplayDictionary))
             {
                 keyAssetProperty = null;
                 displayPrefabsProperty = null;
@@ -47,7 +43,7 @@ namespace Moonstorm.EditorUtils.VisualElements
             KeyAsset.BindProperty(keyAssetProperty);
             DisplayPrefabs.collectionProperty = displayPrefabsProperty;
             _container.SetDisplay(true);
-            if(!KeyAsset.value)
+            if (!KeyAsset.value)
             {
                 HelpBox.SetDisplay(true);
                 HelpBox.message = "No KeyAsset Set, Cannot show data.";
@@ -62,13 +58,13 @@ namespace Moonstorm.EditorUtils.VisualElements
         public void OnKeyAssetSet(ChangeEvent<UnityEngine.Object> evt)
         {
             ScriptableObject so = (ScriptableObject)evt.newValue;
-            if(!so)
+            if (!so)
             {
                 HelpBox.SetDisplay(false);
                 HelpBox.message = "No KeyAsset Set, Cannot show data.";
                 HelpBox.messageType = MessageType.Info;
             }
-            else if(!(so is ItemDef ^ so is EquipmentDef))
+            else if (!(so is ItemDef ^ so is EquipmentDef))
             {
                 Debug.LogWarning("KeyAsset MUST be either an ItemDef or EquipmentDef!");
                 KeyAsset.SetValueWithoutNotify(evt.previousValue);
@@ -108,7 +104,7 @@ namespace Moonstorm.EditorUtils.VisualElements
         public ItemDisplayDictionary_KeyAssetField()
         {
             TemplateHelpers.GetTemplateInstance(GetType().Name, this, (pth) => pth.ValidateUXMLPath());
-            
+
             _container = this.Q<VisualElement>("ContentContainer");
             HelpBox = this.Q<HelpBox>();
             KeyAsset = this.Q<ObjectField>();

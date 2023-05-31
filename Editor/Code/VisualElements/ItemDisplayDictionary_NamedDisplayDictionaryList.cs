@@ -2,8 +2,6 @@
 using RoR2EditorKit;
 using RoR2EditorKit.VisualElements;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using ThunderKit.Core.UIElements;
@@ -40,14 +38,14 @@ namespace Moonstorm.EditorUtils.VisualElements
         public void CheckForIDD(SerializedObject serializedObject)
         {
             _serializedObject = serializedObject;
-            if(_serializedObject == null)
+            if (_serializedObject == null)
             {
                 this.SetDisplay(false);
                 ExtendedListView.collectionProperty = null;
                 return;
             }
 
-            if(_serializedObject.targetObject is ItemDisplayDictionary idd)
+            if (_serializedObject.targetObject is ItemDisplayDictionary idd)
             {
                 this.SetDisplay(idd.keyAsset);
                 ExtendedListView.collectionProperty = serializedObject.FindProperty("namedDisplayDictionary");
@@ -142,16 +140,16 @@ namespace Moonstorm.EditorUtils.VisualElements
             Undo.RecordObject(idd, "Add IDRS Based On Key Asset");
 
             var entries = Catalog.SurvivorItemDisplayRuleSets.ToList();
-            if(idd.keyAsset is ItemDef id)
+            if (idd.keyAsset is ItemDef id)
             {
-                if(!id.ContainsTag(ItemTag.AIBlacklist))
+                if (!id.ContainsTag(ItemTag.AIBlacklist))
                 {
                     entries.Add("idrsScav");
                 }
             }
-            else if(idd.keyAsset is EquipmentDef ed)
+            else if (idd.keyAsset is EquipmentDef ed)
             {
-                if(ed.passiveBuffDef && ed.passiveBuffDef.eliteDef)
+                if (ed.passiveBuffDef && ed.passiveBuffDef.eliteDef)
                 {
                     entries.AddRange(Catalog.EnemyItemDisplayRuleSets);
                 }
@@ -179,7 +177,7 @@ namespace Moonstorm.EditorUtils.VisualElements
 
         private void AddMissing(ItemDisplayDictionary target, ReadOnlyCollection<string> idrsCollection)
         {
-            foreach(string idrs in idrsCollection)
+            foreach (string idrs in idrsCollection)
             {
                 if (target.namedDisplayDictionary.Any(x => x.idrsName == idrs))
                     continue;

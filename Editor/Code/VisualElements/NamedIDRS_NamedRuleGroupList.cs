@@ -1,20 +1,12 @@
-﻿using Moonstorm.AddressableAssets;
-using RoR2;
+﻿using RoR2;
 using RoR2EditorKit;
 using RoR2EditorKit.VisualElements;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ThunderKit.Core.UIElements;
 using UnityEditor;
-using UnityEditor.UIElements;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
-using UnityEngine.AddressableAssets.ResourceLocators;
-using UnityEngine.ResourceManagement.ResourceLocations;
 using UnityEngine.UIElements;
 
 namespace Moonstorm.EditorUtils.VisualElements
@@ -45,14 +37,14 @@ namespace Moonstorm.EditorUtils.VisualElements
         public void CheckForNamedIDRS(SerializedObject serializedObject)
         {
             _serializedObject = serializedObject;
-            if(_serializedObject == null)
+            if (_serializedObject == null)
             {
                 this.SetDisplay(false);
                 ExtendedListView.collectionProperty = null;
                 return;
             }
 
-            if(_serializedObject.targetObject is NamedIDRS)
+            if (_serializedObject.targetObject is NamedIDRS)
             {
                 this.SetDisplay(idrs);
                 ExtendedListView.collectionProperty = serializedObject.FindProperty("namedRuleGroups");
@@ -85,7 +77,7 @@ namespace Moonstorm.EditorUtils.VisualElements
 
             buttonEntry.SerializedProperty.serializedObject.ApplyModifiedProperties();
             buttonEntry.extraData = Catalog.GetKeyAssetDisplays(buttonEntry.SerializedProperty.FindPropertyRelative("keyAssetName").stringValue);
-            if(buttonEntry.extraData == null)
+            if (buttonEntry.extraData == null)
             {
                 buttonEntry.HelpBox.SetDisplay(true);
                 buttonEntry.HelpBox.messageType = MessageType.Warning;
@@ -177,7 +169,7 @@ namespace Moonstorm.EditorUtils.VisualElements
 
         private void AddMissing(NamedIDRS target, ReadOnlyDictionary<string, ReadOnlyCollection<string>> dict)
         {
-            foreach(var (keyAsset, displayPrefabs) in dict)
+            foreach (var (keyAsset, displayPrefabs) in dict)
             {
                 if (target.namedRuleGroups.Any(x => x.keyAssetName == keyAsset) || displayPrefabs.Count == 0)
                     continue;

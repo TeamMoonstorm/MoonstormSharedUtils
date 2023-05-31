@@ -80,7 +80,7 @@ namespace Moonstorm
         {
             bool available = true;
             var reqExpansions = requiredExpansions.Where(exp => exp.Asset != null).Select(exp => exp.Asset);
-            foreach(ExpansionDef ed in reqExpansions)
+            foreach (ExpansionDef ed in reqExpansions)
             {
                 available = expansionDefs.Contains(ed);
             }

@@ -1,16 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using ThunderKit.Markdown;
-using UnityEditor.UIElements;
-using UnityEngine;
-using UnityEngine.UIElements;
+﻿using RoR2;
 using RoR2EditorKit;
+using RoR2EditorKit.VisualElements;
+using System;
 using ThunderKit.Core.UIElements;
 using UnityEditor;
-using RoR2;
-using System;
-using RoR2EditorKit.VisualElements;
-using Moonstorm.AddressableAssets;
+using UnityEditor.UIElements;
+using UnityEngine.UIElements;
 
 [assembly: UxmlNamespacePrefix("Moonstorm.EditorUtils.VisualElements", "msu")]
 namespace Moonstorm.EditorUtils.VisualElements
@@ -45,7 +40,7 @@ namespace Moonstorm.EditorUtils.VisualElements
 
         public void CheckForNamedIDRS(SerializedObject serializedObject)
         {
-            if(!(serializedObject?.targetObject is NamedIDRS))
+            if (!(serializedObject?.targetObject is NamedIDRS))
             {
                 ObjectField.SetDisplay(false);
                 HelpBox.SetDisplay(true);
@@ -55,7 +50,7 @@ namespace Moonstorm.EditorUtils.VisualElements
             }
 
             ObjectField.SetDisplay(true);
-            if(!ObjectField.value)
+            if (!ObjectField.value)
             {
                 HelpBox.SetDisplay(true);
                 HelpBox.message = "No IDRS Set, Cannot show data.";

@@ -1,7 +1,9 @@
 ﻿using BepInEx;
+using RoR2;
 using R2API.ScriptableObjects;
 using System.IO;
 using UnityEngine;
+using Path = System.IO.Path;
 
 namespace Moonstorm
 {
@@ -45,12 +47,14 @@ namespace Moonstorm
             Instance = this;
             PluginInfo = Info;
             new MSULog(Logger);
-            new MSUConfig().Init();
-#if DEBUG
-            gameObject.AddComponent<MSUDebug>();
-#endif
             MSUAssetBundle = AssetBundle.LoadFromFile(Path.Combine(AssemblyDir, "msuassets"));
             R2API.ContentManagement.R2APIContentManager.AddPreExistingSerializableContentPack(MSUAssetBundle.LoadAsset<R2APISerializableContentPack>("MSUSCP"));
+
+            new MSUConfig().Init();
+            ConfigSystem.AddMod(this);
+#if DEBUG
+            RoR2Application.onLoad += () => gameObject.AddComponent<MSUDebug>();
+#endif
         }
     }
 }

@@ -1,18 +1,12 @@
-﻿using RoR2;
-using RoR2EditorKit.Inspectors;
+﻿using Moonstorm.EditorUtils.VisualElements;
+using R2API.Utils;
 using RoR2EditorKit;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using ThunderKit.Markdown;
 using UnityEditor;
-using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Moonstorm.EditorUtils.VisualElements;
-using static Moonstorm.ItemDisplayDictionary;
-using R2API.Utils;
 
 namespace Moonstorm.EditorUtils.EditorWindows
 {
@@ -61,14 +55,14 @@ namespace Moonstorm.EditorUtils.EditorWindows
             if (currentTarget == obj)
                 return;
 
-            if(obj is ItemDisplayDictionary idd)
+            if (obj is ItemDisplayDictionary idd)
             {
                 SerializedObject?.ApplyModifiedProperties();
                 SetSerializedObject(idd);
                 serializedObjectGUID = AssetDatabaseUtils.GetGUIDFromAsset(obj);
                 return;
             }
-            else if(!serializedObjectGUID.IsNullOrEmptyOrWhitespace())
+            else if (!serializedObjectGUID.IsNullOrEmptyOrWhitespace())
             {
                 SetSerializedObject(AssetDatabaseUtils.LoadAssetFromGUID<ItemDisplayDictionary>(serializedObjectGUID));
                 return;
@@ -150,7 +144,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
 
             string indexString = namedDisplayDictionary.CurrentEntry.name.Substring("element".Length);
             int index = int.Parse(indexString, CultureInfo.InvariantCulture);
-            if(evt.newValue < index || evt.newValue == 0)
+            if (evt.newValue < index || evt.newValue == 0)
             {
                 namedDisplayDictionary.CurrentEntry = null;
                 displayRule.CurrentEntry = null;
@@ -167,6 +161,6 @@ namespace Moonstorm.EditorUtils.EditorWindows
             {
                 displayRule.CurrentEntry = null;
             }
-        }        
+        }
     }
 }

@@ -1,10 +1,6 @@
 ﻿using RoR2EditorKit;
 using RoR2EditorKit.VisualElements;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ThunderKit.Core.UIElements;
 using UnityEditor;
 using UnityEditor.UIElements;
@@ -26,7 +22,7 @@ namespace Moonstorm.EditorUtils.VisualElements
             }
             set
             {
-                if(_currentEntry != value )
+                if (_currentEntry != value)
                 {
                     _currentEntry = value;
                     SerializedProperty?.serializedObject.ApplyModifiedProperties();
@@ -47,7 +43,7 @@ namespace Moonstorm.EditorUtils.VisualElements
 
         private void UpdateBinding()
         {
-            if(SerializedProperty == null)
+            if (SerializedProperty == null)
             {
                 ExtendedListView.collectionProperty = null;
                 idrsName = null;
@@ -75,7 +71,7 @@ namespace Moonstorm.EditorUtils.VisualElements
 
         public void CheckForIDD(SerializedObject so)
         {
-            if(so == null)
+            if (so == null)
             {
                 this.SetDisplay(false);
                 SerializedProperty = null;
@@ -112,14 +108,14 @@ namespace Moonstorm.EditorUtils.VisualElements
             var displayName = entry.SerializedProperty.FindPropertyRelative("displayPrefabIndex");
             var displays = entry.extraData as string[];
 
-            if(displays == null)
+            if (displays == null)
             {
                 entry.Button.text = "Invalid Rule";
                 entry.HelpBox.messageType = MessageType.Warning;
                 entry.HelpBox.message = "This Rule may be Invalid, looks like the DisplayPrefabIndex is out of range.";
                 return;
             }
-            if(displays.Length > displayName.intValue)
+            if (displays.Length > displayName.intValue)
             {
                 string childName = CheckChildName();
                 entry.Button.text = $"{displays[displayName.intValue]}|{childName}";
@@ -149,7 +145,7 @@ namespace Moonstorm.EditorUtils.VisualElements
         private void OnIDRSNameChange(ChangeEvent<string> evt, string defaultVal = null)
         {
             string newVal = evt?.newValue ?? defaultVal;
-            if(!Catalog.DoesIDRSExist(newVal))
+            if (!Catalog.DoesIDRSExist(newVal))
             {
                 HelpBox.message = "The IDRSName value for this entry may be invalid, as the value wasnt found in the ItemDisplayCatalog, are you sure your ItemDisplayCattalog is up to date?";
                 HelpBox.messageType = MessageType.Info;

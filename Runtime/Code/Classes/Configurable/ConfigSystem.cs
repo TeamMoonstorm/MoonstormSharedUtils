@@ -1,18 +1,19 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
 using Moonstorm.Config;
-using R2API.Utils;
-using RiskOfOptions;
 using RoR2;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
+using Moonstorm.Loaders;
 using UnityEngine;
 
 namespace Moonstorm
 {
+    /// <summary>
+    /// The <see cref="ConfigSystem"/> is a class that handles the ConfigurationSystems of MSU, this includes the <see cref="ConfigurableFieldAttribute"/> and classes deriving from <see cref="ConfigurableVariable"/>
+    /// </summary>
     public static class ConfigSystem
     {
         private struct ManagedModData
@@ -36,6 +37,11 @@ namespace Moonstorm
 
         private static bool initialized = false;
 
+        /// <summary>
+        /// Adds the mod from <paramref name="baseUnityPlugin"/> into the ConfigSystem.
+        /// <para>When added, the System will automatically implement the configuration of any <see cref="ConfigurableFieldAttribute"/>s and <see cref="ConfigurableVariable"/>s in your mod</para>
+        /// </summary>
+        /// <param name="baseUnityPlugin">Your mod's BaseUnityPlugin inheriting class.</param>
         public static void AddMod(BaseUnityPlugin baseUnityPlugin)
         {
             if (initialized)
@@ -50,6 +56,11 @@ namespace Moonstorm
             AddConfigFileAndIdentifier(modData.pluginInfo.Metadata.GUID, modData.mainConfigFile);
         }
 
+        /// <summary>
+        /// Retrieves a <see cref="ConfigFile"/> with the identifier specified in <paramref name="identifier"/>
+        /// </summary>
+        /// <param name="identifier">The identifier of the ConfigFile</param>
+        /// <returns>A valid ConfigFile if it exists in the ConfigSystem, null otherwise.</returns>
         public static ConfigFile GetConfigFile(string identifier)
         {
             if (identifierToConfigFile.TryGetValue(identifier, out ConfigFile configFile))
@@ -58,6 +69,13 @@ namespace Moonstorm
             }
             return null;
         }
+
+        /// <summary>
+        /// Adds a <see cref="ConfigFile"/> with it's corresponding Identifier.
+        /// <para>You're strongly advised to create new ConfigFiles by using the <see cref="ConfigLoader"/> class, as that class automatically calls this method.</para>
+        /// </summary>
+        /// <param name="identifier">The identifier for <paramref name="configFile"/></param>
+        /// <param name="configFile">The ConfigFile which will be identified using <paramref name="identifier"/></param>
         public static void AddConfigFileAndIdentifier(string identifier, ConfigFile configFile)
         {
             if (initialized)
@@ -87,14 +105,14 @@ namespace Moonstorm
         {
             var instances = HG.Reflection.SearchableAttribute.GetInstances<ConfigurableFieldAttribute>() ?? new List<HG.Reflection.SearchableAttribute>();
             MSULog.Info($"Configuring a total of {instances.Count} fields");
-            foreach(ConfigurableFieldAttribute configurableField in instances)
+            foreach (ConfigurableFieldAttribute configurableField in instances)
             {
                 try
                 {
                     FieldInfo field = configurableField.Field;
                     Type declaringType = field.DeclaringType;
-                    
-                    if(!TomlTypeConverter.CanConvert(field.FieldType))
+
+                    if (!TomlTypeConverter.CanConvert(field.FieldType))
                     {
                         throw new InvalidOperationException($"ConfigurableField for {declaringType.FullName}.{field.Name} cannot be configured as the Field's Type ({field.FieldType.FullName}) is not supported by BepInEx's TomlTypeConverter");
                     }
@@ -103,7 +121,7 @@ namespace Moonstorm
                         continue;
 
                     string asmName = declaringType.Assembly.FullName;
-                    if(!assemblyNameToModData.ContainsKey(asmName))
+                    if (!assemblyNameToModData.ContainsKey(asmName))
                     {
                         throw new InvalidOperationException($"ConfigurableField for {declaringType.FullName}.{field.Name} cannot be configured as it's assembly is not in the ConfigSystem");
                     }
@@ -111,7 +129,7 @@ namespace Moonstorm
                     string identifier = configurableField.ConfigFileIdentifier;
                     ConfigFile file = identifier.IsNullOrWhiteSpace() ? assemblyNameToModData[asmName].mainConfigFile : GetConfigFile(configurableField.ConfigFileIdentifier);
 
-                    if(configurableField is RooConfigurableFieldAttribute att)
+                    if (configurableField is RooConfigurableFieldAttribute att)
                     {
                         PluginInfo pInfo = assemblyNameToModData[asmName].pluginInfo;
                         att.OwnerGUID = pInfo.Metadata.GUID;
@@ -120,7 +138,7 @@ namespace Moonstorm
 
                     ConfigureField(configurableField, file);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     MSULog.Error($"Error while configuring {configurableField.Field.DeclaringType.Name}.{configurableField.Field.Name}\n{e}");
                 }
@@ -156,7 +174,7 @@ namespace Moonstorm
 
         private static void BindConfigurableVariables()
         {
-            foreach(ManagedModData data in assemblyNameToModData.Values)
+            foreach (ManagedModData data in assemblyNameToModData.Values)
             {
                 BindConfigurableVariablesForMod(data);
             }
@@ -165,7 +183,7 @@ namespace Moonstorm
         private static void BindConfigurableVariablesForMod(ManagedModData data)
         {
 
-            foreach(var (memberInfo, configurableVariable) in data.ConfigurableVariables)
+            foreach (var (memberInfo, configurableVariable) in data.ConfigurableVariables)
             {
                 try
                 {
@@ -186,7 +204,7 @@ namespace Moonstorm
 
                     configurableVariable.Configure();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     MSULog.Error(ex);
                 }
@@ -202,9 +220,9 @@ namespace Moonstorm
 
             ConfigurableVariable cVar = null;
             List<(MemberInfo, ConfigurableVariable)> cVars = new List<(MemberInfo, ConfigurableVariable)>();
-            foreach(FieldInfo field in fields) 
+            foreach (FieldInfo field in fields)
             {
-                if(!field.FieldType.IsSubclassOf(typeof(ConfigurableVariable)))
+                if (!field.FieldType.IsSubclassOf(typeof(ConfigurableVariable)))
                 {
                     continue;
                 }
@@ -212,14 +230,14 @@ namespace Moonstorm
                 cVars.Add((field, cVar));
             }
 
-            foreach(PropertyInfo property in properties)
+            foreach (PropertyInfo property in properties)
             {
-                if(!property.PropertyType.IsSubclassOf(typeof(ConfigurableVariable)))
+                if (!property.PropertyType.IsSubclassOf(typeof(ConfigurableVariable)))
                 {
                     continue;
                 }
                 var methodInfo = property.GetGetMethod();
-                if(methodInfo == null)
+                if (methodInfo == null)
                 {
                     continue;
                 }

@@ -79,12 +79,12 @@ namespace EntityStates.Events
             base.OnEnter();
             DiffScalingValue = DifficultyCatalog.GetDifficultyDef(Run.instance.selectedDifficulty).scalingValue;
 
-            DiffScaledDuration = Util.Remap(DiffScalingValue, 1f, MSUConfig.maxDifficultyScaling.Value, minDuration, maxDuration);
+            DiffScaledDuration = Util.Remap(DiffScalingValue, 1f, MSUConfig.maxDifficultyScaling, minDuration, maxDuration);
 
             TotalDuration = DiffScaledDuration + warningDur;
             if (!eventCard.startMessageToken.Equals(string.Empty))
             {
-                if (MSUConfig.eventAnnouncementsAsChatMessages.Value)
+                if (MSUConfig.eventAnnouncementsAsChatMessages)
                 {
                     Chat.SimpleChatMessage messageBase = new Chat.SimpleChatMessage()
                     {
@@ -127,7 +127,7 @@ namespace EntityStates.Events
             base.OnExit();
             if (!eventCard.startMessageToken.Equals(string.Empty))
             {
-                if (MSUConfig.eventAnnouncementsAsChatMessages.Value)
+                if (MSUConfig.eventAnnouncementsAsChatMessages)
                 {
                     Chat.SimpleChatMessage messageBase = new Chat.SimpleChatMessage()
                     {

@@ -61,11 +61,11 @@ namespace Moonstorm
             var args = arguments.ToList();
             var consoleUser = new RoR2.Console.CmdSender();
             RoR2.Console.instance.RunCmd(consoleUser, commandName, args);
-        } 
+        }
 
         private void Update()
         {
-            var input0 = Input.GetKeyDown(MSUConfig.instantiateMaterialTester.Value);
+            var input0 = Input.GetKeyDown(MSUConfig.instantiateMaterialTester);
             //add more if necessary
             #region materialTester
             if (input0 && Run.instance)
@@ -79,7 +79,7 @@ namespace Moonstorm
                 Instantiate(materialTester, position, quaternion);
             }
             #endregion
-            var input1 = Input.GetKeyDown(MSUConfig.printDebugEventMessage.Value);
+            var input1 = Input.GetKeyDown(MSUConfig.printDebugEventMessage);
             if (input1)
             {
                 var go = EventHelpers.AnnounceEvent(new EventHelpers.EventAnnounceInfo(MoonstormSharedUtils.MSUAssetBundle.LoadAsset<EventCard>("DummyEventCard"), 15, true) { fadeOnStart = false });

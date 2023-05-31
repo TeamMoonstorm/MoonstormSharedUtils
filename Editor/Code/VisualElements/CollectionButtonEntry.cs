@@ -1,11 +1,5 @@
-﻿using Moonstorm.AddressableAssets;
-using RoR2EditorKit;
-using RoR2EditorKit.VisualElements;
+﻿using RoR2EditorKit.VisualElements;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ThunderKit.Core.UIElements;
 using UnityEditor;
 using UnityEngine.UIElements;
@@ -24,7 +18,7 @@ namespace Moonstorm.EditorUtils.VisualElements
             }
             set
             {
-                if(_serializedProperty != value)
+                if (_serializedProperty != value)
                 {
                     _serializedProperty = value;
                     UpdateRepresentation?.Invoke(this);

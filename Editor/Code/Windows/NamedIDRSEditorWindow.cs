@@ -35,11 +35,11 @@ namespace Moonstorm.EditorUtils.EditorWindows
         private void CheckForNamedIDRS()
         {
             var obj = Selection.activeObject;
-            if(!obj)
+            if (!obj)
                 return;
 
             UnityEngine.Object currentTarget = null;
-            if(SerializedObject != null)
+            if (SerializedObject != null)
             {
                 var ptr = SerializedObject.GetFieldValue<IntPtr>("m_NativeObjectPtr");
                 if (((int)ptr) == 0x0)
@@ -51,7 +51,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
                 currentTarget = SerializedObject.targetObject;
             }
 
-            if(currentTarget == obj)
+            if (currentTarget == obj)
             {
                 return;
             }
@@ -84,11 +84,11 @@ namespace Moonstorm.EditorUtils.EditorWindows
         {
             base.CreateGUI();
             catalog = ItemDisplayCatalog.LoadCatalog();
-            if(catalog == null)
+            if (catalog == null)
             {
                 Close();
                 return;
-            }    
+            }
 
             namedIDRSField = rootVisualElement.Q<NamedIDRS_IDRSField>(nameof(NamedIDRS_IDRSField));
             namedRuleGroupList = rootVisualElement.Q<NamedIDRS_NamedRuleGroupList>(nameof(NamedIDRS_NamedRuleGroupList));
@@ -145,7 +145,7 @@ namespace Moonstorm.EditorUtils.EditorWindows
 
             string indexString = namedRuleGroup.CurrentEntry.name.Substring("element".Length);
             int index = int.Parse(indexString, CultureInfo.InvariantCulture);
-            if(e.newValue < index || e.newValue == 0)
+            if (e.newValue < index || e.newValue == 0)
             {
                 namedRuleGroup.CurrentEntry = null;
                 namedRule.CurrentEntry = null;

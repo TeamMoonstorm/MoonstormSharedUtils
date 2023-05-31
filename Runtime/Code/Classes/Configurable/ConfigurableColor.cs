@@ -1,20 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RiskOfOptions;
-using RiskOfOptions.Options;
-using RiskOfOptions.OptionConfigs;
+﻿using BepInEx;
 using BepInEx.Configuration;
+using RiskOfOptions;
+using RiskOfOptions.OptionConfigs;
+using RiskOfOptions.Options;
 using UnityEngine;
-using UnityEditor;
-using BepInEx;
 
 namespace Moonstorm.Config
 {
+    /// <summary>
+    /// A Configurable <see cref="Color"/> that can be configured using the BepInEx Config System
+    /// <br>Contains an implicit operator for casting the ConfigEntry's value into <see cref="Color"/></br>
+    /// <para>If <see cref="ConfigurableVariable.ModGUID"/> and <see cref="ConfigurableVariable.ModName"/> are not null or empty, this ConfigurableColor is automatically added to RiskOfOptions' <see cref="ModSettingsManager"/></para>
+    /// </summary>
     public class ConfigurableColor : ConfigurableVariable<Color>
     {
+
+        /// <summary>
+        /// A Configuration for the Risk of Options' <see cref="ColorOption"/>
+        /// <para>Becomes ReadOnly if <see cref="ConfigurableVariable.IsConfigured"/> is true</para>
+        /// </summary>
         public ColorOptionConfig ColorConfig
         {
             get => _colorConfig;
@@ -27,54 +31,98 @@ namespace Moonstorm.Config
         }
         private ColorOptionConfig _colorConfig;
 
+        /// <summary>
+        /// <inheritdoc cref="ConfigurableVariable.SetSection(string)"/>
+        /// </summary>
         public new ConfigurableColor SetSection(string section)
         {
             base.SetSection(section);
             return this;
         }
 
+        /// <summary>
+        /// <inheritdoc cref="ConfigurableVariable.SetKey(string)"/>
+        /// </summary>
         public new ConfigurableColor SetKey(string key)
         {
             base.SetKey(key);
             return this;
         }
 
+        /// <summary>
+        /// <inheritdoc cref="ConfigurableVariable.SetDescription(string)"/>
+        /// </summary>
         public new ConfigurableColor SetDescription(string description)
         {
             base.SetDescription(description);
             return this;
         }
 
+        /// <summary>
+        /// <inheritdoc cref="ConfigurableVariable.SetIdentifier(string)"/>
+        /// </summary>
         public new ConfigurableColor SetIdentifier(string identifier)
         {
             base.SetIdentifier(identifier);
             return this;
         }
 
+        /// <summary>
+        /// <inheritdoc cref="ConfigurableVariable.SetConfigFile(ConfigFile)"/>
+        /// </summary>
         public new ConfigurableColor SetConfigFile(ConfigFile file)
         {
             base.SetConfigFile(file);
             return this;
         }
 
+        /// <summary>
+        /// <inheritdoc cref="ConfigurableVariable.SetModGUID(string)"/>
+        /// </summary>
         public new ConfigurableColor SetModGUID(string modGUID)
         {
             base.SetModGUID(modGUID);
             return this;
         }
 
+        /// <summary>
+        /// <inheritdoc cref="ConfigurableVariable.SetModName(string)"/>
+        /// </summary>
         public new ConfigurableColor SetModName(string modName)
         {
             base.SetModName(modName);
             return this;
         }
 
+        public new ConfigurableColor SetOnConfigChanged(OnConfigChangedDelegate onConfigChanged)
+        {
+            base.AddOnConfigChanged(onConfigChanged);
+            return this;
+        }
+
+        /// <summary>
+        /// Chainable method for setting <see cref="ColorConfig"/>
+        /// </summary>
         public ConfigurableColor SetColorConfig(ColorOptionConfig cfg)
         {
             ColorConfig = cfg;
             return this;
         }
 
+        /// <summary>
+        /// Chainable method that configures this ConfigurableColor using the specified data. This is normally called automatically by the <see cref="ConfigSystem"/>, but it can be used for early initialization of configs if need be.
+        /// </summary>
+        /// <exception cref="System.NullReferenceException"></exception>
+        public new ConfigurableColor DoConfigure()
+        {
+            base.DoConfigure();
+            return this;
+        }
+
+        /// <summary>
+        /// When <see cref="DoConfigure"/> is called and <see cref="ConfigurableVariable.ConfigEntry"/> is bound, this method gets called. use it to finalize any initialization of the ConfigurableVariable
+        /// <para>Automatically creates a <see cref="ColorOption"/> for this ConfigurableBool if <see cref="ConfigurableVariable.ModGUID"/> and <see cref="ConfigurableVariable.ModName"/> are not null.</para>
+        /// </summary>
         protected override void OnConfigured()
         {
             base.OnConfigured();
@@ -84,6 +132,11 @@ namespace Moonstorm.Config
                 ModSettingsManager.AddOption(option, ModGUID, ModName);
             }
         }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="ConfigurableColor"/> with a default value
+        /// </summary>
+        /// <param name="defaultVal">The default Color value.</param>
         public ConfigurableColor(Color defaultVal) : base(defaultVal)
         {
         }
