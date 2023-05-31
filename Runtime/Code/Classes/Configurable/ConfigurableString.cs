@@ -77,7 +77,10 @@ namespace Moonstorm.Config
         {
             base.OnConfigured();
             if(!(ModGUID.IsNullOrWhiteSpace() || ModName.IsNullOrWhiteSpace()))
-                ModSettingsManager.AddOption(new StringInputFieldOption(ConfigEntry, InputFieldConfig), ModGUID, ModName);
+            {
+                var option = InputFieldConfig == null ? new StringInputFieldOption(ConfigEntry) : new StringInputFieldOption(ConfigEntry, InputFieldConfig);
+                ModSettingsManager.AddOption(option, ModGUID, ModName);
+            }
         }
         public ConfigurableString(string defaultVal) : base(defaultVal)
         {

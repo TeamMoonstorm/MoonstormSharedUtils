@@ -115,11 +115,11 @@ namespace Moonstorm.Config
                 BaseOption baseOption = null;
                 if(UseStepSlider)
                 {
-                    baseOption = new StepSliderOption(ConfigEntry, StepSliderConfig);
+                    baseOption = StepSliderConfig == null ? new StepSliderOption(ConfigEntry) : new StepSliderOption(ConfigEntry, StepSliderConfig);
                 }
                 else
                 {
-                    baseOption = new SliderOption(ConfigEntry, SliderConfig);
+                    baseOption = SliderConfig == null ? new SliderOption(ConfigEntry) : new SliderOption(ConfigEntry, SliderConfig);
                 }
                 ModSettingsManager.AddOption(baseOption, ModGUID, ModName);
             }

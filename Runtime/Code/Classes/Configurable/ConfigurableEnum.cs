@@ -77,7 +77,10 @@ namespace Moonstorm.Config
         {
             base.OnConfigured();
             if (!(ModGUID.IsNullOrWhiteSpace() || ModName.IsNullOrWhiteSpace()))
-                ModSettingsManager.AddOption(new ChoiceOption(ConfigEntry, ChoiceConfig));
+            {
+                var option = ChoiceConfig == null ? new ChoiceOption(ConfigEntry) : new ChoiceOption(ConfigEntry, ChoiceConfig);
+                ModSettingsManager.AddOption(option, ModGUID, ModName);
+            }
         }
         public ConfigurableEnum(TEnum defaultVal) : base(defaultVal)
         {

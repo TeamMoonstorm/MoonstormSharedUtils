@@ -79,7 +79,10 @@ namespace Moonstorm.Config
         {
             base.OnConfigured();
             if (!(ModGUID.IsNullOrWhiteSpace() || ModName.IsNullOrWhiteSpace()))
-                ModSettingsManager.AddOption(new ColorOption(ConfigEntry, ColorConfig), ModGUID, ModName);
+            {
+                var option = ColorConfig == null ? new ColorOption(ConfigEntry) : new ColorOption(ConfigEntry, ColorConfig);
+                ModSettingsManager.AddOption(option, ModGUID, ModName);
+            }
         }
         public ConfigurableColor(Color defaultVal) : base(defaultVal)
         {

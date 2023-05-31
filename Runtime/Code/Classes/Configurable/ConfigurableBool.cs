@@ -77,7 +77,10 @@ namespace Moonstorm.Config
         {
             base.OnConfigured();
             if (!(ModGUID.IsNullOrWhiteSpace() || ModName.IsNullOrWhiteSpace()))
-                ModSettingsManager.AddOption(new CheckBoxOption(ConfigEntry, CheckBoxConfig), ModGUID, ModName);
+            {
+                CheckBoxOption option = CheckBoxConfig == null ? new CheckBoxOption(ConfigEntry) : new CheckBoxOption(ConfigEntry, CheckBoxConfig);
+                ModSettingsManager.AddOption(option, ModGUID, ModName);
+            }
         }
         public ConfigurableBool(bool defaultVal) : base(defaultVal)
         {

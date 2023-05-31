@@ -77,7 +77,10 @@ namespace Moonstorm.Config
         {
             base.OnConfigured();
             if (!(ModGUID.IsNullOrWhiteSpace() || ModName.IsNullOrWhiteSpace()))
-                ModSettingsManager.AddOption(new IntSliderOption(ConfigEntry, SliderConfig), ModGUID, ModName);
+            {
+                var option = SliderConfig == null ? new IntSliderOption(ConfigEntry) : new IntSliderOption(ConfigEntry, SliderConfig);
+                ModSettingsManager.AddOption(option, ModGUID, ModName);
+            }
         }
 
         public ConfigurableInt(int defaultVal) : base(defaultVal)
