@@ -1,3 +1,8 @@
+### '1.5.1' - De(eznuts)stroyImmediate
+
+* Runtime:
+    * Fixed certain components and code using ``Object.DestroyImmediate()`` outside of an ``UnityEditor`` enviroment.
+
 ### '1.5.0' - Config Update May
 
 * Now dependant on Risk of Options

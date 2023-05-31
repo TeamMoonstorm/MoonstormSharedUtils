@@ -12,7 +12,7 @@ namespace Moonstorm.Components.Addressables
         public const string CAMERA_ADDRESS = "RoR2/Base/Core/Main Camera.prefab";
         [SerializeField, HideInInspector] private GameObject cameraInstance;
         private void OnEnable() => Refresh();
-        private void OnDisable() => DestroyImmediate(cameraInstance, true);
+        private void OnDisable() => MSUtil.DestroyImmediateSafe(cameraInstance, true);
 
         /// <summary>
         /// Instantiates the camera or destroys the attached game object if the component is instantiated at runtime and not in the editor.
@@ -28,7 +28,7 @@ namespace Moonstorm.Components.Addressables
 
             if (cameraInstance)
             {
-                DestroyImmediate(cameraInstance, true);
+                MSUtil.DestroyImmediateSafe(cameraInstance, true);
             }
             var go = UnityEngine.AddressableAssets.Addressables.LoadAssetAsync<GameObject>(CAMERA_ADDRESS).WaitForCompletion();
             cameraInstance = Instantiate(go, transform);

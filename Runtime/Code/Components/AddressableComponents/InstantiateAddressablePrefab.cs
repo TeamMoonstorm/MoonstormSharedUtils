@@ -29,7 +29,7 @@ namespace Moonstorm.Components.Addressables
         private void OnDisable()
         {
             if (instance)
-                DestroyImmediate(instance, true);
+                MSUtil.DestroyImmediateSafe(instance, true);
         }
         /// <summary>
         /// Destroys the instantiated object and re-instantiates using the prefab that's loaded via <see cref="address"/>
@@ -41,7 +41,7 @@ namespace Moonstorm.Components.Addressables
 
             if (instance)
             {
-                DestroyImmediate(instance, true);
+                MSUtil.DestroyImmediateSafe(instance, true);
             }
 
             if (string.IsNullOrWhiteSpace(address) || string.IsNullOrEmpty(address))

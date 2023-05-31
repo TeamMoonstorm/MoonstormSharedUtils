@@ -270,10 +270,31 @@ namespace Moonstorm
             return selection.choices.Select(x => x.value).Where(x => x != null);
         }
 
+        /// <summary>
+        /// Returns the object as it's valid representation, or as C# null
+        /// <br>Effectively allows you to use the ?. and ?? operators</br>
+        /// </summary>
+        /// <typeparam name="T">The type of the object</typeparam>
+        /// <param name="obj">The object to check</param>
+        /// <returns>The object if it exists, C# null otherwise.</returns>
         public static T AsValidOrNull<T>(this T obj) where T : UnityEngine.Object
         {
             return obj ? obj : null;
         }
-        #endregion
+
+        /// <summary>
+        /// Destroys the given object, if the method is called inside the UnityEditor enviroment, it uses DestroyImmediate. otherwise it uses the regular Destroy
+        /// </summary>
+        /// <param name="obj">The object to destroy</param>
+        /// <param name="allowDestroyingAssets">Wether or not this method can destroy assets in the editor enviroment. this can cause data loss, so be careful when setting this to true.</param>
+        public static void DestroyImmediateSafe(UnityEngine.Object obj, bool allowDestroyingAssets = false)
+        {
+#if UNITY_EDITOR
+            GameObject.DestroyImmediate(obj, allowDestroyingAssets);
+#else
+            GameObject.Destroy(obj);
+#endif
+        }
+#endregion
     }
 }
