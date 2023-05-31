@@ -31,7 +31,6 @@ namespace Moonstorm.Loaders
                     throw new InvalidOperationException("Singleton class \"" + typeof(T).Name + "\" inheriting ConfigLoader was instantiated twice");
                 }
                 Instance = this as T;
-                instances.Add(Instance);
             }
             catch (Exception e) { MSULog.Error(e); }
         }
@@ -43,7 +42,6 @@ namespace Moonstorm.Loaders
     /// </summary>
     public abstract class ConfigLoader
     {
-        internal static List<ConfigLoader> instances = new List<ConfigLoader>();
         /// <summary>
         /// Your mod's main class
         /// </summary>
@@ -67,10 +65,7 @@ namespace Moonstorm.Loaders
         /// </summary>
         public BepInPlugin OwnerMetaData { get => MainClass.Info.Metadata; }
 
-        /// <summary>
-        /// A dictionary to store a ConfigFile's identifier to its config file
-        /// </summary>
-
+        [Obsolete("Use ConfigSystem.identifierToConfigFile isntead")]
         public Dictionary<string, ConfigFile> identifierToConfigFile = new Dictionary<string, ConfigFile>();
 
         /// <summary>
@@ -92,7 +87,7 @@ namespace Moonstorm.Loaders
             if (wipedBetweenMinorVersions)
                 TryWipeConfig(configFile);
 
-            identifierToConfigFile.Add(identifier, configFile);
+            ConfigSystem.AddConfigFileAndIdentifier(identifier, configFile);
             return configFile;
         }
 

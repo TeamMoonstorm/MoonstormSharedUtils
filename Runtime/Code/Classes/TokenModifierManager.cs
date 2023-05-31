@@ -13,7 +13,7 @@ namespace Moonstorm
     {
         //This is the finalized dictionary that gets created from the two above.
         private static Dictionary<string, object[]> cachedFormattingArray = null;
-        [SystemInitializer]
+        [SystemInitializer(typeof(ConfigSystem))]
         private static void Init()
         {
             MSULog.Info($"Initializing TokenModifierManager");

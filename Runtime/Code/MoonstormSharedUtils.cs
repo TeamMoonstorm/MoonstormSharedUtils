@@ -8,16 +8,16 @@ namespace Moonstorm
     /// <summary>
     /// The main class of MSU
     /// </summary>
-    [BepInDependency("com.bepis.r2api.artifactcode")]
-    [BepInDependency("com.bepis.r2api.colors")]
-    [BepInDependency("com.bepis.r2api.content_management")]
-    [BepInDependency("com.bepis.r2api.commandhelper")]
-    [BepInDependency("com.bepis.r2api")]
-    [BepInDependency("com.bepis.r2api.damagetype")]
-    [BepInDependency("com.bepis.r2api.director")]
-    [BepInDependency("com.bepis.r2api.elites")]
-    [BepInDependency("com.bepis.r2api.recalculatestats")]
-    [BepInDependency("iHarbHD.DebugToolkit", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency(R2API.ArtifactCodeAPI.PluginGUID)]
+    [BepInDependency(R2API.ColorsAPI.PluginGUID)]
+    [BepInDependency(R2API.ContentManagement.R2APIContentManager.PluginGUID)]
+    [BepInDependency(R2API.R2API.PluginGUID)]
+    [BepInDependency(R2API.DamageAPI.PluginGUID)]
+    [BepInDependency(R2API.DirectorAPI.PluginGUID)]
+    [BepInDependency(R2API.EliteAPI.PluginGUID)]
+    [BepInDependency(R2API.RecalculateStatsAPI.PluginGUID)]
+    [BepInDependency("com.rune580.riskofoptions")]
+    [BepInDependency(DebugToolkit.DebugToolkit.GUID, BepInDependency.DependencyFlags.SoftDependency)]
     [BepInPlugin(GUID, MODNAME, VERSION)]
     public class MoonstormSharedUtils : BaseUnityPlugin
     {

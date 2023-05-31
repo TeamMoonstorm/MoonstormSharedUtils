@@ -148,5 +148,10 @@ namespace Moonstorm
                     break;
             }
         }
+
+        public RooConfigurableFieldAttribute(string identifier = null) : base(identifier)
+        {
+
+        }
     }
 }
