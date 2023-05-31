@@ -13,7 +13,18 @@ namespace Moonstorm.Config
 {
     public class ConfigurableEnum<TEnum> : ConfigurableVariable<TEnum> where TEnum : Enum
     {
-        public ChoiceConfig ChoiceConfig { get; set; }
+        public ChoiceConfig ChoiceConfig
+        {
+            get => _choiceConfig;
+            set
+            {
+                if (IsConfigured)
+                    return;
+                _choiceConfig = value;
+            }
+        }
+        private ChoiceConfig _choiceConfig;
+
         public new ConfigurableEnum<TEnum> SetSection(string section)
         {
             base.SetSection(section);
@@ -58,9 +69,6 @@ namespace Moonstorm.Config
 
         public ConfigurableEnum<TEnum> SetChoiceConfig(ChoiceConfig cfg)
         {
-            if (IsConfigured)
-                return this;
-
             ChoiceConfig = cfg;
             return this;
         }

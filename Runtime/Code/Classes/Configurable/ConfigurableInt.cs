@@ -13,7 +13,18 @@ namespace Moonstorm.Config
 {
     public class ConfigurableInt : ConfigurableVariable<int>
     {
-        public IntSliderConfig SliderConfig { get; set; }
+        public IntSliderConfig SliderConfig
+        {
+            get => _sliderConfig;
+            set
+            {
+                if (IsConfigured)
+                    return;
+                _sliderConfig = value;
+            }
+        }
+        private IntSliderConfig _sliderConfig;
+
         public new ConfigurableInt SetSection(string section)
         {
             base.SetSection(section);
@@ -46,9 +57,6 @@ namespace Moonstorm.Config
 
         public ConfigurableInt SetSliderConfig(IntSliderConfig cfg)
         {
-            if (IsConfigured)
-                return this;
-
             SliderConfig = cfg;
             return this;
         }
@@ -71,6 +79,7 @@ namespace Moonstorm.Config
             if (!(ModGUID.IsNullOrWhiteSpace() || ModName.IsNullOrWhiteSpace()))
                 ModSettingsManager.AddOption(new IntSliderOption(ConfigEntry, SliderConfig), ModGUID, ModName);
         }
+
         public ConfigurableInt(int defaultVal) : base(defaultVal)
         {
         }

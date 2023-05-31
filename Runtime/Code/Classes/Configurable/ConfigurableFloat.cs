@@ -13,9 +13,40 @@ namespace Moonstorm.Config
 {
     public class ConfigurableFloat : ConfigurableVariable<float>
     {
-        public bool UseStepSlider { get; set; }
-        public StepSliderConfig StepSliderConfig { get; set; }
-        public SliderConfig SliderConfig { get; set; }
+        public bool UseStepSlider
+        {
+            get => _useStepSlider;
+            set
+            {
+                if (IsConfigured)
+                    return;
+                _useStepSlider = value;
+            }
+        }
+        private bool _useStepSlider;
+        public StepSliderConfig StepSliderConfig
+        {
+            get => _stepSliderConfig;
+            set
+            {
+                if (IsConfigured)
+                    return;
+                _stepSliderConfig = value;
+            }
+        }
+        private StepSliderConfig _stepSliderConfig;
+        public SliderConfig SliderConfig
+        {
+            get => _sliderConfig;
+            set
+            {
+                if (IsConfigured)
+                    return;
+                _sliderConfig = value;
+            }
+        }
+        private SliderConfig _sliderConfig;
+
         public new ConfigurableFloat SetSection(string section)
         {
             base.SetSection(section);
@@ -60,27 +91,18 @@ namespace Moonstorm.Config
 
         public ConfigurableFloat SetUseStepSlider(bool useStepSlider)
         {
-            if (IsConfigured)
-                return this;
-
             UseStepSlider = useStepSlider;
             return this;
         }
 
         public ConfigurableFloat SetStepSliderConfig(StepSliderConfig cfg)
         {
-            if (IsConfigured)
-                return this;
-
             StepSliderConfig = cfg;
             return this;
         }
 
         public ConfigurableFloat SetSliderConfig(SliderConfig cfg)
         {
-            if (IsConfigured)
-                return this;
-
             SliderConfig = cfg;
             return this;
         }

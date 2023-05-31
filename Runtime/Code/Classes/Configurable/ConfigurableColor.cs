@@ -15,7 +15,18 @@ namespace Moonstorm.Config
 {
     public class ConfigurableColor : ConfigurableVariable<Color>
     {
-        public ColorOptionConfig ColorConfig { get; set; }
+        public ColorOptionConfig ColorConfig
+        {
+            get => _colorConfig;
+            set
+            {
+                if (IsConfigured)
+                    return;
+                _colorConfig = value;
+            }
+        }
+        private ColorOptionConfig _colorConfig;
+
         public new ConfigurableColor SetSection(string section)
         {
             base.SetSection(section);
@@ -60,9 +71,6 @@ namespace Moonstorm.Config
 
         public ConfigurableColor SetColorConfig(ColorOptionConfig cfg)
         {
-            if (IsConfigured)
-                return this;
-
             ColorConfig = cfg;
             return this;
         }

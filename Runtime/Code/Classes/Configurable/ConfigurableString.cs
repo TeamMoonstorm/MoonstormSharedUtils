@@ -13,7 +13,18 @@ namespace Moonstorm.Config
 {
     public class ConfigurableString : ConfigurableVariable<string>
     {
-        public InputFieldConfig InputFieldConfig { get; set; }
+        public InputFieldConfig InputFieldConfig
+        {
+            get => _inputFieldConfig;
+            set
+            {
+                if (IsConfigured)
+                    return;
+                _inputFieldConfig = value;
+            }
+        }
+        private InputFieldConfig _inputFieldConfig;
+
         public new ConfigurableString SetSection(string section)
         {
             base.SetSection(section);
@@ -58,9 +69,6 @@ namespace Moonstorm.Config
 
         public ConfigurableString SetInputFieldConfig(InputFieldConfig cfg)
         {
-            if (IsConfigured)
-                return this;
-
             InputFieldConfig = cfg;
             return this;
         }

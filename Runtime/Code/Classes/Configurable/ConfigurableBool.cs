@@ -13,7 +13,18 @@ namespace Moonstorm.Config
 {
     public class ConfigurableBool : ConfigurableVariable<bool>
     {
-        public CheckBoxConfig CheckBoxConfig { get; set; }
+        public CheckBoxConfig CheckBoxConfig
+        {
+            get => _checkBoxConfig;
+            set
+            {
+                if (IsConfigured)
+                    return;
+                _checkBoxConfig = value;
+            }
+        }
+        private CheckBoxConfig _checkBoxConfig;
+
         public new ConfigurableBool SetSection(string section)
         {
             base.SetSection(section);
@@ -58,9 +69,6 @@ namespace Moonstorm.Config
 
         public ConfigurableBool SetCheckboxConfig(CheckBoxConfig cfg)
         {
-            if (IsConfigured)
-                return this;
-
             CheckBoxConfig = cfg;
             return this;
         }
