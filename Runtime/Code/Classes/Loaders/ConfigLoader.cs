@@ -65,7 +65,7 @@ namespace Moonstorm.Loaders
         /// </summary>
         public BepInPlugin OwnerMetaData { get => MainClass.Info.Metadata; }
 
-        [Obsolete("Use ConfigSystem.identifierToConfigFile isntead")]
+        [Obsolete("Use ConfigSystem.GetConfigFile() isntead")]
         public Dictionary<string, ConfigFile> identifierToConfigFile = new Dictionary<string, ConfigFile>();
 
         /// <summary>

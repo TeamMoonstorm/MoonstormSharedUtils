@@ -45,11 +45,21 @@ namespace Moonstorm
         public static void AddMod(BaseUnityPlugin baseUnityPlugin)
         {
             if (initialized)
+            {
+#if DEBUG
+                MSULog.Warning($"Cannot add plugin {baseUnityPlugin.Info.Metadata.Name} to the ConfigSystem as it's already been initialized.");
+#endif
                 return;
+            }
 
             Assembly assembly = baseUnityPlugin.GetType().Assembly;
             if (assemblyNameToModData.ContainsKey(assembly.FullName))
+            {
+#if DEBUG
+                MSULog.Warning($"Plugin {baseUnityPlugin.Info.Metadata.Name} is already in the ConfigSystem.");
+#endif
                 return;
+            }
 
             ManagedModData modData = new ManagedModData(baseUnityPlugin, GetConfigurableVariables(assembly));
             assemblyNameToModData.Add(assembly.FullName, modData);
@@ -67,6 +77,9 @@ namespace Moonstorm
             {
                 return configFile;
             }
+#if DEBUG
+            MSULog.Warning($"Could not find a config file with the identifier \"{identifier}\"");
+#endif
             return null;
         }
 
@@ -79,10 +92,20 @@ namespace Moonstorm
         public static void AddConfigFileAndIdentifier(string identifier, ConfigFile configFile)
         {
             if (initialized)
+            {
+#if DEBUG
+                MSULog.Warning($"Cannot add a ConfigFile with the identifier \"{identifier}\" as the ConfigSystem has already initialized.");
+#endif
                 return;
+            }
 
             if (identifierToConfigFile.ContainsKey(identifier))
+            {
+#if DEBUG
+                MSULog.Warning($"Cannot add a ConfigFile with the identifier \"{identifier}\" as that identifier is already being used.");
+#endif
                 return;
+            }
 
             identifierToConfigFile.Add(identifier, configFile);
         }
@@ -90,8 +113,6 @@ namespace Moonstorm
         private static void Init()
         {
             initialized = true;
-            MSULog.Info("Initializing ConfigSystem");
-
             RoR2Application.onLoad += BindConfigs;
         }
 
@@ -104,7 +125,7 @@ namespace Moonstorm
         private static void BindConfigurableFieldAttributes()
         {
             var instances = HG.Reflection.SearchableAttribute.GetInstances<ConfigurableFieldAttribute>() ?? new List<HG.Reflection.SearchableAttribute>();
-            MSULog.Info($"Configuring a total of {instances.Count} fields");
+            MSULog.Info($"Configuring a total of {instances.Count} fields with ConfigurableFieldAttributes.");
             foreach (ConfigurableFieldAttribute configurableField in instances)
             {
                 try
@@ -174,15 +195,17 @@ namespace Moonstorm
 
         private static void BindConfigurableVariables()
         {
+            int totalConfigured = 0;
             foreach (ManagedModData data in assemblyNameToModData.Values)
             {
-                BindConfigurableVariablesForMod(data);
+                totalConfigured += BindConfigurableVariablesForMod(data);
             }
+            MSULog.Info($"Configured a total of {totalConfigured} ConfigurableVariables");
         }
 
-        private static void BindConfigurableVariablesForMod(ManagedModData data)
+        private static int BindConfigurableVariablesForMod(ManagedModData data)
         {
-
+            int num = 0;
             foreach (var (memberInfo, configurableVariable) in data.ConfigurableVariables)
             {
                 try
@@ -197,18 +220,19 @@ namespace Moonstorm
 
                     configurableVariable.Section = configurableVariable.Section.IsNullOrWhiteSpace() ? MSUtil.NicifyString(memberInfo.DeclaringType.Name) : configurableVariable.Section;
                     configurableVariable.Key = configurableVariable.Key.IsNullOrWhiteSpace() ? MSUtil.NicifyString(memberInfo.Name) : configurableVariable.Key;
-                    configurableVariable.Description = configurableVariable.Description.IsNullOrWhiteSpace() ? "Configure this variable" : configurableVariable.Description;
 
                     configurableVariable.ModGUID = configurableVariable.ModGUID.IsNullOrWhiteSpace() ? data.pluginInfo.Metadata.GUID : configurableVariable.ModGUID;
                     configurableVariable.ModName = configurableVariable.ModName.IsNullOrWhiteSpace() ? data.pluginInfo.Metadata.Name : configurableVariable.ModName;
 
                     configurableVariable.Configure();
+                    num++;
                 }
                 catch (Exception ex)
                 {
-                    MSULog.Error(ex);
+                    MSULog.Error($"Error while trying to Configure the ConfigurableVariable for member: {memberInfo.DeclaringType.FullName}.{memberInfo.Name}\n{ex}");
                 }
             }
+            return num;
         }
         private static (MemberInfo, ConfigurableVariable)[] GetConfigurableVariables(Assembly assembly)
         {

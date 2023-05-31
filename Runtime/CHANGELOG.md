@@ -1,3 +1,39 @@
+### '1.5.0' - Config Update May
+
+* Now dependant on Risk of Options
+* Cleaned up the source code
+
+* Editor:
+    * Added ``InstallRiskOfOptions`` import extension`
+
+* Runtime:
+    * Deprecated ``TokenModifierAttribute.extraData``, replaced by ``operationData``
+    * Reworked the Configuration systems of MSU
+    * Deprecated ``ConfigurableFieldManager``, replaced by the ``ConfigSystem`` class.
+    * Deprecated ``ConfigLoader.identifierToConfigFile``
+    * Added ``OnConfigured`` method to the ``ConfigurableFieldAttribute``.
+    * Added ``RooConfigurableFieldAttribute``
+        * Allows for very basic Risk of Options implementation.
+        * Supports ``bool, float, int, string, UnityEngine.Color, Enum``
+    * Added ``ConfigurableVariable<T>`` class
+        * Represents a variable that can be configured using the bepinex config system
+        * Works as fields and properties.
+        * a ``ConfigFile`` can be assigned directly or via the identifier system of the ``ConfigSystem``
+        * Just like ``ConfigurableFieldAttribute``, if a ``Section`` and ``Key`` are not specified, it uses a nicified string of the ``DeclaringType`` and ``MemberInfo`` names
+        * ConfigurableVariables can be created with method chaining or Object Initialization
+        * ConfigurableVariables can be bound immediatly, or bound automatically when RoR2 loads
+        * Doesnt support Risk of Options by itself
+    * Added the following classes that inherit from ``ConfigurableVariable``:
+        1. ``ConfigurableBool``
+        2. ``ConfigurableColor``
+        3. ``ConfigurableEnum<TEnum>``
+        4. ``ConfigurableFloat``
+        5. ``ConfigurableInt``
+        6. ``ConfigurableString``
+        * These classes automatically gets implemented into your mod's RiskOfOptions configuration page.
+        * Allows for complexity with the OptionConfig system of Risk of Options
+    * Implemented Risk of Options support for MSU's config
+
 ### '1.4.3' - No one will ever know!
 
 * Runtime:

@@ -1,7 +1,6 @@
 ﻿using BepInEx;
 using RoR2;
 using R2API.ScriptableObjects;
-using System.IO;
 using UnityEngine;
 using Path = System.IO.Path;
 
@@ -19,13 +18,13 @@ namespace Moonstorm
     [BepInDependency(R2API.EliteAPI.PluginGUID)]
     [BepInDependency(R2API.RecalculateStatsAPI.PluginGUID)]
     [BepInDependency("com.rune580.riskofoptions")]
-    [BepInDependency(DebugToolkit.DebugToolkit.GUID, BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("iHarbHD.DebugToolkit", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInPlugin(GUID, MODNAME, VERSION)]
     public class MoonstormSharedUtils : BaseUnityPlugin
     {
         public const string GUID = "com.TeamMoonstorm.MoonstormSharedUtils";
         public const string MODNAME = "Moonstorm Shared Utils";
-        public const string VERSION = "1.4.1";
+        public const string VERSION = "1.5.0";
 
         /// <summary>
         /// Instance of MSU
