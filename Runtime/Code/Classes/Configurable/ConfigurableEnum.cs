@@ -7,6 +7,7 @@ using RiskOfOptions;
 using RiskOfOptions.Options;
 using RiskOfOptions.OptionConfigs;
 using BepInEx.Configuration;
+using BepInEx;
 
 namespace Moonstorm.Config
 {
@@ -43,6 +44,18 @@ namespace Moonstorm.Config
             return this;
         }
 
+        public new ConfigurableEnum<TEnum> SetModGUID(string modGUID)
+        {
+            base.SetModGUID(modGUID);
+            return this;
+        }
+
+        public new ConfigurableEnum<TEnum> SetModName(string modName)
+        {
+            base.SetModName(modName);
+            return this;
+        }
+
         public ConfigurableEnum<TEnum> SetChoiceConfig(ChoiceConfig cfg)
         {
             if (IsConfigured)
@@ -55,7 +68,8 @@ namespace Moonstorm.Config
         protected override void OnConfigured()
         {
             base.OnConfigured();
-            ModSettingsManager.AddOption(new ChoiceOption(ConfigEntry, ChoiceConfig));
+            if (!(ModGUID.IsNullOrWhiteSpace() || ModName.IsNullOrWhiteSpace()))
+                ModSettingsManager.AddOption(new ChoiceOption(ConfigEntry, ChoiceConfig));
         }
         public ConfigurableEnum(TEnum defaultVal) : base(defaultVal)
         {

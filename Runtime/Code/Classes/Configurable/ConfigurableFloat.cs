@@ -7,6 +7,7 @@ using RiskOfOptions;
 using RiskOfOptions.Options;
 using RiskOfOptions.OptionConfigs;
 using BepInEx.Configuration;
+using BepInEx;
 
 namespace Moonstorm.Config
 {
@@ -45,6 +46,18 @@ namespace Moonstorm.Config
             return this;
         }
 
+        public new ConfigurableFloat SetModGUID(string modGUID)
+        {
+            base.SetModGUID(modGUID);
+            return this;
+        }
+
+        public new ConfigurableFloat SetModName(string modName)
+        {
+            base.SetModName(modName);
+            return this;
+        }
+
         public ConfigurableFloat SetUseStepSlider(bool useStepSlider)
         {
             if (IsConfigured)
@@ -75,17 +88,19 @@ namespace Moonstorm.Config
         protected override void OnConfigured()
         {
             base.OnConfigured();
-            BaseOption baseOption = null;
-            if(UseStepSlider)
+            if (!(ModGUID.IsNullOrWhiteSpace() || ModName.IsNullOrWhiteSpace()))
             {
-                baseOption = new StepSliderOption(ConfigEntry, StepSliderConfig);
+                BaseOption baseOption = null;
+                if(UseStepSlider)
+                {
+                    baseOption = new StepSliderOption(ConfigEntry, StepSliderConfig);
+                }
+                else
+                {
+                    baseOption = new SliderOption(ConfigEntry, SliderConfig);
+                }
+                ModSettingsManager.AddOption(baseOption, ModGUID, ModName);
             }
-            else
-            {
-                baseOption = new SliderOption(ConfigEntry, SliderConfig);
-            }
-
-            ModSettingsManager.AddOption(baseOption, ModGUID, ModName);
         }
         public ConfigurableFloat(float defaultVal) : base(defaultVal)
         {

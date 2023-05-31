@@ -68,52 +68,69 @@ namespace Moonstorm.Config
             }
         }
         private string _configIdentifier = string.Empty;
-        public string ModGUID { get; internal set; } = string.Empty;
-        public string ModName { get; internal set; } = string.Empty;
+        public string ModGUID
+        {
+            get => _modGUID;
+            set
+            {
+                if (IsConfigured)
+                    return;
+                _modGUID = value;
+            }
+        }
+        private string _modGUID = string.Empty;
+        public string ModName
+        {
+            get => _modName;
+            set
+            {
+                if (IsConfigured)
+                    return;
+                _modName = value;
+            }
+        }
+        private string _modName = string.Empty;
         public bool IsActuallyConfigurable { get; } = false;
         public bool IsConfigured { get; protected set; } = false;
         public ConfigurableVariable SetSection(string section)
         {
-            if (IsConfigured)
-                return this;
-
             Section = section;
             return this;
         }
 
         public ConfigurableVariable SetKey(string key)
         {
-            if (IsConfigured)
-                return this;
-
             Key = key;
             return this;
         }
 
         public ConfigurableVariable SetDescription(string description)
         {
-            if (IsConfigured)
-                return this;
-
             Description = description;
             return this;
         }
 
         public ConfigurableVariable SetIdentifier(string identifier)
         {
-            if (IsConfigured)
-                return this;
-
             ConfigIdentifier = identifier;
             return this;
         }
 
         public ConfigurableVariable SetConfigFile(ConfigFile file)
         {
-            if (IsConfigured)
-                return this;
-
             ConfigFile = file;
+            return this;
+        }
+
+        public ConfigurableVariable SetModGUID(string modGUID)
+        {
+            ModGUID = modGUID;
+            return this;
+        }
+
+        public ConfigurableVariable SetModName(string modName)
+        {
+            ModName = modName;
             return this;
         }
 
@@ -132,46 +149,43 @@ namespace Moonstorm.Config
         
         public new ConfigurableVariable<T> SetSection(string section)
         {
-            if (IsConfigured)
-                return this;
-
-            Section = section;
+            base.SetSection(section);
             return this;
         }
 
         public new ConfigurableVariable<T> SetKey(string key)
         {
-            if (IsConfigured)
-                return this;
-
-            Key = key;
+            base.SetKey(key);
             return this;
         }
 
         public new ConfigurableVariable<T> SetDescription(string description)
         {
-            if (IsConfigured)
-                return this;
-
-            Description = description;
+            base.SetDescription(description);
             return this;
         }
 
         public new ConfigurableVariable<T> SetIdentifier(string identifier)
         {
-            if (IsConfigured)
-                return this;
-
-            ConfigIdentifier = identifier;
+            base.SetIdentifier(identifier);
             return this;
         }
 
         public new ConfigurableVariable<T> SetConfigFile(ConfigFile file)
         {
-            if (IsConfigured)
-                return this;
+            base.SetConfigFile(file);
+            return this;
+        }
 
-            ConfigFile = file;
+        public new ConfigurableVariable<T> SetModGUID(string modGUID)
+        {
+            base.SetModGUID(modGUID);
+            return this;
+        }
+
+        public new ConfigurableVariable<T> SetModName(string modName)
+        {
+            base.SetModName(modName);
             return this;
         }
 

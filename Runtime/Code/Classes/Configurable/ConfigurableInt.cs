@@ -7,6 +7,7 @@ using RiskOfOptions;
 using RiskOfOptions.Options;
 using RiskOfOptions.OptionConfigs;
 using BepInEx.Configuration;
+using BepInEx;
 
 namespace Moonstorm.Config
 {
@@ -52,10 +53,23 @@ namespace Moonstorm.Config
             return this;
         }
 
+        public new ConfigurableInt SetModGUID(string modGUID)
+        {
+            base.SetModGUID(modGUID);
+            return this;
+        }
+
+        public new ConfigurableInt SetModName(string modName)
+        {
+            base.SetModName(modName);
+            return this;
+        }
+
         protected override void OnConfigured()
         {
             base.OnConfigured();
-            ModSettingsManager.AddOption(new IntSliderOption(ConfigEntry, SliderConfig), ModGUID, ModName);
+            if (!(ModGUID.IsNullOrWhiteSpace() || ModName.IsNullOrWhiteSpace()))
+                ModSettingsManager.AddOption(new IntSliderOption(ConfigEntry, SliderConfig), ModGUID, ModName);
         }
         public ConfigurableInt(int defaultVal) : base(defaultVal)
         {

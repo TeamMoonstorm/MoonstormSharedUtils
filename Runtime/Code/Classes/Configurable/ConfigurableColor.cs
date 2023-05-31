@@ -8,6 +8,8 @@ using RiskOfOptions.Options;
 using RiskOfOptions.OptionConfigs;
 using BepInEx.Configuration;
 using UnityEngine;
+using UnityEditor;
+using BepInEx;
 
 namespace Moonstorm.Config
 {
@@ -44,7 +46,19 @@ namespace Moonstorm.Config
             return this;
         }
 
-        public ConfigurableColor SetCheckboxConfig(ColorOptionConfig cfg)
+        public new ConfigurableColor SetModGUID(string modGUID)
+        {
+            base.SetModGUID(modGUID);
+            return this;
+        }
+
+        public new ConfigurableColor SetModName(string modName)
+        {
+            base.SetModName(modName);
+            return this;
+        }
+
+        public ConfigurableColor SetColorConfig(ColorOptionConfig cfg)
         {
             if (IsConfigured)
                 return this;
@@ -56,7 +70,8 @@ namespace Moonstorm.Config
         protected override void OnConfigured()
         {
             base.OnConfigured();
-            ModSettingsManager.AddOption(new ColorOption(ConfigEntry, ColorConfig), ModGUID, ModName);
+            if (!(ModGUID.IsNullOrWhiteSpace() || ModName.IsNullOrWhiteSpace()))
+                ModSettingsManager.AddOption(new ColorOption(ConfigEntry, ColorConfig), ModGUID, ModName);
         }
         public ConfigurableColor(Color defaultVal) : base(defaultVal)
         {

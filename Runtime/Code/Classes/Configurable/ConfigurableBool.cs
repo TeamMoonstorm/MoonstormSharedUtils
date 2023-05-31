@@ -7,6 +7,7 @@ using RiskOfOptions;
 using RiskOfOptions.Options;
 using RiskOfOptions.OptionConfigs;
 using BepInEx.Configuration;
+using BepInEx;
 
 namespace Moonstorm.Config
 {
@@ -37,6 +38,18 @@ namespace Moonstorm.Config
             return this;
         }
 
+        public new ConfigurableBool SetModGUID(string modGUID)
+        {
+            base.SetModGUID(modGUID);
+            return this;
+        }
+
+        public new ConfigurableBool SetModName(string modName)
+        {
+            base.SetModName(modName);
+            return this;
+        }
+
         public new ConfigurableBool SetConfigFile(ConfigFile file)
         {
             base.SetConfigFile(file);
@@ -55,7 +68,8 @@ namespace Moonstorm.Config
         protected override void OnConfigured()
         {
             base.OnConfigured();
-            ModSettingsManager.AddOption(new CheckBoxOption(ConfigEntry, CheckBoxConfig), ModGUID, ModName);
+            if (!(ModGUID.IsNullOrWhiteSpace() || ModName.IsNullOrWhiteSpace()))
+                ModSettingsManager.AddOption(new CheckBoxOption(ConfigEntry, CheckBoxConfig), ModGUID, ModName);
         }
         public ConfigurableBool(bool defaultVal) : base(defaultVal)
         {

@@ -7,6 +7,7 @@ using RiskOfOptions;
 using RiskOfOptions.Options;
 using RiskOfOptions.OptionConfigs;
 using BepInEx.Configuration;
+using BepInEx;
 
 namespace Moonstorm.Config
 {
@@ -43,6 +44,18 @@ namespace Moonstorm.Config
             return this;
         }
 
+        public new ConfigurableString SetModGUID(string modGUID)
+        {
+            base.SetModGUID(modGUID);
+            return this;
+        }
+
+        public new ConfigurableString SetModName(string modName)
+        {
+            base.SetModName(modName);
+            return this;
+        }
+
         public ConfigurableString SetInputFieldConfig(InputFieldConfig cfg)
         {
             if (IsConfigured)
@@ -55,7 +68,8 @@ namespace Moonstorm.Config
         protected override void OnConfigured()
         {
             base.OnConfigured();
-            ModSettingsManager.AddOption(new StringInputFieldOption(ConfigEntry, InputFieldConfig), ModGUID, ModName);
+            if(!(ModGUID.IsNullOrWhiteSpace() || ModName.IsNullOrWhiteSpace()))
+                ModSettingsManager.AddOption(new StringInputFieldOption(ConfigEntry, InputFieldConfig), ModGUID, ModName);
         }
         public ConfigurableString(string defaultVal) : base(defaultVal)
         {
