@@ -2,6 +2,7 @@
 using BepInEx.Configuration;
 using Moonstorm.Config;
 using R2API.Utils;
+using RiskOfOptions;
 using RoR2;
 using System;
 using System.Collections.Generic;
@@ -33,7 +34,7 @@ namespace Moonstorm
         private static Dictionary<string, ManagedModData> assemblyNameToModData = new Dictionary<string, ManagedModData>();
         private static Dictionary<string, ConfigFile> identifierToConfigFile = new Dictionary<string, ConfigFile>();
 
-        private static bool initialized;
+        private static bool initialized = false;
 
         public static void AddMod(BaseUnityPlugin baseUnityPlugin)
         {
@@ -102,13 +103,13 @@ namespace Moonstorm
                         continue;
 
                     string asmName = declaringType.Assembly.FullName;
-                    if(assemblyNameToModData.ContainsKey(asmName))
+                    if(!assemblyNameToModData.ContainsKey(asmName))
                     {
                         throw new InvalidOperationException($"ConfigurableField for {declaringType.FullName}.{field.Name} cannot be configured as it's assembly is not in the ConfigSystem");
                     }
 
                     string identifier = configurableField.ConfigFileIdentifier;
-                    ConfigFile file = GetConfigFile(identifier) ?? assemblyNameToModData[asmName].mainConfigFile;
+                    ConfigFile file = identifier.IsNullOrWhiteSpace() ? assemblyNameToModData[asmName].mainConfigFile : GetConfigFile(configurableField.ConfigFileIdentifier);
 
                     if(configurableField is RooConfigurableFieldAttribute att)
                     {
@@ -163,21 +164,25 @@ namespace Moonstorm
 
         private static void BindConfigurableVariablesForMod(ManagedModData data)
         {
+
             foreach(var (memberInfo, configurableVariable) in data.ConfigurableVariables)
             {
                 try
                 {
-                    if (configurableVariable.IsConfigured || configurableVariable.IsActuallyConfigurable)
+                    if (configurableVariable.IsConfigured || !configurableVariable.IsActuallyConfigurable)
                         continue;
 
                     if (configurableVariable.ConfigFile == null)
                     {
-                        configurableVariable.ConfigFile = GetConfigFile(configurableVariable.ConfigIdentifier) ?? data.mainConfigFile;
+                        configurableVariable.ConfigFile = configurableVariable.ConfigIdentifier.IsNullOrWhiteSpace() ? data.mainConfigFile : GetConfigFile(configurableVariable.ConfigIdentifier);
                     }
 
                     configurableVariable.Section = configurableVariable.Section.IsNullOrWhiteSpace() ? MSUtil.NicifyString(memberInfo.DeclaringType.Name) : configurableVariable.Section;
                     configurableVariable.Key = configurableVariable.Key.IsNullOrWhiteSpace() ? MSUtil.NicifyString(memberInfo.Name) : configurableVariable.Key;
                     configurableVariable.Description = configurableVariable.Description.IsNullOrWhiteSpace() ? "Configure this variable" : configurableVariable.Description;
+
+                    configurableVariable.ModGUID = configurableVariable.ModGUID.IsNullOrWhiteSpace() ? data.pluginInfo.Metadata.GUID : configurableVariable.ModGUID;
+                    configurableVariable.ModName = configurableVariable.ModName.IsNullOrWhiteSpace() ? data.pluginInfo.Metadata.Name : configurableVariable.ModName;
 
                     configurableVariable.Configure();
                 }
@@ -199,7 +204,7 @@ namespace Moonstorm
             List<(MemberInfo, ConfigurableVariable)> cVars = new List<(MemberInfo, ConfigurableVariable)>();
             foreach(FieldInfo field in fields) 
             {
-                if(field.FieldType.IsAssignableFrom(typeof(ConfigurableVariable)))
+                if(!field.FieldType.IsSubclassOf(typeof(ConfigurableVariable)))
                 {
                     continue;
                 }
@@ -209,7 +214,7 @@ namespace Moonstorm
 
             foreach(PropertyInfo property in properties)
             {
-                if(!property.PropertyType.IsAssignableFrom(typeof(ConfigurableVariable)))
+                if(!property.PropertyType.IsSubclassOf(typeof(ConfigurableVariable)))
                 {
                     continue;
                 }
