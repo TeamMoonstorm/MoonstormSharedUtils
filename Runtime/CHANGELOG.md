@@ -1,3 +1,9 @@
+### '1.5.2' - ConfigurableVariable improvements
+
+* Runtime:
+    * Constructor attempts to automatically sets the ``ModGUID`` and ``ModName`` to the Calling Assembly's ``BaseUnityPlugin``
+    * Added a ``ToString()`` override to ``ConfigurableVariable<T>``
+
 ### '1.5.1' - De(eznuts)stroyImmediate
 
 * Runtime:

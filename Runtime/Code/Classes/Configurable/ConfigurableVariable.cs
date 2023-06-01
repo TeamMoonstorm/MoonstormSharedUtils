@@ -1,6 +1,8 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
 using System;
+using System.Linq;
+using System.Reflection;
 
 namespace Moonstorm.Config
 {
@@ -213,6 +215,29 @@ namespace Moonstorm.Config
         public ConfigurableVariable(object defaultValue)
         {
             IsActuallyConfigurable = TomlTypeConverter.CanConvert(defaultValue.GetType());
+            Assembly callingAssembly = Assembly.GetCallingAssembly();
+            this.TrySettingGUIDAndModName(callingAssembly);
+        }
+
+        private void TrySettingGUIDAndModName(Assembly assembly)
+        {
+            try
+            {
+                BepInPlugin bepInPlugin = assembly.GetTypes()
+                    .Where(t => t.GetCustomAttribute<BepInPlugin>() != null)
+                    .Select(t => t.GetCustomAttribute<BepInPlugin>())
+                    .FirstOrDefault();
+
+                if (bepInPlugin == null)
+                    return;
+
+                ModName = bepInPlugin.Name;
+                ModGUID = bepInPlugin.GUID;
+            }
+            catch(Exception e)
+            {
+                MSULog.Error($"Tried to set automatically the GUID and ModName for {this} failed. {e}");
+            }
         }
     }
 
@@ -233,7 +258,7 @@ namespace Moonstorm.Config
         /// <summary>
         /// The current and valid value of this ConfigurableVariable. Usually <see cref="ConfigEntry.Value"/>
         /// </summary>
-        public T Value => ConfigEntry == null ? default(T) : ConfigEntry.Value;
+        public T Value => ConfigEntry == null ? DefaultValue : ConfigEntry.Value;
 
         /// <summary>
         /// The ConfigEntry for this ConfigurableVariable
@@ -370,6 +395,15 @@ namespace Moonstorm.Config
         protected virtual void OnConfigured()
         {
 
+        }
+
+        /// <summary>
+        /// Returns a readable string of this Configurable Variable
+        /// </summary>
+        /// <returns>A readable string</returns>
+        public override string ToString()
+        {
+            return $"{GetType().Name} (Configured Type: {typeof(T).Name}, Default Value: {DefaultValue}, Configured Value: {Value})";
         }
 
         /// <summary>
