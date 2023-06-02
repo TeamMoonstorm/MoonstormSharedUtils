@@ -1,8 +1,10 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
+using Moonstorm.Config;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using UnityEngine;
 
 namespace Moonstorm.Loaders
 {
@@ -33,6 +35,164 @@ namespace Moonstorm.Loaders
                 Instance = this as T;
             }
             catch (Exception e) { MSULog.Error(e); }
+        }
+
+        /// <summary>
+        /// Creates a ConfigurableVariable of type <typeparamref name="TVal"/> and automatically sets it's <see cref="ConfigurableVariable.ModGUID"/> and <see cref="ConfigurableVariable.ModName"/> to <typeparamref name="T"/>'s instance using it's <see cref="ConfigLoader.MainClass"/>.
+        /// <br>Requires an <see cref="Instance"/> of <typeparamref name="T"/> to exist.</br>
+        /// </summary>
+        /// <typeparam name="TVal">The type that the configurable variable will configure</typeparam>
+        /// <param name="defaultVal">The default value for the variable</param>
+        /// <param name="initializer">Optional initializer</param>
+        /// <returns>The created ConfigurableVariable</returns>
+        public static ConfigurableVariable<TVal> MakeConfigurableVariable<TVal>(TVal defaultVal, Action<ConfigurableVariable<TVal>> initializer = null)
+        {
+            ThrowIfNoInstance($"Create {nameof(ConfigurableVariable<TVal>)}");
+
+            var metadata = Instance.MainClass.Info.Metadata;
+            var cfg = new ConfigurableVariable<TVal>(defaultVal)
+            {
+                ModGUID = metadata.GUID,
+                ModName = metadata.Name,
+            };
+            initializer?.Invoke(cfg);
+            return cfg;
+        }
+
+        /// <summary>
+        /// Creates a ConfigurableBool and automatically sets it's <see cref="ConfigurableVariable.ModGUID"/> and <see cref="ConfigurableVariable.ModName"/> to <typeparamref name="T"/>'s instance using it's <see cref="ConfigLoader.MainClass"/>.
+        /// <br>Requires an <see cref="Instance"/> of <typeparamref name="T"/> to exist.</br>
+        /// </summary>
+        /// <param name="defaultVal">The default value for the bool</param>
+        /// <param name="initializer">Optional initializer</param>
+        /// <returns>The created ConfigurableBool</returns>
+        public static ConfigurableBool MakeConfigurableBool(bool defaultVal, Action<ConfigurableBool> initializer = null)
+        {
+            ThrowIfNoInstance($"Create {nameof(ConfigurableBool)}");
+
+            var metadata = Instance.MainClass.Info.Metadata;
+            var cfg = new ConfigurableBool(defaultVal)
+            {
+                ModGUID = metadata.GUID,
+                ModName = metadata.Name,
+            };
+            initializer?.Invoke(cfg);
+            return cfg;
+        }
+
+        /// <summary>
+        /// Creates a ConfigurableColor and automatically sets it's <see cref="ConfigurableVariable.ModGUID"/> and <see cref="ConfigurableVariable.ModName"/> to <typeparamref name="T"/>'s instance using it's <see cref="ConfigLoader.MainClass"/>.
+        /// <br>Requires an <see cref="Instance"/> of <typeparamref name="T"/> to exist.</br>
+        /// </summary>
+        /// <param name="defaultVal">The default value for the color</param>
+        /// <param name="initializer">Optional initializer</param>
+        /// <returns>The created ConfigurableColor</returns>
+        public static ConfigurableColor MakeConfigurableColor(Color defaultVal, Action<ConfigurableColor> initializer = null)
+        {
+            ThrowIfNoInstance($"Create {nameof(ConfigurableColor)}");
+
+            var metadata = Instance.MainClass.Info.Metadata;
+            var cfg = new ConfigurableColor(defaultVal)
+            {
+                ModGUID = metadata.GUID,
+                ModName = metadata.Name,
+            };
+            initializer?.Invoke(cfg);
+            return cfg;
+        }
+
+        /// <summary>
+        /// Creates a ConfigurableEnum of type <typeparamref name="TEnum"/> and automatically sets it's <see cref="ConfigurableVariable.ModGUID"/> and <see cref="ConfigurableVariable.ModName"/> to <typeparamref name="T"/>'s instance using it's <see cref="ConfigLoader.MainClass"/>.
+        /// <br>Requires an <see cref="Instance"/> of <typeparamref name="T"/> to exist.</br>
+        /// </summary>
+        /// <typeparam name="TEnum">The enum type that the configurable variable will configure</typeparam>
+        /// <param name="defaultVal">The default value for the enum</param>
+        /// <param name="initializer">Optional initializer</param>
+        /// <returns>The created ConfigurableEnum</returns>
+        public static ConfigurableEnum<TEnum> MakeConfigurableEnum<TEnum>(TEnum defaultVal, Action<ConfigurableEnum<TEnum>> initializer = null) where TEnum : Enum
+        {
+            ThrowIfNoInstance($"Create {nameof(ConfigurableEnum<TEnum>)}");
+
+            var metadata = Instance.MainClass.Info.Metadata;
+            var cfg = new ConfigurableEnum<TEnum>(defaultVal)
+            {
+                ModGUID = metadata.GUID,
+                ModName = metadata.Name,
+            };
+            initializer?.Invoke(cfg);
+            return cfg;
+        }
+
+        /// <summary>
+        /// Creates a ConfigurableFloat and automatically sets it's <see cref="ConfigurableVariable.ModGUID"/> and <see cref="ConfigurableVariable.ModName"/> to <typeparamref name="T"/>'s instance using it's <see cref="ConfigLoader.MainClass"/>.
+        /// <br>Requires an <see cref="Instance"/> of <typeparamref name="T"/> to exist.</br>
+        /// </summary>
+        /// <param name="defaultVal">The default value for the float</param>
+        /// <param name="initializer">Optional initializer</param>
+        /// <returns>The created ConfigurableFloat</returns>
+        public static ConfigurableFloat MakeConfigurableFloat(float defaultVal, Action<ConfigurableFloat> initializer = null)
+        {
+            ThrowIfNoInstance($"Create {nameof(ConfigurableFloat)}");
+
+            var metadata = Instance.MainClass.Info.Metadata;
+            var cfg = new ConfigurableFloat(defaultVal)
+            {
+                ModGUID = metadata.GUID,
+                ModName = metadata.Name,
+            };
+            initializer?.Invoke(cfg);
+            return cfg;
+        }
+
+        /// <summary>
+        /// Creates a ConfigurableInt and automatically sets it's <see cref="ConfigurableVariable.ModGUID"/> and <see cref="ConfigurableVariable.ModName"/> to <typeparamref name="T"/>'s instance using it's <see cref="ConfigLoader.MainClass"/>.
+        /// <br>Requires an <see cref="Instance"/> of <typeparamref name="T"/> to exist.</br>
+        /// </summary>
+        /// <param name="defaultVal">The default value for the int</param>
+        /// <param name="initializer">Optional initializer</param>
+        /// <returns>The created ConfigurableInt</returns>
+        public static ConfigurableInt MakeConfigurableInt(int defaultVal, Action<ConfigurableInt> initializer = null)
+        {
+            ThrowIfNoInstance($"Create {nameof(ConfigurableInt)}");
+
+            var metadata = Instance.MainClass.Info.Metadata;
+            var cfg = new ConfigurableInt(defaultVal)
+            {
+                ModGUID = metadata.GUID,
+                ModName = metadata.Name,
+            };
+            initializer?.Invoke(cfg);
+            return cfg;
+        }
+
+        /// <summary>
+        /// Creates a ConfigurableString and automatically sets it's <see cref="ConfigurableVariable.ModGUID"/> and <see cref="ConfigurableVariable.ModName"/> to <typeparamref name="T"/>'s instance using it's <see cref="ConfigLoader.MainClass"/>.
+        /// <br>Requires an <see cref="Instance"/> of <typeparamref name="T"/> to exist.</br>
+        /// </summary>
+        /// <param name="defaultVal">The default value for the string</param>
+        /// <param name="initializer">Optional initializer</param>
+        /// <returns>The created ConfigurableString</returns>
+        public static ConfigurableString MakeConfigurableInt(string defaultVal, Action<ConfigurableString> initializer = null)
+        {
+            ThrowIfNoInstance($"Create {nameof(ConfigurableString)}");
+
+            var metadata = Instance.MainClass.Info.Metadata;
+            var cfg = new ConfigurableString(defaultVal)
+            {
+                ModGUID = metadata.GUID,
+                ModName = metadata.Name,
+            };
+            initializer?.Invoke(cfg);
+            return cfg;
+        }
+
+        /// <summary>
+        /// Throws a null reference exception if no isntance is found. use with caution
+        /// </summary>
+        protected static void ThrowIfNoInstance(string attemptedAction)
+        {
+            if (Instance == null)
+                throw new NullReferenceException($"Cannot {attemptedAction} when there is no instance of {typeof(T).Name}!");
         }
     }
 

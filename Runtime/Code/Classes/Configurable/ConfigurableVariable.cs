@@ -215,29 +215,6 @@ namespace Moonstorm.Config
         public ConfigurableVariable(object defaultValue)
         {
             IsActuallyConfigurable = TomlTypeConverter.CanConvert(defaultValue.GetType());
-            Assembly callingAssembly = Assembly.GetCallingAssembly();
-            this.TrySettingGUIDAndModName(callingAssembly);
-        }
-
-        private void TrySettingGUIDAndModName(Assembly assembly)
-        {
-            try
-            {
-                BepInPlugin bepInPlugin = assembly.GetTypes()
-                    .Where(t => t.GetCustomAttribute<BepInPlugin>() != null)
-                    .Select(t => t.GetCustomAttribute<BepInPlugin>())
-                    .FirstOrDefault();
-
-                if (bepInPlugin == null)
-                    return;
-
-                ModName = bepInPlugin.Name;
-                ModGUID = bepInPlugin.GUID;
-            }
-            catch(Exception e)
-            {
-                MSULog.Error($"Tried to set automatically the GUID and ModName for {this} failed. {e}");
-            }
         }
     }
 
