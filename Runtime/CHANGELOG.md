@@ -1,7 +1,16 @@
+### '1.5.3' - That was stupid
+
+* Runtime:
+    * Constructor for ConfigurableVariable no longer attempts to set the ``ModGUID`` and ``ModName`` to the Calling Assembly's ``BaseUnityPlugin``
+    * Added Factory methods to ``ConfigLoader<T>`` to create ConfigurableVariables and their built in inheriting classes.
+        * Factory methods require an instance of your ConfigLoader to work
+        * Factory methods automatically set the ConfigurableVariable's ``ModGUID`` and ``ModName``
+        * Factory methods contain an optional ``Action<ConfigurableVariableType>`` to initialize the configurable variable, as a near identical implementation of initializing them using the ``ObjectInitializer`` pattern
+
 ### '1.5.2' - ConfigurableVariable improvements
 
 * Runtime:
-    * Constructor attempts to automatically sets the ``ModGUID`` and ``ModName`` to the Calling Assembly's ``BaseUnityPlugin``
+    * Constructor for ``ConfigurableVariable`` attempts to automatically sets the ``ModGUID`` and ``ModName`` to the Calling Assembly's ``BaseUnityPlugin``
     * Added a ``ToString()`` override to ``ConfigurableVariable<T>``
 
 ### '1.5.1' - De(eznuts)stroyImmediate
