@@ -396,6 +396,6 @@ namespace Moonstorm.Config
         /// An implicit operator that casts the ConfigurableVariable's <see cref="ConfigEntry.Value"/> into <typeparamref name="T"/>
         /// </summary>
         /// <param name="cf">The instance of the ConfigurableVariable</param>
-        public static implicit operator T(ConfigurableVariable<T> cf) => cf.ConfigEntry.Value;
+        public static implicit operator T(ConfigurableVariable<T> cf) => cf.Value;
     }
 }
