@@ -1,6 +1,7 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -11,7 +12,6 @@ namespace Moonstorm.Config
     /// </summary>
     public abstract class ConfigurableVariable
     {
-
         /// <summary>
         /// The <see cref="ConfigFile"/> that this ConfigurableVariable is bound to.
         /// <para>If left null before the Configuration process, a ConfigFile is attempted to get using <see cref="ConfigSystem.GetConfigFile(string)"/> using <see cref="ConfigIdentifier"/></para>
@@ -28,6 +28,11 @@ namespace Moonstorm.Config
             }
         }
         private ConfigFile _configFile = null;
+
+        /// <summary>
+        /// The ConfigEntryBase of this ConfigurableVariable, Usually Set when <see cref="Configure"/> is called
+        /// </summary>
+        public ConfigEntryBase ConfigEntryBase { get; protected set; }
 
         /// <summary>
         /// The Config Section for this ConfigurableVariable
@@ -62,6 +67,17 @@ namespace Moonstorm.Config
             }
         }
         private string _key = string.Empty;
+
+        /// <summary>
+        /// Returns an unique hashcode for this ConfigurableVariable, using the HashCode of <see cref="Key"/> and <see cref="Section"/>
+        /// </summary>
+        public int ConfigHash
+        {
+            get
+            {
+                return Convert.ToInt32((Key.GetHashCode() / 2) + (Section.GetHashCode() / 2));
+            }
+        }
 
         /// <summary>
         /// The Config Description
@@ -226,7 +242,44 @@ namespace Moonstorm.Config
     /// <typeparam name="T">The type of value that this ConfigurableVariable uses, for a list of valid types, see <see cref="TomlTypeConverter"/></typeparam>
     public class ConfigurableVariable<T> : ConfigurableVariable
     {
+        private struct DelegateContainer
+        {
+            public ConfigEntry<T> Entry
+            {
+                get => _entry;
+                set
+                {
+                    if(_entry != null)
+                        _entry.SettingChanged -= InvokeDelegate;
+
+                    _entry = value;
+                    _entry.SettingChanged += InvokeDelegate;
+                }
+            }
+            private ConfigEntry<T> _entry;
+
+            public event OnConfigChangedDelegate OnConfigChanged;
+
+            private void InvokeDelegate(object sender, EventArgs args)
+            {
+                Raise();
+            }
+
+            public void Raise()
+            {
+                if(Entry != null)
+                    OnConfigChanged?.Invoke((T)Entry.BoxedValue);
+            }
+
+            public void SetListeners(OnConfigChangedDelegate listeners)
+            {
+                OnConfigChanged = listeners;
+            }
+        }
         public delegate void OnConfigChangedDelegate(T newVal);
+
+        private static Dictionary<int, DelegateContainer> configHashToDelegates = new Dictionary<int, DelegateContainer>();
+
         /// <summary>
         /// The default value for this ConfigurableVariable
         /// </summary>
@@ -244,8 +297,24 @@ namespace Moonstorm.Config
 
         /// <summary>
         /// A delegate that gets invoked whenever the setting of <see cref="ConfigEntry"/> changes.
+        /// <para>Once <see cref="ConfigurableVariable.IsConfigured"/> is true, the OnConfigChanged becomes readonly.</para>
         /// </summary>
-        public event OnConfigChangedDelegate OnConfigChanged;
+        public event OnConfigChangedDelegate OnConfigChanged
+        {
+            add
+            {
+                if (IsConfigured)
+                    return;
+                _onConfigChanged += value;
+            }
+            remove
+            {
+                if (IsConfigured)
+                    return;
+                _onConfigChanged -= value;
+            }
+        }
+        private OnConfigChangedDelegate _onConfigChanged;
 
         /// <summary>
         /// <inheritdoc cref="ConfigurableVariable.SetSection(string)"/>
@@ -354,16 +423,21 @@ namespace Moonstorm.Config
                 throw new NullReferenceException("Key is null, empty or whitespace");
 
             ConfigEntry = ConfigFile.Bind(Section, Key, DefaultValue, Description);
-            ConfigEntry.SettingChanged += InvokeDelegate;
-            OnConfigChanged?.Invoke((T)ConfigEntry.BoxedValue);
+            ConfigEntryBase = ConfigEntry;
+            if(_onConfigChanged != null)
+            {
+                if (!configHashToDelegates.ContainsKey(ConfigHash))
+                    configHashToDelegates[ConfigHash] = default(DelegateContainer);
+
+                var val = configHashToDelegates[ConfigHash];
+                val.Entry = ConfigEntry;
+                val.SetListeners(_onConfigChanged);
+                val.Raise();
+                configHashToDelegates[ConfigHash] = val;
+            }
             IsConfigured = true;
             OnConfigured();
             return this;
-        }
-
-        private void InvokeDelegate(object sender, EventArgs e)
-        {
-            OnConfigChanged?.Invoke((T)ConfigEntry.BoxedValue);
         }
 
         /// <summary>
@@ -380,7 +454,7 @@ namespace Moonstorm.Config
         /// <returns>A readable string</returns>
         public override string ToString()
         {
-            return $"{GetType().Name} (Configured Type: {typeof(T).Name}, Default Value: {DefaultValue}, Configured Value: {Value})";
+            return $"{GetType().Name} (Configured Type: {typeof(T).Name}, Default Value: {DefaultValue}, Configured Value: {Value}, ConfigDefinition: {Section}, {Key})";
         }
 
         /// <summary>
@@ -390,6 +464,11 @@ namespace Moonstorm.Config
         public ConfigurableVariable(T defaultVal) : base(defaultVal)
         {
             DefaultValue = defaultVal;
+        }
+
+        ~ConfigurableVariable()
+        {
+            MSULog.Info($"Collected {ToString()}");
         }
 
         /// <summary>

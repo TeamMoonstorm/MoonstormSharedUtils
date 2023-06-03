@@ -3,6 +3,7 @@ using BepInEx.Configuration;
 using RiskOfOptions;
 using RiskOfOptions.OptionConfigs;
 using RiskOfOptions.Options;
+using System;
 using UnityEngine;
 
 namespace Moonstorm.Config
@@ -94,9 +95,15 @@ namespace Moonstorm.Config
             return this;
         }
 
-        public new ConfigurableColor SetOnConfigChanged(OnConfigChangedDelegate onConfigChanged)
+        [Obsolete("Method is wrongly named, Use AddOnConfigChanged instead")]
+        public new ConfigurableColor SetOnConfigChanged(OnConfigChangedDelegate onConfigChanged) => AddOnConfigChanged(onConfigChanged);
+
+        /// <summary>
+        /// <inheritdoc cref="ConfigurableVariable{T}.AddOnConfigChanged(ConfigurableVariable{T}.OnConfigChangedDelegate)"/>
+        /// </summary>
+        public new ConfigurableColor AddOnConfigChanged(OnConfigChangedDelegate onConfigChangedDelegate)
         {
-            base.AddOnConfigChanged(onConfigChanged);
+            base.AddOnConfigChanged(onConfigChangedDelegate);
             return this;
         }
 

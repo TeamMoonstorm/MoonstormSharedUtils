@@ -95,15 +95,17 @@ namespace Moonstorm.Config
             return this;
         }
 
+        [Obsolete("Method is wrongly named, Use AddOnConfigChanged instead")]
+        public new ConfigurableEnum<TEnum> SetOnConfigChanged(OnConfigChangedDelegate onConfigChanged) => AddOnConfigChanged(onConfigChanged);
+
         /// <summary>
         /// <inheritdoc cref="ConfigurableVariable{T}.AddOnConfigChanged(ConfigurableVariable{T}.OnConfigChangedDelegate)"/>
         /// </summary>
-        public new ConfigurableEnum<TEnum> SetOnConfigChanged(OnConfigChangedDelegate onConfigChanged)
+        public new ConfigurableEnum<TEnum> AddOnConfigChanged(OnConfigChangedDelegate onConfigChanged)
         {
             base.AddOnConfigChanged(onConfigChanged);
             return this;
         }
-
         /// <summary>
         /// Chainable method for setting <see cref="ChoiceConfig"/>
         /// </summary>

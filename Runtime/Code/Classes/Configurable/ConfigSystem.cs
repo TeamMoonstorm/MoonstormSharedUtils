@@ -120,6 +120,8 @@ namespace Moonstorm
         {
             BindConfigurableFieldAttributes();
             BindConfigurableVariables();
+            MSULog.Fatal("Collecting Garbitch");
+            GC.Collect();
         }
 
         private static void BindConfigurableFieldAttributes()

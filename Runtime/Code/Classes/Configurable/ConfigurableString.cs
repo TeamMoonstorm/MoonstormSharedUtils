@@ -3,6 +3,7 @@ using BepInEx.Configuration;
 using RiskOfOptions;
 using RiskOfOptions.OptionConfigs;
 using RiskOfOptions.Options;
+using System;
 
 namespace Moonstorm.Config
 {
@@ -92,10 +93,10 @@ namespace Moonstorm.Config
             return this;
         }
 
-        /// <summary>
-        /// <inheritdoc cref="ConfigurableVariable{T}.AddOnConfigChanged(ConfigurableVariable{T}.OnConfigChangedDelegate)"/>
-        /// </summary>
-        public new ConfigurableString SetOnConfigChanged(OnConfigChangedDelegate onConfigChanged)
+        [Obsolete("Method is wrongly named, Use AddOnConfigChanged instead")]
+        public new ConfigurableString SetOnConfigChanged(OnConfigChangedDelegate onConfigChanged) => AddOnConfigChanged(onConfigChanged);
+
+        public new ConfigurableString AddOnConfigChanged(OnConfigChangedDelegate onConfigChanged)
         {
             base.AddOnConfigChanged(onConfigChanged);
             return this;

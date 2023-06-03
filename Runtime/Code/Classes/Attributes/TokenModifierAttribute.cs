@@ -1,5 +1,8 @@
 ﻿using BepInEx;
+using BepInEx.Configuration;
 using HG.Reflection;
+using Moonstorm.Config;
+using R2API.Utils;
 using System;
 using System.Globalization;
 using System.Reflection;
@@ -115,6 +118,12 @@ namespace Moonstorm
             {
                 operationData = float.Parse(extraData, CultureInfo.InvariantCulture);
                 extraData = string.Empty;
+            }
+
+            if(value.GetType().IsSubclassOf(typeof(ConfigurableVariable)))
+            {
+                var cfg = value.GetPropertyValue<ConfigEntryBase>("ConfigEntryBase");
+                value = cfg.BoxedValue;
             }
 
             if (value != null && IsNumber(value))
