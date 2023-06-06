@@ -1,6 +1,8 @@
-﻿using RoR2;
+﻿using RiskOfOptions.Components.Panel;
+using RoR2;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using SearchableAttribute = HG.Reflection.SearchableAttribute;
 
@@ -11,8 +13,8 @@ namespace Moonstorm
     /// </summary>
     public static class TokenModifierManager
     {
-        //This is the finalized dictionary that gets created from the two above.
-        private static Dictionary<string, object[]> cachedFormattingArray = null;
+        //Since 1.5 introduces risk of options support, we now need to keep a cache of the attributes themselves so we can hot-reload languages.
+        private static Dictionary<string, TokenModifierAttribute[]> formattingArray = null;
         [SystemInitializer(typeof(ConfigSystem))]
         private static void Init()
         {
@@ -23,12 +25,13 @@ namespace Moonstorm
                 ModifyTokensInLanguage(self);
             };
             RoR2Application.onLoad += () => ModifyTokensInLanguage(null);
+
+            ModOptionPanelController.OnModOptionsExit += () =>
+            {
+                Language.SetCurrentLanguage(Language.currentLanguageName);
+            };
         }
 
-        /// <summary>
-        /// Adds the calling assembly to the TokenModifierManager.
-        /// <para>When added, the manager will look for types with public static fields that implement the <see cref="TokenModifierAttribute"/></para>
-        /// </summary>
         [Obsolete("Apply the following assembly attribute to your assembly: \"[assembly: HG.Reflection.SearchableAttribute.OptIn]\"")]
         public static void AddToManager()
         {
@@ -38,66 +41,61 @@ namespace Moonstorm
         {
             lang = lang == null ? Language.currentLanguage : lang;
 
-            if (cachedFormattingArray == null)
-                CreateFinalizedFormattingArray(lang);
+            if (formattingArray == null)
+                CreateFormattingArray(lang);
 
             //Do formatting with cached array
             FormatTokens(lang);
         }
 
-        private static void CreateFinalizedFormattingArray(Language lang)
+        private static void CreateFormattingArray(Language lang)
         {
             GetTokenModifierLists(out var propertyTokenModifiers, out var fieldTokenModifiers);
             var formattingDictionaryFromFields = CreateFormattingDictionary(fieldTokenModifiers);
             var formattingDictionaryFromProperties = CreateFormattingDictionary(propertyTokenModifiers);
 
-            cachedFormattingArray = new Dictionary<string, object[]>();
-            foreach (var kvp in formattingDictionaryFromFields)
-            {
-                var token = kvp.Key;
-                var formattingArray = kvp.Value;
+            formattingArray = new Dictionary<string, TokenModifierAttribute[]>();
 
-                //Add token from dictionary, this replaces the array, but thats ok as this dictionary is completely empty.
-                //Empty array
-                cachedFormattingArray[token] = Array.Empty<object>();
-                var arrayFromCache = cachedFormattingArray[token];
-                for (int i = 0; i < formattingArray.Length; i++)
+            foreach (var (token, attributeArray) in formattingDictionaryFromFields)
+            {
+                //Add token from dictionary, this replaces the array, but that's ok as this dictionary is currently empty
+                formattingArray[token] = Array.Empty<TokenModifierAttribute>();
+                var arrayFromCache = formattingArray[token];
+                for (int i = 0; i < attributeArray.Length; i++)
                 {
                     //Resize if needed
                     if (arrayFromCache.Length < i + 1)
                     {
                         Array.Resize(ref arrayFromCache, i + 1);
                     }
-                    //only set value if the value in the cache is not null 
+
+                    //only set value if the value in the cache is not null
                     if (arrayFromCache[i] == null)
-                        arrayFromCache[i] = formattingArray[i];
+                        arrayFromCache[i] = attributeArray[i];
                 }
-                cachedFormattingArray[token] = arrayFromCache;
+                formattingArray[token] = arrayFromCache;
             }
-            foreach (var kvp in formattingDictionaryFromProperties)
+            foreach (var (token, attributeArray) in formattingDictionaryFromProperties)
             {
-                var token = kvp.Key;
-                var formattingArray = kvp.Value;
-
                 //We do not overwrite the array if the token is already in the dictionary.
-                //this is due to the fact that key may already be in the dictionary due to being created from field token modifiers.
-                if (!cachedFormattingArray.ContainsKey(token))
+                //This is due to the fact that the kye may already be in the dictionary due to being created from fields with the token modifiers
+
+                if (!formattingArray.ContainsKey(token))
                 {
-                    cachedFormattingArray[token] = Array.Empty<object>();
+                    formattingArray[token] = Array.Empty<TokenModifierAttribute>();
                 }
-                var arrayFromCache = cachedFormattingArray[token];
-                for (int i = 0; i < formattingArray.Length; i++)
+                var arrayFromCache = formattingArray[token];
+                for (int i = 0; i < attributeArray.Length; i++)
                 {
-                    //Resize if needed
                     if (arrayFromCache.Length < i + 1)
                     {
                         Array.Resize(ref arrayFromCache, i + 1);
                     }
                     //only set value if the value in the cache is not null 
                     if (arrayFromCache[i] == null)
-                        arrayFromCache[i] = formattingArray[i];
+                        arrayFromCache[i] = attributeArray[i];
                 }
-                cachedFormattingArray[token] = arrayFromCache;
+                formattingArray[token] = arrayFromCache;
             }
         }
 
@@ -119,9 +117,9 @@ namespace Moonstorm
             }
         }
 
-        private static Dictionary<string, object[]> CreateFormattingDictionary(List<TokenModifierAttribute> tokenModifiers)
+        private static Dictionary<string, TokenModifierAttribute[]> CreateFormattingDictionary(List<TokenModifierAttribute> tokenModifiers)
         {
-            var dictionary = new Dictionary<string, object[]>();
+            var dictionary = new Dictionary<string, TokenModifierAttribute[]>();
             if (tokenModifiers.Count == 0)
                 return dictionary;
 
@@ -131,45 +129,44 @@ namespace Moonstorm
                 {
                     var token = tokenModifier.langToken;
                     var formattingIndex = tokenModifier.formatIndex;
-                    var formattingValue = tokenModifier.GetFormattingValue();
-                    if (!dictionary.ContainsKey(token)) //If the token is not in the dictionary, add it with an empty array.
+                    //If the token is not in the dictionary, add it and initialize an empty array.
+                    if (!dictionary.ContainsKey(token))
                     {
-                        dictionary[token] = Array.Empty<object>();
+                        dictionary[token] = Array.Empty<TokenModifierAttribute>();
                     }
 
                     var dictArray = dictionary[token];
-                    if (dictArray.Length < formattingIndex + 1) //Resize array if needed
+                    //Ensure array is big enough for the new modifier
+                    if (dictArray.Length < formattingIndex + 1)
                     {
                         Array.Resize(ref dictArray, formattingIndex + 1);
                     }
 
-                    if (dictArray[formattingIndex] == null) //Only set value if the current value is null
+                    //We should only set the modifier if there is no modifier already
+                    if (dictArray[formattingIndex] == null)
                     {
-                        dictArray[formattingIndex] = formattingValue;
+                        dictArray[formattingIndex] = tokenModifier;
                     }
                     dictionary[token] = dictArray;
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
-                    MSULog.Error(e);
+                    MSULog.Error(ex);
                 }
             }
-
             return dictionary;
         }
+
         private static void FormatTokens(Language lang)
         {
-            if (cachedFormattingArray.Count == 0)
+            if (formattingArray.Count == 0)
                 return;
 
-            MSULog.Info($"Modifying a total of {cachedFormattingArray.Count} tokens.");
-            foreach (var kvp in cachedFormattingArray)
+            MSULog.Info($"Modifying a total of {formattingArray.Count} tokens.");
+            foreach (var (token, attributes) in formattingArray)
             {
                 try
                 {
-                    var token = kvp.Key;
-                    var formattingArray = kvp.Value;
-
                     if (!lang.stringsByToken.ContainsKey(token))
                     {
 #if DEBUG
@@ -180,16 +177,16 @@ namespace Moonstorm
 #if DEBUG
                     MSULog.Debug($"Modifying {token}");
 #endif
-                    FormatToken(lang, token, formattingArray);
+                    FormatToken(lang, token, attributes);
                 }
                 catch (Exception e) { MSULog.Error(e); }
             }
         }
 
-        private static void FormatToken(Language lang, string token, object[] formattingArray)
+        private static void FormatToken(Language lang, string token, TokenModifierAttribute[] formattingArray)
         {
             var tokenValue = lang.stringsByToken[token];
-            var formatted = string.Format(tokenValue, formattingArray);
+            var formatted = string.Format(tokenValue, formattingArray.Select(t => t.GetFormattingValue()));
             lang.stringsByToken[token] = formatted;
         }
     }

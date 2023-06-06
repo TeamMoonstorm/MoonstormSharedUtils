@@ -114,15 +114,17 @@ namespace Moonstorm
                 value = pi.GetMethod?.Invoke(null, null);
             }
 
-            if(!extraData.IsNullOrWhiteSpace() && float.IsNaN(operationData))
+            if (!extraData.IsNullOrWhiteSpace() && float.IsNaN(operationData))
             {
                 operationData = float.Parse(extraData, CultureInfo.InvariantCulture);
                 extraData = string.Empty;
             }
 
-            if(value.GetType().IsSubclassOf(typeof(ConfigurableVariable)))
+            Type valueType = value.GetType();
+            if (valueType.IsSubclassOf(typeof(ConfigurableVariable)))
             {
-                var cfg = value.GetPropertyValue<ConfigEntryBase>("ConfigEntryBase");
+                PropertyInfo ConfigEntryBase = valueType.GetProperty(nameof(ConfigurableVariable.ConfigEntryBase), BindingFlags.Public | BindingFlags.Instance);
+                var cfg = (ConfigEntryBase)ConfigEntryBase.GetGetMethod().Invoke(value, null);
                 value = cfg.BoxedValue;
             }
 
