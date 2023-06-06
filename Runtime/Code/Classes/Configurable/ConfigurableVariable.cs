@@ -466,11 +466,6 @@ namespace Moonstorm.Config
             DefaultValue = defaultVal;
         }
 
-        ~ConfigurableVariable()
-        {
-            MSULog.Info($"Collected {ToString()}");
-        }
-
         /// <summary>
         /// An implicit operator that casts the ConfigurableVariable's <see cref="ConfigEntry.Value"/> into <typeparamref name="T"/>
         /// </summary>

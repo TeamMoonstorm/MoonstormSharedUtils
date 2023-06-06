@@ -44,6 +44,10 @@ namespace Moonstorm
         /// N is substracted to the value of this field/property, where N is a float that'll be parsed from <see cref="TokenModifierAttribute.extraData"/>
         /// </summary>
         SubtractN,
+        /// <summary>
+        /// The value of this field/property is divided by N, and the remainder of the operation will be the token's value.
+        /// </summary>
+        ModuloN,
     }
 
     /// <summary>
@@ -155,6 +159,9 @@ namespace Moonstorm
                     case StatTypes.SubtractN:
                         valueForFormatting = float.IsNaN(operationData) ? value : SubtractN(CastToFloat(value));
                         return valueForFormatting;
+                    case StatTypes.ModuloN:
+                        valueForFormatting = float.IsNaN(operationData) ? value : ModuloN(CastToFloat(value));
+                        return valueForFormatting;
                 }
             }
             else
@@ -195,6 +202,13 @@ namespace Moonstorm
         {
             var substrahend = operationData;
             float num = number - substrahend;
+            return num;
+        }
+
+        private object ModuloN(float number)
+        {
+            var modulo = operationData;
+            var num = number % modulo;
             return num;
         }
 

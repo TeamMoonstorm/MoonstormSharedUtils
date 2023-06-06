@@ -77,9 +77,10 @@ namespace Moonstorm
         internal void ConfigureField<T>(ConfigFile configFile, T value)
         {
             ConfigEntryBase = configFile.Bind<T>(GetSection(), GetName(), value, GetDescription());
-            OnConfigured(configFile, value);
             var entry = GetConfigEntry<T>();
-            entry.SettingChanged += SetValue;
+            entry.SettingChanged += SettingChanged;
+            SetValue(ConfigEntryBase.BoxedValue);
+            OnConfigured(configFile, value);
         }
 
         /// <summary>
@@ -88,10 +89,14 @@ namespace Moonstorm
         /// <param name="configFile">The ConfigFile that this ConfigurableFieldAttribute was bound to</param>
         /// <param name="value">The value for this ConfigurableField's field</param>
         protected virtual void OnConfigured(ConfigFile configFile, object value) { }
-        private void SetValue(object sender, EventArgs e)
+        private void SettingChanged(object sender, EventArgs e)
         {
-            var newVal = ConfigEntryBase.BoxedValue;
-            Field.SetValue(Field.DeclaringType, newVal);
+            SetValue(ConfigEntryBase.BoxedValue);
+        }
+
+        private void SetValue(object boxedValue)
+        {
+            Field.SetValue(Field.DeclaringType, boxedValue);
         }
 
         private string GetSection()

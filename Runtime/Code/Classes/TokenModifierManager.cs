@@ -14,7 +14,7 @@ namespace Moonstorm
     public static class TokenModifierManager
     {
         //Since 1.5 introduces risk of options support, we now need to keep a cache of the attributes themselves so we can hot-reload languages.
-        private static Dictionary<string, TokenModifierAttribute[]> formattingArray = null;
+        private static Dictionary<string, TokenModifierAttribute[]> cachedFormattingArray = null;
         [SystemInitializer(typeof(ConfigSystem))]
         private static void Init()
         {
@@ -28,7 +28,9 @@ namespace Moonstorm
 
             ModOptionPanelController.OnModOptionsExit += () =>
             {
-                Language.SetCurrentLanguage(Language.currentLanguageName);
+                string langName = Language.currentLanguageName;
+                Language.currentLanguage?.UnloadStrings();
+                Language.SetCurrentLanguage(langName);
             };
         }
 
@@ -39,9 +41,9 @@ namespace Moonstorm
 
         private static void ModifyTokensInLanguage(Language lang)
         {
-            lang = lang == null ? Language.currentLanguage : lang;
+            lang = lang ?? Language.currentLanguage;
 
-            if (formattingArray == null)
+            if (cachedFormattingArray == null)
                 CreateFormattingArray(lang);
 
             //Do formatting with cached array
@@ -54,14 +56,14 @@ namespace Moonstorm
             var formattingDictionaryFromFields = CreateFormattingDictionary(fieldTokenModifiers);
             var formattingDictionaryFromProperties = CreateFormattingDictionary(propertyTokenModifiers);
 
-            formattingArray = new Dictionary<string, TokenModifierAttribute[]>();
+            cachedFormattingArray = new Dictionary<string, TokenModifierAttribute[]>();
 
-            foreach (var (token, attributeArray) in formattingDictionaryFromFields)
+            foreach (var (token, formattingArray) in formattingDictionaryFromFields)
             {
                 //Add token from dictionary, this replaces the array, but that's ok as this dictionary is currently empty
-                formattingArray[token] = Array.Empty<TokenModifierAttribute>();
-                var arrayFromCache = formattingArray[token];
-                for (int i = 0; i < attributeArray.Length; i++)
+                cachedFormattingArray[token] = Array.Empty<TokenModifierAttribute>();
+                var arrayFromCache = cachedFormattingArray[token];
+                for (int i = 0; i < formattingArray.Length; i++)
                 {
                     //Resize if needed
                     if (arrayFromCache.Length < i + 1)
@@ -71,21 +73,21 @@ namespace Moonstorm
 
                     //only set value if the value in the cache is not null
                     if (arrayFromCache[i] == null)
-                        arrayFromCache[i] = attributeArray[i];
+                        arrayFromCache[i] = formattingArray[i];
                 }
-                formattingArray[token] = arrayFromCache;
+                cachedFormattingArray[token] = arrayFromCache;
             }
-            foreach (var (token, attributeArray) in formattingDictionaryFromProperties)
+            foreach (var (token, formattingArray) in formattingDictionaryFromProperties)
             {
                 //We do not overwrite the array if the token is already in the dictionary.
                 //This is due to the fact that the kye may already be in the dictionary due to being created from fields with the token modifiers
 
-                if (!formattingArray.ContainsKey(token))
+                if (!cachedFormattingArray.ContainsKey(token))
                 {
-                    formattingArray[token] = Array.Empty<TokenModifierAttribute>();
+                    cachedFormattingArray[token] = Array.Empty<TokenModifierAttribute>();
                 }
-                var arrayFromCache = formattingArray[token];
-                for (int i = 0; i < attributeArray.Length; i++)
+                var arrayFromCache = cachedFormattingArray[token];
+                for (int i = 0; i < formattingArray.Length; i++)
                 {
                     if (arrayFromCache.Length < i + 1)
                     {
@@ -93,9 +95,9 @@ namespace Moonstorm
                     }
                     //only set value if the value in the cache is not null 
                     if (arrayFromCache[i] == null)
-                        arrayFromCache[i] = attributeArray[i];
+                        arrayFromCache[i] = formattingArray[i];
                 }
-                formattingArray[token] = arrayFromCache;
+                cachedFormattingArray[token] = arrayFromCache;
             }
         }
 
@@ -159,11 +161,11 @@ namespace Moonstorm
 
         private static void FormatTokens(Language lang)
         {
-            if (formattingArray.Count == 0)
+            if (cachedFormattingArray.Count == 0)
                 return;
 
-            MSULog.Info($"Modifying a total of {formattingArray.Count} tokens.");
-            foreach (var (token, attributes) in formattingArray)
+            MSULog.Info($"Modifying a total of {cachedFormattingArray.Count} tokens.");
+            foreach (var (token, attributes) in cachedFormattingArray)
             {
                 try
                 {
@@ -186,7 +188,8 @@ namespace Moonstorm
         private static void FormatToken(Language lang, string token, TokenModifierAttribute[] formattingArray)
         {
             var tokenValue = lang.stringsByToken[token];
-            var formatted = string.Format(tokenValue, formattingArray.Select(t => t.GetFormattingValue()));
+            object[] format = formattingArray.Select(att => att.GetFormattingValue()).ToArray();
+            var formatted = string.Format(tokenValue, format);
             lang.stringsByToken[token] = formatted;
         }
     }
