@@ -12,14 +12,14 @@ namespace Moonstorm
 {
     internal static class ItemDisplayCatalog
     {
-        private static Dictionary<string, ItemDisplayRuleSet> idrsDictionary = new Dictionary<string, ItemDisplayRuleSet>();
-        private static Dictionary<string, GameObject> displayDictionary = new Dictionary<string, GameObject>();
+        private static Dictionary<string, ItemDisplayRuleSet> idrsDictionary = new Dictionary<string, ItemDisplayRuleSet>(StringComparer.OrdinalIgnoreCase);
+        private static Dictionary<string, GameObject> displayDictionary = new Dictionary<string, GameObject>(StringComparer.OrdinalIgnoreCase);
 #if DEBUG
         private static List<string> survivorRuleSets = new List<string>();
         private static List<string> enemyRuleSets = new List<string>();
-        private static Dictionary<string, List<string>> itemToDisplayPrefabs = new Dictionary<string, List<string>>();
-        private static Dictionary<string, List<string>> equipmentToDisplayPrefabs = new Dictionary<string, List<string>>();
-        private static Dictionary<string, List<string>> eliteEquipmentToDisplayPrefabs = new Dictionary<string, List<string>>();
+        private static Dictionary<string, List<string>> itemToDisplayPrefabs = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
+        private static Dictionary<string, List<string>> equipmentToDisplayPrefabs = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
+        private static Dictionary<string, List<string>> eliteEquipmentToDisplayPrefabs = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
 #endif
         public static ResourceAvailability catalogAvailability;
 

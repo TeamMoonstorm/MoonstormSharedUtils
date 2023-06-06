@@ -1,3 +1,25 @@
+### '1.5.4' - Config Update End
+
+* Runtime:
+    * ``TokenModifierManager`` reformats tokens when the Risk of Options menu is closed
+        * This in turn makes it so tokens are always updated with the proper values from configurations.
+    * ``TokenModifierAttribute`` now works with ``ConfigurableVariable`` classes
+    * ``TokenModifierAttribute`` can now have ``ModuloN`` stat type
+    * Non assigned ``ConfigurableVariables`` now get collected by the Garbage Collector, while keeping any of their ``OnConfigured`` actions in memory
+    * Added a ``ConfigEntryBase`` property to ``ConfigurableVariable``
+    * Added a ``ConfigHash`` property to ``ConfigurableVariable``
+    * ``OnConfigChanged`` event in ``ConfigurableVariable`` now becomes ReadOnly once its configured
+    * Increased verbosity of ``ToString()``method of ``ConfigurableVariable``
+    * Deprecated ``SetOnConfigChanged(OnConfigChangedDelegate)`` on the following ConfigurableVariables
+        * ConfigurableString
+        * ConfigurableInt
+        * ConfigurableFloat
+        * ConfigurableEnum
+        * ConfigurableColor
+        * ConfigurableBool
+        * (These have been replaced by ``AddOnConfigChanged(OnConfigChangedDelegate)`` to ensure method chaining works properly.)
+    * Made all of the dictionary that have string keys to be case insensitive
+
 ### '1.5.3' - That was stupid
 
 * Runtime:

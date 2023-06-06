@@ -57,7 +57,7 @@ namespace Moonstorm
         public static ResourceAvailability moduleAvailability;
 
         private static Dictionary<DirectorAPI.Stage, List<MSMonsterDirectorCard>> currentStageToCards = new Dictionary<DirectorAPI.Stage, List<MSMonsterDirectorCard>>();
-        private static Dictionary<string, List<MSMonsterDirectorCard>> currentCustomStageToCards = new Dictionary<string, List<MSMonsterDirectorCard>>();
+        private static Dictionary<string, List<MSMonsterDirectorCard>> currentCustomStageToCards = new Dictionary<string, List<MSMonsterDirectorCard>>(StringComparer.OrdinalIgnoreCase);
         #endregion
 
         [SystemInitializer(new Type[] { typeof(BodyCatalog), typeof(MasterCatalog) })]

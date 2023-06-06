@@ -29,11 +29,11 @@ namespace Moonstorm
         private static EventCard[] eventCards = Array.Empty<EventCard>();
         private static EventCard[] registeredEventCards = Array.Empty<EventCard>();
 
-        private static readonly Dictionary<string, EventIndex> nameToEventIndex = new Dictionary<string, EventIndex>();
-        private static readonly Dictionary<string, int> nameToCategoryIndex = new Dictionary<string, int>();
+        private static readonly Dictionary<string, EventIndex> nameToEventIndex = new Dictionary<string, EventIndex>(StringComparer.OrdinalIgnoreCase);
+        private static readonly Dictionary<string, int> nameToCategoryIndex = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 
         private static readonly Dictionary<DirectorAPI.Stage, EventDirectorCategorySelection> stageToCategory = new Dictionary<DirectorAPI.Stage, EventDirectorCategorySelection>();
-        private static readonly Dictionary<string, EventDirectorCategorySelection> baseSceneNameToCategory = new Dictionary<string, EventDirectorCategorySelection>();
+        private static readonly Dictionary<string, EventDirectorCategorySelection> baseSceneNameToCategory = new Dictionary<string, EventDirectorCategorySelection>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
         /// Call ResourceAvailability.CallWhenAvailable() to run a method after the EventCatalog is initialized

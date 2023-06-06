@@ -226,7 +226,7 @@ namespace Moonstorm.Loaders
         public BepInPlugin OwnerMetaData { get => MainClass.Info.Metadata; }
 
         [Obsolete("Use ConfigSystem.GetConfigFile() isntead")]
-        public Dictionary<string, ConfigFile> identifierToConfigFile = new Dictionary<string, ConfigFile>();
+        public Dictionary<string, ConfigFile> identifierToConfigFile = new Dictionary<string, ConfigFile>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
         /// Creates a config file.

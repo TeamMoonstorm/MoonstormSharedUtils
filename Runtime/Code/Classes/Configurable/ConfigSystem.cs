@@ -32,8 +32,8 @@ namespace Moonstorm
             }
         }
 
-        private static Dictionary<string, ManagedModData> assemblyNameToModData = new Dictionary<string, ManagedModData>();
-        private static Dictionary<string, ConfigFile> identifierToConfigFile = new Dictionary<string, ConfigFile>();
+        private static Dictionary<string, ManagedModData> assemblyNameToModData = new Dictionary<string, ManagedModData>(StringComparer.OrdinalIgnoreCase);
+        private static Dictionary<string, ConfigFile> identifierToConfigFile = new Dictionary<string, ConfigFile>(StringComparer.OrdinalIgnoreCase);
 
         private static bool initialized = false;
 
@@ -120,8 +120,6 @@ namespace Moonstorm
         {
             BindConfigurableFieldAttributes();
             BindConfigurableVariables();
-            MSULog.Fatal("Collecting Garbitch");
-            GC.Collect();
         }
 
         private static void BindConfigurableFieldAttributes()

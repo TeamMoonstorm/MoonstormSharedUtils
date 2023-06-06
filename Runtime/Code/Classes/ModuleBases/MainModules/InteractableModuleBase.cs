@@ -47,7 +47,7 @@ namespace Moonstorm
         /// </summary>
         public static ResourceAvailability moduleAvailability;
         private static Dictionary<DirectorAPI.Stage, List<MSInteractableDirectorCard>> currentStageToCards = new Dictionary<DirectorAPI.Stage, List<MSInteractableDirectorCard>>();
-        private static Dictionary<string, List<MSInteractableDirectorCard>> currentCustomStageToCards = new Dictionary<string, List<MSInteractableDirectorCard>>();
+        private static Dictionary<string, List<MSInteractableDirectorCard>> currentCustomStageToCards = new Dictionary<string, List<MSInteractableDirectorCard>>(StringComparer.OrdinalIgnoreCase);
         #endregion
 
         [SystemInitializer]
