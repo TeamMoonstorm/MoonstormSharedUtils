@@ -191,8 +191,10 @@ namespace Moonstorm.Loaders
         /// </summary>
         protected static void ThrowIfNoInstance(string attemptedAction)
         {
+#if !UNITY_EDITOR
             if (Instance == null)
                 throw new NullReferenceException($"Cannot {attemptedAction} when there is no instance of {typeof(T).Name}!");
+#endif
         }
     }
 

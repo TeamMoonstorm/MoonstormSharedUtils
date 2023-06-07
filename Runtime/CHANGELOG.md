@@ -1,3 +1,8 @@
+### '1.5.5' - That was a lie
+
+* Fixed issue with ConfigurableVariables
+* ConfigLoader no longer throws null reference exceptions on Editor reload
+
 ### '1.5.4' - Config Update End
 
 * Runtime:
