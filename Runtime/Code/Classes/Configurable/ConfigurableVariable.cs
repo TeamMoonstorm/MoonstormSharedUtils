@@ -1,4 +1,4 @@
-﻿using BepInEx;
+using BepInEx;
 using BepInEx.Configuration;
 using System;
 using System.Collections.Generic;
@@ -242,7 +242,7 @@ namespace Moonstorm.Config
     /// <typeparam name="T">The type of value that this ConfigurableVariable uses, for a list of valid types, see <see cref="TomlTypeConverter"/></typeparam>
     public class ConfigurableVariable<T> : ConfigurableVariable
     {
-        private struct DelegateContainer
+        private class DelegateContainer
         {
             public ConfigEntry<T> Entry
             {
@@ -274,6 +274,10 @@ namespace Moonstorm.Config
             public void SetListeners(OnConfigChangedDelegate listeners)
             {
                 OnConfigChanged = listeners;
+                /*foreach(var del in listeners.GetInvocationList())
+                {
+                    OnConfigChanged += (OnConfigChangedDelegate)Delegate.CreateDelegate(typeof(OnConfigChangedDelegate), del.Target, del.Method);
+                }*/
             }
         }
         public delegate void OnConfigChangedDelegate(T newVal);
@@ -429,7 +433,7 @@ namespace Moonstorm.Config
                 if (!configHashToDelegates.ContainsKey(ConfigHash))
                     configHashToDelegates[ConfigHash] = default(DelegateContainer);
 
-                var val = configHashToDelegates[ConfigHash];
+                var val = new DelegateContainer();
                 val.Entry = ConfigEntry;
                 val.SetListeners(_onConfigChanged);
                 val.Raise();
