@@ -84,6 +84,10 @@ namespace Moonstorm.Components
         [Tooltip("The current amount of Credits")]
         public float eventCredits;
 
+        // TODO: Remove before merging
+        [Tooltip("The current amount of Credits")]
+        public float eventCreditsOld;
+
         [Tooltip("The amount of time that takes between new credits for the director")]
         public RangeFloat intervalResetRange;
 
@@ -200,16 +204,45 @@ namespace Moonstorm.Components
                         intervalStopWatch = newStopwatchVal;
 
                         float compensatedDifficultyCoefficient = Run.instance.compensatedDifficultyCoefficient;
+                        float stagesCleared = Run.instance.stageClearCount;
 
-                        float eventScaling = compensatedDifficultyCoefficient / Run.instance.participatingPlayerCount;
+                        //float totalPlayerHealth = 0;
+                        // TODO: Do we want particpating or living player count?
+                        float playerCount = Run.instance.participatingPlayerCount;
+
+                        //foreach(var player in PlayerCharacterMasterController.instances)
+                        //{
+                        //    var playerBody = player.master.GetBody();
+                        //    if (playerBody != null && playerBody.healthComponent != null)
+                        //    {
+                        //        totalPlayerHealth += playerBody.healthComponent.health;
+                        //    }
+                        //}
+                        float playerTeamLevel = TeamManager.instance.GetTeamLevel(TeamIndex.Player);
+
+                        // TODO: Remove before mergining
+                        float eventScalingOld = compensatedDifficultyCoefficient / Run.instance.participatingPlayerCount;
+
+                        float eventScaling = playerTeamLevel * stagesCleared;
+
+                        // TODO: Clean up logging before merge
 
 #if DEBUG
+                        Log($">Stages Cleared: {stagesCleared}");
+                        Log($">playerTeamLevel: {playerTeamLevel}");
+                        Log($">Event Scaling: {eventScaling}");
                         Log($">compensated difficulty coefficient: {compensatedDifficultyCoefficient}" +
-                                $"\nevent scaling: {eventScaling}");
+                                $"\nevent scaling old: {eventScalingOld}");
 #endif
+                        float newCreditsOld = eventRNG.RangeFloat(creditGainRange.min, creditGainRange.max) * eventScaling;
+                        eventCreditsOld += newCreditsOld;
+
                         float newCredits = eventRNG.RangeFloat(creditGainRange.min, creditGainRange.max) * eventScaling;
                         eventCredits += newCredits;
+
 #if DEBUG
+                        Log($">new Credits (Old Method): {newCreditsOld}" +
+                                $"\nTotal credits so far (eventCreditsOld): {eventCreditsOld}");
                         Log($">new Credits: {newCredits}" +
                                 $"\nTotal credits so far: {eventCredits}");
 #endif
@@ -272,6 +305,7 @@ namespace Moonstorm.Components
 
             LastSuccesfulEventCard = currentEventCard;
 
+            eventCreditsOld -= effectiveCost;
             eventCredits -= effectiveCost;
             TotalCreditsSpent += effectiveCost;
 #if DEBUG
