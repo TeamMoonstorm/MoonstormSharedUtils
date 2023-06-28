@@ -2,8 +2,6 @@ using BepInEx;
 using BepInEx.Configuration;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 
 namespace Moonstorm.Config
 {
@@ -242,14 +240,21 @@ namespace Moonstorm.Config
     /// <typeparam name="T">The type of value that this ConfigurableVariable uses, for a list of valid types, see <see cref="TomlTypeConverter"/></typeparam>
     public class ConfigurableVariable<T> : ConfigurableVariable
     {
-        private class DelegateContainer
+        /// <summary>
+        /// Represents a container for delegates for a ConfigurableVariable. these are stored automatically by MSU and created when a ConfigurableVariable is bound.
+        /// <br>This allows the ConfigurableVariable to be garbage collected if necesary, while keeping the OnConfigchanged functionality intact.</br>
+        /// </summary>
+        public class DelegateContainer
         {
+            /// <summary>
+            /// The ConfigEntry tied to this delegate container
+            /// </summary>
             public ConfigEntry<T> Entry
             {
                 get => _entry;
-                set
+                internal set
                 {
-                    if(_entry != null)
+                    if (_entry != null)
                         _entry.SettingChanged -= InvokeDelegate;
 
                     _entry = value;
@@ -258,31 +263,42 @@ namespace Moonstorm.Config
             }
             private ConfigEntry<T> _entry;
 
-            public event OnConfigChangedDelegate OnConfigChanged;
+            internal event OnConfigChangedDelegate OnConfigChanged;
 
             private void InvokeDelegate(object sender, EventArgs args)
             {
                 Raise();
             }
 
+            /// <summary>
+            /// Manually invokes the delegates tied to this DelegateContainer
+            /// </summary>
             public void Raise()
             {
-                if(Entry != null)
+                if (Entry != null)
                     OnConfigChanged?.Invoke((T)Entry.BoxedValue);
             }
 
-            public void SetListeners(OnConfigChangedDelegate listeners)
+            internal void SetListeners(OnConfigChangedDelegate listeners)
             {
                 OnConfigChanged = listeners;
-                /*foreach(var del in listeners.GetInvocationList())
-                {
-                    OnConfigChanged += (OnConfigChangedDelegate)Delegate.CreateDelegate(typeof(OnConfigChangedDelegate), del.Target, del.Method);
-                }*/
             }
         }
         public delegate void OnConfigChangedDelegate(T newVal);
 
         private static Dictionary<int, DelegateContainer> configHashToDelegates = new Dictionary<int, DelegateContainer>();
+
+        /// <summary>
+        /// Returns the DelegateContainer tied to a specific ConfigHash
+        /// </summary>
+        /// <param name="configHash">The ConfigHash of the delegate, this can be obtained from <see cref="ConfigurableVariable.ConfigHash"/></param>
+        /// <returns>The delegate container for the config, null if no delegate container exists.</returns>
+        public static DelegateContainer GetDelegateContainer(int configHash)
+        {
+            if (configHashToDelegates.TryGetValue(configHash, out DelegateContainer val))
+                return val;
+            return null;
+        }
 
         /// <summary>
         /// The default value for this ConfigurableVariable
@@ -428,7 +444,7 @@ namespace Moonstorm.Config
 
             ConfigEntry = ConfigFile.Bind(Section, Key, DefaultValue, Description);
             ConfigEntryBase = ConfigEntry;
-            if(_onConfigChanged != null)
+            if (_onConfigChanged != null)
             {
                 if (!configHashToDelegates.ContainsKey(ConfigHash))
                     configHashToDelegates[ConfigHash] = default(DelegateContainer);

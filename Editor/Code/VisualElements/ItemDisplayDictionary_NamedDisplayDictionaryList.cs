@@ -187,7 +187,7 @@ namespace Moonstorm.EditorUtils.VisualElements
                 newEntry.AddDisplayRule(new ItemDisplayDictionary.DisplayRule
                 {
                     ruleType = RoR2.ItemDisplayRuleType.ParentedPrefab,
-                    displayPrefabIndex = target.displayPrefabs.Length > 0 ? -1 : 0,
+                    displayPrefabIndex = target.displayPrefabs.Length > 0 ? 0 : -1,
                     childName = string.Empty,
                     localPos = Vector3.zero,
                     localAngles = Vector3.zero,

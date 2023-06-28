@@ -165,6 +165,21 @@ namespace Moonstorm.Loaders
             return cfg;
         }
 
+        [Obsolete("Method is wrongly named, use \"MakeConfigurableString\" instead.")]
+        public static ConfigurableString MakeConfigurableInt(string defaultVal, Action<ConfigurableString> initializer = null)
+        {
+            ThrowIfNoInstance($"Create {nameof(ConfigurableString)}");
+
+            var metadata = Instance.MainClass.Info.Metadata;
+            var cfg = new ConfigurableString(defaultVal)
+            {
+                ModGUID = metadata.GUID,
+                ModName = metadata.Name,
+            };
+            initializer?.Invoke(cfg);
+            return cfg;
+        }
+
         /// <summary>
         /// Creates a ConfigurableString and automatically sets it's <see cref="ConfigurableVariable.ModGUID"/> and <see cref="ConfigurableVariable.ModName"/> to <typeparamref name="T"/>'s instance using it's <see cref="ConfigLoader.MainClass"/>.
         /// <br>Requires an <see cref="Instance"/> of <typeparamref name="T"/> to exist.</br>
@@ -172,12 +187,33 @@ namespace Moonstorm.Loaders
         /// <param name="defaultVal">The default value for the string</param>
         /// <param name="initializer">Optional initializer</param>
         /// <returns>The created ConfigurableString</returns>
-        public static ConfigurableString MakeConfigurableInt(string defaultVal, Action<ConfigurableString> initializer = null)
+        public static ConfigurableString MakeConfigurableString(string defaultVal, Action<ConfigurableString> initializer = null)
         {
             ThrowIfNoInstance($"Create {nameof(ConfigurableString)}");
 
             var metadata = Instance.MainClass.Info.Metadata;
             var cfg = new ConfigurableString(defaultVal)
+            {
+                ModGUID = metadata.GUID,
+                ModName = metadata.Name,
+            };
+            initializer?.Invoke(cfg);
+            return cfg;
+        }
+
+        /// <summary>
+        /// Creates a ConfigurableKeyBind and automatically sets it's <see cref="ConfigurableVariable.ModGUID"/> and <see cref="ConfigurableVariable.ModName"/> to <typeparamref name="T"/>'s instance using it's <see cref="ConfigLoader.MainClass"/>.
+        /// <br>Requires an <see cref="Instance"/> of <typeparamref name="T"/> to exist.</br>
+        /// </summary>
+        /// <param name="defaultVal">The default value for the key bind</param>
+        /// <param name="initializer">Optional initializer</param>
+        /// <returns>The created ConfigurableKeyBind</returns>
+        public static ConfigurableKeyBind MakeConfigurableKeyBind(KeyboardShortcut defaultVal, Action<ConfigurableKeyBind> initializer = null)
+        {
+            ThrowIfNoInstance($"Create {nameof(ConfigurableKeyBind)}");
+
+            var metadata = Instance.MainClass.Info.Metadata;
+            var cfg = new ConfigurableKeyBind(defaultVal)
             {
                 ModGUID = metadata.GUID,
                 ModName = metadata.Name,
@@ -239,6 +275,19 @@ namespace Moonstorm.Loaders
         /// <returns>The config file</returns>
         public ConfigFile CreateConfigFile(string identifier, bool wipedBetweenMinorVersions = true)
         {
+            return CreateConfigFile(identifier, wipedBetweenMinorVersions, false);
+        }
+
+        /// <summary>
+        /// Creates a config file.
+        /// <para>The config file's name will be the <paramref name="identifier"/></para>
+        /// </summary>
+        /// <param name="identifier">A unique identifier for this config file</param>
+        /// <param name="wipedBetweenMinorVersions">Wether the ConfigFile is wiped between minor version changes of your mod</param>
+        /// <param name="createSeparateRooEntry">If true, the ConfigSystem will create a new Risk of Options entry for the ConfigFile.</param>
+        /// <returns>The config file</returns>
+        public ConfigFile CreateConfigFile(string identifier, bool wipedBetweenMinorVersions = true, bool createSeparateRooEntry = false)
+        {
             string fileName = identifier;
             if (!fileName.EndsWith(".cfg", StringComparison.OrdinalIgnoreCase))
             {
@@ -249,7 +298,7 @@ namespace Moonstorm.Loaders
             if (wipedBetweenMinorVersions)
                 TryWipeConfig(configFile);
 
-            ConfigSystem.AddConfigFileAndIdentifier(identifier, configFile);
+            ConfigSystem.AddConfigFileAndIdentifier(identifier, configFile, createSeparateRooEntry);
             return configFile;
         }
 

@@ -14,6 +14,7 @@ namespace Moonstorm.EditorUtils.Inspectors
             Button button = new Button(Open);
             button.text = $"Open ItemDisplayDictionary Editor Window";
             element.Add(button);
+            element.Add(new IMGUIContainer(OnInspectorGUI));
             return element;
         }
 

@@ -2,7 +2,6 @@
 using BepInEx.Configuration;
 using HG.Reflection;
 using Moonstorm.Config;
-using R2API.Utils;
 using System;
 using System.Globalization;
 using System.Reflection;

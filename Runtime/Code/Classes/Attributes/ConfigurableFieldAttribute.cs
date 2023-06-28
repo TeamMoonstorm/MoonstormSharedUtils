@@ -1,10 +1,11 @@
 ﻿using BepInEx.Configuration;
 using HG.Reflection;
+using Moonstorm.Config;
 using RiskOfOptions;
 using RiskOfOptions.Options;
 using System;
+using System.IO;
 using System.Reflection;
-using Moonstorm.Config;
 using UnityEngine;
 
 namespace Moonstorm
@@ -148,26 +149,29 @@ namespace Moonstorm
 
         protected override void OnConfigured(ConfigFile file, object value)
         {
-
+            bool separateEntry = ConfigSystem.configFilesWithSeparateRooEntries.Contains(file);
+            string fileName = Path.GetFileNameWithoutExtension(file.ConfigFilePath);
+            var guid = separateEntry ? OwnerGUID + "." + fileName : OwnerGUID;
+            var ownerName = separateEntry ? OwnerName + "." + fileName : OwnerName;
             switch (value)
             {
                 case Boolean _bool:
-                    ModSettingsManager.AddOption(new CheckBoxOption(GetConfigEntry<bool>()), OwnerGUID, OwnerName);
+                    ModSettingsManager.AddOption(new CheckBoxOption(GetConfigEntry<bool>()), guid, ownerName);
                     break;
                 case float _float:
-                    ModSettingsManager.AddOption(new SliderOption(GetConfigEntry<float>()), OwnerGUID, OwnerName);
+                    ModSettingsManager.AddOption(new SliderOption(GetConfigEntry<float>()), guid, ownerName);
                     break;
                 case int _int:
-                    ModSettingsManager.AddOption(new IntSliderOption(GetConfigEntry<int>()), OwnerGUID, OwnerName);
+                    ModSettingsManager.AddOption(new IntSliderOption(GetConfigEntry<int>()), guid, ownerName);
                     break;
                 case string _string:
-                    ModSettingsManager.AddOption(new StringInputFieldOption(GetConfigEntry<string>()), OwnerGUID, OwnerName);
+                    ModSettingsManager.AddOption(new StringInputFieldOption(GetConfigEntry<string>()), guid, ownerName);
                     break;
                 case Color _color:
-                    ModSettingsManager.AddOption(new ColorOption(GetConfigEntry<Color>()), OwnerGUID, OwnerName);
+                    ModSettingsManager.AddOption(new ColorOption(GetConfigEntry<Color>()), guid, ownerName);
                     break;
                 case Enum _enum:
-                    ModSettingsManager.AddOption(new ChoiceOption(ConfigEntryBase), OwnerGUID, OwnerName);
+                    ModSettingsManager.AddOption(new ChoiceOption(ConfigEntryBase), guid, ownerName);
                     break;
             }
         }
