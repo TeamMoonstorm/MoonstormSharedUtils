@@ -206,18 +206,6 @@ namespace Moonstorm.Components
                         float compensatedDifficultyCoefficient = Run.instance.compensatedDifficultyCoefficient;
                         float stagesCleared = Run.instance.stageClearCount;
 
-                        //float totalPlayerHealth = 0;
-                        // TODO: Do we want particpating or living player count?
-                        float playerCount = Run.instance.participatingPlayerCount;
-
-                        //foreach(var player in PlayerCharacterMasterController.instances)
-                        //{
-                        //    var playerBody = player.master.GetBody();
-                        //    if (playerBody != null && playerBody.healthComponent != null)
-                        //    {
-                        //        totalPlayerHealth += playerBody.healthComponent.health;
-                        //    }
-                        //}
                         float playerTeamLevel = TeamManager.instance.GetTeamLevel(TeamIndex.Player);
 
                         // TODO: Remove before mergining
@@ -225,15 +213,17 @@ namespace Moonstorm.Components
 
                         float eventScaling = playerTeamLevel * stagesCleared;
 
-                        // TODO: Clean up logging before merge
+
 
 #if DEBUG
+                        // TODO: Clean up logging before merge
                         Log($">Stages Cleared: {stagesCleared}");
                         Log($">playerTeamLevel: {playerTeamLevel}");
                         Log($">Event Scaling: {eventScaling}");
                         Log($">compensated difficulty coefficient: {compensatedDifficultyCoefficient}" +
                                 $"\nevent scaling old: {eventScalingOld}");
 #endif
+                        // TODO: Remove before mergining
                         float newCreditsOld = eventRNG.RangeFloat(creditGainRange.min, creditGainRange.max) * eventScaling;
                         eventCreditsOld += newCreditsOld;
 
@@ -241,6 +231,7 @@ namespace Moonstorm.Components
                         eventCredits += newCredits;
 
 #if DEBUG
+                        // TODO: Clean up logging before merge
                         Log($">new Credits (Old Method): {newCreditsOld}" +
                                 $"\nTotal credits so far (eventCreditsOld): {eventCreditsOld}");
                         Log($">new Credits: {newCredits}" +
@@ -305,7 +296,9 @@ namespace Moonstorm.Components
 
             LastSuccesfulEventCard = currentEventCard;
 
+            // TODO: Clean up code before merge
             eventCreditsOld -= effectiveCost;
+            
             eventCredits -= effectiveCost;
             TotalCreditsSpent += effectiveCost;
 #if DEBUG
