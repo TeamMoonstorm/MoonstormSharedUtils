@@ -134,8 +134,12 @@ namespace Moonstorm.Config
             base.OnConfigured();
             if (!(ModGUID.IsNullOrWhiteSpace() || ModName.IsNullOrWhiteSpace()))
             {
+                bool separateEntry = ConfigSystem.configFilesWithSeparateRooEntries.Contains(ConfigFile);
+                string fileName = System.IO.Path.GetFileNameWithoutExtension(ConfigFile.ConfigFilePath);
+                var guid = separateEntry ? ModGUID + "." + fileName : ModGUID;
+                var name = separateEntry ? ModName + "." + fileName : ModName;
                 CheckBoxOption option = CheckBoxConfig == null ? new CheckBoxOption(ConfigEntry) : new CheckBoxOption(ConfigEntry, CheckBoxConfig);
-                ModSettingsManager.AddOption(option, ModGUID, ModName);
+                ModSettingsManager.AddOption(option, guid, name);
             }
         }
 

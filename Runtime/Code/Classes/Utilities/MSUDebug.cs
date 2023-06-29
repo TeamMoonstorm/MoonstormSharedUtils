@@ -1,5 +1,6 @@
 ﻿#if DEBUG
 using Moonstorm.Components;
+using Moonstorm.Config;
 using RoR2;
 using RoR2.UI;
 using System;
@@ -8,14 +9,36 @@ using UnityEngine;
 
 namespace Moonstorm
 {
+    internal class DebugCommandBinding
+    {
+        public class Command
+        {
+            public string commandName;
+            public string[] Parameters => parameters == null ? generateParams() : parameters;
+            private string[] parameters;
+            public Func<string[]> generateParams;
+            public Command(string commandName, params string[] parameters)
+            {
+                this.commandName = commandName;
+                this.parameters = parameters;
+                generateParams = null;
+            }
+            public Command(string commandName, Func<string[]> generateParams)
+            {
+                this.commandName = commandName;
+                parameters = null;
+                this.generateParams = generateParams;
+            }
+        }
+        public string description;
+        public ConfigurableKeyBind tiedKeyBind;
+        public Command[] tiedCommands;
+    }
+
     internal class MSUDebug : MonoBehaviour
     {
         private void Awake()
         {
-            #region networking
-            //you can connect to yourself with a second instance of the game by hosting a private game with one and opening the console on the other and typing connect localhost:7777
-            On.RoR2.Networking.NetworkManagerSystem.OnClientConnect += (self, user, t) => { };
-            #endregion networking
             #region Item display helper adder
             //Adds the item display helper to all the character bodies.
             RoR2Application.onLoad += () =>
@@ -47,43 +70,56 @@ namespace Moonstorm
         private void OnRunStart(Run obj)
         {
             #region Command Invoking
-            InvokeCommand("stage1_pod", "0");
-            InvokeCommand("no_enemies");
-            InvokeCommand("msEnable_Event_Logging", "1");
+            if (!MSUConfig.enableCommandInvoking)
+                return;
+
+            if (MSUConfig.invokeGod)
+                MSUtil.InvokeCommand("god", "1");
+            if (MSUConfig.invokeStage1Pod)
+                MSUtil.InvokeCommand("stage1_pod", "0");
+            if (MSUConfig.invokeNoMonsters)
+                MSUtil.InvokeCommand("no_enemies");
+            if (MSUConfig.invokeMSEnableEventLogging)
+                MSUtil.InvokeCommand("ms_enable_event_logging", "1");
+            if (MSUConfig.invoke100Dios)
+                MSUtil.InvokeCommand("give_item", "extralife", "100", GetNetworkUser().ToString());
             #endregion
         }
 
-        private void InvokeCommand(string commandName, params string[] arguments)
+        public static object GetNetworkUser()
         {
-            if (!RoR2.Console.instance)
-                return;
-
-            var args = arguments.ToList();
-            var consoleUser = new RoR2.Console.CmdSender();
-            RoR2.Console.instance.RunCmd(consoleUser, commandName, args);
+            var networkUser = NetworkUser.instancesList.FirstOrDefault();
+            if (networkUser)
+            {
+                if (MSUConfig.enableSelfConnect)
+                {
+                    return NetworkUser.instancesList.IndexOf(networkUser);
+                }
+                return networkUser.userName;
+            }
+            return string.Empty;
         }
 
         private void Update()
         {
-            var input0 = Input.GetKeyDown(MSUConfig.instantiateMaterialTester);
-            //add more if necessary
-            #region materialTester
-            if (input0 && Run.instance)
-            {
-                var position = Vector3.zero;
-                var quaternion = Quaternion.identity;
-                var inputBank = PlayerCharacterMasterController.instances[0].master.GetBodyObject().GetComponent<InputBankTest>();
-                position = inputBank.aimOrigin + inputBank.aimDirection * 5;
-                quaternion = Quaternion.LookRotation(inputBank.GetAimRay().direction, Vector3.up);
-                var materialTester = MoonstormSharedUtils.MSUAssetBundle.LoadAsset<GameObject>("MaterialTester");
-                Instantiate(materialTester, position, quaternion);
-            }
-            #endregion
-            var input1 = Input.GetKeyDown(MSUConfig.printDebugEventMessage);
-            if (input1)
+            var input0 = MSUConfig.printDebugEventMessage.IsDown;
+            if (input0)
             {
                 var go = EventHelpers.AnnounceEvent(new EventHelpers.EventAnnounceInfo(MoonstormSharedUtils.MSUAssetBundle.LoadAsset<EventCard>("DummyEventCard"), 15, true) { fadeOnStart = false });
                 go.GetComponent<HGTextMeshProUGUI>().alpha = 1f;
+            }
+            if (!MSUConfig.enableDebugToolkitBindings)
+                return;
+
+            foreach (var binding in MSUConfig.bindings)
+            {
+                if (binding.tiedKeyBind.IsDown)
+                {
+                    foreach (var command in binding.tiedCommands)
+                    {
+                        MSUtil.InvokeCommand(command.commandName, command.Parameters);
+                    }
+                }
             }
         }
     }

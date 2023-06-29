@@ -3,37 +3,36 @@ using BepInEx.Configuration;
 using RiskOfOptions;
 using RiskOfOptions.OptionConfigs;
 using RiskOfOptions.Options;
-using System;
 
 namespace Moonstorm.Config
 {
     /// <summary>
-    /// A Configurable int that can be configured using the BepInEx Config System
-    /// <br>Contains an implicit operator for casting the ConfigEntry's value into <see cref="int"/></br>
-    /// <para>If <see cref="ConfigurableVariable.ModGUID"/> and <see cref="ConfigurableVariable.ModName"/> are not null or empty, this ConfigurableInt is automatically added to RiskOfOptions' <see cref="ModSettingsManager"/></para>
+    /// A Configurable <see cref="KeyboardShortcut"/> that can be configured using the BepInEx Config System
+    /// <br>Contains an implicit operator for casting the ConfigEntry's value into <see cref="KeyboardShortcut"/></br>
+    /// <para>If <see cref="ConfigurableVariable.ModGUID"/> and <see cref="ConfigurableVariable.ModName"/> are not null or empty, this ConfigurableKeyBind is automatically added to RiskOfOptions' <see cref="ModSettingsManager"/></para>
     /// </summary>
-    public class ConfigurableInt : ConfigurableVariable<int>
+    public class ConfigurableKeyBind : ConfigurableVariable<KeyboardShortcut>
     {
         /// <summary>
-        /// A Configuration for the RiskOfOptions' <see cref="IntSliderOption"/>
+        /// A Configuration for the Risk of Options' <see cref="KeyBindOption"/>
         /// <para>Becomes ReadOnly if <see cref="ConfigurableVariable.IsConfigured"/> is true</para>
         /// </summary>
-        public IntSliderConfig SliderConfig
+        public KeyBindConfig KeyBindConfig
         {
-            get => _sliderConfig;
+            get => _keyBindConfig;
             set
             {
                 if (IsConfigured)
                     return;
-                _sliderConfig = value;
+                _keyBindConfig = value;
             }
         }
-        private IntSliderConfig _sliderConfig;
+        private KeyBindConfig _keyBindConfig;
 
         /// <summary>
         /// <inheritdoc cref="ConfigurableVariable.SetSection(string)"/>
         /// </summary>
-        public new ConfigurableInt SetSection(string section)
+        public new ConfigurableKeyBind SetSection(string section)
         {
             base.SetSection(section);
             return this;
@@ -42,7 +41,7 @@ namespace Moonstorm.Config
         /// <summary>
         /// <inheritdoc cref="ConfigurableVariable.SetKey(string)"/>
         /// </summary>
-        public new ConfigurableInt SetKey(string key)
+        public new ConfigurableKeyBind SetKey(string key)
         {
             base.SetKey(key);
             return this;
@@ -51,7 +50,7 @@ namespace Moonstorm.Config
         /// <summary>
         /// <inheritdoc cref="ConfigurableVariable.SetDescription(string)"/>
         /// </summary>
-        public new ConfigurableInt SetDescription(string description)
+        public new ConfigurableKeyBind SetDescription(string description)
         {
             base.SetDescription(description);
             return this;
@@ -60,7 +59,7 @@ namespace Moonstorm.Config
         /// <summary>
         /// <inheritdoc cref="ConfigurableVariable.SetIdentifier(string)"/>
         /// </summary>
-        public new ConfigurableInt SetIdentifier(string identifier)
+        public new ConfigurableKeyBind SetIdentifier(string identifier)
         {
             base.SetIdentifier(identifier);
             return this;
@@ -69,7 +68,7 @@ namespace Moonstorm.Config
         /// <summary>
         /// <inheritdoc cref="ConfigurableVariable.SetConfigFile(ConfigFile)"/>
         /// </summary>
-        public new ConfigurableInt SetConfigFile(ConfigFile file)
+        public new ConfigurableKeyBind SetConfigFile(ConfigFile file)
         {
             base.SetConfigFile(file);
             return this;
@@ -78,7 +77,7 @@ namespace Moonstorm.Config
         /// <summary>
         /// <inheritdoc cref="ConfigurableVariable.SetModGUID(string)"/>
         /// </summary>
-        public new ConfigurableInt SetModGUID(string modGUID)
+        public new ConfigurableKeyBind SetModGUID(string modGUID)
         {
             base.SetModGUID(modGUID);
             return this;
@@ -87,46 +86,57 @@ namespace Moonstorm.Config
         /// <summary>
         /// <inheritdoc cref="ConfigurableVariable.SetModName(string)"/>
         /// </summary>
-        public new ConfigurableInt SetModName(string modName)
+        public new ConfigurableKeyBind SetModName(string modName)
         {
             base.SetModName(modName);
             return this;
         }
 
-        [Obsolete("Method is wrongly named, Use AddOnConfigChanged instead")]
-        public new ConfigurableInt SetOnConfigChanged(OnConfigChangedDelegate onConfigChanged) => AddOnConfigChanged(onConfigChanged);
-
         /// <summary>
         /// <inheritdoc cref="ConfigurableVariable{T}.AddOnConfigChanged(ConfigurableVariable{T}.OnConfigChangedDelegate)"/>
         /// </summary>
-        public new ConfigurableInt AddOnConfigChanged(OnConfigChangedDelegate onConfigChanged)
+        public new ConfigurableKeyBind AddOnConfigChanged(OnConfigChangedDelegate onConfigChanged)
         {
             base.AddOnConfigChanged(onConfigChanged);
             return this;
         }
 
         /// <summary>
-        /// Chainable method for setting <see cref="SliderConfig"/>
+        /// <inheritdoc cref="ConfigurableVariable{T}.DoConfigure"/>
         /// </summary>
-        public ConfigurableInt SetSliderConfig(IntSliderConfig cfg)
-        {
-            SliderConfig = cfg;
-            return this;
-        }
-
-        /// <summary>
-        /// Chainable method that configures this ConfigurableInt using the specified data. This is normally called automatically by the <see cref="ConfigSystem"/>, but it can be used for early initialization of configs if need be.
-        /// </summary>
-        /// <exception cref="System.NullReferenceException"></exception>
-        public new ConfigurableInt DoConfigure()
+        public new ConfigurableKeyBind DoConfigure()
         {
             base.DoConfigure();
             return this;
         }
 
         /// <summary>
+        /// Chainable method for setting <see cref="KeyBindConfig"/>
+        /// </summary>
+        public ConfigurableKeyBind SetKeyBindConfig(KeyBindConfig cfg)
+        {
+            KeyBindConfig = cfg;
+            return this;
+        }
+
+        /// <summary>
+        /// Checks if the Key combination for this ConfigurableKeyBind was just pressed (Input.GetKeyDown)
+        /// </summary>
+        public bool IsDown => Value.IsDown();
+
+        /// <summary>
+        /// Checks if the Key combination for this ConfigurableKeyBind is currently held down (Input.GetKey)
+        /// </summary>
+        public bool IsPressed => Value.IsPressed();
+
+        /// <summary>
+        /// Checks if the Key combination for this keybind was just lifted (Input.GetKeyUp)
+        /// </summary>
+        public bool IsUp() => Value.IsUp();
+
+        /// <summary>
         /// When <see cref="DoConfigure"/> is called and <see cref="ConfigurableVariable.ConfigEntry"/> is bound, this method gets called. use it to finalize any initialization of the ConfigurableVariable.
-        /// <para>Automatically creates an <see cref="IntSliderOption"/> for this ConfigurableInt if <see cref="ConfigurableVariable.ModGUID"/> and <see cref="ConfigurableVariable.ModName"/> are not null.</para>
+        /// <para>Automatically creates a <see cref="KeyBindOption"/> for this ConfigurableKeyBind if <see cref="ConfigurableVariable.ModGUID"/> and <see cref="ConfigurableVariable.ModName"/> are not null.</para>
         /// </summary>
         protected override void OnConfigured()
         {
@@ -137,18 +147,17 @@ namespace Moonstorm.Config
                 string fileName = System.IO.Path.GetFileNameWithoutExtension(ConfigFile.ConfigFilePath);
                 var guid = separateEntry ? ModGUID + "." + fileName : ModGUID;
                 var name = separateEntry ? ModName + "." + fileName : ModName;
-                var option = SliderConfig == null ? new IntSliderOption(ConfigEntry) : new IntSliderOption(ConfigEntry, SliderConfig);
+                KeyBindOption option = KeyBindConfig == null ? new KeyBindOption(ConfigEntry) : new KeyBindOption(ConfigEntry, KeyBindConfig);
                 ModSettingsManager.AddOption(option, guid, name);
             }
         }
 
         /// <summary>
-        /// Creates a new instance of <see cref="ConfigurableInt"/> with a default value
+        /// Creates a new instance of <see cref="ConfigurableKeyBind"/> with a default value
         /// </summary>
-        /// <param name="defaultVal">The default int value.</param>
-        public ConfigurableInt(int defaultVal) : base(defaultVal)
+        /// <param name="defaultVal">The default KeyboardShortcut value.</param>
+        public ConfigurableKeyBind(KeyboardShortcut defaultVal) : base(defaultVal)
         {
         }
     }
-
 }

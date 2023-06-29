@@ -1,12 +1,12 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
 using Moonstorm.Config;
+using Moonstorm.Loaders;
 using RoR2;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Moonstorm.Loaders;
 using UnityEngine;
 
 namespace Moonstorm
@@ -34,6 +34,7 @@ namespace Moonstorm
 
         private static Dictionary<string, ManagedModData> assemblyNameToModData = new Dictionary<string, ManagedModData>(StringComparer.OrdinalIgnoreCase);
         private static Dictionary<string, ConfigFile> identifierToConfigFile = new Dictionary<string, ConfigFile>(StringComparer.OrdinalIgnoreCase);
+        internal static HashSet<ConfigFile> configFilesWithSeparateRooEntries = new HashSet<ConfigFile>();
 
         private static bool initialized = false;
 
@@ -91,6 +92,17 @@ namespace Moonstorm
         /// <param name="configFile">The ConfigFile which will be identified using <paramref name="identifier"/></param>
         public static void AddConfigFileAndIdentifier(string identifier, ConfigFile configFile)
         {
+            AddConfigFileAndIdentifier(identifier, configFile, false);
+        }
+        /// <summary>
+        /// Adds a <see cref="ConfigFile"/> with it's corresponding Identifier.
+        /// <para>You're strongly advised to create new ConfigFiles by using the <see cref="ConfigLoader"/> class, as that class automatically calls this method.</para>
+        /// </summary>
+        /// <param name="identifier">The identifier for <paramref name="configFile"/></param>
+        /// <param name="configFile">The ConfigFile which will be identified using <paramref name="identifier"/></param>
+        /// <param name="createSeparateRooEntry">If true, the ConfigSystem will create a new Risk of Options entry for the ConfigFile.</param>
+        public static void AddConfigFileAndIdentifier(string identifier, ConfigFile configFile, bool createSeparateRooEntry)
+        {
             if (initialized)
             {
 #if DEBUG
@@ -108,6 +120,8 @@ namespace Moonstorm
             }
 
             identifierToConfigFile.Add(identifier, configFile);
+            if (createSeparateRooEntry)
+                configFilesWithSeparateRooEntries.Add(configFile);
         }
         [SystemInitializer]
         private static void Init()
@@ -188,6 +202,7 @@ namespace Moonstorm
                     case Vector3 _vector3: attribute.ConfigureField<Vector3>(config, _vector3); break;
                     case Vector4 _vector4: attribute.ConfigureField<Vector4>(config, _vector4); break;
                     case Quaternion _quaternion: attribute.ConfigureField<Quaternion>(config, _quaternion); break;
+                    case KeyboardShortcut _keyboardShortcut: attribute.ConfigureField<KeyboardShortcut>(config, _keyboardShortcut); break;
                     default: MSULog.Error($"Due to the nature of the Config system in bepinex, MSU cannot bind a config of type {attribute.Field.FieldType}. If you see this, please create an issue on our github."); break;
                 }
             }

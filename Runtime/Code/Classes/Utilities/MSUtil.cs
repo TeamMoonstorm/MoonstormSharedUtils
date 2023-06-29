@@ -17,6 +17,8 @@ namespace Moonstorm
         public static bool HolyDLLInstalled => IsModInstalled("xyz.yekoc.Holy");
         public static bool RiskOfOptionsInstalled => IsModInstalled("com.rune580.riskofoptions");
 
+        public static bool DebugToolkitInstalled => IsModInstalled("iHarbHD.DebugToolkit");
+
         private static Run currentRun;
         private static ExpansionDef[] currentRunExpansionDefs;
         /// <summary>
@@ -78,6 +80,25 @@ namespace Moonstorm
             currentRunExpansionDefs = ExpansionCatalog.expansionDefs.Where(x => run.IsExpansionEnabled(x)).ToArray();
             return currentRunExpansionDefs;
         }
+
+#if DEBUG
+        /// <summary>
+        /// Invokes a command
+        /// </summary>
+        /// <param name="commandName">The name of the command</param>
+        /// <param name="arguments">The arguments for the command</param>
+        public static void InvokeCommand(string commandName, params string[] arguments)
+        {
+            if (!RoR2.Console.instance)
+                return;
+
+            var args = arguments.ToList();
+            var consoleUser = new RoR2.Console.CmdSender();
+            consoleUser.networkUser = NetworkUser.instancesList.FirstOrDefault();
+            consoleUser.localUser = consoleUser.networkUser ? consoleUser.networkUser.localUser : null;
+            RoR2.Console.instance.RunCmd(consoleUser, commandName, args);
+        }
+#endif
 
         #region Extensions
         /// <summary>
@@ -295,6 +316,6 @@ namespace Moonstorm
             GameObject.Destroy(obj);
 #endif
         }
-#endregion
+        #endregion
     }
 }

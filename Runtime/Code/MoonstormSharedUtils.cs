@@ -1,6 +1,6 @@
 ﻿using BepInEx;
-using RoR2;
 using R2API.ScriptableObjects;
+using RoR2;
 using UnityEngine;
 using Path = System.IO.Path;
 
@@ -24,7 +24,7 @@ namespace Moonstorm
     {
         public const string GUID = "com.TeamMoonstorm.MoonstormSharedUtils";
         public const string MODNAME = "Moonstorm Shared Utils";
-        public const string VERSION = "1.5.5";
+        public const string VERSION = "1.5.6";
 
         /// <summary>
         /// Instance of MSU
