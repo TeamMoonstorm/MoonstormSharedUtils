@@ -234,7 +234,9 @@ namespace Moonstorm
         private void Upgrade()
         {
             int indexOfDisplayPrefab = displayPrefabs.Length;
+#pragma warning disable CS0618 // Type or member is obsolete
             HG.ArrayUtils.ArrayAppend(ref displayPrefabs, displayPrefab);
+#pragma warning restore CS0618 // Type or member is obsolete
 
             for (int i = 0; i < namedDisplayDictionary.Count; i++)
             {
@@ -255,6 +257,7 @@ namespace Moonstorm
 
                     string idrsName = null;
 
+#pragma warning disable CS0618 // Type or member is obsolete
                     if (!input.idrs.address.IsNullOrWhiteSpace())
                     {
                         string[] split = input.idrs.address.Split('/');
@@ -266,12 +269,13 @@ namespace Moonstorm
                     {
                         idrsName = input.idrs.Asset.name;
                     }
+#pragma warning restore CS0618 // Type or member is obsolete
                     input.idrsName = idrsName;
                     return input;
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError($"Failed to upgrade AddressNamedRuleGroup at index {index} for {this}.\n{e}");
+                    MSULog.Error($"Failed to upgrade AddressNamedRuleGroup at index {index} for {this}.\n{e}");
                     return copy;
                 }
             }
@@ -291,7 +295,7 @@ namespace Moonstorm
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError($"Failed to upgrade Displayrule from dictionary index {dictionaryIndex} at {ruleIndex} for {this}.\n{e}");
+                    MSULog.Error($"Failed to upgrade Displayrule from dictionary index {dictionaryIndex} at {ruleIndex} for {this}.\n{e}");
                     return copy;
                 }
             }

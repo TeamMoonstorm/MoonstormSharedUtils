@@ -210,7 +210,7 @@ namespace Moonstorm
         [HideInInspector]
         public int rendererAmounts;
 
-        private async void Awake()
+        private new async void Awake()
         {
             if (Application.IsPlaying(this))
             {
@@ -295,7 +295,7 @@ namespace Moonstorm
             }
             catch (Exception e)
             {
-                Debug.Log($"Failed to validate renderer counts for {this}: {e}");
+                MSULog.Error($"Failed to validate renderer counts for {this}: {e}");
             }
         }
 
@@ -307,7 +307,7 @@ namespace Moonstorm
             }
             catch (Exception e)
             {
-                Debug.LogError($"Failed to validate Display Address for {this}: {e}");
+                MSULog.Error($"Failed to validate Display Address for {this}: {e}");
             }
         }
 
@@ -322,7 +322,7 @@ namespace Moonstorm
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError($"Failed to validate projectile ghost replacement index {i}: {e}");
+                    MSULog.Error($"Failed to validate projectile ghost replacement index {i}: {e}");
                 }
             }
         }
@@ -343,7 +343,7 @@ namespace Moonstorm
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError($"Failed to validate projectile ghost replacement index {i}: {e}");
+                    MSULog.Error($"Failed to validate projectile ghost replacement index {i}: {e}");
                 }
             }
         }
@@ -352,10 +352,9 @@ namespace Moonstorm
         {
             for (int i = 0; i < _minionSkinReplacements.Length; i++)
             {
-                UnityEngine.Object obj = null;
                 try
                 {
-                    obj = await Addressables.LoadAssetAsync<GameObject>(_minionSkinReplacements[i].minionPrefabAddress).Task;
+                    Object obj = await Addressables.LoadAssetAsync<GameObject>(_minionSkinReplacements[i].minionPrefabAddress).Task;
                     var body = (GameObject)obj;
                     if (!body.GetComponent<CharacterBody>())
                     {
@@ -364,7 +363,7 @@ namespace Moonstorm
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError($"Failed to validate projectile ghost replacement index {i}: {e}");
+                    MSULog.Error($"Failed to validate projectile ghost replacement index {i}: {e}");
                 }
             }
         }

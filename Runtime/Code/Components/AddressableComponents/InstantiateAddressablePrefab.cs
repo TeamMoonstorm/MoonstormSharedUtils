@@ -46,7 +46,7 @@ namespace Moonstorm.Components.Addressables
 
             if (string.IsNullOrWhiteSpace(address) || string.IsNullOrEmpty(address))
             {
-                Debug.LogWarning($"Invalid address in {this}, address is null, empty, or white space");
+                MSULog.Warning($"Invalid address in {this}, address is null, empty, or white space");
                 return;
             }
 

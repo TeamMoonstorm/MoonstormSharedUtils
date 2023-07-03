@@ -220,6 +220,7 @@ namespace Moonstorm
                         return input;
 
                     string keyAssetName = null;
+#pragma warning disable CS0618 // Type or member is obsolete
                     switch (input.keyAsset.loadAssetFrom)
                     {
                         case AddressableKeyAsset.KeyAssetAddressType.UsingDirectReference:
@@ -234,12 +235,13 @@ namespace Moonstorm
                             keyAssetName = input.keyAsset.address;
                             break;
                     }
+#pragma warning restore CS0618 // Type or member is obsolete
                     input.keyAssetName = keyAssetName;
                     return input;
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError($"Failed to upgrade AddressNamedRuleGroup at index {index} for {this}.\n{e}");
+                    MSULog.Error($"Failed to upgrade AddressNamedRuleGroup at index {index} for {this}.\n{e}");
                     return copy;
                 }
             }
@@ -255,6 +257,7 @@ namespace Moonstorm
                     }
 
                     string displayPrefabName = null;
+#pragma warning disable CS0618 // Type or member is obsolete
                     if (input.displayPrefab.address.IsNullOrWhiteSpace())
                     {
                         displayPrefabName = input.displayPrefab.Asset.name;
@@ -265,6 +268,7 @@ namespace Moonstorm
                         split = split[split.Length - 1].Split('.');
                         displayPrefabName = split[0];
                     }
+#pragma warning restore CS0618 // Type or member is obsolete
 
                     input.displayPrefabName = displayPrefabName;
                     return input;

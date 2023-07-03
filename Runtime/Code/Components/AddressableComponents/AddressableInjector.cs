@@ -33,11 +33,7 @@ namespace Moonstorm.Components.Addressables
             {
 #if DEBUG
                 string msg = $"Invalid address in {this}, address is null, empty, or white space";
-#if UNITY_EDITOR
-                Debug.LogWarning(msg);
-#else
                 MSULog.Warning(msg);
-#endif
 #endif
                 return;
             }
@@ -46,11 +42,7 @@ namespace Moonstorm.Components.Addressables
             {
 #if DEBUG
                 string msg = $"No Target Component Set in {this}";
-#if UNITY_EDITOR
-                Debug.LogWarning(msg);
-#else
                 MSULog.Warning(msg);
-#endif
 #endif
                 return;
             }
@@ -59,11 +51,7 @@ namespace Moonstorm.Components.Addressables
             {
 #if DEBUG
                 string msg = $"{this}'s targetMemberInfoName is null, empty or white space";
-#if UNITY_EDITOR
-                Debug.LogWarning(msg);
-#else
                 MSULog.Warning(msg);
-#endif
 #endif
                 return;
             }
@@ -73,11 +61,7 @@ namespace Moonstorm.Components.Addressables
             {
 #if DEBUG
                 string msg = $"{this} failed finding the MemberInfo to target based on the name \"{targetMemberInfoName}\". Target Component: {targetComponent}";
-#if UNITY_EDITOR
-                Debug.LogWarning(msg);
-#else
-                MSULog.Warning(msg);
-#endif
+                MSULog.Warning(msg); ;
 #endif
                 return;
             }

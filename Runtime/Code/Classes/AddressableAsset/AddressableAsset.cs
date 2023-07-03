@@ -55,7 +55,9 @@ namespace Moonstorm.AddressableAssets
                     var method = stackTrace.GetFrame(1).GetMethod();
                     MSULog.Warning($"Assembly {Assembly.GetCallingAssembly()} is trying to access an {GetType()} before AddressableAssets have initialize!" +
                         $"\n Consider using AddressableAsset.OnAddressableAssetsLoaded for running code that depends on AddressableAssets! (Method: {method.DeclaringType.FullName}.{method.Name}()");
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     Load();
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 }
                 return asset;
             }
@@ -127,7 +129,9 @@ namespace Moonstorm.AddressableAssets
         }
 
         [SystemInitializer]
+#pragma warning disable IDE0051 // Remove unused private members
         private static void Init()
+#pragma warning restore IDE0051 // Remove unused private members
         {
             RoR2Application.onLoad += FinishAdressableAssets;
         }

@@ -370,6 +370,7 @@ namespace Moonstorm.Components
 
         private void FindIdleStateMachine(EventCard card)
         {
+#pragma warning disable CS0618 // Type or member is obsolete
             if (card.eventFlags.HasFlag(EventFlags.WeatherRelated))
             {
                 EntityStateMachine weatherRelatedMachine = EntityStateMachine.FindByCustomName(gameObject, "Weather");
@@ -377,6 +378,7 @@ namespace Moonstorm.Components
                 TargetedStateMachine = isInMainState ? weatherRelatedMachine : null;
                 return;
             }
+#pragma warning restore CS0618 // Type or member is obsolete
 
             if (!card.requiredStateMachine.IsNullOrWhiteSpace())
             {

@@ -21,7 +21,7 @@ namespace Moonstorm.Components.Addressables
         {
             if (Application.isPlaying && !Application.isEditor)
             {
-                Debug.LogError($"Lingering camera injector in {gameObject}, Ensure that these scripts are NOT present on finalized builds!!!");
+                MSULog.Fatal($"Lingering camera injector in {gameObject}, Ensure that these scripts are NOT present on finalized builds!!!");
                 Destroy(gameObject);
                 return;
             }

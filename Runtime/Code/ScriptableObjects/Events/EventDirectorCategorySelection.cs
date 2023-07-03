@@ -204,7 +204,7 @@ namespace Moonstorm
                 EventCategory category = categories[i];
                 if (category.selectionWeight <= 0f)
                 {
-                    Debug.LogError($"{category.categoryName} in {this} has no weight!");
+                    MSULog.Error($"{category.categoryName} in {this} has no weight!");
                 }
             }
         }

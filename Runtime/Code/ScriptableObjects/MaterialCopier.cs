@@ -60,14 +60,14 @@ namespace Moonstorm
             {
                 UpgradeSingle(pair.material, pair.materialAddress);
             }
-            Debug.Log("Upgrade finished, remember to call \"FinalizeMaterialsWithAddressableMaterialShader\" method in your AssetsLoader!");
+            MSULog.Info("Upgrade finished, remember to call \"FinalizeMaterialsWithAddressableMaterialShader\" method in your AssetsLoader!");
         }
 #endif
 
         private void UpgradeSingle(Material material, string address)
         {
 #if DEBUG
-            Debug.Log($"Upgraded {material} to use AddressableMaterialShader");
+            MSULog.Info($"Upgraded {material} to use AddressableMaterialShader");
 #endif
             var shader = Shader.Find("AddressableMaterialShader");
             material.shader = shader;

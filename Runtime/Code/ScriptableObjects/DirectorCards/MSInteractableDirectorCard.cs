@@ -20,13 +20,19 @@ namespace Moonstorm
         [Header("Settings for DirectorAPI")]
         public DirectorCard directorCard;
 
-        [Tooltip("The category for this interactable")]
+        [Tooltip("The category for this interactable. If interactableCategory is set to Custom, the option to set a Custom Category will appear.")]
         public InteractableCategory interactableCategory;
 
-        [Tooltip("The name of the custom category")]
+        [Tooltip("The name of the custom category. DirectorAPI automatically adds the category if its not present in the dccs")]
         public string customCategory;
+        [Tooltip("The weight for the custom category.\nA list of the vanilla weights:" +
+            "\nBasic Monsters: 4" +
+            "\nMinibosses: 2" +
+            "\nChampions: 2" +
+            "\nSpecial: 1")]
+        public int customCategoryWeight = 1;
 
-        [Tooltip("The stages where this monster can spawn")]
+        [Tooltip("The stages where this interactable can spawn")]
         [EnumMask(typeof(R2API.DirectorAPI.Stage))]
         public R2API.DirectorAPI.Stage stages;
 
@@ -53,6 +59,7 @@ namespace Moonstorm
                     _directorCardHolder.Card = directorCard;
                     _directorCardHolder.InteractableCategory = interactableCategory;
                     _directorCardHolder.CustomInteractableCategory = customCategory;
+                    _directorCardHolder.InteractableCategorySelectionWeight = customCategoryWeight;
                     _directorCardHolder.MonsterCategory = MonsterCategory.Invalid;
                     return _directorCardHolder;
                 }

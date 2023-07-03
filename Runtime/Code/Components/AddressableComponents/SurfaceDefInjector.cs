@@ -23,7 +23,7 @@ namespace Moonstorm.Components.Addressables
         {
             if (string.IsNullOrWhiteSpace(surfaceDefAddress) || string.IsNullOrEmpty(surfaceDefAddress))
             {
-                Debug.LogWarning($"Invalid address in {this}, address is null, empty, or white space");
+                MSULog.Warning($"Invalid address in {this}, address is null, empty, or white space");
                 return;
             }
 

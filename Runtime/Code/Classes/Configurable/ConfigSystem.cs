@@ -32,8 +32,8 @@ namespace Moonstorm
             }
         }
 
-        private static Dictionary<string, ManagedModData> assemblyNameToModData = new Dictionary<string, ManagedModData>(StringComparer.OrdinalIgnoreCase);
-        private static Dictionary<string, ConfigFile> identifierToConfigFile = new Dictionary<string, ConfigFile>(StringComparer.OrdinalIgnoreCase);
+        private static readonly Dictionary<string, ManagedModData> assemblyNameToModData = new Dictionary<string, ManagedModData>(StringComparer.OrdinalIgnoreCase);
+        private static readonly Dictionary<string, ConfigFile> identifierToConfigFile = new Dictionary<string, ConfigFile>(StringComparer.OrdinalIgnoreCase);
         internal static HashSet<ConfigFile> configFilesWithSeparateRooEntries = new HashSet<ConfigFile>();
 
         private static bool initialized = false;
@@ -124,7 +124,9 @@ namespace Moonstorm
                 configFilesWithSeparateRooEntries.Add(configFile);
         }
         [SystemInitializer]
+#pragma warning disable IDE0051 // Remove unused private members
         private static void Init()
+#pragma warning restore IDE0051 // Remove unused private members
         {
             initialized = true;
             RoR2Application.onLoad += BindConfigs;
@@ -138,7 +140,8 @@ namespace Moonstorm
 
         private static void BindConfigurableFieldAttributes()
         {
-            var instances = HG.Reflection.SearchableAttribute.GetInstances<ConfigurableFieldAttribute>() ?? new List<HG.Reflection.SearchableAttribute>();
+            List<ConfigurableFieldAttribute> instances = new List<ConfigurableFieldAttribute>();
+            HG.Reflection.SearchableAttribute.GetInstances<ConfigurableFieldAttribute>(instances);
             MSULog.Info($"Configuring a total of {instances.Count} fields with ConfigurableFieldAttributes.");
             foreach (ConfigurableFieldAttribute configurableField in instances)
             {
@@ -228,10 +231,12 @@ namespace Moonstorm
                     if (configurableVariable.IsConfigured || !configurableVariable.IsActuallyConfigurable)
                         continue;
 
+#pragma warning disable IDE0074 // Use compound assignment
                     if (configurableVariable.ConfigFile == null)
                     {
                         configurableVariable.ConfigFile = configurableVariable.ConfigIdentifier.IsNullOrWhiteSpace() ? data.mainConfigFile : GetConfigFile(configurableVariable.ConfigIdentifier);
                     }
+#pragma warning restore IDE0074 // Use compound assignment
 
                     configurableVariable.Section = configurableVariable.Section.IsNullOrWhiteSpace() ? MSUtil.NicifyString(memberInfo.DeclaringType.Name) : configurableVariable.Section;
                     configurableVariable.Key = configurableVariable.Key.IsNullOrWhiteSpace() ? MSUtil.NicifyString(memberInfo.Name) : configurableVariable.Key;
