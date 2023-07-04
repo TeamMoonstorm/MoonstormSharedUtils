@@ -173,6 +173,9 @@ namespace Moonstorm
                 case Enum _enum:
                     ModSettingsManager.AddOption(new ChoiceOption(ConfigEntryBase), guid, ownerName);
                     break;
+                case KeyboardShortcut _keyboardShortcut:
+                    ModSettingsManager.AddOption(new KeyBindOption(GetConfigEntry<KeyboardShortcut>()), guid, ownerName);
+                    break;
             }
         }
 

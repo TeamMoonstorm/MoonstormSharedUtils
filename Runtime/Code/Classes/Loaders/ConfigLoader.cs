@@ -168,16 +168,7 @@ namespace Moonstorm.Loaders
         [Obsolete("Method is wrongly named, use \"MakeConfigurableString\" instead.")]
         public static ConfigurableString MakeConfigurableInt(string defaultVal, Action<ConfigurableString> initializer = null)
         {
-            ThrowIfNoInstance($"Create {nameof(ConfigurableString)}");
-
-            var metadata = Instance.MainClass.Info.Metadata;
-            var cfg = new ConfigurableString(defaultVal)
-            {
-                ModGUID = metadata.GUID,
-                ModName = metadata.Name,
-            };
-            initializer?.Invoke(cfg);
-            return cfg;
+            return MakeConfigurableString(defaultVal, initializer);
         }
 
         /// <summary>
