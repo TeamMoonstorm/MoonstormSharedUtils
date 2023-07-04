@@ -12,6 +12,7 @@ namespace Moonstorm.EditorUtils.Inspectors
     {
         VisualElement inspectorData;
         PropertyField customCategory;
+        PropertyField customCategoryWeight;
 
         EnumFlagsField stagesField;
         PropertyField customStages;
@@ -22,6 +23,7 @@ namespace Moonstorm.EditorUtils.Inspectors
             {
                 inspectorData = DrawInspectorElement.Q<VisualElement>("InspectorDataContainer");
                 customCategory = inspectorData.Q<PropertyField>("customCategory");
+                customCategoryWeight = inspectorData.Q<PropertyField>("customCategoryWeight");
                 customStages = inspectorData.Q<PropertyField>("customStages");
             };
         }
@@ -50,6 +52,7 @@ namespace Moonstorm.EditorUtils.Inspectors
             bool shouldDisplay = Enum.GetName(typeof(R2API.DirectorAPI.MonsterCategory), R2API.DirectorAPI.MonsterCategory.Custom) == val;
 
             customCategory.SetDisplay(shouldDisplay);
+            customCategoryWeight.SetDisplay(shouldDisplay);
         }
 
         private void OnStageSet(ChangeEvent<Enum> evt = null)

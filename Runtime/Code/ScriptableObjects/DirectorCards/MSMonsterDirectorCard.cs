@@ -18,7 +18,7 @@ namespace Moonstorm
     {
         [Space(10)]
         [Header("Settings for DirectorAPI")]
-        public DirectorCard directorCard;
+        public DirectorCard directorCard = new DirectorCard();
 
         [Tooltip("The category for this monster. If MonsterCategory is set to Custom, the option to set a Custom Category will appear")]
         public MonsterCategory monsterCategory;
@@ -30,7 +30,7 @@ namespace Moonstorm
             "\nMinibosses: 2" +
             "\nChampions: 2" +
             "\nSpecial: 1")]
-        public int customCategoryWeight = 1;
+        public float customCategoryWeight = 1;
 
         [Tooltip("The stages where this monster can spawn")]
         [EnumMask(typeof(R2API.DirectorAPI.Stage))]
@@ -71,7 +71,7 @@ namespace Moonstorm
         }
         private DirectorCardHolder _directorCardHolder = null;
 
-        private void Awake()
+        private new void Awake()
         {
             base.Awake();
             directorCard.spawnCard = this as CharacterSpawnCard;

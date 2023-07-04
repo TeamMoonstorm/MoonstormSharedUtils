@@ -27,6 +27,7 @@
         </ui:VisualElement>
         <uie:PropertyField name="monsterCategory" binding-path="monsterCategory" />
         <uie:PropertyField name="customCategory" binding-path="customCategory" />
+        <uie:PropertyField name="customCategoryWeight" binding-path="customCategoryWeight" />
         <uie:PropertyField name="customStages" binding-path="customStages" />
         <uie:PropertyField name="requiredExpansions" binding-path="requiredExpansions" />
     </ui:VisualElement>

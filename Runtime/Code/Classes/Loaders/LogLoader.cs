@@ -179,13 +179,37 @@ namespace Moonstorm.Loaders
         [Flags]
         public enum BreakOnLog
         {
+            /// <summary>
+            /// No Level of Debugging triggers a break
+            /// </summary>
             None = 0,
+            /// <summary>
+            /// Message Level Debugging triggers a break
+            /// </summary>
             Message = 1,
+            /// <summary>
+            /// Info Level Debugging triggers a break
+            /// </summary>
             Info = 2,
+            /// <summary>
+            /// Debug Level Debugging triggers a break
+            /// </summary>
             Debug = 4,
+            /// <summary>
+            /// Warning Level Debugging triggers a break
+            /// </summary>
             Warning = 8,
+            /// <summary>
+            /// Error Level Debugging triggers a break
+            /// </summary>
             Error = 16,
+            /// <summary>
+            /// Fatal Level Debugging triggers a break
+            /// </summary>
             Fatal = 32,
+            /// <summary>
+            /// All Levels Debugging triggers a break
+            /// </summary>
             Everything = ~None,
         };
 

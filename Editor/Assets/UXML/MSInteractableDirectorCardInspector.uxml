@@ -22,6 +22,7 @@
             <uie:PropertyField name="forbiddenUnlockableDef" binding-path="directorCard.forbiddenUnlockableDef" />
         </ui:VisualElement>
         <uie:PropertyField name="interactableCategory" binding-path="interactableCategory" />
+        <uie:PropertyField name="customCategoryWeight" binding-path="customCategoryWeight" />
         <uie:PropertyField name="customCategory" binding-path="customCategory" />
         <uie:PropertyField name="customStages" binding-path="customStages" />
         <uie:PropertyField name="requiredExpansions" binding-path="requiredExpansions" />
