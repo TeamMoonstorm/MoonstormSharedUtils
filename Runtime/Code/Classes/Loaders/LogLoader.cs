@@ -30,6 +30,7 @@ namespace Moonstorm.Loaders
                 {
                     throw new InvalidOperationException($"Singleton class \"{typeof(T).Name}\" inheriting LogLoader was instantiated twice.");
                 }
+                Instance = this as T;
             }
             catch (Exception e) { MSULog.Error(e); }
         }

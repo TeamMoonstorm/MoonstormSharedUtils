@@ -84,10 +84,6 @@ namespace Moonstorm.Components
         [Tooltip("The current amount of Credits")]
         public float eventCredits;
 
-        // TODO: Remove before merging
-        [Tooltip("The current amount of Credits")]
-        public float eventCreditsOld;
-
         [Tooltip("The amount of time that takes between new credits for the director")]
         public RangeFloat intervalResetRange;
 
@@ -143,7 +139,7 @@ namespace Moonstorm.Components
                 EventDirectorCategorySelection = EventCatalog.GetCategoryFromSceneDef(SceneInfo.instance.sceneDef);
                 if (EventDirectorCategorySelection == null)
                 {
-                    MSULog.Error($"COULD NOT RETRIEVE EVENT CATEGORY FOR SCENE {SceneInfo.instance.sceneDef}!!!");
+                    MSULog.Fatal($"COULD NOT RETRIEVE EVENT CATEGORY FOR SCENE {SceneInfo.instance.sceneDef}!!!");
 #if DEBUG
                     Log($"Destroying root");
                     Log(null);
@@ -157,8 +153,6 @@ namespace Moonstorm.Components
                 Log("Final Card Selection: " + string.Join("\n", EventCardSelection.choices.Where(x => x.value).Select(x => x.value)));
                 Log(null);
 #endif
-                //Log below causes issues, no idea why
-                //Log($"Awakened with the following EventCards:\n{string.Join("\n", EventCardSelection.choices.Select(c => c.value.name))}");
             }
         }
         private void OnEnable()
@@ -203,37 +197,15 @@ namespace Moonstorm.Components
 #endif
                         intervalStopWatch = newStopwatchVal;
 
-                        float compensatedDifficultyCoefficient = Run.instance.compensatedDifficultyCoefficient;
-                        float stagesCleared = Run.instance.stageClearCount;
-
-                        float playerTeamLevel = TeamManager.instance.GetTeamLevel(TeamIndex.Player);
-
-                        // TODO: Remove before mergining
-                        float eventScalingOld = compensatedDifficultyCoefficient / Run.instance.participatingPlayerCount;
-
-                        float eventScaling = playerTeamLevel * stagesCleared;
-
-
-
+                        float eventScaling = GetEventScaling();
 #if DEBUG
-                        // TODO: Clean up logging before merge
-                        Log($">Stages Cleared: {stagesCleared}");
-                        Log($">playerTeamLevel: {playerTeamLevel}");
                         Log($">Event Scaling: {eventScaling}");
-                        Log($">compensated difficulty coefficient: {compensatedDifficultyCoefficient}" +
-                                $"\nevent scaling old: {eventScalingOld}");
 #endif
-                        // TODO: Remove before mergining
-                        float newCreditsOld = eventRNG.RangeFloat(creditGainRange.min, creditGainRange.max) * eventScaling;
-                        eventCreditsOld += newCreditsOld;
 
                         float newCredits = eventRNG.RangeFloat(creditGainRange.min, creditGainRange.max) * eventScaling;
                         eventCredits += newCredits;
 
 #if DEBUG
-                        // TODO: Clean up logging before merge
-                        Log($">new Credits (Old Method): {newCreditsOld}" +
-                                $"\nTotal credits so far (eventCreditsOld): {eventCreditsOld}");
                         Log($">new Credits: {newCredits}" +
                                 $"\nTotal credits so far: {eventCredits}");
 #endif
@@ -244,6 +216,18 @@ namespace Moonstorm.Components
                     }
                 }
             }
+        }
+
+        private float GetEventScaling()
+        {
+            int currentStage = Run.instance.stageClearCount + 1;
+            float stageModifier = currentStage / Run.stagesPerLoop;
+            float playerTeamLevel = TeamManager.instance.GetTeamLevel(TeamIndex.Player);
+#if DEBUG
+            Log($">Stages Cleared: {currentStage}");
+            Log($">playerTeamLevel: {playerTeamLevel}");
+#endif
+            return playerTeamLevel * stageModifier;
         }
 
         private void Simulate()
@@ -296,8 +280,6 @@ namespace Moonstorm.Components
 
             LastSuccesfulEventCard = currentEventCard;
 
-            // TODO: Clean up code before merge
-            eventCreditsOld -= effectiveCost;
             
             eventCredits -= effectiveCost;
             TotalCreditsSpent += effectiveCost;

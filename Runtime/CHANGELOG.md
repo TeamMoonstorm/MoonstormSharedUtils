@@ -2,6 +2,9 @@
 
 ## Runtime:
 
+* Modified the ``EventDirector`` scaling system to no longer be exponential.
+    * New scaling formula is ``currentStageCount / 5``
+* Fixed issue where CharacterBase classes wouldnt be added to the CharacterModule's Dictioanries.
 * Added ``LogLoader``, a Logging system for mods
     * Based off the ``MSULog`` class
     * Uses the ``BepInEx`` ``ManualLogSource``
@@ -15,7 +18,7 @@
     * A ``DelegateContainer`` stores these invoked methods, can be used to manually raise said methods.
 * Deprecated ``ConfigurableString MakeConfigurableInt(string, Action<ConfigurableString>)`` as it was wrongly named.
     * Added a new method with the correct name to rectify this
-* Fixed an issue where ``MSInteractableDirectorCard`` and ``MSMonsterDirectorCard`` couldn't specify the custom category's Weights.
+* Fixed an issue where ``MSInteractableDirectorCard`` and ``MSMonsterDirectorCard`` couldn't specify the custom category's Weights. 
 
 ## Debug Build Exclusive:
 * Removed the Material Tester. We recommend you use [this](https://thunderstore.io/package/Groove_Salad/RuntimeMaterialInspector/1.0.0/) instead

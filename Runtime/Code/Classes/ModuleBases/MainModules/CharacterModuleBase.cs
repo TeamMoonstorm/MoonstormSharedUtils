@@ -120,6 +120,7 @@ namespace Moonstorm
                     MSULog.Debug($"Character {survivor} Initialized and ensured it's body, master prefabs & survivor def in {SerializableContentPack.name}");
                     break;
             }
+            characters.Add(contentClass.BodyPrefab, contentClass);
         }
         #endregion
 
