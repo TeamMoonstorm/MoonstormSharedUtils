@@ -32,7 +32,8 @@ namespace Moonstorm
             "\nDrones: 14" +
             "\nMisc: 7" +
             "\nRare: 0.4" +
-            "\nDuplicator: 8")]
+            "\nDuplicator: 8" +
+            "\nVoid Stuff: 3")]
         public float customCategoryWeight = 1;
 
         [Tooltip("The stages where this interactable can spawn")]
