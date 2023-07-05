@@ -24,7 +24,7 @@ namespace Moonstorm
     {
         public const string GUID = "com.TeamMoonstorm.MoonstormSharedUtils";
         public const string MODNAME = "Moonstorm Shared Utils";
-        public const string VERSION = "1.5.6";
+        public const string VERSION = "1.6.0";
 
         /// <summary>
         /// Instance of MSU
@@ -38,7 +38,6 @@ namespace Moonstorm
         /// The main AssetBundle of MSU
         /// </summary>
         public static AssetBundle MSUAssetBundle { get; private set; }
-        private static R2APISerializableContentPack MSUSerializableContentPack { get; set; }
         private static string AssemblyDir { get => Path.Combine(Path.GetDirectoryName(PluginInfo.Location), "assetbundles"); }
 
         private void Awake()

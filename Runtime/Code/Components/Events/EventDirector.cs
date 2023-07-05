@@ -198,9 +198,6 @@ namespace Moonstorm.Components
                         intervalStopWatch = newStopwatchVal;
 
                         float eventScaling = GetEventScaling();
-#if DEBUG
-                        Log($">Event Scaling: {eventScaling}");
-#endif
 
                         float newCredits = eventRNG.RangeFloat(creditGainRange.min, creditGainRange.max) * eventScaling;
                         eventCredits += newCredits;
@@ -220,14 +217,20 @@ namespace Moonstorm.Components
 
         private float GetEventScaling()
         {
-            int currentStage = Run.instance.stageClearCount + 1;
+            float currentStage = Run.instance.stageClearCount + 1;
             float stageModifier = currentStage / Run.stagesPerLoop;
             float playerTeamLevel = TeamManager.instance.GetTeamLevel(TeamIndex.Player);
+            float scaling = playerTeamLevel * stageModifier * GetDifficultyScalingValue;
 #if DEBUG
-            Log($">Stages Cleared: {currentStage}");
-            Log($">playerTeamLevel: {playerTeamLevel}");
+            Log($">Selected Difficulty Scaling Coefficient: {GetDifficultyScalingValue}");
+            Log($">Current Stage: {currentStage}");
+            Log($">PlayerTeamLevel: {playerTeamLevel}");
+            Log($">Drizzle Scaling: {playerTeamLevel * stageModifier * 1}");
+            Log($">Rainstorm Scaling: {playerTeamLevel * stageModifier * 2}");
+            Log($">Monsoom Scaling: {playerTeamLevel * stageModifier * 3}");
+            Log($">Selected Difficulty Scaling: {scaling}");
 #endif
-            return playerTeamLevel * stageModifier;
+            return scaling;
         }
 
         private void Simulate()
@@ -457,7 +460,7 @@ namespace Moonstorm.Components
                 MSULog.Info(log.ToString());
                 log.Clear();
             }
-            log.AppendLine(msg + "\n");
+            log.AppendLine(msg);
         }
         private bool AttemptForceSpawnEvent(EventCard card)
         {

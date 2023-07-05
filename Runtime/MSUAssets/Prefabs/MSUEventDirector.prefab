@@ -86,7 +86,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   creditGainRange:
     min: 1
-    max: 55
+    max: 25
   eventCredits: 0
   intervalResetRange:
     min: 15

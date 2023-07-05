@@ -1,9 +1,11 @@
 # '1.6.0' - LogLoader and Utilities
 
+* Reformatted the Readme
+
 ## Runtime:
 
 * Modified the ``EventDirector`` scaling system to no longer be exponential.
-    * New scaling formula is ``currentStageCount / 5``
+    * New scaling formula is ``PlayerTeamLevel * (currentStageCount / 5) * DifficultyScalingValue``
 * Fixed issue where CharacterBase classes wouldnt be added to the CharacterModule's Dictioanries.
 * Added ``LogLoader``, a Logging system for mods
     * Based off the ``MSULog`` class
