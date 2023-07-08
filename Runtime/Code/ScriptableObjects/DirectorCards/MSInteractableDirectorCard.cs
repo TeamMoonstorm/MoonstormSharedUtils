@@ -16,6 +16,40 @@ namespace Moonstorm
     [CreateAssetMenu(fileName = "New InteractableDirectorCard", menuName = "Moonstorm/Director Cards/Interactable Director Card", order = 5)]
     public class MSInteractableDirectorCard : InteractableSpawnCard
     {
+        /// <summary>
+        /// An struct used to compare if two <see cref="MSInteractableDirectorCard"/> implement the same Interactable prefab.
+        /// </summary>
+        public struct PrefabComparer : IEqualityComparer<InteractableSpawnCard>
+        {
+            /// <summary>
+            /// Checks if two InteractableSpawnCard implements the same interactable prefab
+            /// </summary>
+            /// <returns>True if both cards are not null and implement the same prefab, false otherwise</returns>
+            public bool Equals(InteractableSpawnCard x, InteractableSpawnCard y)
+            {
+                if (!x || !y)
+                    return false;
+
+                if (!x.prefab || !y.prefab)
+                    return false;
+
+                return x.prefab == y.prefab;
+            }
+
+            /// <summary>
+            /// Returns a hash code from this prefab comparer.
+            /// </summary>
+            /// <returns>-1 if the card is null or has no prefab, otherwise it calls the prefab's GetHashCode function</returns>
+            public int GetHashCode(InteractableSpawnCard obj)
+            {
+                if (!obj)
+                    return -1;
+                if (!obj.prefab)
+                    return -1;
+
+                return obj.prefab.GetHashCode();
+            }
+        }
         [Space(10)]
         [Header("Settings for DirectorAPI")]
         public DirectorCard directorCard = new DirectorCard();

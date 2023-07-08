@@ -16,6 +16,40 @@ namespace Moonstorm
     [CreateAssetMenu(fileName = "New MonsterDirectorCard", menuName = "Moonstorm/Director Cards/MonsterDirectorCard", order = 5)]
     public class MSMonsterDirectorCard : CharacterSpawnCard
     {
+        /// <summary>
+        /// An struct used to compare if two <see cref="MSMonsterDirectorCard"/> implement the same Monster prefab.
+        /// </summary>
+        public struct PrefabComparer : IEqualityComparer<MSMonsterDirectorCard>
+        {
+            /// <summary>
+            /// Checks if two MSMonsterDirectorCards implements the same monster prefab
+            /// </summary>
+            /// <returns>True if both cards are not null and implement the same prefab, false otherwise</returns>
+            public bool Equals(MSMonsterDirectorCard x, MSMonsterDirectorCard y)
+            {
+                if (!x || !y)
+                    return false;
+
+                if (!x.prefab || !y.prefab)
+                    return false;
+
+                return x.prefab == y.prefab;
+            }
+
+            /// <summary>
+            /// Returns a hash code from this prefab comparer.
+            /// </summary>
+            /// <returns>-1 if the card is null or has no prefab, otherwise it calls the prefab's GetHashCode function</returns>
+            public int GetHashCode(MSMonsterDirectorCard obj)
+            {
+                if (!obj)
+                    return -1;
+                if (!obj.prefab)
+                    return -1;
+
+                return obj.prefab.GetHashCode();
+            }
+        }
         [Space(10)]
         [Header("Settings for DirectorAPI")]
         public DirectorCard directorCard = new DirectorCard();

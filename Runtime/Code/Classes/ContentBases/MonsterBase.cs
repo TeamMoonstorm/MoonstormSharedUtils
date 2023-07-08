@@ -1,15 +1,21 @@
 ﻿
+using System;
+using System.Collections.Generic;
+
 namespace Moonstorm
 {
     /// <summary>
     /// <inheritdoc cref="CharacterBase"/>
-    /// <para>A MonsterBase also contains a <see cref="MonsterDirectorCard"/>, used for spawning the monster ingame with the Combat Director</para>
+    /// <para>A MonsterBase also contains a <see cref="MonsterDirectorCards"/> List, used for spawning the monster ingame with the Combat Director</para>
     /// </summary>
     public abstract class MonsterBase : CharacterBase
     {
+        [Obsolete("Use the MonsterDirectorCards list instead.")]
+        public virtual MSMonsterDirectorCard MonsterDirectorCard { get; }
+
         /// <summary>
-        /// The <see cref="MSMonsterDirectorCard"/> for this Monster
+        /// A list of <see cref="MSMonsterDirectorCard"/> for this Monster.
         /// </summary>
-        public abstract MSMonsterDirectorCard MonsterDirectorCard { get; }
+        public virtual List<MSMonsterDirectorCard> MonsterDirectorCards { get; } = new List<MSMonsterDirectorCard>();
     }
 }

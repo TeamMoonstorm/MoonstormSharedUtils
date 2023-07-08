@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 namespace Moonstorm
@@ -33,7 +34,7 @@ namespace Moonstorm
         /// <summary>
         /// Returns all the MonsterBases that have <see cref="MSMonsterDirectorCard"/>
         /// </summary>
-        public static MonsterBase[] MonstersWithCards { get => MoonstormMonsters.Where(mb => mb.MonsterDirectorCard != null).ToArray(); }
+        public static MonsterBase[] MonstersWithCards { get => MoonstormMonsters.Where(mb => mb.MonsterDirectorCards.Count > 0).ToArray(); }
         /// <summary>
         /// Returns all the SurvivorBases from the <see cref="MoonstormCharacters"/>
         /// </summary>
@@ -56,8 +57,8 @@ namespace Moonstorm
         /// </summary>
         public static ResourceAvailability moduleAvailability;
 
-        private static Dictionary<DirectorAPI.Stage, List<MSMonsterDirectorCard>> currentStageToCards = new Dictionary<DirectorAPI.Stage, List<MSMonsterDirectorCard>>();
-        private static Dictionary<string, List<MSMonsterDirectorCard>> currentCustomStageToCards = new Dictionary<string, List<MSMonsterDirectorCard>>(StringComparer.OrdinalIgnoreCase);
+        private static Dictionary<DirectorAPI.Stage, HashSet<MSMonsterDirectorCard>> currentStageToCards = new Dictionary<DirectorAPI.Stage, HashSet<MSMonsterDirectorCard>>();
+        private static Dictionary<string, HashSet<MSMonsterDirectorCard>> currentCustomStageToCards = new Dictionary<string, HashSet<MSMonsterDirectorCard>>(StringComparer.OrdinalIgnoreCase);
         #endregion
 
         [SystemInitializer(new Type[] { typeof(BodyCatalog), typeof(MasterCatalog) })]
@@ -112,6 +113,13 @@ namespace Moonstorm
             {
                 case MonsterBase monster:
                     AddSafely(ref SerializableContentPack.masterPrefabs, monster.MasterPrefab, "MasterPrefabs");
+#pragma warning disable CS0618 // Type or member is obsolete
+                    var cardObsolete = monster.MonsterDirectorCard;
+#pragma warning restore CS0618 // Type or member is obsolete
+                    if (cardObsolete && !monster.MonsterDirectorCards.Contains(cardObsolete))
+                    {
+                        monster.MonsterDirectorCards.Add(cardObsolete);
+                    }
                     MSULog.Debug($"Character {monster} Initialized and ensured it's body and master prefabs in {SerializableContentPack.name}");
                     break;
                 case SurvivorBase survivor:
@@ -129,7 +137,7 @@ namespace Moonstorm
         {
             ClearDictionaries();
             ExpansionDef[] runExpansions = ExpansionCatalog.expansionDefs.Where(exp => run.IsExpansionEnabled(exp)).ToArray();
-            MSMonsterDirectorCard[] cards = MonstersWithCards.Select(mb => mb.MonsterDirectorCard).ToArray();
+            MSMonsterDirectorCard[] cards = MonstersWithCards.SelectMany(mb => mb.MonsterDirectorCards).ToArray();
 
             int num = 0;
             foreach (MSMonsterDirectorCard card in cards)
@@ -151,8 +159,16 @@ namespace Moonstorm
                             {
                                 if (!currentCustomStageToCards.ContainsKey(baseStageName))
                                 {
-                                    currentCustomStageToCards.Add(baseStageName, new List<MSMonsterDirectorCard>());
+                                    currentCustomStageToCards.Add(baseStageName, new HashSet<MSMonsterDirectorCard>(new MSMonsterDirectorCard.PrefabComparer()));
                                 }
+                                HashSet<MSMonsterDirectorCard> set = currentCustomStageToCards[baseStageName];
+#if DEBUG
+                                if (set.Contains(card))
+                                {
+                                    MSULog.Warning($"There are two or more MSMonsterDirectorCards that are trying to add the same monster prefab to the stage {baseStageName}. (Card that triggered this warning: {card}))");
+                                    continue;
+                                }
+#endif
                                 currentCustomStageToCards[baseStageName].Add(card);
                             }
                             continue;
@@ -163,8 +179,16 @@ namespace Moonstorm
                         {
                             if (!currentStageToCards.ContainsKey(stageValue))
                             {
-                                currentStageToCards.Add(stageValue, new List<MSMonsterDirectorCard>());
+                                currentStageToCards.Add(stageValue, new HashSet<MSMonsterDirectorCard>(new MSMonsterDirectorCard.PrefabComparer()));
                             }
+                            var set = currentStageToCards[stageValue];
+#if DEBUG
+                            if(set.Contains(card))
+                            {
+                                MSULog.Warning($"There are two or more MSMonsterDirectorCards that are trying to add the same monster prefab to the stage {Enum.GetName(typeof(DirectorAPI.Stage), stageValue)}. (Card that triggered this warning: {card}))");
+                                continue;
+                            }
+#endif
                             currentStageToCards[stageValue].Add(card);
                         }
                     }
@@ -188,7 +212,7 @@ namespace Moonstorm
         {
             try
             {
-                List<MSMonsterDirectorCard> cards = new List<MSMonsterDirectorCard>();
+                HashSet<MSMonsterDirectorCard> cards;
                 if (stageInfo.stage == DirectorAPI.Stage.Custom)
                 {
                     if (currentCustomStageToCards.TryGetValue(stageInfo.CustomStageName, out cards))
@@ -210,7 +234,7 @@ namespace Moonstorm
             }
         }
 
-        private static void AddCardsToPool(DccsPool pool, List<MSMonsterDirectorCard> cards)
+        private static void AddCardsToPool(DccsPool pool, HashSet<MSMonsterDirectorCard> cards)
         {
             var standardCategory = pool.poolCategories.FirstOrDefault(category => category.name == DirectorAPI.Helpers.MonsterPoolCategories.Standard);
             if (standardCategory == null)

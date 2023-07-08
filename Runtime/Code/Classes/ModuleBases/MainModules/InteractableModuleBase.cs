@@ -28,11 +28,11 @@ namespace Moonstorm
         /// <summary>
         /// Loads all the <see cref="InteractableBase"/> from the <see cref="MoonstormInteractables"/> dictionary that have a <see cref="MSInteractableDirectorCard"/>
         /// </summary>
-        public static InteractableBase[] InteractablesWithCards { get => MoonstormInteractables.Values.Where(ib => ib.InteractableDirectorCard != null).ToArray(); }
+        public static InteractableBase[] InteractablesWithCards { get => MoonstormInteractables.Values.Where(ib => ib.InteractableDirectorCards.Count > 0).ToArray(); }
         /// <summary>
         /// Loads all the <see cref="InteractableBase"/> from the <see cref="MoonstormInteractables"/> dictionary that do not have a <see cref="MSInteractableDirectorCard"/>
         /// </summary>
-        public static InteractableBase[] InteractablesWithoutCards { get => MoonstormInteractables.Values.Where(ib => ib.InteractableDirectorCard == null).ToArray(); }
+        public static InteractableBase[] InteractablesWithoutCards { get => MoonstormInteractables.Values.Where(ib => ib.InteractableDirectorCards.Count == 0).ToArray(); }
         /// <summary>
         /// Loads all the interactable game objects
         /// </summary>
@@ -46,8 +46,9 @@ namespace Moonstorm
         /// Call moduleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
         /// </summary>
         public static ResourceAvailability moduleAvailability;
-        private static Dictionary<DirectorAPI.Stage, List<MSInteractableDirectorCard>> currentStageToCards = new Dictionary<DirectorAPI.Stage, List<MSInteractableDirectorCard>>();
-        private static Dictionary<string, List<MSInteractableDirectorCard>> currentCustomStageToCards = new Dictionary<string, List<MSInteractableDirectorCard>>(StringComparer.OrdinalIgnoreCase);
+
+        private static Dictionary<DirectorAPI.Stage, HashSet<MSInteractableDirectorCard>> currentStageToCards = new Dictionary<DirectorAPI.Stage, HashSet<MSInteractableDirectorCard>>();
+        private static Dictionary<string, HashSet<MSInteractableDirectorCard>> currentCustomStageToCards = new Dictionary<string, HashSet<MSInteractableDirectorCard>>(StringComparer.OrdinalIgnoreCase);
         #endregion
 
         [SystemInitializer]
@@ -101,6 +102,14 @@ namespace Moonstorm
         {
             AddSafely(ref SerializableContentPack.networkedObjectPrefabs, contentClass.Interactable, "NetworkedObjectPrefabs");
             contentClass.Initialize();
+
+#pragma warning disable CS0618 // Type or member is obsolete
+            var cardObsolete = contentClass.InteractableDirectorCard;
+#pragma warning restore CS0618 // Type or member is obsolete
+            if (cardObsolete && !contentClass.InteractableDirectorCards.Contains(cardObsolete))
+            {
+                contentClass.InteractableDirectorCards.Add(cardObsolete);
+            }
             interactables.Add(contentClass.Interactable, contentClass);
         }
         #endregion
@@ -112,7 +121,7 @@ namespace Moonstorm
             ClearDictionaries();
             //Expansions enabled in this run
             ExpansionDef[] runExpansions = ExpansionCatalog.expansionDefs.Where(exp => run.IsExpansionEnabled(exp)).ToArray();
-            MSInteractableDirectorCard[] cards = InteractablesWithCards.Select(ib => ib.InteractableDirectorCard).ToArray();
+            MSInteractableDirectorCard[] cards = InteractablesWithCards.SelectMany(ib => ib.InteractableDirectorCards).ToArray();
 
             int num = 0;
             foreach (MSInteractableDirectorCard card in cards)
@@ -134,9 +143,17 @@ namespace Moonstorm
                             {
                                 if (!currentCustomStageToCards.ContainsKey(baseStageName))
                                 {
-                                    currentCustomStageToCards.Add(baseStageName, new List<MSInteractableDirectorCard>());
+                                    currentCustomStageToCards.Add(baseStageName, new HashSet<MSInteractableDirectorCard>(new MSInteractableDirectorCard.PrefabComparer()));
                                 }
-                                currentCustomStageToCards[baseStageName].Add(card);
+                                HashSet<MSInteractableDirectorCard> set = currentCustomStageToCards[baseStageName];
+#if DEBUG
+                                if(set.Contains(card))
+                                {
+                                    MSULog.Warning($"There are two or more MSInteractableDirectorCards that are trying to add the same interactable prefab to the stage {baseStageName}. (Card that triggered this warning: {card}))");
+                                    continue;
+                                }
+#endif
+                                set.Add(card);
                             }
                             continue;
                         }
@@ -146,9 +163,17 @@ namespace Moonstorm
                         {
                             if (!currentStageToCards.ContainsKey(stageValue))
                             {
-                                currentStageToCards.Add(stageValue, new List<MSInteractableDirectorCard>());
+                                currentStageToCards.Add(stageValue, new HashSet<MSInteractableDirectorCard>(new MSInteractableDirectorCard.PrefabComparer()));
                             }
-                            currentStageToCards[stageValue].Add(card);
+                            HashSet<MSInteractableDirectorCard> set = currentStageToCards[stageValue];
+#if DEBUG
+                            if (set.Contains(card))
+                            {
+                                MSULog.Warning($"There are two or more MSInteractableDirectorCards that are trying to add the same interactable prefab to the stage {Enum.GetName(typeof(DirectorAPI.Stage), stageValue)}. (Card that triggered this warning: {card}))");
+                                continue;
+                            }
+#endif
+                            set.Add(card);
                         }
                     }
                     num++;
@@ -173,7 +198,7 @@ namespace Moonstorm
         {
             try
             {
-                List<MSInteractableDirectorCard> cards = new List<MSInteractableDirectorCard>();
+                HashSet<MSInteractableDirectorCard> cards;
                 if (stageInfo.stage == DirectorAPI.Stage.Custom)
                 {
                     if (currentCustomStageToCards.TryGetValue(stageInfo.CustomStageName, out cards))
@@ -197,7 +222,7 @@ namespace Moonstorm
             }
         }
 
-        private static void AddCardsToPool(DccsPool pool, List<MSInteractableDirectorCard> cards)
+        private static void AddCardsToPool(DccsPool pool, HashSet<MSInteractableDirectorCard> cards)
         {
             var alwaysIncluded = pool.poolCategories.SelectMany(pc => pc.alwaysIncluded.Select(pe => pe.dccs)).ToList();
             var includedIfConditionsMet = pool.poolCategories.SelectMany(pc => pc.includedIfConditionsMet.Select(cpe => cpe.dccs)).ToList();

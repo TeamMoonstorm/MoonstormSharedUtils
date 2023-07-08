@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace Moonstorm
 {
@@ -13,9 +15,12 @@ namespace Moonstorm
         /// The interactable prefab for the InteractableBase
         /// </summary>
         public abstract GameObject Interactable { get; }
-        /// <summary>
-        /// An <see cref="MSInteractableDirectorCard"/> used for spawning the interactable
-        /// </summary>
+
+        [Obsolete("Use the InteractableDirectorCards list instead.")]
         public virtual MSInteractableDirectorCard InteractableDirectorCard { get; }
+        /// <summary>
+        /// A list of <see cref="MSInteractableDirectorCard"/> used for spawning the interactable prefab.
+        /// </summary>
+        public virtual List<MSInteractableDirectorCard> InteractableDirectorCards { get; } = new List<MSInteractableDirectorCard>();
     }
 }
