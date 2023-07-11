@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.IO;
+using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -13,7 +15,11 @@ namespace Moonstorm.Components.Addressables
     {
         [Tooltip("The address used for injecting")]
         public string address;
-        private Object _asset;
+        /// <summary>
+        /// The Loaded Asset
+        /// </summary>
+        public Object Asset { get => _asset; private set => _asset = value; }
+        [NonSerialized] private Object _asset;
 
         [Tooltip("The component that will be injected")]
         [SerializeField] private Component targetComponent;
@@ -66,28 +72,65 @@ namespace Moonstorm.Components.Addressables
                 return;
             }
 
-            _asset = UnityEngine.AddressableAssets.Addressables.LoadAssetAsync<Object>(address).WaitForCompletion();
+            var _asset = UnityEngine.AddressableAssets.Addressables.LoadAssetAsync<Object>(address).WaitForCompletion();
             if (!_asset)
                 return;
 #if UNITY_EDITOR
-            _asset = Instantiate(_asset);
+            Asset = Instantiate(_asset);
 #endif
-            _asset.hideFlags = HideFlags.DontSaveInEditor | HideFlags.NotEditable | HideFlags.DontSaveInBuild;
+            Asset.hideFlags = HideFlags.DontSaveInEditor | HideFlags.NotEditable | HideFlags.DontSaveInBuild;
 
-            switch (memberInfo)
+            Inject(memberInfo);
+        }
+
+        private void Inject(MemberInfo memberInfo)
+        {
+            switch(memberInfo)
             {
-                case PropertyInfo pInfo:
-                    pInfo.SetValue(targetComponent, _asset);
-                    break;
-                case FieldInfo fInfo:
-                    fInfo.SetValue(targetComponent, _asset);
-                    break;
+                case PropertyInfo pInfo: InjectPropertyInfo(pInfo); break;
+                case FieldInfo fInfo: InjectFieldInfo(fInfo); break;
+            }
+
+            void InjectPropertyInfo(PropertyInfo propertyInfo)
+            {
+                try
+                {
+                    propertyInfo.SetValue(targetComponent, Asset);
+                }
+                catch (Exception e)
+                {
+                    MSULog.Error(e);
+                }
+
+#if UNITY_EDITOR
+                MSULog.Info($"injected {Asset} onto {targetComponent}'s propertyInfo, setting propertyInfo value to null to avoid broken scenes/objects");
+                propertyInfo.SetValue(targetComponent, null);
+                DestroyImmediate(Asset);
+#endif
+            }
+
+            void InjectFieldInfo(FieldInfo fieldInfo)
+            {
+                try
+                {
+                    fieldInfo.SetValue(targetComponent, Asset);
+                }
+                catch(Exception e)
+                {
+                    MSULog.Error(e);
+                }
+
+#if UNITY_EDITOR
+                MSULog.Info($"injected {Asset} onto {targetComponent}'s fieldInfo, setting fieldInfo value to null to avoid broken scenes/objects");
+                fieldInfo.SetValue(targetComponent, null);
+                DestroyImmediate(Asset);
+#endif
             }
         }
 
         private MemberInfo GetMemberInfo()
         {
-            if (cachedMemberInfo == null && targetComponent)
+            if ((cachedMemberInfo == null || $"({cachedMemberInfo.DeclaringType.Name}) {cachedMemberInfo.Name}" != targetMemberInfoName) && targetComponent)
             {
                 cachedMemberInfo = targetComponent.GetType()
                     .GetMembers(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy)

@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
 
 namespace Moonstorm.EditorUtils.Inspectors
@@ -71,6 +72,10 @@ namespace Moonstorm.EditorUtils.Inspectors
         private void RefreshMembersOfTargetComponent()
         {
             _memberInfos = _targetComponent.objectReferenceValue.GetType().GetMembers(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy).Where(m => m.GetType().Name == "MonoProperty" || m.GetType().Name == "MonoField").OrderBy(m => m.Name).ToArray();
+
+            var props = _memberInfos.OfType<PropertyInfo>().Where(p => p.PropertyType.IsSubclassOf(typeof(UnityEngine.Object)) && p.GetSetMethod(true) != null).Cast<MemberInfo>();
+            var fields = _memberInfos.OfType<FieldInfo>().Where(f => f.FieldType.IsSubclassOf(typeof(UnityEngine.Object))).Cast<MemberInfo>();
+            _memberInfos = props.Concat(fields).ToArray();
             _memberInfoNames = _memberInfos.Select(x => $"({x.DeclaringType.Name}) {x.Name}").ToArray();
         }
     }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Networking;
 
 namespace Moonstorm.Components.Addressables
@@ -23,6 +24,7 @@ namespace Moonstorm.Components.Addressables
         /// The instantiated prefab
         /// </summary>
         public GameObject Instance => instance;
+        [NonSerialized]
         private GameObject instance;
 
         private void OnEnable() => Refresh();

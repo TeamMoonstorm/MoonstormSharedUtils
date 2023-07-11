@@ -1,4 +1,5 @@
 ﻿using RoR2;
+using System;
 using UnityEngine;
 
 namespace Moonstorm.Components.Addressables
@@ -11,6 +12,7 @@ namespace Moonstorm.Components.Addressables
     {
         [Tooltip("The surfaceDef address to load")]
         public string surfaceDefAddress;
+        [NonSerialized]
         private SurfaceDef loadedSurfaceDef;
 
         private void OnEnable() => Refresh();

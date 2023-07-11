@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Moonstorm.Components.Addressables
 {
@@ -10,9 +11,10 @@ namespace Moonstorm.Components.Addressables
     public class CameraInstantiator : MonoBehaviour
     {
         public const string CAMERA_ADDRESS = "RoR2/Base/Core/Main Camera.prefab";
-        [SerializeField, HideInInspector] private GameObject cameraInstance;
+        public GameObject CameraInstance { get => _cameraInstance; private set => _cameraInstance = value; }
+        [NonSerialized] private GameObject _cameraInstance;
         private void OnEnable() => Refresh();
-        private void OnDisable() => MSUtil.DestroyImmediateSafe(cameraInstance, true);
+        private void OnDisable() => MSUtil.DestroyImmediateSafe(CameraInstance, true);
 
         /// <summary>
         /// Instantiates the camera or destroys the attached game object if the component is instantiated at runtime and not in the editor.
@@ -26,18 +28,19 @@ namespace Moonstorm.Components.Addressables
                 return;
             }
 
-            if (cameraInstance)
+            if (CameraInstance)
             {
-                MSUtil.DestroyImmediateSafe(cameraInstance, true);
+                MSUtil.DestroyImmediateSafe(CameraInstance, true);
             }
             var go = UnityEngine.AddressableAssets.Addressables.LoadAssetAsync<GameObject>(CAMERA_ADDRESS).WaitForCompletion();
-            cameraInstance = Instantiate(go, transform);
-            cameraInstance.name = $"[EDITOR ONLY] {cameraInstance.name}";
-            cameraInstance.hideFlags |= HideFlags.DontSaveInEditor | HideFlags.DontSaveInBuild | HideFlags.NotEditable;
-            foreach (Transform t in cameraInstance.GetComponentsInChildren<Transform>())
+            CameraInstance = Instantiate(go, transform);
+            CameraInstance.name = $"[EDITOR ONLY] {CameraInstance.name}";
+            CameraInstance.hideFlags |= HideFlags.DontSaveInEditor | HideFlags.DontSaveInBuild | HideFlags.NotEditable;
+            foreach (Transform t in CameraInstance.GetComponentsInChildren<Transform>())
             {
-                t.gameObject.hideFlags = cameraInstance.hideFlags | HideFlags.HideInHierarchy;
+                t.gameObject.hideFlags = CameraInstance.hideFlags | HideFlags.HideInHierarchy;
             }
+            CameraInstance.hideFlags &= ~HideFlags.HideInHierarchy;
         }
     }
 }
