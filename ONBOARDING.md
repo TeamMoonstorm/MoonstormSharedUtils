@@ -9,8 +9,8 @@
 - [RoR2EditorKit](https://github.com/risk-of-thunder/RoR2EditorKit) version 4.0.4 or Greater
 
 
-> 2b. Sidenote, it is important that you use the versioned versions instead of the pre-release or indev versions. To select the correct version, You can click the big green “<> Code” button, and then copy the https url. You can append an “#” followed by your desired version to specify what version to download.
-> ![](/Docs/2b-git-version.png)
+    -  It is important that you use the versioned versions instead of the pre-release or indev versions. To select the correct version, You can click the big green “<> Code” button, and then copy the https url. You can append an “#” followed by your desired version to specify what version to download.
+    - ![](/Docs/2b-git-version.png)
 
 3. After installing the 3 packages, close your project, this will ensure stability later on.
 
@@ -32,12 +32,12 @@
 
 10. If during the import process, the editor stops responding and doesnt continue importing, close the project, and delete any folders in the packages folder (Except for the moonstorm shared utils one) Then reopen the project and reimport
 
->NOTE: If you ever see this image, ALWAYS hit “No Thanks”
-![](./Docs/NoThanks.png)
+    - ⚠️: If you ever see this image, ALWAYS hit “No Thanks” or you WILL break things....
+    - ![](./Docs/NoThanks.png)
 
 11. Copy `MoonstormSharedUtils/Editor/Assets/ThunderKit/Pipelines/Contributor/GenericContributor` to your `Assets` folder and configure the pipeline similar to [Starstorm 2's Build Config](https://github.com/TeamMoonstorm/Starstorm2#issues-qa)
 
 12. You should now be able to build!
 Make sure: 
-![](./Docs/makeSurePt1.png)
-That MSUManifest is selected in the build task and that the pipeline job has the correct path here so it knows to output in the plugins folder/
+    - ![](./Docs/makeSurePt1.png)
+    - That MSUManifest is selected in the build task and that the pipeline job has the correct path here so it knows to output in the plugins folder/
