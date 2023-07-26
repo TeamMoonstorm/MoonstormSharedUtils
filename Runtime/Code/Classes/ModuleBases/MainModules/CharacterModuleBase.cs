@@ -19,6 +19,35 @@ namespace Moonstorm
     /// </summary>
     public abstract class CharacterModuleBase : ContentModule<CharacterBase>
     {
+        private class MonsterCollectionFuncPair
+        {
+            public struct Comparer : IEqualityComparer<MonsterCollectionFuncPair>
+            {
+                bool IEqualityComparer<MonsterCollectionFuncPair>.Equals(MonsterCollectionFuncPair x, MonsterCollectionFuncPair y)
+                {
+                    if (x == null || y == null)
+                        return false;
+
+                    if (x.tiedMonsterBase == null || y.tiedMonsterBase == null) 
+                        return false;
+
+                    return x.tiedMonsterBase == y.tiedMonsterBase;
+                }
+
+                int IEqualityComparer<MonsterCollectionFuncPair>.GetHashCode(MonsterCollectionFuncPair obj)
+                {
+                    if (obj == null)
+                        return -1;
+                    if (obj.tiedMonsterBase == null)
+                        return -1;
+                    return obj.tiedMonsterBase.GetHashCode();
+                }
+            }
+
+            public HashSet<MSMonsterDirectorCard> cards = new HashSet<MSMonsterDirectorCard>(new MSMonsterDirectorCard.PrefabComparer());
+            public MonsterBase tiedMonsterBase;
+            public MonsterBase.IsAvailableForDCCSDelegate IsAvailable => tiedMonsterBase.IsAvailableForDCCS;
+        }
         #region Properties and Fields
         /// <summary>
         /// A ReadOnlyDictionary that can be used for loading a specific CharacterBase by giving it's tied CharacterBody prefab
@@ -57,8 +86,8 @@ namespace Moonstorm
         /// </summary>
         public static ResourceAvailability moduleAvailability;
 
-        private static Dictionary<DirectorAPI.Stage, HashSet<MSMonsterDirectorCard>> currentStageToCards = new Dictionary<DirectorAPI.Stage, HashSet<MSMonsterDirectorCard>>();
-        private static Dictionary<string, HashSet<MSMonsterDirectorCard>> currentCustomStageToCards = new Dictionary<string, HashSet<MSMonsterDirectorCard>>(StringComparer.OrdinalIgnoreCase);
+        private static Dictionary<DirectorAPI.Stage, HashSet<MonsterCollectionFuncPair>> currentStageToCards = new Dictionary<DirectorAPI.Stage, HashSet<MonsterCollectionFuncPair>>();
+        private static Dictionary<string, HashSet<MonsterCollectionFuncPair>> currentCustomStageToCards = new Dictionary<string, HashSet<MonsterCollectionFuncPair>>(StringComparer.OrdinalIgnoreCase);
         #endregion
 
         [SystemInitializer(new Type[] { typeof(BodyCatalog), typeof(MasterCatalog) })]
@@ -137,10 +166,22 @@ namespace Moonstorm
         {
             ClearDictionaries();
             ExpansionDef[] runExpansions = ExpansionCatalog.expansionDefs.Where(exp => run.IsExpansionEnabled(exp)).ToArray();
-            MSMonsterDirectorCard[] cards = MonstersWithCards.SelectMany(mb => mb.MonsterDirectorCards).ToArray();
+            MonsterBase[] monsterBases = MonstersWithCards.ToArray();
 
             int num = 0;
-            foreach (MSMonsterDirectorCard card in cards)
+            foreach(MonsterBase monsterBase in monsterBases)
+            {
+                AddMonsterBaseToRun(monsterBase, run, runExpansions, ref num);
+            }
+
+#if DEBUG
+            MSULog.Info(num > 0 ? $"A total of {num} monster cards added to the run" : $"No monster cards added to the run");
+#endif
+        }
+
+        private static void AddMonsterBaseToRun(MonsterBase monsterBase, Run run, ExpansionDef[] runExpansions, ref int totalMonstersAdded)
+        {
+            foreach (MSMonsterDirectorCard card in monsterBase.MonsterDirectorCards)
             {
                 try
                 {
@@ -153,54 +194,91 @@ namespace Moonstorm
                     foreach (DirectorAPI.Stage stageValue in Enum.GetValues(typeof(DirectorAPI.Stage)))
                     {
                         //Card has custom stage support? add them to the dictionaries.
-                        if (stageValue == DirectorAPI.Stage.Custom)
+                        if (stageValue == DirectorAPI.Stage.Custom && card.stages.HasFlag(stageValue))
                         {
-                            foreach (string baseStageName in card.customStages)
-                            {
-                                if (!currentCustomStageToCards.ContainsKey(baseStageName))
-                                {
-                                    currentCustomStageToCards.Add(baseStageName, new HashSet<MSMonsterDirectorCard>(new MSMonsterDirectorCard.PrefabComparer()));
-                                }
-                                HashSet<MSMonsterDirectorCard> set = currentCustomStageToCards[baseStageName];
-#if DEBUG
-                                if (set.Contains(card))
-                                {
-                                    MSULog.Warning($"There are two or more MSMonsterDirectorCards that are trying to add the same monster prefab to the stage {baseStageName}. (Card that triggered this warning: {card}))");
-                                    continue;
-                                }
-#endif
-                                currentCustomStageToCards[baseStageName].Add(card);
-                            }
+                            AddCardToCustomStages(card, monsterBase);
                             continue;
                         }
 
                         //Card can appear in current stage? add it to the dictionary
                         if (card.stages.HasFlag(stageValue))
                         {
-                            if (!currentStageToCards.ContainsKey(stageValue))
-                            {
-                                currentStageToCards.Add(stageValue, new HashSet<MSMonsterDirectorCard>(new MSMonsterDirectorCard.PrefabComparer()));
-                            }
-                            var set = currentStageToCards[stageValue];
-#if DEBUG
-                            if(set.Contains(card))
-                            {
-                                MSULog.Warning($"There are two or more MSMonsterDirectorCards that are trying to add the same monster prefab to the stage {Enum.GetName(typeof(DirectorAPI.Stage), stageValue)}. (Card that triggered this warning: {card}))");
-                                continue;
-                            }
-#endif
-                            currentStageToCards[stageValue].Add(card);
+                            AddCardToStage(card, monsterBase, stageValue);
                         }
                     }
-                    num++;
+                    totalMonstersAdded++;
                 }
                 catch (Exception e)
                 {
                     MSULog.Error($"{e}\nCard: {card}");
                 }
             }
+        }
 
-            MSULog.Info(num > 0 ? $"A total of {num} monster cards added to the run" : $"No monster cards added to the run");
+        private static void AddCardToCustomStages(MSMonsterDirectorCard card, MonsterBase monsterBase)
+        {
+            foreach (string baseStageName in card.customStages)
+            {
+                //If the dictionary doesnt have an entry for this custom stage, create a new one alongside the list of monsters.
+                if (!currentCustomStageToCards.ContainsKey(baseStageName))
+                {
+                    currentCustomStageToCards.Add(baseStageName, new HashSet<MonsterCollectionFuncPair>(new MonsterCollectionFuncPair.Comparer()));
+                }
+
+                HashSet<MonsterCollectionFuncPair> monsterCollectionSet = currentCustomStageToCards[baseStageName];
+                //If there's no monster collection for this card's master prefab, create a new collection.
+                MonsterCollectionFuncPair monsterCollection = FindMonsterCollection(monsterBase, monsterCollectionSet) ?? new MonsterCollectionFuncPair();
+
+#if DEBUG
+                if (monsterCollection.cards.Contains(card))
+                {
+                    MSULog.Warning($"There are two or more MSMonsterDirectorCards that are trying to add the same monster prefab to the stage {baseStageName}. (Card that triggered this warning: {card}))");
+                    continue;
+                }
+#endif
+                //Add card to monster collection hash set
+                monsterCollection.cards.Add(card);
+
+                //Its a set, no neeed to check if the collection already exists.
+                monsterCollectionSet.Add(monsterCollection);
+            }
+        }
+
+        private static void AddCardToStage(MSMonsterDirectorCard card, MonsterBase monsterBase, DirectorAPI.Stage stageValue)
+        {
+            //If the dictionary doesnt have an entry for this stage, create a new one alongside the list of monsters.
+            if (!currentStageToCards.ContainsKey(stageValue))
+            {
+                currentStageToCards[stageValue] = new HashSet<MonsterCollectionFuncPair>(new MonsterCollectionFuncPair.Comparer());
+            }
+            HashSet<MonsterCollectionFuncPair> monsterCollectionSet = currentStageToCards[stageValue];
+            //If there's no monster collection for this card's master prefab, create a new collection.
+            MonsterCollectionFuncPair monsterCollection = FindMonsterCollection(monsterBase, monsterCollectionSet) ?? new MonsterCollectionFuncPair();
+
+#if DEBUG
+            if (monsterCollection.cards.Contains(card))
+            {
+                MSULog.Warning($"There are two or more MSMonsterDirectorCards that are trying to add the same monster prefab to the stage {Enum.GetName(typeof(DirectorAPI.Stage), stageValue)}. (Card that triggered this warning: {card}))");
+                return;
+            }
+#endif
+            //Add card to monster collection hash set
+            monsterCollection.cards.Add(card);
+
+            //Its a set, no neeed to check if the collection already exists.
+            monsterCollectionSet.Add(monsterCollection);
+        }
+
+        private static MonsterCollectionFuncPair FindMonsterCollection(MonsterBase monsterBase, HashSet<MonsterCollectionFuncPair> set)
+        {
+            foreach(MonsterCollectionFuncPair collection in set)
+            {
+                if(collection.tiedMonsterBase == monsterBase)
+                {
+                    return collection;
+                }
+            }
+            return null;
         }
 
         private static void ClearDictionaries()
@@ -212,18 +290,18 @@ namespace Moonstorm
         {
             try
             {
-                HashSet<MSMonsterDirectorCard> cards;
+                HashSet<MonsterCollectionFuncPair> monsters;
                 if (stageInfo.stage == DirectorAPI.Stage.Custom)
                 {
-                    if (currentCustomStageToCards.TryGetValue(stageInfo.CustomStageName, out cards))
+                    if (currentCustomStageToCards.TryGetValue(stageInfo.CustomStageName, out monsters))
                     {
-                        AddCardsToPool(pool, cards);
+                        AddMonstersToPool(pool, monsters);
                     }
                 }
                 else
                 {
-                    if (currentStageToCards.TryGetValue(stageInfo.stage, out cards))
-                        AddCardsToPool(pool, cards);
+                    if (currentStageToCards.TryGetValue(stageInfo.stage, out monsters))
+                        AddMonstersToPool(pool, monsters);
                 }
 
                 //MSULog.Info(cards.Count > 0 ? $"Added a total of {cards.Count} monster cards to stage {stageInfo.ToInternalStageName()}" : $"No monster cards added to stage {stageInfo.ToInternalStageName()}");
@@ -234,7 +312,7 @@ namespace Moonstorm
             }
         }
 
-        private static void AddCardsToPool(DccsPool pool, HashSet<MSMonsterDirectorCard> cards)
+        private static void AddMonstersToPool(DccsPool pool, HashSet<MonsterCollectionFuncPair> monsters)
         {
             var standardCategory = pool.poolCategories.FirstOrDefault(category => category.name == DirectorAPI.Helpers.MonsterPoolCategories.Standard);
             if (standardCategory == null)
@@ -246,18 +324,26 @@ namespace Moonstorm
                 .Concat(standardCategory.includedIfConditionsMet.Select(cpe => cpe.dccs))
                 .Concat(standardCategory.includedIfNoConditionsMet.Select(pe => pe.dccs));
 
-            foreach (MSMonsterDirectorCard card in cards)
+            foreach (MonsterCollectionFuncPair monsterCollection in monsters)
             {
+                if(!monsterCollection.IsAvailable())
+                {
+                    continue;
+                }
                 try
                 {
                     foreach (DirectorCardCategorySelection categorySelection in dccs)
                     {
-                        categorySelection.AddCard(card.DirectorCardHolder);
+                        foreach(var card in monsterCollection.cards)
+                        {
+                            categorySelection.AddCard(card.DirectorCardHolder);
+                        }
                     }
                 }
                 catch (Exception e)
                 {
-                    MSULog.Error($"{e}\n(Card: {card})");
+
+                    MSULog.Error($"{e}\n(Monster Collection: {monsterCollection})");
                 }
             }
         }

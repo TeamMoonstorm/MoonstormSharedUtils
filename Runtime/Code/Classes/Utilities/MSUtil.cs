@@ -15,12 +15,15 @@ namespace Moonstorm
     public static class MSUtil
     {
         public static bool HolyDLLInstalled => IsModInstalled("xyz.yekoc.Holy");
+
+        [Obsolete("Risk of options is a hard dependency so its always installed.")]
         public static bool RiskOfOptionsInstalled => IsModInstalled("com.rune580.riskofoptions");
 
         public static bool DebugToolkitInstalled => IsModInstalled("iHarbHD.DebugToolkit");
 
         private static Run currentRun;
         private static ExpansionDef[] currentRunExpansionDefs;
+        private static Dictionary<AssemblyName, Type[]> assemblyToTypesCached;
         /// <summary>
         /// Checks if a mod is installed in the bepinex chainloader
         /// </summary>
@@ -193,6 +196,10 @@ namespace Moonstorm
         /// <returns>The types of the assembly</returns>
         public static Type[] GetTypesSafe(this Assembly assembly)
         {
+            if(assemblyToTypesCached.TryGetValue(assembly.GetName(), out var type))
+            {
+                return type;
+            }
             Type[] types = null;
             try
             {
@@ -202,6 +209,7 @@ namespace Moonstorm
             {
                 types = re.Types.Where(t => t != null).ToArray();
             }
+            assemblyToTypesCached.Add(assembly.GetName(), types);
             return types;
         }
 

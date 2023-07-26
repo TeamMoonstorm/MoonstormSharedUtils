@@ -17,6 +17,35 @@ namespace Moonstorm
     /// </summary>
     public abstract class InteractableModuleBase : ContentModule<InteractableBase>
     {
+        private class InteractableCollectionFuncPair
+        {
+            public struct Comparer : IEqualityComparer<InteractableCollectionFuncPair>
+            {
+                bool IEqualityComparer<InteractableCollectionFuncPair>.Equals(InteractableCollectionFuncPair x, InteractableCollectionFuncPair y)
+                {
+                    if (x == null || y == null)
+                        return false;
+
+                    if (x.tiedInteractableBase == null || y.tiedInteractableBase == null)
+                        return false;
+
+                    return x.tiedInteractableBase == y.tiedInteractableBase;
+                }
+
+                int IEqualityComparer<InteractableCollectionFuncPair>.GetHashCode(InteractableCollectionFuncPair obj)
+                {
+                    if (obj == null)
+                        return -1;
+                    if (obj.tiedInteractableBase == null)
+                        return -1;
+                    return obj.tiedInteractableBase.GetHashCode();
+                }
+            }
+
+            public HashSet<MSInteractableDirectorCard> cards = new HashSet<MSInteractableDirectorCard>(new MSInteractableDirectorCard.PrefabComparer());
+            public InteractableBase tiedInteractableBase;
+            public InteractableBase.IsAvailableForDCCSDelegate IsAvailable => tiedInteractableBase.IsAvailableForDCCS;
+        }
         #region Properties and Fields
         /// <summary>
         /// A ReadOnlyDictionary that can be used for loading a specific <see cref="InteractableBase"/> by giving it's tied <see cref="GameObject"/>
@@ -47,8 +76,8 @@ namespace Moonstorm
         /// </summary>
         public static ResourceAvailability moduleAvailability;
 
-        private static Dictionary<DirectorAPI.Stage, HashSet<MSInteractableDirectorCard>> currentStageToCards = new Dictionary<DirectorAPI.Stage, HashSet<MSInteractableDirectorCard>>();
-        private static Dictionary<string, HashSet<MSInteractableDirectorCard>> currentCustomStageToCards = new Dictionary<string, HashSet<MSInteractableDirectorCard>>(StringComparer.OrdinalIgnoreCase);
+        private static Dictionary<DirectorAPI.Stage, HashSet<InteractableCollectionFuncPair>> currentStageToCards = new Dictionary<DirectorAPI.Stage, HashSet<InteractableCollectionFuncPair>>();
+        private static Dictionary<string, HashSet<InteractableCollectionFuncPair>> currentCustomStageToCards = new Dictionary<string, HashSet<InteractableCollectionFuncPair>>(StringComparer.OrdinalIgnoreCase);
         #endregion
 
         [SystemInitializer]
@@ -121,71 +150,117 @@ namespace Moonstorm
             ClearDictionaries();
             //Expansions enabled in this run
             ExpansionDef[] runExpansions = ExpansionCatalog.expansionDefs.Where(exp => run.IsExpansionEnabled(exp)).ToArray();
-            MSInteractableDirectorCard[] cards = InteractablesWithCards.SelectMany(ib => ib.InteractableDirectorCards).ToArray();
+            InteractableBase[] interactableBases = InteractablesWithCards.ToArray();
 
             int num = 0;
-            foreach (MSInteractableDirectorCard card in cards)
+            foreach(InteractableBase interactableBase in interactableBases)
             {
-                try
-                {
-                    //If card cant appear, skip
-                    if (!card.IsAvailable(runExpansions))
-                    {
-                        continue;
-                    }
-
-                    foreach (DirectorAPI.Stage stageValue in Enum.GetValues(typeof(DirectorAPI.Stage)))
-                    {
-                        //Card has custom stage support? add them to the dictionaries.
-                        if (stageValue == DirectorAPI.Stage.Custom)
-                        {
-                            foreach (string baseStageName in card.customStages)
-                            {
-                                if (!currentCustomStageToCards.ContainsKey(baseStageName))
-                                {
-                                    currentCustomStageToCards.Add(baseStageName, new HashSet<MSInteractableDirectorCard>(new MSInteractableDirectorCard.PrefabComparer()));
-                                }
-                                HashSet<MSInteractableDirectorCard> set = currentCustomStageToCards[baseStageName];
-#if DEBUG
-                                if(set.Contains(card))
-                                {
-                                    MSULog.Warning($"There are two or more MSInteractableDirectorCards that are trying to add the same interactable prefab to the stage {baseStageName}. (Card that triggered this warning: {card}))");
-                                    continue;
-                                }
-#endif
-                                set.Add(card);
-                            }
-                            continue;
-                        }
-
-                        //Card can appear in current stage? add it to the dictionary
-                        if (card.stages.HasFlag(stageValue))
-                        {
-                            if (!currentStageToCards.ContainsKey(stageValue))
-                            {
-                                currentStageToCards.Add(stageValue, new HashSet<MSInteractableDirectorCard>(new MSInteractableDirectorCard.PrefabComparer()));
-                            }
-                            HashSet<MSInteractableDirectorCard> set = currentStageToCards[stageValue];
-#if DEBUG
-                            if (set.Contains(card))
-                            {
-                                MSULog.Warning($"There are two or more MSInteractableDirectorCards that are trying to add the same interactable prefab to the stage {Enum.GetName(typeof(DirectorAPI.Stage), stageValue)}. (Card that triggered this warning: {card}))");
-                                continue;
-                            }
-#endif
-                            set.Add(card);
-                        }
-                    }
-                    num++;
-                }
-                catch (Exception e)
-                {
-                    MSULog.Error($"{e}\nCard: {card}");
-                }
+                AddInteractableBaseToRun(interactableBase, run, runExpansions, ref num);
             }
 #if DEBUG
             MSULog.Info(num > 0 ? $"A total of {num} interactable cards added to the run" : $"No interactable cards added to the run");
 #endif
+        }
+
+        private static void AddInteractableBaseToRun(InteractableBase interactableBase, Run run, ExpansionDef[] runExpansions, ref int totalInteractablesAdded)
+        {
+            foreach(MSInteractableDirectorCard card in interactableBase.InteractableDirectorCards)
+            {
+                try
+                {
+                    //If card cant appear, skip
+                    if(!card.IsAvailable(runExpansions))
+                    {
+                        continue;
+                    }
+
+                    foreach(DirectorAPI.Stage stageValue in Enum.GetValues(typeof(DirectorAPI.Stage)))
+                    {
+                        if(stageValue == DirectorAPI.Stage.Custom && card.stages.HasFlag
+                            (stageValue))
+                        {
+                            AddCardToCustomStages(card, interactableBase);
+                            continue;
+                        }
+
+                        if(card.stages.HasFlag(stageValue))
+                        {
+                            AddCardToStage(card, interactableBase, stageValue);
+                        }
+                    }
+                    totalInteractablesAdded++;
+                }
+                catch(Exception e)
+                {
+                    MSULog.Error($"{e}\nCard: {card}");
+                }
+            }
+        }
+
+        private static void AddCardToCustomStages(MSInteractableDirectorCard card, InteractableBase interactableBase)
+        {
+            foreach(string baseStageName in card.customStages)
+            {
+                //If the dictionary doesnt have an entry for this custom stage, create a new one alongside the list of monsters.
+                if (!currentCustomStageToCards.ContainsKey(baseStageName))
+                {
+                    currentCustomStageToCards.Add(baseStageName, new HashSet<InteractableCollectionFuncPair>(new InteractableCollectionFuncPair.Comparer()));
+                }
+
+                HashSet<InteractableCollectionFuncPair> interactableCollectionSet = currentCustomStageToCards[baseStageName];
+                //If there's no monster collection for this card's master prefab, create a new collection.
+                InteractableCollectionFuncPair interactableCollection = FindInteractableCollection(interactableBase, interactableCollectionSet) ?? new InteractableCollectionFuncPair();
+
+#if DEBUG
+                if (interactableCollection.cards.Contains(card))
+                {
+                    MSULog.Warning($"There are two or more MSInteractableDirectorCard that are trying to add the same interactable prefab to the stage {baseStageName}. (Card that triggered this warning: {card}))");
+                    continue;
+                }
+#endif
+                //Add card to monster collection hash set
+                interactableCollection.cards.Add(card);
+
+                //Its a set, no neeed to check if the collection already exists.
+                interactableCollectionSet.Add(interactableCollection);
+            }
+        }
+
+        private static void AddCardToStage(MSInteractableDirectorCard card, InteractableBase monsterBase, DirectorAPI.Stage stageValue)
+        {
+            //If the dictionary doesnt have an entry for this stage, create a new one alongside the list of monsters.
+            if (!currentStageToCards.ContainsKey(stageValue))
+            {
+                currentStageToCards[stageValue] = new HashSet<InteractableCollectionFuncPair>(new InteractableCollectionFuncPair.Comparer());
+            }
+            HashSet<InteractableCollectionFuncPair> interactableCollectionSet = currentStageToCards[stageValue];
+            //If there's no monster collection for this card's master prefab, create a new collection.
+            InteractableCollectionFuncPair interactableCollection = FindInteractableCollection(monsterBase, interactableCollectionSet) ?? new InteractableCollectionFuncPair();
+
+#if DEBUG
+            if (interactableCollection.cards.Contains(card))
+            {
+                MSULog.Warning($"There are two or more MSInteractableDirectorCards that are trying to add the same interactable  prefab to the stage {Enum.GetName(typeof(DirectorAPI.Stage), stageValue)}. (Card that triggered this warning: {card}))");
+                return;
+            }
+#endif
+            //Add card to monster collection hash set
+            interactableCollection.cards.Add(card);
+
+            //Its a set, no neeed to check if the collection already exists.
+            interactableCollectionSet.Add(interactableCollection);
+        }
+
+        private static InteractableCollectionFuncPair FindInteractableCollection(InteractableBase monsterBase, HashSet<InteractableCollectionFuncPair> set)
+        {
+            foreach (InteractableCollectionFuncPair collection in set)
+            {
+                if (collection.tiedInteractableBase == monsterBase)
+                {
+                    return collection;
+                }
+            }
+            return null;
         }
 
         private static void ClearDictionaries()
@@ -198,19 +273,19 @@ namespace Moonstorm
         {
             try
             {
-                HashSet<MSInteractableDirectorCard> cards;
+                HashSet<InteractableCollectionFuncPair> interactables;
                 if (stageInfo.stage == DirectorAPI.Stage.Custom)
                 {
-                    if (currentCustomStageToCards.TryGetValue(stageInfo.CustomStageName, out cards))
+                    if (currentCustomStageToCards.TryGetValue(stageInfo.CustomStageName, out interactables))
                     {
-                        AddCardsToPool(pool, cards);
+                        AddCardsToPool(pool, interactables);
                     }
                 }
                 else
                 {
-                    if (currentStageToCards.TryGetValue(stageInfo.stage, out cards))
+                    if (currentStageToCards.TryGetValue(stageInfo.stage, out interactables))
                     {
-                        AddCardsToPool(pool, cards);
+                        AddCardsToPool(pool, interactables);
                     }
                 }
 
@@ -222,25 +297,33 @@ namespace Moonstorm
             }
         }
 
-        private static void AddCardsToPool(DccsPool pool, HashSet<MSInteractableDirectorCard> cards)
+        private static void AddCardsToPool(DccsPool pool, HashSet<InteractableCollectionFuncPair> interactables)
         {
             var alwaysIncluded = pool.poolCategories.SelectMany(pc => pc.alwaysIncluded.Select(pe => pe.dccs)).ToList();
             var includedIfConditionsMet = pool.poolCategories.SelectMany(pc => pc.includedIfConditionsMet.Select(cpe => cpe.dccs)).ToList();
             var includedIfNoConditions = pool.poolCategories.SelectMany(pc => pc.includedIfNoConditionsMet.Select(pe => pe.dccs)).ToList();
 
             List<DirectorCardCategorySelection> cardSelections = alwaysIncluded.Concat(includedIfConditionsMet).Concat(includedIfNoConditions).ToList();
-            foreach (MSInteractableDirectorCard card in cards)
+            foreach (InteractableCollectionFuncPair collection in interactables)
             {
+                if(!collection.IsAvailable())
+                {
+                    continue;
+                }
+
                 try
                 {
                     foreach (DirectorCardCategorySelection cardCategorySelection in cardSelections)
                     {
-                        cardCategorySelection.AddCard(card.DirectorCardHolder);
+                        foreach(var card in collection.cards)
+                        {
+                            cardCategorySelection.AddCard(card.DirectorCardHolder);
+                        }
                     }
                 }
                 catch (Exception e)
                 {
-                    MSULog.Error($"{e}\n(Card: {card}");
+                    MSULog.Error($"{e}\n(Interactable Collection: {collection}");
                 }
             }
         }
