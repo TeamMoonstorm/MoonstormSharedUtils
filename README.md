@@ -4,6 +4,8 @@ MoonstormSharedUtils, otherwise known as MSU, is a "Content Loading" and "Genera
 
 Originally part of the API and framework built for updating Starstorm2 to Thunderkit, it was eventually split into it's own separate library so anyone with the desire to create mods with thunderkit can use it.
 
+If you want to contribute to Moonstorm please read our [ONBOARDING](./ONBOARDING.md) doc to properly setup your project for development.
+
 ## Goals:
 
 * MSU Strifes for the following goals:
