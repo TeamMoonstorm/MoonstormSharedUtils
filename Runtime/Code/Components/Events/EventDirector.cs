@@ -394,7 +394,7 @@ namespace Moonstorm.Components
 
             if (!card.requiredStateMachine.IsNullOrWhiteSpace())
             {
-                EntityStateMachine requiredStateMachine = EntityStateMachine.FindByCustomName(gameObject, currentEventCard.requiredStateMachine);
+                EntityStateMachine requiredStateMachine = EntityStateMachine.FindByCustomName(gameObject, card.requiredStateMachine);
                 if (!requiredStateMachine)
                 {
 #if DEBUG
