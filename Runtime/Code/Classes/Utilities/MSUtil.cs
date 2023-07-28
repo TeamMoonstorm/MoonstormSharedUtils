@@ -22,8 +22,8 @@ namespace Moonstorm
         public static bool DebugToolkitInstalled => IsModInstalled("iHarbHD.DebugToolkit");
 
         private static Run currentRun;
-        private static ExpansionDef[] currentRunExpansionDefs;
-        private static Dictionary<AssemblyName, Type[]> assemblyToTypesCached;
+        private static ExpansionDef[] currentRunExpansionDefs = Array.Empty<ExpansionDef>();
+        private static Dictionary<AssemblyName, Type[]> assemblyToTypesCached = new Dictionary<AssemblyName, Type[]>();
         /// <summary>
         /// Checks if a mod is installed in the bepinex chainloader
         /// </summary>
