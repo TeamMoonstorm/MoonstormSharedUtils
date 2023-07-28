@@ -181,7 +181,7 @@ namespace Moonstorm
 #endif
                     FormatToken(lang, token, attributes);
                 }
-                catch (Exception e) { MSULog.Error(e); }
+                catch (Exception e) { MSULog.Error($"{e}\n(Token={token})"); }
             }
         }
 
