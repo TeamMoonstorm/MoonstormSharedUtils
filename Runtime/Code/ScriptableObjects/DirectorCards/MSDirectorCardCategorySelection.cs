@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Moonstorm
 {
-    [Obsolete("Use R2API's AddressableDirectorCard instead", true)]
+    [Obsolete("Use R2API's AddressableDirectorCard instead")]
     [Serializable]
     public class MSDirectorCard
     {
@@ -31,7 +31,7 @@ namespace Moonstorm
             return returnVal;
         }
     }
-    [Obsolete("Use R2API's AddressableDirectorCardCategorySelection instead", true)]
+    [Obsolete("Use R2API's AddressableDirectorCardCategorySelection instead")]
     public class MSDirectorCardCategorySelection : ScriptableObject
     {
         [Serializable]

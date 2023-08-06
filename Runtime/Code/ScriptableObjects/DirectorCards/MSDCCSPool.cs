@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Moonstorm
 {
-    [Obsolete("Use R2API's AddressableDCCSPool instead", true)]
+    [Obsolete("Use R2API's AddressableDCCSPool instead")]
     public class MSDCCSPool : ScriptableObject
     {
         public DccsPool targetPool;

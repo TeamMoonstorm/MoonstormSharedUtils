@@ -1,3 +1,13 @@
+# '1.6.2' - Whoops
+
+## Runtime
+
+* Removed "Error On Obsolete" setting for MSDirectorCardCategorySeleection and MSDCCSPool
+
+## Editor
+
+* Fixed Inspectors still showing the deprecated fields instead of the new ones
+
 # '1.6.1' - Dependency changes and Rectifications
 
 * Added Onboarding and Documentation to begin developping a PR for MSU, Thanks Buns!

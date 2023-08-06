@@ -10,7 +10,7 @@
         <uie:PropertyField name="requiredFlags" binding-path="requiredFlags" />
         <uie:PropertyField name="forbiddenFlags" binding-path="forbiddenFlags" />
         <uie:PropertyField name="directorCreditCost" binding-path="directorCreditCost" />
-        <uie:PropertyField name="occupyPosition" binding-path="ocuppyPosition" />
+        <uie:PropertyField name="occupyPosition" binding-path="occupyPosition" />
         <uie:PropertyField name="eliteRules" binding-path="eliteRules" />
         <uie:PropertyField name="noElites" binding-path="noElites" />
         <uie:PropertyField name="forbiddenAsBoss" binding-path="forbiddenAsBoss" />
@@ -18,17 +18,17 @@
         <ui:Label text="DirectorAPI Data" name="DirectorAPIData" tooltip="Data passed over to R2API&apos;s DirectorAPI" class="genericHolderHeader separatorLabel" />
         <ui:VisualElement name="DirectorCardContainer" class="genericHolder">
             <ui:Label text="Director Card Data" name="DirectorCardData" class="genericHolderHeader separatorLabel" />
-            <uie:PropertyField name="selectionWeight" binding-path="directorCard.selectionWeight" />
-            <uie:PropertyField name="spawnDistance" binding-path="directorCard.spawnDistance" />
-            <uie:PropertyField name="preventOverhead" binding-path="directorCard.preventOverhead" />
-            <uie:PropertyField name="minimumStageCompletions" binding-path="directorCard.minimumStageCompletions" />
-            <uie:PropertyField name="requiredUnlockableDef" binding-path="directorCard.requiredUnlockableDef" />
-            <uie:PropertyField name="forbiddenUnlockableDef" binding-path="directorCard.forbiddenUnlockableDef" />
+            <uie:PropertyField name="selectionWeight" binding-path="addressReferencedDirectorCard.selectionWeight" />
+            <uie:PropertyField name="spawnDistance" binding-path="addressReferencedDirectorCard.spawnDistance" />
+            <uie:PropertyField name="preventOverhead" binding-path="addressReferencedDirectorCard.preventOverhead" />
+            <uie:PropertyField name="minimumStageCompletions" binding-path="addressReferencedDirectorCard.minimumStageCompletions" />
+            <uie:PropertyField name="requiredUnlockableDef" binding-path="addressReferencedDirectorCard.requiredUnlockableDef" />
+            <uie:PropertyField name="forbiddenUnlockableDef" binding-path="addressReferencedDirectorCard.forbiddenUnlockableDef" />
         </ui:VisualElement>
         <uie:PropertyField name="monsterCategory" binding-path="monsterCategory" />
         <uie:PropertyField name="customCategory" binding-path="customCategory" />
         <uie:PropertyField name="customCategoryWeight" binding-path="customCategoryWeight" />
         <uie:PropertyField name="customStages" binding-path="customStages" />
-        <uie:PropertyField name="requiredExpansions" binding-path="requiredExpansions" />
+        <uie:PropertyField name="requiredExpansions" binding-path="requiredExpansionDefs" />
     </ui:VisualElement>
 </ui:UXML>
