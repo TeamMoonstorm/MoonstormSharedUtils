@@ -3,7 +3,8 @@ using System;
 
 namespace Moonstorm.AddressableAssets
 {
-    [Serializable, Obsolete("Made Obsolete due to the introducttion of the ItemDisplayCatalog on 1.4.0")]
+    [Obsolete("Made Obsolete due to the introduction of the ItemDisplayCatalog on 1.4.0")]
+    [Serializable]
     public class AddressableIDRS : AddressableAsset<ItemDisplayRuleSet>
     {
         public AddressableIDRS() { }

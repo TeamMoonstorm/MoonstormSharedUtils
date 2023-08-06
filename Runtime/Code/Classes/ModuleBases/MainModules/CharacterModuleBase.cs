@@ -236,9 +236,10 @@ namespace Moonstorm
                     continue;
                 }
 #endif
+                
                 //Add card to monster collection hash set
                 monsterCollection.cards.Add(card);
-
+                monsterCollection.tiedMonsterBase = monsterBase;
                 //Its a set, no neeed to check if the collection already exists.
                 monsterCollectionSet.Add(monsterCollection);
             }
@@ -264,7 +265,7 @@ namespace Moonstorm
 #endif
             //Add card to monster collection hash set
             monsterCollection.cards.Add(card);
-
+            monsterCollection.tiedMonsterBase = monsterBase;
             //Its a set, no neeed to check if the collection already exists.
             monsterCollectionSet.Add(monsterCollection);
         }
@@ -295,13 +296,13 @@ namespace Moonstorm
                 {
                     if (currentCustomStageToCards.TryGetValue(stageInfo.CustomStageName, out monsters))
                     {
-                        AddMonstersToPool(pool, monsters);
+                        AddMonstersToPool(pool, monsters, stageInfo);
                     }
                 }
                 else
                 {
                     if (currentStageToCards.TryGetValue(stageInfo.stage, out monsters))
-                        AddMonstersToPool(pool, monsters);
+                        AddMonstersToPool(pool, monsters, stageInfo);
                 }
 
                 //MSULog.Info(cards.Count > 0 ? $"Added a total of {cards.Count} monster cards to stage {stageInfo.ToInternalStageName()}" : $"No monster cards added to stage {stageInfo.ToInternalStageName()}");
@@ -312,7 +313,7 @@ namespace Moonstorm
             }
         }
 
-        private static void AddMonstersToPool(DccsPool pool, HashSet<MonsterCollectionFuncPair> monsters)
+        private static void AddMonstersToPool(DccsPool pool, HashSet<MonsterCollectionFuncPair> monsters, DirectorAPI.StageInfo stageInfo)
         {
             var standardCategory = pool.poolCategories.FirstOrDefault(category => category.name == DirectorAPI.Helpers.MonsterPoolCategories.Standard);
             if (standardCategory == null)
@@ -326,7 +327,7 @@ namespace Moonstorm
 
             foreach (MonsterCollectionFuncPair monsterCollection in monsters)
             {
-                if(!monsterCollection.IsAvailable())
+                if(!monsterCollection.IsAvailable(stageInfo))
                 {
                     continue;
                 }

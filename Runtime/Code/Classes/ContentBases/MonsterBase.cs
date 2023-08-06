@@ -1,4 +1,5 @@
 ﻿
+using R2API;
 using System;
 using System.Collections.Generic;
 
@@ -14,7 +15,7 @@ namespace Moonstorm
         /// Represents if the Monster is available for a DCCS
         /// </summary>
         /// <returns>true if the Monster should be added, false otherwise</returns>
-        public delegate bool IsAvailableForDCCSDelegate();
+        public delegate bool IsAvailableForDCCSDelegate(DirectorAPI.StageInfo stageInfo);
 
         [Obsolete("Use the MonsterDirectorCards list instead.")]
         public virtual MSMonsterDirectorCard MonsterDirectorCard { get; }
@@ -28,6 +29,6 @@ namespace Moonstorm
         /// </summary>
         public virtual IsAvailableForDCCSDelegate IsAvailableForDCCS { get; } = DefaultIsAvailable;
 
-        private static bool DefaultIsAvailable() => true;
+        private static bool DefaultIsAvailable(DirectorAPI.StageInfo stageInfo) => true;
     }
 }

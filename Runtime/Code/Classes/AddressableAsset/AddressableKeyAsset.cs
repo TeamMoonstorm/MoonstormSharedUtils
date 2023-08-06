@@ -4,7 +4,8 @@ using System.Threading.Tasks;
 
 namespace Moonstorm.AddressableAssets
 {
-    [Serializable, Obsolete("Made obsoslete due to the introduction of the ItemDisplayCatalog on 1.4.0")]
+    [Obsolete("Made obssolete due to the introduction of the ItemDisplayCatalog on 1.4.0")]
+    [Serializable]
     public class AddressableKeyAsset : AddressableAsset<UnityEngine.Object>
     {
         public enum KeyAssetAddressType

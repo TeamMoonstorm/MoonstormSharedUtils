@@ -1,14 +1,12 @@
-﻿using RoR2.ExpansionManagement;
+﻿using R2API.AddressReferencedAssets;
+using RoR2.ExpansionManagement;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Moonstorm.AddressableAssets
 {
-    /// <summary>
-    /// <inheritdoc cref="AddressableAsset{T}"/>
-    /// The type of asset this references is an <see cref="ExpansionDef"/>, and can be loaded either via Addressables or the <see cref="ExpansionCatalog"/>
-    /// </summary>
+    [Obsolete("Use R2API's AddressReferencedExpansionDef Instead")]
     [Serializable]
     public class AddressableExpansionDef : AddressableAsset<ExpansionDef>
     {
@@ -25,23 +23,20 @@ namespace Moonstorm.AddressableAssets
             }
         }
 
-        /// <summary>
-        /// Parameterless Constructor for <see cref="AddressableExpansionDef"/>
-        /// </summary>
+        public static implicit operator AddressReferencedExpansionDef(AddressableExpansionDef bd)
+        {
+            if (bd.asset)
+                return new AddressReferencedExpansionDef(bd.asset);
+            else
+                return new AddressReferencedExpansionDef(bd.address);
+        }
+
         public AddressableExpansionDef() { }
-        /// <summary>
-        /// Constructor for <see cref="AddressableExpansionDef"/> that sets the <see cref="ExpansionDef"/> asset.
-        /// </summary>
-        /// <param name="ed">The <see cref="ExpansionDef"/> for this <see cref="AddressableExpansionDef"/></param>
         public AddressableExpansionDef(ExpansionDef ed)
         {
             asset = ed;
             useDirectReference = true;
         }
-        /// <summary>
-        /// Constructor for <see cref="AddressableExpansionDef"/> that sets the address that'll load the asset
-        /// </summary>
-        /// <param name="addressOrExpansionDefName">The Address for the <see cref="ExpansionDef"/>, this can also be the asset's name so it can load via the <see cref="ExpansionCatalog"/></param>
         public AddressableExpansionDef(string addressOrExpansionDefName)
         {
             address = addressOrExpansionDefName;

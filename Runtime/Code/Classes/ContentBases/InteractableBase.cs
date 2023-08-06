@@ -1,4 +1,5 @@
-﻿using System;
+﻿using R2API;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,7 +16,7 @@ namespace Moonstorm
         /// Represents if the Interactable is available for a DCCS
         /// </summary>
         /// <returns>true if the Interactable should be added, false otherwise</returns>
-        public delegate bool IsAvailableForDCCSDelegate();
+        public delegate bool IsAvailableForDCCSDelegate(DirectorAPI.StageInfo stageInfo);
         /// <summary>
         /// The interactable prefab for the InteractableBase
         /// </summary>
@@ -33,6 +34,6 @@ namespace Moonstorm
         /// </summary>
         public virtual IsAvailableForDCCSDelegate IsAvailableForDCCS { get; } = DefaultIsAvailable;
 
-        private static bool DefaultIsAvailable() => true;
+        private static bool DefaultIsAvailable(DirectorAPI.StageInfo stageInfo) => true;
     }
 }

@@ -1,13 +1,11 @@
-﻿using RoR2;
+﻿using R2API.AddressReferencedAssets;
+using RoR2;
 using System;
 using System.Threading.Tasks;
 
 namespace Moonstorm.AddressableAssets
 {
-    /// <summary>
-    /// <inheritdoc cref="AddressableAsset{T}"/>
-    /// The type of asset this references is an <see cref="ItemDef"/> and can be loaded either via Addressables or the <see cref="ItemCatalog"/>
-    /// </summary>
+    [Obsolete("Use R2API's AddressReferencedItemDef Instead")]
     [Serializable]
     public class AddressableItemDef : AddressableAsset<ItemDef>
     {
@@ -24,24 +22,21 @@ namespace Moonstorm.AddressableAssets
             }
         }
 
+        public static implicit operator AddressReferencedItemDef(AddressableItemDef bd)
+        {
+            if (bd.asset)
+                return new AddressReferencedItemDef(bd.asset);
+            else
+                return new AddressReferencedItemDef(bd.address);
+        }
 
-        /// <summary>
-        /// Parameterless Constructor for <see cref="AddressableItemDef"/>
-        /// </summary>
+
         public AddressableItemDef() { }
-        /// <summary>
-        /// Constructor for <see cref="AddressableItemDef"/> that sets the <see cref="ItemDef"/> asset.
-        /// </summary>
-        /// <param name="id">The <see cref="ItemDef"/> for this <see cref="AddressableItemDef"/></param>
         public AddressableItemDef(ItemDef id)
         {
             asset = id;
             useDirectReference = true;
         }
-        /// <summary>
-        /// Constructor for <see cref="AddressableItemDef"/> that sets the address that'll load the asset
-        /// </summary>
-        /// <param name="addressOrItemDefName">The Address for the <see cref="ItemDef"/>, this can also be the asset's name so it can load via the <see cref="ItemCatalog"/></param>
         public AddressableItemDef(string addressOrItemDefName)
         {
             address = addressOrItemDefName;

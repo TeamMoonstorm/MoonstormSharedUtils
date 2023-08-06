@@ -1,4 +1,5 @@
-﻿using RoR2;
+﻿using R2API.AddressReferencedAssets;
+using RoR2;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -41,7 +42,7 @@ namespace Moonstorm
         [SystemInitializer]
         private static void SystemInit()
         {
-            AddressableAssets.AddressableAsset.OnAddressableAssetsLoaded += () =>
+            AddressReferencedAsset.OnAddressReferencedAssetsLoaded += () =>
             {
                 MSULog.Info($"Initializing EliteTierDef Module...");
 

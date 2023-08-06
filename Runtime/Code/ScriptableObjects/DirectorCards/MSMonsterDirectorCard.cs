@@ -1,6 +1,9 @@
 ﻿using Moonstorm.AddressableAssets;
+using R2API;
+using R2API.AddressReferencedAssets;
 using RoR2;
 using RoR2.ExpansionManagement;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -52,6 +55,9 @@ namespace Moonstorm
         }
         [Space(10)]
         [Header("Settings for DirectorAPI")]
+        public AddressableDirectorCard addressReferencedDirectorCard = new AddressableDirectorCard();
+
+        [HideInInspector, Obsolete("Use \"addressReferencedDirectorCard\" instead")]
         public DirectorCard directorCard = new DirectorCard();
 
         [Tooltip("The category for this monster. If MonsterCategory is set to Custom, the option to set a Custom Category will appear")]
@@ -70,10 +76,12 @@ namespace Moonstorm
         [EnumMask(typeof(R2API.DirectorAPI.Stage))]
         public R2API.DirectorAPI.Stage stages;
 
-        [Tooltip("The list  of custom stages where this monster can spawn")]
+        [Tooltip("The list of custom stages where this monster can spawn, adding the keyword \"ALL\" means this monster can spawn on ANY custom stage.")]
         public List<string> customStages = new List<string>();
 
         [Tooltip("The ExpansionDefs that neeed to be enabled for this Monster to spawn. note that ALL expansions need to be enabled. for the monster to spawn")]
+        public List<AddressReferencedExpansionDef> requiredExpansionDefs = new List<AddressReferencedExpansionDef>();
+        [HideInInspector, Obsolete("Use \"requiredExpansionDefs\" instead")]
         public List<AddressableExpansionDef> requiredExpansions;
 
         /// <summary>
@@ -90,7 +98,16 @@ namespace Moonstorm
                 else
                 {
                     _directorCardHolder = new DirectorCardHolder();
-                    _directorCardHolder.Card = directorCard;
+                    _directorCardHolder.Card = new DirectorCard
+                    {
+                        forbiddenUnlockableDef = addressReferencedDirectorCard.forbiddenUnlockableDef,
+                        minimumStageCompletions = addressReferencedDirectorCard.minimumStageCompletions,
+                        preventOverhead = addressReferencedDirectorCard.preventOverhead,
+                        requiredUnlockableDef = addressReferencedDirectorCard.requiredUnlockableDef,
+                        selectionWeight = addressReferencedDirectorCard.selectionWeight,
+                        spawnCard = this,
+                        spawnDistance = addressReferencedDirectorCard.spawnDistance
+                    };
                     _directorCardHolder.MonsterCategory = monsterCategory;
                     _directorCardHolder.CustomMonsterCategory = customCategory;
                     _directorCardHolder.MonsterCategorySelectionWeight = customCategoryWeight;
@@ -108,8 +125,30 @@ namespace Moonstorm
         private new void Awake()
         {
             base.Awake();
-            directorCard.spawnCard = this as CharacterSpawnCard;
+            addressReferencedDirectorCard.spawnCard = this;
             customStages = customStages.Select(stageName => stageName.ToLowerInvariant()).ToList();
+#if !UNITY_EDITOR
+            Migrate();
+#endif
+        }
+
+        [ContextMenu("Migrate to R2API.Addressables")]
+        private void Migrate()
+        {
+            if(directorCard.forbiddenUnlockableDef && addressReferencedDirectorCard.forbiddenUnlockableDef.IsInvalid)
+            {
+                addressReferencedDirectorCard.forbiddenUnlockableDef = directorCard.forbiddenUnlockableDef;
+            }
+
+            if(directorCard.requiredUnlockableDef && addressReferencedDirectorCard.requiredUnlockableDef.IsInvalid)
+            {
+                addressReferencedDirectorCard.requiredUnlockableDef = directorCard.requiredUnlockableDef;
+            }
+
+            if(requiredExpansionDefs.Count == 0 && requiredExpansions.Count > 0)
+            {
+                requiredExpansionDefs.AddRange(requiredExpansions.Select(x => (AddressReferencedExpansionDef)x));
+            }
         }
 
         /// <summary>
@@ -120,7 +159,7 @@ namespace Moonstorm
         public virtual bool IsAvailable(ExpansionDef[] expansionDefs)
         {
             bool available = true;
-            var reqExpansions = requiredExpansions.Where(exp => exp.Asset != null).Select(exp => exp.Asset);
+            var reqExpansions = requiredExpansionDefs.Where(exp => exp.AssetExists);
             foreach (ExpansionDef ed in reqExpansions)
             {
                 available = expansionDefs.Contains(ed);

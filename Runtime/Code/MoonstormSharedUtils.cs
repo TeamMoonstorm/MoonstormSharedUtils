@@ -17,6 +17,7 @@ namespace Moonstorm
     [BepInDependency(R2API.DirectorAPI.PluginGUID)]
     [BepInDependency(R2API.EliteAPI.PluginGUID)]
     [BepInDependency(R2API.RecalculateStatsAPI.PluginGUID)]
+    [BepInDependency(R2API.AddressablesPlugin.PluginGUID)]
     [BepInDependency("com.rune580.riskofoptions")]
     [BepInDependency("iHarbHD.DebugToolkit", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInPlugin(GUID, MODNAME, VERSION)]
@@ -24,7 +25,7 @@ namespace Moonstorm
     {
         public const string GUID = "com.TeamMoonstorm.MoonstormSharedUtils";
         public const string MODNAME = "Moonstorm Shared Utils";
-        public const string VERSION = "1.6.0";
+        public const string VERSION = "1.6.1";
 
         /// <summary>
         /// Instance of MSU

@@ -1,8 +1,11 @@
 ﻿using EntityStates;
 using Moonstorm.AddressableAssets;
 using R2API;
+using R2API.AddressReferencedAssets;
 using RoR2;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Moonstorm
@@ -54,12 +57,51 @@ namespace Moonstorm
         public float repeatedSelectionCostCoefficient = 1;
         [Tooltip("How many stages need to pass before this event can be played")]
         public int minimumStageCompletions = 0;
+
         [Tooltip("If supplied, this event can only play if this unlockableDef has been unlocked")]
+        public AddressReferencedUnlockableDef requiredUnlock;
+        [HideInInspector, Obsolete("Use \"requiredUnlockable\" instead")]
         public AddressableUnlockableDef requiredUnlockableDef;
+
         [Tooltip("If supplied, this event CANNOT play if this unlockableDef has been unlocked")]
+        public AddressReferencedUnlockableDef forbiddenUnlock;
+        [HideInInspector, Obsolete("Use \"forbiddenUnlock\" instead")]
         public AddressableUnlockableDef forbiddenUnlockableDef;
+
         [Tooltip("If supplied, this event can only play if ALL expansion defs are enabled")]
+        public List<AddressReferencedExpansionDef> requiredExpansionDefs = new List<AddressReferencedExpansionDef>();
+        [HideInInspector, Obsolete("Use \"requiredExpansionDefs\" instead")]
         public List<AddressableExpansionDef> requiredExpansions = new List<AddressableExpansionDef>();
+
+
+        /// <summary>
+        /// Awake method for Event Card
+        /// 
+        /// Ensures the now deprecated <see cref="forbiddenUnlockableDef"/>, <see cref="requiredUnlockableDef"/> and <see cref="requiredExpansions"/> are migrated to their new fields.
+        /// </summary>
+        public virtual void Awake()
+        {
+#if !UNITY_EDITOR
+            Migrate();
+#endif
+        }
+
+
+        [ContextMenu("Migrate to R2API.Addressables")]
+        private void Migrate()
+        {
+            if (forbiddenUnlock.IsInvalid)
+                forbiddenUnlock = forbiddenUnlockableDef;
+
+            if (requiredUnlock.IsInvalid)
+                requiredUnlock = requiredUnlockableDef;
+
+            if(requiredExpansionDefs.Count == 0 && requiredExpansionDefs.Count > 0)
+            {
+                requiredExpansionDefs.AddRange(requiredExpansions.Select(x => (AddressReferencedExpansionDef
+                    )x));
+            }
+        }
 
         /// <summary>
         /// Checks if this card can be used currently.
@@ -79,17 +121,17 @@ namespace Moonstorm
             }
 
             var expansionsEnabled = true;
-            foreach (AddressableExpansionDef ed in requiredExpansions)
+            foreach (AddressReferencedExpansionDef ed in requiredExpansionDefs)
             {
-                expansionsEnabled = Run.instance.IsExpansionEnabled(ed.Asset);
+                expansionsEnabled = Run.instance.IsExpansionEnabled(ed);
             }
             if (!expansionsEnabled)
             {
                 return false;
             }
 
-            bool requiredUnlockableUnlocked = !requiredUnlockableDef || Run.instance.IsUnlockableUnlocked(requiredUnlockableDef);
-            bool forbiddenUnlockableUnlocked = forbiddenUnlockableDef && Run.instance.DoesEveryoneHaveThisUnlockableUnlocked(forbiddenUnlockableDef);
+            bool requiredUnlockableUnlocked = !requiredUnlock || Run.instance.IsUnlockableUnlocked(requiredUnlock);
+            bool forbiddenUnlockableUnlocked = forbiddenUnlock && Run.instance.DoesEveryoneHaveThisUnlockableUnlocked(forbiddenUnlock);
             if (!(requiredUnlockableUnlocked && !forbiddenUnlockableUnlocked))
             {
                 return false;

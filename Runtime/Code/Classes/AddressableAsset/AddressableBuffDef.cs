@@ -1,13 +1,11 @@
-﻿using RoR2;
+﻿using R2API.AddressReferencedAssets;
+using RoR2;
 using System;
 using System.Threading.Tasks;
 
 namespace Moonstorm.AddressableAssets
 {
-    /// <summary>
-    /// <inheritdoc cref="AddressableAsset{T}"/>
-    /// The type of asset this references is a <see cref="BuffDef"/>, and can be loaded either via Addressables or the <see cref="BuffCatalog"/>
-    /// </summary>
+    [Obsolete("Use R2API's AddressReferencedBuffDef Instead")]
     [Serializable]
     public class AddressableBuffDef : AddressableAsset<BuffDef>
     {
@@ -24,23 +22,19 @@ namespace Moonstorm.AddressableAssets
             }
         }
 
-        /// <summary>
-        /// Parameterless Constructor for <see cref="AddressableBuffDef"/>
-        /// </summary>
+        public static implicit operator AddressReferencedBuffDef(AddressableBuffDef bd)
+        {
+            if (bd.asset)
+                return new AddressReferencedBuffDef(bd.asset);
+            else
+                return new AddressReferencedBuffDef(bd.address);
+        }
         public AddressableBuffDef() { }
-        /// <summary>
-        /// Constructor for <see cref="AddressableBuffDef"/> that sets the <see cref="BuffDef"/> asset.
-        /// </summary>
-        /// <param name="bd">The <see cref="BuffDef"/> for this <see cref="AddressableBuffDef"/></param>
         public AddressableBuffDef(BuffDef bd)
         {
             asset = bd;
             useDirectReference = true;
         }
-        /// <summary>
-        /// Constructor for <see cref="AddressableBuffDef"/> that sets the address that'll load the asset
-        /// </summary>
-        /// <param name="addressOrBuffDefName">The Address for the <see cref="BuffDef"/>, this can also be the asset's name so it can load via the <see cref="BuffCatalog"/></param>
         public AddressableBuffDef(string addressOrBuffDefName)
         {
             address = addressOrBuffDefName;

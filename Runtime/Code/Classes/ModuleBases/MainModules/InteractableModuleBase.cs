@@ -220,13 +220,14 @@ namespace Moonstorm
 #endif
                 //Add card to monster collection hash set
                 interactableCollection.cards.Add(card);
+                interactableCollection.tiedInteractableBase = interactableBase;
 
                 //Its a set, no neeed to check if the collection already exists.
                 interactableCollectionSet.Add(interactableCollection);
             }
         }
 
-        private static void AddCardToStage(MSInteractableDirectorCard card, InteractableBase monsterBase, DirectorAPI.Stage stageValue)
+        private static void AddCardToStage(MSInteractableDirectorCard card, InteractableBase interactableBase, DirectorAPI.Stage stageValue)
         {
             //If the dictionary doesnt have an entry for this stage, create a new one alongside the list of monsters.
             if (!currentStageToCards.ContainsKey(stageValue))
@@ -235,7 +236,7 @@ namespace Moonstorm
             }
             HashSet<InteractableCollectionFuncPair> interactableCollectionSet = currentStageToCards[stageValue];
             //If there's no monster collection for this card's master prefab, create a new collection.
-            InteractableCollectionFuncPair interactableCollection = FindInteractableCollection(monsterBase, interactableCollectionSet) ?? new InteractableCollectionFuncPair();
+            InteractableCollectionFuncPair interactableCollection = FindInteractableCollection(interactableBase, interactableCollectionSet) ?? new InteractableCollectionFuncPair();
 
 #if DEBUG
             if (interactableCollection.cards.Contains(card))
@@ -246,6 +247,7 @@ namespace Moonstorm
 #endif
             //Add card to monster collection hash set
             interactableCollection.cards.Add(card);
+            interactableCollection.tiedInteractableBase = interactableBase;
 
             //Its a set, no neeed to check if the collection already exists.
             interactableCollectionSet.Add(interactableCollection);
@@ -278,14 +280,14 @@ namespace Moonstorm
                 {
                     if (currentCustomStageToCards.TryGetValue(stageInfo.CustomStageName, out interactables))
                     {
-                        AddCardsToPool(pool, interactables);
+                        AddCardsToPool(pool, interactables, stageInfo);
                     }
                 }
                 else
                 {
                     if (currentStageToCards.TryGetValue(stageInfo.stage, out interactables))
                     {
-                        AddCardsToPool(pool, interactables);
+                        AddCardsToPool(pool, interactables, stageInfo);
                     }
                 }
 
@@ -297,7 +299,7 @@ namespace Moonstorm
             }
         }
 
-        private static void AddCardsToPool(DccsPool pool, HashSet<InteractableCollectionFuncPair> interactables)
+        private static void AddCardsToPool(DccsPool pool, HashSet<InteractableCollectionFuncPair> interactables, DirectorAPI.StageInfo stageInfo)
         {
             var alwaysIncluded = pool.poolCategories.SelectMany(pc => pc.alwaysIncluded.Select(pe => pe.dccs)).ToList();
             var includedIfConditionsMet = pool.poolCategories.SelectMany(pc => pc.includedIfConditionsMet.Select(cpe => cpe.dccs)).ToList();
@@ -306,7 +308,7 @@ namespace Moonstorm
             List<DirectorCardCategorySelection> cardSelections = alwaysIncluded.Concat(includedIfConditionsMet).Concat(includedIfNoConditions).ToList();
             foreach (InteractableCollectionFuncPair collection in interactables)
             {
-                if(!collection.IsAvailable())
+                if(!collection.IsAvailable(stageInfo))
                 {
                     continue;
                 }

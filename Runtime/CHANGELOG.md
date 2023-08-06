@@ -1,3 +1,41 @@
+# '1.6.1' - Dependency changes and Rectifications
+
+* Added Onboarding and Documentation to begin developping a PR for MSU, Thanks Buns!
+
+## Runtime:
+
+* Now Dependant on ``R2API_Addressables``
+* Deprecated the following classes:
+    * ``AddressableAsset``
+    * ``AddressableBuffDef``
+    * ``AddressableEliteDef``
+    * ``AddressableEquipmentDef``
+    * ``AddressableExpansionDef``
+    * ``AddressableGameObject``
+    * ``AddressableItemDef``
+    * ``AddressableSpawnCard``
+    * ``AddressableUnlockableDef``
+        * These have been replaced by the AddressReferencedAsset system from ``R2API_Addressables``
+        * Any ScriptableObject affected by these changes now have a ContextMenu for upgrading to their new versions.
+    * ``MSDCCSPool``
+    * ``MSDirectorCardCategorySelection``
+        * These have been replaced by the ``AddressableDCCSPool`` and ``AddressableDirectorCardCategorySelection`` from ``R2API_Director``
+* ``InteractableBase`` and ``MonsterBase`` can now specify multiple Cards.
+* ``InteractableBase`` and ``MonsterBase`` can now implement custom IsAvailable methods, which will determine if the Monster or Interactable will be added to the stage
+* Added ``IEqualityComparers`` for ``MSMonsterDirectorCard`` and ``MSInteractableDirectorCard``, used for comparing equality between card prefabs.
+* ``AddressableInjector`` now only shows fields which are of type ``UnityEngine.Object``, largely cutting the amount of invalid options
+* Fixed issues where ``AddressableInjector``, ``CameraInstantiator``, ``InstantiateAddressablePrefab`` and ``SurfaceDefInjector`` would cause invalid GUIDs on scenes
+* Attempted to fix an issue where MSU would create multiple reflection type objects during dependent mod initializations
+* Fixed issue where the EventDirector would sometimes fail to find the required state machine
+
+## Debug Build Exclusive
+
+* MSU now only breaks when a fatal log is reached.
+
+## Editor
+
+* Removed property drawers for AddressableAsset related classes.
+
 # '1.6.0' - LogLoader and Utilities
 
 * Reformatted the Readme

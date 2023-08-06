@@ -8,7 +8,7 @@ namespace Moonstorm
     {
         public override ManualLogSource LogSource { get; protected set; }
 
-        public override BreakOnLog BreakOn => BreakOnLog.Error | BreakOnLog.Fatal;
+        public override BreakOnLog BreakOn => BreakOnLog.Fatal;
 
         public MSULog(ManualLogSource logSource) : base(logSource)
         {
