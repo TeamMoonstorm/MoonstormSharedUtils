@@ -76,11 +76,7 @@ namespace Moonstorm
         /// Returns all the CharacterMaster prefabs from the <see cref="MoonstormCharacters"/>
         /// </summary>
         public static GameObject[] LoadedCharacterMasters { get => MoonstormCharacters.Values.Select(cb => cb.MasterPrefab).ToArray(); }
-        /// <summary>
-        /// An action that gets invoked when the <see cref="MoonstormCharacters"/> dictionary has been populated
-        /// </summary>
-        [Obsolete("use \"moduleAvailability.CallWhenAvailable()\" instead")]
-        public static Action<ReadOnlyDictionary<GameObject, CharacterBase>> OnDictionaryCreated;
+
         /// <summary>
         /// Call moduleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
         /// </summary>
@@ -100,7 +96,6 @@ namespace Moonstorm
             MoonstormCharacters = new ReadOnlyDictionary<GameObject, CharacterBase>(characters);
             characters = null;
 
-            OnDictionaryCreated?.Invoke(MoonstormCharacters);
             moduleAvailability.MakeAvailable();
         }
 
@@ -142,13 +137,6 @@ namespace Moonstorm
             {
                 case MonsterBase monster:
                     AddSafely(ref SerializableContentPack.masterPrefabs, monster.MasterPrefab, "MasterPrefabs");
-#pragma warning disable CS0618 // Type or member is obsolete
-                    var cardObsolete = monster.MonsterDirectorCard;
-#pragma warning restore CS0618 // Type or member is obsolete
-                    if (cardObsolete && !monster.MonsterDirectorCards.Contains(cardObsolete))
-                    {
-                        monster.MonsterDirectorCards.Add(cardObsolete);
-                    }
                     MSULog.Debug($"Character {monster} Initialized and ensured it's body and master prefabs in {SerializableContentPack.name}");
                     break;
                 case SurvivorBase survivor:

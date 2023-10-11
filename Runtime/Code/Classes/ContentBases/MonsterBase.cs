@@ -17,9 +17,6 @@ namespace Moonstorm
         /// <returns>true if the Monster should be added, false otherwise</returns>
         public delegate bool IsAvailableForDCCSDelegate(DirectorAPI.StageInfo stageInfo);
 
-        [Obsolete("Use the MonsterDirectorCards list instead.")]
-        public virtual MSMonsterDirectorCard MonsterDirectorCard { get; }
-
         /// <summary>
         /// A list of <see cref="MSMonsterDirectorCard"/> for this Monster.
         /// </summary>

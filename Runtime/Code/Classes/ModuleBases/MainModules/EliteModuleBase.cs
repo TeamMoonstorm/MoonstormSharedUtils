@@ -28,11 +28,7 @@ namespace Moonstorm
         /// The AssetBundle where your EliteDefs are stored
         /// </summary>
         public abstract AssetBundle AssetBundle { get; }
-        /// <summary>
-        /// An action that gets invoked when the <see cref="MoonstormElites"/> List has been populated
-        /// </summary>
-        [Obsolete("use \"moduleAvailability.CallWhenAvailable()\" instead")]
-        public static Action<ReadOnlyCollection<MSEliteDef>> OnListCreated;
+
         /// <summary>
         /// Call moduleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
         /// </summary>
@@ -48,7 +44,6 @@ namespace Moonstorm
             MoonstormElites = new ReadOnlyCollection<MSEliteDef>(eliteDefs);
             eliteDefs = null;
 
-            OnListCreated?.Invoke(MoonstormElites);
             moduleAvailability.MakeAvailable();
         }
 

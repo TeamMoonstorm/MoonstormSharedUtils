@@ -28,11 +28,7 @@ namespace Moonstorm
         /// Returns all the SerializableEliteTierDefs from <see cref="MoonstormEliteTiers"/>
         /// </summary>
         public static SerializableEliteTierDef[] LoadedEliteTierDefs { get => MoonstormEliteTiers.Keys.ToArray(); }
-        /// <summary>
-        /// An action that gets invoked when the <see cref="MoonstormEliteTiers"/> dictionary has been populated
-        /// </summary>
-        [Obsolete("use \"moduleAvailability.CallWhenAvailable()\" instead")]
-        public static Action<ReadOnlyDictionary<SerializableEliteTierDef, EliteTierDefBase>> OnDictionaryCreated;
+
         /// <summary>
         /// Call moduleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
         /// </summary>
@@ -51,7 +47,6 @@ namespace Moonstorm
                 MoonstormEliteTiers = new ReadOnlyDictionary<SerializableEliteTierDef, EliteTierDefBase>(eliteTierDefs);
                 eliteTierDefs = null;
 
-                OnDictionaryCreated?.Invoke(MoonstormEliteTiers);
                 moduleAvailability.MakeAvailable();
             };
         }

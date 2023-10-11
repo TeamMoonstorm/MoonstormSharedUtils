@@ -18,16 +18,6 @@ namespace Moonstorm
         /// </summary>
         Default,
         /// <summary>
-        /// The value of the field/property is multiplied by 100
-        /// </summary>
-        [Obsolete("Use MultiplyByN and set the extraData field to 100")]
-        Percentage,
-        /// <summary>
-        /// The value of the field/property is divided by 2
-        /// </summary>
-        [Obsolete("Use DivideByN and set the extraData field to 2")]
-        DivideBy2,
-        /// <summary>
         /// The value of this field/property is divided by N, where N is a float that'll be parsed from <see cref="TokenModifierAttribute.extraData"/>
         /// </summary>
         DivideByN,
@@ -68,9 +58,6 @@ namespace Moonstorm
         /// The index used during formatting process
         /// </summary>
         public int formatIndex;
-
-        [Obsolete("Creating floats from strings is error prone, use \"operationData\" instead.")]
-        public string extraData;
 
         /// <summary>
         /// Operation data to be used during formatting, should be used depending on the chosen StatType
@@ -117,12 +104,6 @@ namespace Moonstorm
                 value = pi.GetMethod?.Invoke(null, null);
             }
 
-            if (!extraData.IsNullOrWhiteSpace() && float.IsNaN(operationData))
-            {
-                operationData = float.Parse(extraData, CultureInfo.InvariantCulture);
-                extraData = string.Empty;
-            }
-
             Type valueType = value.GetType();
             if (valueType.IsSubclassOf(typeof(ConfigurableVariable)))
             {
@@ -137,14 +118,6 @@ namespace Moonstorm
                 {
                     case StatTypes.Default:
                         valueForFormatting = value;
-                        return valueForFormatting;
-                    case StatTypes.Percentage:
-                        operationData = 100f;
-                        valueForFormatting = MultiplyByN(CastToFloat(value));
-                        return valueForFormatting;
-                    case StatTypes.DivideBy2:
-                        operationData = 2f;
-                        valueForFormatting = DivideByN(CastToFloat(value));
                         return valueForFormatting;
                     case StatTypes.MultiplyByN:
                         valueForFormatting = float.IsNaN(operationData) ? value : MultiplyByN(CastToFloat(value));

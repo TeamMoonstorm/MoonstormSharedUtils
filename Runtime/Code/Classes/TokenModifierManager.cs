@@ -34,11 +34,6 @@ namespace Moonstorm
             };
         }
 
-        [Obsolete("Apply the following assembly attribute to your assembly: \"[assembly: HG.Reflection.SearchableAttribute.OptIn]\"")]
-        public static void AddToManager()
-        {
-        }
-
         private static void ModifyTokensInLanguage(Language lang)
         {
             lang = lang ?? Language.currentLanguage;

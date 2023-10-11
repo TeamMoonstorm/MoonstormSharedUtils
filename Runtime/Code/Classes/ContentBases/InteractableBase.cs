@@ -22,8 +22,6 @@ namespace Moonstorm
         /// </summary>
         public abstract GameObject Interactable { get; }
 
-        [Obsolete("Use the InteractableDirectorCards list instead.")]
-        public virtual MSInteractableDirectorCard InteractableDirectorCard { get; }
         /// <summary>
         /// A list of <see cref="MSInteractableDirectorCard"/> used for spawning the interactable prefab.
         /// </summary>

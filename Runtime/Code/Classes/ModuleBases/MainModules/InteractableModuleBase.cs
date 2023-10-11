@@ -66,11 +66,7 @@ namespace Moonstorm
         /// Loads all the interactable game objects
         /// </summary>
         public static GameObject[] LoadedInteractables { get => MoonstormInteractables.Keys.ToArray(); }
-        /// <summary>
-        /// An action that gets invoked when the <see cref="MoonstormInteractables"/> dictionary has been populated
-        /// </summary>
-        [Obsolete("use \"moduleAvailability.CallWhenAvailable()\" instead")]
-        public static Action<ReadOnlyDictionary<GameObject, InteractableBase>> OnDictionaryCreated;
+
         /// <summary>
         /// Call moduleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
         /// </summary>
@@ -90,7 +86,6 @@ namespace Moonstorm
             MoonstormInteractables = new ReadOnlyDictionary<GameObject, InteractableBase>(interactables);
             interactables = null;
 
-            OnDictionaryCreated?.Invoke(MoonstormInteractables);
             moduleAvailability.MakeAvailable();
         }
 
@@ -132,13 +127,6 @@ namespace Moonstorm
             AddSafely(ref SerializableContentPack.networkedObjectPrefabs, contentClass.Interactable, "NetworkedObjectPrefabs");
             contentClass.Initialize();
 
-#pragma warning disable CS0618 // Type or member is obsolete
-            var cardObsolete = contentClass.InteractableDirectorCard;
-#pragma warning restore CS0618 // Type or member is obsolete
-            if (cardObsolete && !contentClass.InteractableDirectorCards.Contains(cardObsolete))
-            {
-                contentClass.InteractableDirectorCards.Add(cardObsolete);
-            }
             interactables.Add(contentClass.Interactable, contentClass);
         }
         #endregion

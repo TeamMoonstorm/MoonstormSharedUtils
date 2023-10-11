@@ -165,11 +165,6 @@ namespace Moonstorm.Loaders
             return cfg;
         }
 
-        [Obsolete("Method is wrongly named, use \"MakeConfigurableString\" instead.")]
-        public static ConfigurableString MakeConfigurableInt(string defaultVal, Action<ConfigurableString> initializer = null)
-        {
-            return MakeConfigurableString(defaultVal, initializer);
-        }
 
         /// <summary>
         /// Creates a ConfigurableString and automatically sets it's <see cref="ConfigurableVariable.ModGUID"/> and <see cref="ConfigurableVariable.ModName"/> to <typeparamref name="T"/>'s instance using it's <see cref="ConfigLoader.MainClass"/>.
@@ -253,9 +248,6 @@ namespace Moonstorm.Loaders
         /// Retrieves the MainClass's Owner Metadata
         /// </summary>
         public BepInPlugin OwnerMetaData { get => MainClass.Info.Metadata; }
-
-        [Obsolete("Use ConfigSystem.GetConfigFile() isntead")]
-        public Dictionary<string, ConfigFile> identifierToConfigFile = new Dictionary<string, ConfigFile>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
         /// Creates a config file.

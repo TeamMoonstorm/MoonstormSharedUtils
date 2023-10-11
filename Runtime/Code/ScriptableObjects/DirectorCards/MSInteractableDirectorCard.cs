@@ -1,5 +1,4 @@
-﻿using Moonstorm.AddressableAssets;
-using R2API;
+﻿using R2API;
 using R2API.AddressReferencedAssets;
 using RoR2;
 using RoR2.ExpansionManagement;
@@ -57,9 +56,6 @@ namespace Moonstorm
         [Header("Settings for DirectorAPI")]
         public AddressableDirectorCard addressReferencedDirectorCard = new AddressableDirectorCard();
 
-        [HideInInspector, Obsolete("Use \"addressReferencedDirectorCard\" instead")]
-        public DirectorCard directorCard = new DirectorCard();
-
         [Tooltip("The category for this interactable. If interactableCategory is set to Custom, the option to set a Custom Category will appear.")]
         public InteractableCategory interactableCategory;
 
@@ -85,8 +81,6 @@ namespace Moonstorm
 
         [Tooltip("The ExpansionDefs that neeed to be enabled for this Interactable to spawn. note that ALL expansions need to be enabled for the Interactable to spawn")]
         public List<AddressReferencedExpansionDef> requiredExpansionDefs = new List<AddressReferencedExpansionDef>();
-        [HideInInspector, Obsolete("Use \"requiredExpansionDefs\" instead")]
-        public List<AddressableExpansionDef> requiredExpansions;
 
         /// <summary>
         /// The DirectorCardHolder for this MSMonsterDirectorCard
@@ -129,30 +123,11 @@ namespace Moonstorm
 
         private void Awake()
         {
-            directorCard.spawnCard = this as InteractableSpawnCard;
+            addressReferencedDirectorCard.spawnCard = this as InteractableSpawnCard;
             customStages = customStages.Select(stageName => stageName.ToLowerInvariant()).ToList();
 #if !UNITY_EDITOR
             Migrate();
 #endif
-        }
-
-        [ContextMenu("Migrate to R2API.Addressables")]
-        private void Migrate()
-        {
-            if (directorCard.forbiddenUnlockableDef && addressReferencedDirectorCard.forbiddenUnlockableDef.IsInvalid)
-            {
-                addressReferencedDirectorCard.forbiddenUnlockableDef = directorCard.forbiddenUnlockableDef;
-            }
-
-            if (directorCard.requiredUnlockableDef && addressReferencedDirectorCard.requiredUnlockableDef.IsInvalid)
-            {
-                addressReferencedDirectorCard.requiredUnlockableDef = directorCard.requiredUnlockableDef;
-            }
-
-            if (requiredExpansionDefs.Count == 0 && requiredExpansions.Count > 0)
-            {
-                requiredExpansionDefs.AddRange(requiredExpansions.Select(x => (AddressReferencedExpansionDef)x));
-            }
         }
 
         /// <summary>

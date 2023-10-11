@@ -29,11 +29,7 @@ namespace Moonstorm
         /// Loads all the Artifactdefs from <see cref="MoonstormArtifacts"/>
         /// </summary>
         public static ArtifactDef[] LoadedArtifactDefs { get => MoonstormArtifacts.Keys.ToArray(); }
-        /// <summary>
-        /// An action that gets invoked when the <see cref="MoonstormArtifacts"/> has been populated
-        /// </summary>
-        [Obsolete("use \"moduleAvailability.CallWhenAvailable()\" instead")]
-        public static Action<ReadOnlyDictionary<ArtifactDef, ArtifactBase>> OnDictionaryCreated;
+
         /// <summary>
         /// Call moduleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
         /// </summary>
@@ -50,7 +46,6 @@ namespace Moonstorm
             MoonstormArtifacts = new ReadOnlyDictionary<ArtifactDef, ArtifactBase>(artifacts);
             artifacts = null;
 
-            OnDictionaryCreated?.Invoke(MoonstormArtifacts);
             moduleAvailability.MakeAvailable();
         }
 

@@ -26,11 +26,7 @@ namespace Moonstorm
         /// Loads all the Projectile GameObjects from the <see cref="MoonstormScenes"/> dictionary.
         /// </summary>
         public static GameObject[] LoadedProjectiles { get => MoonstormProjectiles.Keys.ToArray(); }
-        /// <summary>
-        /// An action that gets invoked when the <see cref="MoonstormUnlockables"/> dictionary has been populated
-        /// </summary>
-        [Obsolete("use \"moduleAvailability.CallWhenAvailable()\" instead")]
-        public static Action<ReadOnlyDictionary<GameObject, ProjectileBase>> OnDictionaryCreated;
+
         /// <summary>
         /// Call moduleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
         /// </summary>
@@ -45,7 +41,6 @@ namespace Moonstorm
             MoonstormProjectiles = new ReadOnlyDictionary<GameObject, ProjectileBase>(projectiles);
             projectiles = null;
 
-            OnDictionaryCreated?.Invoke(MoonstormProjectiles);
             moduleAvailability.MakeAvailable();
         }
 

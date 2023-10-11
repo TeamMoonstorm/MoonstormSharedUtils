@@ -93,8 +93,6 @@ namespace Moonstorm.Config
             return this;
         }
 
-        [Obsolete("Method is wrongly named, Use AddOnConfigChanged instead")]
-        public new ConfigurableString SetOnConfigChanged(OnConfigChangedDelegate onConfigChanged) => AddOnConfigChanged(onConfigChanged);
 
         public new ConfigurableString AddOnConfigChanged(OnConfigChangedDelegate onConfigChanged)
         {

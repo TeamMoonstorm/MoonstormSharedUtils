@@ -1,5 +1,4 @@
 ﻿using BepInEx;
-using Moonstorm.AddressableAssets;
 using RoR2;
 using System;
 using System.Collections.Generic;
@@ -22,7 +21,6 @@ namespace Moonstorm
         {
             [Tooltip("The IDRS to add the rules below to")]
             public string idrsName;
-            [Obsolete("Use idrsName instead")] public AddressableIDRS idrs;
             [Tooltip("The rules for the IDRS above")]
             public List<DisplayRule> displayRules;
 
@@ -116,8 +114,6 @@ namespace Moonstorm
         public UnityEngine.Object keyAsset;
         [Tooltip("An array of valid display prefabs for this Item")]
         public GameObject[] displayPrefabs = Array.Empty<GameObject>();
-        [Obsolete("Use DisplayPrefabs and specify the displayPrefabIndex on the DisplayRule")]
-        public GameObject displayPrefab;
 
         [Tooltip("Implement the rules for this Dictionary")]
         [Space]
@@ -228,77 +224,6 @@ namespace Moonstorm
                 }
             }
             return keyAssetRuleGroup;
-        }
-
-        [ContextMenu("Upgrade for SerializedItemDisplayCatalog")]
-        private void Upgrade()
-        {
-            int indexOfDisplayPrefab = displayPrefabs.Length;
-#pragma warning disable CS0618 // Type or member is obsolete
-            HG.ArrayUtils.ArrayAppend(ref displayPrefabs, displayPrefab);
-#pragma warning restore CS0618 // Type or member is obsolete
-
-            for (int i = 0; i < namedDisplayDictionary.Count; i++)
-            {
-                namedDisplayDictionary[i] = UpgradeNamedDisplayDictionary(namedDisplayDictionary[i], i);
-                for (int j = 0; j < namedDisplayDictionary[i].displayRules.Count; j++)
-                {
-                    namedDisplayDictionary[i].displayRules[j] = UpgradeDisplayRule(namedDisplayDictionary[i].displayRules[j], i, j);
-                }
-            }
-
-            NamedDisplayDictionary UpgradeNamedDisplayDictionary(NamedDisplayDictionary input, int index)
-            {
-                var copy = input;
-                try
-                {
-                    if (!input.idrsName.IsNullOrWhiteSpace())
-                        return input;
-
-                    string idrsName = null;
-
-#pragma warning disable CS0618 // Type or member is obsolete
-                    if (!input.idrs.address.IsNullOrWhiteSpace())
-                    {
-                        string[] split = input.idrs.address.Split('/');
-                        split = split[split.Length - 1].Split('.');
-                        idrsName = split[0];
-                    }
-                    else
-
-                    {
-                        idrsName = input.idrs.Asset.name;
-                    }
-#pragma warning restore CS0618 // Type or member is obsolete
-                    input.idrsName = idrsName;
-                    return input;
-                }
-                catch (Exception e)
-                {
-                    MSULog.Error($"Failed to upgrade AddressNamedRuleGroup at index {index} for {this}.\n{e}");
-                    return copy;
-                }
-            }
-
-            DisplayRule UpgradeDisplayRule(DisplayRule input, int dictionaryIndex, int ruleIndex)
-            {
-                var copy = input;
-                try
-                {
-                    if (input.displayPrefabIndex == indexOfDisplayPrefab)
-                    {
-                        return input;
-                    }
-
-                    input.displayPrefabIndex = indexOfDisplayPrefab;
-                    return input;
-                }
-                catch (Exception e)
-                {
-                    MSULog.Error($"Failed to upgrade Displayrule from dictionary index {dictionaryIndex} at {ruleIndex} for {this}.\n{e}");
-                    return copy;
-                }
-            }
         }
     }
 }

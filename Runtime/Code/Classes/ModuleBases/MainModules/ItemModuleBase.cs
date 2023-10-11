@@ -26,11 +26,7 @@ namespace Moonstorm
         /// Loads all the <see cref="ItemDef"/> from the <see cref="MoonstormItems"/> dictionary
         /// </summary>
         public static ItemDef[] LoadedItemDefs { get => MoonstormItems.Keys.ToArray(); }
-        /// <summary>
-        /// An action that gets invoked when the <see cref="MoonstormItems"/> dictionary has been populated
-        /// </summary>
-        [Obsolete("use \"moduleAvailability.CallWhenAvailable()\" instead")]
-        public static Action<ReadOnlyDictionary<ItemDef, ItemBase>> OnDictionaryCreated;
+
         /// <summary>
         /// Call moduleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
         /// </summary>
@@ -50,7 +46,6 @@ namespace Moonstorm
             MoonstormItems = new ReadOnlyDictionary<ItemDef, ItemBase>(items);
             items = null;
 
-            OnDictionaryCreated?.Invoke(MoonstormItems);
             moduleAvailability.MakeAvailable();
         }
 

@@ -55,11 +55,7 @@ namespace Moonstorm
         /// Returns all the EquipmentDefs, regardless if theyre from Elites or not
         /// </summary>
         public static EquipmentDef[] AllEquipmentDefs { get => AllMoonstormEquipments.Keys.ToArray(); }
-        /// <summary>
-        /// An action that gets invoked when the <see cref="NonEliteMoonstormEquipments"/> & <see cref="EliteMoonstormEquipments"/> dictionaries have been populated
-        /// </summary>
-        [Obsolete("use \"moduleAvailability.CallWhenAvailable()\" instead")]
-        public static Action<ReadOnlyDictionary<EquipmentDef, EquipmentBase>, ReadOnlyDictionary<EquipmentDef, EliteEquipmentBase>> OnDictionariesCreated;
+
         /// <summary>
         /// Call moduleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
         /// </summary>
@@ -83,7 +79,6 @@ namespace Moonstorm
                                                               .ToDictionary(k => k.Key, v => v.Value);
             allMoonstormEquipments = new ReadOnlyDictionary<EquipmentDef, EquipmentBase>(mergedDictionary);
 
-            OnDictionariesCreated?.Invoke(NonEliteMoonstormEquipments, EliteMoonstormEquipments);
             moduleAvailability.MakeAvailable();
         }
 

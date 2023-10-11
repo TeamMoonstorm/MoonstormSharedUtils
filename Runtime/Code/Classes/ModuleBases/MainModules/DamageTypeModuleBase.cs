@@ -27,11 +27,6 @@ namespace Moonstorm
         /// </summary>
         public static ModdedDamageType[] ModdedDamageTypes { get => MoonstormDamageTypes.Keys.ToArray(); }
         /// <summary>
-        /// An action that gets invoked when the <see cref="MoonstormDamageTypes" dictionary has been populated
-        /// </summary>
-        [Obsolete("use \"moduleAvailability.CallWhenAvailable()\" instead")]
-        public static Action<ReadOnlyDictionary<ModdedDamageType, DamageTypeBase>> OnDictionaryCreated;
-        /// <summary>
         /// Call moduleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
         /// </summary>
         public static ResourceAvailability moduleAvailability;
@@ -45,7 +40,6 @@ namespace Moonstorm
             MoonstormDamageTypes = new ReadOnlyDictionary<ModdedDamageType, DamageTypeBase>(damageTypes);
             damageTypes = null;
 
-            OnDictionaryCreated?.Invoke(MoonstormDamageTypes);
             moduleAvailability.MakeAvailable();
         }
 

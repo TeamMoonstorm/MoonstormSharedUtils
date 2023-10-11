@@ -1,5 +1,4 @@
 ﻿using BepInEx;
-using Moonstorm.AddressableAssets;
 using RoR2;
 using System;
 using System.Collections.Generic;
@@ -23,7 +22,6 @@ namespace Moonstorm
         {
             [Tooltip("The Key Asset, usually an ItemDef or EquipmentDef name")]
             public string keyAssetName;
-            [Obsolete("Use keyAssetName instead")] public AddressableKeyAsset keyAsset;
             [Tooltip("The rules this rule group has")]
             public List<AddressNamedDisplayRule> rules;
 
@@ -55,7 +53,6 @@ namespace Moonstorm
             public ItemDisplayRuleType ruleType;
             [Tooltip("The Display Prefab")]
             public string displayPrefabName;
-            [Obsolete("Use displayPrefabName instead")] public AddressableGameObject displayPrefab;
             [Tooltip("The name of the child where this display prefab will appear")]
             public string childName;
             [Tooltip("The local position of this display")]
@@ -197,88 +194,6 @@ namespace Moonstorm
             }
             namedRuleGroups.Clear();
             return keyAssetList.ToArray();
-        }
-
-        [ContextMenu("Upgrade for SerializedItemDisplayCatalog")]
-        private void Upgrade()
-        {
-            for (int i = 0; i < namedRuleGroups.Count; i++)
-            {
-                namedRuleGroups[i] = UpgradeRuleGroup(namedRuleGroups[i], i);
-                for (int j = 0; j < namedRuleGroups[i].rules.Count; j++)
-                {
-                    namedRuleGroups[i].rules[j] = UpgradeRule(namedRuleGroups[i].rules[j], i, j);
-                }
-            }
-
-            AddressNamedRuleGroup UpgradeRuleGroup(AddressNamedRuleGroup input, int index)
-            {
-                var copy = input;
-                try
-                {
-                    if (!input.keyAssetName.IsNullOrWhiteSpace())
-                        return input;
-
-                    string keyAssetName = null;
-#pragma warning disable CS0618 // Type or member is obsolete
-                    switch (input.keyAsset.loadAssetFrom)
-                    {
-                        case AddressableKeyAsset.KeyAssetAddressType.UsingDirectReference:
-                            keyAssetName = input.keyAsset.Asset.name;
-                            break;
-                        case AddressableKeyAsset.KeyAssetAddressType.Addressables:
-                            string[] split = input.keyAsset.address.Split('/');
-                            split = split[split.Length - 1].Split('.');
-                            keyAssetName = split[0];
-                            break;
-                        default:
-                            keyAssetName = input.keyAsset.address;
-                            break;
-                    }
-#pragma warning restore CS0618 // Type or member is obsolete
-                    input.keyAssetName = keyAssetName;
-                    return input;
-                }
-                catch (Exception e)
-                {
-                    MSULog.Error($"Failed to upgrade AddressNamedRuleGroup at index {index} for {this}.\n{e}");
-                    return copy;
-                }
-            }
-
-            AddressNamedDisplayRule UpgradeRule(AddressNamedDisplayRule input, int groupIndex, int index)
-            {
-                var copy = input;
-                try
-                {
-                    if (!input.displayPrefabName.IsNullOrWhiteSpace())
-                    {
-                        return input;
-                    }
-
-                    string displayPrefabName = null;
-#pragma warning disable CS0618 // Type or member is obsolete
-                    if (input.displayPrefab.address.IsNullOrWhiteSpace())
-                    {
-                        displayPrefabName = input.displayPrefab.Asset.name;
-                    }
-                    else
-                    {
-                        string[] split = input.displayPrefab.address.Split('/');
-                        split = split[split.Length - 1].Split('.');
-                        displayPrefabName = split[0];
-                    }
-#pragma warning restore CS0618 // Type or member is obsolete
-
-                    input.displayPrefabName = displayPrefabName;
-                    return input;
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError($"Failed to upgrade AddressNamedDisplayRule from group index {groupIndex} at {index} for {this}.\n{e}");
-                    return copy;
-                }
-            }
         }
     }
 }

@@ -16,9 +16,6 @@ namespace Moonstorm
     {
         public static bool HolyDLLInstalled => IsModInstalled("xyz.yekoc.Holy");
 
-        [Obsolete("Risk of options is a hard dependency so its always installed.")]
-        public static bool RiskOfOptionsInstalled => IsModInstalled("com.rune580.riskofoptions");
-
         public static bool DebugToolkitInstalled => IsModInstalled("iHarbHD.DebugToolkit");
 
         private static Run currentRun;
@@ -149,11 +146,6 @@ namespace Moonstorm
             return true;
         }
 
-        [Obsolete("Method is wrongly named, use RemoveIfInCollection instead")]
-        public static bool RemoveIfNotInCollection<T>(this ICollection<T> collection, T entry)
-        {
-            return RemoveIfInCollection(collection, entry);
-        }
 
         /// <summary>
         /// Removes the entry of type <typeparamref name="T"/> from the collection if its in it

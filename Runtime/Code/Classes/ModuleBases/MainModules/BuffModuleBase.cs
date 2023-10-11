@@ -35,11 +35,7 @@ namespace Moonstorm
         /// Loads all the BuffDefs from <see cref="MoonstormBuffs">
         /// </summary>
         public static BuffDef[] LoadedBuffDefs { get => MoonstormBuffs.Keys.ToArray(); }
-        /// <summary>
-        /// An action that gets invoked when the <see cref="MoonstormBuffs"/> and <see cref="MoonstormOverlayMaterials"/> have been populated
-        /// </summary>
-        [Obsolete("use \"moduleAvailability.CallWhenAvailable()\" instead")]
-        public static Action<ReadOnlyDictionary<BuffDef, BuffBase>, ReadOnlyDictionary<BuffDef, Material>> OnDictionariesCreated;
+
         /// <summary>
         /// Call moduleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
         /// </summary>
@@ -59,7 +55,6 @@ namespace Moonstorm
             MoonstormOverlayMaterials = new ReadOnlyDictionary<BuffDef, Material>(overlayMaterials);
             overlayMaterials = null;
 
-            OnDictionariesCreated?.Invoke(MoonstormBuffs, MoonstormOverlayMaterials);
             moduleAvailability.MakeAvailable();
         }
 

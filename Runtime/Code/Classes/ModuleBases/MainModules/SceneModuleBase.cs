@@ -25,11 +25,7 @@ namespace Moonstorm
         /// Loads all the <see cref="SceneDef"/>s from the <see cref="MoonstormScenes"/> dictionary.
         /// </summary>
         public SceneDef[] LoadedSceneDefs { get => MoonstormScenes.Keys.ToArray(); }
-        /// <summary>
-        /// An action that gets invoked when the <see cref="MoonstormUnlockables"/> dictionary has been populated
-        /// </summary>
-        [Obsolete("use \"moduleAvailability.CallWhenAvailable()\" instead")]
-        public static Action<ReadOnlyDictionary<SceneDef, SceneBase>> OnDictionaryCreated;
+
         /// <summary>
         /// Call moduleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
         /// </summary>
@@ -44,7 +40,6 @@ namespace Moonstorm
             MoonstormScenes = new ReadOnlyDictionary<SceneDef, SceneBase>(scenes);
             scenes = null;
 
-            OnDictionaryCreated?.Invoke(MoonstormScenes);
             moduleAvailability.MakeAvailable();
         }
 

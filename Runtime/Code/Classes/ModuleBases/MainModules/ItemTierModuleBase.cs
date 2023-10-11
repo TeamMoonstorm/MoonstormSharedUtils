@@ -29,11 +29,6 @@ namespace Moonstorm
         public static ItemTierDef[] LoadedItemTierDefs => MoonstormItemTiers.Keys.ToArray();
 
         /// <summary>
-        /// An action that gets invoked when the <see cref="MoonstormItemTiers"/> dictionary has been populated.
-        /// </summary>
-        [Obsolete("use \"moduleAvailability.CallWhenAvailable()\" instead")]
-        public static event Action<ReadOnlyDictionary<ItemTierDef, ItemTierBase>> OnDictionaryCreated;
-        /// <summary>
         /// Call moduleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
         /// </summary>
         public static ResourceAvailability moduleAvailability;
@@ -49,7 +44,6 @@ namespace Moonstorm
             BuildItemListForEachItemTier();
 
 
-            OnDictionaryCreated?.Invoke(MoonstormItemTiers);
             moduleAvailability.MakeAvailable();
         }
 

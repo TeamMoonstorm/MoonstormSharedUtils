@@ -41,14 +41,6 @@ namespace Moonstorm
         [Tooltip("The description of this achievement")]
         public string achievementDescToken;
 
-        [Obsolete("Made obsolete by the new Sprite field of UnlockableDef")]
-        [HideInInspector]
-        public Sprite achievedIcon;
-
-        [Obsolete("Made obsolete by the new Sprite field of UnlockableDef")]
-        [HideInInspector]
-        public Sprite unachievedIcon;
-
         [Tooltip("The prerequisite achievement for this achievement to be unlocked")]
         public AchievementStringAssetRef prerequisiteAchievement;
 
@@ -103,13 +95,5 @@ namespace Moonstorm
             }
             return null;
         }
-
-#if DEBUG
-        [ContextMenu("Migrate from sprite fields to vanilla field")]
-        private void UpdateSpritesToVanillaIconField()
-        {
-            achievementIcon = achievedIcon;
-        }
-#endif
     }
 }

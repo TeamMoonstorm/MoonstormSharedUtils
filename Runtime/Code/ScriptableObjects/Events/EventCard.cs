@@ -1,5 +1,4 @@
 ﻿using EntityStates;
-using Moonstorm.AddressableAssets;
 using R2API;
 using R2API.AddressReferencedAssets;
 using RoR2;
@@ -60,48 +59,13 @@ namespace Moonstorm
 
         [Tooltip("If supplied, this event can only play if this unlockableDef has been unlocked")]
         public AddressReferencedUnlockableDef requiredUnlock;
-        [HideInInspector, Obsolete("Use \"requiredUnlockable\" instead")]
-        public AddressableUnlockableDef requiredUnlockableDef;
+
 
         [Tooltip("If supplied, this event CANNOT play if this unlockableDef has been unlocked")]
         public AddressReferencedUnlockableDef forbiddenUnlock;
-        [HideInInspector, Obsolete("Use \"forbiddenUnlock\" instead")]
-        public AddressableUnlockableDef forbiddenUnlockableDef;
 
         [Tooltip("If supplied, this event can only play if ALL expansion defs are enabled")]
         public List<AddressReferencedExpansionDef> requiredExpansionDefs = new List<AddressReferencedExpansionDef>();
-        [HideInInspector, Obsolete("Use \"requiredExpansionDefs\" instead")]
-        public List<AddressableExpansionDef> requiredExpansions = new List<AddressableExpansionDef>();
-
-
-        /// <summary>
-        /// Awake method for Event Card
-        /// 
-        /// Ensures the now deprecated <see cref="forbiddenUnlockableDef"/>, <see cref="requiredUnlockableDef"/> and <see cref="requiredExpansions"/> are migrated to their new fields.
-        /// </summary>
-        public virtual void Awake()
-        {
-#if !UNITY_EDITOR
-            Migrate();
-#endif
-        }
-
-
-        [ContextMenu("Migrate to R2API.Addressables")]
-        private void Migrate()
-        {
-            if (forbiddenUnlock.IsInvalid)
-                forbiddenUnlock = forbiddenUnlockableDef;
-
-            if (requiredUnlock.IsInvalid)
-                requiredUnlock = requiredUnlockableDef;
-
-            if(requiredExpansionDefs.Count == 0 && requiredExpansionDefs.Count > 0)
-            {
-                requiredExpansionDefs.AddRange(requiredExpansions.Select(x => (AddressReferencedExpansionDef
-                    )x));
-            }
-        }
 
         /// <summary>
         /// Checks if this card can be used currently.

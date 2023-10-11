@@ -29,11 +29,7 @@ namespace Moonstorm
         /// Loads all the <see cref="AchievementDef"/>s from the unlockables in <see cref="MoonstormUnlockables"/> dictionary.
         /// </summary>
         public static AchievementDef[] LoadedAchievements { get => MoonstormUnlockables.Values.Select(ub => ub.GetAchievementDef).ToArray(); }
-        /// <summary>
-        /// An action that gets invoked when the <see cref="MoonstormUnlockables"/> dictionary has been populated
-        /// </summary>
-        [Obsolete("use \"moduleAvailability.CallWhenAvailable()\" instead")]
-        public static Action<ReadOnlyDictionary<MSUnlockableDef, UnlockableBase>> OnDictionaryCreated;
+
         /// <summary>
         /// Call moduleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
         /// </summary>
@@ -49,7 +45,6 @@ namespace Moonstorm
             MoonstormUnlockables = new ReadOnlyDictionary<MSUnlockableDef, UnlockableBase>(unlocks);
             unlocks = null;
 
-            OnDictionaryCreated?.Invoke(MoonstormUnlockables);
             moduleAvailability.MakeAvailable();
         }
 
