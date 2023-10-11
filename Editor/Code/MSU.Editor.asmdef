@@ -1,5 +1,5 @@
 {
-    "name": "MoonstormEditorUtils",
+    "name": "MSU.Editor",
     "references": [
         "ThunderKit.Core",
         "MoonstormSharedUtils",

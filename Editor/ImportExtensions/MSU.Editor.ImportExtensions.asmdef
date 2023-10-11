@@ -1,5 +1,5 @@
 {
-    "name": "MSUImporters",
+    "name": "MSU.Editor.ImportExtensions",
     "references": [
         "BsDiff",
         "ThunderKit.Core",
