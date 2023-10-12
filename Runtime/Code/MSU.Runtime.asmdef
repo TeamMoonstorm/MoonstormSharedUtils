@@ -39,7 +39,8 @@
         "R2API.Elites.dll",
         "R2API.RecalculateStats.dll",
         "R2API.CommandHelper.dll",
-        "R2API.Addressables.dll"
+        "R2API.Addressables.dll",
+        "MonoMod.RuntimeDetour.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [],

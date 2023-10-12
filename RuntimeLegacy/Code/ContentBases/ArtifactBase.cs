@@ -11,6 +11,7 @@ namespace Moonstorm
     /// </summary>
     public abstract class ArtifactBase : ContentBase
     {
+
         /// <summary>
         /// The ArtifactDef associated with this ArtifactBase
         /// </summary>

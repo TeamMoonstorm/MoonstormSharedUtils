@@ -1,18 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Security;
+using System.Security.Permissions;
 
-public class AssemblyInfo : MonoBehaviour
-{
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-}
+[assembly: HG.Reflection.SearchableAttribute.OptIn]
+#pragma warning disable CS0618
+[assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
+#pragma warning restore CS0618
+[module: UnverifiableCode]
