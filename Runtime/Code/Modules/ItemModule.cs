@@ -13,7 +13,7 @@ namespace Moonstorm
     public static class ItemModule
     {
         public static ReadOnlyDictionary<ItemDef, IItemContentPiece> MoonstormItems { get; private set; }
-        private static Dictionary<ItemDef, IItemContentPiece> _moonstormItems;
+        private static Dictionary<ItemDef, IItemContentPiece> _moonstormItems = new Dictionary<ItemDef, IItemContentPiece>();
 
         public static ResourceAvailability moduleAvailability;
 
