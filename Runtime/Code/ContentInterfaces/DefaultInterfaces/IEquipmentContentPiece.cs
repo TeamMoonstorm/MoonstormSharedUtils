@@ -9,8 +9,11 @@ using UnityEngine;
 
 namespace Moonstorm
 {
-    public interface IItemContentPiece : IContentPiece<ItemDef>
+    public interface IEquipmentContentPiece : IContentPiece<EquipmentDef>
     {
         NullableRef<GameObject> ItemDisplayPrefab { get; }
+        bool Execute(EquipmentSlot slot);
+
+        void OnEquipmentObtained(CharacterBody body);
     }
 }

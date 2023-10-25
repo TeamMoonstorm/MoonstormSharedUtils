@@ -13,6 +13,7 @@ namespace Moonstorm
 {
     public static class MSUtil
     {
+        public static bool HolyDLLInstalled => IsModInstalled("xyz.yekoc.Holy");
         private static Run currentRun;
         private static ExpansionDef[] currentRunExpansionDefs = Array.Empty<ExpansionDef>();
 
@@ -54,7 +55,9 @@ namespace Moonstorm
         {
             if(contentArray.Contains(asset))
             {
-                Debug.LogError($"Cannot add {asset} to content array of type {typeof(T).Name} to the content pack {contentPack.name} because its already in the array.");
+#if DEBUG
+                MSULog.Error($"Cannot add {asset} to content array of type {typeof(T).Name} to the content pack {contentPack.name} because its already in the array.");
+#endif
                 return;
             }
 
@@ -62,7 +65,9 @@ namespace Moonstorm
             {
                 if(obj.name.IsNullOrWhiteSpace())
                 {
-                    Debug.LogWarning("Asset is of type UnityEngine.Object, but it has no name, setting a generic name.");
+#if DEBUG
+                    MSULog.Warning("Asset is of type UnityEngine.Object, but it has no name, setting a generic name.");
+#endif
                     obj.name = $"{asset.GetType().Name}_{contentArray.Length}";
                 }
             }
@@ -166,7 +171,7 @@ namespace Moonstorm
             }
             catch (Exception e)
             {
-                Debug.LogError($"Failed to nicify {origName}: {e}");
+                MSULog.Error($"Failed to nicify {origName}: {e}");
                 return origName;
             }
         }

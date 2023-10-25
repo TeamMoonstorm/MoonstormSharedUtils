@@ -100,12 +100,12 @@ namespace Moonstorm
             var asset = artifact.Asset;
             provider.ContentPack.AddToArraySafe(ref provider.ContentPack.artifactDefs, asset);
 
-            if (provider is IContentPackModifier packModifier)
+            if (artifact is IContentPackModifier packModifier)
             {
                 packModifier.ModifyContentPack(provider.ContentPack);
             }
 
-            if (provider is IArtifactContentPiece artifactContentPiece)
+            if (artifact is IArtifactContentPiece artifactContentPiece)
             {
                 if (!_pluginToArtifacts.ContainsKey(plugin))
                 {
@@ -118,6 +118,7 @@ namespace Moonstorm
                 {
                     ArtifactCodeAPI.AddCode(artifactContentPiece.Asset, artifactContentPiece.ArtifactCode);
                 }
+                _moonstormArtifacts.Add(asset, artifactContentPiece);
             }
         }
     }

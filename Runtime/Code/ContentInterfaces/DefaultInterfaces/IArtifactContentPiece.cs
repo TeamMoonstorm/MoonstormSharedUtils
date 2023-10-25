@@ -11,9 +11,7 @@ namespace Moonstorm
 {
     public interface IArtifactContentPiece : IContentPiece<ArtifactDef>
     {
-
-        [CanBeNull]
-        ArtifactCode ArtifactCode { get; }
+        NullableRef<ArtifactCode> ArtifactCode { get; }
         void OnArtifactEnabled();
         void OnArtifactDisabled();
     }

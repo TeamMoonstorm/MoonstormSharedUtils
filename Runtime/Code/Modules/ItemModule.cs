@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using static RoR2.RoR2Content;
 
 namespace Moonstorm
 {
@@ -73,11 +74,11 @@ namespace Moonstorm
             var asset = item.Asset;
             provider.ContentPack.AddToArraySafe(ref provider.ContentPack.itemDefs, asset);
 
-            if (provider is IContentPackModifier packModifier)
+            if (item is IContentPackModifier packModifier)
             {
                 packModifier.ModifyContentPack(provider.ContentPack);
             }
-            if (provider is IItemContentPiece itemContentPiece)
+            if (item is IItemContentPiece itemContentPiece)
             {
                 if (!_pluginToItems.ContainsKey(plugin))
                 {
@@ -85,7 +86,9 @@ namespace Moonstorm
                 }
                 var array = _pluginToItems[plugin];
                 HG.ArrayUtils.ArrayAppend(ref array, itemContentPiece);
+                _moonstormItems.Add(asset, itemContentPiece);
             }
+
         }
 
         private static void AddVoidItems(On.RoR2.Items.ContagiousItemManager.orig_Init orig)
@@ -121,13 +124,13 @@ namespace Moonstorm
                         }
                         catch(Exception ex)
                         {
-                            Debug.LogError($"Failed to add transformation of {itemToInfect} to {voidItem.Asset}\n{ex}");
+                            MSULog.Error($"Failed to add transformation of {itemToInfect} to {voidItem.Asset}\n{ex}");
                         }
                     }
                 }
                 catch(Exception ex)
                 {
-                    Debug.LogError($"IVoidItemContentPiece {voidItem.GetType().Name} failed to intialize properly\n{ex}");
+                    MSULog.Error($"IVoidItemContentPiece {voidItem.GetType().Name} failed to intialize properly\n{ex}");
                 }
             }
             orig();
