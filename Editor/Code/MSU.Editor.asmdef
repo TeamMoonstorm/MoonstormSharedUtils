@@ -2,11 +2,11 @@
     "name": "MSU.Editor",
     "references": [
         "ThunderKit.Core",
-        "MoonstormSharedUtils",
         "RoR2EditorKit",
         "ThunderKit.Markdown",
         "RoR2EditorScripts",
-        "ThunderKit.Common"
+        "ThunderKit.Common",
+        "MSU.Runtime"
     ],
     "includePlatforms": [
         "Editor"
@@ -28,7 +28,9 @@
         "R2API.DamageType.dll",
         "R2API.Director.dll",
         "R2API.Elites.dll",
-        "R2API.RecalculateStats.dll"
+        "R2API.RecalculateStats.dll",
+        "Wwise.dll",
+        "BepInEx.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [],

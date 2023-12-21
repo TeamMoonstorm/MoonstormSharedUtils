@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <ui:TextField picking-mode="Ignore" label="Author Name" value="EnterYourNameHere" text="EnterYourNameHere" name="authorName" binding-path="authorName" />
+    <ui:TextField picking-mode="Ignore" label="Mod Name" value="filler text" text="filler text" name="modName" binding-path="modName" />
+    <ui:TextField picking-mode="Ignore" label="Human Readable Name" value="filler text" text="filler text" name="humanReadableModName" binding-path="humanReadableModName" />
+    <ui:TextField picking-mode="Ignore" label="Mod Description" value="filler text" text="filler text" name="modDescription" binding-path="modDescription" multiline="true" />
+    <uie:EnumField label="Assets Class Type" value="SingleBundle" binding-path="assetsClassType" name="assetsClassType" />
+</ui:UXML>

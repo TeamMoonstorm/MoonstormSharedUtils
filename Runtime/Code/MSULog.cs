@@ -42,8 +42,6 @@ namespace Moonstorm
                     UDebug.LogWarning(Format(data, i, member));
                     break;
             }
-
-
 #else
             object data = (level.HasFlag(LogLevel.Warning) || level.HasFlag(LogLevel.Error) || level.HasFlag(LogLevel.Fatal)) ? Format(data, i, member) : data;
 

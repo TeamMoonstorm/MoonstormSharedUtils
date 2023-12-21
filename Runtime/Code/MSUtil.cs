@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using BepInEx;
 using RoR2;
 using RoR2.ExpansionManagement;
+using BepInEx.Configuration;
+using System.Reflection;
 
 namespace Moonstorm
 {
@@ -16,6 +18,7 @@ namespace Moonstorm
         public static bool HolyDLLInstalled => IsModInstalled("xyz.yekoc.Holy");
         private static Run currentRun;
         private static ExpansionDef[] currentRunExpansionDefs = Array.Empty<ExpansionDef>();
+        private static FieldInfo _configEntryTypedValueField;
 
         public static bool IsModInstalled(string GUID)
         {
@@ -184,6 +187,19 @@ namespace Moonstorm
         public static T AsValidOrNull<T>(this T obj) where T : UnityEngine.Object
         {
             return obj ? obj : null;
+        }
+
+        public static void SetValueWithoutNotifying<T>(this ConfigEntry<T> entry, T newValue)
+        {
+            _configEntryTypedValueField.SetValue(entry, newValue);
+            entry.ConfigFile.Save();
+        }
+
+        static MSUtil()
+        {
+            Type configEntryType = typeof(ConfigEntry<object>);
+            Type genericType = configEntryType.GetGenericTypeDefinition();
+            _configEntryTypedValueField = genericType.GetField("_typedValue", BindingFlags.Instance | BindingFlags.NonPublic);
         }
 #endregion
     }

@@ -1,9 +1,0 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
-    <ui:Foldout text="Foldout" name="FoldOut">
-        <uie:PropertyField name="isCustomActivation" />
-        <uie:PropertyField name="rendererIndex" />
-        <uie:PropertyField name="gameObjectPrefab" />
-        <uie:PropertyField name="childName" />
-        <uie:PropertyField name="shouldActivate" />
-    </ui:Foldout>
-</ui:UXML>
