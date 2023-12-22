@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using UDebug = UnityEngine.Debug;
 
-namespace Moonstorm
+namespace MSU
 {
     public class MSULog
     {
@@ -43,9 +43,9 @@ namespace Moonstorm
                     break;
             }
 #else
-            object data = (level.HasFlag(LogLevel.Warning) || level.HasFlag(LogLevel.Error) || level.HasFlag(LogLevel.Fatal)) ? Format(data, i, member) : data;
+            object data2 = (level.HasFlag(LogLevel.Warning) || level.HasFlag(LogLevel.Error) || level.HasFlag(LogLevel.Fatal)) ? Format(data, i, member) : data;
 
-            _log.Log(level, data);
+            _log.Log(level, data2);
 #if DEBUG
             if(_breakableLevel.HasFlag(level))
             {

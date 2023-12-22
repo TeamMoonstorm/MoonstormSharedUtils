@@ -8,12 +8,12 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
-namespace Moonstorm
+namespace MSU
 {
     public static class EquipmentModule
     {
         public static ReadOnlyDictionary<EquipmentDef, IEquipmentContentPiece> AllMoonstormEquipments { get; private set; }
-        public static ReadOnlyDictionary<EquipmentDef, IEquipmentContentPiece> MoonstormEliteEquipments { get; private set; }
+        public static ReadOnlyDictionary<EquipmentDef, IEliteContentPiece> MoonstormEliteEquipments { get; private set; }
         public static ReadOnlyDictionary<EquipmentDef, IEquipmentContentPiece> NonEliteMoonstormEquipments { get; private set; }
         public static ReadOnlyCollection<EliteDef> MoonstormEliteDefs { get; private set; }
 
@@ -47,19 +47,33 @@ namespace Moonstorm
             yield break;
         }
 
-        [SystemInitializer(typeof(EquipmentDef))]
+        [SystemInitializer(typeof(EquipmentCatalog))]
         private static void SystemInit()
         {
             On.RoR2.EquipmentSlot.PerformEquipmentAction += PerformAction;
 
+            var allEquips = new Dictionary<EquipmentDef, IEquipmentContentPiece>();
+            var nonEliteEquips = new Dictionary<EquipmentDef, IEquipmentContentPiece>();
+            var eliteEquips = new Dictionary<EquipmentDef, IEliteContentPiece>();
+
             foreach(var(eqpDef, eqp) in _moonstormEquipments)
             {
-
-                if(eqp is IEliteContentPiece)
+                allEquips.Add(eqpDef, eqp);
+                if(eqp is IEliteContentPiece eliteContent)
                 {
-
+                    eliteEquips.Add(eqpDef, eliteContent);
+                }
+                else
+                {
+                    nonEliteEquips.Add(eqpDef, eqp);
                 }
             }
+
+            AllMoonstormEquipments = new ReadOnlyDictionary<EquipmentDef, IEquipmentContentPiece>(allEquips);
+            MoonstormEliteEquipments = new ReadOnlyDictionary<EquipmentDef, IEliteContentPiece>(eliteEquips);
+            NonEliteMoonstormEquipments = new ReadOnlyDictionary<EquipmentDef, IEquipmentContentPiece>(nonEliteEquips);
+
+            moduleAvailability.MakeAvailable();
         }
 
         private static bool PerformAction(On.RoR2.EquipmentSlot.orig_PerformEquipmentAction orig, EquipmentSlot self, EquipmentDef equipmentDef)
@@ -89,6 +103,8 @@ namespace Moonstorm
             }
 
             yield return equipment.LoadContentAsync();
+
+            equipment.Initialize();
 
             var asset = equipment.Asset;
             provider.ContentPack.AddToArraySafe(ref provider.ContentPack.equipmentDefs, asset);

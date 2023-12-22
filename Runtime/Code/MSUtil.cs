@@ -11,7 +11,7 @@ using RoR2.ExpansionManagement;
 using BepInEx.Configuration;
 using System.Reflection;
 
-namespace Moonstorm
+namespace MSU
 {
     public static class MSUtil
     {
@@ -193,6 +193,42 @@ namespace Moonstorm
         {
             _configEntryTypedValueField.SetValue(entry, newValue);
             entry.ConfigFile.Save();
+        }
+
+        public static bool IsAvailable(this ItemDef itemDef)
+        {
+            if (!Run.instance)
+                return false;
+
+            Run run = Run.instance;
+
+            var unlockableDef = itemDef.unlockableDef;
+            if (unlockableDef && !run.IsUnlockableUnlocked(unlockableDef))
+                return false;
+
+            var expansionDef = itemDef.requiredExpansion;
+            if (expansionDef && !run.IsExpansionEnabled(expansionDef))
+                return false;
+
+            return true;
+        }
+
+        public static bool IsAvailable(this EquipmentDef equipmentDef)
+        {
+            if (!Run.instance)
+                return false;
+
+            Run run = Run.instance;
+
+            var unlockableDef = equipmentDef.unlockableDef;
+            if (unlockableDef && !run.IsUnlockableUnlocked(unlockableDef))
+                return false;
+
+            var expansionDef = equipmentDef.requiredExpansion;
+            if (expansionDef && !run.IsExpansionEnabled(expansionDef))
+                return false;
+
+            return true;
         }
 
         static MSUtil()

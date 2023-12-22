@@ -12,7 +12,6 @@ namespace Moonstorm
     /// <summary>
     /// Represents an EventCard for the <see cref="Moonstorm.Components.EventDirector"/>
     /// </summary>
-    [CreateAssetMenu(menuName = "Moonstorm/Events/EventCard")]
     public class EventCard : ScriptableObject
     {
         /// <summary>

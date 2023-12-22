@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Moonstorm
+namespace MSU
 {
-    public interface IEliteContentPiece : IContentPiece
+    public interface IEliteContentPiece : IEquipmentContentPiece
     {
         List<EliteDef> EliteDefs { get; }
     }

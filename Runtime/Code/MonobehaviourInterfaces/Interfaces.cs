@@ -3,7 +3,7 @@ using MonoMod.Cil;
 using RoR2;
 using System;
 
-namespace Moonstorm
+namespace MSU
 {
     static class Interfaces
     {

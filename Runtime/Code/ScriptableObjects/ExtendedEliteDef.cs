@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Moonstorm
+namespace MSU
 {
     public class ExtendedEliteDef : EliteDef
     {

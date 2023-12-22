@@ -9,7 +9,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using static RoR2.RoR2Content;
 
-namespace Moonstorm
+namespace MSU
 {
     public static class ItemModule
     {
@@ -71,6 +71,8 @@ namespace Moonstorm
 
             yield return item.LoadContentAsync();
 
+            item.Initialize();
+
             var asset = item.Asset;
             provider.ContentPack.AddToArraySafe(ref provider.ContentPack.itemDefs, asset);
 
@@ -88,7 +90,6 @@ namespace Moonstorm
                 HG.ArrayUtils.ArrayAppend(ref array, itemContentPiece);
                 _moonstormItems.Add(asset, itemContentPiece);
             }
-
         }
 
         private static void AddVoidItems(On.RoR2.Items.ContagiousItemManager.orig_Init orig)

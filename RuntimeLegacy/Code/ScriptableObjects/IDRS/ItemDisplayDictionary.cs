@@ -10,7 +10,6 @@ namespace Moonstorm
     /// An <see cref="ItemDisplayDictionary"/> is used for appending a single <see cref="ItemDisplayRuleSet.KeyAssetRuleGroup"/> to multiple <see cref="ItemDisplayRuleSet"/>
     /// <para>It works in a similar fashion to R2API's ItemDisplayDictionary</para>
     /// </summary>
-    [CreateAssetMenu(fileName = "New ItemDisplayDictionary", menuName = "Moonstorm/IDRS/ItemDisplayDictionary")]
     public class ItemDisplayDictionary : ScriptableObject
     {
         /// <summary>
@@ -122,10 +121,6 @@ namespace Moonstorm
         private void Awake()
         {
             instances.AddIfNotInCollection(this);
-#if !UNITY_EDITOR
-            ItemDisplayCatalog.AddDisplay(this);
-            Upgrade();
-#endif
         }
         private void OnDestroy()
         {

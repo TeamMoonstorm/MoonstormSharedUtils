@@ -10,7 +10,6 @@ namespace Moonstorm
     /// A <see cref="NamedIDRS"/> is a version of an <see cref="ItemDisplayRuleSet"/> that can be populated and serialized in the editor.
     /// <para>The values in <see cref="namedRuleGroups"/> will be appended to the IDRS set in <see cref="idrs"/></para>
     /// </summary>
-    [CreateAssetMenu(fileName = "New NamedIDRS", menuName = "Moonstorm/IDRS/NamedIDRS")]
     public class NamedIDRS : ScriptableObject
     {
         /// <summary>
@@ -120,9 +119,6 @@ namespace Moonstorm
         private void Awake()
         {
             instances.AddIfNotInCollection(this);
-#if !UNITY_EDITOR
-            Upgrade();
-#endif
         }
         private void OnDestroy()
         {

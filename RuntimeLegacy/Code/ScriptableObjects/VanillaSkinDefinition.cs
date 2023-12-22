@@ -12,7 +12,6 @@ namespace Moonstorm
     /// <summary>
     /// A <see cref="VanillaSkinDef"/> is an extension of <see cref="SkinDef"/> that allows for creating of skins for vanilla characterbodies.
     /// </summary>
-    [CreateAssetMenu(fileName = "New VanillaSkinDefinition", menuName = "Moonstorm/VanillaSkinDefinition")]
     public class VanillaSkinDefinition : SkinDef
     {
         #region Internal Types

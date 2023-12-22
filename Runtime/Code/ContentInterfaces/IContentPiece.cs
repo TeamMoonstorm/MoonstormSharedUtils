@@ -5,12 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Moonstorm
+namespace MSU
 {
     public interface IContentPiece
     {
         IEnumerator LoadContentAsync();
         bool IsAvailable();
+        void Initialize();
     }
 
     public interface IContentPiece<T> : IContentPiece where T : UnityEngine.Object

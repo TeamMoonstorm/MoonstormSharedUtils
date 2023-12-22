@@ -1,4 +1,5 @@
 ﻿using BepInEx;
+using MSU;
 using R2API;
 using RoR2;
 using System;
@@ -96,6 +97,8 @@ namespace Moonstorm
             }
 
             yield return artifact.LoadContentAsync();
+
+            artifact.Initialize();
 
             var asset = artifact.Asset;
             provider.ContentPack.AddToArraySafe(ref provider.ContentPack.artifactDefs, asset);

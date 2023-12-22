@@ -8,7 +8,6 @@ namespace Moonstorm
     /// An <see cref="EventDirectorCategorySelection"/> is the <see cref="Moonstorm.Components.EventDirector"/>'s version of a <see cref="RoR2.DirectorCardCategorySelection"/>
     /// <para>It is used for storing the available events for a stage.</para>
     /// </summary>
-    [CreateAssetMenu(menuName = "Moonstorm/Events/EDCS")]
     public class EventDirectorCategorySelection : ScriptableObject
     {
         /// <summary>

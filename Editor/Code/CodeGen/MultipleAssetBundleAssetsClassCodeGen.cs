@@ -34,10 +34,12 @@ namespace Moonstorm.Editor.CodeGen
             _output.bundleEnumName = $"{data.modName}Bundle";
             WriteBundleEnum();
             writer.WriteLine();
+            writer.WriteLine("//This is your assets class. it'll contain all of your mod's assetbundles.");
             writer.WriteLine($"internal static class {className}");
             writer.BeginBlock();
 
             writer.WriteLine("private const string ASSET_BUNDLE_FOLDER_NAME = \"assetbundles\";");
+            writer.WriteLine();
             writer.WriteLine("//Try to keep a specific constant for each of your non streamed scene bundles.");
             writer.WriteLine($"private const string MAIN = \"{data.assetBundleName}\";");
             writer.WriteLine();
@@ -248,7 +250,7 @@ using Path = System.IO.Path;");
 
         private void WriteLoadAssetBundlesMethod()
         {
-            writer.WriteLine("internal static IEnumerator LoadAssetBundles(LoadStaticContentAsyncArgs args)");
+            writer.WriteLine("private static IEnumerator LoadAssetBundles(LoadStaticContentAsyncArgs args)");
             writer.BeginBlock();
 
             writer.WriteLine("var bundlePaths = GetAssetBundlePaths();");
@@ -518,7 +520,7 @@ using Path = System.IO.Path;");
             writer.WriteLine("internal IEnumerator Load()");
             writer.BeginBlock();
 
-            writer.WriteLine("if(BundleEnum == YourModBundle.All)");
+            writer.WriteLine($"if(BundleEnum == {_output.bundleEnumName}.All)");
             writer.BeginBlock();
 
             writer.WriteLine("yield return FindAsset();");

@@ -1,4 +1,4 @@
-﻿namespace Moonstorm
+﻿namespace MSU
 {
     /// <summary>
     /// An IStatItemBehavior is used by the <see cref="Moonstorm.Components.MoonstormContentManager"/> to run the methods <see cref="RecalculateStatsEnd"/> and <see cref="RecalculateStatsStart"/>

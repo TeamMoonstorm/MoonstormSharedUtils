@@ -11,7 +11,6 @@ namespace Moonstorm
     /// Represents a Serialized version of a <see cref="CombatDirector.EliteTierDef"/>
     /// <para>Utilized by the <see cref="EliteTierDefBase"/> and the <see cref="EliteTierDefModuleBase"/></para>
     /// </summary>
-    [CreateAssetMenu(fileName = "New SerializableEliteTierDef", menuName = "Moonstorm/Elites/SerializableEliteTierDef", order = 0)]
     public class SerializableEliteTierDef : ScriptableObject
     {
         [Tooltip("This multiplier is applied to the cost of the CharacterSpawnCard when the CombatDirector tries to spawn an elite from this tier")]

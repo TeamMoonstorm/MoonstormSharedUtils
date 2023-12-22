@@ -9,7 +9,6 @@ namespace Moonstorm
     /// <summary>
     /// A <see cref="MSUnlockableDef"/> is an extension of <see cref="UnlockableDef"/> that allows for easy creation of an Unlockable that gets unlocked via an Achievement
     /// </summary>
-    [CreateAssetMenu(fileName = "New ExtendedUnlockableDef", menuName = "Moonstorm/MSUnlockableDef")]
     public class MSUnlockableDef : UnlockableDef
     {
         /// <summary>

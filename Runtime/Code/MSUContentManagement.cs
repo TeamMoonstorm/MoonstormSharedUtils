@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
-namespace Moonstorm
+namespace MSU
 {
     internal static class MSUContentManagement
     {
@@ -148,6 +148,7 @@ namespace Moonstorm
         }
         private static void RemoveFromDictionary(On.RoR2.CharacterBody.orig_OnDestroy orig, CharacterBody self)
         {
+            bodyToContentBehaviour.Remove(self);
             bodyToBuffBehaviours.Remove(self);
             bodyToBuffHolder.Remove(self);
             orig(self);

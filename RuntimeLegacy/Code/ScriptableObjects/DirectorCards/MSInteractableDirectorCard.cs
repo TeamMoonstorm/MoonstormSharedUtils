@@ -15,7 +15,6 @@ namespace Moonstorm
     /// <para>A MSInteractableDirectorCard can be used by the <see cref="SceneDirector"/> so the supplied interactable can spawn ingame</para>
     /// <para>Used in the <see cref="InteractableBase"/></para>
     /// </summary>
-    [CreateAssetMenu(fileName = "New InteractableDirectorCard", menuName = "Moonstorm/Director Cards/Interactable Director Card", order = 5)]
     public class MSInteractableDirectorCard : InteractableSpawnCard
     {
         /// <summary>
@@ -125,9 +124,6 @@ namespace Moonstorm
         {
             addressReferencedDirectorCard.spawnCard = this as InteractableSpawnCard;
             customStages = customStages.Select(stageName => stageName.ToLowerInvariant()).ToList();
-#if !UNITY_EDITOR
-            Migrate();
-#endif
         }
 
         /// <summary>

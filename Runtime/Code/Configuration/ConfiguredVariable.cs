@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Moonstorm.Config
+namespace MSU.Config
 {
     public abstract class ConfiguredVariable
     {

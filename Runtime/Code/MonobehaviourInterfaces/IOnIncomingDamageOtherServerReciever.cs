@@ -1,6 +1,6 @@
 ﻿using RoR2;
 
-namespace Moonstorm
+namespace MSU
 {
     /// <summary>
     /// An IOnIncomingDamageOtherServerReciever can be used to modify the DamageInfo of a victim that the player is attacking.

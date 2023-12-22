@@ -1,6 +1,6 @@
 ﻿using R2API;
 
-namespace Moonstorm
+namespace MSU
 {
     /// <summary>
     /// An IBodyStatArgModifier can be used to modify the Stats of a characterbody using <see cref="RecalculateStatsAPI"/>

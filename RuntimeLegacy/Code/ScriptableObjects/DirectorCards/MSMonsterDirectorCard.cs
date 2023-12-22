@@ -15,7 +15,6 @@ namespace Moonstorm
     /// <para>A MSMonsterDirectorCard can be used by the <see cref="CombatDirector"/> so the supplied Monster can spawn ingame</para>
     /// <para>Used in the <see cref="MonsterBase"/></para>
     /// </summary>
-    [CreateAssetMenu(fileName = "New MonsterDirectorCard", menuName = "Moonstorm/Director Cards/MonsterDirectorCard", order = 5)]
     public class MSMonsterDirectorCard : CharacterSpawnCard
     {
         /// <summary>

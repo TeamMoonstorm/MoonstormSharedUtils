@@ -41,6 +41,8 @@ namespace Moonstorm.Editor.Windows
         private string _mainClassName;
         private string _assetsClassName;
         private string _bundleEnumName;
+
+        private string _contentClassName;
         [MenuItem("Assets/Create/MSUMod", priority = ThunderKit.Common.Constants.ThunderKitMenuPriority)]
         private static void OpenWindow()
         {
@@ -93,6 +95,7 @@ namespace Moonstorm.Editor.Windows
                 await CreateLoggerClass();
                 await CreateMainClass();
                 await CreateAssetsClass();
+                //await CreateContentClass();
             }
             catch(Exception e)
             {
@@ -249,6 +252,31 @@ namespace Moonstorm.Editor.Windows
                 desiredPath = assetsClassPath
             };
             await CodeGeneratorValidator.ValidateAsync(validationData);
+        }
+
+        private async Task CreateContentClass()
+        {
+            var contentClassPath = Path.Combine(_directory, $"{modName}Content.cs");
+            Writer writer = default;
+
+            var codeGen = new ContentClassCodeGen(new ContentClassCodeGen.Data
+            {
+                assetbundleClassName = _assetsClassName,
+                isSingleAssetsClass = assetsClassType == AssetClassType.SingleBundle,
+                loggerClassName = _loggerClassName,
+                mainClassName = _mainClassName,
+                modName = modName,
+                path = contentClassPath
+            });
+            writer = codeGen.WriteCode(out var output);
+            _contentClassName = output.contentClassName;
+
+            var validationDdata = new CodeGeneratorValidator.ValidationData
+            {
+                code = writer,
+                desiredPath = contentClassPath
+            };
+            await CodeGeneratorValidator.ValidateAsync(validationDdata);
         }
         public enum AssetClassType
         {
