@@ -107,7 +107,7 @@ namespace MSU
             equipment.Initialize();
 
             var asset = equipment.Asset;
-            provider.ContentPack.AddToArraySafe(ref provider.ContentPack.equipmentDefs, asset);
+            provider.ContentPack.equipmentDefs.AddSingle(asset);
 
             if (equipment is IContentPackModifier packModifier)
             {
@@ -129,9 +129,9 @@ namespace MSU
             {
                 foreach(var eliteDef in eliteContentPiece.EliteDefs)
                 {
-                    provider.ContentPack.AddToArraySafe(ref provider.ContentPack.eliteDefs, eliteDef);
+                    provider.ContentPack.eliteDefs.AddSingle(eliteDef);
                 }
-                provider.ContentPack.AddToArraySafe(ref provider.ContentPack.buffDefs, asset.passiveBuffDef);
+                provider.ContentPack.buffDefs.AddSingle(asset.passiveBuffDef);
             }
         }
     }

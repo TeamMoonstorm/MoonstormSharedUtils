@@ -10,7 +10,7 @@ namespace MSU
 {
     public interface IContentPieceProvider
     {
-        R2APISerializableContentPack ContentPack { get; }
+        ContentPack ContentPack { get; }
         IContentPiece[] GetContents();
     }
 

@@ -54,30 +54,6 @@ namespace MSU
 #endif
 
 #region Extensions
-        public static void AddToArraySafe<T>(this R2APISerializableContentPack contentPack, ref T[] contentArray, T asset) where T : class
-        {
-            if(contentArray.Contains(asset))
-            {
-#if DEBUG
-                MSULog.Error($"Cannot add {asset} to content array of type {typeof(T).Name} to the content pack {contentPack.name} because its already in the array.");
-#endif
-                return;
-            }
-
-            if(asset is UnityEngine.Object obj)
-            {
-                if(obj.name.IsNullOrWhiteSpace())
-                {
-#if DEBUG
-                    MSULog.Warning("Asset is of type UnityEngine.Object, but it has no name, setting a generic name.");
-#endif
-                    obj.name = $"{asset.GetType().Name}_{contentArray.Length}";
-                }
-            }
-
-            HG.ArrayUtils.ArrayAppend(ref contentArray, asset);
-        }
-
         public static ExpansionDef[] GetEnabledExpansions(this Run run)
         {
             if (currentRun == run)

@@ -101,7 +101,7 @@ namespace Moonstorm
             artifact.Initialize();
 
             var asset = artifact.Asset;
-            provider.ContentPack.AddToArraySafe(ref provider.ContentPack.artifactDefs, asset);
+            provider.ContentPack.artifactDefs.AddSingle(asset);
 
             if (artifact is IContentPackModifier packModifier)
             {

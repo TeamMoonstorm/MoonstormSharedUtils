@@ -74,7 +74,7 @@ namespace MSU
             item.Initialize();
 
             var asset = item.Asset;
-            provider.ContentPack.AddToArraySafe(ref provider.ContentPack.itemDefs, asset);
+            provider.ContentPack.itemDefs.AddSingle(asset);
 
             if (item is IContentPackModifier packModifier)
             {

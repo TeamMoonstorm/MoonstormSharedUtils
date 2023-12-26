@@ -1,4 +1,5 @@
 ﻿using R2API.ScriptableObjects;
+using RoR2.ContentManagement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace MSU
 {
     public interface IContentPackModifier
     {
-        void ModifyContentPack(R2APISerializableContentPack contentPack);
+        void ModifyContentPack(ContentPack contentPack);
     }
 }
