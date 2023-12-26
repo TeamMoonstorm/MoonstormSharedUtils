@@ -1,3 +1,9 @@
+# '1.6.3' - Addressable Fix
+
+## Runtime
+
+* Fixed the AddressableInjector not working outside of the unity editor.
+
 # '1.6.2' - Whoops
 
 ## Runtime
