@@ -1,5 +1,7 @@
 ﻿using BepInEx;
+using RoR2.Skills;
 using R2API.ScriptableObjects;
+using RoR2;
 using RoR2.ContentManagement;
 using System;
 using System.Collections;
@@ -8,16 +10,42 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
+using RoR2.ExpansionManagement;
+using R2API.Utils;
 
 namespace MSU
 {
     public static class ContentUtil
     {
+        //Dummy expansion def, we dont add it to the Catalog to make it so stuff thats disabled cant be added.
+        private static ExpansionDef _dummyExpansion = ScriptableObject.CreateInstance<ExpansionDef>();
+        public static void DisableArtifact(ArtifactDef artifactDef)
+        {
+            //setting expansion to an invalid value makes it impossible for it to appear in lobby.
+            artifactDef.requiredExpansion = _dummyExpansion;
+        }
+        
+        public static void DisableSurvivor(SurvivorDef survivorDef)
+        {
+            survivorDef.hidden = true;
+        }
+
+        public static void DisableItem(ItemDef itemDef)
+        {
+            itemDef.requiredExpansion = _dummyExpansion;
+        }
+
+        public static void DisableEquipment(EquipmentDef equipmentDef)
+        {
+            equipmentDef.requiredExpansion = _dummyExpansion;
+        }
+
         public static IContentPieceProvider<T> AnalyzeForContentPieces<T>(BaseUnityPlugin baseUnityPlugin, ContentPack contentPack) where T : UnityEngine.Object
         {
             var assembly = baseUnityPlugin.GetType().Assembly;
 
-            IEnumerable<IContentPiece<T>> contentPieces = assembly.GetTypes()
+            IEnumerable<IContentPiece<T>> contentPieces = ReflectionCache.GetTypes(assembly)
                 .Where(PassesFilter<T>)
                 .Select(t => (IContentPiece<T>)Activator.CreateInstance(t));
 
@@ -49,7 +77,7 @@ namespace MSU
             if(collection.nameToAsset.ContainsKey(name))
             {
 #if DEBUG
-                MSULog.Warning($"Content {content} cant be addded because an asset with the name \"{name}\" is already registered. Using a generic name.");
+                MSULog.Warning($"Content {content} cant be added because an asset with the name \"{name}\" is already registered. Using a generic name.");
                 name = backupName;
 #endif
             }

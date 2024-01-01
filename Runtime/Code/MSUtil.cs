@@ -15,6 +15,7 @@ namespace MSU
 {
     public static class MSUtil
     {
+        public static bool DebugToolkitInstalled => IsModInstalled("iHarbHD.DebugToolkit");
         public static bool HolyDLLInstalled => IsModInstalled("xyz.yekoc.Holy");
         private static Run currentRun;
         private static ExpansionDef[] currentRunExpansionDefs = Array.Empty<ExpansionDef>();
@@ -83,14 +84,35 @@ namespace MSU
             return true;
         }
 
+        public static bool HasItem(this CharacterBody body, ItemDef def)
+        {
+            return body.HasItem(def.itemIndex);
+        }
+
+        public static bool HasItem(this CharacterBody body, ItemIndex index)
+        {
+            return body.GetItemCount(index) > 0;
+        }
+
+        public static bool TryGetItemCount(this CharacterBody body, ItemDef itemDef, out int itemCount)
+        {
+            return body.TryGetItemCount(itemDef.itemIndex, out itemCount);
+        }
+
+        public static bool TryGetItemCount(this CharacterBody body, ItemIndex index, out int itemCount)
+        {
+            itemCount = body.GetItemCount(index);
+            return itemCount > 0;
+        }
+
         public static int GetItemCount(this CharacterBody body, ItemDef itemDef)
         {
-            return body.inventory == null ? 0 : body.inventory.GetItemCount(itemDef);
+            return body.GetItemCount(itemDef.itemIndex);
         }
 
         public static int GetItemCount(this CharacterBody body, ItemIndex index)
         {
-            return body.inventory == null ? 0 : body.inventory.GetItemCount(index);
+            return body.inventory ? body.inventory.GetItemCount(index) : 0;
         }
 
         public static void Deconstruct<TKey, TValue>(this KeyValuePair<TKey, TValue> kvp, out TKey key, out TValue value)

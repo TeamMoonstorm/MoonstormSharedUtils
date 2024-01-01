@@ -1,5 +1,6 @@
 using BepInEx;
 using BepInEx.Configuration;
+using HG.Reflection;
 using System;
 using System.Collections.Generic;
 
@@ -10,6 +11,7 @@ namespace Moonstorm.Config
     /// </summary>
     public abstract class ConfigurableVariable
     {
+
         /// <summary>
         /// The <see cref="ConfigFile"/> that this ConfigurableVariable is bound to.
         /// <para>If left null before the Configuration process, a ConfigFile is attempted to get using <see cref="ConfigSystem.GetConfigFile(string)"/> using <see cref="ConfigIdentifier"/></para>

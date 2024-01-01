@@ -16,8 +16,8 @@ namespace MSU
         public const string MODNAME = "Moonstorm Shared Utils";
         public const string VERSION = "2.0.0";
 
-        private static PluginInfo PluginInfo { get; set; }
-        private static AssetBundle MSUAssetBundle { get; set; }
+        public static PluginInfo PluginInfo { get; private set; }
+        public static AssetBundle MSUAssetBundle { get; private set; }
         private static string AssemblyDir { get => Path.Combine(Path.GetDirectoryName(PluginInfo.Location), "assetbundles"); }
 
         private void Awake()
@@ -25,7 +25,11 @@ namespace MSU
             PluginInfo = Info;
             new MSULog(Logger);
             MSUAssetBundle = AssetBundle.LoadFromFile(Path.Combine(AssemblyDir, "msuassets"));
-            R2API.ContentManagement.R2APIContentManager.AddPreExistingSerializableContentPack(MSUAssetBundle.LoadAsset<R2APISerializableContentPack>("MSUSCP"));
+            new MSUConfig(this);
+
+#if DEBUG
+            gameObject.AddComponent<MSUDebug>();
+#endif
         }
     }
 }

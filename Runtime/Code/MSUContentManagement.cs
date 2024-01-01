@@ -1,4 +1,5 @@
-﻿using R2API;
+﻿using HG;
+using R2API;
 using RoR2;
 using System;
 using System.Collections;
@@ -10,16 +11,16 @@ namespace MSU
 {
     internal static class MSUContentManagement
     {
-        private static Dictionary<CharacterBody, MSUContentBehaviour> bodyToContentBehaviour = new Dictionary<CharacterBody, MSUContentBehaviour>();
-        private static Dictionary<CharacterBody, Dictionary<BuffIndex, BuffBehaviour>> bodyToBuffBehaviours = new Dictionary<CharacterBody, Dictionary<BuffIndex, BuffBehaviour>>();
-        private static Dictionary<CharacterBody, GameObject> bodyToBuffHolder = new Dictionary<CharacterBody, GameObject>();
-        private static Dictionary<BuffIndex, Type> buffToBehaviourType = new Dictionary<BuffIndex, Type>();
+        private static Dictionary<UnityObjectWrapperKey<CharacterBody>, MSUContentBehaviour> bodyToContentBehaviour = new Dictionary<UnityObjectWrapperKey<CharacterBody>, MSUContentBehaviour>();
+
+        private static Dictionary<BuffIndex, Type> _buffToBehaviour = new Dictionary<BuffIndex, Type>();
+        private static Dictionary<UnityObjectWrapperKey<CharacterBody>, Dictionary<BuffIndex, BuffBehaviour>> _bodyToBuffBehaviourDictionary = new Dictionary<UnityObjectWrapperKey<CharacterBody>, Dictionary<BuffIndex, BuffBehaviour>>();
         [SystemInitializer(typeof(BodyCatalog), typeof(BuffCatalog))]
         private static void SystemInit()
         {
-            On.RoR2.CharacterBody.Awake += AddToDictionary;
-            On.RoR2.CharacterBody.OnDestroy += RemoveFromDictionary;
             On.RoR2.CharacterBody.SetBuffCount += SetBuffBehaviourCount;
+            CharacterBody.onBodyAwakeGlobal += OnBodyAwakeGlobal;
+            CharacterBody.onBodyDestroyGlobal += OnBodyDestroyedGlobal;
 
             if(MSUtil.HolyDLLInstalled)
             {
@@ -119,7 +120,7 @@ namespace MSU
                 if (type.IsAbstract)
                     continue;
 
-                if (buffDefType.IsAssignableFrom(methodInfo.ReturnType))
+                if (!buffDefType.IsAssignableFrom(methodInfo.ReturnType))
                     continue;
 
                 if (methodInfo.GetGenericArguments().Length != 0)
@@ -132,50 +133,41 @@ namespace MSU
                 if (buffDef.buffIndex < 0)
                     continue;
 
-                buffToBehaviourType.Add(buffDef.buffIndex, type);
+                _buffToBehaviour.Add(buffDef.buffIndex, type);
             }
-        }
-
-        private static void AddToDictionary(On.RoR2.CharacterBody.orig_Awake orig, CharacterBody self)
-        {
-            orig(self);
-            var buffHolder = new GameObject("BuffHolder");
-            buffHolder.transform.SetParent(self.transform);
-
-            bodyToContentBehaviour.Add(self, self.GetComponent<MSUContentBehaviour>());
-            bodyToBuffHolder.Add(self, buffHolder);
-            bodyToBuffBehaviours.Add(self, new Dictionary<BuffIndex, BuffBehaviour>());
-        }
-        private static void RemoveFromDictionary(On.RoR2.CharacterBody.orig_OnDestroy orig, CharacterBody self)
-        {
-            bodyToContentBehaviour.Remove(self);
-            bodyToBuffBehaviours.Remove(self);
-            bodyToBuffHolder.Remove(self);
-            orig(self);
         }
 
         private static void SetBuffBehaviourCount(On.RoR2.CharacterBody.orig_SetBuffCount orig, CharacterBody self, BuffIndex buffType, int newCount)
         {
-            if(!buffToBehaviourType.ContainsKey(buffType))
-            {
+            orig(self, buffType, newCount);
+            if (!_buffToBehaviour.ContainsKey(buffType))
                 return;
-            }
 
-            var buffHolder = bodyToBuffHolder[self];
-            var bodyBuffBehaviours = bodyToBuffBehaviours[self];
+            var bodyBuffBehaviours = _bodyToBuffBehaviourDictionary[self];
             if(!bodyBuffBehaviours.ContainsKey(buffType))
             {
-                var newBehaviour = (BuffBehaviour)buffHolder.AddComponent(buffToBehaviourType[buffType]);
+                var newBehaviour = (BuffBehaviour)self.gameObject.AddComponent(_buffToBehaviour[buffType]);
                 newBehaviour.BuffCount = newCount;
                 newBehaviour.CharacterBody = self;
-                var manager = self.GetComponent<MSUContentBehaviour>();
-                if (manager)
-                {
-                    manager.StartGetInterfaces();
-                }
+                bodyBuffBehaviours.Add(buffType, newBehaviour);
+                var manager = bodyToContentBehaviour[self];
+                manager.StartGetInterfaces();
                 return;
             }
             bodyBuffBehaviours[buffType].BuffCount = newCount;
+        }
+
+
+        private static void OnBodyDestroyedGlobal(CharacterBody obj)
+        {
+            bodyToContentBehaviour.Remove(obj);
+            _bodyToBuffBehaviourDictionary.Remove(obj);
+        }
+
+        private static void OnBodyAwakeGlobal(CharacterBody obj)
+        {
+            bodyToContentBehaviour.Add(obj, obj.GetComponent<MSUContentBehaviour>());
+            _bodyToBuffBehaviourDictionary.Add(obj, new Dictionary<BuffIndex, BuffBehaviour>());
         }
     }
 
@@ -233,6 +225,10 @@ namespace MSU
         private IEnumerator GetInterfaces()
         {
             yield return new WaitForEndOfFrame();
+            _statItemBehaviors = GetComponents<IStatItemBehavior>();
+            _bodyStatArgModifiers = GetComponents<IBodyStatArgModifier>();
+            body.healthComponent.onIncomingDamageReceivers = GetComponents<IOnIncomingDamageServerReceiver>();
+            body.healthComponent.onTakeDamageReceivers = GetComponents<IOnTakeDamageServerReceiver>();
         }
 
         public void GetStatCoefficients(RecalculateStatsAPI.StatHookEventArgs args)
@@ -265,7 +261,6 @@ namespace MSU
         public class BuffDefAssociation : HG.Reflection.SearchableAttribute
         {
         }
-        public abstract BuffDef TiedBuffDef { get; }
         public int BuffCount
         {
             get
@@ -274,10 +269,21 @@ namespace MSU
             }
             internal set
             {
+                if (_buffCount == value)
+                    return;
+
+                var previous = _buffCount;
                 _buffCount = value;
-                if(_buffCount <= 0)
+
+                if(previous == 0 && _buffCount > 0)
                 {
-                    base.enabled = false;
+                    enabled = true;
+                    OnFirstStackGained();
+                }
+                if(previous > 0 && _buffCount == 0)
+                {
+                    enabled = false;
+                    OnAllStacksLost();
                 }
             }
         }
@@ -285,48 +291,9 @@ namespace MSU
 
         public CharacterBody CharacterBody { get; internal set; }
 
-        public new bool enabled => BuffCount > 0;
+        public bool HasAnyStacks => _buffCount > 0;
 
-        public new Component GetComponent(string type) => CharacterBody.GetComponent(type);
-        public new Component GetComponent(Type type) => CharacterBody.GetComponent(type);
-        public new T GetComponent<T>() => CharacterBody.GetComponent<T>();
-        public new T GetComponentInChildren<T>() => CharacterBody.GetComponentInChildren<T>();
-        public new T GetComponentInChildren<T>(bool includeInactive) => CharacterBody.GetComponentInChildren<T>(includeInactive);
-        public new Component GetComponentInChildren(Type type) => CharacterBody.GetComponentInChildren(type);
-        public new Component GetComponentInChildren(Type type, bool includeInactive) => CharacterBody.GetComponentInChildren(type, includeInactive);
-        public new Component GetComponentInParent(Type type) => CharacterBody.GetComponentInParent(type);
-        public new T GetComponentInParent<T>() => CharacterBody.GetComponentInParent<T>();
-
-        public new Component[] GetComponents(Type type) => CharacterBody.GetComponents(type);
-        public new void GetComponents(Type type, List<Component> results) => CharacterBody.GetComponents(type, results);
-        public new T[] GetComponents<T>() => CharacterBody.GetComponents<T>();
-        public new void GetComponents<T>(List<T> results) => CharacterBody.GetComponents<T>(results);
-        public new Component[] GetComponentsInChildren(Type type) => CharacterBody.GetComponentsInChildren(type);
-        public new Component[] GetComponentsInChildren(Type type, bool includeInactive) => CharacterBody.GetComponentsInChildren(type, includeInactive);
-        public new T[] GetComponentsInChildren<T>() => CharacterBody.GetComponentsInChildren<T>();
-        public new T[] GetComponentsInChildren<T>(bool includeInactive) => CharacterBody.GetComponentsInChildren<T>(includeInactive);
-        public new void GetComponentsInChildren<T>(List<T> results) => CharacterBody.GetComponentsInChildren(results);
-        public new void GetComponentsInChildren<T>(bool includeInactive, List<T> results) => CharacterBody.GetComponentsInChildren<T>(includeInactive, results);
-        public new Component[] GetComponentsInParent(Type type) => CharacterBody.GetComponentsInParent(type);
-        public new Component[] GetComponentsInParent(Type type, bool includeInactive) => CharacterBody.GetComponentsInParent(type, includeInactive);
-        public new T[] GetComponentsInParent<T>() => CharacterBody.GetComponentsInParent<T>();
-        public new T[] GetComponentsInParent<T>(bool includeInactive) => CharacterBody.GetComponentsInParent<T>(includeInactive);
-        public new void GetComponentsInParent<T>(bool includeInactive, List<T> results) => CharacterBody.GetComponentsInParent<T>(includeInactive, results);
-
-        public new bool TryGetComponent<T>(out T component) => CharacterBody.TryGetComponent<T>(out component);
-        public new bool TryGetComponent(Type type, out Component component) => CharacterBody.TryGetComponent(type, out component);
-
-        internal struct BuffBehaviourBuffDefComparer : IEqualityComparer<BuffBehaviour>
-        {
-            public bool Equals(BuffBehaviour x, BuffBehaviour y)
-            {
-                return x.TiedBuffDef.buffIndex == y.TiedBuffDef.buffIndex;
-            }
-
-            public int GetHashCode(BuffBehaviour obj)
-            {
-                return obj.TiedBuffDef.buffIndex.GetHashCode();
-            }
-        }
+        protected virtual void OnFirstStackGained() { }
+        protected virtual void OnAllStacksLost() { }
     }
 }
