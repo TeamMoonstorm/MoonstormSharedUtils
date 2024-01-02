@@ -8,6 +8,7 @@ using UnityEngine;
 
 namespace MSU
 {
+    [CreateAssetMenu(fileName = "New ExtendedEliteDef", menuName = "MSU/ExtendedEliteDef")]
     public class ExtendedEliteDef : EliteDef
     {
         public VanillaTier eliteTier;

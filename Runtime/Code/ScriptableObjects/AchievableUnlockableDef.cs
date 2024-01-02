@@ -11,6 +11,7 @@ using BepInEx;
 
 namespace MSU
 {
+    [CreateAssetMenu(fileName = "New AchievableUnlockableDef", menuName = "MSU/AchievableUnlockableDef")]
     public class AchievableUnlockableDef : UnlockableDef
     {
         [SerializableSystemType.RequiredBaseType(typeof(BaseAchievement))]

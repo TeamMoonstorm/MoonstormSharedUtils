@@ -18,13 +18,13 @@ namespace MSU
 
         public static PluginInfo PluginInfo { get; private set; }
         public static AssetBundle MSUAssetBundle { get; private set; }
-        private static string AssemblyDir { get => Path.Combine(Path.GetDirectoryName(PluginInfo.Location), "assetbundles"); }
+        private static string AssetBundleDir { get => Path.Combine(Path.GetDirectoryName(PluginInfo.Location), "assetbundles"); }
 
         private void Awake()
         {
             PluginInfo = Info;
             new MSULog(Logger);
-            MSUAssetBundle = AssetBundle.LoadFromFile(Path.Combine(AssemblyDir, "msuassets"));
+            MSUAssetBundle = AssetBundle.LoadFromFile(Path.Combine(AssetBundleDir, "runtimemsuassetbundle"));
             new MSUConfig(this);
 
 #if DEBUG

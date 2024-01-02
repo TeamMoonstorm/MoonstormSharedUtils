@@ -52,6 +52,17 @@ namespace MSU
             return new GenericContentPieceProvider<T>(contentPieces, contentPack);
         }
 
+        public static IContentPieceProvider<GameObject> AnalyzeForGameObjectContentPieces<T>(BaseUnityPlugin baseUnityPlugin, ContentPack contentPack)
+        {
+            var assembly = baseUnityPlugin.GetType().Assembly;
+            
+            IEnumerable<IContentPiece<GameObject>> contentPieces = ReflectionCache.GetTypes(assembly)
+                .Where(t => PassesFilter<GameObject>(t) && t.GetInterfaces().Contains(typeof(IGameObjectContentPiece<T>)))
+                .Select(t => (IContentPiece<GameObject>)Activator.CreateInstance(t));
+
+            return new GenericContentPieceProvider<GameObject>(contentPieces, contentPack);
+        }
+
         public static void AddSingle<T>(this NamedAssetCollection<T> collection, T content) where T : class
         {
             string name = collection.nameProvider(content);

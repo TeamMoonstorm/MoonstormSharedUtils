@@ -5,7 +5,7 @@
         "com.unity.multiplayer-hlapi.Runtime",
         "Unity.TextMeshPro",
         "UnityEditor.UI",
-        "MoonstormSharedUtils.Legacy"
+        "MSU.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

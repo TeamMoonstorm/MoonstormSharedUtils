@@ -116,7 +116,7 @@ MonoBehaviour:
   StagingPaths:
   - <BuildPathAssets>
   assetBundles:
-  - assetBundleName: msuassets
+  - assetBundleName: runtimemsuassetbundle
     assets:
     - {fileID: 102900000, guid: c1895b7b41943e741ab6b390f9f4aa69, type: 3}
     - {fileID: 102900000, guid: 071e77fdeac30b44e8eed0fd1cd25e4f, type: 3}

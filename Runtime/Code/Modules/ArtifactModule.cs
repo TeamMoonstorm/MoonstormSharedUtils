@@ -23,6 +23,7 @@ namespace Moonstorm
 
         private static Dictionary<BaseUnityPlugin, IArtifactContentPiece[]> _pluginToArtifacts = new Dictionary<BaseUnityPlugin, IArtifactContentPiece[]>();
         private static Dictionary<BaseUnityPlugin, IContentPieceProvider<ArtifactDef>> _pluginToContentProvider = new Dictionary<BaseUnityPlugin, IContentPieceProvider<ArtifactDef>>();
+
         public static void AddProvider(BaseUnityPlugin plugin, IContentPieceProvider<ArtifactDef> provider)
         {
             _pluginToContentProvider.Add(plugin, provider);

@@ -1,0 +1,4 @@
+﻿Shader "AddressableMaterialShader"
+{
+    FallBack "Diffuse"
+}
