@@ -1,6 +1,6 @@
 Shader "StubbedRoR2/Base/Shaders/HGSolidParallax" {
 	Properties {
-		[HDR] _Color ("Color", Vector) = (1,1,1,1)
+		[HDR] _Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
 		_EmissionTex ("Emission (RGB)", 2D) = "black" {}
 		_EmissionPower ("Emission Power", Range(0.1, 20)) = 1

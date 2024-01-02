@@ -1,7 +1,7 @@
 Shader "StubbedRoR2/Base/Shaders/HGDamageNumber" {
 	Properties {
-		[HDR] _TintColor ("Tint", Vector) = (1,1,1,1)
-		_CritColor ("Crit Color", Vector) = (1,1,1,1)
+		[HDR] _TintColor ("Tint", Color) = (1,1,1,1)
+		_CritColor ("Crit Color", Color) = (1,1,1,1)
 		_MainTex ("Texture", 2D) = "white" {}
 		_CharacterLimit ("Character Limit", Float) = 3
 	}

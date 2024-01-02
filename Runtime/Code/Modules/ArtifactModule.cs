@@ -123,6 +123,16 @@ namespace Moonstorm
                 }
                 _moonstormArtifacts.Add(asset, artifactContentPiece);
             }
+
+            if(artifact is IUnlockableContent unlockableContent)
+            {
+                UnlockableDef[] unlockableDefs = unlockableContent.TiedUnlockables;
+                if(unlockableDefs.Length > 0)
+                {
+                    UnlockableManager.AddUnlockables(unlockableDefs);
+                    provider.ContentPack.unlockableDefs.Add(unlockableDefs);
+                }
+            }
         }
     }
-}
+} 

@@ -90,6 +90,16 @@ namespace MSU
                 HG.ArrayUtils.ArrayAppend(ref array, itemContentPiece);
                 _moonstormItems.Add(asset, itemContentPiece);
             }
+
+            if (item is IUnlockableContent unlockableContent)
+            {
+                UnlockableDef[] unlockableDefs = unlockableContent.TiedUnlockables;
+                if (unlockableDefs.Length > 0)
+                {
+                    UnlockableManager.AddUnlockables(unlockableDefs);
+                    provider.ContentPack.unlockableDefs.Add(unlockableDefs);
+                }
+            }
         }
 
         private static void AddVoidItems(On.RoR2.Items.ContagiousItemManager.orig_Init orig)

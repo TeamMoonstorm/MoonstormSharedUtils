@@ -11,7 +11,7 @@ Shader "StubbedRoR2/Base/Shaders/HGUIAnimateAlpha" {
 		_PatternStrength ("Pattern Strength", Range(0, 1)) = 1
 		_PatternPanningSpeed ("Pattern Panning Speed", Range(0, 20)) = 0
 		[Toggle(DOUBLESAMPLE)] _DoubleSampleOn ("Double Sample Pattern", Float) = 0
-		_Color ("Tint", Vector) = (1,1,1,1)
+		_Color ("Tint", Color) = (1,1,1,1)
 		_StencilComp ("Stencil Comparison", Float) = 8
 		_Stencil ("Stencil ID", Float) = 0
 		_StencilOp ("Stencil Operation", Float) = 0

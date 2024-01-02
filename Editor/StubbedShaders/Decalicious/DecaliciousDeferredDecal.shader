@@ -1,11 +1,11 @@
-Shader "StubbedDecalicious/DecaliciousDeferredDecal" {
+Shader "StubbedDecalicious/DecaliciousUnlitDecal" {
 	Properties {
 		_MaskTex ("Mask", 2D) = "white" {}
 		[PerRendererData] _MaskMultiplier ("Mask (Multiplier)", Float) = 1
 		_MaskNormals ("Mask Normals?", Float) = 1
 		[PerRendererData] _LimitTo ("Limit To", Float) = 0
 		_MainTex ("Albedo", 2D) = "white" {}
-		[HDR] _Color ("Albedo (Multiplier)", Vector) = (1,1,1,1)
+		[HDR] _Color ("Albedo (Multiplier)", Color) = (1,1,1,1)
 		[Normal] _NormalTex ("Normal", 2D) = "bump" {}
 		_NormalMultiplier ("Normal (Multiplier)", Float) = 1
 		_SpecularStrength ("Specular Strength", Range(0, 1)) = 0
@@ -13,10 +13,10 @@ Shader "StubbedDecalicious/DecaliciousDeferredDecal" {
 		_Smoothness ("Smoothness (Multiplier)", Range(0, 1)) = 0.5
 		[MaterialEnum(Two Tone,0,Smoothed Two Tone,1,Unlitish,3,Subsurface,4,Grass,5)] _RampInfo ("Ramp Choice", Float) = 0
 		[MaterialEnum(Character,0,Environment,1,Misc,2)] _DecalLayer ("Decal Layer", Float) = 0
-		_DecalBlendMode ("Blend Mode", Float) = 0
-		_DecalSrcBlend ("SrcBlend", Float) = 1
-		_DecalDstBlend ("DstBlend", Float) = 10
-		_NormalBlendMode ("Normal Blend Mode", Float) = 0
+		[Enum(UnityEngine.Rendering.BlendMode)] _DecalBlendMode ("Blend Mode", Float) = 0
+		[Enum(UnityEngine.Rendering.BlendMode)] _DecalSrcBlend ("SrcBlend", Float) = 1
+		[Enum(UnityEngine.Rendering.BlendMode)] _DecalDstBlend ("DstBlend", Float) = 10
+		[Enum(UnityEngine.Rendering.BlendMode)] _NormalBlendMode ("Normal Blend Mode", Float) = 0
 		_AngleLimit ("Angle Limit", Float) = 0.5
 		_CloudOn ("Use Cloud Remap", Float) = 0
 		_Cloud1Tex ("Cloud 1 (RGB) Trans (A)", 2D) = "grey" {}

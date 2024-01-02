@@ -1,6 +1,6 @@
 Shader "StubbedCalm Water/ProjectorCaustics" {
 	Properties {
-		_Color ("Main Color", Vector) = (1,1,1,1)
+		_Color ("Main Color", Color) = (1,1,1,1)
 		_CausticTex ("Cookie", 2D) = "" {}
 		_Speed ("Caustic Speed", Float) = 1
 		_Tiling ("Tiling", Float) = 1

@@ -3,10 +3,10 @@ Shader "StubbedDecalicious/DecaliciousUnlitDecal" {
 		_MaskTex ("Mask", 2D) = "white" {}
 		[PerRendererData] _MaskMultiplier ("Mask (Multiplier)", Float) = 1
 		_MainTex ("Albedo", 2D) = "white" {}
-		[HDR] _Color ("Albedo (Multiplier)", Vector) = (1,1,1,1)
-		_DecalBlendMode ("Blend Mode", Float) = 0
-		_DecalSrcBlend ("SrcBlend", Float) = 1
-		_DecalDstBlend ("DstBlend", Float) = 10
+		[HDR] _Color ("Albedo (Multiplier)", Color) = (1,1,1,1)
+		[Enum(UnityEngine.Rendering.BlendMode)] _DecalBlendMode ("Blend Mode", Float) = 0
+		[Enum(UnityEngine.Rendering.BlendMode)] _DecalSrcBlend ("SrcBlend", Float) = 1
+		[Enum(UnityEngine.Rendering.BlendMode)] _DecalDstBlend ("DstBlend", Float) = 10
 		_AngleLimit ("Angle Limit", Float) = 0.5
 	}
 	//DummyShaderTextExporter

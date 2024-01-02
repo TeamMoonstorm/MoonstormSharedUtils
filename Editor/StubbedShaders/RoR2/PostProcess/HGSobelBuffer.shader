@@ -1,6 +1,6 @@
 Shader "StubbedRoR2/Base/Shaders/HGSobelBuffer" {
 	Properties {
-		_Color ("Color", Vector) = (1,1,1,1)
+		_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Main Texture", 2D) = "black" {}
 	}
 	//DummyShaderTextExporter

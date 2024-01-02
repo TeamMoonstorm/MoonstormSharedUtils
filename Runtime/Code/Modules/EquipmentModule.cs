@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using static RoR2.RoR2Content;
 
 namespace MSU
 {
@@ -132,6 +133,17 @@ namespace MSU
                     provider.ContentPack.eliteDefs.AddSingle(eliteDef);
                 }
                 provider.ContentPack.buffDefs.AddSingle(asset.passiveBuffDef);
+                BuffOverlays.AddBuffOverlay(asset.passiveBuffDef, eliteContentPiece.EliteDefs.OfType<ExtendedEliteDef>().FirstOrDefault(eed => eed.overlayMaterial).overlayMaterial);
+            }
+
+            if (equipment is IUnlockableContent unlockableContent)
+            {
+                UnlockableDef[] unlockableDefs = unlockableContent.TiedUnlockables;
+                if (unlockableDefs.Length > 0)
+                {
+                    UnlockableManager.AddUnlockables(unlockableDefs);
+                    provider.ContentPack.unlockableDefs.Add(unlockableDefs);
+                }
             }
         }
     }

@@ -11,11 +11,11 @@ namespace MSU
 {
     public interface IItemTierContentPiece : IContentPiece<ItemTierDef>
     {
-        public NullableRef<SerializableColorCatalogEntry> ColorIndex { get; }
-        public NullableRef<SerializableColorCatalogEntry> DarkColorIndex { get; }
-        public GameObject PickupDisplayVFX { get; }
+        NullableRef<SerializableColorCatalogEntry> ColorIndex { get; }
+        NullableRef<SerializableColorCatalogEntry> DarkColorIndex { get; }
+        GameObject PickupDisplayVFX { get; }
 
-        public List<ItemIndex> ItemsWithThisTier { get; set; }
-        public List<PickupIndex> AvailableTierDropList { get; set; }
+        List<ItemIndex> ItemsWithThisTier { get; set; }
+        List<PickupIndex> AvailableTierDropList { get; set; }
     }
 }

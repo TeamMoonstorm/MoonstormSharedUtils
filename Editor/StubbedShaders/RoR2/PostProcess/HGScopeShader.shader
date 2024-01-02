@@ -5,7 +5,7 @@ Shader "StubbedRoR2/Base/Shaders/HGScopeShader" {
 		_Scale ("Scale", Range(1, 10)) = 1
 		_DistortionStrength ("Distortion Strength", Range(-1, 1)) = 1
 		_TintStrength ("Tint Strength", Range(0, 1)) = 0.5
-		[Header(Base Image Properties)] _Color ("Tint", Vector) = (1,1,1,1)
+		[Header(Base Image Properties)] _Color ("Tint", Color) = (1,1,1,1)
 		_StencilComp ("Stencil Comparison", Float) = 8
 		_Stencil ("Stencil ID", Float) = 0
 		_StencilOp ("Stencil Operation", Float) = 0
