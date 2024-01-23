@@ -56,7 +56,7 @@ namespace MSU
             if (string.IsNullOrEmpty(address))
                 yield break;
 
-            var asyncOp = Addressables.LoadAssetAsync<Material>(address)];
+            var asyncOp = Addressables.LoadAssetAsync<Material>(address);
             while (asyncOp.IsDone)
                 yield return null;
 
