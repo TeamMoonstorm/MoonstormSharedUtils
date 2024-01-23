@@ -1,4 +1,4 @@
-﻿using Moonstorm.Editor.Settings;
+﻿using MSU.Editor.Settings;
 using RoR2EditorKit;
 using System;
 using System.Collections;
@@ -12,7 +12,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace Moonstorm.Editor.Pipelines
+namespace MSU.Editor.Pipelines
 {
     [PipelineSupport(typeof(Pipeline)), RequiresManifestDatumType(typeof(AssetBundleDefinitions))]
     public sealed class SwapShaders : PipelineJob

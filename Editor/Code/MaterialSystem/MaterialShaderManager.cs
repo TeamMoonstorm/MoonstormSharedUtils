@@ -1,10 +1,10 @@
-﻿using Moonstorm.Editor.Settings;
+﻿using MSU.Editor.Settings;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace Moonstorm.Editor.ShaderSystem
+namespace MSU.Editor.ShaderSystem
 {
     public static class MaterialShaderManager
     {

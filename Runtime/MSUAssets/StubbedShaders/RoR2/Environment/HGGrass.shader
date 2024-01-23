@@ -1,6 +1,6 @@
 Shader "StubbedRoR2/Base/Shaders/HGGrass" {
 	Properties {
-		_Color ("Main Color", Vector) = (0.5,0.5,0.5,1)
+		_Color ("Main Color", Color) = (0.5,0.5,0.5,1)
 		_MainTex ("Base (RGB)", 2D) = "white" {}
 		_Scroll ("Scroll Speed (XY), Distortion Noise Scale (ZW)", Vector) = (0,0,0,0)
 		_Cutoff ("Cutoff Alpha", Range(0, 1)) = 0.5

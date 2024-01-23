@@ -1,11 +1,11 @@
 Shader "StubbedRoR2/Base/Shaders/HGStandard" {
 	Properties {
 		[Header(Default)] [Toggle(CUTOUT)] _EnableCutout ("Cutout", Float) = 0
-		_Color ("Main Color", Vector) = (0.5,0.5,0.5,1)
+		_Color ("Main Color", Color) = (0.5,0.5,0.5,1)
 		_MainTex ("Base (RGB) Specular Scale (A)", 2D) = "white" {}
 		_NormalStrength ("Normal Strength", Range(0, 5)) = 1
 		_NormalTex ("Normal Map", 2D) = "bump" {}
-		_EmColor ("Emission Color", Vector) = (0,0,0,1)
+		_EmColor ("Emission Color", Color) = (0,0,0,1)
 		[NoScaleOffset] _EmTex ("Emission Tex (RGB)", 2D) = "white" {}
 		_EmPower ("Emission Power", Range(0, 10)) = 1
 		_Smoothness ("Smoothness", Range(0, 1)) = 0
@@ -61,7 +61,7 @@ Shader "StubbedRoR2/Base/Shaders/HGStandard" {
 		_FlowTextureScaleFactor ("Flow Texture Scale Factor", Range(0, 10)) = 1
 		[Header(Limb Removal)] [Toggle(LIMBREMOVAL)] _LimbRemovalOn ("Enable Limb Removal", Float) = 0
 		[PerRendererData] _LimbPrimeMask ("Limb Prime Mask", Range(1, 10000)) = 1
-		[PerRendererData] _FlashColor ("Flash Color", Vector) = (0,0,0,1)
+		[PerRendererData] _FlashColor ("Flash Color", Color) = (0,0,0,1)
 		[PerRendererData] _Fade ("Fade", Range(0, 1)) = 1
 	}
 	//DummyShaderTextExporter

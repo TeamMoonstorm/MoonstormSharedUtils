@@ -5,7 +5,7 @@ Shader "StubbedRoR2/Base/Shaders/HGTriplanarTerrainBlend" {
 		[Toggle(USE_ALPHA_AS_MASK)] _MaskOn ("Use Alpha Channels as Weight Mask", Float) = 0
 		[Toggle(USE_VERTICAL_BIAS)] _VerticalBiasOn ("Bias Green Channel to Vertical", Float) = 0
 		[Toggle(DOUBLESAMPLE)] _DoublesampleOn ("Double Sample UVs", Float) = 1
-		_Color ("Main Color", Vector) = (0.5,0.5,0.5,1)
+		_Color ("Main Color", Color) = (0.5,0.5,0.5,1)
 		_NormalTex ("Normal Tex (RGB)", 2D) = "bump" {}
 		_NormalStrength ("Normal Strength", Range(0, 1)) = 1
 		[MaterialEnum(Two Tone,0,Smoothed Two Tone,1,Unlitish,3,Subsurface,4,Grass,5)] _RampInfo ("Ramp Choice", Float) = 0

@@ -1,11 +1,11 @@
 Shader "StubbedCalm Water/CalmWater - DX11" {
 	Properties {
-		_Color ("Shallow Color", Vector) = (1,1,1,1)
-		_DepthColor ("Depth Color", Vector) = (0,0,0,0)
+		_Color ("Shallow Color", Color) = (1,1,1,1)
+		_DepthColor ("Depth Color", Color) = (0,0,0,0)
 		_Depth ("Depth", Float) = 0.5
 		[Toggle(_DEPTHFOG_ON)] _EnableFog ("Enable Depth Fog", Float) = 0
 		_EdgeFade ("Edge Fade", Float) = 1
-		_SpecColor ("SpecularColor", Vector) = (1,1,1,1)
+		_SpecColor ("SpecularColor", Color) = (1,1,1,1)
 		_Smoothness ("Smoothness", Range(0.01, 5)) = 0.5
 		_BumpMap ("Micro Detail", 2D) = "bump" {}
 		_BumpStrength ("Bump Strength", Range(0, 1)) = 1
@@ -18,13 +18,13 @@ Shader "StubbedCalm Water/CalmWater - DX11" {
 		_Distortion ("Distortion", Range(0, 100)) = 50
 		[KeywordEnum(High,Low)] _DistortionQuality ("Distortion Quality", Float) = 0
 		[KeywordEnum(None,Mixed,RealTime,CubeMap)] _ReflectionType ("ReflectionType", Float) = 0
-		_CubeColor ("CubeMap Color [RGB] Intensity [A]", Vector) = (1,1,1,1)
+		_CubeColor ("CubeMap Color [RGB] Intensity [A]", Color) = (1,1,1,1)
 		[NoScaleOffset] _Cube ("CubeMap", Cube) = "black" {}
 		[NoScaleOffset] _ReflectionTex ("Internal reflection", 2D) = "white" {}
 		_Reflection ("Reflection", Range(0, 1)) = 1
 		_RimPower ("Fresnel Angle", Range(1, 20)) = 5
 		[Toggle(_FOAM_ON)] _FOAM ("Enable Foam", Float) = 0
-		_FoamColor ("FoamColor", Vector) = (1,1,1,1)
+		_FoamColor ("FoamColor", Color) = (1,1,1,1)
 		_FoamTex ("Foam Texture", 2D) = "white" {}
 		_FoamSize ("Fade Size", Float) = 0.5
 		[KeywordEnum(Off,Wave,Gerstner)] _DisplacementMode ("Mode", Float) = 0

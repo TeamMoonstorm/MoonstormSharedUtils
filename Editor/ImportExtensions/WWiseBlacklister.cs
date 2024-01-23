@@ -1,6 +1,6 @@
 ﻿using ThunderKit.Core.Config;
 
-namespace Moonstorm.EditorUtils.Importers
+namespace MSU.Editor.Importers
 {
     public class WWiseBlacklister : OptionalExecutor
     {

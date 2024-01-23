@@ -6,7 +6,7 @@ using ThunderKit.Core.Pipelines;
 using ThunderKit.Core.Pipelines.Jobs;
 using UnityEditor;
 
-namespace Moonstorm.Editor.Pipelines
+namespace MSU.Editor.Pipelines
 {
     [PipelineSupport(typeof(Pipeline))]
     public sealed class ChangeAssemblyBuildMode : PipelineJob

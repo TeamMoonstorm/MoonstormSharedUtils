@@ -3,7 +3,7 @@ Shader "StubbedRoR2/Base/Shaders/HGForwardPlanet" {
 		[Header(Blending)] [Enum(UnityEngine.Rendering.BlendMode)] _SrcBlendFloat ("Source Blend", Float) = 1
 		[Enum(UnityEngine.Rendering.BlendMode)] _DstBlendFloat ("Destination Blend", Float) = 1
 		[MaterialEnum(Off,0,Front,1,Back,2)] _Cull ("Cull", Float) = 0
-		[Header(Lighting and Base Colors)] [HDR] _TintColor ("Tint", Vector) = (1,1,1,1)
+		[Header(Lighting and Base Colors)] [HDR] _TintColor ("Tint", Color) = (1,1,1,1)
 		[NoScaleOffset] _LightWarpRamp ("Lightwarp Ramp", 2D) = "grey" {}
 		_DetailStrength ("Detail Strength", Range(0, 1)) = 0.5
 		_DiffuseTex ("Diffuse Texture", 2D) = "white" {}
@@ -11,7 +11,7 @@ Shader "StubbedRoR2/Base/Shaders/HGForwardPlanet" {
 		_NormalStrength ("Normal Strength", Range(0, 5)) = 1
 		_NormalTex ("Normal Map", 2D) = "bump" {}
 		_NormalDetailTex ("Normal Detail Map", 2D) = "bump" {}
-		_SpecColor ("Specular Color", Vector) = (1,1,1,1)
+		_SpecColor ("Specular Color", Color) = (1,1,1,1)
 		_SpecularPower ("Specular Power", Range(0.1, 1000)) = 1
 		_DoubleSampleFactor ("Double Sample Factor", Range(0, 5)) = 1
 		[Header(Atmosphere)] [NoScaleOffset] _AtmosphereRamp ("Atmosphere Ramp", 2D) = "grey" {}

@@ -9,7 +9,7 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Moonstorm.Editor.Settings
+namespace MSU.Editor.Settings
 {
     public sealed class ShaderDictionary : ThunderKitSetting
     {
@@ -26,7 +26,7 @@ namespace Moonstorm.Editor.Settings
             }
         }
 
-        const string ShaderRootGUID = "e57526cd2e529264f8e9999843849112";
+        const string ShaderRootGUID = "9baa48c4908f85f43ae0c54e90e44447";
 
         [InitializeOnLoadMethod]
         static void CreateDictionaryOnDomainReload()

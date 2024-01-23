@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace Moonstorm.Editor.ShaderSystem
+namespace MSU.Editor.ShaderSystem
 {
     [InitializeOnLoad]
     public class MaterialEditorAdditions

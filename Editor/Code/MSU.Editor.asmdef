@@ -6,7 +6,8 @@
         "ThunderKit.Markdown",
         "RoR2EditorScripts",
         "ThunderKit.Common",
-        "MSU.Runtime"
+        "MSU.Runtime",
+        "R2APIEditorScripts"
     ],
     "includePlatforms": [
         "Editor"
@@ -30,7 +31,8 @@
         "R2API.Elites.dll",
         "R2API.RecalculateStats.dll",
         "Wwise.dll",
-        "BepInEx.dll"
+        "BepInEx.dll",
+        "R2API.Addressables.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [],

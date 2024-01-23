@@ -1,6 +1,6 @@
 Shader "StubbedRoR2/Base/Shaders/HGSnowTopped" {
 	Properties {
-		[Header(Main Properties)] _Color ("Main Color", Vector) = (0.5,0.5,0.5,1)
+		[Header(Main Properties)] _Color ("Main Color", Color) = (0.5,0.5,0.5,1)
 		_MainTex ("Base (RGB)", 2D) = "white" {}
 		_NormalStrength ("Normal Strength", Range(0, 1)) = 1
 		_NormalTex ("Normal Map", 2D) = "bump" {}

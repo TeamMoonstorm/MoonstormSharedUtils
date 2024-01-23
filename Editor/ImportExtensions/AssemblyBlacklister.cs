@@ -4,7 +4,7 @@ using ThunderKit.Core.Config;
 using ThunderKit.Core.Data;
 using UnityEngine;
 
-namespace Moonstorm.EditorUtils.Importers
+namespace MSU.Editor.Importers
 {
     public class AssemblyBlacklister : BlacklistProcessor
     {

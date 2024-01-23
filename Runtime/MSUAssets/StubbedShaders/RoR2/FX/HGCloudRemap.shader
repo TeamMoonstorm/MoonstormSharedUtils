@@ -1,9 +1,9 @@
 Shader "StubbedRoR2/Base/Shaders/HGCloudRemap" {
 	Properties {
-		[HideInInspector] _SrcBlend ("Source Blend", Float) = 1
-		[HideInInspector] _DstBlend ("Destination Blend", Float) = 1
+		[Enum(UnityEngine.Rendering.BlendMode)] _SrcBlend ("Source Blend", Float) = 1
+		[Enum(UnityEngine.Rendering.BlendMode)] _DstBlend ("Destination Blend", Float) = 1
 		[HideInInspector] _InternalSimpleBlendMode ("Internal Simple Blend Mode", Float) = 0
-		[HDR] _TintColor ("Tint", Vector) = (1,1,1,1)
+		[HDR] _TintColor ("Tint", Color) = (1,1,1,1)
 		[Toggle(DISABLEREMAP)] _DisableRemapOn ("Disable Remapping", Float) = 0
 		_MainTex ("Base (RGB) Trans (A)", 2D) = "grey" {}
 		_RemapTex ("Color Remap Ramp (RGB)", 2D) = "grey" {}

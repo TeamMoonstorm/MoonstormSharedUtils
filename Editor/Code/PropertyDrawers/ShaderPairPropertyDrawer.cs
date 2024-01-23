@@ -1,9 +1,9 @@
-﻿using Moonstorm.Editor.Settings;
+﻿using MSU.Editor.Settings;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 
-namespace Moonstorm.Editor.PropertyDrawers
+namespace MSU.Editor.PropertyDrawers
 {
     [CustomPropertyDrawer(typeof(ShaderDictionary.ShaderPair))]
     public sealed class ShaderPairPropertyDrawer : PropertyDrawer

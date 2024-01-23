@@ -3,7 +3,7 @@ Shader "StubbedRoR2/Base/Shaders/HGVisionLimit" {
 		_Origin ("Effect Origin", Vector) = (0,0,0,0)
 		_RangeEnd ("Range Start", Float) = 0
 		_RangeEnd ("Range End", Float) = 1
-		_Color ("Tint", Vector) = (1,1,1,1)
+		_Color ("Tint", Color) = (1,1,1,1)
 	}
 	//DummyShaderTextExporter
 	SubShader{

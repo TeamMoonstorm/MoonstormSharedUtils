@@ -1,7 +1,7 @@
 Shader "StubbedRoR2/Base/skymeadow/Fill-Linear" {
 	Properties {
 		_MainTex ("Base (RGB)", 2D) = "white" {}
-		_Color ("Color", Vector) = (1,1,1,1)
+		_Color ("Color", Color) = (1,1,1,1)
 		_Center ("Center", Vector) = (0,0,0,0)
 		_FillRate ("FillRate", Range(0, 1)) = 1
 	}

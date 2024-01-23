@@ -3,8 +3,8 @@ Shader "StubbedRoR2/Base/Shaders/HGStandardWithDistortion" {
 		_BumpMap ("Bump Texture", 2D) = "bump" {}
 		_MaskTex ("Mask Texture", 2D) = "white" {}
 		_Magnitude ("Magnitude", Range(0, 10)) = 0.05
-		[HDR] _DistortionColor ("Distortion Color", Vector) = (1,1,1,1)
-		[HDR] _OpacityColor ("Opacity Color", Vector) = (1,1,1,1)
+		[HDR] _DistortionColor ("Distortion Color", Color) = (1,1,1,1)
+		[HDR] _OpacityColor ("Opacity Color", Color) = (1,1,1,1)
 		_Opacity ("Opacity", Range(0, 1)) = 0
 		_NearFadeZeroDistance ("Near-Fade Zero Distance", Float) = 0
 		_NearFadeOneDistance ("Near-Fade One Distance", Float) = 5
