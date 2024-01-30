@@ -5,8 +5,9 @@ using System;
 
 namespace MSU
 {
-    static class Interfaces
+    internal static class Interfaces
     {
+        internal static event Action<HealthComponent, DamageInfo> @event;
         [SystemInitializer]
         private static void Init()
         {
@@ -40,6 +41,8 @@ namespace MSU
             IOnIncomingDamageOtherServerReciever[] interfaces = damageInfo.attacker.GetComponents<IOnIncomingDamageOtherServerReciever>();
             for (int i = 0; i < interfaces.Length; i++)
                 interfaces[i].OnIncomingDamageOther(healthComponent, damageInfo);
+
+            @event?.Invoke(healthComponent, damageInfo);
         }
         #endregion;
     }

@@ -40,7 +40,8 @@
         "R2API.CommandHelper.dll",
         "R2API.Addressables.dll",
         "MonoMod.RuntimeDetour.dll",
-        "ShaderSwapper.dll"
+        "ShaderSwapper.dll",
+        "R2API.Dot.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [],

@@ -77,20 +77,14 @@ namespace MSU
                     var manager = bodyPrefab.AddComponent<MSUContentBehaviour>();
                     manager.body = bodyPrefab.GetComponent<CharacterBody>();
 
-                    /*var modelLocator = bodyPrefab.GetComponent<ModelLocator>();
-                    if (!modelLocator)
-                        continue;
-
-                    if (!modelLocator.modelTransform)
-                        continue;
-
-                    if (!modelLocator.modelTransform.TryGetComponent<CharacterModel>(out var model))
-                        continue;
-
-                    var eliteBehaviour = bodyPrefab.AddComponent<MSUEliteBehaviour>();
-                    eliteBehaviour.characterModel = model;
-                    eliteBehaviour.body = manager.body;
-                    manager.eliteBehaviour = eliteBehaviour;*/
+                    var characterModel = bodyPrefab.GetComponentInChildren<CharacterModel>();
+                    if(characterModel)
+                    {
+                        var eliteBehaviour = characterModel.gameObject.AddComponent<MSUEliteBehaviour>();
+                        eliteBehaviour.characterModel = characterModel;
+                        eliteBehaviour.body = manager.body;
+                        manager.eliteBehaviour = eliteBehaviour;
+                    }
 
                     BodyCatalog.bodyPrefabs[i] = bodyPrefab;
                 }
@@ -175,10 +169,13 @@ namespace MSU
     {
         public bool HasMaster { get; private set; }
         public CharacterBody body;
+        public MSUEliteBehaviour eliteBehaviour;
 
         private EquipmentIndex _assignedEliteEquipmentIndex;
         private IStatItemBehavior[] _statItemBehaviors = Array.Empty<IStatItemBehavior>();
         private IBodyStatArgModifier[] _bodyStatArgModifiers = Array.Empty<IBodyStatArgModifier>();
+
+        private IEquipmentContentPiece _equipmentContentPiece;
 
         private void Start()
         {
@@ -199,27 +196,26 @@ namespace MSU
 
             if(EquipmentModule.AllMoonstormEquipments.TryGetValue(def, out IEquipmentContentPiece equipmentContent))
             {
-                equipmentContent.OnEquipmentObtained(body);
-                if (!def.passiveBuffDef)
-                    return;
-
-                if(_assignedEliteEquipmentIndex != def.passiveBuffDef?.eliteDef?.eliteEquipmentDef?.equipmentIndex)
-                {
-                    _assignedEliteEquipmentIndex = (EquipmentIndex)def.passiveBuffDef?.eliteDef?.eliteEquipmentDef?.equipmentIndex;
-                    AssignElite(def.passiveBuffDef.eliteDef);
-                }
+                _equipmentContentPiece.OnEquipmentLost(body);
+                _equipmentContentPiece = equipmentContent;
+                _equipmentContentPiece.OnEquipmentObtained(body);
             }
+
+            if (eliteBehaviour)
+                CheckEliteBehaviour(def);
         }
 
-        private void AssignElite(EliteDef eliteDef)
+        private void CheckEliteBehaviour(EquipmentDef def)
         {
-            if(!(eliteDef is ExtendedEliteDef eed))
+            //Try removing elite qualities if thee incomming def isnt an Elite Equipment.
+            if(!def.passiveBuffDef || !def.passiveBuffDef.isElite)
             {
+                eliteBehaviour.AssignNewElite(EliteIndex.None);
                 return;
             }
-
-
+            eliteBehaviour.AssignNewElite(def.passiveBuffDef.eliteDef.eliteIndex);
         }
+
         public void StartGetInterfaces() => StartCoroutine(GetInterfaces());
 
         private IEnumerator GetInterfaces()
@@ -253,6 +249,31 @@ namespace MSU
             {
                 _statItemBehaviors[i].RecalculateStatsEnd();
             }
+        }
+    }
+
+    public sealed class MSUEliteBehaviour : MonoBehaviour
+    {
+        public CharacterBody body;
+        public CharacterModel characterModel;
+
+        private GameObject effectInstance;
+
+        public void AssignNewElite(EliteIndex eliteIndex)
+        {
+            //Incoming index is none, or the incoming index is not an ExtendedEliteDef, destroy effect instance if needed.
+            if(eliteIndex == EliteIndex.None || !(EliteCatalog.GetEliteDef(eliteIndex) is ExtendedEliteDef eed))
+            {
+                if (effectInstance)
+                    Destroy(effectInstance);
+                return;
+            }
+
+            if (!eed || !eed.effect)
+                return;
+
+            effectInstance = Instantiate(eed.effect, body.aimOriginTransform, false);
+
         }
     }
     public abstract class BuffBehaviour : MonoBehaviour

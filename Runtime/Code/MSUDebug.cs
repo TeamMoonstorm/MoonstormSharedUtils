@@ -46,6 +46,28 @@ namespace MSU
 
         private void Awake()
         {
+            RoR2Application.onLoad += () =>
+            {
+                foreach (GameObject prefab in BodyCatalog.allBodyPrefabs)
+                {
+                    try
+                    {
+                        var charModel = prefab.GetComponentInChildren<CharacterModel>();
+
+                        if (!charModel)
+                            continue;
+
+                        if (!charModel.itemDisplayRuleSet)
+                            continue;
+
+                        charModel.gameObject.EnsureComponent<ItemDisplayHelper>();
+                    }
+                    catch (Exception e)
+                    {
+                        MSULog.Error(e);
+                    }
+                }
+            };
             if (MSUtil.DebugToolkitInstalled)
                 GetNoEnemiesField();
         }

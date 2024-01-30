@@ -11,7 +11,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using static RoR2.RoR2Content;
 
-namespace Moonstorm
+namespace MSU
 {
     public static class ArtifactModule
     {

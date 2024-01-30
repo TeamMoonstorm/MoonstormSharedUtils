@@ -40,6 +40,7 @@ namespace MSU
 #endif
         }
 
+
 #if DEBUG
         public static void InvokeCommand(string commandName, params string[] arguments)
         {

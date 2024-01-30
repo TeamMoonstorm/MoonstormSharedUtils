@@ -15,5 +15,7 @@ namespace MSU
         bool Execute(EquipmentSlot slot);
 
         void OnEquipmentObtained(CharacterBody body);
+
+        void OnEquipmentLost(CharacterBody body);
     }
 }
