@@ -10,12 +10,13 @@ GameObject:
   m_Component:
   - component: {fileID: 8213170796682785220}
   - component: {fileID: 8213170796682785242}
+  - component: {fileID: 6856245325845556312}
+  - component: {fileID: -1841656863747711454}
   - component: {fileID: 6709673378652027855}
   - component: {fileID: 3916189021239166270}
   - component: {fileID: -4272976251058039023}
-  - component: {fileID: 7290148279729907428}
   m_Layer: 5
-  m_Name: EventAnnouncer
+  m_Name: GameplayEventText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -48,6 +49,35 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8213170796682785221}
   m_CullTransparentMesh: 0
+--- !u!114 &6856245325845556312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8213170796682785221}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c7e5d46afce4124d88b4d4771e8d678, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-1841656863747711454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8213170796682785221}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1297580292, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  customName: Main
+  initialStateType:
+    _typeName: EntityStates.Idle, RoR2, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  mainStateType:
+    _typeName: EntityStates.Idle, RoR2, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
 --- !u!225 &6709673378652027855
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -168,18 +198,3 @@ MonoBehaviour:
   transitionDuration: 0
   panningMagnitude: 0
   destroyOnEndOfTransition: 0
---- !u!114 &7290148279729907428
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8213170796682785221}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ae41182b6efbc14ab17f86d84b8b528, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  uiJuice: {fileID: -4272976251058039023}
-  fadeOnStart: 0
-  warningDuration: 0
