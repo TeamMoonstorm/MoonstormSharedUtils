@@ -13,6 +13,9 @@ using System.Threading.Tasks;
 using UnityEngine;
 using RoR2.ExpansionManagement;
 using R2API.Utils;
+using RoR2.EntitlementManagement;
+using UnityEngine.Networking;
+using RoR2.Projectile;
 
 namespace MSU
 {
@@ -155,6 +158,100 @@ namespace MSU
                     failureLog.AppendLine(asset.name);
                 }
                 MSULog.Warning(failureLog);
+            }
+        }
+
+        public static void AddContentFromAssetCollection(this ContentPack contentPack, AssetCollection collection)
+        {
+            foreach(var asset in collection.assets)
+            {
+                try
+                {
+                    if (!asset)
+                        continue;
+
+                    HandleAssetAddition(asset, contentPack);
+                }
+                catch(Exception e)
+                {
+                    MSULog.Error(e);
+                }
+            }
+        }
+
+        private static void HandleAssetAddition(UnityEngine.Object asset, ContentPack contentPack)
+        {
+            switch (asset)
+            {
+                case UnityEngine.GameObject gObject: HandleGameObjectAddition(gObject, contentPack); break;
+                case SkillDef sd: contentPack.skillDefs.AddSingle(sd); break;
+                case SkillFamily sf: contentPack.skillFamilies.AddSingle(sf); break;
+                case SceneDef sd: contentPack.sceneDefs.AddSingle(sd); break;
+                case ItemDef id: contentPack.itemDefs.AddSingle(id); break;
+                case ItemTierDef itd: contentPack.itemTierDefs.AddSingle(itd); break;
+                case ItemRelationshipProvider irp: contentPack.itemRelationshipProviders.AddSingle(irp); break;
+                case ItemRelationshipType irt: contentPack.itemRelationshipTypes.AddSingle(irt); break;
+                case EquipmentDef ed: contentPack.equipmentDefs.AddSingle(ed); break;
+                case BuffDef bd: contentPack.buffDefs.AddSingle(bd); break;
+                case EliteDef _ed: contentPack.eliteDefs.AddSingle(_ed); break;
+                case UnlockableDef ud: contentPack.unlockableDefs.AddSingle(ud); break;
+                case SurvivorDef _sd: contentPack.survivorDefs.AddSingle(_sd); break;
+                case ArtifactDef ad: contentPack.artifactDefs.AddSingle(ad); break;
+                case SurfaceDef __sd: contentPack.surfaceDefs.AddSingle(__sd); break;
+                case NetworkSoundEventDef nsed: contentPack.networkSoundEventDefs.AddSingle(nsed); break;
+                case MusicTrackDef mtd: contentPack.musicTrackDefs.AddSingle(mtd); break;
+                case GameEndingDef ged: contentPack.gameEndingDefs.AddSingle(ged); break;
+                case EntityStateConfiguration esc: contentPack.entityStateConfigurations.AddSingle(esc); break;
+                case ExpansionDef __ed: contentPack.expansionDefs.AddSingle(__ed); break;
+                case EntitlementDef ___ed: contentPack.entitlementDefs.AddSingle(___ed); break;
+                case MiscPickupDef mpd: contentPack.miscPickupDefs.AddSingle(mpd); break;
+                case EntityStateTypeCollection estc: AddEntityStateTypes(estc, contentPack); break;
+            }
+        }
+
+        private static void HandleGameObjectAddition(GameObject go, ContentPack contentPack)
+        {
+            NetworkIdentity identity = go.GetComponent<NetworkIdentity>();
+            bool isNetworkedByDefault = false;
+            if(go.TryGetComponent<CharacterBody>(out var bodyComponent))
+            {
+                isNetworkedByDefault = true;
+                contentPack.bodyPrefabs.AddSingle(go);
+            }
+            if(go.TryGetComponent<CharacterMaster>(out var masterComponent))
+            {
+                isNetworkedByDefault = true;
+                contentPack.masterPrefabs.AddSingle(go);
+            }
+            if(go.TryGetComponent<ProjectileController>(out var controllerComponent))
+            {
+                isNetworkedByDefault = true;
+                contentPack.projectilePrefabs.AddSingle(go);
+            }
+            if(go.TryGetComponent<Run>(out var runComponent))
+            {
+                isNetworkedByDefault = true;
+                contentPack.gameModePrefabs.AddSingle(go);
+            }
+            if(go.TryGetComponent<EffectComponent>(out var effectComponent))
+            {
+                contentPack.effectDefs.AddSingle(new EffectDef(go));
+            }
+
+            if(identity && !isNetworkedByDefault)
+            {
+                contentPack.networkedObjectPrefabs.AddSingle(go);
+            }
+        }
+
+        private static void AddEntityStateTypes(EntityStateTypeCollection collection, ContentPack contentPack)
+        {
+            foreach(var type in collection.stateTypes)
+            {
+                if(type.stateType != null)
+                {
+                    contentPack.entityStateTypes.AddSingle(type.stateType);
+                }
             }
         }
 
