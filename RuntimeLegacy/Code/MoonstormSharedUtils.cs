@@ -6,9 +6,6 @@ using Path = System.IO.Path;
 
 namespace Moonstorm
 {
-    /// <summary>
-    /// The main class of MSU
-    /// </summary>
     [BepInDependency(R2API.ArtifactCodeAPI.PluginGUID)]
     [BepInDependency(R2API.ColorsAPI.PluginGUID)]
     [BepInDependency(R2API.ContentManagement.R2APIContentManager.PluginGUID)]
@@ -27,17 +24,10 @@ namespace Moonstorm
         public const string MODNAME = "Moonstorm Shared Utils";
         public const string VERSION = "1.6.2";
 
-        /// <summary>
-        /// Instance of MSU
-        /// </summary>
         public static MoonstormSharedUtils Instance { get; private set; }
-        /// <summary>
-        /// MSU's PluginInfo
-        /// </summary>
+
         public static PluginInfo PluginInfo { get; private set; }
-        /// <summary>
-        /// The main AssetBundle of MSU
-        /// </summary>
+
         public static AssetBundle MSUAssetBundle { get; private set; }
         private static string AssemblyDir { get => Path.Combine(Path.GetDirectoryName(PluginInfo.Location), "assetbundles"); }
 

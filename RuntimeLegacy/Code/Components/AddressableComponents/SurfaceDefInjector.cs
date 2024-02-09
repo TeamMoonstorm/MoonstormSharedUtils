@@ -4,13 +4,9 @@ using UnityEngine;
 
 namespace Moonstorm.Components.Addressables
 {
-    /// <summary>
-    /// Injects a surface def specified in <see cref="surfaceDefAddress"/> to all SurfaceDefProviders that are children of the attached game object
-    /// </summary>
     [ExecuteAlways]
     public class SurfaceDefInjector : MonoBehaviour
     {
-        [Tooltip("The surfaceDef address to load")]
         public string surfaceDefAddress;
         [NonSerialized]
         private SurfaceDef loadedSurfaceDef;
@@ -18,9 +14,6 @@ namespace Moonstorm.Components.Addressables
         private void OnEnable() => Refresh();
         private void OnDisable() => RemoveReferencesEditor();
 
-        /// <summary>
-        /// Reloads the surface def and updates the SurfaceDefProvider components found in children of the attached game object
-        /// </summary>
         public void Refresh()
         {
             if (string.IsNullOrWhiteSpace(surfaceDefAddress) || string.IsNullOrEmpty(surfaceDefAddress))

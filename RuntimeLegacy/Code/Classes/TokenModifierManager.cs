@@ -8,9 +8,6 @@ using SearchableAttribute = HG.Reflection.SearchableAttribute;
 
 namespace Moonstorm
 {
-    /// <summary>
-    /// The TokenModifierManager is a class that handles the usage of <see cref="TokenModifierAttribute"/> in mods.
-    /// </summary>
     public static class TokenModifierManager
     {
         //Since 1.5 introduces risk of options support, we now need to keep a cache of the attributes themselves so we can hot-reload languages.

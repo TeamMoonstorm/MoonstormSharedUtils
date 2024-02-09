@@ -6,39 +6,15 @@ using UnityEngine;
 
 namespace Moonstorm
 {
-    /// <summary>
-    /// Class for handling Event Messages
-    /// </summary>
     public static class EventHelpers
     {
-        /// <summary>
-        /// Represents a Data structure for announcing an event
-        /// </summary>
         public struct EventAnnounceInfo
         {
-            /// <summary>
-            /// The EventCard, the text and colour are taken from this
-            /// </summary>
             public EventCard card;
-            /// <summary>
-            /// How long the message lasts, if <see cref="isEventStart"/> is false, the duration is cut in half
-            /// </summary>
             public float eventWarningDuration;
-            /// <summary>
-            /// Wether to display the start message or the end message
-            /// </summary>
             public bool isEventStart;
-            /// <summary>
-            /// Wether to begin the fade in as soon as the event message becomes instantiated
-            /// </summary>
             public bool fadeOnStart;
 
-            /// <summary>
-            /// Constructor
-            /// </summary>
-            /// <param name="card">The EventCard, the text and colour are taken from this</param>
-            /// <param name="warningDuration">How long the message lasts, if <see cref="isEventStart"/> is false, the duration is cut in half</param>
-            /// <param name="isEventStart">Wether to display the start message or the end message</param>
             public EventAnnounceInfo(EventCard card, float warningDuration, bool isEventStart)
             {
                 this.card = card;
@@ -99,11 +75,6 @@ namespace Moonstorm
             orig(self, familySelectionChatString);
         }
 
-        /// <summary>
-        /// Announces a new event, using the Event Message system
-        /// </summary>
-        /// <param name="announceInfo">The announcement info</param>
-        /// <returns>The EventMessage GameObject</returns>
         public static GameObject AnnounceEvent(EventAnnounceInfo announceInfo)
         {
             GameObject eventAnnouncerInstance = UnityEngine.Object.Instantiate(EventAnnouncer, hudInstance.mainContainer.transform, false);

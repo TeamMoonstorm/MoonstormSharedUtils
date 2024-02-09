@@ -9,18 +9,10 @@ using static Moonstorm.EventDirectorCategorySelection;
 
 namespace Moonstorm
 {
-    /// <summary>
-    /// The Event Catalog for MSU's Event System
-    /// </summary>
     public static class EventCatalog
     {
-        /// <summary>
-        /// Returns the amount of Categories that are registered
-        /// </summary>
         public static int RegisteredCategoriesCount => registeredCategories.Length;
-        /// <summary>
-        /// Returns the amount of Events that are registered.
-        /// </summary>
+
         public static int RegisteredEventCount => registeredEventCards.Length;
 
         private static EventDirectorCategorySelection[] categories = Array.Empty<EventDirectorCategorySelection>();
@@ -35,18 +27,9 @@ namespace Moonstorm
         private static readonly Dictionary<DirectorAPI.Stage, EventDirectorCategorySelection> stageToCategory = new Dictionary<DirectorAPI.Stage, EventDirectorCategorySelection>();
         private static readonly Dictionary<string, EventDirectorCategorySelection> baseSceneNameToCategory = new Dictionary<string, EventDirectorCategorySelection>(StringComparer.OrdinalIgnoreCase);
 
-        /// <summary>
-        /// Call ResourceAvailability.CallWhenAvailable() to run a method after the EventCatalog is initialized
-        /// </summary>
         public static ResourceAvailability resourceAvailability = default(ResourceAvailability);
         private static bool initialized = false;
         #region GetAndFindMethods
-        /// <summary>
-        /// Returns the EventIndex tied to the string supplied in <paramref name="eventName"/>
-        /// </summary>
-        /// <param name="eventName">The name of this event</param>
-        /// <returns>An EventIndex if valid, <see cref="EventIndex.None"/> if no event matches.</returns>
-        /// <exception cref="InvalidOperationException"></exception>
         public static EventIndex FindEventIndex(string eventName)
         {
             if (!initialized)
@@ -59,12 +42,6 @@ namespace Moonstorm
             return EventIndex.None;
         }
 
-        /// <summary>
-        /// Returns the EventCard that's tied to the supplied EventIndex in <paramref name="eventIndex"/>
-        /// </summary>
-        /// <param name="eventIndex">The EventIndex</param>
-        /// <returns>An event card that's tied to <paramref name="eventIndex"/></returns>
-        /// <exception cref="InvalidOperationException"></exception>
         public static EventCard GetEventCard(EventIndex eventIndex)
         {
             if (!initialized)
@@ -73,12 +50,6 @@ namespace Moonstorm
             return ArrayUtils.GetSafe(registeredEventCards, (int)eventIndex);
         }
 
-        /// <summary>
-        /// Returns the index that's tied to a CategorySelection's name by using <paramref name="name"/>
-        /// </summary>
-        /// <param name="name">The name of the category to find</param>
-        /// <returns>The index of the category, returns -1 if no category is found.</returns>
-        /// <exception cref="InvalidOperationException"></exception>
         public static int FindCategorySelectionIndex(string name)
         {
             if (!initialized)
@@ -91,12 +62,6 @@ namespace Moonstorm
             return -1;
         }
 
-        /// <summary>
-        /// Returns the EventDirectorCategorySelection tied to the index provided in <paramref name="categoryIndex"/>
-        /// </summary>
-        /// <param name="categoryIndex">The index to use for the lookup</param>
-        /// <returns>The EventDirectorCategorySelection</returns>
-        /// <exception cref="InvalidOperationException"></exception>
         public static EventDirectorCategorySelection GetCategorySelection(int categoryIndex)
         {
             if (!initialized)
@@ -105,12 +70,6 @@ namespace Moonstorm
             return ArrayUtils.GetSafe(registeredCategories, categoryIndex);
         }
 
-        /// <summary>
-        /// Returns the EventDirectorCategorySelection that's tied to the given <paramref name="stage"/> or the given <paramref name="customName"/>
-        /// </summary>
-        /// <param name="stage">The Stage to obtain</param>
-        /// <param name="customName">A custom stage's name, <paramref name="stage"/> needs to be set to <see cref="DirectorAPI.Stage.Custom"/> for it to work properly</param>
-        /// <returns>The EventDirectorCategorySelection</returns>
         public static EventDirectorCategorySelection GetCategoryFromCurrentStage(DirectorAPI.Stage stage, string customName = null)
         {
             try
@@ -143,11 +102,6 @@ namespace Moonstorm
             }
         }
 
-        /// <summary>
-        /// Returns the EventDirectorCategorySelection that's tied to <paramref name="sceneDef"/>.
-        /// </summary>
-        /// <param name="sceneDef">The scene def to use for the lookup</param>
-        /// <returns>The EventDirectorCategorySelection</returns>
         public static EventDirectorCategorySelection GetCategoryFromSceneDef(SceneDef sceneDef)
         {
             try
@@ -177,11 +131,6 @@ namespace Moonstorm
         #endregion
 
         #region Add Methods
-        /// <summary>
-        /// Adds multiple cards to the EventCatalog
-        /// </summary>
-        /// <param name="cards">The cards to addd</param>
-        /// <exception cref="InvalidOperationException"></exception>
         public static void AddCards(EventCard[] cards)
         {
             if (initialized)
@@ -190,11 +139,6 @@ namespace Moonstorm
             cards.ToList().ForEach(card => AddCard(card));
         }
 
-        /// <summary>
-        /// Adds a single card to the EventCatalog
-        /// </summary>
-        /// <param name="card">The card to add</param>
-        /// <exception cref="InvalidOperationException"></exception>
         public static void AddCard(EventCard card)
         {
             if (initialized)
@@ -202,22 +146,12 @@ namespace Moonstorm
             HG.ArrayUtils.ArrayAppend(ref eventCards, card);
         }
 
-        /// <summary>
-        /// Adds multiple EventDirectorCategorySelection to the EventCatalog
-        /// </summary>
-        /// <param name="categories">The categories to add</param>
-        /// <exception cref="InvalidOperationException"></exception>
         public static void AddCategories(EventDirectorCategorySelection[] categories)
         {
             if (initialized)
                 throw new InvalidOperationException($"EventCatalog already initialized");
             categories.ToList().ForEach(category => AddCategory(category));
         }
-        /// <summary>
-        /// Adds a single EventDirectorCategorySelection to the EventCatalog
-        /// </summary>
-        /// <param name="category">The category to add</param>
-        /// <exception cref="InvalidOperationException"></exception>
         public static void AddCategory(EventDirectorCategorySelection category)
         {
             if (initialized)

@@ -11,9 +11,6 @@ using UnityEngine;
 
 namespace Moonstorm
 {
-    /// <summary>
-    /// The <see cref="ConfigSystem"/> is a class that handles the ConfigurationSystems of MSU, this includes the <see cref="ConfigurableFieldAttribute"/> and classes deriving from <see cref="ConfigurableVariable"/>
-    /// </summary>
     public static class ConfigSystem
     {
         private struct ManagedModData
@@ -38,11 +35,6 @@ namespace Moonstorm
 
         private static bool initialized = false;
 
-        /// <summary>
-        /// Adds the mod from <paramref name="baseUnityPlugin"/> into the ConfigSystem.
-        /// <para>When added, the System will automatically implement the configuration of any <see cref="ConfigurableFieldAttribute"/>s and <see cref="ConfigurableVariable"/>s in your mod</para>
-        /// </summary>
-        /// <param name="baseUnityPlugin">Your mod's BaseUnityPlugin inheriting class.</param>
         public static void AddMod(BaseUnityPlugin baseUnityPlugin)
         {
             if (initialized)
@@ -67,11 +59,6 @@ namespace Moonstorm
             AddConfigFileAndIdentifier(modData.pluginInfo.Metadata.GUID, modData.mainConfigFile);
         }
 
-        /// <summary>
-        /// Retrieves a <see cref="ConfigFile"/> with the identifier specified in <paramref name="identifier"/>
-        /// </summary>
-        /// <param name="identifier">The identifier of the ConfigFile</param>
-        /// <returns>A valid ConfigFile if it exists in the ConfigSystem, null otherwise.</returns>
         public static ConfigFile GetConfigFile(string identifier)
         {
             if (identifierToConfigFile.TryGetValue(identifier, out ConfigFile configFile))
@@ -84,23 +71,11 @@ namespace Moonstorm
             return null;
         }
 
-        /// <summary>
-        /// Adds a <see cref="ConfigFile"/> with it's corresponding Identifier.
-        /// <para>You're strongly advised to create new ConfigFiles by using the <see cref="ConfigLoader"/> class, as that class automatically calls this method.</para>
-        /// </summary>
-        /// <param name="identifier">The identifier for <paramref name="configFile"/></param>
-        /// <param name="configFile">The ConfigFile which will be identified using <paramref name="identifier"/></param>
         public static void AddConfigFileAndIdentifier(string identifier, ConfigFile configFile)
         {
             AddConfigFileAndIdentifier(identifier, configFile, false);
         }
-        /// <summary>
-        /// Adds a <see cref="ConfigFile"/> with it's corresponding Identifier.
-        /// <para>You're strongly advised to create new ConfigFiles by using the <see cref="ConfigLoader"/> class, as that class automatically calls this method.</para>
-        /// </summary>
-        /// <param name="identifier">The identifier for <paramref name="configFile"/></param>
-        /// <param name="configFile">The ConfigFile which will be identified using <paramref name="identifier"/></param>
-        /// <param name="createSeparateRooEntry">If true, the ConfigSystem will create a new Risk of Options entry for the ConfigFile.</param>
+
         public static void AddConfigFileAndIdentifier(string identifier, ConfigFile configFile, bool createSeparateRooEntry)
         {
             if (initialized)
@@ -123,6 +98,7 @@ namespace Moonstorm
             if (createSeparateRooEntry)
                 configFilesWithSeparateRooEntries.Add(configFile);
         }
+
         [SystemInitializer]
 #pragma warning disable IDE0051 // Remove unused private members
         private static void Init()

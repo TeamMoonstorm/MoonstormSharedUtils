@@ -1,8 +1,4 @@
-﻿/*
- * TODO:
- *  > Wait for debug toolkit to implement spawn ai on the server side.
- */
-using BepInEx;
+﻿using BepInEx;
 using BepInEx.Configuration;
 using Moonstorm.Config;
 using Moonstorm.Loaders;
@@ -15,40 +11,23 @@ using UnityEngine.Networking;
 
 namespace Moonstorm
 {
-    /// <summary>
-    /// MSU's Configuration Loader
-    /// </summary>
     public class MSUConfig : ConfigLoader<MSUConfig>
     {
-        /// <summary>
-        /// Identifier for the General config file
-        /// </summary>
         public const string general = "MSU.General";
-        /// <summary>
-        /// Identifier for the Events file
-        /// </summary>
+
         public const string events = "MSU.Events";
+
 #if DEBUG
-        /// <summary>
-        /// Identifier for the Debugging File
-        /// </summary>
         public const string debug = "MSU.Debug";
 #endif
         public override BaseUnityPlugin MainClass => MoonstormSharedUtils.Instance;
         public override bool CreateSubFolder => true;
 
-        /// <summary>
-        /// The general config file
-        /// </summary>
         public static ConfigFile generalConfig;
-        /// <summary>
-        /// The events config file
-        /// </summary>
+
         public static ConfigFile eventsConfig;
+
 #if DEBUG
-        /// <summary>
-        /// The Debugging config file
-        /// </summary>
         public static ConfigFile debugConfig;
 #endif
 

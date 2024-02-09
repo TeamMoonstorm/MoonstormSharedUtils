@@ -3,14 +3,8 @@ using UnityEngine;
 
 namespace Moonstorm.Components
 {
-    /// <summary>
-    /// The controller for an Event's Announcement text
-    /// </summary>
     public class EventTextController : MonoBehaviour
     {
-        /// <summary>
-        /// The state of the event
-        /// </summary>
         public enum EventFadeState
         {
             FadeIn,
@@ -18,17 +12,10 @@ namespace Moonstorm.Components
             FadeOut,
         }
 
-        /// <summary>
-        /// UIJuice used for fading
-        /// </summary>
         public UIJuice uiJuice;
-        /// <summary>
-        /// Wether the fade begins as soon as the event gets entered
-        /// </summary>
+
         public bool fadeOnStart;
-        /// <summary>
-        /// How long the warning lasts
-        /// </summary>
+
         public float warningDuration;
 
         private bool fading = false;
@@ -44,9 +31,6 @@ namespace Moonstorm.Components
                 BeginFade();
         }
 
-        /// <summary>
-        /// Begins the EventTextController, only call this is <see cref="fadeOnStart"/> is false
-        /// </summary>
         public void BeginFade()
         {
             switch (fadeState)

@@ -10,47 +10,25 @@ using UnityEngine.Networking;
 
 namespace Moonstorm.Components
 {
-    /// <summary>
-    /// The <see cref="EventDirector"/> is a Singleton class that's used for managing MSU's Event system.
-    /// </summary>
     [RequireComponent(typeof(NetworkStateMachine))]
     public class EventDirector : MonoBehaviour
     {
-        /// <summary>
-        /// Returns the current instance of the EventDirector
-        /// </summary>
         public static EventDirector Instance { get; private set; }
-        /// <summary>
-        /// The NetworkStateMachine tied to this Eventdirector
-        /// </summary>
+
         public NetworkStateMachine NetworkStateMachine { get; private set; }
-        /// <summary>
-        /// The EventFunctions tied to this EventDirector
-        /// </summary>
+
         public EventFunctions EventFunctions { get; private set; }
-        /// <summary>
-        /// The current stage's EventCardSelection
-        /// </summary>
+
         public WeightedSelection<EventCard> EventCardSelection { get; private set; }
-        /// <summary>
-        /// The CategorySelection for the current stage
-        /// </summary>
+
         public EventDirectorCategorySelection EventDirectorCategorySelection { get; private set; }
-        /// <summary>
-        /// The EntityStateMachine where the next event will play
-        /// </summary>
+
         public EntityStateMachine TargetedStateMachine { get; private set; }
-        /// <summary>
-        /// The last event that attempted to play
-        /// </summary>
+
         public EventCard LastAttemptedEventCard { get; private set; }
-        /// <summary>
-        /// The last event that succesfully played
-        /// </summary>
+
         public EventCard LastSuccesfulEventCard { get; private set; }
-        /// <summary>
-        /// The total amount of credits spent
-        /// </summary>
+
         public float TotalCreditsSpent { get; private set; }
         private int MostExpensiveEventInDeck
         {
@@ -78,22 +56,16 @@ namespace Moonstorm.Components
             }
         }
 
-        [Tooltip("The amount of credits gained when the intervalStopWatch reaches 0")]
         public RangeFloat creditGainRange;
 
-        [Tooltip("The current amount of Credits")]
         public float eventCredits;
 
-        [Tooltip("The amount of time that takes between new credits for the director")]
         public RangeFloat intervalResetRange;
 
-        [Tooltip("The stopwatch of the EventDirector")]
         public float intervalStopWatch;
 
-        [Tooltip("The weather parameters when the scene started")]
         public SceneWeatherController.WeatherParams weatherParamsWhenSceneStarted;
 
-        [Tooltip("The RTCP when the scene started")]
         public string weatherRtpcWhenStarted = string.Empty;
 
         private Xoroshiro128Plus eventRNG;
@@ -407,13 +379,6 @@ namespace Moonstorm.Components
             }
         }
 
-        /// <summary>
-        /// Adds a new EntityStateMachine to the EventDirector with the name <paramref name="stateMachineName"/>
-        /// <para>Intended to be used with <see cref="EventCard.requiredStateMachine"/> to make certain events only play on a specific machine (IE: Weather events from Starstorm2)</para>
-        /// <para>If you want your new state machine to be used for events that dont specify a requiredStateMachine, make sure that <paramref name="stateMachineName"/> starts with "Generic"</para>
-        /// </summary>
-        /// <param name="stateMachineName">The name of the State Machine</param>
-        /// <returns>True if added succesfully, false otherwise.</returns>
         public static bool AddNewEntityStateMachine(string stateMachineName)
         {
             GameObject prefab = MoonstormSharedUtils.MSUAssetBundle.LoadAsset<GameObject>("MSUEventDirector");

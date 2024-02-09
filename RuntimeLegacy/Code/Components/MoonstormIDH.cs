@@ -4,9 +4,6 @@ using UnityEngine;
 
 namespace Moonstorm.Components
 {
-    /// <summary>
-    /// Sets default values to a CharacterModel's item display rule set entries that have a child with the name "NoValue"
-    /// </summary>
     [RequireComponent(typeof(CharacterModel))]
     public class MoonstormIDH : MonoBehaviour
     {

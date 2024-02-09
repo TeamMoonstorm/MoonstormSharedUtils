@@ -9,12 +9,6 @@ using UnityEngine;
 
 namespace Moonstorm
 {
-    /// <summary>
-    /// The <see cref="InteractableModuleBase"/> is a <see cref="ContentModule{T}"/> that handles the <see cref="InteractableBase"/> class
-    /// <para><see cref="InteractableModuleBase"/>'s main job is to handle the proper addition of Interactable prefabs from <see cref="InteractableBase"/> inheriting classes</para>
-    /// <para><see cref="InteractableBase"/>s that implement <see cref="InteractableBase.InteractableDirectorCard"/> will spawn in runs</para>
-    /// <para>Inherit from this module if you want to load and manage Interactables with <see cref="InteractableBase"/> systems</para>
-    /// </summary>
     public abstract class InteractableModuleBase : ContentModule<InteractableBase>
     {
         private class InteractableCollectionFuncPair
@@ -47,29 +41,16 @@ namespace Moonstorm
             public InteractableBase.IsAvailableForDCCSDelegate IsAvailable => tiedInteractableBase.IsAvailableForDCCS;
         }
         #region Properties and Fields
-        /// <summary>
-        /// A ReadOnlyDictionary that can be used for loading a specific <see cref="InteractableBase"/> by giving it's tied <see cref="GameObject"/>
-        /// <para>If you want to modify classes inside this, subscribe to <see cref="OnDictionaryCreated"/> to ensure the dictionary is not empty</para>
-        /// </summary>
+
         public static ReadOnlyDictionary<GameObject, InteractableBase> MoonstormInteractables { get; private set; }
         internal static Dictionary<GameObject, InteractableBase> interactables = new Dictionary<GameObject, InteractableBase>();
 
-        /// <summary>
-        /// Loads all the <see cref="InteractableBase"/> from the <see cref="MoonstormInteractables"/> dictionary that have a <see cref="MSInteractableDirectorCard"/>
-        /// </summary>
         public static InteractableBase[] InteractablesWithCards { get => MoonstormInteractables.Values.Where(ib => ib.InteractableDirectorCards.Count > 0).ToArray(); }
-        /// <summary>
-        /// Loads all the <see cref="InteractableBase"/> from the <see cref="MoonstormInteractables"/> dictionary that do not have a <see cref="MSInteractableDirectorCard"/>
-        /// </summary>
+
         public static InteractableBase[] InteractablesWithoutCards { get => MoonstormInteractables.Values.Where(ib => ib.InteractableDirectorCards.Count == 0).ToArray(); }
-        /// <summary>
-        /// Loads all the interactable game objects
-        /// </summary>
+
         public static GameObject[] LoadedInteractables { get => MoonstormInteractables.Keys.ToArray(); }
 
-        /// <summary>
-        /// Call moduleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
-        /// </summary>
         public static ResourceAvailability moduleAvailability;
 
         private static Dictionary<DirectorAPI.Stage, HashSet<InteractableCollectionFuncPair>> currentStageToCards = new Dictionary<DirectorAPI.Stage, HashSet<InteractableCollectionFuncPair>>();
@@ -91,11 +72,7 @@ namespace Moonstorm
 
 
         #region Interactables
-        /// <summary>
-        /// <inheritdoc cref="ModuleBase{T}.GetContentClasses{T}(Type)"/>
-        /// <para>T in this case is <see cref="InteractableBase"/></para>
-        /// </summary>
-        /// <returns>An IEnumerable of all your assembly's <see cref="InteractableBase"/></returns>
+
         protected virtual IEnumerable<InteractableBase> GetInteractableBases()
         {
 #if DEBUG
@@ -103,11 +80,7 @@ namespace Moonstorm
 #endif
             return GetContentClasses<InteractableBase>();
         }
-        /// <summary>
-        /// Adds an InteractableBase's InteractablePrefab to the game and to the ContentPack's NetworkedObjects array
-        /// </summary>
-        /// <param name="interactableBase">The InteractableBase to add</param>
-        /// <param name="interactableDictionary">Optional, a dictionary to add your initialized InteractableBase and InteractablePrefab</param>
+
         protected void AddInteractable(InteractableBase interactableBase, Dictionary<GameObject, InteractableBase> interactableDictionary = null)
         {
             InitializeContent(interactableBase);
@@ -117,11 +90,6 @@ namespace Moonstorm
 #endif
         }
 
-        /// <summary>
-        /// Adds the InteractablePrefab of <paramref name="contentClass"/> to your mod's SerializableContentPack's NetworkedObjects array
-        /// <para>Once added, it'll call <see cref="ContentBase.Initialize"/></para>
-        /// </summary>
-        /// <param name="contentClass">The content class being initialized</param>
         protected override void InitializeContent(InteractableBase contentClass)
         {
             AddSafely(ref SerializableContentPack.networkedObjectPrefabs, contentClass.Interactable, "NetworkedObjectPrefabs");

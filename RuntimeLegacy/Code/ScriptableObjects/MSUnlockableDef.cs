@@ -6,46 +6,30 @@ using UnityEngine;
 
 namespace Moonstorm
 {
-    /// <summary>
-    /// A <see cref="MSUnlockableDef"/> is an extension of <see cref="UnlockableDef"/> that allows for easy creation of an Unlockable that gets unlocked via an Achievement
-    /// </summary>
     public class MSUnlockableDef : UnlockableDef
     {
-        /// <summary>
-        /// Represents an addressable version of a prerequisite achievement
-        /// </summary>
         [Serializable]
         public struct AchievementStringAssetRef
         {
-            [Tooltip("The prerequisite AchievementDef's identifier")]
             public string AchievementIdentifier;
-            [Tooltip("The prerequisite MSUnlockableDef")]
+
             public MSUnlockableDef UnlockableDef;
         }
 
-        [Tooltip("The BaseAchievement class that manages how this achievement is obtained")]
         [SerializableSystemType.RequiredBaseType(typeof(BaseAchievement))]
         public SerializableSystemType achievementCondition;
 
-        [Tooltip("Wether this achievement is server tracked")]
         public bool serverTracked;
 
-        [Tooltip("The BaseServerAchievement class that manages the networking of this achievment")]
         [SerializableSystemType.RequiredBaseType(typeof(BaseServerAchievement))]
         public SerializableSystemType baseServerAchievement;
 
-        [Tooltip("The name of this achievement")]
         public string achievementNameToken;
 
-        [Tooltip("The description of this achievement")]
         public string achievementDescToken;
 
-        [Tooltip("The prerequisite achievement for this achievement to be unlocked")]
         public AchievementStringAssetRef prerequisiteAchievement;
 
-        /// <summary>
-        /// This is the <see cref="AchievementDef"/> that's tied to this UnlockableDef
-        /// </summary>
         public AchievementDef AchievementDef { get; private set; }
 
         internal AchievementDef GetOrCreateAchievementDef()

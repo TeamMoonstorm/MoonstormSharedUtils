@@ -8,75 +8,34 @@ using System.Reflection;
 
 namespace Moonstorm
 {
-    /// <summary>
-    /// A StatType for the Token Modifier, this is used to modify the value for the token.
-    /// </summary>
+
     public enum StatTypes : int
     {
-        /// <summary>
-        /// No changes are made to the field/property value for the token formatting
-        /// </summary>
         Default,
-        /// <summary>
-        /// The value of this field/property is divided by N, where N is a float that'll be parsed from <see cref="TokenModifierAttribute.extraData"/>
-        /// </summary>
         DivideByN,
-        /// <summary>
-        /// The value of this field/property is multiplied by N, where N is a float that'll be parsed from <see cref="TokenModifierAttribute.extraData"/>
-        /// </summary>
         MultiplyByN,
-        /// <summary>
-        /// N is added to the value of this field/property, where N is a float that'll be parsed from <see cref="TokenModifierAttribute.extraData"/>
-        /// </summary>
         AddN,
-        /// <summary>
-        /// N is substracted to the value of this field/property, where N is a float that'll be parsed from <see cref="TokenModifierAttribute.extraData"/>
-        /// </summary>
         SubtractN,
-        /// <summary>
-        /// The value of this field/property is divided by N, and the remainder of the operation will be the token's value.
-        /// </summary>
         ModuloN,
     }
 
-    /// <summary>
-    /// Declares that the value from a field must be used for formatting a language token
-    /// <para>You should add your mod to the <see cref="TokenModifierManager"/> with <seealso cref="TokenModifierManager.AddToManager"/></para>
-    /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = true)]
     public class TokenModifierAttribute : SearchableAttribute
     {
-        /// <summary>
-        /// The LanguageToken to be formatted
-        /// </summary>
         public string langToken;
-        /// <summary>
-        /// The type of stat this field has
-        /// </summary>
         public StatTypes statType;
-        /// <summary>
-        /// The index used during formatting process
-        /// </summary>
         public int formatIndex;
 
-        /// <summary>
-        /// Operation data to be used during formatting, should be used depending on the chosen StatType
-        /// <para>Examples of StatTypes that use this field: <see cref="StatTypes.DivideByN"/>, <see cref="StatTypes.MultiplyByN"/></para>
-        /// </summary>
         public float operationData = float.NaN;
 
         private object valueForFormatting;
 
-        /// <summary>
-        /// Constructor for the TokenModifierAttribute
-        /// </summary>
         public TokenModifierAttribute(string langToken, StatTypes statType, int formatIndex = 0)
         {
             this.langToken = langToken;
             this.statType = statType;
             this.formatIndex = formatIndex;
         }
-        /// <inheritdoc cref="TokenModifierAttribute.TokenModifierAttribute(string, StatTypes, int)"/>
         public TokenModifierAttribute(string langToken, StatTypes statType, int formatIndex = 0, string extraData = "")
         {
             this.langToken = langToken;

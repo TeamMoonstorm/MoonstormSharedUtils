@@ -4,15 +4,9 @@ using UnityEngine;
 
 namespace Moonstorm.Components
 {
-    /// <summary>
-    /// Used for setting up a weather controler on a scene that doesnt have a <see cref="SceneWeatherController"/>
-    /// </summary>
     public class SetupWeatherController : MonoBehaviour
     {
         //It could potentially be worth it to reverse this list and add only scenes that are guaranteed to work.
-        /// <summary>
-        /// If a scene in the game, modded or unmodded, should not have weather changes, add it to this list.
-        /// </summary>
         public static List<string> blacklistedScenes = new List<string>()
         {
             "arena",

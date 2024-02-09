@@ -7,32 +7,20 @@ using Object = UnityEngine.Object;
 
 namespace Moonstorm.Components.Addressables
 {
-    /// <summary>
-    /// Component that injects an AddressableAsset to a component's field
-    /// </summary>
     [ExecuteAlways]
     public class AddressableInjector : MonoBehaviour
     {
-        [Tooltip("The address used for injecting")]
         public string address;
-        /// <summary>
-        /// The Loaded Asset
-        /// </summary>
         public Object Asset { get => _asset; private set => _asset = value; }
         [NonSerialized] private Object _asset;
 
-        [Tooltip("The component that will be injected")]
         [SerializeField] private Component targetComponent;
-        [Tooltip("The member info that'll be injected")]
         [SerializeField] private string targetMemberInfoName;
 
         private MemberInfo cachedMemberInfo;
 
         private void OnEnable() => Refresh();
 
-        /// <summary>
-        /// Refreshes and re-injects the asset specified in <see cref="address"/>
-        /// </summary>
         public void Refresh()
         {
             if (string.IsNullOrWhiteSpace(address) || string.IsNullOrEmpty(address))

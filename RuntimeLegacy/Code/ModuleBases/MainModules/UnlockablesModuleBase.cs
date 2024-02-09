@@ -6,33 +6,16 @@ using System.Linq;
 
 namespace Moonstorm
 {
-    /// <summary>
-    /// The <see cref="UnlockablesModuleBase"/> is a <see cref="ContentModule{T}"/> that handles the <see cref="UnlockableBase"/> class
-    /// <para><see cref="UnlockablesModuleBase"/>'s main job is to create and handle the UnlockableBase classes, alongside adding AchievementDefs created by <see cref="MSUnlockableDef"/></para>
-    /// <para>Inherit from this module if you want to use Unlockables tied to Achievements for your mod</para>
-    /// </summary>
     public abstract class UnlockablesModuleBase : ContentModule<UnlockableBase>
     {
         #region Properties and Fields
-        /// <summary>
-        /// A ReadOnlyDictionary that can be used for loading a specific <see cref="UnlockableBase"/> by giving it's tied <see cref="MSUnlockableDef"/>
-        /// <para>If you want to modify classes inside this, subscribe to <see cref="OnDictionaryCreated"/> to ensure the dictionary is not empty</para>
-        /// </summary>
         public static ReadOnlyDictionary<MSUnlockableDef, UnlockableBase> MoonstormUnlockables { get; private set; }
         private static Dictionary<MSUnlockableDef, UnlockableBase> unlocks = new Dictionary<MSUnlockableDef, UnlockableBase>();
 
-        /// <summary>
-        /// Loads all the <see cref="MSUnlockableDef"/>s from the <see cref="MoonstormUnlockables"/> dictionary.
-        /// </summary>
         public static MSUnlockableDef[] LoadedUnlockables { get => MoonstormUnlockables.Keys.ToArray(); }
-        /// <summary>
-        /// Loads all the <see cref="AchievementDef"/>s from the unlockables in <see cref="MoonstormUnlockables"/> dictionary.
-        /// </summary>
+
         public static AchievementDef[] LoadedAchievements { get => MoonstormUnlockables.Values.Select(ub => ub.GetAchievementDef).ToArray(); }
 
-        /// <summary>
-        /// Call moduleAvailability.CallWhenAvailable() to run a method after the Module is initialized.
-        /// </summary>
         public static ResourceAvailability moduleAvailability;
         #endregion
 
@@ -59,11 +42,6 @@ namespace Moonstorm
         }
 
         #region Unlockables
-        /// <summary>
-        /// <inheritdoc cref="ModuleBase{T}.GetContentClasses{T}(Type)"/>
-        /// <para>T in this case is <see cref="UnlockableBase"/></para>
-        /// </summary>
-        /// <returns>An IEnumerable of all your assembly's <see cref="UnlockableBase"/></returns>
         protected virtual IEnumerable<UnlockableBase> GetUnlockableBases()
         {
 #if DEBUG
@@ -72,13 +50,6 @@ namespace Moonstorm
             return GetContentClasses<UnlockableBase>();
         }
 
-        /// <summary>
-        /// Adds an UnlockableBase to the game.
-        /// <para>The UnlockableDef and AchievementDefs are only added if the required type for the unlockable base has been added</para>
-        /// <para>For more information regarding RequiredTypes, check <see cref="UnlockableBase.AddRequiredType{T}"/></para>
-        /// </summary>
-        /// <param name="unlockableBase">The unlockable base to add</param>
-        /// <param name="unlockableDictionary">Optional, an Dictionary to add your initialized unlockable bases and unlockable defs</param>
         protected void AddUnlockable(UnlockableBase unlockableBase, Dictionary<MSUnlockableDef, UnlockableBase> unlockableDictionary = null)
         {
             unlockableBase.Initialize();
@@ -98,11 +69,6 @@ namespace Moonstorm
 #endif
         }
 
-        /// <summary>
-        /// Adds the unlockableDef of <paramref name="contentClass"/> to your mod's SerializableContentPack.
-        /// <para>Once added, it'll call <see cref="UnlockableBase.OnCheckPassed"/></para>
-        /// </summary>
-        /// <param name="contentClass">The content class being initialized</param>
         protected override void InitializeContent(UnlockableBase contentClass)
         {
             AddSafely(ref SerializableContentPack.unlockableDefs, contentClass.UnlockableDef);
@@ -161,11 +127,6 @@ namespace Moonstorm
             return true;
         }
 
-        /// <summary>
-        /// Overwrite this method to add your own Required Typpe checking.
-        /// </summary>
-        /// <param name="type">The class that's required for an UnlockableBase to be added</param>
-        /// <returns>defaults to false</returns>
         public virtual bool OnFailedToCheck(Type type) { return false; }
 
         private static bool CheckArtifacts(Type type)
