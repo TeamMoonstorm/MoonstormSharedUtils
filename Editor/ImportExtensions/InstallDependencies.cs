@@ -43,6 +43,8 @@ namespace MSU.Editor.Importers
                 }
                 else if (packageSource.Packages == null || packageSource.Packages.Count == 0)
                     packageSource.ReloadPages(true);
+                else
+                    transientStore = packageSource;
 
                 if(packageSource.Packages == null || packageSource.Packages.Count == 0)
                 {
@@ -53,7 +55,7 @@ namespace MSU.Editor.Importers
                 List<(PackageGroup, string)> packages = new List<(PackageGroup, string)>();
                 foreach(string dependency in GetDependencyIDs())
                 {
-                    var pkg = transientStore.Packages.FirstOrDefault(p => p.DependencyId == dependency);
+                    var pkg = packageSource.Packages.FirstOrDefault(p => p.DependencyId == dependency);
 
                     if(pkg != null && !pkg.Installed)
                     {
@@ -64,7 +66,7 @@ namespace MSU.Editor.Importers
                 if (packages.Count == 0)
                     return true;
 
-                var task = transientStore.InstallPackages(packages);
+                var task = packageSource.InstallPackages(packages);
                 while(!task.IsCompleted)
                 {
                     Debug.Log("Waiting for Completion...");
