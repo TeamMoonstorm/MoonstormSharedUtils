@@ -55,49 +55,57 @@ namespace MSU
         private static IEnumerator InitializeItemsFromProvider(BaseUnityPlugin plugin, IContentPieceProvider<ItemDef> provider)
         {
             IContentPiece<ItemDef>[] content = provider.GetContents();
+            List<IContentPiece<ItemDef>> items = new List<IContentPiece<ItemDef>>();
 
+            var helper = new ParallelCoroutineHelper();
             foreach(var item in content)
             {
-                yield return InitializeItem(item, plugin, provider);
+                if (!item.IsAvailable())
+                    continue;
+
+                items.Add(item);
+                helper.Add(item.LoadContentAsync);
             }
+
+            helper.Start();
+            while (!helper.IsDone())
+                yield return null;
+
+            InitializeItems(plugin, items, provider);
         }
 
-        private static IEnumerator InitializeItem(IContentPiece<ItemDef> item, BaseUnityPlugin plugin, IContentPieceProvider<ItemDef> provider)
+        private static void InitializeItems(BaseUnityPlugin plugin, List<IContentPiece<ItemDef>> items, IContentPieceProvider<ItemDef> provider)
         {
-            if (!item.IsAvailable())
+            foreach(var item in items)
             {
-                yield break;
-            }
+                item.Initialize();
 
-            yield return item.LoadContentAsync();
+                var asset = item.Asset;
+                provider.ContentPack.itemDefs.AddSingle(asset);
 
-            item.Initialize();
-
-            var asset = item.Asset;
-            provider.ContentPack.itemDefs.AddSingle(asset);
-
-            if (item is IContentPackModifier packModifier)
-            {
-                packModifier.ModifyContentPack(provider.ContentPack);
-            }
-            if (item is IItemContentPiece itemContentPiece)
-            {
-                if (!_pluginToItems.ContainsKey(plugin))
+                if (item is IContentPackModifier packModifier)
                 {
-                    _pluginToItems.Add(plugin, Array.Empty<IItemContentPiece>());
+                    packModifier.ModifyContentPack(provider.ContentPack);
                 }
-                var array = _pluginToItems[plugin];
-                HG.ArrayUtils.ArrayAppend(ref array, itemContentPiece);
-                _moonstormItems.Add(asset, itemContentPiece);
-            }
-
-            if (item is IUnlockableContent unlockableContent)
-            {
-                UnlockableDef[] unlockableDefs = unlockableContent.TiedUnlockables;
-                if (unlockableDefs.Length > 0)
+                if (item is IItemContentPiece itemContentPiece)
                 {
-                    UnlockableManager.AddUnlockables(unlockableDefs);
-                    provider.ContentPack.unlockableDefs.Add(unlockableDefs);
+                    if (!_pluginToItems.ContainsKey(plugin))
+                    {
+                        _pluginToItems.Add(plugin, Array.Empty<IItemContentPiece>());
+                    }
+                    var array = _pluginToItems[plugin];
+                    HG.ArrayUtils.ArrayAppend(ref array, itemContentPiece);
+                    _moonstormItems.Add(asset, itemContentPiece);
+                }
+
+                if (item is IUnlockableContent unlockableContent)
+                {
+                    UnlockableDef[] unlockableDefs = unlockableContent.TiedUnlockables;
+                    if (unlockableDefs.Length > 0)
+                    {
+                        UnlockableManager.AddUnlockables(unlockableDefs);
+                        provider.ContentPack.unlockableDefs.Add(unlockableDefs);
+                    }
                 }
             }
         }

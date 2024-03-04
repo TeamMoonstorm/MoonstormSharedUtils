@@ -105,49 +105,59 @@ namespace MSU
         private static IEnumerator InitializeItemTiersFromProvidder(BaseUnityPlugin plugin, IContentPieceProvider<ItemTierDef> provider)
         {
             IContentPiece<ItemTierDef>[] content = provider.GetContents();
+            List<IContentPiece<ItemTierDef>> itemTiers = new List<IContentPiece<ItemTierDef>>();
 
+            var helper = new ParallelCoroutineHelper();
             foreach(var tier in content)
             {
-                yield return InitializeItemTier(tier, plugin, provider);
+                if (!tier.IsAvailable())
+                    continue;
+
+                itemTiers.Add(tier);
+                helper.Add(tier.LoadContentAsync);
             }
+
+            helper.Start();
+            while (!helper.IsDone())
+                yield return null;
+
+            InitializeItemTiers(plugin, itemTiers, provider);
         }
 
-        private static IEnumerator InitializeItemTier(IContentPiece<ItemTierDef> tier, BaseUnityPlugin plugin, IContentPieceProvider<ItemTierDef> provider)
+        private static void InitializeItemTiers(BaseUnityPlugin plugin, List<IContentPiece<ItemTierDef>> itemTiers, IContentPieceProvider<ItemTierDef> provider)
         {
-            if (!tier.IsAvailable())
-                yield break;
-
-            yield return tier.LoadContentAsync();
-
-            tier.Initialize();
-
-            var asset = tier.Asset;
-            provider.ContentPack.itemTierDefs.AddSingle(asset);
-
-            if(tier is IContentPackModifier packModifier)
+            foreach(var tier in itemTiers)
             {
-                packModifier.ModifyContentPack(provider.ContentPack);
-            }
-            if(tier is IItemTierContentPiece itemTierContentPiece)
-            {
-                if (!_pluginToTiers.ContainsKey(plugin))
-                    _pluginToTiers.Add(plugin, Array.Empty<IItemTierContentPiece>());
+                tier.Initialize();
 
-                var array = _pluginToTiers[plugin];
-                HG.ArrayUtils.ArrayAppend(ref array, itemTierContentPiece);
-                _moonstormItemTiers.Add(asset, itemTierContentPiece);
+                var asset = tier.Asset;
+                provider.ContentPack.itemTierDefs.AddSingle(asset);
 
-                if(itemTierContentPiece.ColorIndex)
+                if (tier is IContentPackModifier packModifier)
                 {
-                    ColorsAPI.AddSerializableColor(itemTierContentPiece.ColorIndex);
-                    asset.colorIndex = itemTierContentPiece.ColorIndex.Value.ColorIndex;
+                    packModifier.ModifyContentPack(provider.ContentPack);
                 }
-                if(itemTierContentPiece.DarkColorIndex)
+                if (tier is IItemTierContentPiece itemTierContentPiece)
                 {
-                    ColorsAPI.AddSerializableColor(itemTierContentPiece.DarkColorIndex);
-                    asset.colorIndex = itemTierContentPiece.DarkColorIndex.Value.ColorIndex;
+                    if (!_pluginToTiers.ContainsKey(plugin))
+                        _pluginToTiers.Add(plugin, Array.Empty<IItemTierContentPiece>());
+
+                    var array = _pluginToTiers[plugin];
+                    HG.ArrayUtils.ArrayAppend(ref array, itemTierContentPiece);
+                    _moonstormItemTiers.Add(asset, itemTierContentPiece);
+
+                    if (itemTierContentPiece.ColorIndex)
+                    {
+                        ColorsAPI.AddSerializableColor(itemTierContentPiece.ColorIndex);
+                        asset.colorIndex = itemTierContentPiece.ColorIndex.Value.ColorIndex;
+                    }
+                    if (itemTierContentPiece.DarkColorIndex)
+                    {
+                        ColorsAPI.AddSerializableColor(itemTierContentPiece.DarkColorIndex);
+                        asset.colorIndex = itemTierContentPiece.DarkColorIndex.Value.ColorIndex;
+                    }
+                    _itemTierToPickupFX.Add(asset, itemTierContentPiece.PickupDisplayVFX);
                 }
-                _itemTierToPickupFX.Add(asset, itemTierContentPiece.PickupDisplayVFX);
             }
         }
     }

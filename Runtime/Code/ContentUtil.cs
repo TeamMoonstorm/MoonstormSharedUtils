@@ -266,6 +266,7 @@ namespace MSU
         {
             public ContentPack ContentPack => _contentPack;
 
+
             private ContentPack _contentPack;
             private IContentPiece<T>[] _contentPieces;
             public IContentPiece<T>[] GetContents()

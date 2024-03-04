@@ -83,55 +83,62 @@ namespace MSU
         private static IEnumerator InitializeArtifactsFromProvider(BaseUnityPlugin plugin, IContentPieceProvider<ArtifactDef> provider)
         {
             IContentPiece<ArtifactDef>[] content = provider.GetContents();
+            List<IContentPiece<ArtifactDef>> artifacts = new List<IContentPiece<ArtifactDef>>();
 
+            var helper = new ParallelCoroutineHelper();
             foreach (var artifact in content)
             {
-                yield return InitializeArtifact(artifact, plugin, provider);
+                if (!artifact.IsAvailable())
+                    continue;
+
+                artifacts.Add(artifact);
+                helper.Add(artifact.LoadContentAsync);
             }
+
+            helper.Start();
+            while (!helper.IsDone())
+                yield return null;
+
+            InitializeArtifacts(plugin, artifacts, provider);
         }
 
-        private static IEnumerator InitializeArtifact(IContentPiece<ArtifactDef> artifact, BaseUnityPlugin plugin, IContentPieceProvider<ArtifactDef> provider)
+        private static void InitializeArtifacts(BaseUnityPlugin plugin, List<IContentPiece<ArtifactDef>> artifacts, IContentPieceProvider<ArtifactDef> provider)
         {
-            if (!artifact.IsAvailable())
+            foreach(var artifact in artifacts)
             {
-                yield break;
-            }
+                artifact.Initialize();
+                var asset = artifact.Asset;
+                provider.ContentPack.artifactDefs.AddSingle(asset);
 
-            yield return artifact.LoadContentAsync();
-
-            artifact.Initialize();
-
-            var asset = artifact.Asset;
-            provider.ContentPack.artifactDefs.AddSingle(asset);
-
-            if (artifact is IContentPackModifier packModifier)
-            {
-                packModifier.ModifyContentPack(provider.ContentPack);
-            }
-
-            if (artifact is IArtifactContentPiece artifactContentPiece)
-            {
-                if (!_pluginToArtifacts.ContainsKey(plugin))
+                if (artifact is IContentPackModifier packModifier)
                 {
-                    _pluginToArtifacts.Add(plugin, Array.Empty<IArtifactContentPiece>());
+                    packModifier.ModifyContentPack(provider.ContentPack);
                 }
-                var array = _pluginToArtifacts[plugin];
-                HG.ArrayUtils.ArrayAppend(ref array, artifactContentPiece);
 
-                if(artifactContentPiece.ArtifactCode)
+                if (artifact is IArtifactContentPiece artifactContentPiece)
                 {
-                    ArtifactCodeAPI.AddCode(artifactContentPiece.Asset, artifactContentPiece.ArtifactCode);
+                    if (!_pluginToArtifacts.ContainsKey(plugin))
+                    {
+                        _pluginToArtifacts.Add(plugin, Array.Empty<IArtifactContentPiece>());
+                    }
+                    var array = _pluginToArtifacts[plugin];
+                    HG.ArrayUtils.ArrayAppend(ref array, artifactContentPiece);
+
+                    if (artifactContentPiece.ArtifactCode)
+                    {
+                        ArtifactCodeAPI.AddCode(artifactContentPiece.Asset, artifactContentPiece.ArtifactCode);
+                    }
+                    _moonstormArtifacts.Add(asset, artifactContentPiece);
                 }
-                _moonstormArtifacts.Add(asset, artifactContentPiece);
-            }
 
-            if(artifact is IUnlockableContent unlockableContent)
-            {
-                UnlockableDef[] unlockableDefs = unlockableContent.TiedUnlockables;
-                if(unlockableDefs.Length > 0)
+                if (artifact is IUnlockableContent unlockableContent)
                 {
-                    UnlockableManager.AddUnlockables(unlockableDefs);
-                    provider.ContentPack.unlockableDefs.Add(unlockableDefs);
+                    UnlockableDef[] unlockableDefs = unlockableContent.TiedUnlockables;
+                    if (unlockableDefs.Length > 0)
+                    {
+                        UnlockableManager.AddUnlockables(unlockableDefs);
+                        provider.ContentPack.unlockableDefs.Add(unlockableDefs);
+                    }
                 }
             }
         }

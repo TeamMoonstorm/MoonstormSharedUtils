@@ -64,65 +64,76 @@ namespace MSU
         {
             IGameObjectContentPiece<CharacterBody>[] content = provider.GetContents().OfType<IGameObjectContentPiece<CharacterBody>>().ToArray();
 
+            List<IGameObjectContentPiece<CharacterBody>> characters = new List<IGameObjectContentPiece<CharacterBody>>();
+
+            var helper = new ParallelCoroutineHelper();
             foreach(var character in content)
             {
-                yield return InitializeCharacter(character, plugin, provider);
+                if (!character.IsAvailable())
+                    continue;
+
+                characters.Add(character);
+                helper.Add(character.LoadContentAsync);
             }
+
+            helper.Start();
+            while (!helper.IsDone())
+                yield return null;
+
+            InitializeCharacters(plugin, characters, provider);
         }
 
-        private static IEnumerator InitializeCharacter(IGameObjectContentPiece<CharacterBody> character, BaseUnityPlugin plugin, IContentPieceProvider<GameObject> provider)
+        private static void InitializeCharacters(BaseUnityPlugin plugin, List<IGameObjectContentPiece<CharacterBody>> bodies, IContentPieceProvider<GameObject> provider)
         {
-            if (!character.IsAvailable())
-                yield break;
-
-            yield return character.LoadContentAsync();
-
-            character.Initialize();
-
-            var asset = character.Asset;
-            provider.ContentPack.bodyPrefabs.AddSingle(asset);
-
-            if(character is IContentPackModifier packModifier)
+            foreach (var body in bodies)
             {
-                packModifier.ModifyContentPack(provider.ContentPack);
-            }
+                body.Initialize();
 
-            if(character is ICharacterContentPiece characterContentPiece)
-            {
-                if(!_pluginToCharacters.ContainsKey(plugin))
+                var asset = body.Asset;
+                provider.ContentPack.bodyPrefabs.AddSingle(asset);
+
+                if (body is IContentPackModifier packModifier)
                 {
-                    _pluginToCharacters.Add(plugin, Array.Empty<ICharacterContentPiece>());
+                    packModifier.ModifyContentPack(provider.ContentPack);
                 }
-                var array = _pluginToCharacters[plugin];
-                HG.ArrayUtils.ArrayAppend(ref array, characterContentPiece);
 
-                if(characterContentPiece.MasterPrefab)
+                if (body is ICharacterContentPiece characterContentPiece)
                 {
-                    provider.ContentPack.masterPrefabs.AddSingle(characterContentPiece.MasterPrefab);
+                    if (!_pluginToCharacters.ContainsKey(plugin))
+                    {
+                        _pluginToCharacters.Add(plugin, Array.Empty<ICharacterContentPiece>());
+                    }
+                    var array = _pluginToCharacters[plugin];
+                    HG.ArrayUtils.ArrayAppend(ref array, characterContentPiece);
+
+                    if (characterContentPiece.MasterPrefab)
+                    {
+                        provider.ContentPack.masterPrefabs.AddSingle(characterContentPiece.MasterPrefab);
+                    }
+                    _moonstormCharacters.Add(characterContentPiece.Component, characterContentPiece);
                 }
-                _moonstormCharacters.Add(characterContentPiece.Component, characterContentPiece);
-            }
 
-            if(character is ISurvivorContentPiece survivorContentPiece)
-            {
-                provider.ContentPack.survivorDefs.AddSingle(survivorContentPiece.SurvivorDef);
-            }
-            if(character is IMonsterContentPiece monsterContentPiece)
-            {
-                if (monsterContentPiece.CardProvider)
-                    _monsterCardProviders.Add(monsterContentPiece.CardProvider);
-
-                if (monsterContentPiece.DissonanceCard)
-                    _dissonanceCards.Add(monsterContentPiece.DissonanceCard);
-            }
-
-            if (character is IUnlockableContent unlockableContent)
-            {
-                UnlockableDef[] unlockableDefs = unlockableContent.TiedUnlockables;
-                if (unlockableDefs.Length > 0)
+                if (body is ISurvivorContentPiece survivorContentPiece)
                 {
-                    UnlockableManager.AddUnlockables(unlockableDefs);
-                    provider.ContentPack.unlockableDefs.Add(unlockableDefs);
+                    provider.ContentPack.survivorDefs.AddSingle(survivorContentPiece.SurvivorDef);
+                }
+                if (body is IMonsterContentPiece monsterContentPiece)
+                {
+                    if (monsterContentPiece.CardProvider)
+                        _monsterCardProviders.Add(monsterContentPiece.CardProvider);
+
+                    if (monsterContentPiece.DissonanceCard)
+                        _dissonanceCards.Add(monsterContentPiece.DissonanceCard);
+                }
+
+                if (body is IUnlockableContent unlockableContent)
+                {
+                    UnlockableDef[] unlockableDefs = unlockableContent.TiedUnlockables;
+                    if (unlockableDefs.Length > 0)
+                    {
+                        UnlockableManager.AddUnlockables(unlockableDefs);
+                        provider.ContentPack.unlockableDefs.Add(unlockableDefs);
+                    }
                 }
             }
         }

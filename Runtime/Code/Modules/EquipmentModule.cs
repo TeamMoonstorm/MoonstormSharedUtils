@@ -89,60 +89,69 @@ namespace MSU
         private static IEnumerator InitializeEquipmentsFromProvider(BaseUnityPlugin plugin, IContentPieceProvider<EquipmentDef> provider)
         {
             IContentPiece<EquipmentDef>[] content = provider.GetContents();
+            List<IContentPiece<EquipmentDef>> equipments = new List<IContentPiece<EquipmentDef>>();
 
-            foreach (var equipment in content)
+            var helper = new ParallelCoroutineHelper();
+
+            foreach(var equipment in content)
             {
-                yield return InitializeEquipment(equipment, plugin, provider);
+                if (!equipment.IsAvailable())
+                    continue;
+
+                equipments.Add(equipment);
+                helper.Add(equipment.LoadContentAsync);
             }
+
+            helper.Start();
+            while (!helper.IsDone())
+                yield return null;
+
+            InitializeEquipments(plugin, equipments, provider);
         }
 
-        private static IEnumerator InitializeEquipment(IContentPiece<EquipmentDef> equipment, BaseUnityPlugin plugin, IContentPieceProvider<EquipmentDef> provider)
+        private static void InitializeEquipments(BaseUnityPlugin plugin, List<IContentPiece<EquipmentDef>> equipments, IContentPieceProvider<EquipmentDef> provider)
         {
-            if (!equipment.IsAvailable())
+            foreach(var equipment in equipments)
             {
-                yield break;
-            }
+                equipment.Initialize();
 
-            yield return equipment.LoadContentAsync();
+                var asset = equipment.Asset;
+                provider.ContentPack.equipmentDefs.AddSingle(asset);
 
-            equipment.Initialize();
-
-            var asset = equipment.Asset;
-            provider.ContentPack.equipmentDefs.AddSingle(asset);
-
-            if (equipment is IContentPackModifier packModifier)
-            {
-                packModifier.ModifyContentPack(provider.ContentPack);
-            }
-
-            if (equipment is IEquipmentContentPiece equipmentContentPiece)
-            {
-                if (!_pluginToEquipments.ContainsKey(plugin))
+                if (equipment is IContentPackModifier packModifier)
                 {
-                    _pluginToEquipments.Add(plugin, Array.Empty<IEquipmentContentPiece>());
+                    packModifier.ModifyContentPack(provider.ContentPack);
                 }
-                var array = _pluginToEquipments[plugin];
-                HG.ArrayUtils.ArrayAppend(ref array, equipmentContentPiece);
-                _moonstormEquipments.Add(asset, equipmentContentPiece);
-            }
 
-            if(equipment is IEliteContentPiece eliteContentPiece)
-            {
-                foreach(var eliteDef in eliteContentPiece.EliteDefs)
+                if (equipment is IEquipmentContentPiece equipmentContentPiece)
                 {
-                    provider.ContentPack.eliteDefs.AddSingle(eliteDef);
+                    if (!_pluginToEquipments.ContainsKey(plugin))
+                    {
+                        _pluginToEquipments.Add(plugin, Array.Empty<IEquipmentContentPiece>());
+                    }
+                    var array = _pluginToEquipments[plugin];
+                    HG.ArrayUtils.ArrayAppend(ref array, equipmentContentPiece);
+                    _moonstormEquipments.Add(asset, equipmentContentPiece);
                 }
-                provider.ContentPack.buffDefs.AddSingle(asset.passiveBuffDef);
-                BuffOverlays.AddBuffOverlay(asset.passiveBuffDef, eliteContentPiece.EliteDefs.OfType<ExtendedEliteDef>().FirstOrDefault(eed => eed.overlayMaterial).overlayMaterial);
-            }
 
-            if (equipment is IUnlockableContent unlockableContent)
-            {
-                UnlockableDef[] unlockableDefs = unlockableContent.TiedUnlockables;
-                if (unlockableDefs.Length > 0)
+                if (equipment is IEliteContentPiece eliteContentPiece)
                 {
-                    UnlockableManager.AddUnlockables(unlockableDefs);
-                    provider.ContentPack.unlockableDefs.Add(unlockableDefs);
+                    foreach (var eliteDef in eliteContentPiece.EliteDefs)
+                    {
+                        provider.ContentPack.eliteDefs.AddSingle(eliteDef);
+                    }
+                    provider.ContentPack.buffDefs.AddSingle(asset.passiveBuffDef);
+                    BuffOverlays.AddBuffOverlay(asset.passiveBuffDef, eliteContentPiece.EliteDefs.OfType<ExtendedEliteDef>().FirstOrDefault(eed => eed.overlayMaterial).overlayMaterial);
+                }
+
+                if (equipment is IUnlockableContent unlockableContent)
+                {
+                    UnlockableDef[] unlockableDefs = unlockableContent.TiedUnlockables;
+                    if (unlockableDefs.Length > 0)
+                    {
+                        UnlockableManager.AddUnlockables(unlockableDefs);
+                        provider.ContentPack.unlockableDefs.Add(unlockableDefs);
+                    }
                 }
             }
         }

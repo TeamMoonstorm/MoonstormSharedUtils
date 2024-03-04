@@ -63,56 +63,66 @@ namespace MSU
         private static IEnumerator InitializeInteractablesFromProvider(BaseUnityPlugin plugin, IContentPieceProvider<GameObject> provider)
         {
             IGameObjectContentPiece<IInteractable>[] content = provider.GetContents().OfType<IGameObjectContentPiece<IInteractable>>().ToArray();
+            List<IGameObjectContentPiece<IInteractable>> interactables = new List<IGameObjectContentPiece<IInteractable>>();
 
-            foreach(var interactable in content)
+            var helper = new ParallelCoroutineHelper();
+            foreach (var interactable in content)
             {
-                yield return InitializeInteractable(interactable, plugin, provider);
+                if (!interactable.IsAvailable())
+                    continue;
+
+                interactables.Add(interactable);
+                helper.Add(interactable.LoadContentAsync);
             }
+
+            helper.Start();
+            while (!helper.IsDone())
+                yield return null;
+
+            InitializeInteractables(plugin, interactables, provider);
         }
 
-        private static IEnumerator InitializeInteractable(IGameObjectContentPiece<IInteractable> interactable, BaseUnityPlugin plugin, IContentPieceProvider<GameObject> provider)
+        private static void InitializeInteractables(BaseUnityPlugin plugin, List<IGameObjectContentPiece<IInteractable>> interactables, IContentPieceProvider<GameObject> provider)
         {
-            if (!interactable.IsAvailable())
-                yield break;
-
-            yield return interactable.LoadContentAsync();
-
-            interactable.Initialize();
-
-            var asset = interactable.Asset;
-            if(asset.TryGetComponent<NetworkIdentity>(out _))
+            foreach(var interactable in interactables)
             {
-                provider.ContentPack.networkedObjectPrefabs.AddSingle(asset);
-            }
+                interactable.Initialize();
 
-            if(interactable is IContentPackModifier packModifier)
-            {
-                packModifier.ModifyContentPack(provider.ContentPack);
-            }
-
-            if(interactable is IInteractableContentPiece interactableContentPiece)
-            {
-                if(!_pluginToInteractables.ContainsKey(plugin))
+                var asset = interactable.Asset;
+                if (asset.TryGetComponent<NetworkIdentity>(out _))
                 {
-                    _pluginToInteractables.Add(plugin, Array.Empty<IInteractableContentPiece>());
+                    provider.ContentPack.networkedObjectPrefabs.AddSingle(asset);
                 }
-                var array = _pluginToInteractables[plugin];
-                HG.ArrayUtils.ArrayAppend(ref array, interactableContentPiece);
 
-                if(interactableContentPiece.CardProvider)
+                if (interactable is IContentPackModifier packModifier)
                 {
-                    _interactableCardProviders.Add(interactableContentPiece.CardProvider);
+                    packModifier.ModifyContentPack(provider.ContentPack);
                 }
-                _moonstormInteractables.Add(interactableContentPiece.Component, interactableContentPiece);
-            }
 
-            if(interactable is IUnlockableContent unlockableContent)
-            {
-                UnlockableDef[] unlockableDefs = unlockableContent.TiedUnlockables;
-                if(unlockableDefs.Length > 0)
+                if (interactable is IInteractableContentPiece interactableContentPiece)
                 {
-                    UnlockableManager.AddUnlockables(unlockableDefs);
-                    provider.ContentPack.unlockableDefs.Add(unlockableDefs);
+                    if (!_pluginToInteractables.ContainsKey(plugin))
+                    {
+                        _pluginToInteractables.Add(plugin, Array.Empty<IInteractableContentPiece>());
+                    }
+                    var array = _pluginToInteractables[plugin];
+                    HG.ArrayUtils.ArrayAppend(ref array, interactableContentPiece);
+
+                    if (interactableContentPiece.CardProvider)
+                    {
+                        _interactableCardProviders.Add(interactableContentPiece.CardProvider);
+                    }
+                    _moonstormInteractables.Add(interactableContentPiece.Component, interactableContentPiece);
+                }
+
+                if (interactable is IUnlockableContent unlockableContent)
+                {
+                    UnlockableDef[] unlockableDefs = unlockableContent.TiedUnlockables;
+                    if (unlockableDefs.Length > 0)
+                    {
+                        UnlockableManager.AddUnlockables(unlockableDefs);
+                        provider.ContentPack.unlockableDefs.Add(unlockableDefs);
+                    }
                 }
             }
         }
