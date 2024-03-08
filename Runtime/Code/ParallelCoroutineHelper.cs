@@ -9,6 +9,7 @@ namespace MSU
     {
         private List<Wrapper> _wrappers = new List<Wrapper>();
 
+        #region ADD
         public void Add(Func<IEnumerator> func)
         {
             _wrappers.Add(new Wrapper
@@ -17,46 +18,51 @@ namespace MSU
             });
         }
 
-        public void Add(Delegate @delegate, object[] args)
+        public void Add<T1>(Func<T1, IEnumerator> func, T1 arg)
         {
-            if (!IsSafe(@delegate, args))
-                return;
-
             _wrappers.Add(new Wrapper
             {
-                @delegate = @delegate,
-                args = args,
+                @delegate = func,
+                args = new object[] { arg }
             });
         }
 
-        private bool IsSafe(Delegate @delegate, object[] args)
+        public void Add<T1, T2>(Func<T1, T2, IEnumerator> func, T1 arg1, T2 arg2)
         {
-            var methodInfo = @delegate.Method;
-
-            var returnType = methodInfo.ReturnType;
-            if (returnType == null || returnType == typeof(void))
-                return false;
-
-            if (!methodInfo.ReturnType.IsSameOrSubclassOf<IEnumerator>())
+            _wrappers.Add(new Wrapper
             {
-                return false;
-            }
-
-            var parameters = methodInfo.GetParameters();
-            if (parameters.Length != args.Length)
-                return false;
-
-            for(int i = 0; i < parameters.Length; i++)
-            {
-                var argType = args[i].GetType();
-                if (!(parameters[i].ParameterType == argType || parameters[i].ParameterType.IsSubclassOf(argType)))
-                {
-                    return false;
-                }
-            }
-
-            return true;
+                @delegate = func,
+                args = new object[] { arg1, arg2 }
+            });
         }
+
+        public void Add<T1, T2, T3>(Func<T1, T2, T3, IEnumerator> func, T1 arg1, T2 arg2, T3 arg3)
+        {
+            _wrappers.Add(new Wrapper
+            {
+                @delegate = func,
+                args = new object[] { arg1, arg2, arg3 }
+            });
+        }
+
+        public void Add<T1, T2, T3, T4>(Func<T1, T2, T3, T4, IEnumerator> func, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+        {
+            _wrappers.Add(new Wrapper
+            {
+                @delegate = func,
+                args = new object[] { arg1, arg2, arg3, arg4 }
+            });
+        }
+        public void Add<T1, T2, T3, T4, T5>(Func<T1, T2, T3, T4, T5, IEnumerator> func, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+        {
+            _wrappers.Add(new Wrapper
+            {
+                @delegate = func,
+                args = new object[] { arg1, arg2, arg3, arg4, arg5 }
+            });
+        }
+        #endregion
+
 
         public void Start()
         {
