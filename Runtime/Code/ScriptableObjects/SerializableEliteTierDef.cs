@@ -10,6 +10,7 @@ using UnityEngine;
 
 namespace MSU
 {
+    [CreateAssetMenu(fileName = "New SerializableEliteTierDef", menuName = "MSU/SerializableEliteTierDef")]
     public class SerializableEliteTierDef : ScriptableObject
     {
         public float costMultiplier;

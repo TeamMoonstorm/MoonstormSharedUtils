@@ -8,6 +8,7 @@ using UnityEngine;
 
 namespace MSU
 {
+    [CreateAssetMenu(fileName = "New EntityStateTypeCollection", menuName = "MSU/EntityStateTypeCollection")]
     public class EntityStateTypeCollection : ScriptableObject
     {
         public SerializableEntityStateType[] stateTypes = Array.Empty<SerializableEntityStateType>();

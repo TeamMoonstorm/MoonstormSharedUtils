@@ -10,6 +10,7 @@ using static RoR2.ItemDisplayRuleSet;
 
 namespace MSU
 {
+    [CreateAssetMenu(fileName = "New NamedItemDisplayRuleSet", menuName = "MSU/IDRS/NamedItemDisplayRuleSet")]
     public class NamedItemDisplayRuleSet : ScriptableObject
     {
         private static readonly HashSet<NamedItemDisplayRuleSet> _instances = new HashSet<NamedItemDisplayRuleSet>();

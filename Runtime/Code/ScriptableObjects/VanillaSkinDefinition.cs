@@ -167,7 +167,7 @@ namespace MSU
 
                 if (displayModel)
                 {
-                    var path = AnimationUtility.CalculateTransformPath(child, characterModel.transform);
+                    var path = Util.BuildPrefabTransformPath(characterModel.transform, child.transform);
                     var displayChild = displayModel.transform.Find(path);
                     var displayObjectInstance = Instantiate(customObject, displayChild, false);
                     var displayObjectInstanceTransform = displayObjectInstance.transform;

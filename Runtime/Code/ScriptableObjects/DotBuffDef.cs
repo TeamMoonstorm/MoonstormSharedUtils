@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace MSU
 {
+    [CreateAssetMenu(fileName = "New DotBuffDef", menuName = "MSU/DotBuffDef")]
     public class DotBuffDef : BuffDef
     {
         public float interval;

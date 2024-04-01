@@ -8,6 +8,7 @@ using UnityEngine;
 
 namespace MSU
 {
+    [CreateAssetMenu(fileName = "New ItemDisplayDictionary", menuName = "MSU/IDRS/ItemDisplayDictionary")]
     public class ItemDisplayDictionary : ScriptableObject
     {
         private static readonly HashSet<ItemDisplayDictionary> _instances = new HashSet<ItemDisplayDictionary>();

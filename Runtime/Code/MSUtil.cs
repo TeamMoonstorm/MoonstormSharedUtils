@@ -230,6 +230,12 @@ namespace MSU
             return true;
         }
 
+        public static TAsset FindAsset<TAsset>(this AssetCollection collection, string assetName) where TAsset : UnityEngine.Object
+        {
+            return collection.assets.OfType<TAsset>().Where(asset => string.Equals(asset.name, assetName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+        }
+
+
         static MSUtil()
         {
             Type configEntryType = typeof(ConfigEntry<object>);
