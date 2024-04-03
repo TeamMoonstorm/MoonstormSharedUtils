@@ -21,6 +21,7 @@ namespace MSU
 
         private static Dictionary<BaseUnityPlugin, IItemContentPiece[]> _pluginToItems = new Dictionary<BaseUnityPlugin, IItemContentPiece[]>();
         private static Dictionary<BaseUnityPlugin, IContentPieceProvider<ItemDef>> _pluginToContentProvider = new Dictionary<BaseUnityPlugin, IContentPieceProvider<ItemDef>>();
+        private static HashSet<ItemDef> _bossItems = new HashSet<ItemDef>();
         public static void AddProvider(BaseUnityPlugin plugin, IContentPieceProvider<ItemDef> provider)
         {
             _pluginToContentProvider.Add(plugin, provider);
@@ -83,6 +84,11 @@ namespace MSU
                 var asset = item.Asset;
                 provider.ContentPack.itemDefs.AddSingle(asset);
 
+                if(asset.deprecatedTier == ItemTier.Boss)
+                {
+                    _bossItems.Add(asset);
+                }
+
                 if (item is IContentPackModifier packModifier)
                 {
                     packModifier.ModifyContentPack(provider.ContentPack);
@@ -137,9 +143,9 @@ namespace MSU
                                 itemDef1 = itemToInfect,
                                 itemDef2 = voidItem.Asset
                             };
-                            ItemDef.Pair[] existingInfections = ItemCatalog.itemRelationships[contagiousItem];
-                            HG.ArrayUtils.ArrayAppend(ref existingInfections, transformation);
-                            ItemCatalog.itemRelationships[contagiousItem] = existingInfections;
+                            ItemDef.Pair[] existingInfections0 = ItemCatalog.itemRelationships[contagiousItem];
+                            HG.ArrayUtils.ArrayAppend(ref existingInfections0, transformation);
+                            ItemCatalog.itemRelationships[contagiousItem] = existingInfections0;
                         }
                         catch(Exception ex)
                         {
@@ -152,6 +158,19 @@ namespace MSU
                     MSULog.Error($"IVoidItemContentPiece {voidItem.GetType().Name} failed to intialize properly\n{ex}");
                 }
             }
+
+            List<ItemDef.Pair> bossVoidPairs = new List<ItemDef.Pair>();
+            foreach(ItemDef bossItem in _bossItems)
+            {
+                bossVoidPairs.Add(new ItemDef.Pair
+                {
+                    itemDef1 = bossItem,
+                    itemDef2 = RoR2.DLC1Content.Items.VoidMegaCrabItem
+                });   
+            }
+            ItemDef.Pair[] existingInfections1 = ItemCatalog.itemRelationships[contagiousItem];
+            existingInfections1 = existingInfections1.Union(bossVoidPairs).ToArray();
+            ItemCatalog.itemRelationships[contagiousItem] = existingInfections1;
             orig();
         }
 
