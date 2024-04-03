@@ -110,7 +110,7 @@ namespace MSU
             var helper = new ParallelCoroutineHelper();
             foreach(var tier in content)
             {
-                if (!tier.IsAvailable())
+                if (!tier.IsAvailable(provider.ContentPack))
                     continue;
 
                 itemTiers.Add(tier);

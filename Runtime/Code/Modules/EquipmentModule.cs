@@ -95,7 +95,7 @@ namespace MSU
 
             foreach(var equipment in content)
             {
-                if (!equipment.IsAvailable())
+                if (!equipment.IsAvailable(provider.ContentPack))
                     continue;
 
                 equipments.Add(equipment);

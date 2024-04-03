@@ -69,7 +69,7 @@ namespace MSU
             var helper = new ParallelCoroutineHelper();
             foreach(var character in content)
             {
-                if (!character.IsAvailable())
+                if (!character.IsAvailable(provider.ContentPack))
                     continue;
 
                 characters.Add(character);

@@ -68,7 +68,7 @@ namespace MSU
             var helper = new ParallelCoroutineHelper();
             foreach (var interactable in content)
             {
-                if (!interactable.IsAvailable())
+                if (!interactable.IsAvailable(provider.ContentPack))
                     continue;
 
                 interactables.Add(interactable);

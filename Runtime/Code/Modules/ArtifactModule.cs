@@ -88,7 +88,7 @@ namespace MSU
             var helper = new ParallelCoroutineHelper();
             foreach (var artifact in content)
             {
-                if (!artifact.IsAvailable())
+                if (!artifact.IsAvailable(provider.ContentPack))
                     continue;
 
                 artifacts.Add(artifact);
