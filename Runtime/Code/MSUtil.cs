@@ -235,6 +235,26 @@ namespace MSU
             return collection.assets.OfType<TAsset>().Where(asset => string.Equals(asset.name, assetName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
         }
 
+        public static bool IsInteractableValidForSpawns(GameObject interactableGameObject)
+        {
+            if (!interactableGameObject)
+                return false;
+
+            if (interactableGameObject.TryGetComponent<InteractionProcFilter>(out var val))
+                return val.shouldAllowOnInteractionBeginProc;
+
+            if (interactableGameObject.TryGetComponent<GenericPickupController>(out _))
+                return false;
+
+            if (interactableGameObject.TryGetComponent<VehicleSeat>(out _))
+                return false;
+
+            if (interactableGameObject.TryGetComponent<NetworkUIPromptController>(out _))
+                return false;
+
+            return true;
+        }
+
 
         static MSUtil()
         {
