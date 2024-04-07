@@ -17,11 +17,13 @@ namespace MSU
         [ContextMenu("Add Selected Scripts")]
         private void AddSelectedScripts()
         {
-            var selectedAssets = UnityEditor.Selection.assetGUIDs.OfType<UnityEditor.MonoScript>()
-                .Select(ms => ms.GetClass())
+            var monoscripts = UnityEditor.Selection.assetGUIDs.Select(UnityEditor.AssetDatabase.GUIDToAssetPath).Select(UnityEditor.AssetDatabase.LoadAssetAtPath<UnityEngine.Object>)
+                .OfType<UnityEditor.MonoScript>();
+
+            var entityStateTypes = monoscripts.Select(ms => ms.GetClass())
                 .Where(t => !t.IsAbstract && t.IsSubclassOf(typeof(EntityState)));
 
-            stateTypes = selectedAssets.Select(t => new  SerializableEntityStateType(t)).ToArray();
+            stateTypes = entityStateTypes.Select(t => new  SerializableEntityStateType(t)).ToArray();
             UnityEditor.EditorUtility.SetDirty(this);
         }
 #endif
