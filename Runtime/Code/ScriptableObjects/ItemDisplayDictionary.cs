@@ -134,6 +134,7 @@ namespace MSU
             }
         }
 
+        [Serializable]
         public struct DisplayRule
         {
             public ItemDisplayRuleType ruleType;

@@ -10,3 +10,4 @@ using System.Security.Permissions;
 #pragma warning restore CS0618
 [module: UnverifiableCode]
 [assembly: InternalsVisibleTo("MoonstormSharedUtils", AllInternalsVisible = true)]
+[assembly: InternalsVisibleTo("MSU.Editor", AllInternalsVisible = true)]

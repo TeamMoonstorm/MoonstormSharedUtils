@@ -74,13 +74,22 @@ namespace MSU
             public float customCategoryWeight;
             public string customCategoryName;
 
-            public DirectorCard card;
+            public AddressableDirectorCard card;
 
             public static implicit operator DirectorAPI.DirectorCardHolder(StageMonsterCardPair other)
             {
                 return new DirectorAPI.DirectorCardHolder
                 {
-                    Card = other.card,
+                    Card = new DirectorCard
+                    {
+                        forbiddenUnlockableDef = other.card.forbiddenUnlockableDef,
+                        minimumStageCompletions = other.card.minimumStageCompletions,
+                        preventOverhead = other.card.preventOverhead,
+                        requiredUnlockableDef = other.card.requiredUnlockableDef,
+                        selectionWeight = other.card.selectionWeight,
+                        spawnCard = other.card.spawnCard,
+                        spawnDistance = other.card.spawnDistance
+                    },
                     MonsterCategory = other.monsterCategory,
                     CustomMonsterCategory = other.monsterCategory == DirectorAPI.MonsterCategory.Custom ? other.customCategoryName : null,
                     MonsterCategorySelectionWeight = other.monsterCategory == DirectorAPI.MonsterCategory.Custom ? other.customCategoryWeight : 0,

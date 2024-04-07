@@ -32,7 +32,7 @@ namespace MSU
                 case LogLevel.Debug:
                 case LogLevel.Info:
                 case LogLevel.Message:
-                    UDebug.Log(data);
+                    UDebug.Log(Format(data, i, member));
                     break;
                 case LogLevel.Error:
                 case LogLevel.Fatal:
@@ -57,7 +57,11 @@ namespace MSU
 
         public static string Format(object data, int i, string member)
         {
+#if UNITY_EDITOR
+            return $"[MSU]: {data} | Line={i} : Member={member}";
+#else
             return $"{data} | Line={i} : Member={member}";
+#endif
         }
 
 #if DEBUG

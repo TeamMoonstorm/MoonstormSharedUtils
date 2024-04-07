@@ -65,6 +65,7 @@ namespace MSU
         [SerializeField]
         private StageInteractableCardPair[] _serializedCardPairs = Array.Empty<StageInteractableCardPair>();
 
+        [Serializable]
         public struct StageInteractableCardPair
         {
             public DirectorAPI.Stage stageEnum;
@@ -73,13 +74,22 @@ namespace MSU
             public float customCategoryWeight;
             public string customCategoryName;
 
-            public DirectorCard card;
+            public AddressableDirectorCard card;
 
             public static implicit operator DirectorAPI.DirectorCardHolder(StageInteractableCardPair other)
             {
                 return new DirectorAPI.DirectorCardHolder
                 {
-                    Card = other.card,
+                    Card = new DirectorCard
+                    {
+                        forbiddenUnlockableDef = other.card.forbiddenUnlockableDef,
+                        minimumStageCompletions = other.card.minimumStageCompletions,
+                        preventOverhead = other.card.preventOverhead,
+                        requiredUnlockableDef = other.card.requiredUnlockableDef,
+                        selectionWeight = other.card.selectionWeight,
+                        spawnCard = other.card.spawnCard,
+                        spawnDistance = other.card.spawnDistance
+                    },
                     InteractableCategory = other.interactableCategory,
                     CustomInteractableCategory = other.interactableCategory == DirectorAPI.InteractableCategory.Custom ? other.customCategoryName : null,
                     InteractableCategorySelectionWeight = other.interactableCategory == DirectorAPI.InteractableCategory.Custom ? other.customCategoryWeight : 0,

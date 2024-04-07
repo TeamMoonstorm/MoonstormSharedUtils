@@ -113,7 +113,7 @@ namespace MSU
         public struct DisplayRule
         {
             public ItemDisplayRuleType ruleType;
-            public string displayPrefab;
+            public string displayPrefabName;
             public string childName;
             public Vector3 localPos;
             public Vector3 localAngles;
@@ -128,7 +128,7 @@ namespace MSU
                 {
                     if(!_finishedRule.HasValue)
                     {
-                        GameObject prefab = ItemDisplayCatalog.GetItemDisplay(displayPrefab);
+                        GameObject prefab = ItemDisplayCatalog.GetItemDisplay(displayPrefabName);
                         if(childName.IsNullOrWhiteSpace())
                         {
                             _finishedRule = new ItemDisplayRule
