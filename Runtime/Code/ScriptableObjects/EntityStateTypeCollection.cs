@@ -12,5 +12,18 @@ namespace MSU
     public class EntityStateTypeCollection : ScriptableObject
     {
         public SerializableEntityStateType[] stateTypes = Array.Empty<SerializableEntityStateType>();
+
+#if UNITY_EDITOR
+        [ContextMenu("Add Selected Scripts")]
+        private void AddSelectedScripts()
+        {
+            var selectedAssets = UnityEditor.Selection.assetGUIDs.OfType<UnityEditor.MonoScript>()
+                .Select(ms => ms.GetClass())
+                .Where(t => !t.IsAbstract && t.IsSubclassOf(typeof(EntityState)));
+
+            stateTypes = selectedAssets.Select(t => new  SerializableEntityStateType(t)).ToArray();
+            UnityEditor.EditorUtility.SetDirty(this);
+        }
+#endif
     }
 }

@@ -79,9 +79,6 @@ namespace MSU
             bool assetInCollection = collection.assetToName.ContainsKey(content);
             if (assetInCollection)
             {
-#if DEBUG
-                MSULog.Error($"Cannot add {content} to the NamedAssetCollection of type {typeof(T).Name} because its already in the collection.");
-#endif
                 return;
             }
 
