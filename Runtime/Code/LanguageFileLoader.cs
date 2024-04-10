@@ -22,18 +22,21 @@ namespace MSU
 
         private static void AddLanguageFiles(On.RoR2.Language.orig_SetFolders orig, RoR2.Language self, IEnumerable<string> newFolders)
         {
-            IEnumerable<string> folders = new List<string>();
-            foreach(var (plugin, languageFolderName) in _pluginsWithLanguageFiles)
+            List<string> moddedFolders = new List<string>();
+
+            foreach(var (plugin, langFolderName) in _pluginsWithLanguageFiles)
             {
                 var directoryName = Path.GetDirectoryName(plugin.Info.Location);
-                var directory = Path.Combine(directoryName, languageFolderName);
-                if(Directory.Exists(directory))
+                var lantguageDirectory = Path.Combine(directoryName, langFolderName);
+
+                if(Directory.Exists(lantguageDirectory))
                 {
-                    var directories = Directory.EnumerateDirectories(directoryName, self.name);
-                    folders.Union(directories);
+                    var newDirectories = Directory.EnumerateDirectories(lantguageDirectory, self.name);
+                    moddedFolders.AddRange(newDirectories);
                 }
             }
-            orig(self, newFolders.Union(folders));
+            moddedFolders.AddRange(newFolders);
+            orig(self, moddedFolders);
         }
     }
 }

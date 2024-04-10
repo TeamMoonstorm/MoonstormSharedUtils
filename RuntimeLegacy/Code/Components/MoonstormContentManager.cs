@@ -9,6 +9,7 @@ namespace Moonstorm.Components
     {
         public bool hasMaster;
 
+        [SerializeField]
         public CharacterBody body;
 
         public MoonstormEliteBehavior eliteBehavior;

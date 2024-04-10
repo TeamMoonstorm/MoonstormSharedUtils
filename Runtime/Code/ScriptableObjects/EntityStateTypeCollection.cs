@@ -21,7 +21,7 @@ namespace MSU
                 .OfType<UnityEditor.MonoScript>();
 
             var entityStateTypes = monoscripts.Select(ms => ms.GetClass())
-                .Where(t => !t.IsAbstract && t.IsSubclassOf(typeof(EntityState)));
+                .Where(t => t.IsSubclassOf(typeof(EntityState)));
 
             stateTypes = entityStateTypes.Select(t => new  SerializableEntityStateType(t)).ToArray();
             UnityEditor.EditorUtility.SetDirty(this);

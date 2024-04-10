@@ -24,14 +24,14 @@ namespace MSU
         [SystemInitializer]
         private static void SystemInit()
         {
-            On.RoR2.UI.HUD.Awake += SpawnAndGetInstance;
             _prefab = MSUMain.MSUAssetBundle.LoadAsset<GameObject>("GameplayEventText");
+            On.RoR2.UI.HUD.Awake += SpawnAndGetInstance;
         }
 
         private static void SpawnAndGetInstance(On.RoR2.UI.HUD.orig_Awake orig, RoR2.UI.HUD self)
         {
             orig(self);
-            GameObject.Instantiate(_prefab, self.transform);
+            GameObject.Instantiate(_prefab, self.mainContainer.transform);
             Instance.HUDInstance = self;
         }
 
@@ -85,6 +85,7 @@ namespace MSU
         private void OnEnable()
         {
             Instance = this;
+            TextMeshProUGUI.text = string.Empty;
         }
         private void OnDisable()
         {

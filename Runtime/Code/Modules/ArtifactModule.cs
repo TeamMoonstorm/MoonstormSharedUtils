@@ -42,7 +42,11 @@ namespace MSU
         {
             if (_pluginToContentProvider.TryGetValue(plugin, out IContentPieceProvider<ArtifactDef> provider))
             {
-                yield return InitializeArtifactsFromProvider(plugin, provider);
+                var enumerator = InitializeArtifactsFromProvider(plugin, provider);
+                while (enumerator.MoveNext())
+                {
+                    yield return null;
+                }
             }
             yield break;
         }

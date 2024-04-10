@@ -24,6 +24,19 @@ public static class ScriptableObjectUpdater
     private static FieldInfo InteractableCardProvider_PairsField = typeof(InteractableCardProvider).GetField("_serializedCardPairs", BindingFlags.Instance | BindingFlags.NonPublic);
     private static FieldInfo MonsterCardProvider_PairsField = typeof(MonsterCardProvider).GetField("_serializedCardPairs", BindingFlags.Instance | BindingFlags.NonPublic);
 
+    [MenuItem("Tools/Penis")]
+    private static void Penis()
+    {
+        var materials = AssetDatabaseUtils.FindAssetsByType<Material>();
+
+        foreach(var material in materials)
+        {
+            if(material.shader.name.Contains("Addressable"))
+            {
+                MSULog.Info($"{material.name} using {material.shader.name}. (Path={AssetDatabase.GetAssetPath(material)}");
+            }
+        }
+    }
     [MenuItem("Tools/MSEU/Upgrade Scriptable Objects")]
     private static void UpdateMSUScriptableObjects()
     {

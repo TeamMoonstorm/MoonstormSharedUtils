@@ -19,12 +19,16 @@ namespace MSU
         private static void HealthComponent_TakeDamage(ILContext il)
         {
             ILCursor c = new ILCursor(il);
-            c.GotoNext(MoveType.After,
+
+            bool tryGotoNext = c.TryGotoNext(MoveType.After,
                 x => x.MatchStfld<DamageInfo>("rejected"),
                 x => x.MatchLdarg(0),
                 x => x.MatchLdfld<HealthComponent>("onIncomingDamageReceivers"));
-            c.Index -= 1;
 
+            if (!tryGotoNext)
+                MSULog.Fatal($"Failed to set up {nameof(IOnIncomingDamageOtherServerReciever)}!");
+
+            c.Index -= 1;
             c.Emit(OpCodes.Ldarg_0);
             c.Emit(OpCodes.Ldarg_1);
             c.EmitDelegate<Action<HealthComponent, DamageInfo>>(RunOnIncomingDamageOther);

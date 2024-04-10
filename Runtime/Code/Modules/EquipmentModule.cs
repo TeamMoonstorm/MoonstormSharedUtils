@@ -1,4 +1,5 @@
 ﻿using BepInEx;
+using R2API;
 using RoR2;
 using System;
 using System.Collections;
@@ -43,7 +44,10 @@ namespace MSU
         {
             if (_pluginToContentProvider.TryGetValue(plugin, out IContentPieceProvider<EquipmentDef> provider))
             {
-                yield return InitializeEquipmentsFromProvider(plugin, provider);
+                var enumerator = InitializeEquipmentsFromProvider(plugin, provider);
+
+                while (enumerator.MoveNext())
+                    yield return null;
             }
             yield break;
         }
@@ -56,6 +60,7 @@ namespace MSU
             var allEquips = new Dictionary<EquipmentDef, IEquipmentContentPiece>();
             var nonEliteEquips = new Dictionary<EquipmentDef, IEquipmentContentPiece>();
             var eliteEquips = new Dictionary<EquipmentDef, IEliteContentPiece>();
+            var eliteDefs = new List<EliteDef>();
 
             foreach(var(eqpDef, eqp) in _moonstormEquipments)
             {
@@ -63,6 +68,7 @@ namespace MSU
                 if(eqp is IEliteContentPiece eliteContent)
                 {
                     eliteEquips.Add(eqpDef, eliteContent);
+                    eliteDefs.AddRange(eliteContent.EliteDefs);
                 }
                 else
                 {
@@ -73,6 +79,31 @@ namespace MSU
             AllMoonstormEquipments = new ReadOnlyDictionary<EquipmentDef, IEquipmentContentPiece>(allEquips);
             MoonstormEliteEquipments = new ReadOnlyDictionary<EquipmentDef, IEliteContentPiece>(eliteEquips);
             NonEliteMoonstormEquipments = new ReadOnlyDictionary<EquipmentDef, IEquipmentContentPiece>(nonEliteEquips);
+            MoonstormEliteDefs = new ReadOnlyCollection<EliteDef>(eliteDefs);
+
+            CombatDirector.EliteTierDef[] vanillaTiers = R2API.EliteAPI.VanillaEliteTiers;
+            foreach(EliteDef eliteDef in MoonstormEliteDefs)
+            {
+                if (!(eliteDef is ExtendedEliteDef eed))
+                    continue;
+
+                switch(eed.eliteTier)
+                {
+                    case ExtendedEliteDef.VanillaTier.HonorDisabled:
+                        HG.ArrayUtils.ArrayAppend(ref vanillaTiers[1].eliteTypes, eliteDef);
+                        break;
+                    case ExtendedEliteDef.VanillaTier.HonorActive:
+                        HG.ArrayUtils.ArrayAppend(ref vanillaTiers[2].eliteTypes, eliteDef);
+                        break;
+                    case ExtendedEliteDef.VanillaTier.PostLoop:
+                        HG.ArrayUtils.ArrayAppend(ref vanillaTiers[3].eliteTypes, eliteDef);
+                        break;
+                    case ExtendedEliteDef.VanillaTier.Lunar:
+                        HG.ArrayUtils.ArrayAppend(ref vanillaTiers[4].eliteTypes, eliteDef);
+                        break;
+                }
+                R2API.EliteRamp.AddRamp(eed, eed.eliteRamp);
+            }
 
             moduleAvailability.MakeAvailable();
         }
@@ -141,7 +172,12 @@ namespace MSU
                         provider.ContentPack.eliteDefs.AddSingle(eliteDef);
                     }
                     provider.ContentPack.buffDefs.AddSingle(asset.passiveBuffDef);
-                    BuffOverlays.AddBuffOverlay(asset.passiveBuffDef, eliteContentPiece.EliteDefs.OfType<ExtendedEliteDef>().FirstOrDefault(eed => eed.overlayMaterial).overlayMaterial);
+
+                    var eliteDefWithOverlayMaterial = eliteContentPiece.EliteDefs.OfType<ExtendedEliteDef>().FirstOrDefault(eed => eed.overlayMaterial);
+
+                    if(eliteDefWithOverlayMaterial)
+                        BuffOverlays.AddBuffOverlay(asset.passiveBuffDef, eliteDefWithOverlayMaterial.overlayMaterial);
+
                 }
 
                 if (equipment is IUnlockableContent unlockableContent)

@@ -23,6 +23,9 @@ namespace MSU
                 return;
 
             PickupDef def = PickupCatalog.GetPickupDef(_display.pickupIndex);
+            if (def == null)
+                return;
+
             ItemTier tier = def.itemTier;
             if(tier > ItemTier.AssignedAtRuntime)
             {

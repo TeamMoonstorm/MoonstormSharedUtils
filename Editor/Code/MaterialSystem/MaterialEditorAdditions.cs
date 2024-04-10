@@ -29,7 +29,7 @@ namespace MSU.Editor.ShaderSystem
                     MaterialShaderManager.Upgrade((Material)materialEditor.target);
                 }
             }
-            if (shader.name == "AddressableMaterialShader")
+            if (shader.name == "MSU/AddressableMaterialShader")
             {
                 AddressableMaterialShaderHeader(obj);
             }

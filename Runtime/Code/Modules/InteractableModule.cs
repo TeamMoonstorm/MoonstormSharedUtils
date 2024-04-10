@@ -44,7 +44,11 @@ namespace MSU
         {
             if(_pluginToContentProvider.TryGetValue(plugin, out IContentPieceProvider<GameObject> provider))
             {
-                yield return InitializeInteractablesFromProvider(plugin, provider);
+                var enumerator = InitializeInteractablesFromProvider(plugin, provider);
+                while (enumerator.MoveNext())
+                {
+                    yield return null;
+                }
             }
             yield break;
         }

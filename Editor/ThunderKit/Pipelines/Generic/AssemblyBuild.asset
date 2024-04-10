@@ -32,4 +32,4 @@ MonoBehaviour:
   Data:
   - {fileID: -715294958435390540}
   QuickAccess: 0
-  manifest: {fileID: 0}
+  manifest: {fileID: 11400000, guid: 6f21799fca639037e1b559d4902eab24, type: 2}

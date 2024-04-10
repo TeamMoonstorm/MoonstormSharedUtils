@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 8213170796682785242}
   - component: {fileID: 6856245325845556312}
   - component: {fileID: -1841656863747711454}
-  - component: {fileID: 6709673378652027855}
   - component: {fileID: 3916189021239166270}
   - component: {fileID: -4272976251058039023}
   m_Layer: 5
@@ -78,18 +77,6 @@ MonoBehaviour:
     _typeName: EntityStates.Idle, RoR2, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   mainStateType:
     _typeName: EntityStates.Idle, RoR2, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
---- !u!225 &6709673378652027855
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8213170796682785221}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 0
-  m_BlocksRaycasts: 0
-  m_IgnoreParentGroups: 0
 --- !u!114 &3916189021239166270
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -193,7 +180,7 @@ MonoBehaviour:
   m_Script: {fileID: -946661946, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canvasGroup: {fileID: 6709673378652027855}
+  canvasGroup: {fileID: 0}
   panningRect: {fileID: 0}
   transitionDuration: 0
   panningMagnitude: 0

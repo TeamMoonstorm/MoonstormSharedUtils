@@ -40,7 +40,11 @@ namespace MSU
         {
             if(_pluginToContentProvider.TryGetValue(plugin, out IContentPieceProvider<ItemTierDef> provider))
             {
-                yield return InitializeItemTiersFromProvidder(plugin, provider);
+                var enumerator = InitializeItemTiersFromProvider(plugin, provider);
+                while (enumerator.MoveNext())
+                {
+                    yield return null;
+                }
             }
         }
 
@@ -102,7 +106,7 @@ namespace MSU
             }
         }
 
-        private static IEnumerator InitializeItemTiersFromProvidder(BaseUnityPlugin plugin, IContentPieceProvider<ItemTierDef> provider)
+        private static IEnumerator InitializeItemTiersFromProvider(BaseUnityPlugin plugin, IContentPieceProvider<ItemTierDef> provider)
         {
             IContentPiece<ItemTierDef>[] content = provider.GetContents();
             List<IContentPiece<ItemTierDef>> itemTiers = new List<IContentPiece<ItemTierDef>>();

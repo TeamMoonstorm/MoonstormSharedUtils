@@ -31,11 +31,21 @@ namespace MSU
                 foreach(ItemDisplayDictionary dictionary in _instances)
                 {
                     var keyAsset = dictionary.keyAsset;
-                    if(!(keyAsset is ItemDef id) || !(keyAsset is EquipmentDef ed))
+
+                    EquipmentDef ed = null;
+                    ItemDef id = null;
+
+                    bool isItem = keyAsset is ItemDef;
+                    bool isEquipment = keyAsset is EquipmentDef;
+
+                    if(!isItem && !isEquipment)
                     {
                         MSULog.Warning($"Item display dictionary {dictionary} has an invalid key asset, a key asset must be either an ItemDef or EquipmentDef.");
                         continue;
                     }
+
+                    id = isItem ? (ItemDef)keyAsset : null;
+                    ed = isEquipment ? (EquipmentDef)keyAsset : null;
 
                     if(id && id.itemIndex == ItemIndex.None)
                     {
@@ -124,7 +134,7 @@ namespace MSU
             public string idrsName;
             public List<DisplayRule> rules;
 
-            public bool IsEmpty => rules == null ? rules.Count == 0 : true;
+            public bool IsEmpty => rules != null ? rules.Count == 0 : true;
 
             public void AddDisplayRule(DisplayRule rule)
             {

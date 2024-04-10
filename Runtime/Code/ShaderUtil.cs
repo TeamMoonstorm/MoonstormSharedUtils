@@ -4,64 +4,115 @@ using UnityEngine;
 using ShaderSwapper;
 using System.Linq;
 using UnityEngine.AddressableAssets;
+using System;
 
 namespace MSU
 {
     public static class ShaderUtil
     {
         private static HashSet<Material> _addressableMaterials = new HashSet<Material>();
+
         public static IEnumerator LoadAddressableMaterialShadersAsync(AssetBundle[] assetBundles)
         {
-            ParallelCoroutineHelper parallelCoroutineHelper = new ParallelCoroutineHelper();
-            foreach(AssetBundle bundle in assetBundles)
-            {
-                parallelCoroutineHelper.Add(LoadAddressableMaterialShadersAsync, bundle);
-            }
-            parallelCoroutineHelper.Start();
-            while (!parallelCoroutineHelper.IsDone())
-                yield return null;
-        }
-
-        public static IEnumerator LoadAddressableMaterialShadersAsync(AssetBundle assetBundle) 
-        {
-            if (!assetBundle)
-                yield break;
-
-            if (assetBundle.isStreamedSceneAssetBundle)
-                yield break;
-
-            var request = assetBundle.LoadAllAssetsAsync<Material>();
-            while(!request.isDone)
-            {
-                yield return null;
-            }
-
             ParallelCoroutineHelper helper = new ParallelCoroutineHelper();
-            foreach(var material in request.allAssets.OfType<Material>())
+
+            var list = new List<Material>();
+            foreach (var bundle in assetBundles)
             {
-                helper.Add(LoadAddressableMaterialShadersAsync, material);
+                helper.Add<AssetBundle, List<Material>, Func<Material, bool>>(LoadMaterialsFromBundle, bundle, list, IsShaderAddressableShader);
             }
 
             helper.Start();
-            while(!helper.IsDone()) yield return null;
+            while (!helper.IsDone())
+                yield return null;
+
+            var addressableMaterialLoadingRoutine = LoadAddressableMaterialShadersAsync(list);
+            while (addressableMaterialLoadingRoutine.MoveNext())
+                yield return null;
+
         }
 
-        public static IEnumerator LoadAddressableMaterialShadersAsync(Material[] materials)
+        public static IEnumerator LoadAddressableMaterialShadersAsync(AssetBundle bundle)
         {
-            ParallelCoroutineHelper helper = new ParallelCoroutineHelper();
-            foreach(Material material in materials)
-            {
-                if (material.shader.name != "AddressableMaterialShader")
-                    continue;
+            var list = new List<Material>();
 
-                helper.Add(LoadAddressableMaterialShadersAsync, material);
+            var enumerator = LoadMaterialsFromBundle(bundle, list, IsShaderAddressableShader);
+            while (enumerator.MoveNext())
+                yield return null;
+
+            var addressableMaterialLoadingRoutine = LoadAddressableMaterialShadersAsync(list);
+            while (addressableMaterialLoadingRoutine.MoveNext())
+                yield return null;
+        }
+
+        public static IEnumerator LoadAddressableMaterialShadersAsync(List<Material> materials)
+        {
+            var helper = new ParallelCoroutineHelper();
+
+            foreach (var material in materials)
+            {
+                helper.Add(LoadRealMaterialAndCopyProperties, material);
             }
 
             helper.Start();
-            while (!helper.IsDone()) yield return null;
+            while (!helper.IsDone())
+                yield return null;
         }
 
-        public static IEnumerator LoadAddressableMaterialShadersAsync(Material material)
+        public static IEnumerator LoadAddressableMaterialShadersAsync(Material material) => LoadRealMaterialAndCopyProperties(material);
+
+        public static IEnumerator SwapStubbedShadersAsync(AssetBundle[] bundles)
+        {
+            ParallelCoroutineHelper helper1 = new ParallelCoroutineHelper();
+
+            List<Material> materials = new List<Material>();
+            foreach (var bundle in bundles)
+            {
+                helper1.Add<AssetBundle, List<Material>, Func<Material, bool>>(LoadMaterialsFromBundle, bundle, materials, IsShaderStubbedShader);
+            }
+
+            helper1.Start();
+            while (!helper1.IsDone())
+                yield return null;
+
+            var enumerator = SwapStubbedShadersAsync(materials);
+
+            while (enumerator.MoveNext())
+                yield return null;
+
+        }
+
+        public static IEnumerator SwapStubbedShadersAsync(AssetBundle assetBundle) => ShaderSwapper.ShaderSwapper.UpgradeStubbedShadersAsync(assetBundle);
+
+        public static IEnumerator SwapStubbedShadersAsync(List<Material> materials)
+        {
+            ParallelCoroutineHelper helper = new ParallelCoroutineHelper();
+
+            foreach(var material in materials)
+            {
+                helper.Add(ShaderSwapper.ShaderSwapper.UpgradeStubbedShaderAsync, material);
+            }
+
+            helper.Start();
+            while (!helper.IsDone())
+                yield return null;
+        }
+
+        public static IEnumerator SwapStubbedShadersAsync(Material material) => ShaderSwapper.ShaderSwapper.UpgradeStubbedShaderAsync(material);
+
+        private static IEnumerator LoadMaterialsFromBundle(AssetBundle bundle, List<Material> materials, Func<Material, bool> filter = null)
+        {
+            if (bundle.isStreamedSceneAssetBundle)
+                yield break;
+
+            var request = bundle.LoadAllAssetsAsync<Material>();
+            while (!request.isDone)
+                yield return null;
+
+            materials.AddRange(request.allAssets.OfType<Material>().Where(filter));
+        }
+
+        private static IEnumerator LoadRealMaterialAndCopyProperties(Material material)
         {
             var shaderKeywords = material.shaderKeywords;
             if (shaderKeywords.Length == 0)
@@ -76,6 +127,12 @@ namespace MSU
                 yield return null;
 
             var loadedMat = asyncOp.Result;
+            if(!loadedMat)
+            {
+                MSULog.Warning($"{material}'s AddressableMaterialShader's address returned a null object. (Address={address})");
+                yield break;
+            }
+
             material.shader = loadedMat.shader;
             material.CopyPropertiesFromMaterial(material);
             _addressableMaterials.Add(material);
@@ -84,42 +141,8 @@ namespace MSU
 #endif
         }
 
-        public static IEnumerator SwapMaterialShadersAsync(Material[] materials)
-        {
-            ParallelCoroutineHelper helper = new ParallelCoroutineHelper();
-            foreach(var material in materials)
-            {
-                helper.Add(SwapMaterialShadersAsync, material);
-            }
-            helper.Start();
-            while (!helper.IsDone()) yield return null;
-        }
+        private static bool IsShaderAddressableShader(Material mat) => mat.shader.name == "AddressableMaterialShader";
 
-        public static IEnumerator SwapMaterialShadersAsync(Material material)
-        {
-            return ShaderSwapper.ShaderSwapper.UpgradeStubbedShaderAsync(material);
-        }
-
-        public static IEnumerator SwapAssetBundleShadersAsync(AssetBundle[] bundles)
-        {
-            ParallelCoroutineHelper helper = new ParallelCoroutineHelper();
-            foreach (var bundle in bundles)
-            {
-                helper.Add(SwapAssetBundleShadersAsync, bundle);
-            }
-            helper.Start();
-            while (!helper.IsDone())
-                yield return null;
-        }
-
-        public static IEnumerator SwapAssetBundleShadersAsync(AssetBundle bundle)
-        {
-            if (bundle.isStreamedSceneAssetBundle)
-                yield break;
-
-            var enumerator = ShaderSwapper.ShaderSwapper.UpgradeStubbedShadersAsync(bundle);
-            while (enumerator.MoveNext())
-                yield return null;
-        }
+        private static bool IsShaderStubbedShader(Material mat) => mat.shader.name.StartsWith("Stubbed");
     }
 }

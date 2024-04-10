@@ -42,5 +42,19 @@ namespace MSU
         {
             return new NullableRef<T> { Value = obj };
         }
+
+        public override string ToString()
+        {
+            if (HasValue)
+                return Value.ToString();
+            return $"NullableRef<{typeof(T).Name}>(null)";
+        }
+
+        public override int GetHashCode()
+        {
+            if (HasValue)
+                return Value.GetHashCode();
+            return -1;
+        }
     }
 }

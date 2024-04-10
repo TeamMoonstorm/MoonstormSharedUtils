@@ -141,8 +141,9 @@ namespace MSU
             if(!bodyBuffBehaviours.ContainsKey(buffType))
             {
                 var newBehaviour = (BuffBehaviour)self.gameObject.AddComponent(_buffToBehaviour[buffType]);
-                newBehaviour.BuffCount = newCount;
                 newBehaviour.CharacterBody = self;
+                newBehaviour.BuffIndex = buffType;
+                newBehaviour.BuffCount = newCount;
                 bodyBuffBehaviours.Add(buffType, newBehaviour);
                 var manager = bodyToContentBehaviour[self];
                 manager.StartGetInterfaces();
@@ -162,6 +163,14 @@ namespace MSU
         {
             bodyToContentBehaviour.Add(obj, obj.GetComponent<MSUContentBehaviour>());
             _bodyToBuffBehaviourDictionary.Add(obj, new Dictionary<BuffIndex, BuffBehaviour>());
+        }
+
+        internal static void OnBuffBehaviourDestroyed(CharacterBody body, BuffIndex buffIndex)
+        {
+            if(_bodyToBuffBehaviourDictionary.TryGetValue(body, out var innerDict))
+            {
+                innerDict.Remove(buffIndex);
+            }
         }
     }
 
@@ -196,7 +205,7 @@ namespace MSU
 
             if(EquipmentModule.AllMoonstormEquipments.TryGetValue(def, out IEquipmentContentPiece equipmentContent))
             {
-                _equipmentContentPiece.OnEquipmentLost(body);
+                _equipmentContentPiece?.OnEquipmentLost(body);
                 _equipmentContentPiece = equipmentContent;
                 _equipmentContentPiece.OnEquipmentObtained(body);
             }
@@ -276,6 +285,8 @@ namespace MSU
 
         }
     }
+
+//https://discord.com/channels/562704639141740588/562704639569428506/1227030308759801866
     public abstract class BuffBehaviour : MonoBehaviour
     {
         [AttributeUsage(AttributeTargets.Method)]
@@ -310,11 +321,30 @@ namespace MSU
         }
         private int _buffCount;
 
+        public BuffIndex BuffIndex { get; internal set; }
+
         public CharacterBody CharacterBody { get; internal set; }
 
         public bool HasAnyStacks => _buffCount > 0;
 
         protected virtual void OnFirstStackGained() { }
         protected virtual void OnAllStacksLost() { }
+
+        [Obsolete("Do not use \"OnEnable\", utilize \"OnFirstStackGained\" which has the same functionality", true)]
+        protected virtual void OnEnable()
+        {
+
+        }
+
+        [Obsolete("Do not use \"OnDisable\", utilize \"OnAllStacksLost\" which has the same functionality", true)]
+        protected virtual void OnDisable()
+        {
+
+        }
+
+        protected virtual void OnDestroy()
+        {
+            MSUContentManagement.OnBuffBehaviourDestroyed(CharacterBody, BuffIndex);
+        }
     }
 }

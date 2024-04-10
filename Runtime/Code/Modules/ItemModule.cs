@@ -40,7 +40,11 @@ namespace MSU
         {
             if(_pluginToContentProvider.TryGetValue(plugin, out IContentPieceProvider<ItemDef> provider))
             {
-                yield return InitializeItemsFromProvider(plugin, provider);
+                var enumerator = InitializeItemsFromProvider(plugin, provider);
+                while(enumerator.MoveNext())
+                {
+                    yield return null;
+                }
             }
             yield break;
         }
