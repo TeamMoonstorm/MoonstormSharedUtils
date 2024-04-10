@@ -123,7 +123,7 @@ namespace MSU
                 yield break;
 
             var asyncOp = Addressables.LoadAssetAsync<Material>(address);
-            while (asyncOp.IsDone)
+            while (!asyncOp.IsDone)
                 yield return null;
 
             var loadedMat = asyncOp.Result;
