@@ -19,36 +19,71 @@ using RoR2.Projectile;
 
 namespace MSU
 {
+    /// <summary>
+    /// Class containing a plethora of utility methods regarding Content and Content related classes from Risk of Rain 2
+    /// </summary>
     public static class ContentUtil
     {
         //Dummy expansion def, we dont add it to the Catalog to make it so stuff thats disabled cant be added.
         private static ExpansionDef _dummyExpansion = ScriptableObject.CreateInstance<ExpansionDef>();
+
+        /// <summary>
+        /// Disables the provided ArtifactDef by setting it's <see cref="ArtifactDef.requiredExpansion"/> to a Dummy ExpansionDef thats not added to the ExpansionCatalog.
+        /// </summary>
+        /// <param name="artifactDef">The ArtifactDef to Disable.</param>
         public static void DisableArtifact(ArtifactDef artifactDef)
         {
             //setting expansion to an invalid value makes it impossible for it to appear in lobby.
             artifactDef.requiredExpansion = _dummyExpansion;
         }
         
+        /// <summary>
+        /// Disables the provided Survivor by setting it's <see cref="SurvivorDef.hidden"/> boolean to True.
+        /// </summary>
+        /// <param name="survivorDef">The Survivor to Disable<./param>
         public static void DisableSurvivor(SurvivorDef survivorDef)
         {
             survivorDef.hidden = true;
         }
 
+        /// <summary>
+        /// Disables the provided ItemDef by setting it's required <see cref="ItemDef.requiredExpansion"/> to a Dummy ExpansionDef thats not added to the ExpansionCatalog.
+        /// </summary>
+        /// <param name="itemDef">The Item to Disable.</param>
         public static void DisableItem(ItemDef itemDef)
         {
             itemDef.requiredExpansion = _dummyExpansion;
         }
 
+        /// <summary>
+        /// Disables the provided EquipmentDef by setting it's required <see cref="EquipmentDef.requiredExpansion"/> to a Dummy ExpansionDef thats not added to the ExpansionCatalog
+        /// </summary>
+        /// <param name="equipmentDef">The Equipment to Disable</param>
         public static void DisableEquipment(EquipmentDef equipmentDef)
         {
             equipmentDef.requiredExpansion = _dummyExpansion;
         }
 
+        /// <summary>
+        /// See also <see cref="IContentPieceProvider"/>
+        /// <para>Creates a new, generic ContentPieceProvider for the specified unity Object, this is done by analyzing the assembly from <paramref name="baseUnityPlugin"/> and creating new instances of classes that implement <see cref="IContentPiece{T}"/>.</para>
+        /// </summary>
+        /// <typeparam name="T">The type of object that the provider provides.</typeparam>
+        /// <param name="baseUnityPlugin">The plugin to scan for content pieces</param>
+        /// <param name="contentPack">The plugin's ContentPack</param>
+        /// <returns>An IContentPieceProvider with <paramref name="baseUnityPlugin"/>'s classes that implement <see cref="IContentPiece{T}"/></returns>
         public static IContentPieceProvider<T> CreateContentPieceProvider<T>(BaseUnityPlugin baseUnityPlugin, ContentPack contentPack) where T : UnityEngine.Object
         {
             return new GenericContentPieceProvider<T>(AnalyzeForContentPieces<T>(baseUnityPlugin), contentPack);
         }
 
+        /// <summary>
+        /// Analyzes the <paramref name="baseUnityPlugin"/>'s Assembly for classes that implement <see cref="IContentPiece{T}"/> and returns a collection of said classes's instances.
+        /// <br>This is ideal for creating your own implementation of <see cref="IContentPieceProvider"/></br>
+        /// </summary>
+        /// <typeparam name="T">The type of object to analyze for.</typeparam>
+        /// <param name="baseUnityPlugin">The plugin to analyze for content pieces</param>
+        /// <returns>An Enumerable of <see cref="IContentPiece{T}"/></returns>
         public static IEnumerable<IContentPiece<T>> AnalyzeForContentPieces<T>(BaseUnityPlugin baseUnityPlugin) where T : UnityEngine.Object
         {
             var assembly = baseUnityPlugin.GetType().Assembly;
@@ -57,11 +92,26 @@ namespace MSU
                 .Select(t => (IContentPiece<T>)Activator.CreateInstance(t));
         }
 
+        /// <summary>
+        /// See also <see cref="IContentPieceProvider"/>
+        /// <para>Creates a new, generic ContentPieceProvider that provides GameObjects with a specific component specified by <typeparamref name="T"/>, this is done by analyzing the assembly from <paramref name="baseUnityPlugin"/> and creating new instances of classes that implement <see cref="IGameObjectContentPiece{T}{T}"/>.</para>
+        /// </summary>
+        /// <typeparam name="T">The component that the game objects have that the provider provides.</typeparam>
+        /// <param name="baseUnityPlugin">The plugin to scan for content pieces</param>
+        /// <param name="contentPack">The plugin's ContentPack</param>
+        /// <returns>An IContentPieceProvider with <paramref name="baseUnityPlugin"/>'s classes that implement <see cref="IGameObjectContentPiece{T}{T}"/></returns>
         public static IContentPieceProvider<GameObject> CreateGameObjectContentPieceProvider<T>(BaseUnityPlugin baseUnityPlugin, ContentPack contentPack)
         {
             return new GenericContentPieceProvider<GameObject>(AnalyzeForGameObjectContentPieces<T>(baseUnityPlugin), contentPack);
         }
 
+        /// <summary>
+        /// Analyzes the <paramref name="baseUnityPlugin"/>'s Assembly for classes that implement <see cref="IGameObjectContentPiece{T}"/> and returns a collection of said classes's instances.
+        /// <br>This is ideal for creating your own implementation of <see cref="IContentPieceProvider"/></br>
+        /// </summary>
+        /// <typeparam name="T">The type of component to analyze for.</typeparam>
+        /// <param name="baseUnityPlugin">The plugin to analyze for content pieces</param>
+        /// <returns>An Enumerable of IContentPiece that have gameObjects with the component specified in <typeparamref name="T"/>></returns>
         public static IEnumerable<IContentPiece<GameObject>> AnalyzeForGameObjectContentPieces<T>(BaseUnityPlugin baseUnityPlugin)
         {
             var assembly = baseUnityPlugin.GetType().Assembly;
@@ -71,6 +121,13 @@ namespace MSU
                 .Select(t => (IContentPiece<GameObject>)Activator.CreateInstance(t));
         }
 
+        /// <summary>
+        /// Adds a single ContentPiece of type <typeparamref name="T"/> to a NamedAssetCollection of type <typeparamref name="T"/>
+        /// <br>Utilize this instead of <see cref="NamedAssetCollection{T}.Add(T[])"/> if you only want to add one asset.</br>
+        /// </summary>
+        /// <typeparam name="T">The type of the Asset</typeparam>
+        /// <param name="collection">The collection that will be modified</param>
+        /// <param name="content">The content to add</param>
         public static void AddSingle<T>(this NamedAssetCollection<T> collection, T content) where T : class
         {
             string name = collection.nameProvider(content);
@@ -111,6 +168,13 @@ namespace MSU
             Array.Sort(collection.assetInfos);
         }
 
+        /// <summary>
+        /// Populates public static fields of type <typeparamref name="TAsset"/> that are found in <paramref name="typeToPopulate"/> utilizing the assets found in <paramref name="assets"/>.
+        /// <br>Unlike the base game's <see cref="ContentLoadHelper.PopulateTypeFields{TAsset}(Type, NamedAssetCollection{TAsset}, Func{string, string})"/>. This version logs assets that did not have a corresponding field found in <paramref name="typeToPopulate"/></br>
+        /// </summary>
+        /// <typeparam name="TAsset">The type of asset to populate</typeparam>
+        /// <param name="typeToPopulate">The actual type to populate.</param>
+        /// <param name="assets">The AssetCollection to use for population.</param>
         public static void PopulateTypeFields<TAsset>(Type typeToPopulate, NamedAssetCollection<TAsset> assets) where TAsset : UnityEngine.Object
         {
             MSULog.Info($"Attempting to populate {typeToPopulate.FullName} with {assets.Count} assets");
@@ -163,6 +227,12 @@ namespace MSU
             }
         }
 
+        /// <summary>
+        /// Adds all and any Content pieces from the AssetCollection found in <paramref name="collection"/> to the ContentPack specified in <paramref name="contentPack"/>.
+        /// <br>This is ideal to store a Content's required assets. For example, you can have a <see cref="ISurvivorContentPiece"/> that calls this method inside <see cref="IContentPackModifier.ModifyContentPack(ContentPack)"/> to add the survivor's states, skillDefs, that are found inside the survivor's AssetCollection.</br>
+        /// </summary>
+        /// <param name="contentPack">The content pack to modify</param>
+        /// <param name="collection">The asset collection to use.</param>
         public static void AddContentFromAssetCollection(this ContentPack contentPack, AssetCollection collection)
         {
             foreach(var asset in collection.assets)

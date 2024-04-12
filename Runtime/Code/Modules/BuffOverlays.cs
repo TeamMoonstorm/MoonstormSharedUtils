@@ -6,11 +6,20 @@ using UnityEngine;
 
 namespace MSU
 {
+    /// <summary>
+    /// Class used to create new Material Overlays for BuffDefs
+    /// </summary>
     public static class BuffOverlays
     {
+        /// <summary>
+        /// A read only dictionary of BuffDef to Material. These materials are later applied as Overlays to CharacterBodies when they have the BuffDef
+        /// </summary>
         public static ReadOnlyDictionary<BuffDef, Material> BuffOverlayDictionary { get; private set; }
         private static Dictionary<BuffDef, Material> _buffOverlays = new Dictionary<BuffDef, Material>();
 
+        /// <summary>
+        /// Wether the BuffOverlayDictionary has been created or not.
+        /// </summary>
         public static bool DictionaryCreated { get; private set; } = false;
 
         [SystemInitializer(typeof(BuffCatalog))]
@@ -24,6 +33,11 @@ namespace MSU
             _buffOverlays = null;
         }
 
+        /// <summary>
+        /// Adds a new Buff Material pair to the Overlays system
+        /// </summary>
+        /// <param name="def">The BuffDef that will have a new Overlay</param>
+        /// <param name="material">The Material for the BuffDef</param>
         public static void AddBuffOverlay(BuffDef def, Material material)
         {
             if (DictionaryCreated)

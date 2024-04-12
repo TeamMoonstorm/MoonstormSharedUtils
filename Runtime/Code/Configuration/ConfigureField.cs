@@ -14,28 +14,64 @@ using UnityEngine;
 
 namespace MSU.Config
 {
+    /// <summary>
+    /// The ConfigureFieldAttribute can be used to make a field or property configurable using BepInEx's ConfigSystem.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
     public class ConfigureFieldAttribute : SearchableAttribute
     {
+        /// <summary>
+        /// An override for the ConfigEntry's Section, if left null, it'll use a "Nicified" version of the Declaring Type's name
+        /// </summary>
         public string ConfigSectionOverride { get; set; }
         
+        /// <summary>
+        /// An override for the ConfigEntry's Name, if left null, it'll use a "Nicified" version of the field/property's name
+        /// </summary>
         public string ConfigNameOverride { get; set; }
 
+        /// <summary>
+        /// The description of the Config
+        /// </summary>
         public string ConfigDescOverride { get; set; }
 
+        /// <summary>
+        /// Returns the ConfigFileIdentifier specified by this ConfigureField attribute.
+        /// </summary>
         public string ConfigFileIdentifier => _configFileIdentifier;
         private string _configFileIdentifier;
 
+        /// <summary>
+        /// Returns true if the attached MemberInfo is a Field
+        /// </summary>
         public bool AttachedMemberIsField => target is FieldInfo;
         
+        /// <summary>
+        /// Returns the field that's attached to this ConfigureField
+        /// </summary>
         public FieldInfo AttachedField => (FieldInfo)target;
 
+        /// <summary>
+        /// Returns the property that's attached to this ConfigureField
+        /// </summary>
         public PropertyInfo AttachedProperty => (PropertyInfo)target;
 
+        /// <summary>
+        /// Returns the member that's attached to this ConfigureField
+        /// </summary>
         public MemberInfo AttachedMemberInfo => (MemberInfo)target;
 
+        /// <summary>
+        /// The ConfigEntry thats tied to this ConfigureField attribute.
+        /// <br>See <see cref="GetConfigEntry{T}"/></br>
+        /// </summary>
         public ConfigEntryBase ConfigEntryBase { get; private set; }
 
+        /// <summary>
+        /// Returns <see cref="ConfigEntryBase"/> as a generic ConfigEntry using casting.
+        /// </summary>
+        /// <typeparam name="T">The type to use for the generic during casting</typeparam>
+        /// <returns>The casted ConfigEntry</returns>
         public ConfigEntry<T> GetConfigEntry<T>()
         {
             try
@@ -49,6 +85,11 @@ namespace MSU.Config
             }
         }
 
+        /// <summary>
+        /// This method gets called when the ConfigureField configures a specific field.
+        /// </summary>
+        /// <param name="configFile">The ConfigFile that the ConfigEntry got bound to</param>
+        /// <param name="value">The value for the field</param>
         protected virtual void OnConfigured(ConfigFile configFile, object value) { }
 
         internal void ConfigureField<T>(ConfigFile configFile, T value)
@@ -106,15 +147,30 @@ namespace MSU.Config
             return string.Empty;
         }
 
+        /// <summary>
+        /// Constructor for a ConfigureField
+        /// </summary>
+        /// <param name="fileIdentifier">The ConfigureField's ConfigFileIdentifier</param>
         public ConfigureFieldAttribute(string fileIdentifier)
         {
             _configFileIdentifier = fileIdentifier;
         }
     }
 
+    /// <summary>
+    /// <inheritdoc cref="ConfigureFieldAttribute"/>
+    /// <para>The RiskOfOptionsConfigureFieldAttribute is an extended version of a <see cref="ConfigureFieldAttribute"/>. Unlike the regular ConfigueFieldAttribute, this attribute will also create a RiskOfOption's option for the field so it can be configured ingame using Risk of Options.</para>
+    /// <para>Due to the limitations of Attributes, its not possible to specify OptionConfigs for the RiskOfOptions Options, instead you might want to use a <see cref="ConfiguredVariable"/></para>
+    /// </summary>
     public class RiskOfOptionsConfigureFieldAttribute : ConfigureFieldAttribute
     {
+        /// <summary>
+        /// The GUID of the mod that owns this ConfigurableField, Set automatically by the <see cref="ConfigSystem"/>.
+        /// </summary>
         public string ModGUID { get; internal set; }
+        /// <summary>
+        /// The GUID of the mod that owns this ConfigurableField, Set automatically by the <see cref="ConfigSystem"/>.
+        /// </summary>
         public string ModName { get; internal set; }
 
         protected override void OnConfigured(ConfigFile configFile, object value)
@@ -149,6 +205,11 @@ namespace MSU.Config
                     break;
             }
         }
+
+        /// <summary>
+        /// Constructor for a ConfigureField
+        /// </summary>
+        /// <param name="fileIdentifier">The ConfigureField's ConfigFileIdentifier</param>
         public RiskOfOptionsConfigureFieldAttribute(string fileIdentifier) : base(fileIdentifier)
         {
         }

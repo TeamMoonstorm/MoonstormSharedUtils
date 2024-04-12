@@ -11,12 +11,20 @@ using UnityEngine;
 
 namespace MSU.Config
 {
+    /// <summary>
+    /// Handles the Configuration system of MSU, this includes the proper implementation of <see cref="ConfigureFieldAttribute"/>, <see cref="RiskOfOptionsConfigureFieldAttribute"/>, <see cref="ConfiguredVariable.AutoConfigAttribute"/> and classes dervied from <see cref="ConfiguredVariable{T}"/>
+    /// </summary>
     public static class ConfigSystem
     {
         private static readonly Dictionary<ConfigFile, BaseUnityPlugin> _configToPluginOwner = new Dictionary<ConfigFile, BaseUnityPlugin>();
         private static readonly Dictionary<string, ConfigFile> _identifierToConfigFile = new Dictionary<string, ConfigFile>(StringComparer.OrdinalIgnoreCase);
         private static readonly HashSet<ConfigFile> _configFilesWithSeparateRiskOfOptionsEntries = new HashSet<ConfigFile>();
-
+        
+        /// <summary>
+        /// Retrieves a <see cref="ConfigFile"/> with the identifier specified in <paramref name="identifier"/>
+        /// </summary>
+        /// <param name="identifier">The identifier of the ConfigFile</param>
+        /// <returns>A valid ConfigFile if it exists in the ConfigSystem, otherwise returns null.</returns>
         public static ConfigFile GetConfigFile(string identifier)
         {
             if(!_identifierToConfigFile.TryGetValue(identifier, out ConfigFile configFile))
@@ -29,6 +37,14 @@ namespace MSU.Config
             return configFile;
         }
 
+        /// <summary>
+        /// Adds a <see cref="ConfigFile"/> with a corresponding identifier.
+        /// <para>You're strongly advised to create new ConfigFiles by using <see cref="ConfigFactory.CreateConfigFile(string, bool)"/>, as that method automatically calls this one.</para>
+        /// </summary>
+        /// <param name="identifier">The identifier for <paramref name="configFile"/></param>
+        /// <param name="configFile">The ConfigFile which will be identified using <paramref name="identifier"/></param>
+        /// <param name="tiedPlugin">The plugint that's respnsible for adding <paramref name="configFile"/></param>
+        /// <param name="createSeparateRiskOfOptionsEntry">If true, the ConfigSystem will create a new Risk of Options entry for the ConfigFile.</param>
         public static void AddConfigFileAndIdentifier(string identifier, ConfigFile configFile, BaseUnityPlugin tiedPlugin, bool createSeparateRiskOfOptionsEntry = false)
         { 
             if(_identifierToConfigFile.ContainsKey(identifier))
@@ -43,6 +59,11 @@ namespace MSU.Config
                 _configFilesWithSeparateRiskOfOptionsEntries.Add(configFile);
         }
 
+        /// <summary>
+        /// Checks wether the specified ConfigFile in <paramref name="cf"/> should have a separate RiskOfOptions entry.
+        /// </summary>
+        /// <param name="cf">The config file to check</param>
+        /// <returns>True if risk of options should create a separate entry, false otherwise.</returns>
         public static bool ShouldCreateSeparateRiskOfOptionsEntry(ConfigFile cf) => _configFilesWithSeparateRiskOfOptionsEntries.Contains(cf);
 
         private static PluginInfo FindPluginInfo(Assembly asm)

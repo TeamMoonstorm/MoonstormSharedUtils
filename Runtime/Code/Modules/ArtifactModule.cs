@@ -13,23 +13,46 @@ using static RoR2.RoR2Content;
 
 namespace MSU
 {
+    /// <summary>
+    /// The ArtifactModule is a Module that handles classes that implement <see cref="IArtifactContentPiece"/>.
+    /// <para>The ArtifactModule's main job is to handle the proper addition of ARtifactDefs and proper hooking usage using the game's <see cref="RunArtifactManager"/></para>
+    /// <br>The ArtifactModule also implements <see cref="R2API.ScriptableObjects.ArtifactCode"/> using <see cref="ArtifactCodeAPI"/></br>
+    /// </summary>
     public static class ArtifactModule
     {
+        /// <summary>
+        /// A ReadOnlyDictionary that can be used for finding an ArtifactDef's IArtifactContentPiece.
+        /// <br>Subscribe to <see cref="moduleAvailability"/> to ensure the dictionary is not empty.</br>
+        /// </summary>
         public static ReadOnlyDictionary<ArtifactDef, IArtifactContentPiece> MoonstormArtifacts { get; private set; }
         private static Dictionary<ArtifactDef, IArtifactContentPiece> _moonstormArtifacts = new Dictionary<ArtifactDef, IArtifactContentPiece>();
 
+        /// <summary>
+        /// Represents the Availability of this Module.
+        /// </summary>
         public static ResourceAvailability moduleAvailability;
 
 
         private static Dictionary<BaseUnityPlugin, IArtifactContentPiece[]> _pluginToArtifacts = new Dictionary<BaseUnityPlugin, IArtifactContentPiece[]>();
         private static Dictionary<BaseUnityPlugin, IContentPieceProvider<ArtifactDef>> _pluginToContentProvider = new Dictionary<BaseUnityPlugin, IContentPieceProvider<ArtifactDef>>();
 
+        /// <summary>
+        /// Adds a new provider to the ArtifactModule.
+        /// <br>For more info, see <see cref="IContentPieceProvider"/></br>
+        /// </summary>
+        /// <param name="plugin">The plugin that's adding the new provider</param>
+        /// <param name="provider">The provider from the plugin, can be one created using <see cref="ContentUtil.CreateContentPieceProvider{T}(BaseUnityPlugin, RoR2.ContentManagement.ContentPack)"/></param>
         public static void AddProvider(BaseUnityPlugin plugin, IContentPieceProvider<ArtifactDef> provider)
         {
             _pluginToContentProvider.Add(plugin, provider);
         }
 
-        public static IArtifactContentPiece[] GetItems(BaseUnityPlugin plugin)
+        /// <summary>
+        /// Obtains all the Artifacts that where added by the specified plugin
+        /// </summary>
+        /// <param name="plugin">The plugin to obtain it's artifacts.</param>
+        /// <returns>An array of IArtifactContentPieces</returns>
+        public static IArtifactContentPiece[] GetArtifacts(BaseUnityPlugin plugin)
         {
             if (_pluginToArtifacts.TryGetValue(plugin, out var artifacts))
             {
@@ -38,6 +61,11 @@ namespace MSU
             return null;
         }
 
+        /// <summary>
+        /// A Coroutine used to initialize the Artifacts added by <paramref name="plugin"/>.
+        /// </summary>
+        /// <param name="plugin">The plugin to initialize it's artifacts.</param>
+        /// <returns>A Coroutine enumerator that can be Awaited or Yielded</returns>
         public static IEnumerator InitializeArtifacts(BaseUnityPlugin plugin)
         {
             if (_pluginToContentProvider.TryGetValue(plugin, out IContentPieceProvider<ArtifactDef> provider))

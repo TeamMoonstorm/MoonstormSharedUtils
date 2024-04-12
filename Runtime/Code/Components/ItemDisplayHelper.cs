@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace MSU
 {
-    public class ItemDisplayHelper : MonoBehaviour
+    internal class ItemDisplayHelper : MonoBehaviour
     {
         private CharacterModel _model;
         private ItemDisplayRuleSet _idrs;

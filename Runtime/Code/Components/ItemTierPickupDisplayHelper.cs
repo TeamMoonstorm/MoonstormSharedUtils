@@ -8,6 +8,9 @@ using UnityEngine;
 
 namespace MSU
 {
+    /// <summary>
+    /// A class utilized to display custom Pickup VFX for new ItemTiers added using MSU's Systems.
+    /// </summary>
     public class ItemTierPickupDisplayHelper : MonoBehaviour
     {
         private PickupDisplay _display;
@@ -17,6 +20,9 @@ namespace MSU
             _display = GetComponent<PickupDisplay>();
         }
 
+        /// <summary>
+        /// Rebuilds the custom model.
+        /// </summary>
         public void RebuildCustomModel()
         {
             if (!_display)
@@ -38,6 +44,9 @@ namespace MSU
             }
         }
 
+        /// <summary>
+        /// Destroys the custom model
+        /// </summary>
         public void DestroyCustomModel()
         {
             if (_vfxInstance)
