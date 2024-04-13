@@ -37,11 +37,11 @@ namespace MSU
         /// <summary>
         /// Contains all the ItemIndices of items that use this ItemTier
         /// </summary>
-        List<ItemIndex> ItemsWithThisTier { get; internal set; }
+        List<ItemIndex> ItemsWithThisTier { get; set; }
 
         /// <summary>
         /// Contains all the available items for the current run.
         /// </summary>
-        List<PickupIndex> AvailableTierDropList { get; internal set; }
+        List<PickupIndex> AvailableTierDropList { get; set; }
     }
 }

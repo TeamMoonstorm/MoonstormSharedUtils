@@ -12,25 +12,66 @@ using static RoR2.RoR2Content;
 
 namespace MSU
 {
+    /// <summary>
+    /// The EquipmentModule is a Module that handles classes that implement <see cref="IEquipmentContentPiece"/> and <see cref="IEliteContentPiece"/>.
+    /// <para>The EquipmentModule's main job is to handle the proper addition of EquipmentDefs and EliteDefs with their respective BuffDefs. The Elites are added using the extra data provided by <see cref="ExtendedEliteDef"/> and <see cref="EliteAPI"/></para>
+    /// </summary>
     public static class EquipmentModule
     {
+        /// <summary>
+        /// A ReadOnlyDictionary that can be used for finding an Equipment's IEquipmentContentPiece.
+        /// <br>This Dictionary contains both Elite and NonElite Equipments.</br>
+        /// <para>Subscribe to <see cref="moduleAvailability"/> to ensure the dictionary is not empty.</para>
+        /// </summary>
         public static ReadOnlyDictionary<EquipmentDef, IEquipmentContentPiece> AllMoonstormEquipments { get; private set; }
+
+        /// <summary>
+        /// A ReadOnlyDictionary that can be used for finding an Elite's IEliteContentPiece by using the Elite's EquipmentDef.
+        /// <br>This Dictionary contains only Elite Equipments</br>
+        /// <para>Subscribe to <see cref="moduleAvailability"/> to ensure the dictionary is not empty.</para>
+        /// </summary>
         public static ReadOnlyDictionary<EquipmentDef, IEliteContentPiece> MoonstormEliteEquipments { get; private set; }
+
+        /// <summary>
+        /// A ReadOnlyDictionary that can be used for finding a NonElite Equipment's IEquipmentContentPiece.
+        /// <br>This Dictionary contains only Non Elite Equipments.</br>
+        /// <para>Subscribe to <see cref="moduleAvailability"/> to ensure the dictionary is not empty.</para>
+        /// </summary>
         public static ReadOnlyDictionary<EquipmentDef, IEquipmentContentPiece> NonEliteMoonstormEquipments { get; private set; }
+
+        /// <summary>
+        /// A ReadOnlyCollection of all the EliteDefs added by MSU.
+        /// <para>Subscribe to <see cref="moduleAvailability"/> to ensure the dictionary is not empty.</para>
+        /// </summary>
         public static ReadOnlyCollection<EliteDef> MoonstormEliteDefs { get; private set; }
 
         private static Dictionary<EquipmentDef, IEquipmentContentPiece> _moonstormEquipments = new Dictionary<EquipmentDef, IEquipmentContentPiece>();
 
+        /// <summary>
+        /// Represents the Availability of this Module.
+        /// </summary>
         public static ResourceAvailability moduleAvailability;
 
 
         private static Dictionary<BaseUnityPlugin, IEquipmentContentPiece[]> _pluginToEquipments = new Dictionary<BaseUnityPlugin, IEquipmentContentPiece[]>();
         private static Dictionary<BaseUnityPlugin, IContentPieceProvider<EquipmentDef>> _pluginToContentProvider = new Dictionary<BaseUnityPlugin, IContentPieceProvider<EquipmentDef>>();
+
+        /// <summary>
+        /// Adds a new provider to the EquipmentModule.
+        /// <br>Fort more info, see <see cref="IContentPieceProvider"/></br>
+        /// </summary>
+        /// <param name="plugin">The plugin that's adding the new provider</param>
+        /// <param name="provider">The provider from the plugin, can be one created using <see cref="ContentUtil.CreateContentPieceProvider{T}(BaseUnityPlugin, RoR2.ContentManagement.ContentPack)"/></param>
         public static void AddProvider(BaseUnityPlugin plugin, IContentPieceProvider<EquipmentDef> provider)
         {
             _pluginToContentProvider.Add(plugin, provider);
         }
 
+        /// <summary>
+        /// Obtains all the EquipmentContentPieces that where added by the specified Plugin
+        /// </summary>
+        /// <param name="plugin">The plugin to obtain it's Equipments</param>
+        /// <returns>An array of IEquipmentContentPieces, if the plugin has not added any Equipments, it returns null.</returns>
         public static IEquipmentContentPiece[] GetEquipments(BaseUnityPlugin plugin)
         {
             if (_pluginToEquipments.TryGetValue(plugin, out var items))
@@ -40,6 +81,12 @@ namespace MSU
             return null;
         }
 
+        /// <summary>
+        /// A Coroutine used to initialize the Equipments added by <paramref name="plugin"/>
+        /// <br>The coroutine yield breaks if the plugin has not added it's specified provider using <see cref="AddProvider(BaseUnityPlugin, IContentPieceProvider{EquipmentDef})"/></br>
+        /// </summary>
+        /// <param name="plugin">The plugin to initialize it's Equipments</param>
+        /// <returns>A Coroutine enumerator that can be Awaited or Yielded</returns>
         public static IEnumerator InitialzeEquipments(BaseUnityPlugin plugin)
         {
             if (_pluginToContentProvider.TryGetValue(plugin, out IContentPieceProvider<EquipmentDef> provider))

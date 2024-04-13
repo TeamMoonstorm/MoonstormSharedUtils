@@ -13,11 +13,23 @@ using static RoR2.RoR2Content;
 
 namespace MSU
 {
+    /// <summary>
+    /// The CharacterModule is a Module that handles classes that implement <see cref="ICharacterContentPiece"/>, <see cref="ISurvivorContentPiece"/> and <see cref="IMonsterContentPiece"/>.
+    /// <para>The CharacterModule's main job is to handle the proper addition of SurvivorDefs, CharacterBodies and CharacterMasters. Alongside addition of monsters to stages using <see cref="MonsterCardProvider"/> and <see cref="DirectorAPI"/></para>
+    /// </summary>
     public static class CharacterModule
     {
+        /// <summary>
+        /// A ReadOnlyDictionary that can be used for finding a CharacterBody's ICharacterContentPiece.
+        /// <br>The ReadOnlyDictionary has a special key evaluator which uses <see cref="CharacterBody.bodyIndex"/>, which allows prefab instances of <see cref="CharacterBody"/> to be used in this dictionary.</br>
+        /// <br>Subscribe to <see cref="moduleAvailability"/> to ensure the dictionary is not empty.</br>
+        /// </summary>
         public static ReadOnlyDictionary<CharacterBody, ICharacterContentPiece> MoonstormCharacters { get; private set; }
-        private static Dictionary<CharacterBody, ICharacterContentPiece> _moonstormCharacters = new Dictionary<CharacterBody, ICharacterContentPiece>();
+        private static Dictionary<CharacterBody, ICharacterContentPiece> _moonstormCharacters = new Dictionary<CharacterBody, ICharacterContentPiece>(new CharacterBodyIndexEqualityComparer());
 
+        /// <summary>
+        /// Represents the Availability of this Module.
+        /// </summary>
         public static ResourceAvailability moduleAvailability;
 
         private static Dictionary<BaseUnityPlugin, ICharacterContentPiece[]> _pluginToCharacters = new Dictionary<BaseUnityPlugin, ICharacterContentPiece[]>();
@@ -25,11 +37,22 @@ namespace MSU
         private static HashSet<MonsterCardProvider> _monsterCardProviders = new HashSet<MonsterCardProvider>();
         private static HashSet<DirectorAPI.DirectorCardHolder> _dissonanceCards = new HashSet<DirectorAPI.DirectorCardHolder>();
 
+        /// <summary>
+        /// Adds a new provider to the CharacterModule.
+        /// <br>For more info, see <see cref="IContentPieceProvider"/></br>
+        /// </summary>
+        /// <param name="plugin">The plugin that's adding the new provider</param>
+        /// <param name="provider">The provider from the plugin, can be one created using <see cref="ContentUtil.CreateGameObjectContentPieceProvider{T}(BaseUnityPlugin, RoR2.ContentManagement.ContentPack)"/></param>
         public static void AddProvider(BaseUnityPlugin plugin, IContentPieceProvider<GameObject> provider)
         {
             _pluginToContentProvider.Add(plugin, provider);
         }
 
+        /// <summary>
+        /// Obtains all the CharacterContentPieces that where added by the specified plugin
+        /// </summary>
+        /// <param name="plugin">The plugin to obtain it's Characters</param>
+        /// <returns>An array of ICharacterContentPieces, if the plugin has not added any characters, it returns null.</returns>
         public static ICharacterContentPiece[] GetCharacters(BaseUnityPlugin plugin)
         {
             if(_pluginToCharacters.TryGetValue(plugin, out var characters))
@@ -39,6 +62,12 @@ namespace MSU
             return null;
         }
 
+        /// <summary>
+        /// A Coroutine used to initialize the Characters added by <paramref name="plugin"/>
+        /// <br>The coroutine yield breaks if the plugin has not added it's specified provider using <see cref="AddProvider(BaseUnityPlugin, IContentPieceProvider{GameObject})"/></br>
+        /// </summary>
+        /// <param name="plugin">The plugin to initialize it's Characters</param>
+        /// <returns>A Coroutine enumerator that can be Awaited or Yielded</returns>
         public static IEnumerator InitializeCharacters(BaseUnityPlugin plugin)
         {
             if(_pluginToContentProvider.TryGetValue(plugin, out IContentPieceProvider<GameObject> provider))

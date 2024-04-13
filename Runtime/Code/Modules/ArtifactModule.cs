@@ -15,7 +15,7 @@ namespace MSU
 {
     /// <summary>
     /// The ArtifactModule is a Module that handles classes that implement <see cref="IArtifactContentPiece"/>.
-    /// <para>The ArtifactModule's main job is to handle the proper addition of ARtifactDefs and proper hooking usage using the game's <see cref="RunArtifactManager"/></para>
+    /// <para>The ArtifactModule's main job is to handle the proper addition of ArtifactDefs and proper hooking usage using the game's <see cref="RunArtifactManager"/></para>
     /// <br>The ArtifactModule also implements <see cref="R2API.ScriptableObjects.ArtifactCode"/> using <see cref="ArtifactCodeAPI"/></br>
     /// </summary>
     public static class ArtifactModule
@@ -48,10 +48,10 @@ namespace MSU
         }
 
         /// <summary>
-        /// Obtains all the Artifacts that where added by the specified plugin
+        /// Obtains all the ArtifactContentPieces that where added by the specified plugin
         /// </summary>
         /// <param name="plugin">The plugin to obtain it's artifacts.</param>
-        /// <returns>An array of IArtifactContentPieces</returns>
+        /// <returns>An array of IArtifactContentPieces, if the plugin has not added any artifacts, it returns null.</returns>
         public static IArtifactContentPiece[] GetArtifacts(BaseUnityPlugin plugin)
         {
             if (_pluginToArtifacts.TryGetValue(plugin, out var artifacts))
@@ -63,6 +63,7 @@ namespace MSU
 
         /// <summary>
         /// A Coroutine used to initialize the Artifacts added by <paramref name="plugin"/>.
+        /// <br>The coroutine yield breaks if the plugin has not added it's specified provider using <see cref="AddProvider(BaseUnityPlugin, IContentPieceProvider{ArtifactDef})"/></br>
         /// </summary>
         /// <param name="plugin">The plugin to initialize it's artifacts.</param>
         /// <returns>A Coroutine enumerator that can be Awaited or Yielded</returns>
