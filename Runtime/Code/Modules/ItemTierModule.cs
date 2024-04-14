@@ -12,30 +12,59 @@ using UnityEngine;
 
 namespace MSU
 {
+    /// <summary>
+    /// The ItemTierModule is a Module that handles classes that implement <see cref="IItemTierContentPiece"/>.
+    /// <para>The ItemTierModule's main job is to handle the proper addition of ItemTierDefs to the ContentPack. Alongside this, it'll also implement custom pickup FX for the tier, a list of items with said tier, and a list of pickup indices mimicking lists such as <see cref="Run.availableTier3DropList"/></para>
+    /// </summary>
     public static class ItemTierModule
     {
+        /// <summary>
+        /// A ReadOnlyDictionary that can be used for finding an ItemTier's IItemContentPiece
+        /// <para>Subscribe to <see cref="moduleAvailability"/> to ensure the Dictionary is not Empty.</para>
+        /// </summary>
         public static ReadOnlyDictionary<ItemTierDef, IItemTierContentPiece> MoonstormItemTiers { get; private set; }
         private static Dictionary<ItemTierDef, IItemTierContentPiece> _moonstormItemTiers = new Dictionary<ItemTierDef, IItemTierContentPiece>();
+
+        /// <summary>
+        /// Represents the Availability of this Module.
+        /// </summary>
         public static ResourceAvailability moduleAvailability;
 
         internal static Dictionary<ItemTierDef, GameObject> _itemTierToPickupFX = new Dictionary<ItemTierDef, GameObject>();
         private static Dictionary<BaseUnityPlugin, IItemTierContentPiece[]> _pluginToTiers = new Dictionary<BaseUnityPlugin, IItemTierContentPiece[]>();
         private static Dictionary<BaseUnityPlugin, IContentPieceProvider<ItemTierDef>> _pluginToContentProvider = new Dictionary<BaseUnityPlugin, IContentPieceProvider<ItemTierDef>>();
 
+        /// <summary>
+        /// Adds a new provider to the ItemTierModule.
+        /// <br>For more info, see <see cref="IContentPieceProvider"/></br>
+        /// </summary>
+        /// <param name="plugin">The plugin that's adding the new provider.</param>
+        /// <param name="provider">The provider from the plugin, can be one created using <see cref="ContentUtil.CreateContentPieceProvider{T}(BaseUnityPlugin, RoR2.ContentManagement.ContentPack)"/></param>
         public static void AddProvider(BaseUnityPlugin plugin, IContentPieceProvider<ItemTierDef> provider)
         {
             _pluginToContentProvider.Add(plugin, provider);
         }
 
+        /// <summary>
+        /// Obtains all the ItemTierContentPieces that where added by a specified plugin
+        /// </summary>
+        /// <param name="plugin">The plugin to obtain it's ItemTiers</param>
+        /// <returns>An array of IItemTierContentPiece, if the plugin has not added any ItemTiers, it returns an empty Array</returns>
         public static IItemTierContentPiece[] GetItemTiers(BaseUnityPlugin plugin)
         {
             if(_pluginToTiers.TryGetValue(plugin, out var tiers))
             {
                 return tiers;
             }
-            return null;
+            return Array.Empty<IItemTierContentPiece>();
         }
 
+        /// <summary>
+        /// Coroutine used to initialize the ItemTiers added by <paramref name="plugin"/>
+        /// <br>The coroutine yield breaks if the plugin has not added a provider using <see cref="AddProvider(BaseUnityPlugin, IContentPieceProvider{ItemTierDef})"/></br>
+        /// </summary>
+        /// <param name="plugin">The plugin to initialize it's Items</param>
+        /// <returns>A Coroutine enumerator that can be Awaited or Yielded.</returns>
         public static IEnumerator InitializeTiers(BaseUnityPlugin plugin)
         {
             if(_pluginToContentProvider.TryGetValue(plugin, out IContentPieceProvider<ItemTierDef> provider))

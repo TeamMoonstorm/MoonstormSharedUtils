@@ -58,7 +58,7 @@ namespace MSU
 
         /// <summary>
         /// Adds a new provider to the EquipmentModule.
-        /// <br>Fort more info, see <see cref="IContentPieceProvider"/></br>
+        /// <br>For more info, see <see cref="IContentPieceProvider"/></br>
         /// </summary>
         /// <param name="plugin">The plugin that's adding the new provider</param>
         /// <param name="provider">The provider from the plugin, can be one created using <see cref="ContentUtil.CreateContentPieceProvider{T}(BaseUnityPlugin, RoR2.ContentManagement.ContentPack)"/></param>
@@ -71,14 +71,14 @@ namespace MSU
         /// Obtains all the EquipmentContentPieces that where added by the specified Plugin
         /// </summary>
         /// <param name="plugin">The plugin to obtain it's Equipments</param>
-        /// <returns>An array of IEquipmentContentPieces, if the plugin has not added any Equipments, it returns null.</returns>
+        /// <returns>An array of IEquipmentContentPieces, if the plugin has not added any Equipments, it returns an empty Array.</returns>
         public static IEquipmentContentPiece[] GetEquipments(BaseUnityPlugin plugin)
         {
             if (_pluginToEquipments.TryGetValue(plugin, out var items))
             {
                 return items;
             }
-            return null;
+            return Array.Empty<IEquipmentContentPiece>();
         }
 
         /// <summary>

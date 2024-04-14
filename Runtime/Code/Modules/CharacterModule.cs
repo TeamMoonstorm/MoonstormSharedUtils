@@ -52,14 +52,14 @@ namespace MSU
         /// Obtains all the CharacterContentPieces that where added by the specified plugin
         /// </summary>
         /// <param name="plugin">The plugin to obtain it's Characters</param>
-        /// <returns>An array of ICharacterContentPieces, if the plugin has not added any characters, it returns null.</returns>
+        /// <returns>An array of ICharacterContentPieces, if the plugin has not added any characters, it returns an empty Array.</returns>
         public static ICharacterContentPiece[] GetCharacters(BaseUnityPlugin plugin)
         {
             if(_pluginToCharacters.TryGetValue(plugin, out var characters))
             {
                 return characters;
             }
-            return null;
+            return Array.Empty<ICharacterContentPiece>();
         }
 
         /// <summary>

@@ -5,6 +5,7 @@ namespace MSU
     /// <summary>
     /// An IOnIncomingDamageOtherServerReciever can be used to modify the DamageInfo of a victim that the player is attacking.
     /// <para>Effectively allows modifications that  run during the TakeDamage method of HealthComponent</para>
+    /// <para>Intended to be used on MonoBehaviours that are added to the CharacterBody.</para>
     /// </summary>
     public interface IOnIncomingDamageOtherServerReciever
     {

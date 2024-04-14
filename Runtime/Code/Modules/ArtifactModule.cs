@@ -51,14 +51,14 @@ namespace MSU
         /// Obtains all the ArtifactContentPieces that where added by the specified plugin
         /// </summary>
         /// <param name="plugin">The plugin to obtain it's artifacts.</param>
-        /// <returns>An array of IArtifactContentPieces, if the plugin has not added any artifacts, it returns null.</returns>
+        /// <returns>An array of IArtifactContentPieces, if the plugin has not added any artifacts, it returns an empty Array.</returns>
         public static IArtifactContentPiece[] GetArtifacts(BaseUnityPlugin plugin)
         {
             if (_pluginToArtifacts.TryGetValue(plugin, out var artifacts))
             {
                 return artifacts;
             }
-            return null;
+            return Array.Empty<IArtifactContentPiece>();
         }
 
         /// <summary>

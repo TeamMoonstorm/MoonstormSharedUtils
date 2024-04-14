@@ -8,11 +8,18 @@ using System.Threading.Tasks;
 
 namespace MSU
 {
+    /// <summary>
+    /// Class used to add new Unlockables using the <see cref="AchievableUnlockableDef"/> system.
+    /// </summary>
     public static class UnlockableManager
     {
         private static List<AchievableUnlockableDef> _achievableUnlockableDefs = new List<AchievableUnlockableDef>();
-        
-        public static void AddUnlockables(UnlockableDef[] unlockableDefs)
+
+        /// <summary>
+        /// Adds an array of <see cref="AchievableUnlockableDef"/> to the list that'll be added to the game's <see cref="AchievementManager"/>
+        /// </summary>
+        /// <param name="unlockableDefs">An array of <see cref="AchievableUnlockableDef"/></param>
+        public static void AddUnlockables(AchievableUnlockableDef[] unlockableDefs)
         {
             foreach(UnlockableDef def in unlockableDefs)
             {
@@ -20,12 +27,13 @@ namespace MSU
             }
         }
 
-        public static void AddUnlockable(UnlockableDef unlockableDef)
+        /// <summary>
+        /// Adds a single <see cref="AchievableUnlockableDef"/> to the list that'll be added to the game's <see cref="AchievementManager"/>
+        /// </summary>
+        /// <param name="unlockableDef">An <see cref="AchievableUnlockableDef"/></param>
+        public static void AddUnlockable(AchievableUnlockableDef unlockableDef)
         {
-            if(unlockableDef is AchievableUnlockableDef aud)
-            {
-                _achievableUnlockableDefs.Add(aud);
-            }
+            _achievableUnlockableDefs.Add(unlockableDef);
         }
 
         [SystemInitializer(typeof(UnlockableCatalog))]

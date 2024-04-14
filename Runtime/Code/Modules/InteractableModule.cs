@@ -13,11 +13,23 @@ using UnityEngine.Networking;
 
 namespace MSU
 {
+    /// <summary>
+    /// The InteractableModule is a Module that handles classes that implement <see cref="IInteractableContentPiece"/>.
+    /// <para>The InteractableModule's main job is to handle the proper additon of the Interactable to the NetworkedObjects array of your ContentPack. Alongside addition of Interactables to stages using <see cref="InteractableCardProvider"/> and <see cref="DirectorAPI"/></para>
+    /// </summary>
     public static class InteractableModule
     {
+        /// <summary>
+        /// A ReadOnlyDictionary that can be used for finding an Interactable's IInteractableContentPiece.
+        /// <br>The ReadOnlyDictionary has a special Key Evaluator that Evaluates keys based off the IInteractable's <see cref="NetworkIdentity.assetId"/> to check if two interactables are the same. This allows instances of the interactable to be used as keys.</br>
+        /// <br>Subscribe to <see cref="moduleAvailability"/> to ensure the dictionary is not empty.</br>
+        /// </summary>
         public static ReadOnlyDictionary<IInteractable, IInteractableContentPiece> MoonstormInteractables { get; private set; }
-        private static Dictionary<IInteractable, IInteractableContentPiece> _moonstormInteractables = new Dictionary<IInteractable, IInteractableContentPiece>();
+        private static Dictionary<IInteractable, IInteractableContentPiece> _moonstormInteractables = new Dictionary<IInteractable, IInteractableContentPiece>(new IInteractableNetworkIdentityAssetIDComparer());
 
+        /// <summary>
+        /// Represents the Availability of this Module.
+        /// </summary>
         public static ResourceAvailability moduleAvailability;
 
         private static Dictionary<BaseUnityPlugin, IInteractableContentPiece[]> _pluginToInteractables = new Dictionary<BaseUnityPlugin, IInteractableContentPiece[]>();
@@ -25,11 +37,22 @@ namespace MSU
 
         private static HashSet<InteractableCardProvider> _interactableCardProviders = new HashSet<InteractableCardProvider>();
 
+        /// <summary>
+        /// Adds a new provider to the InteractableModule
+        /// <br>For more info, see <see cref="IContentPieceProvider"/></br>
+        /// </summary>
+        /// <param name="plugin">The plugin that's adding the new provider</param>
+        /// <param name="provider">The provider from the plugin, can be one created using <see cref="ContentUtil.CreateGameObjectContentPieceProvider{T}(BaseUnityPlugin, RoR2.ContentManagement.ContentPack)"/></param>
         public static void AddProvider(BaseUnityPlugin plugin, IContentPieceProvider<GameObject> provider)
         {
             _pluginToContentProvider.Add(plugin, provider);
         }
 
+        /// <summary>
+        /// Obtains all the InteractableContentPieces that where added by the specified plugin
+        /// </summary>
+        /// <param name="plugin">The plugin to obtain it's Interactables</param>
+        /// <returns>An array of IInteractableContentPieces, if the plugin has not added any Interactables, it returns an empty Array.</returns>
         public static IInteractableContentPiece[] GetInteractables(BaseUnityPlugin plugin)
         {
             if(_pluginToInteractables.TryGetValue(plugin, out var interactableContentPieces))
@@ -37,9 +60,15 @@ namespace MSU
                 return interactableContentPieces;
             }
 
-            return null;
+            return Array.Empty<IInteractableContentPiece>();
         }
 
+        /// <summary>
+        /// A Coroutine used to initialize the Characters added by <paramref name="plugin"/>
+        /// <br>The coroutine yeild breaks if the plugin has not added a provider using <see cref="AddProvider(BaseUnityPlugin, IContentPieceProvider{GameObject})"/></br>
+        /// </summary>
+        /// <param name="plugin">The plugin to initialize it's Interactables</param>
+        /// <returns>A Coroutine enumerator that can be Awaited or Yielded</returns>
         public static IEnumerator InitializeInteractables(BaseUnityPlugin plugin)
         {
             if(_pluginToContentProvider.TryGetValue(plugin, out IContentPieceProvider<GameObject> provider))

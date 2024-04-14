@@ -41,7 +41,8 @@
         "R2API.Addressables.dll",
         "MonoMod.RuntimeDetour.dll",
         "ShaderSwapper.dll",
-        "R2API.Dot.dll"
+        "R2API.Dot.dll",
+        "R2API.Stages.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [],
