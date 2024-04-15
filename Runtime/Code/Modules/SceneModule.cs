@@ -165,6 +165,17 @@ namespace MSU
                         StageRegistration.RegisterSceneDefToLoop(sceneContentPiece.Asset);
                     }
                 }
+
+
+                if (scene is IUnlockableContent unlockableContent)
+                {
+                    UnlockableDef[] unlockableDefs = unlockableContent.TiedUnlockables;
+                    if (unlockableDefs.Length > 0)
+                    {
+                        UnlockableManager.AddUnlockables(unlockableDefs.OfType<AchievableUnlockableDef>().ToArray());
+                        provider.ContentPack.unlockableDefs.Add(unlockableDefs);
+                    }
+                }
             }
         }
     }

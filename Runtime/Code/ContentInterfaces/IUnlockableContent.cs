@@ -16,7 +16,7 @@ namespace MSU
     public interface IUnlockableContent
     {
         /// <summary>
-        /// Your ContentClass's UnlockableDefs
+        /// Your ContentClass's UnlockableDef
         /// </summary>
         UnlockableDef[] TiedUnlockables { get; }
     }

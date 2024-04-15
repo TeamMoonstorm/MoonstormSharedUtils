@@ -232,10 +232,28 @@ namespace MSU
         /// <br>This is ideal to store a Content's required assets. For example, you can have a <see cref="ISurvivorContentPiece"/> that calls this method inside <see cref="IContentPackModifier.ModifyContentPack(ContentPack)"/> to add the survivor's states, skillDefs, that are found inside the survivor's AssetCollection.</br>
         /// </summary>
         /// <param name="contentPack">The content pack to modify</param>
-        /// <param name="collection">The asset collection to use.</param>
-        public static void AddContentFromAssetCollection(this ContentPack contentPack, AssetCollection collection)
+        /// <param name="assetCollection">The asset collection to use.</param>
+        public static void AddContentFromAssetCollection(this ContentPack contentPack, AssetCollection assetCollection)
         {
-            foreach(var asset in collection.assets)
+            AddContentFromCollectionInternal(contentPack, assetCollection.assets);
+        }
+
+        /// <summary>
+        /// <inheritdoc cref="AddContentFromAssetCollection(ContentPack, AssetCollection)"/>
+        /// <para>Unlike the 2 argument overload, this version of the method accepts a predicate to filter assets from being added to the collection. This can be done for example to avoid adding the UnlockableDefs from an asset collection for the purposes of later adding them using the <see cref="IUnlockableContent"/> system.</para>
+        /// </summary>
+        /// <param name="contentPack">The content pack to modify</param>
+        /// <param name="assetCollection">The asset collection to use.</param>
+        /// <param name="predicate">A predicate to filter assets, cannot be null.</param>
+        public static void AddContentFromAssetCollection(this ContentPack contentPack, AssetCollection assetCollection, Func<UnityEngine.Object, bool> predicate)
+        {
+            var filtered = assetCollection.assets.Where(predicate).ToArray();
+            AddContentFromCollectionInternal(contentPack, filtered);
+        }
+
+        private static void AddContentFromCollectionInternal(ContentPack contentPack, UnityEngine.Object[] assetCollection)
+        {
+            foreach (var asset in assetCollection)
             {
                 try
                 {
@@ -244,7 +262,7 @@ namespace MSU
 
                     HandleAssetAddition(asset, contentPack);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     MSULog.Error(e);
                 }

@@ -21,7 +21,7 @@ namespace MSU
         /// <param name="unlockableDefs">An array of <see cref="AchievableUnlockableDef"/></param>
         public static void AddUnlockables(AchievableUnlockableDef[] unlockableDefs)
         {
-            foreach(UnlockableDef def in unlockableDefs)
+            foreach(AchievableUnlockableDef def in unlockableDefs)
             {
                 AddUnlockable(def);
             }

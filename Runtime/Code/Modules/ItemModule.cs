@@ -142,7 +142,7 @@ namespace MSU
                     UnlockableDef[] unlockableDefs = unlockableContent.TiedUnlockables;
                     if (unlockableDefs.Length > 0)
                     {
-                        UnlockableManager.AddUnlockables(unlockableDefs);
+                        UnlockableManager.AddUnlockables(unlockableDefs.OfType<AchievableUnlockableDef>().ToArray());
                         provider.ContentPack.unlockableDefs.Add(unlockableDefs);
                     }
                 }

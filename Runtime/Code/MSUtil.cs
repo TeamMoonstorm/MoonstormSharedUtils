@@ -235,6 +235,16 @@ namespace MSU
             return collection.assets.OfType<TAsset>().Where(asset => string.Equals(asset.name, assetName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
         }
 
+        public static bool IsSameOrSubclassOf(this Type type, Type otherType)
+        {
+            if (!(type == otherType))
+            {
+                return type.IsSubclassOf(otherType);
+            }
+
+            return true;
+        }
+
         public static bool IsInteractableValidForSpawns(GameObject interactableGameObject)
         {
             if (!interactableGameObject)
