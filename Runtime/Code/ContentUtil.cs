@@ -16,6 +16,7 @@ using R2API.Utils;
 using RoR2.EntitlementManagement;
 using UnityEngine.Networking;
 using RoR2.Projectile;
+using EntityStates;
 
 namespace MSU
 {

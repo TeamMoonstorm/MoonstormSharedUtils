@@ -10,9 +10,16 @@ using System.Collections.ObjectModel;
 
 namespace MSU
 {
+    /// <summary>
+    /// An InteractableCardProvider is a ScriptableObject which is used to contain all of an Interactable's DirectorCards, which then will be added to the game's stages using <see cref="DirectorAPI"/>
+    /// </summary>
     [CreateAssetMenu(fileName = "New InteractableCardProvider", menuName = "MSU/DirectorCardProviders/InteractableCardProvider")]
     public class InteractableCardProvider : ScriptableObject
     {
+        /// <summary>
+        /// A Dictionary that contains this Interactable's <see cref="DirectorAPI.DirectorCardHolder"/> for vanilla stages, which can be accessed by giving the corresponding key of type <see cref="DirectorAPI.Stage"/>.
+        /// <br>For custom stages, use <see cref="CustomStageToCards"/></br>
+        /// </summary>
         public ReadOnlyDictionary<DirectorAPI.Stage, DirectorAPI.DirectorCardHolder> StageToCards
         {
             get
@@ -37,6 +44,10 @@ namespace MSU
         }
         private ReadOnlyDictionary<DirectorAPI.Stage, DirectorAPI.DirectorCardHolder> _stageToCards;
 
+        /// <summary>
+        /// A Dictionary that contains this Interactable's <see cref="DirectorAPI.DirectorCardHolder"/> for custom stages, which can be accessed by giving the corresponding key which would be the stage's name.
+        /// <br>For vanilla stages, use <see cref="StageToCards"/></br>
+        /// </summary>
         public ReadOnlyDictionary<string, DirectorAPI.DirectorCardHolder> CustomStageToCards
         {
             get
@@ -62,19 +73,40 @@ namespace MSU
         }
         private ReadOnlyDictionary<string, DirectorAPI.DirectorCardHolder> _customStageToCards;
 
+        [Tooltip("Contains your Interactable's Cards.")]
         [SerializeField]
         private StageInteractableCardPair[] _serializedCardPairs = Array.Empty<StageInteractableCardPair>();
 
+        /// <summary>
+        /// Represents a pair of <see cref="DirectorAPI.DirectorCardHolder"/> and stage metadata.
+        /// <br>Contains an implicit cast to cast from this struct to <see cref="DirectorAPI.DirectorCardHolder"/></br>
+        /// </summary>
         [Serializable]
         public struct StageInteractableCardPair
         {
+            [Header("Stage Metadata")]
+            [Tooltip("The stage enum for this pair, this only includes vanilla stages.\nif you want to add your interactable to a custom stage, set this to \"Custom\" and fill out the field \"Custom Stage Name\"")]
             public DirectorAPI.Stage stageEnum;
+            [Tooltip("The custom stage name for this pair, this is only used for custom, non vanilla stages.\nIf you want to add your interactable to a vanilla stage, leave this empty and utilize the field \"Stage Enum\"")]
             public string customStageName;
+
+            [Header("Director Card Metadata")]
+            [Tooltip("The category for this interactable. This is only used for vanilla categories.\nIf you want to add your interactable to a custom category, set this to \"Custom\" and fill out \"Custom Category Weight\" and \"Custom Category Name\"")]
             public DirectorAPI.InteractableCategory interactableCategory;
+
+            [Tooltip("The weight for a new Category, only relevant if \"Interactable Category\" is not \"Custom\".\n keep in mind that if the Category does not exist in the DirectorCardCategorySelection, the category will be added and this weight will be used. if the Category exists, the card will just be added to it.")]
             public float customCategoryWeight;
+
+            [Tooltip("The weight for a new Category, only relevant if \"Interactable Category\" is not \"Custom\".\n keep in mind that if the Category does not exist in the DirectorCardCategorySelection, the category will be added and this name will be used. if the Category exists, the card will just be added to it.")]
             public string customCategoryName;
 
+            [Tooltip("The actual DirectorCard for this pair.")]
             public AddressableDirectorCard card;
+
+            /// <summary>
+            /// Cast for casting a <see cref="StageInteractableCardPair"/> into a valid <see cref="DirectorAPI.DirectorCardHolder"/>
+            /// </summary>
+            /// <param name="other"></param>
 
             public static implicit operator DirectorAPI.DirectorCardHolder(StageInteractableCardPair other)
             {

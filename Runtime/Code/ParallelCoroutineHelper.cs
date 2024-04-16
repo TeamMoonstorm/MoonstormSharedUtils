@@ -9,6 +9,17 @@ namespace MSU
     {
         private List<Wrapper> _wrappers = new List<Wrapper>();
 
+        public bool IsDone()
+        {
+            foreach(Wrapper wrapper in _wrappers)
+            {
+                if (!wrapper.IsDone)
+                    return false;
+            }
+            return true;
+            
+        }
+
         #region ADD
         public void Add(Func<IEnumerator> func)
         {
@@ -70,16 +81,6 @@ namespace MSU
             {
                 wrapper.Start();
             }
-        }
-
-        public bool IsDone()
-        {
-            foreach (Wrapper wrapper in _wrappers)
-            {
-                if (!wrapper.IsDone)
-                    return false;
-            }
-            return true;
         }
 
         private class Wrapper

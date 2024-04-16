@@ -95,13 +95,10 @@ namespace MSU
         [Serializable]
         public struct PreRequisiteAchievementIdentifier
         {
-            /// <summary>
-            /// The AchievableUnlockableDef that's required to be achieved before this one can be achieved.
-            /// </summary>
+            [Tooltip("The AchievableUnlockableDef that's required to be achieved before this one can be achieved.")]
             public AchievableUnlockableDef unlockableDef;
-            /// <summary>
-            /// The identifier for another achievement, usually these can be obtained by concatenating the Unlockable's name and ".Achievement" (ie: using "Characters.Bandit2.Achievement" will make unlocking Bandit2 a pre-requisite for this unlockable to be unlocked.)
-            /// </summary>
+
+            [Tooltip("The identifier for another achievement, usually these can be obtained by concatenating the Unlockable's name and \".Achievement\" (ie: using \"Characters.Bandit2.Achievement\" will make unlocking Bandit2 a pre-requisite for this unlockable to be unlocked.)")]
             public string achievementIdentifier;
         }
     }
