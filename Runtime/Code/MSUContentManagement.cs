@@ -174,10 +174,22 @@ namespace MSU
         }
     }
 
+    /// <summary>
+    /// Base MonoBehaviour of MSU, this MonoBehaviour is used to manage a plethora of Behaviour related interfaces for a Body.
+    /// </summary>
     public sealed class MSUContentBehaviour : MonoBehaviour
     {
+        /// <summary>
+        /// Wether or not the body tied to this ContentBehaviour has a CharacterMaster
+        /// </summary>
         public bool HasMaster { get; private set; }
+        /// <summary>
+        /// The body attached to this ContentBehaviour
+        /// </summary>
         public CharacterBody body;
+        /// <summary>
+        /// The ContentBehaviour's Elite Behaviour, see also <see cref="MSUEliteBehaviour"/>
+        /// </summary>
         public MSUEliteBehaviour eliteBehaviour;
 
         private EquipmentIndex _assignedEliteEquipmentIndex;
@@ -225,6 +237,9 @@ namespace MSU
             eliteBehaviour.AssignNewElite(def.passiveBuffDef.eliteDef.eliteIndex);
         }
 
+        /// <summary>
+        /// Starts a Coroutine used for updating the interfaces that the body has
+        /// </summary>
         public void StartGetInterfaces() => StartCoroutine(GetInterfaces());
 
         private IEnumerator GetInterfaces()
@@ -236,7 +251,7 @@ namespace MSU
             body.healthComponent.onTakeDamageReceivers = GetComponents<IOnTakeDamageServerReceiver>();
         }
 
-        public void GetStatCoefficients(RecalculateStatsAPI.StatHookEventArgs args)
+        internal void GetStatCoefficients(RecalculateStatsAPI.StatHookEventArgs args)
         {
             for(int i = 0; i < _bodyStatArgModifiers.Length; i++)
             {
@@ -244,7 +259,7 @@ namespace MSU
             }
         }
 
-        public void RecalculateStatsStart()
+        internal void RecalculateStatsStart()
         {
             for(int i = 0; i < _statItemBehaviors.Length; i++)
             {
@@ -252,7 +267,7 @@ namespace MSU
             }
         }
 
-        public void RecalculateStatsEnd()
+        internal void RecalculateStatsEnd()
         {
             for (int i = 0; i < _statItemBehaviors.Length; i++)
             {
@@ -261,14 +276,23 @@ namespace MSU
         }
     }
 
+    /// <summary>
+    /// The EliteBehaviour is used for managing the extra metadata found in a <see cref="ExtendedEliteDef"/> and applying said metadata to a CharacterBodys
+    /// </summary>
     public sealed class MSUEliteBehaviour : MonoBehaviour
     {
+        /// <summary>
+        /// The CharacterBody assigned to this EliteBehaviour
+        /// </summary>
         public CharacterBody body;
+        /// <summary>
+        /// The <see cref="body"/>'s CharacterModel
+        /// </summary>
         public CharacterModel characterModel;
 
         private GameObject effectInstance;
 
-        public void AssignNewElite(EliteIndex eliteIndex)
+        internal void AssignNewElite(EliteIndex eliteIndex)
         {
             //Incoming index is none, or the incoming index is not an ExtendedEliteDef, destroy effect instance if needed.
             if(eliteIndex == EliteIndex.None || !(EliteCatalog.GetEliteDef(eliteIndex) is ExtendedEliteDef eed))
@@ -287,12 +311,25 @@ namespace MSU
     }
 
 //https://discord.com/channels/562704639141740588/562704639569428506/1227030308759801866
+    /// <summary>
+    /// BuffBehaviour is a subclass of a MonoBehaviour that's used for managing a custom behaviour that's applied to a body when it obtains a specific Buff/Debuff
+    /// <para>Due to the nature of Buffs being Ephemeral, this Behaviour is not destroyed when the buff is removed, but instead it becomes disabled. Due to this reason, most, if not all behaviour interfaces will still get called even if the behaviour itself is disabled. For this reason it is recommended to break from the function early by checking if <see cref="BuffBehaviour.HasAnyStacks"/> is false</para>
+    /// </summary>
     public abstract class BuffBehaviour : MonoBehaviour
     {
+        /// <summary>
+        /// Attribute used to find the BuffDef tied to a BuffBehaviour.
+        /// <br>This attribute should be used to decorate a public static method that returns a BuffDef and does not accept any arguments.</br>
+        /// </summary>
         [AttributeUsage(AttributeTargets.Method)]
         public class BuffDefAssociation : HG.Reflection.SearchableAttribute
         {
         }
+
+        /// <summary>
+        /// Gets the total stacks of the BuffDef associated with this BuffBehaviour.
+        /// <br>This property is automatically updated whenever the Buff's count changes, once the value. Once the behaviour is added, it gets enabled or disabled as needed depending on the incoming value.</br>
+        /// </summary>
         public int BuffCount
         {
             get
@@ -321,21 +358,45 @@ namespace MSU
         }
         private int _buffCount;
 
+        /// <summary>
+        /// The BuffIndex tied to this BuffBehaviour
+        /// </summary>
         public BuffIndex BuffIndex { get; internal set; }
 
+        /// <summary>
+        /// The CharacterBody that got this BuffBehaviour
+        /// </summary>
         public CharacterBody CharacterBody { get; internal set; }
 
+        /// <summary>
+        /// Wether or not this BuffBehaviour has any stacks
+        /// </summary>
         public bool HasAnyStacks => _buffCount > 0;
 
+        /// <summary>
+        /// Called when this buff behaviour is Initialized and obtains a new Stack value when the previous stack was 0. This is a replacement for unity's "OnEnable" method, which should not be used.
+        /// </summary>
         protected virtual void OnFirstStackGained() { }
+
+        /// <summary>
+        /// Called when this buff behaviour looses all of it's Stacks and it's previous stack was greater than 0. This is a replacement for unity's OnDisable method, which should not be used.
+        /// </summary>
         protected virtual void OnAllStacksLost() { }
 
+        /// <summary>
+        /// Do not use this method, utilize <see cref="OnFirstStackGained"/> which has the same functionality.
+        /// 
+        /// <para>The reason behind this is because OnEnable gets called before <see cref="CharacterBody"/> and <see cref="BuffIndex"/> are set.</para>
+        /// </summary>
         [Obsolete("Do not use \"OnEnable\", utilize \"OnFirstStackGained\" which has the same functionality", true)]
         protected virtual void OnEnable()
         {
 
         }
 
+        /// <summary>
+        /// Do not use this method, utilize <see cref="OnAllStacksLost"/>, which has the same functionality
+        /// </summary>
         [Obsolete("Do not use \"OnDisable\", utilize \"OnAllStacksLost\" which has the same functionality", true)]
         protected virtual void OnDisable()
         {

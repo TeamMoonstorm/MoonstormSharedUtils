@@ -5,7 +5,7 @@ using UDebug = UnityEngine.Debug;
 
 namespace MSU
 {
-    public class MSULog
+    internal class MSULog
     {
 #if DEBUG
         private static LogLevel _breakableLevel = LogLevel.Fatal;

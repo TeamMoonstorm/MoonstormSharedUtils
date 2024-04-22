@@ -20,8 +20,8 @@ namespace MSU
     public interface IItemContentPiece : IContentPiece<ItemDef>
     {
         /// <summary>
-        /// The ItemDisplayPrefab for this Item, can be null.
+        /// The ItemDisplayPrefabs for this Item, can be null.
         /// </summary>
-        NullableRef<GameObject> ItemDisplayPrefab { get; }
+        NullableRef<List<GameObject>> ItemDisplayPrefabs { get; }
     }
 }

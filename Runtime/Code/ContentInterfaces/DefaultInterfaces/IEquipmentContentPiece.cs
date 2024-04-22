@@ -20,9 +20,9 @@ namespace MSU
     public interface IEquipmentContentPiece : IContentPiece<EquipmentDef>
     {
         /// <summary>
-        /// The ItemDisplayPrefab for this Equipment, can be null.
+        /// The ItemDisplayPrefabs for this Equipment, can be null.
         /// </summary>
-        NullableRef<GameObject> ItemDisplayPrefab { get; }
+        NullableRef<List<GameObject>> ItemDisplayPrefabs { get; }
 
         /// <summary>
         /// Method that's ran when an EquipmentSlot tries to execute this Equipment

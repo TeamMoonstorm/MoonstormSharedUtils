@@ -15,16 +15,27 @@ using AutoConfig = MSU.Config.ConfiguredVariable.AutoConfigAttribute;
 
 namespace MSU
 {
+    /// <summary>
+    /// The config class for MSU
+    /// </summary>
     public class MSUConfig
     {
+        /// <summary>
+        /// Identifier for MSU's General config file
+        /// </summary>
         public const string GENERAL = "MSU.General";
 
 #if DEBUG
         public const string DEBUG = "MSU.Debug";
 #endif
-
+        /// <summary>
+        /// MSUConfig's ConfigFactory
+        /// </summary>
         public static ConfigFactory ConfigFactory { get; private set; }
 
+        /// <summary>
+        /// The General Config File, it's identifier is <see cref="GENERAL"/>
+        /// </summary>
         public static ConfigFile GeneralConfig { get; private set; }
 
 #if DEBUG
@@ -199,6 +210,7 @@ namespace MSU
         {
 
         }
+
         internal MSUConfig(BaseUnityPlugin bup)
         {
             ConfigFactory = new ConfigFactory(bup, true);

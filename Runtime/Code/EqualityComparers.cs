@@ -9,6 +9,9 @@ using UnityEngine.Networking;
 
 namespace MSU
 {
+    /// <summary>
+    /// An Equality comparer for <see cref="CharacterBody"/> which compares the equality of each body's <see cref="BodyIndex"/>
+    /// </summary>
     public struct CharacterBodyIndexEqualityComparer : IEqualityComparer<CharacterBody>
     {
         public bool Equals(CharacterBody x, CharacterBody y)
@@ -28,6 +31,9 @@ namespace MSU
         }
     }
 
+    /// <summary>
+    /// An Equality comparer for an Interactable which compares the equality of each Interactable's NetworkIdentity's assetID
+    /// </summary>
     public struct IInteractableNetworkIdentityAssetIDComparer : IEqualityComparer<IInteractable>
     {
         public bool Equals(IInteractable x, IInteractable y)

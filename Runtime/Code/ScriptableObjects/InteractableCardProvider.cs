@@ -52,7 +52,7 @@ namespace MSU
         {
             get
             {
-                if (_stageToCards == null)
+                if (_customStageToCards == null)
                 {
                     var dict = new Dictionary<string, DirectorAPI.DirectorCardHolder>();
                     foreach (var stageInteractableCardPair in _serializedCardPairs)
@@ -106,7 +106,6 @@ namespace MSU
             /// <summary>
             /// Cast for casting a <see cref="StageInteractableCardPair"/> into a valid <see cref="DirectorAPI.DirectorCardHolder"/>
             /// </summary>
-            /// <param name="other"></param>
 
             public static implicit operator DirectorAPI.DirectorCardHolder(StageInteractableCardPair other)
             {

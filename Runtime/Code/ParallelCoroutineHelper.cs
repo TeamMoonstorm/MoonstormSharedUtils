@@ -5,6 +5,9 @@ using System.Collections.Generic;
 
 namespace MSU
 {   
+    /// <summary>
+    /// A class used for running multiple Coroutine methods in parallel
+    /// </summary>
     public class ParallelCoroutineHelper
     {
         private List<Wrapper> _wrappers = new List<Wrapper>();

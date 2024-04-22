@@ -8,14 +8,22 @@ using UnityEngine;
 
 namespace MSU
 {
+    /// <summary>
+    /// An <see cref="ItemDisplayDictionary"/> is used for appending a single <see cref="ItemDisplayRuleSet.KeyAssetRuleGroup"/> to multiple <see cref="ItemDisplayRuleSet"/>. It works in a similar fashion to R2API's ItemDisplayDictionary.
+    /// <para>The IDRS that are modified are loaded via using their names and MSU's internal ItemDisplayCatalog.</para>
+    /// </summary>
     [CreateAssetMenu(fileName = "New ItemDisplayDictionary", menuName = "MSU/IDRS/ItemDisplayDictionary")]
     public class ItemDisplayDictionary : ScriptableObject
     {
         private static readonly HashSet<ItemDisplayDictionary> _instances = new HashSet<ItemDisplayDictionary>();
+
+        [Tooltip("The key asset that's used for the key asset rule groups, must be of type ItemDef or EquipmentDef")]
         public ScriptableObject keyAsset;
+        [Tooltip("An array of valid item display prefabs for the Key Asset")]
         public GameObject[] displayPrefabs = Array.Empty<GameObject>();
 
         [Space]
+        [Tooltip("The dictionary's entries.")]
         public List<DisplayDictionaryEntry> displayDictionaryEntries = new List<DisplayDictionaryEntry>();
 
         private void Awake() => _instances.Add(this);
@@ -128,14 +136,27 @@ namespace MSU
             return keyAssetRuleGroup;
         }
 
+        /// <summary>
+        /// Represents an entry for a <see cref="ItemDisplayDictionary"/>
+        /// <para>Contains a string that'll be used to load a specific IDRS, and a list of display rules.</para>
+        /// </summary>
         [Serializable]
         public struct DisplayDictionaryEntry
         {
+            [Tooltip("The name of the IDRS to load")]
             public string idrsName;
+            [Tooltip("The rules for this dictionary entry")]
             public List<DisplayRule> rules;
 
+            /// <summary>
+            /// Checks if this dictionary entry is empty or not.
+            /// </summary>
             public bool IsEmpty => rules != null ? rules.Count == 0 : true;
 
+            /// <summary>
+            /// Adds a new DisplayRule to this DictionaryEntry
+            /// </summary>
+            /// <param name="rule"></param>
             public void AddDisplayRule(DisplayRule rule)
             {
                 rules = rules ?? new List<DisplayRule>();
@@ -144,19 +165,37 @@ namespace MSU
             }
         }
 
+        /// <summary>
+        /// Represents a DisplayRule for an entry inside a <see cref="DisplayDictionaryEntry"/>.
+        /// <para>Contains sufficient metadata for transforming into a <see cref="RoR2.ItemDisplayRule"/> at runtime.</para>
+        /// </summary>
         [Serializable]
         public struct DisplayRule
         {
+            [Tooltip("The type of rule this display uses")]
             public ItemDisplayRuleType ruleType;
+            [Tooltip("The index to use to load the Display Prefab from the \"Display Prefabs\" array")]
             public int displayPrefabIndex;
+            [Tooltip("The name of a ChildLocator entry to instantiate the display prefab")]
             public string childName;
+            [Tooltip("The display prefab's position relative to it's parent.")]
             public Vector3 localPos;
+            [Tooltip("The display prefab's rotation relative to it's parent.")]
             public Vector3 localAngles;
+            [Tooltip("The display prefab's scale relative to it's parent.")]
             public Vector3 localScale;
+            [Tooltip("A mask of limbs to occlude when this display rule becomes active.")]
             public LimbFlags limbMask;
 
+            /// <summary>
+            /// Represents a display rule which has it's <see cref="childName"/> set to "NoValue"
+            /// <br>This in turn will setup the display rule to use the first entry of the model's child locator, which then can be modified to be placed correctly using the ItemDisplayPlacementHelper</br>
+            /// </summary>
             public const string NO_VALUE = "NoValue";
 
+            /// <summary>
+            /// Contains the finished rule from this DisplayRule
+            /// </summary>
             public ItemDisplayRule FinishedRule { get; private set; }
 
             internal void CreateRule(GameObject[] displayPrefabs)

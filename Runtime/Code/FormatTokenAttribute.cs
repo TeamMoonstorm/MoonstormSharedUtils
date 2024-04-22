@@ -11,21 +11,31 @@ using System.Threading.Tasks;
 
 namespace MSU
 {
-
+    /// <summary>
+    /// The FormatTokenAttribute is a <see cref="SearchableAttribute"/> that can be used for obtaning values for a Token, which then said token will be formated using said values.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = true)]
     public class FormatTokenAttribute : SearchableAttribute
     {
-        public enum OperationTypeEnum : int
-        {
-            DivideByN,
-            MultiplyByN,
-            AddN,
-            SubtractN,
-            ModuloN,
-        }
+        /// <summary>
+        /// The language token to be formatted
+        /// </summary>
         public string LanguageToken { get; private set; }
+        
+        /// <summary>
+        /// A type of operation to apply to the value stored in the field/property this attribute is attached to.
+        /// </summary>
         public OperationTypeEnum? OperationType { get; private set; }
+
+        /// <summary>
+        /// A number to use to modify the value stored in the field/property this attribute is attached to. Only relevant if there's a value in <see cref="OperationType"/>
+        /// <para>
+        /// </summary>
         public float? OperationData { get; private set; }
+
+        /// <summary>
+        /// The index used during the formatting process
+        /// </summary>
         public int FormattingIndex { get; private set; }
 
         private object _cachedFormattingValue;
@@ -140,18 +150,57 @@ namespace MSU
                     || value is decimal;
         }
 
+        /// <summary>
+        /// Constructor for the FormatTokenAttribute
+        /// </summary>
+        /// <param name="token">The token to format</param>
+        /// <param name="formattingIndex">The index to format</param>
         public FormatTokenAttribute(string token, int formattingIndex = 0)
         {
             LanguageToken = token;
             FormattingIndex = formattingIndex;
         }
 
+        /// <summary>
+        /// Constructor for the FormatTokenAttribute
+        /// </summary>
+        /// <param name="token">The token to format</param>
+        /// <param name="opType">A type of operation that'll be applied to the field/property's value before formatting occurs</param>
+        /// <param name="opData">The number used during the operation that'll be applied to the field/property's value before formatting occurs</param>
+        /// <param name="formattingIndex">The index to format</param>
         public FormatTokenAttribute(string token, OperationTypeEnum opType, float opData, int formattingIndex = 0)
         {
             LanguageToken = token;
             OperationType = opType;
             OperationData = opData;
             FormattingIndex = formattingIndex;
+        }
+
+        /// <summary>
+        /// Represents basic arithmetic operations used in the <see cref="FormatTokenAttribute"/>
+        /// </summary>
+        public enum OperationTypeEnum : int
+        {
+            /// <summary>
+            /// Represents a Division (/) operator
+            /// </summary>
+            DivideByN,
+            /// <summary>
+            /// Represents a Multiplication (*) operator
+            /// </summary>
+            MultiplyByN,
+            /// <summary>
+            /// Represents an Addition (+) operator
+            /// </summary>
+            AddN,
+            /// <summary>
+            /// Represents a Subtraction (-) operator
+            /// </summary>
+            SubtractN,
+            /// <summary>
+            /// Represents a Modulo (%) operator
+            /// </summary>
+            ModuloN,
         }
     }
 }
