@@ -99,7 +99,7 @@ namespace MSU
 
             List<IGameObjectContentPiece<CharacterBody>> characters = new List<IGameObjectContentPiece<CharacterBody>>();
 
-            var helper = new ParallelCoroutineHelper();
+            var helper = new ParallelMultiStartCoroutine();
             foreach(var character in content)
             {
                 if (!character.IsAvailable(provider.ContentPack))

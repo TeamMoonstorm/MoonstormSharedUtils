@@ -381,12 +381,13 @@ namespace MSU
 
         /// <summary>
         /// Extension method used for checking if a coroutine enumerator has finished executing.
+        /// <para>The extension technically only calls <paramref name="coroutineEnumerator"/>'s MoveNext() method and negates the result. but this is mainly for syntactic sugar.</para>
         /// </summary>
         /// <param name="coroutineEnumerator">The coroutine enumerator to check</param>
         /// <returns>True if the coroutine has finished executing, false otherwise</returns>
         public static bool IsDone(this IEnumerator coroutineEnumerator)
         {
-            return !coroutineEnumerator.MoveNext()
+            return !coroutineEnumerator.MoveNext();
         }
 
         static MSUtil()

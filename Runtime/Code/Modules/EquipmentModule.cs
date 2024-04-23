@@ -169,7 +169,7 @@ namespace MSU
             IContentPiece<EquipmentDef>[] content = provider.GetContents();
             List<IContentPiece<EquipmentDef>> equipments = new List<IContentPiece<EquipmentDef>>();
 
-            var helper = new ParallelCoroutineHelper();
+            var helper = new ParallelMultiStartCoroutine();
 
             foreach(var equipment in content)
             {

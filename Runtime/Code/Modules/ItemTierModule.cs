@@ -140,7 +140,7 @@ namespace MSU
             IContentPiece<ItemTierDef>[] content = provider.GetContents();
             List<IContentPiece<ItemTierDef>> itemTiers = new List<IContentPiece<ItemTierDef>>();
 
-            var helper = new ParallelCoroutineHelper();
+            var helper = new ParallelMultiStartCoroutine();
             foreach(var tier in content)
             {
                 if (!tier.IsAvailable(provider.ContentPack))

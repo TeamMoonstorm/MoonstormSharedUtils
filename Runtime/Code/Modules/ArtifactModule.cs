@@ -118,7 +118,7 @@ namespace MSU
             IContentPiece<ArtifactDef>[] content = provider.GetContents();
             List<IContentPiece<ArtifactDef>> artifacts = new List<IContentPiece<ArtifactDef>>();
 
-            var helper = new ParallelCoroutineHelper();
+            var helper = new ParallelMultiStartCoroutine();
             foreach (var artifact in content)
             {
                 if (!artifact.IsAvailable(provider.ContentPack))

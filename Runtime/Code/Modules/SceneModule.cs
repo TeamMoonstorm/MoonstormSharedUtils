@@ -113,7 +113,7 @@ namespace MSU
             IContentPiece<SceneDef>[] content = provider.GetContents();
             List<IContentPiece<SceneDef>> _scenes = new List<IContentPiece<SceneDef>>();
 
-            var helper = new ParallelCoroutineHelper();
+            var helper = new ParallelMultiStartCoroutine();
             foreach(var scene in content)
             {
                 if (!scene.IsAvailable(provider.ContentPack))

@@ -108,7 +108,7 @@ namespace MSU
         {
             [Tooltip("The name of the key asset, this must either be the name of an ItemDef or an EquipmentDef")]
             public string keyAssetName;
-            [Tooltip("The rules contained in this RuleGroup");]
+            [Tooltip("The rules contained in this RuleGroup")]
             public List<DisplayRule> rules;
 
             /// <summary>

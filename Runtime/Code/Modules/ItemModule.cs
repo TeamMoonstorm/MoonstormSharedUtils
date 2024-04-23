@@ -91,7 +91,7 @@ namespace MSU
             IContentPiece<ItemDef>[] content = provider.GetContents();
             List<IContentPiece<ItemDef>> items = new List<IContentPiece<ItemDef>>();
 
-            var helper = new ParallelCoroutineHelper();
+            var helper = new ParallelMultiStartCoroutine();
             foreach(var item in content)
             {
                 if (!item.IsAvailable(provider.ContentPack))

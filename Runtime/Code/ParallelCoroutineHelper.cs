@@ -1,34 +1,132 @@
+using HG;
 using R2API.Utils;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 
 namespace MSU
 {   
     /// <summary>
-    /// A class used for running multiple Coroutine methods in parallel
+    /// Class used for wrapping multiple coroutine methods, which then can be started on parallel and subsecuently awaited on parallel
+    /// 
+    /// <para>See also <see cref="ParallelCoroutine"/></para>
     /// </summary>
-    public class ParallelCoroutineHelper
+    public class ParallelMultiStartCoroutine : IEnumerator
     {
         private List<Wrapper> _wrappers = new List<Wrapper>();
 
-        public bool IsDone()
+        /// <summary>
+        /// Returns true if the execution of all the coroutines has finished. False otherwise
+        /// </summary>
+        public bool IsDone
         {
-            foreach(Wrapper wrapper in _wrappers)
+            get
             {
-                if (!wrapper.IsDone)
-                    return false;
+                if (_internalCoroutine == null)
+                    Start();
+
+                return _internalCoroutine.IsDone();
             }
-            return true;
-            
         }
+
+        public object Current => _internalCoroutine.Current;
+
+        private IEnumerator _internalCoroutine;
+
+        /// <summary>
+        /// Iterates thru the wrapped coroutine methods and calls them, effectively beginning the parallel coroutine
+        /// </summary>
+        public void Start()
+        {
+            for (int i = 0; i < _wrappers.Count; i++)
+            {
+                var wrapper = _wrappers[i];
+                wrapper.coroutine = (IEnumerator)(wrapper.coroutineDelegate?.DynamicInvoke(wrapper.args));
+            }
+            _internalCoroutine = InternalCoroutine();
+        }
+
+        //This dumb thing does not work
+        /*
+        /// <summary>
+        /// Adds a new method to be wrapped and eventually called with <see cref="Start"/>
+        /// </summary>
+        /// <param name="_delegate">The method itself. The method must return IEnumerator.</param>
+        /// <param name="args">The arguments for the method specified in <paramref name="_delegate"/></param>
+        public void AddMethod(Delegate _delegate, params object[] args)
+        {
+            ValidateIncomingMethod(_delegate, args);
+            _wrappers.Add(new Wrapper
+            {
+                args = args,
+                coroutineDelegate = _delegate
+            });
+        }
+        
+         private void ValidateIncomingMethod(Delegate _delegate, object[] args)
+        {
+            var methodInfo = _delegate.Method;
+
+            var returnType = methodInfo.ReturnType;
+
+            if (returnType == null || returnType == typeof(void))
+            {
+                throw new NullReferenceException($"Delegate's return type is null or void. (Delegate={BuildBestName()})");
+            }
+
+            if(!returnType.IsSameOrSubclassOf<IEnumerator>())
+            {
+                throw new NullReferenceException($"Delegate's return type is not of type IEnumerator. (Delegate={BuildBestName()})");
+            }
+
+            var parameters = methodInfo.GetParameters();
+
+            if(parameters.Length != args.Length)
+            {
+                throw new ArgumentException($"Object array length does not match delegate's argument length. (Delegate={BuildBestName()})");
+            }
+
+            for(int i = 0; i < args.Length; i++)
+            {
+                var paramType = parameters[i].ParameterType;
+
+                if (!args[i].GetType().IsSameOrSubclassOf(paramType))
+                {
+                    throw new ArgumentException($"Argument at index {i} does not match the method's {i} argument type. (Delegate={BuildBestName()})");
+                }
+            }
+
+            string BuildBestName()
+            {
+                StringBuilder stringBuilder = new StringBuilder();
+
+                stringBuilder.Append(returnType.Name);
+                stringBuilder.Append(' ');
+                stringBuilder.Append(methodInfo.DeclaringType.FullName);
+                stringBuilder.Append(".");
+                stringBuilder.Append(methodInfo.Name);
+                stringBuilder.Append("(");
+                if(args.Length > 0)
+                {
+                    foreach(var arg in args)
+                    {
+                        stringBuilder.Append(arg.GetType().FullName);
+                        stringBuilder.Append(", ");
+                    }
+                }
+                stringBuilder.Append(")");
+
+                return stringBuilder.ToString();
+            }
+        }*/
 
         #region ADD
         public void Add(Func<IEnumerator> func)
         {
             _wrappers.Add(new Wrapper
             {
-                @delegate = func
+                coroutineDelegate = func
             });
         }
 
@@ -36,7 +134,7 @@ namespace MSU
         {
             _wrappers.Add(new Wrapper
             {
-                @delegate = func,
+                coroutineDelegate = func,
                 args = new object[] { arg }
             });
         }
@@ -45,7 +143,7 @@ namespace MSU
         {
             _wrappers.Add(new Wrapper
             {
-                @delegate = func,
+                coroutineDelegate = func,
                 args = new object[] { arg1, arg2 }
             });
         }
@@ -54,7 +152,7 @@ namespace MSU
         {
             _wrappers.Add(new Wrapper
             {
-                @delegate = func,
+                coroutineDelegate = func,
                 args = new object[] { arg1, arg2, arg3 }
             });
         }
@@ -63,7 +161,7 @@ namespace MSU
         {
             _wrappers.Add(new Wrapper
             {
-                @delegate = func,
+                coroutineDelegate = func,
                 args = new object[] { arg1, arg2, arg3, arg4 }
             });
         }
@@ -71,47 +169,114 @@ namespace MSU
         {
             _wrappers.Add(new Wrapper
             {
-                @delegate = func,
+                coroutineDelegate = func,
                 args = new object[] { arg1, arg2, arg3, arg4, arg5 }
             });
         }
         #endregion
 
-
-        public void Start()
+        private IEnumerator InternalCoroutine()
         {
-            foreach (Wrapper wrapper in _wrappers)
-            {
-                wrapper.Start();
-            }
-        }
+            yield return null;
 
-        private class Wrapper
-        {
-            public Delegate @delegate;
-            public object[] args;
-            public IEnumerator coroutine;
-
-            public void Start()
+            bool encounteredUnfinished = true;
+            while(encounteredUnfinished)
             {
-                coroutine = (IEnumerator)@delegate.DynamicInvoke(args);
-            }
-
-            public bool IsDone
-            {
-                get
+                encounteredUnfinished = false;
+                int i = _wrappers.Count - 1;
+                while(i >= 0)
                 {
-                    if (coroutine == null)
-                        return true;
-
-                    if (!coroutine.MoveNext())
+                    Wrapper wrapper = _wrappers[i];
+                    if(!wrapper.coroutine.IsDone())
                     {
-                        return true;
+                        encounteredUnfinished = true;
+                        yield return wrapper.coroutine.Current;
                     }
-                    return false;
+                    else
+                    {
+                        _wrappers.RemoveAt(i);
+                    }
+                    i--;
                 }
             }
         }
-  
+
+        bool IEnumerator.MoveNext()
+        {
+            return _internalCoroutine?.MoveNext() ?? false;
+        }
+
+        void IEnumerator.Reset()
+        {
+            _internalCoroutine?.MoveNext();
+        }
+
+        private struct Wrapper
+        {
+            public Delegate coroutineDelegate;
+            public object[] args;
+
+            public IEnumerator coroutine;
+        }
+    }
+
+    /// <summary>
+    /// A version of RoR2's <see cref="HG.Coroutines.ParallelProgressCoroutine"/> which does not have a progress receiver.
+    /// 
+    /// <para>See also <see cref="ParallelMultiStartCoroutine"/></para>
+    /// </summary>
+    public class ParallelCoroutine : IEnumerator
+    {
+        private readonly List<IEnumerator> coroutinesList = new List<IEnumerator>();
+
+        private IEnumerator internalCoroutine;
+
+        public object Current => internalCoroutine.Current;
+
+        public ParallelCoroutine()
+        {
+            internalCoroutine = InternalCoroutine();
+        }
+
+        public void Add(IEnumerator coroutine)
+        {
+            coroutinesList.Add(coroutine);
+        }
+
+        public bool MoveNext()
+        {
+            return internalCoroutine.MoveNext();
+        }
+
+        public void Reset()
+        {
+            internalCoroutine.Reset();
+        }
+
+        private IEnumerator InternalCoroutine()
+        {
+            yield return null;
+            bool encounteredUnfinished = true;
+            while (encounteredUnfinished)
+            {
+                encounteredUnfinished = false;
+                int i = coroutinesList.Count - 1;
+                while (i >= 0)
+                {
+                    IEnumerator coroutine = coroutinesList[i];
+                    if (coroutine.MoveNext())
+                    {
+                        encounteredUnfinished = true;
+                        yield return coroutine.Current;
+                    }
+                    else
+                    {
+                        coroutinesList.RemoveAt(i);
+                    }
+                    int num = i - 1;
+                    i = num;
+                }
+            }
+        }
     }
 }

@@ -22,7 +22,7 @@ namespace MSU
         /// <returns>A Coroutine which can be yielded or awaited</returns>
         public static IEnumerator LoadAddressableMaterialShadersAsync(AssetBundle[] assetBundles)
         {
-            ParallelCoroutineHelper helper = new ParallelCoroutineHelper();
+            ParallelMultiStartCoroutine helper = new ParallelMultiStartCoroutine();
 
             var list = new List<Material>();
             foreach (var bundle in assetBundles)
@@ -65,7 +65,7 @@ namespace MSU
         /// <returns>A Coroutine which can be yielded or awaited</returns>
         public static IEnumerator LoadAddressableMaterialShadersAsync(List<Material> materials)
         {
-            var helper = new ParallelCoroutineHelper();
+            var helper = new ParallelMultiStartCoroutine();
 
             foreach (var material in materials)
             {
@@ -91,7 +91,7 @@ namespace MSU
         /// <returns>A Coroutine which can be yielded or awaited</returns>
         public static IEnumerator SwapStubbedShadersAsync(AssetBundle[] bundles)
         {
-            ParallelCoroutineHelper helper1 = new ParallelCoroutineHelper();
+            ParallelMultiStartCoroutine helper1 = new ParallelMultiStartCoroutine();
 
             List<Material> materials = new List<Material>();
             foreach (var bundle in bundles)
@@ -125,7 +125,7 @@ namespace MSU
         /// <returns>A Coroutine which can be yielded or awaited</returns>
         public static IEnumerator SwapStubbedShadersAsync(List<Material> materials)
         {
-            ParallelCoroutineHelper helper = new ParallelCoroutineHelper();
+            ParallelMultiStartCoroutine helper = new ParallelMultiStartCoroutine();
 
             foreach(var material in materials)
             {
