@@ -78,13 +78,13 @@ namespace MSU
         private StageMonsterCardPair[] _serializedCardPairs = Array.Empty<StageMonsterCardPair>();
 
         /// <summary>
-        /// Method that builds a <see cref="HashSet{T}"/> containing all the unique instances of prefabs held by this MonsterCardProvider. Said prefabs are obtained from the prefabs stored in <see cref="SpawnCard.prefab"/>
-        /// <br>Keep in mind that the hash set will not contain prefabs obtained from Addressables.</br>
+        /// Method that builds a <see cref="HashSet{T}"/> containing all the unique instances of SpawnCards held by this MonsterCardProvider. 
+        /// <br>Keep in mind that the hash set will not contain SpawnCards obtained from Addressables.</br>
         /// </summary>
-        /// <returns>A <see cref="HashSet{T}"/> containing all of the prefabs this MonsterCardProvider provides</returns>
-        public HashSet<GameObject> BuildPrefabSet()
+        /// <returns>A <see cref="HashSet{T}"/> containing all of the SpawnCards this MonsterCardProvider provides</returns>
+        public HashSet<SpawnCard> BuildSpawnCardSet()
         {
-            HashSet<GameObject> result = new HashSet<GameObject>();
+            HashSet<SpawnCard> result = new HashSet<SpawnCard>();
             foreach(StageMonsterCardPair pair in _serializedCardPairs)
             {
                 var card = pair.card;
@@ -98,7 +98,7 @@ namespace MSU
                     continue;
                 }
 
-                result.Add(spawnCard.Asset.prefab);
+                result.Add(spawnCard.Asset);
             }
             return result;
         }
