@@ -102,6 +102,7 @@ namespace MSU
             }
             return result;
         }
+
         /// <summary>
         /// Represents a pair of <see cref="DirectorAPI.DirectorCardHolder"/> and stage metadata.
         /// <br>Contains an implicit cast to cast from this struct to <see cref="DirectorAPI.DirectorCardHolder"/></br>
