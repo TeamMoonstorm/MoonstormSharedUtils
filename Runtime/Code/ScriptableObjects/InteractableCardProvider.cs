@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using System.Collections.ObjectModel;
+using static MSU.MonsterCardProvider;
 
 namespace MSU
 {
@@ -76,6 +77,32 @@ namespace MSU
         [Tooltip("Contains your Interactable's Cards.")]
         [SerializeField]
         private StageInteractableCardPair[] _serializedCardPairs = Array.Empty<StageInteractableCardPair>();
+
+        /// <summary>
+        /// Method that builds a <see cref="HashSet{T}"/> containing all the unique instances of prefabs held by this InteractableCardProvider. Said prefabs are obtained from the prefabs stored in <see cref="SpawnCard.prefab"/>
+        /// <br>Keep in mind that the hash set will not contain prefabs obtained from Addressables.</br>
+        /// </summary>
+        /// <returns>A <see cref="HashSet{T}"/> containing all of the prefabs this InteractableCardProvider provides</returns>
+        public HashSet<GameObject> BuildPrefabSet()
+        {
+            HashSet<GameObject> result = new HashSet<GameObject>();
+            foreach (StageInteractableCardPair pair in _serializedCardPairs)
+            {
+                var card = pair.card;
+
+                if (card == null)
+                    continue;
+
+                var spawnCard = card.spawnCard;
+                if (!spawnCard.AssetExists)
+                {
+                    continue;
+                }
+
+                result.Add(spawnCard.Asset.prefab);
+            }
+            return result;
+        }
 
         /// <summary>
         /// Represents a pair of <see cref="DirectorAPI.DirectorCardHolder"/> and stage metadata.
