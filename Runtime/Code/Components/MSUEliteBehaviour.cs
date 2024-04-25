@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Packages.teammoonstorm_moonstormsharedutils.Runtime.Code.Components
+namespace MSU
 {
     /// <summary>
     /// The EliteBehaviour is used for managing the extra metadata found in a <see cref="ExtendedEliteDef"/> and applying said metadata to a CharacterBodys
