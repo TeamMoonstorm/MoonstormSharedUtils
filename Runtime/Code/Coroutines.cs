@@ -43,6 +43,7 @@ namespace MSU
             {
                 var wrapper = _wrappers[i];
                 wrapper.coroutine = (IEnumerator)(wrapper.coroutineDelegate?.DynamicInvoke(wrapper.args));
+                _wrappers[i] = wrapper;
             }
             _internalCoroutine = InternalCoroutine();
         }
