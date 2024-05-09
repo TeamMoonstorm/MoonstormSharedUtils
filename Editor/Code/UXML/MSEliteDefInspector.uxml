@@ -1,0 +1,22 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <ui:VisualElement name="Container" class="genericHolder">
+        <Style src="/Packages/riskofthunder-ror2editorkit/Assets/USS/Inspectors/ScriptableObjectInspector.uss" />
+        <ui:Label text="Label" name="scriptType" binding-path="m_Script.displayName" tooltip="The type of this object" class="scriptType genericHolderHeader" />
+        <ui:VisualElement name="InspectorDataContainer" class="genericHolder">
+            <ui:Label text="Vanilla Properties" name="VanillaProperties" class="genericHolderHeader separatorLabel" />
+            <RoR2EditorKit.VisualElements.ValidatingPropertyField name="eliteEquipmentDef" binding-path="eliteEquipmentDef" />
+            <uie:PropertyField name="color" binding-path="color" />
+            <uie:PropertyField name="modifierToken" binding-path="modifierToken" />
+            <ui:Foldout text="Stat Coefficients" name="StatCoefficientContainer" class="genericHolderFoldout">
+                <uie:PropertyField name="healthBoostCoefficient" binding-path="healthBoostCoefficient" label="Health Boost" />
+                <uie:PropertyField name="damageBoostCoefficient" binding-path="damageBoostCoefficient" label="Damage Boost" />
+            </ui:Foldout>
+            <ui:Label text="Custom Properties" name="CustomProperties" class="genericHolderHeader separatorLabel" />
+            <uie:PropertyField name="eliteTierDefIdentifiers" binding-path="eliteTierDefIdentifiers" />
+            <uie:PropertyField name="lightColor" binding-path="lightColor" />
+            <uie:PropertyField name="eliteRamp" binding-path="eliteRamp" />
+            <uie:PropertyField name="overlay" binding-path="overlay" />
+            <uie:PropertyField name="effect" binding-path="effect" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

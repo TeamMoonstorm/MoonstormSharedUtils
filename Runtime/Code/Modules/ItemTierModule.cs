@@ -191,16 +191,6 @@ namespace MSU
                     }
                     _itemTierToPickupFX.Add(asset, itemTierContentPiece.PickupDisplayVFX);
                 }
-
-                if(tier is IUnlockableContent unlockableContent)
-                {
-                    UnlockableDef[] unlockableDefs = unlockableContent.TiedUnlockables;
-                    if (unlockableDefs.Length > 0)
-                    {
-                        UnlockableManager.AddUnlockables(unlockableDefs.OfType<AchievableUnlockableDef>().ToArray());
-                        provider.ContentPack.unlockableDefs.Add(unlockableDefs);
-                    }
-                }
             }
         }
     }

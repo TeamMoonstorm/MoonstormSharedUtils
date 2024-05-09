@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BepInEx;
+using RoR2BepInExPack;
 
 namespace MSU
 {
@@ -17,6 +18,7 @@ namespace MSU
     [CreateAssetMenu(fileName = "New AchievableUnlockableDef", menuName = "MSU/AchievableUnlockableDef")]
     public class AchievableUnlockableDef : UnlockableDef
     {
+        private static HashSet<AchievableUnlockableDef> _instances = new HashSet<AchievableUnlockableDef>();
         [Header("Achievement Metadata")]
 
         [Tooltip("The condition required for this Achievement")]
@@ -89,6 +91,46 @@ namespace MSU
         }
         private AchievementDef _tiedAchievementDef;
 
+        private void Awake()
+        {
+            base.Awake();
+            _instances.Add(this);
+        }
+
+        private void OnDestroy()
+        {
+            _instances.Remove(this);
+        }
+
+        [SystemInitializer]
+        private static void SystemInit()
+        {
+            RoR2BepInExPack.VanillaFixes.SaferAchievementManager.OnCollectAchievementDefs += AddInstances;
+        }
+
+        private static void AddInstances(List<string> arg1, Dictionary<string, AchievementDef> arg2, List<AchievementDef> arg3)
+        {
+            foreach(AchievableUnlockableDef def in _instances)
+            {
+                if (def.index == UnlockableIndex.None)
+                    continue;
+
+                var tiedAchievement = def.TiedAchievementDef;
+                def.getHowToUnlockString = () =>
+                {
+                    return Language.GetStringFormatted("UNLOCK_VIA_ACHIEVEMENT_FORMAT", Language.GetString(tiedAchievement.nameToken), Language.GetString(tiedAchievement.descriptionToken));
+                };
+                def.getUnlockedString = () =>
+                {
+                    return Language.GetStringFormatted("UNLOCKED_FORMAT", Language.GetString(tiedAchievement.nameToken), Language.GetString(tiedAchievement.descriptionToken));
+                };
+
+                arg1.Add(tiedAchievement.identifier);
+                arg2.Add(tiedAchievement.identifier, tiedAchievement);
+                arg3.Add(tiedAchievement);
+            }
+        }
+
         /// <summary>
         /// A Struct to represent a pre-requisite achievement
         /// </summary>
@@ -101,5 +143,6 @@ namespace MSU
             [Tooltip("The identifier for another achievement, usually these can be obtained by concatenating the Unlockable's name and \".Achievement\" (ie: using \"Characters.Bandit2.Achievement\" will make unlocking Bandit2 a pre-requisite for this unlockable to be unlocked.)")]
             public string achievementIdentifier;
         }
+
     }
 }

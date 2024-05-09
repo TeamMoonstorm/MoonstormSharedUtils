@@ -136,16 +136,6 @@ namespace MSU
                     HG.ArrayUtils.ArrayAppend(ref array, itemContentPiece);
                     _moonstormItems.Add(asset, itemContentPiece);
                 }
-
-                if (item is IUnlockableContent unlockableContent)
-                {
-                    UnlockableDef[] unlockableDefs = unlockableContent.TiedUnlockables;
-                    if (unlockableDefs.Length > 0)
-                    {
-                        UnlockableManager.AddUnlockables(unlockableDefs.OfType<AchievableUnlockableDef>().ToArray());
-                        provider.ContentPack.unlockableDefs.Add(unlockableDefs);
-                    }
-                }
             }
         }
 

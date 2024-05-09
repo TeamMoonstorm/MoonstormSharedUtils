@@ -139,6 +139,8 @@ namespace MSU.Editor.Settings
                     shaderPairs.Add(new ShaderPair(null, shader));
                 }
             }
+            shaderDictionarySO.ApplyModifiedProperties();
+            UnityEditor.EditorUtility.SetDirty(this);
         }
 
         private void AttemptToFinishDictionaryAutomatically()
@@ -171,6 +173,8 @@ namespace MSU.Editor.Settings
 
                 pair.yaml.SetShader(origShader);
             }
+            shaderDictionarySO.ApplyModifiedProperties();
+            UnityEditor.EditorUtility.SetDirty(this);
         }
 
         private void ReloadDictionaries()
@@ -180,6 +184,8 @@ namespace MSU.Editor.Settings
 
             _ = YAMLToHLSL;
             _ = HLSLToYAML;
+            shaderDictionarySO.ApplyModifiedProperties();
+            UnityEditor.EditorUtility.SetDirty(this);
         }
     }
 }

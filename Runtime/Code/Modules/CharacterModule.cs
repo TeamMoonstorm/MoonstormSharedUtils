@@ -158,16 +158,6 @@ namespace MSU
                     if (monsterContentPiece.DissonanceCard)
                         _dissonanceCards.Add(monsterContentPiece.DissonanceCard);
                 }
-
-                if (body is IUnlockableContent unlockableContent)
-                {
-                    UnlockableDef[] unlockableDefs = unlockableContent.TiedUnlockables;
-                    if (unlockableDefs.Length > 0)
-                    {
-                        UnlockableManager.AddUnlockables(unlockableDefs.OfType<AchievableUnlockableDef>().ToArray());
-                        provider.ContentPack.unlockableDefs.Add(unlockableDefs);
-                    }
-                }
             }
         }
 
