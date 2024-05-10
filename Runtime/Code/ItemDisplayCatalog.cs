@@ -1,7 +1,6 @@
 ﻿using BepInEx;
 using RoR2;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -98,6 +97,16 @@ namespace MSU
             {
                 PopulateDisplaysFromIDRS(idrs);
             }
+
+            foreach(var (_, item) in ItemModule.MoonstormItems)
+            {
+                PopulateDisplaysFromItems(item);
+            }
+
+            foreach(var (_, equipment) in EquipmentModule.AllMoonstormEquipments)
+            {
+                PopulateDisplaysFromEquips(equipment);
+            }
         }
 
         private static void PopulateDisplaysFromIDRS(ItemDisplayRuleSet idrs)
@@ -144,6 +153,94 @@ namespace MSU
             }
         }
 
+        private static void PopulateDisplaysFromItems(IItemContentPiece item)
+        {
+            if(!item.ItemDisplayPrefabs)
+            {
+                return;
+            }
+
+            List<GameObject> displayPrefabs = item.ItemDisplayPrefabs;
+            ItemDef itemDef = item.Asset;
+
+            for(int i = 0; i < displayPrefabs.Count; i++)
+            {
+                var displayPrefab = displayPrefabs[i];
+
+                if (!displayPrefab)
+                    continue;
+
+                string key = displayPrefab.name.IsNullOrWhiteSpace() ? $"{itemDef.name}Display_{i}" : displayPrefab.name;
+
+                if(!_displayDictionary.ContainsKey(key))
+                {
+                    _displayDictionary.Add(key, displayPrefab);
+                }
+                else
+                {
+                    var existingPrefab = _displayDictionary[key];
+                    if (existingPrefab == displayPrefab)
+                        continue;
+
+                    int startingIndex = i - 1;
+                    while (_displayDictionary.ContainsKey(key))
+                    {
+                        startingIndex++;
+                        key = $"{itemDef.name}Display_{startingIndex}";
+                    }
+                    _displayDictionary.Add(key, displayPrefab);
+                }
+            }
+
+#if DEBUG
+            AddKeyAssetAndDisplaysForSerializedDictionary(itemDef, displayPrefabs);
+#endif
+        }
+
+        private static void PopulateDisplaysFromEquips(IEquipmentContentPiece equipment)
+        {
+            if (!equipment.ItemDisplayPrefabs)
+            {
+                return;
+            }
+
+            List<GameObject> displayPrefabs = equipment.ItemDisplayPrefabs;
+            EquipmentDef itemDef = equipment.Asset;
+
+            for (int i = 0; i < displayPrefabs.Count; i++)
+            {
+                var displayPrefab = displayPrefabs[i];
+
+                if (!displayPrefab)
+                    continue;
+
+                string key = displayPrefab.name.IsNullOrWhiteSpace() ? $"{itemDef.name}Display_{i}" : displayPrefab.name;
+
+                if (!_displayDictionary.ContainsKey(key))
+                {
+                    _displayDictionary.Add(key, displayPrefab);
+                }
+                else
+                {
+                    var existingPrefab = _displayDictionary[key];
+                    if (existingPrefab == displayPrefab)
+                        continue;
+
+                    int startingIndex = i - 1;
+                    while (_displayDictionary.ContainsKey(key))
+                    {
+                        startingIndex++;
+                        key = $"{itemDef.name}Display_{startingIndex}";
+                    }
+                    _displayDictionary.Add(key, displayPrefab);
+                }
+            }
+
+#if DEBUG
+            AddKeyAssetAndDisplaysForSerializedDictionary(itemDef, displayPrefabs);
+#endif
+        }
+
 #if DEBUG
         private static HashSet<string> _survivorRuleSets = new HashSet<string>(_comparer);
         private static HashSet<string> _enemyRuleSets = new HashSet<string>(_comparer);
@@ -168,6 +265,8 @@ namespace MSU
                 case EquipmentDef ed:
                     target = (ed && ed.passiveBuffDef && ed.passiveBuffDef.eliteDef) ? _eliteEquipmentToDisplayPrefabs : _equipmentToDisplayPrefabs;
                     break;
+                default:
+                    return;
             }
 
             string keyName = keyAsset.name;
@@ -182,6 +281,41 @@ namespace MSU
             {
                 var rule = rulesArray[i];
                 var displayPrefab = rule.followerPrefab;
+                if (!displayPrefab)
+                    continue;
+
+                string displayPrefabName = displayPrefab.name;
+                string value = displayPrefabName.IsNullOrWhiteSpace() ? $"{keyName}Display_{i}" : displayPrefabName;
+
+                target[keyName].Add(value);
+            }
+        }
+
+        private static void AddKeyAssetAndDisplaysForSerializedDictionary(ScriptableObject keyAsset, List<GameObject> displayPrefabs)
+        {
+            Dictionary<string, HashSet<string>> target = null;
+
+            switch(keyAsset)
+            {
+                case ItemDef id:
+                    target = _itemToDisplayPrefabs;
+                    break;
+                case EquipmentDef ed:
+                    target = (ed && ed.passiveBuffDef && ed.passiveBuffDef.eliteDef) ? _eliteEquipmentToDisplayPrefabs : _equipmentToDisplayPrefabs;
+                    break;
+                default:
+                    return;
+            }
+
+            string keyName = keyAsset.name;
+            if (!target.ContainsKey(keyName))
+            {
+                target[keyName] = new HashSet<string>(_comparer);
+            }
+
+            for(int i = 0; i < displayPrefabs.Count; i++)
+            {
+                var displayPrefab = displayPrefabs[i];
                 if (!displayPrefab)
                     continue;
 
