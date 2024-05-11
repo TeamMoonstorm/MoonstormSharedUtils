@@ -178,7 +178,7 @@ namespace MSU
             }
 
             material.shader = loadedMat.shader;
-            material.CopyPropertiesFromMaterial(material);
+            material.CopyPropertiesFromMaterial(loadedMat);
             _addressableMaterials.Add(material);
 #if DEBUG
             MSULog.Debug($"Properties from {loadedMat} ({address}) copied to {material}");
