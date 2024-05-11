@@ -1,4 +1,4 @@
-﻿Shader "AddressableMaterialShader"
+﻿Shader "DEPRECATED/AddressableMaterialShader"
 {
     FallBack "Diffuse"
 }

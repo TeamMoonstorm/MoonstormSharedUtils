@@ -185,7 +185,25 @@ namespace MSU
 #endif
         }
 
-        private static bool IsShaderAddressableShader(Material mat) => mat.shader.name == "AddressableMaterialShader";
+        private static bool IsShaderAddressableShader(Material mat)
+        {
+#if !DEBUG
+            return mat.shader.name == "MSU/AddressableMaterialShader";
+#endif
+            var shaderName = mat.shader.name;
+
+            if(shaderName == "MSU/AddressableMaterialShader")
+            {
+                return true;
+            }
+            else if(shaderName == "DEPRECATED/AddressableMaterialShader")
+            {
+                MSULog.Warning($"Material wtih name {mat.name} has its Shader set to \"DEPRECATED/AddressableMaterialShader\", this shader will be removed in future releases as its been replaced by the shader \"MSU/AddressableMaterialShader\"." +
+                    $"\nThis message is purely a warning and the material's addressable representation will be loaded regardless.");
+                return true;
+            }
+            return false;
+        }
 
         private static bool IsShaderStubbedShader(Material mat) => mat.shader.name.StartsWith("Stubbed");
     }

@@ -1,4 +1,5 @@
 ﻿using UnityEditor;
+using UnityEditorInternal.VR;
 using UnityEngine;
 
 namespace MSU.Editor.ShaderSystem
@@ -33,6 +34,10 @@ namespace MSU.Editor.ShaderSystem
             {
                 AddressableMaterialShaderHeader(obj);
             }
+            if (shader.name == "DEPRECATED/AddressableMaterialShader")
+            {
+                UpgradeAddressableMaterialShader(obj);
+            }
 
             if (GUILayout.Button("Pick shader asset"))
             {
@@ -52,6 +57,20 @@ namespace MSU.Editor.ShaderSystem
             SerializedProperty shaderKeywords = so.FindProperty("m_ShaderKeywords");
             shaderKeywords.stringValue = EditorGUILayout.TextField(new GUIContent("Address"), shaderKeywords.stringValue);
             so.ApplyModifiedProperties();
+        }
+
+        private static void UpgradeAddressableMaterialShader(UnityEditor.Editor obj)
+        {
+            EditorGUILayout.LabelField(new GUIContent("WARNING (Hover Me.)", "This AddressableMaterialShader is deprecated, click the button below to update"));
+
+            if(GUILayout.Button("Upgrade"))
+            {
+                SerializedObject so = obj.serializedObject;
+                SerializedProperty sp = so.FindProperty("m_Shader");
+
+                sp.objectReferenceValue = Shader.Find("MSU/AddressableMaterialShader");
+                so.ApplyModifiedProperties();
+            }
         }
 
         private static void ShowAboutLabel()
