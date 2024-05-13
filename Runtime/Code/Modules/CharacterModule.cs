@@ -177,11 +177,11 @@ namespace MSU
 
             foreach (var monsterCardProvider in _monsterCardProviders)
             {
-                AddCustomMonster(monsterCardProvider, pool, cardList, stageInfo);
+                AddCustomMonster(monsterCardProvider, pool, stageInfo);
             }
         }
 
-        private static void AddCustomMonster(MonsterCardProvider monsterCardProvider, DccsPool pool, List<DirectorAPI.DirectorCardHolder> cardList, DirectorAPI.StageInfo stageInfo)
+        private static void AddCustomMonster(MonsterCardProvider monsterCardProvider, DccsPool pool, DirectorAPI.StageInfo stageInfo)
         {
             var standardCategory = pool.poolCategories.FirstOrDefault(category => category.name == DirectorAPI.Helpers.MonsterPoolCategories.Standard);
             

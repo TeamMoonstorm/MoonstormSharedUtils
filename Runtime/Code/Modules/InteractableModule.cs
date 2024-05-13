@@ -82,6 +82,7 @@ namespace MSU
             yield break;
         }
 
+        [SystemInitializer]
         private static void SystemInit()
         {
             MSULog.Info("Initializing Interactable Module...");

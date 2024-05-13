@@ -26,18 +26,7 @@ namespace MSU
             {
                 if(_stageToCards == null)
                 {
-                    var dict = new Dictionary<DirectorAPI.Stage, DirectorAPI.DirectorCardHolder>();
-                    foreach(var stageMonsterCardPair in _serializedCardPairs)
-                    {
-                        if (stageMonsterCardPair.stageEnum == DirectorAPI.Stage.Custom)
-                            continue;
-
-                        if (dict.ContainsKey(stageMonsterCardPair.stageEnum))
-                            continue;
-
-                        dict.Add(stageMonsterCardPair.stageEnum, stageMonsterCardPair);
-                    }
-                    _stageToCards = new ReadOnlyDictionary<DirectorAPI.Stage, DirectorAPI.DirectorCardHolder>(dict);
+                    BuildDictionaries();
                 }
                 return _stageToCards;
             }
@@ -54,19 +43,7 @@ namespace MSU
             {
                 if(_customStageToCards == null)
                 {
-                    var dict = new Dictionary<string, DirectorAPI.DirectorCardHolder>();
-                    foreach(var stageMonsterCardPair in _serializedCardPairs)
-                    {
-                        if (stageMonsterCardPair.stageEnum != DirectorAPI.Stage.Custom)
-                            continue;
-
-                        if (dict.ContainsKey(stageMonsterCardPair.customStageName))
-                            continue;
-
-                        dict.Add(stageMonsterCardPair.customCategoryName, stageMonsterCardPair);
-                    }
-
-                    _customStageToCards = new ReadOnlyDictionary<string, DirectorAPI.DirectorCardHolder>(dict);
+                    BuildDictionaries();
                 }
                 return _customStageToCards;
             }
@@ -103,6 +80,62 @@ namespace MSU
             return result;
         }
 
+        private void BuildDictionaries()
+        {
+            var stageDict = new Dictionary<DirectorAPI.Stage, DirectorAPI.DirectorCardHolder>();
+            var customStageDict = new Dictionary<string, DirectorAPI.DirectorCardHolder>();
+
+            //Iterate thru pairs
+            for (int i = 0; i < _serializedCardPairs.Length; i++)
+            {
+                var pair = _serializedCardPairs[i];
+                var stageFlags = pair.stageEnum;
+
+                //Iterate thru stage enum values
+                foreach (DirectorAPI.Stage stageEnumValue in Enum.GetValues(typeof(DirectorAPI.Stage)))
+                {
+                    //If the pair has a custom flag, add said custom stage names to the dictionary.
+                    if (stageEnumValue == DirectorAPI.Stage.Custom && stageFlags.HasFlag(stageEnumValue))
+                    {
+                        if (pair.customStageNames == null)
+                        {
+                            continue;
+                        }
+
+                        //Iterate thru stage names
+                        foreach (var stageName in pair.customStageNames)
+                        {
+                            //If a previous pair already added a card, continue and log warning
+                            if (customStageDict.ContainsKey(stageName))
+                            {
+#if DEBUG
+                                MSULog.Warning($"Cannot add {this}'s {i} card pair to custom stage {stageName} because there's already a card pair associated to said stage.");
+#endif
+                                continue;
+                            }
+                            customStageDict.Add(stageName, pair);
+                        }
+                    }
+
+                    //if the pair has any other value thats not custom, add it to the regular dictionary.
+                    if (stageEnumValue != DirectorAPI.Stage.Custom && stageFlags.HasFlag(stageEnumValue))
+                    {
+                        if (stageDict.ContainsKey(stageEnumValue))
+                        {
+#if DEBUG
+                            MSULog.Warning($"Cannot add {this}'s {i} card pair to stage {Enum.GetName(typeof(DirectorAPI.Stage), stageEnumValue)} because there's already a card pair associated to said stage.");
+#endif
+                            continue;
+                        }
+                        stageDict.Add(stageEnumValue, pair);
+                    }
+                }
+            }
+
+            _customStageToCards = new ReadOnlyDictionary<string, DirectorAPI.DirectorCardHolder>(customStageDict);
+            _stageToCards = new ReadOnlyDictionary<DirectorAPI.Stage, DirectorAPI.DirectorCardHolder>(stageDict);
+        }
+
         /// <summary>
         /// Represents a pair of <see cref="DirectorAPI.DirectorCardHolder"/> and stage metadata.
         /// <br>Contains an implicit cast to cast from this struct to <see cref="DirectorAPI.DirectorCardHolder"/></br>
@@ -115,7 +148,7 @@ namespace MSU
             public DirectorAPI.Stage stageEnum;
 
             [Tooltip("The custom stage name for this pair, this is only used for custom, non vanilla stages.\nIf you want to add your interactable to a vanilla stage, leave this empty and utilize the field \"Stage Enum\"")]
-            public string customStageName;
+            public List<string> customStageNames;
 
             [Header("Director Card Metadata")]
             [Tooltip("The category for this monster. this is only used for vanilla categories. \nIf you want to add your monster to a custom category, set this to \"Custom\" and fill out \"Custom Category Weight\" and \"Custom Category Name\"")]

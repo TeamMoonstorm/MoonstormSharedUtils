@@ -106,7 +106,7 @@ public static class ScriptableObjectUpdater
                             pairs.Add(new InteractableCardProvider.StageInteractableCardPair
                             {
                                 stageEnum = DirectorAPI.Stage.Custom,
-                                customStageName = customStage,
+                                customStageNames = new List<string>() { customStage },
                                 interactableCategory = msInteractableDirectorCard.interactableCategory,
                                 customCategoryName = isCustomCategory ? msInteractableDirectorCard.customCategory : string.Empty,
                                 customCategoryWeight = isCustomCategory ? msInteractableDirectorCard.customCategoryWeight : 0,
@@ -132,7 +132,7 @@ public static class ScriptableObjectUpdater
                             stageEnum = stageEnum,
                             customCategoryName = isCustomCategory ? msInteractableDirectorCard.customCategory : string.Empty,
                             customCategoryWeight = isCustomCategory ? msInteractableDirectorCard.customCategoryWeight : 0,
-                            customStageName = string.Empty,
+                            customStageNames = new List<string>(),
                             interactableCategory = msInteractableDirectorCard.interactableCategory,
                             card = new AddressableDirectorCard
                             {
@@ -188,7 +188,7 @@ public static class ScriptableObjectUpdater
                             pairs.Add(new MonsterCardProvider.StageMonsterCardPair
                             {
                                 stageEnum = DirectorAPI.Stage.Custom,
-                                customStageName = customStage,
+                                customStageNames = new List<string>() { customStage },
                                 monsterCategory = msMonsterDirectorCard.monsterCategory,
                                 customCategoryName = isCustomCategory ? msMonsterDirectorCard.customCategory : string.Empty,
                                 customCategoryWeight = isCustomCategory ? msMonsterDirectorCard.customCategoryWeight : 0,
@@ -214,7 +214,7 @@ public static class ScriptableObjectUpdater
                             stageEnum = stageEnum,
                             customCategoryName = isCustomCategory ? msMonsterDirectorCard.customCategory : string.Empty,
                             customCategoryWeight = isCustomCategory ? msMonsterDirectorCard.customCategoryWeight : 0,
-                            customStageName = string.Empty,
+                            customStageNames = new List<string>(),
                             monsterCategory = msMonsterDirectorCard.monsterCategory,
                             card = new AddressableDirectorCard
                             {
