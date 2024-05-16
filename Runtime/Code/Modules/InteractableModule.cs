@@ -120,34 +120,45 @@ namespace MSU
         {
             foreach(var interactable in interactables)
             {
-                interactable.Initialize();
-
-                var asset = interactable.Asset;
-                if (asset.TryGetComponent<NetworkIdentity>(out _))
+#if DEBUG
+                try
                 {
-                    provider.ContentPack.networkedObjectPrefabs.AddSingle(asset);
-                }
+#endif
+                    interactable.Initialize();
 
-                if (interactable is IContentPackModifier packModifier)
-                {
-                    packModifier.ModifyContentPack(provider.ContentPack);
-                }
-
-                if (interactable is IInteractableContentPiece interactableContentPiece)
-                {
-                    if (!_pluginToInteractables.ContainsKey(plugin))
+                    var asset = interactable.Asset;
+                    if (asset.TryGetComponent<NetworkIdentity>(out _))
                     {
-                        _pluginToInteractables.Add(plugin, Array.Empty<IInteractableContentPiece>());
+                        provider.ContentPack.networkedObjectPrefabs.AddSingle(asset);
                     }
-                    var array = _pluginToInteractables[plugin];
-                    HG.ArrayUtils.ArrayAppend(ref array, interactableContentPiece);
 
-                    if (interactableContentPiece.CardProvider)
+                    if (interactable is IContentPackModifier packModifier)
                     {
-                        _interactableCardProviders.Add(interactableContentPiece.CardProvider);
+                        packModifier.ModifyContentPack(provider.ContentPack);
                     }
-                    _moonstormInteractables.Add(interactableContentPiece.Component, interactableContentPiece);
+
+                    if (interactable is IInteractableContentPiece interactableContentPiece)
+                    {
+                        if (!_pluginToInteractables.ContainsKey(plugin))
+                        {
+                            _pluginToInteractables.Add(plugin, Array.Empty<IInteractableContentPiece>());
+                        }
+                        var array = _pluginToInteractables[plugin];
+                        HG.ArrayUtils.ArrayAppend(ref array, interactableContentPiece);
+
+                        if (interactableContentPiece.CardProvider)
+                        {
+                            _interactableCardProviders.Add(interactableContentPiece.CardProvider);
+                        }
+                        _moonstormInteractables.Add(interactableContentPiece.Component, interactableContentPiece);
+                    }
+#if DEBUG
                 }
+                catch (Exception ex) 
+                {
+                    MSULog.Error($"Interactable {interactable.GetType().FullName} threw an exception while initializing.\n{ex}");
+                }
+#endif
             }
         }
 

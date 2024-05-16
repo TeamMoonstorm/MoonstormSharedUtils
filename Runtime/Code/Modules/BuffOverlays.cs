@@ -44,9 +44,25 @@ namespace MSU
             {
 #if DEBUG
                 MSULog.Info("Buff Overlay Dictionary already created.");
-                return;
 #endif
-            }    
+                return;
+            }
+            
+            if(!def)
+            {
+#if DEBUG
+                MSULog.Warning($"BuffDef is null for overlay with material {material}");
+#endif
+                return;
+            }
+
+            if(!material)
+            {
+#if DEBUG
+                MSULog.Warning($"Material is null for buff def {def}");
+#endif
+                return;
+            }
 
             if(_buffOverlays.ContainsKey(def))
             {

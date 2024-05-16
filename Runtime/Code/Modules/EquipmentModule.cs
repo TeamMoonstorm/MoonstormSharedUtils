@@ -191,41 +191,52 @@ namespace MSU
         {
             foreach(var equipment in equipments)
             {
-                equipment.Initialize();
-
-                var asset = equipment.Asset;
-                provider.ContentPack.equipmentDefs.AddSingle(asset);
-
-                if (equipment is IContentPackModifier packModifier)
+#if DEBUG
+                try
                 {
-                    packModifier.ModifyContentPack(provider.ContentPack);
-                }
+#endif
+                    equipment.Initialize();
 
-                if (equipment is IEquipmentContentPiece equipmentContentPiece)
-                {
-                    if (!_pluginToEquipments.ContainsKey(plugin))
+                    var asset = equipment.Asset;
+                    provider.ContentPack.equipmentDefs.AddSingle(asset);
+
+                    if (equipment is IContentPackModifier packModifier)
                     {
-                        _pluginToEquipments.Add(plugin, Array.Empty<IEquipmentContentPiece>());
+                        packModifier.ModifyContentPack(provider.ContentPack);
                     }
-                    var array = _pluginToEquipments[plugin];
-                    HG.ArrayUtils.ArrayAppend(ref array, equipmentContentPiece);
-                    _moonstormEquipments.Add(asset, equipmentContentPiece);
-                }
 
-                if (equipment is IEliteContentPiece eliteContentPiece)
-                {
-                    foreach (var eliteDef in eliteContentPiece.EliteDefs)
+                    if (equipment is IEquipmentContentPiece equipmentContentPiece)
                     {
-                        provider.ContentPack.eliteDefs.AddSingle(eliteDef);
+                        if (!_pluginToEquipments.ContainsKey(plugin))
+                        {
+                            _pluginToEquipments.Add(plugin, Array.Empty<IEquipmentContentPiece>());
+                        }
+                        var array = _pluginToEquipments[plugin];
+                        HG.ArrayUtils.ArrayAppend(ref array, equipmentContentPiece);
+                        _moonstormEquipments.Add(asset, equipmentContentPiece);
                     }
-                    provider.ContentPack.buffDefs.AddSingle(asset.passiveBuffDef);
 
-                    var eliteDefWithOverlayMaterial = eliteContentPiece.EliteDefs.OfType<ExtendedEliteDef>().FirstOrDefault(eed => eed.overlayMaterial);
+                    if (equipment is IEliteContentPiece eliteContentPiece)
+                    {
+                        foreach (var eliteDef in eliteContentPiece.EliteDefs)
+                        {
+                            provider.ContentPack.eliteDefs.AddSingle(eliteDef);
+                        }
+                        provider.ContentPack.buffDefs.AddSingle(asset.passiveBuffDef);
 
-                    if(eliteDefWithOverlayMaterial)
-                        BuffOverlays.AddBuffOverlay(asset.passiveBuffDef, eliteDefWithOverlayMaterial.overlayMaterial);
+                        var eliteDefWithOverlayMaterial = eliteContentPiece.EliteDefs.OfType<ExtendedEliteDef>().FirstOrDefault(eed => eed.overlayMaterial);
 
+                        if(eliteDefWithOverlayMaterial)
+                            BuffOverlays.AddBuffOverlay(asset.passiveBuffDef, eliteDefWithOverlayMaterial.overlayMaterial);
+
+                    }
+#if DEBUG
                 }
+                catch(Exception ex)
+                {
+                    MSULog.Error($"Equipment {equipment.GetType().FullName} threw an exception while initializing.\n{ex}");
+                }
+#endif
             }
         }
     }

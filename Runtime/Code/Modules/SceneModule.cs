@@ -134,37 +134,48 @@ namespace MSU
         {
             foreach(var scene in scenes)
             {
-                scene.Initialize();
-                var asset = scene.Asset;
-                provider.ContentPack.sceneDefs.AddSingle(asset);
-
-                if(scene is IContentPackModifier packModifier)
+#if DEBUG
+                try
                 {
-                    packModifier.ModifyContentPack(provider.ContentPack);
-                }
+#endif
+                    scene.Initialize();
+                    var asset = scene.Asset;
+                    provider.ContentPack.sceneDefs.AddSingle(asset);
 
-                if(scene is ISceneContentPiece sceneContentPiece)
+                    if (scene is IContentPackModifier packModifier)
+                    {
+                        packModifier.ModifyContentPack(provider.ContentPack);
+                    }
+
+                    if (scene is ISceneContentPiece sceneContentPiece)
+                    {
+                        if (!_pluginToScenes.ContainsKey(plugin))
+                        {
+                            _pluginToScenes.Add(plugin, Array.Empty<ISceneContentPiece>());
+                        }
+                        var array = _pluginToScenes[plugin];
+                        HG.ArrayUtils.ArrayAppend(ref array, sceneContentPiece);
+
+                        if (sceneContentPiece.MainTrack.HasValue)
+                            provider.ContentPack.musicTrackDefs.AddSingle(sceneContentPiece.MainTrack.Value);
+
+                        if (sceneContentPiece.BossTrack.HasValue)
+                            provider.ContentPack.musicTrackDefs.AddSingle(sceneContentPiece.BossTrack.Value);
+
+                        sceneContentPiece.Asset.portalMaterial = StageRegistration.MakeBazaarSeerMaterial(sceneContentPiece.BazaarTextureBase);
+
+                        if (sceneContentPiece.Asset.sceneType == SceneType.Stage)
+                        {
+                            StageRegistration.RegisterSceneDefToLoop(sceneContentPiece.Asset);
+                        }
+                    }
+#if DEBUG
+                }
+                catch (Exception ex)
                 {
-                    if(!_pluginToScenes.ContainsKey(plugin))
-                    {
-                        _pluginToScenes.Add(plugin, Array.Empty<ISceneContentPiece>());
-                    }
-                    var array = _pluginToScenes[plugin];
-                    HG.ArrayUtils.ArrayAppend(ref array, sceneContentPiece);
-
-                    if (sceneContentPiece.MainTrack.HasValue)
-                        provider.ContentPack.musicTrackDefs.AddSingle(sceneContentPiece.MainTrack.Value);
-
-                    if (sceneContentPiece.BossTrack.HasValue)
-                        provider.ContentPack.musicTrackDefs.AddSingle(sceneContentPiece.BossTrack.Value);
-
-                    sceneContentPiece.Asset.portalMaterial = StageRegistration.MakeBazaarSeerMaterial(sceneContentPiece.BazaarTextureBase);
-
-                    if(sceneContentPiece.Asset.sceneType == SceneType.Stage)
-                    {
-                        StageRegistration.RegisterSceneDefToLoop(sceneContentPiece.Asset);
-                    }
+                    MSULog.Error($"Scene {scene.GetType().FullName} threw an exception while initializing.\n{ex}");
                 }
+#endif
             }
         }
     }

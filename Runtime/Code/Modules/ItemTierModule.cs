@@ -161,36 +161,47 @@ namespace MSU
         {
             foreach(var tier in itemTiers)
             {
-                tier.Initialize();
-
-                var asset = tier.Asset;
-                provider.ContentPack.itemTierDefs.AddSingle(asset);
-
-                if (tier is IContentPackModifier packModifier)
+#if DEBUG
+                try
                 {
-                    packModifier.ModifyContentPack(provider.ContentPack);
+#endif
+                    tier.Initialize();
+
+                    var asset = tier.Asset;
+                    provider.ContentPack.itemTierDefs.AddSingle(asset);
+
+                    if (tier is IContentPackModifier packModifier)
+                    {
+                        packModifier.ModifyContentPack(provider.ContentPack);
+                    }
+                    if (tier is IItemTierContentPiece itemTierContentPiece)
+                    {
+                        if (!_pluginToTiers.ContainsKey(plugin))
+                            _pluginToTiers.Add(plugin, Array.Empty<IItemTierContentPiece>());
+
+                        var array = _pluginToTiers[plugin];
+                        HG.ArrayUtils.ArrayAppend(ref array, itemTierContentPiece);
+                        _moonstormItemTiers.Add(asset, itemTierContentPiece);
+
+                        if (itemTierContentPiece.ColorIndex)
+                        {
+                            ColorsAPI.AddSerializableColor(itemTierContentPiece.ColorIndex);
+                            asset.colorIndex = itemTierContentPiece.ColorIndex.Value.ColorIndex;
+                        }
+                        if (itemTierContentPiece.DarkColorIndex)
+                        {
+                            ColorsAPI.AddSerializableColor(itemTierContentPiece.DarkColorIndex);
+                            asset.colorIndex = itemTierContentPiece.DarkColorIndex.Value.ColorIndex;
+                        }
+                        _itemTierToPickupFX.Add(asset, itemTierContentPiece.PickupDisplayVFX);
+                    }
+#if DEBUG
                 }
-                if (tier is IItemTierContentPiece itemTierContentPiece)
+                catch (Exception ex)
                 {
-                    if (!_pluginToTiers.ContainsKey(plugin))
-                        _pluginToTiers.Add(plugin, Array.Empty<IItemTierContentPiece>());
-
-                    var array = _pluginToTiers[plugin];
-                    HG.ArrayUtils.ArrayAppend(ref array, itemTierContentPiece);
-                    _moonstormItemTiers.Add(asset, itemTierContentPiece);
-
-                    if (itemTierContentPiece.ColorIndex)
-                    {
-                        ColorsAPI.AddSerializableColor(itemTierContentPiece.ColorIndex);
-                        asset.colorIndex = itemTierContentPiece.ColorIndex.Value.ColorIndex;
-                    }
-                    if (itemTierContentPiece.DarkColorIndex)
-                    {
-                        ColorsAPI.AddSerializableColor(itemTierContentPiece.DarkColorIndex);
-                        asset.colorIndex = itemTierContentPiece.DarkColorIndex.Value.ColorIndex;
-                    }
-                    _itemTierToPickupFX.Add(asset, itemTierContentPiece.PickupDisplayVFX);
+                    MSULog.Error($"ItemTier {tier.GetType().FullName} threw an exception while initializing.\n{ex}");
                 }
+#endif
             }
         }
     }

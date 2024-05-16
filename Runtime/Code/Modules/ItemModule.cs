@@ -112,30 +112,41 @@ namespace MSU
         {
             foreach(var item in items)
             {
-                item.Initialize();
-
-                var asset = item.Asset;
-                provider.ContentPack.itemDefs.AddSingle(asset);
-
-                if(asset.deprecatedTier == ItemTier.Boss)
+#if DEBUG
+                try
                 {
-                    _bossItems.Add(asset);
-                }
+#endif
+                    item.Initialize();
 
-                if (item is IContentPackModifier packModifier)
-                {
-                    packModifier.ModifyContentPack(provider.ContentPack);
-                }
-                if (item is IItemContentPiece itemContentPiece)
-                {
-                    if (!_pluginToItems.ContainsKey(plugin))
+                    var asset = item.Asset;
+                    provider.ContentPack.itemDefs.AddSingle(asset);
+
+                    if (asset.deprecatedTier == ItemTier.Boss)
                     {
-                        _pluginToItems.Add(plugin, Array.Empty<IItemContentPiece>());
+                        _bossItems.Add(asset);
                     }
-                    var array = _pluginToItems[plugin];
-                    HG.ArrayUtils.ArrayAppend(ref array, itemContentPiece);
-                    _moonstormItems.Add(asset, itemContentPiece);
+
+                    if (item is IContentPackModifier packModifier)
+                    {
+                        packModifier.ModifyContentPack(provider.ContentPack);
+                    }
+                    if (item is IItemContentPiece itemContentPiece)
+                    {
+                        if (!_pluginToItems.ContainsKey(plugin))
+                        {
+                            _pluginToItems.Add(plugin, Array.Empty<IItemContentPiece>());
+                        }
+                        var array = _pluginToItems[plugin];
+                        HG.ArrayUtils.ArrayAppend(ref array, itemContentPiece);
+                        _moonstormItems.Add(asset, itemContentPiece);
+                    }
+#if DEBUG
                 }
+                catch(Exception ex)
+                {
+                    MSULog.Error($"Item {item.GetType().FullName} threw an exception while initializing.\n{ex}");
+                }
+#endif
             }
         }
 

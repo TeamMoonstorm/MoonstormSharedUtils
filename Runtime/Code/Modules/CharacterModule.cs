@@ -120,44 +120,55 @@ namespace MSU
         {
             foreach (var body in bodies)
             {
-                body.Initialize();
-
-                var asset = body.Asset;
-                provider.ContentPack.bodyPrefabs.AddSingle(asset);
-
-                if (body is IContentPackModifier packModifier)
+#if DEBUG
+                try
                 {
-                    packModifier.ModifyContentPack(provider.ContentPack);
-                }
+#endif
+                    body.Initialize();
 
-                if (body is ICharacterContentPiece characterContentPiece)
-                {
-                    if (!_pluginToCharacters.ContainsKey(plugin))
+                    var asset = body.Asset;
+                    provider.ContentPack.bodyPrefabs.AddSingle(asset);
+
+                    if (body is IContentPackModifier packModifier)
                     {
-                        _pluginToCharacters.Add(plugin, Array.Empty<ICharacterContentPiece>());
+                        packModifier.ModifyContentPack(provider.ContentPack);
                     }
-                    var array = _pluginToCharacters[plugin];
-                    HG.ArrayUtils.ArrayAppend(ref array, characterContentPiece);
 
-                    if (characterContentPiece.MasterPrefab)
+                    if (body is ICharacterContentPiece characterContentPiece)
                     {
-                        provider.ContentPack.masterPrefabs.AddSingle(characterContentPiece.MasterPrefab);
+                        if (!_pluginToCharacters.ContainsKey(plugin))
+                        {
+                            _pluginToCharacters.Add(plugin, Array.Empty<ICharacterContentPiece>());
+                        }
+                        var array = _pluginToCharacters[plugin];
+                        HG.ArrayUtils.ArrayAppend(ref array, characterContentPiece);
+
+                        if (characterContentPiece.MasterPrefab)
+                        {
+                            provider.ContentPack.masterPrefabs.AddSingle(characterContentPiece.MasterPrefab);
+                        }
+                        _moonstormCharacters.Add(characterContentPiece.Component, characterContentPiece);
                     }
-                    _moonstormCharacters.Add(characterContentPiece.Component, characterContentPiece);
-                }
 
-                if (body is ISurvivorContentPiece survivorContentPiece)
-                {
-                    provider.ContentPack.survivorDefs.AddSingle(survivorContentPiece.SurvivorDef);
-                }
-                if (body is IMonsterContentPiece monsterContentPiece)
-                {
-                    if (monsterContentPiece.CardProvider)
-                        _monsterCardProviders.Add(monsterContentPiece.CardProvider);
+                    if (body is ISurvivorContentPiece survivorContentPiece)
+                    {
+                        provider.ContentPack.survivorDefs.AddSingle(survivorContentPiece.SurvivorDef);
+                    }
+                    if (body is IMonsterContentPiece monsterContentPiece)
+                    {
+                        if (monsterContentPiece.CardProvider)
+                            _monsterCardProviders.Add(monsterContentPiece.CardProvider);
 
-                    if (monsterContentPiece.DissonanceCard)
-                        _dissonanceCards.Add(monsterContentPiece.DissonanceCard);
+                        if (monsterContentPiece.DissonanceCard)
+                            _dissonanceCards.Add(monsterContentPiece.DissonanceCard);
+                    }
+#if DEBUG
                 }
+                catch (Exception ex)
+                {
+                    MSULog.Error($"Character {body.GetType().FullName} threw an exception while initializing.\n{ex}");
+                }
+#endif
             }
         }
 

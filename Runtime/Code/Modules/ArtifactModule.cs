@@ -139,30 +139,41 @@ namespace MSU
         {
             foreach(var artifact in artifacts)
             {
-                artifact.Initialize();
-                var asset = artifact.Asset;
-                provider.ContentPack.artifactDefs.AddSingle(asset);
-
-                if (artifact is IContentPackModifier packModifier)
+#if DEBUG
+                try 
                 {
-                    packModifier.ModifyContentPack(provider.ContentPack);
-                }
+#endif
+                    artifact.Initialize();
+                    var asset = artifact.Asset;
+                    provider.ContentPack.artifactDefs.AddSingle(asset);
 
-                if (artifact is IArtifactContentPiece artifactContentPiece)
+                    if (artifact is IContentPackModifier packModifier)
+                    {
+                        packModifier.ModifyContentPack(provider.ContentPack);
+                    }
+
+                    if (artifact is IArtifactContentPiece artifactContentPiece)
+                    {
+                        if (!_pluginToArtifacts.ContainsKey(plugin))
+                        {
+                            _pluginToArtifacts.Add(plugin, Array.Empty<IArtifactContentPiece>());
+                        }
+                        var array = _pluginToArtifacts[plugin];
+                        HG.ArrayUtils.ArrayAppend(ref array, artifactContentPiece);
+
+                        if (artifactContentPiece.ArtifactCode)
+                        {
+                            ArtifactCodeAPI.AddCode(artifactContentPiece.Asset, artifactContentPiece.ArtifactCode);
+                        }
+                        _moonstormArtifacts.Add(asset, artifactContentPiece);
+                    }
+#if DEBUG
+                }
+                catch (Exception ex)
                 {
-                    if (!_pluginToArtifacts.ContainsKey(plugin))
-                    {
-                        _pluginToArtifacts.Add(plugin, Array.Empty<IArtifactContentPiece>());
-                    }
-                    var array = _pluginToArtifacts[plugin];
-                    HG.ArrayUtils.ArrayAppend(ref array, artifactContentPiece);
-
-                    if (artifactContentPiece.ArtifactCode)
-                    {
-                        ArtifactCodeAPI.AddCode(artifactContentPiece.Asset, artifactContentPiece.ArtifactCode);
-                    }
-                    _moonstormArtifacts.Add(asset, artifactContentPiece);
+                    MSULog.Error($"Artifact {artifact.GetType().FullName} threw an exception while initializing.\n{ex}");
                 }
+#endif
             }
         }
     }
