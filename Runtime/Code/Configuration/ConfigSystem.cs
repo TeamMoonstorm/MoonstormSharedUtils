@@ -104,7 +104,7 @@ namespace MSU.Config
                 }
                 catch(Exception e)
                 {
-                    MSULog.Error(e);
+                    MSULog.Error($"Error while configuring {attribute.AttachedMemberInfo.Name}. {e}");
                 }
             }
         }
