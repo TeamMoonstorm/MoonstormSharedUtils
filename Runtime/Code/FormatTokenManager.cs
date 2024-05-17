@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Reflection;
 using SearchableAttribute = HG.Reflection.SearchableAttribute;
 using System.Xml.Linq;
+using MSU.Config;
 
 namespace MSU
 {
@@ -15,6 +16,7 @@ namespace MSU
     {
         private static Dictionary<string, FormatTokenAttribute[]> _cachedFormattingArray = null;
 
+        [SystemInitializer(typeof(ConfigSystem))]
         private static void Init()
         {
             MSULog.Info("Initializing FormatTokenManager");
