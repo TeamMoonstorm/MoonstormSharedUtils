@@ -134,14 +134,13 @@ namespace MSU
         private static void SetBuffBehaviourCount(On.RoR2.CharacterBody.orig_SetBuffCount orig, CharacterBody self, BuffIndex buffType, int newCount)
         {
             orig(self, buffType, newCount);
-            if (!_buffToBehaviour.ContainsKey(buffType))
+            if (!_buffToBehaviour.ContainsKey(buffType) || !self)
                 return;
 
             var bodyBuffBehaviours = _bodyToBuffBehaviourDictionary[self];
             if(!bodyBuffBehaviours.ContainsKey(buffType))
             {
                 var newBehaviour = (BaseBuffBehaviour)self.gameObject.AddComponent(_buffToBehaviour[buffType]);
-                newBehaviour.CharacterBody = self;
                 newBehaviour.BuffIndex = buffType;
                 newBehaviour.BuffCount = newCount;
                 bodyBuffBehaviours.Add(buffType, newBehaviour);
