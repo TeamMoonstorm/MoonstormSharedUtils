@@ -48,7 +48,7 @@ namespace MSU
 
             EquipmentDef def = EquipmentCatalog.GetEquipmentDef(body.inventory.GetEquipmentIndex());
 
-            if (eliteBehaviour)
+            if (def && eliteBehaviour)
                 CheckEliteBehaviour(def);
         }
 
