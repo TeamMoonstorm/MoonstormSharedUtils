@@ -29,7 +29,6 @@ namespace MSU
         /// </summary>
         public MSUEliteBehaviour eliteBehaviour;
 
-        private EquipmentIndex _assignedEliteEquipmentIndex;
         private IStatItemBehavior[] _statItemBehaviors = Array.Empty<IStatItemBehavior>();
         private IBodyStatArgModifier[] _bodyStatArgModifiers = Array.Empty<IBodyStatArgModifier>();
 
@@ -48,16 +47,6 @@ namespace MSU
                 return;
 
             EquipmentDef def = EquipmentCatalog.GetEquipmentDef(body.inventory.GetEquipmentIndex());
-
-            if (!def)
-                return;
-
-            if (EquipmentModule.AllMoonstormEquipments.TryGetValue(def, out IEquipmentContentPiece equipmentContent))
-            {
-                _equipmentContentPiece?.OnEquipmentLost(body);
-                _equipmentContentPiece = equipmentContent;
-                _equipmentContentPiece.OnEquipmentObtained(body);
-            }
 
             if (eliteBehaviour)
                 CheckEliteBehaviour(def);

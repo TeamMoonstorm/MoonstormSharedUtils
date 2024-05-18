@@ -103,6 +103,8 @@ namespace MSU
         private static void SystemInit()
         {
             On.RoR2.EquipmentSlot.PerformEquipmentAction += PerformAction;
+            On.RoR2.CharacterBody.OnEquipmentLost += CallOnEquipmentLost;
+            On.RoR2.CharacterBody.OnEquipmentGained += CallOnEquipmentGained;
 
             var allEquips = new Dictionary<EquipmentDef, IEquipmentContentPiece>();
             var nonEliteEquips = new Dictionary<EquipmentDef, IEquipmentContentPiece>();
@@ -153,6 +155,24 @@ namespace MSU
             }
 
             moduleAvailability.MakeAvailable();
+        }
+
+        private static void CallOnEquipmentGained(On.RoR2.CharacterBody.orig_OnEquipmentGained orig, CharacterBody self, EquipmentDef equipmentDef)
+        {
+            orig(self, equipmentDef);
+            if(AllMoonstormEquipments.TryGetValue(equipmentDef, out var contentPiece))
+            {
+                contentPiece.OnEquipmentObtained(self);
+            }
+        }
+
+        private static void CallOnEquipmentLost(On.RoR2.CharacterBody.orig_OnEquipmentLost orig, CharacterBody self, EquipmentDef equipmentDef)
+        {
+            orig(self, equipmentDef);
+            if (AllMoonstormEquipments.TryGetValue(equipmentDef, out var contentPiece))
+            {
+                contentPiece.OnEquipmentLost(self);
+            }
         }
 
         private static bool PerformAction(On.RoR2.EquipmentSlot.orig_PerformEquipmentAction orig, EquipmentSlot self, EquipmentDef equipmentDef)
