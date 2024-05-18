@@ -113,7 +113,6 @@ namespace MSU
         protected virtual void Awake()
         {
             CharacterBody = GetComponent<CharacterBody>();
-            _buffCount = -1;
         }
 
         protected virtual void OnDestroy()
