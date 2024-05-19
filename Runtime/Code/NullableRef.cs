@@ -8,13 +8,13 @@ using UnityEngine;
 namespace MSU
 {
     /// <summary>
-    /// A wrapper class to mark that a Reference type may be null.
+    /// A wrapper struct to mark that a Reference type may be null.
     /// <para>Due to the nature of unity and using FrankenMono, Nullable Reference Types are not allowed in the unity editor and as such it throws exceptions when unity's compiler tries to compile the code.</para>
-    /// <para>Thus, this class exists.</para>
+    /// <para>Thus, this struct exists.</para>
     /// </summary>
     /// <typeparam name="T">The type contained by this nullable ref</typeparam>
     [Serializable]
-    public class NullableRef<T> where T : class
+    public struct NullableRef<T> where T : class
     {
         /// <summary>
         /// The value stored by this NullableRef
@@ -63,7 +63,7 @@ namespace MSU
         /// </summary>
         public static implicit operator T(NullableRef<T> o)
         {
-            return o?.Value;
+            return o.Value;
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace MSU
         /// </summary>
         public static implicit operator bool(NullableRef<T> o)
         {
-            return o?.HasValue ?? false;
+            return o.HasValue;
         }
 
         /// <summary>
