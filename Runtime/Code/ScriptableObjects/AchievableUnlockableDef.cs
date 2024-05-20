@@ -110,12 +110,27 @@ namespace MSU
 
         private static void AddInstances(List<string> arg1, Dictionary<string, AchievementDef> arg2, List<AchievementDef> arg3)
         {
-            foreach(AchievableUnlockableDef def in _instances)
+            foreach (AchievableUnlockableDef def in _instances)
             {
                 if (def.index == UnlockableIndex.None)
                     continue;
 
                 var tiedAchievement = def.TiedAchievementDef;
+                if (!tiedAchievement.achievedIcon)
+                {
+#if DEBUG
+                    MSULog.Warning($"Not adding {def} as during the AchievementDef creation it returned a null achievedIcon Sprite. (achievementIcon={def.achievementIcon})");
+#endif
+                    continue;
+                }
+
+                if (tiedAchievement.type == null)
+                {
+#if DEBUG
+                    MSULog.Warning($"Not adding {def} as during the AchievementDef creation it returned a null achievementCondition Type. (achievementCondition={def.achievementCondition})");
+#endif
+                    continue;
+                }
                 def.getHowToUnlockString = () =>
                 {
                     return Language.GetStringFormatted("UNLOCK_VIA_ACHIEVEMENT_FORMAT", Language.GetString(tiedAchievement.nameToken), Language.GetString(tiedAchievement.descriptionToken));
