@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.Networking;
 using static RoR2.RoR2Content;
 
 namespace MSU
@@ -93,22 +94,28 @@ namespace MSU
 
         private static void OnArtifactDisabled(RunArtifactManager runArtifactManager, ArtifactDef artifactDef)
         {
-            foreach(var (artifact, contentPiece) in MoonstormArtifacts)
+            foreach (var kvp in MoonstormArtifacts)
             {
-                if(!(artifact == artifactDef))
+                if (!(artifactDef != kvp.Key))
                 {
-                    contentPiece.OnArtifactEnabled();
+#if DEBUG
+                    MSULog.Info($"Running OnArtifactDisabled() for artifact {kvp.Key.cachedName}");
+#endif
+                    kvp.Value.OnArtifactDisabled();
                 }
             }
         }
 
         private static void OnArtifactEnabled(RunArtifactManager runArtifactManager, ArtifactDef artifactDef)
         {
-            foreach(var (artifact, contentPiece) in MoonstormArtifacts)
+            foreach (var kvp in MoonstormArtifacts)
             {
-                if (!(artifact == artifactDef))
+                if (!(artifactDef != kvp.Key) && NetworkServer.active)
                 {
-                    contentPiece.OnArtifactEnabled();
+#if DEBUG
+                    MSULog.Info($"Running OnArtifactEnabled() for artifact {kvp.Key.cachedName}");
+#endif
+                    kvp.Value.OnArtifactEnabled();
                 }
             }
         }
