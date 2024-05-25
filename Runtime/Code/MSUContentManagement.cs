@@ -42,11 +42,17 @@ namespace MSU
 
         private static void GetStatsCoefficients(CharacterBody sender, RecalculateStatsAPI.StatHookEventArgs args)
         {
+            if (sender.bodyIndex == BodyIndex.None)
+                return;
+
             bodyToContentBehaviour[sender].GetStatCoefficients(args);
         }
 
         private static void RecalculateStats(On.RoR2.CharacterBody.orig_RecalculateStats orig, CharacterBody self)
         {
+            if (self.bodyIndex == BodyIndex.None)
+                return;
+
             var behaviour = bodyToContentBehaviour[self];
             behaviour.RecalculateStatsStart();
             orig(self);
@@ -55,6 +61,9 @@ namespace MSU
 
         private static void Holy_GetStatsCoefficients(CharacterBody body, RecalculateStatsAPI.StatHookEventArgs args)
         {
+            if (body.bodyIndex == BodyIndex.None)
+                return;
+
             var behaviour = bodyToContentBehaviour[body];
             behaviour.RecalculateStatsStart();
             behaviour.GetStatCoefficients(args);
@@ -62,6 +71,9 @@ namespace MSU
 
         private static void Holy_RecalculateStats(On.RoR2.CharacterBody.orig_RecalculateStats orig, CharacterBody self)
         {
+            if (self.bodyIndex == BodyIndex.None)
+                return;
+
             orig(self);
             bodyToContentBehaviour[self].RecalculateStatsEnd();
         }
@@ -134,6 +146,10 @@ namespace MSU
         private static void SetBuffBehaviourCount(On.RoR2.CharacterBody.orig_SetBuffCount orig, CharacterBody self, BuffIndex buffType, int newCount)
         {
             orig(self, buffType, newCount);
+
+            if (self.bodyIndex == BodyIndex.None)
+                return;
+
             if (!_buffToBehaviour.ContainsKey(buffType) || !self)
                 return;
 
@@ -154,19 +170,28 @@ namespace MSU
 
         private static void OnBodyDestroyedGlobal(CharacterBody obj)
         {
+            if (obj.bodyIndex == BodyIndex.None)
+                return;
+
             bodyToContentBehaviour.Remove(obj);
             _bodyToBuffBehaviourDictionary.Remove(obj);
         }
 
         private static void OnBodyAwakeGlobal(CharacterBody obj)
         {
+            if (obj.bodyIndex == BodyIndex.None)
+                return;
+
             bodyToContentBehaviour.Add(obj, obj.GetComponent<MSUContentBehaviour>());
             _bodyToBuffBehaviourDictionary.Add(obj, new Dictionary<BuffIndex, BaseBuffBehaviour>());
         }
 
         internal static void OnBuffBehaviourDestroyed(CharacterBody body, BuffIndex buffIndex)
         {
-            if(_bodyToBuffBehaviourDictionary.TryGetValue(body, out var innerDict))
+            if (body.bodyIndex == BodyIndex.None)
+                return;
+
+            if (_bodyToBuffBehaviourDictionary.TryGetValue(body, out var innerDict))
             {
                 innerDict.Remove(buffIndex);
             }
