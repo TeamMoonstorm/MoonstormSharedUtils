@@ -41,6 +41,7 @@ namespace MSU
 #if DEBUG
         public static ConfigFile DebugConfig { get; private set; }
 
+        internal static ConfiguredBool _enableStackLogging;
         [AutoConfig]
         internal static ConfiguredBool _enableSelfConnect;
         [AutoConfig]
@@ -61,6 +62,13 @@ namespace MSU
     
         private void SetDebugConfigs()
         {
+            _enableStackLogging = new ConfiguredBool(false)
+            {
+                Section = "Debugging",
+                Description = "When enabled, MSU will log a StackTrace whenever it logs a Warning, Error or a Fatal.",
+                ConfigFile = DebugConfig,
+            };
+
             _enableSelfConnect = new ConfiguredBool(true)
             {
                 Section = "Debugging",
@@ -206,20 +214,11 @@ namespace MSU
         }
 #endif
 
-        private void SetConfigs()
-        {
-
-        }
-
         internal MSUConfig(BaseUnityPlugin bup)
         {
             ConfigFactory = new ConfigFactory(bup, true);
             GeneralConfig = ConfigFactory.CreateConfigFile(GENERAL, false);
             var icon = MSUMain.MSUAssetBundle.LoadAsset<Sprite>("icon");
-            /*ModSettingsManager.SetModIcon(icon);
-            ModSettingsManager.SetModDescription("An API focused with the intention of working in an editor enviroment using ThunderKit, MSU is a modular API system designed for ease of use and simplicity.");
-
-            SetConfigs();*/
 
 #if DEBUG
             DebugConfig = ConfigFactory.CreateConfigFile(DEBUG, true);

@@ -27,7 +27,16 @@ namespace MSU
         private static void Log(LogLevel level, object data, int i, string member)
         {
 #if UNITY_EDITOR
-            switch(level)
+            LogEditor(level, data, i, member);
+#else
+            LogRuntime(level, data, i, member);
+#endif
+        }
+
+#if UNITY_EDITOR
+        private static void LogEditor(LogLevel level, object data, int i, string member)
+        {
+            switch (level)
             {
                 case LogLevel.Debug:
                 case LogLevel.Info:
@@ -42,16 +51,24 @@ namespace MSU
                     UDebug.LogWarning(Format(data, i, member));
                     break;
             }
-#else
+        }
+#endif
+
+        private static void LogRuntime(LogLevel level, object data, int i, string member)
+        {
             object data2 = (level.HasFlag(LogLevel.Warning) || level.HasFlag(LogLevel.Error) || level.HasFlag(LogLevel.Fatal)) ? Format(data, i, member) : data;
 
             _log.Log(level, data2);
 #if DEBUG
-            if(_breakableLevel.HasFlag(level))
+            if(MSUConfig._enableStackLogging && (level.HasFlag(LogLevel.Warning) || level.HasFlag(LogLevel.Error) || level.HasFlag(LogLevel.Fatal)))
+            {
+                _log.LogMessage(new StackTrace());
+            }
+
+            if (_breakableLevel.HasFlag(level))
             {
                 TryBreak();
             }
-#endif
 #endif
         }
 
