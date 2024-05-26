@@ -168,6 +168,7 @@ namespace MSU
                         {
                             StageRegistration.RegisterSceneDefToLoop(sceneContentPiece.Asset);
                         }
+                        _moonstormScenes.Add(scene.Asset, sceneContentPiece);
                     }
 #if DEBUG
                 }
