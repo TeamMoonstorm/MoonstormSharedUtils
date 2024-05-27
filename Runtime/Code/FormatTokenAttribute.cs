@@ -35,7 +35,8 @@ namespace MSU
 
         /// <summary>
         /// The index used during the formatting process
-        /// </summary>
+        /// </summary>ob
+        /// 
         public int FormattingIndex { get; private set; }
 
         private object _cachedFormattingValue;
@@ -91,7 +92,7 @@ namespace MSU
                             break;
                     }
                 }
-                _cachedFormattingValue = value;
+                _cachedFormattingValue = _cachedFormattingValue ?? value;
             }
             else
             {
