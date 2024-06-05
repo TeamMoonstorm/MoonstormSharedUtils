@@ -64,7 +64,9 @@ namespace MSU.Editor.Pipelines
 
                 if(dictionary.TryGetValue(shader, out Shader value))
                 {
+                    int renderQueue = material.renderQueue;
                     material.shader = value;
+                    material.renderQueue = renderQueue;
                     log.Add($"Swapped {MarkdownUtils.GenerateAssetLink(material)}'s shadder ({MarkdownUtils.GenerateAssetLink(shader)}) with {MarkdownUtils.GenerateAssetLink(value)}.");
                     _modifiedMaterials.Add(material);
                 }
@@ -91,7 +93,9 @@ namespace MSU.Editor.Pipelines
 
                 if(dictionary.TryGetValue(shader, out Shader value))
                 {
+                    int renderQueue = material.renderQueue;
                     material.shader = value;
+                    material.renderQueue = renderQueue;
                 }
             }
         }
