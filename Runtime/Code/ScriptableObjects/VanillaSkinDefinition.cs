@@ -1,4 +1,4 @@
-﻿using MSU.AddressReferencedAssets;
+using MSU.AddressReferencedAssets;
 using R2API.AddressReferencedAssets;
 using RoR2;
 using System;
@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Rendering;
 using UnityEngine.UIElements;
-
+using System.Threading.Tasks;
 namespace MSU
 {
     /// <summary>
@@ -35,7 +35,7 @@ namespace MSU
         [Tooltip("Replace a minion's skin")]
         public AddressedMinionSkinReplacement[] _minionSkinReplacements = Array.Empty<AddressedMinionSkinReplacement>();
 
-        new private void Awake()
+        new private async void Awake()
         {
             if (Application.IsPlaying(this))
             {
@@ -50,15 +50,15 @@ namespace MSU
             }
         }
 
-        private void FinishSkin()
+        private async void FinishSkin()
         {
 #if DEBUG
             MSULog.Debug("Attempting to finalize " + this);
 #endif
-            var bodyPrefab = Addressables.LoadAssetAsync<GameObject>(bodyAddress).WaitForCompletion();
+            var bodyPrefab = await Addressables.LoadAssetAsync<GameObject>(bodyAddress).Task;
             var characterModel = bodyPrefab.GetComponentInChildren<CharacterModel>();
 
-            var displayPrefab = Addressables.LoadAssetAsync<GameObject>(displayAddress).WaitForCompletion();
+            var displayPrefab = await Addressables.LoadAssetAsync<GameObject>(displayAddress).Task;
             var displayModel = displayPrefab.GetComponentInChildren<CharacterModel>();
 
             //fill unfilled base fields
@@ -67,27 +67,28 @@ namespace MSU
                 HG.ArrayUtils.ArrayAppend(ref baseSkins, baseSkin.Asset);
             }
             rootObject = characterModel.gameObject;
-            foreach(var item in _rendererInfos)
+            foreach (var item in _rendererInfos)
             {
                 var rendererInfo = item.Upgrade(characterModel);
                 HG.ArrayUtils.ArrayAppend(ref rendererInfos, rendererInfo);
             }
-            foreach(var item in _gameObjectActivations)
+            foreach (var item in _gameObjectActivations)
             {
                 var gameObjectActivation = item.Upgrade(characterModel, displayModel);
                 HG.ArrayUtils.ArrayAppend(ref gameObjectActivations, gameObjectActivation);
             }
-            foreach(var item in _meshReplacements)
+            foreach (var item in _meshReplacements)
             {
                 var meshReplacement = item.Upgrade(characterModel);
                 HG.ArrayUtils.ArrayAppend(ref meshReplacements, meshReplacement);
             }
-            foreach(var item in _projectileGhostReplacements)
+            await Task.Yield();
+            foreach (var item in _projectileGhostReplacements)
             {
                 var ghostReplacement = item.Upgrade();
                 HG.ArrayUtils.ArrayAppend(ref projectileGhostReplacements, ghostReplacement);
             }
-            foreach(var item in _minionSkinReplacements)
+            foreach (var item in _minionSkinReplacements)
             {
                 var minionSkin = item.Upgrade();
                 HG.ArrayUtils.ArrayAppend(ref minionSkinReplacements, minionSkin);
@@ -173,7 +174,7 @@ namespace MSU
             private SkinDef.GameObjectActivation CreateCustomActivation(CharacterModel characterModel, CharacterModel displayModel)
             {
                 Transform child = characterModel.GetComponent<ChildLocator>().FindChild(childLocatorEntry);
-                if(!child)
+                if (!child)
                 {
                     MSULog.Warning($"Cannot create custom game object activation since \"{childLocatorEntry}\" is not a valid entry for model {characterModel}");
                     return new GameObjectActivation { };
@@ -246,7 +247,7 @@ namespace MSU
             public AddressReferencedPrefab projectilePrefab;
             [Tooltip("The new ghost prefab for the projectile")]
             public GameObject ghostReplacement;
-        
+
             internal SkinDef.ProjectileGhostReplacement Upgrade()
             {
                 return new ProjectileGhostReplacement
