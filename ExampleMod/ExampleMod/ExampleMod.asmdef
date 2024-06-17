@@ -1,0 +1,33 @@
+{
+    "name": "ExampleMod",
+    "references": [
+        "GUID:08e20a9dcb84ac748840227dcac08af2"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "Assembly-CSharp.dll",
+        "MMHOOK_RoR2.dll",
+        "BepInEx.dll",
+        "BepInEx.Preloader.dll",
+        "BepInEx.Bootstrap.dll",
+        "Decalicious.dll",
+        "HGCSharpUtils.dll",
+        "HGUnityUtils.dll",
+        "KinematicCharacterController.dll",
+        "Mono.Cecil.dll",
+        "MonoMod.RuntimeDetour.dll",
+        "RiskOfOptions.dll",
+        "RoR2.dll",
+        "RoR2BepInExPack.dll",
+        "Unity.Addressables.dll",
+        "Unity.TextMeshPro.dll",
+        "UnityEngine.UI.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

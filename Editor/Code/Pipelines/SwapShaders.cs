@@ -67,7 +67,7 @@ namespace MSU.Editor.Pipelines
                     int renderQueue = material.renderQueue;
                     material.shader = value;
                     material.renderQueue = renderQueue;
-                    if (SwapType == SwapType.HlslToYaml && renderQueue == value.renderQueue)
+                    if (swapType == SwapType.HlslToYaml && renderQueue == value.renderQueue)
                         material.renderQueue = -1;
                     log.Add($"Swapped {MarkdownUtils.GenerateAssetLink(material)}'s shadder ({MarkdownUtils.GenerateAssetLink(shader)}) with {MarkdownUtils.GenerateAssetLink(value)}.");
                     _modifiedMaterials.Add(material);
