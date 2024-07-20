@@ -24,7 +24,15 @@
         "RoR2BepInExPack.dll",
         "Unity.Addressables.dll",
         "Unity.TextMeshPro.dll",
-        "UnityEngine.UI.dll"
+        "UnityEngine.UI.dll",
+        "R2API.Addressables.dll",
+        "R2API.ArtifactCode.dll",
+        "R2API.Colors.dll",
+        "R2API.DamageType.dll",
+        "R2API.Dot.dll",
+        "R2API.Elites.dll",
+        "R2API.RecalculateStats.dll",
+        "R2API.Director.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [],

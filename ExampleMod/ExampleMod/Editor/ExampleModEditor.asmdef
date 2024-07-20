@@ -1,0 +1,23 @@
+{
+    "name": "ExampleModEditor",
+    "references": [
+        "GUID:8e3847982664306429cef7df7c4c246d",
+        "GUID:08e20a9dcb84ac748840227dcac08af2",
+        "GUID:a44f47cf3ada4435dbc516bad0bc86fe"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "HGCSharpUtils.dll",
+        "HGUnityUtils.dll",
+        "RoR2.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

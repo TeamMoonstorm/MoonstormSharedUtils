@@ -81,7 +81,7 @@ namespace ExampleMod
         internal ExampleContent()
         {
             ContentManager.collectContentPackProviders += AddSelf;
-            ExampleAssets._onExampleAssetsInitialized += () =>
+            ExampleAssets.onExampleAssetsInitialized += () =>
             {
                 _parallelPreLoadDispatchers.Add(AddExampleExpansionDef);
             };
