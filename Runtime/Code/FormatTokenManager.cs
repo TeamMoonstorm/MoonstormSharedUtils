@@ -1,5 +1,4 @@
-﻿using RoR2;
-using RiskOfOptions.Components.Panel;
+﻿using RiskOfOptions.Components.Panel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +15,7 @@ namespace MSU
     {
         private static Dictionary<string, FormatTokenAttribute[]> _cachedFormattingArray = null;
 
-        [SystemInitializer(typeof(ConfigSystem))]
+        [RoR2.SystemInitializer(typeof(ConfigSystem))]
         private static void Init()
         {
             MSULog.Info("Initializing FormatTokenManager");
@@ -25,19 +24,19 @@ namespace MSU
                 orig(self);
                 FormatTokensInLanguage(self);
             };
-            RoR2Application.onLoad += () => FormatTokensInLanguage(null);
+            RoR2.RoR2Application.onLoad += () => FormatTokensInLanguage(null);
 
             ModOptionPanelController.OnModOptionsExit += () =>
             {
-                string langName = Language.currentLanguageName;
-                Language.currentLanguage?.UnloadStrings();
-                Language.SetCurrentLanguage(langName);
+                string langName = RoR2.Language.currentLanguageName;
+                RoR2.Language.currentLanguage?.UnloadStrings();
+                RoR2.Language.SetCurrentLanguage(langName);
             };
         }
 
-        private static void FormatTokensInLanguage(Language lang)
+        private static void FormatTokensInLanguage(RoR2.Language lang)
         {
-            lang = lang ?? Language.currentLanguage;
+            lang = lang ?? RoR2.Language.currentLanguage;
 
             if (_cachedFormattingArray == null)
                 CreateFormattingArray(lang);
@@ -45,7 +44,7 @@ namespace MSU
             FormatTokens(lang);
         }
 
-        private static void CreateFormattingArray(Language lang)
+        private static void CreateFormattingArray(RoR2.Language lang)
         {
             GetFormatTokenLists(out var propertyFormatTokens, out var fieldFormatTokens);
 
@@ -155,7 +154,7 @@ namespace MSU
             return dictionary;
         }
 
-        private static void FormatTokens(Language lang)
+        private static void FormatTokens(RoR2.Language lang)
         {
             if (_cachedFormattingArray.Count == 0)
                 return;
@@ -184,7 +183,7 @@ namespace MSU
             }
         }
 
-        private static void FormatToken(Language lang, string token, FormatTokenAttribute[] formattingArray)
+        private static void FormatToken(RoR2.Language lang, string token, FormatTokenAttribute[] formattingArray)
         {
             var tokenValue = lang.stringsByToken[token];
             object[] format = formattingArray.Select(att => att.GetFormattingValue()).ToArray();
