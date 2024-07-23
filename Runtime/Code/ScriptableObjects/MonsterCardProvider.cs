@@ -50,9 +50,8 @@ namespace MSU
         }
         private ReadOnlyDictionary<string, DirectorAPI.DirectorCardHolder> _customStageToCards;
 
-        [Tooltip("Contains your Interactable's Cards")]
-        [SerializeField]
-        private StageMonsterCardPair[] _serializedCardPairs = Array.Empty<StageMonsterCardPair>();
+        [Tooltip("Contains your Monster's Cards")]
+        public StageMonsterCardPair[] _serializedCardPairs = Array.Empty<StageMonsterCardPair>();
 
         /// <summary>
         /// Method that builds a <see cref="HashSet{T}"/> containing all the unique instances of SpawnCards held by this MonsterCardProvider. 
@@ -80,7 +79,10 @@ namespace MSU
             return result;
         }
 
-        private void BuildDictionaries()
+        /// <summary>
+        /// Builds the <see cref="StageToCards"/> and the <see cref="CustomStageToCards"/> dictionaries
+        /// </summary>
+        public void BuildDictionaries()
         {
             var stageDict = new Dictionary<DirectorAPI.Stage, DirectorAPI.DirectorCardHolder>();
             var customStageDict = new Dictionary<string, DirectorAPI.DirectorCardHolder>();

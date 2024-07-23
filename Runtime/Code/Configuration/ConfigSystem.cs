@@ -66,6 +66,20 @@ namespace MSU.Config
         /// <returns>True if risk of options should create a separate entry, false otherwise.</returns>
         public static bool ShouldCreateSeparateRiskOfOptionsEntry(ConfigFile cf) => _configFilesWithSeparateRiskOfOptionsEntries.Contains(cf);
 
+        /// <summary>
+        /// Gets the <see cref="BaseUnityPlugin"/> that added the specified ConfigFile in <paramref name="cf"/>
+        /// </summary>
+        /// <param name="cf">The config file to use to obtain the plugin</param>
+        /// <returns>The plugin that added the config file</returns>
+        public static BaseUnityPlugin GetPlugin(ConfigFile cf)
+        {
+            if (_configToPluginOwner.TryGetValue(cf, out var bup))
+            {
+                return bup;
+            }
+            return null;
+        }
+
         private static PluginInfo FindPluginInfo(Assembly asm)
         {
             foreach(var (name, pInfo) in BepInEx.Bootstrap.Chainloader.PluginInfos)
