@@ -13,28 +13,22 @@ namespace MSU.Editor.Settings
 {
     public sealed class ShaderDictionary : ThunderKitSetting
     {
-        [Serializable]
-        public class ShaderPair
-        {
-            public SerializableShaderWrapper yaml;
-            public SerializableShaderWrapper hlsl;
-
-            public ShaderPair(Shader original, Shader stubbed)
-            {
-                this.yaml = new SerializableShaderWrapper(original);
-                this.hlsl = new SerializableShaderWrapper(stubbed);
-            }
-        }
-
         const string ShaderRootGUID = "9baa48c4908f85f43ae0c54e90e44447";
 
         [InitializeOnLoadMethod]
         static void CreateDictionaryOnDomainReload()
         {
-            GetOrCreateSettings<ShaderDictionary>().ReloadDictionaries();
+            var dict = GetOrCreateSettings<ShaderDictionary>();
+            if(dict)
+            {
+                dict.ReloadDictionaries();
+            }
         }
 
         private SerializedObject shaderDictionarySO;
+
+        [Tooltip("This string lets the shader dictionary to serialize properly, fill this value with whatever you want.")]
+        public string serializationString;
 
         public List<ShaderPair> shaderPairs = new List<ShaderPair>();
 
@@ -69,6 +63,14 @@ namespace MSU.Editor.Settings
         }
         private static Dictionary<Shader, Shader> _hlslToYaml;
 
+        public static Dictionary<string, string> stubbedShaderNameToYamlShaderName = new Dictionary<string, string>
+        {
+            ["StubbedTextMeshPro/Distance Field"] = "TextMeshPro/Distance Field",
+            ["StubbedDecalicious/DecaliciousDeferredDecal"] = "Decalicious/Deferred Decal",
+            ["StubbedDecalicious/DecaliciousGameObjectID"] = "Hidden/Decalicious Game Object ID",
+            ["StubbedDecalicious/DecaliciousUnlitDecal"] = "Decalicious/Unlit Decal"
+        };
+
         public override void CreateSettingsUI(VisualElement rootElement)
         {
             if (shaderDictionarySO == null)
@@ -98,6 +100,10 @@ namespace MSU.Editor.Settings
             reloadDictionary.clicked += ReloadDictionaries;
             rootElement.Add(reloadDictionary);
 
+            var dumb = CreateStandardField(nameof(this.serializationString));
+            dumb.tooltip = "This string lets the shader dictionary to serialize properly, fill this value with whatever you want.";
+            rootElement.Add(dumb);
+
             var shaderPair = CreateStandardField(nameof(shaderPairs));
             shaderPair.tooltip = $"The ShaderPairs that are used for the Dictionary system in MSEU's SwapShadersAndStageAssetBundles pipeline." +
                 $"\n The original shader should be the YAML exported shader from AssetRipper" +
@@ -126,12 +132,13 @@ namespace MSU.Editor.Settings
         private void AddDefaultStubbeds()
         {
             string rootPath = AssetDatabase.GUIDToAssetPath(ShaderRootGUID);
-            string pathWithoutFile = rootPath.Replace(Path.GetFileName(rootPath), "");
-            IEnumerable<Shader> files = Directory.EnumerateFiles(pathWithoutFile, "*.shader", SearchOption.AllDirectories)
-                .Select(file => file.Replace("\\", "/"))
-                .Select(shaderPath => AssetDatabase.LoadAssetAtPath<Shader>(shaderPath));
+            string directory = Path.GetDirectoryName(rootPath);
+            string folderToSearch = RoR2EditorKit.IOUtils.FormatPathForUnity(directory);
+            string[] guids = AssetDatabase.FindAssets("t:Shader", new string[] { folderToSearch });
 
-            foreach (Shader shader in files)
+            Shader[] shadersFound = guids?.Select(AssetDatabase.GUIDToAssetPath).Select(AssetDatabase.LoadAssetAtPath<Shader>).ToArray();
+
+            foreach (Shader shader in shadersFound)
             {
                 var stubbeds = shaderPairs.Select(sp => sp.hlsl.LoadShader());
                 if (!stubbeds.Contains(shader))
@@ -139,7 +146,6 @@ namespace MSU.Editor.Settings
                     shaderPairs.Add(new ShaderPair(null, shader));
                 }
             }
-            shaderDictionarySO.ApplyModifiedProperties();
             UnityEditor.EditorUtility.SetDirty(this);
         }
 
@@ -155,9 +161,16 @@ namespace MSU.Editor.Settings
                 if (orig || !stubbed)
                     continue;
 
+                if(stubbedShaderNameToYamlShaderName.TryGetValue(stubbed.name, out var yamlName))
+                {
+                    pair.yaml.SetShader(Shader.Find(yamlName));
+                    continue;
+                }
+
                 string stubbedShaderFileName = Path.GetFileName(AssetDatabase.GetAssetPath(stubbed));
                 string origShaderFileName = stubbedShaderFileName.Replace(".shader", ".asset");
 
+                //Try to find using name
                 Shader origShader = allYAMLShaders.FirstOrDefault(shader =>
                 {
                     string yamlShaderFileName = Path.GetFileName(AssetDatabase.GetAssetPath(shader));
@@ -173,7 +186,6 @@ namespace MSU.Editor.Settings
 
                 pair.yaml.SetShader(origShader);
             }
-            shaderDictionarySO.ApplyModifiedProperties();
             UnityEditor.EditorUtility.SetDirty(this);
         }
 
@@ -184,8 +196,20 @@ namespace MSU.Editor.Settings
 
             _ = YAMLToHLSL;
             _ = HLSLToYAML;
-            shaderDictionarySO.ApplyModifiedProperties();
             UnityEditor.EditorUtility.SetDirty(this);
+        }
+
+        [Serializable]
+        public class ShaderPair
+        {
+            public SerializableShaderWrapper yaml;
+            public SerializableShaderWrapper hlsl;
+
+            public ShaderPair(Shader original, Shader stubbed)
+            {
+                this.yaml = new SerializableShaderWrapper(original);
+                this.hlsl = new SerializableShaderWrapper(stubbed);
+            }
         }
     }
 }
