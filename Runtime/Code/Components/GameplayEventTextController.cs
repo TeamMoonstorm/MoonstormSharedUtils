@@ -43,14 +43,14 @@ namespace MSU
         private void Update()
         {
             //no request being processed, and there's a pending request, dequeue and initialize.
-            if(CurrentTextRequest == null && _textRequests.Count > 0)
+            if(!CurrentTextRequest.HasValue && _textRequests.Count > 0)
             {
                 DequeueAndInitializeRequest();
                 return;
             }
 
             //If there is a request, and its not being proceessed, process it.
-            if(CurrentTextRequest != null && TextStateMachine.state is Idle)
+            if(CurrentTextRequest.HasValue && TextStateMachine.state is Idle)
             {
                 TextStateMachine.SetNextState(new FadeInState
                 {
