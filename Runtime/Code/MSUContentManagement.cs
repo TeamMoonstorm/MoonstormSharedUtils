@@ -51,7 +51,10 @@ namespace MSU
         private static void RecalculateStats(On.RoR2.CharacterBody.orig_RecalculateStats orig, CharacterBody self)
         {
             if (self.bodyIndex == BodyIndex.None)
+            {
+                orig(self);
                 return;
+            }
 
             var behaviour = bodyToContentBehaviour[self];
             behaviour.RecalculateStatsStart();
@@ -72,7 +75,10 @@ namespace MSU
         private static void Holy_RecalculateStats(On.RoR2.CharacterBody.orig_RecalculateStats orig, CharacterBody self)
         {
             if (self.bodyIndex == BodyIndex.None)
+            {
+                orig(self);
                 return;
+            }
 
             orig(self);
             bodyToContentBehaviour[self].RecalculateStatsEnd();
