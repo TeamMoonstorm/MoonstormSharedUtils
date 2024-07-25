@@ -13,7 +13,6 @@ namespace MSU
     /// <summary>
     /// A <see cref="VanillaSkinDefinition"/> is an extension of <see cref="SkinDef"/> that allows for creating skins for vanilla CharacterBodies
     /// </summary>
-    [CreateAssetMenu(fileName = "New VanillaSkinDefinition", menuName = "MSU/VanillaSkinDefinition")]
     public class VanillaSkinDefinition : SkinDef
     {
         [Tooltip("The Address for the CharacterBody")]

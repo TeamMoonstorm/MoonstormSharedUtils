@@ -11,10 +11,10 @@ using UnityEngine.AddressableAssets;
 
 namespace MSU.Editor.Inspectors
 {
-    [CustomEditor(typeof(VanillaSkinDefinition))]
-    public class VanillaSkinDefinitionInspector : UnityEditor.Editor
+    [CustomEditor(typeof(VanillaSkinDef))]
+    public class VanillaSkinDefInspector : UnityEditor.Editor
     {
-        private VanillaSkinDefinition _target;
+        private VanillaSkinDef _target;
 
         private SerializedProperty _bodyAddress;
         private string[] rendererNames = Array.Empty<string>();
@@ -22,8 +22,8 @@ namespace MSU.Editor.Inspectors
 
         private void OnEnable()
         {
-            _target = (VanillaSkinDefinition)target;
-            _bodyAddress = serializedObject.FindProperty("bodyAddress");
+            _target = (VanillaSkinDef)target;
+            _bodyAddress = serializedObject.FindProperty("_bodyAddress");
             if (_bodyAddress.stringValue.IsNullOrEmptyOrWhitespace())
                 return;
             UpdateArrays();
@@ -31,11 +31,11 @@ namespace MSU.Editor.Inspectors
 
         public override void OnInspectorGUI()
         {
-            IMGUIUtil.DrawCheckableProperty(serializedObject.FindProperty("bodyAddress"), UpdateArrays);
-            DrawProperty("displayAddress");
+            IMGUIUtil.DrawCheckableProperty(serializedObject.FindProperty("_bodyAddress"), UpdateArrays);
+            DrawProperty("_displayAddress");
             EditorGUILayout.Space(5);
 
-            if(serializedObject.FindProperty("bodyAddress").stringValue.IsNullOrEmptyOrWhitespace())
+            if(serializedObject.FindProperty("_bodyAddress").stringValue.IsNullOrEmptyOrWhitespace())
             {
                 EditorGUILayout.LabelField("Please input a body address.");
                 return;
@@ -100,7 +100,7 @@ namespace MSU.Editor.Inspectors
                 DrawProperty("ignoreOverlays", child);
                 DrawProperty("hideOnDeath", child);
 
-                var rendererProp = child.FindPropertyRelative("renderer");
+                var rendererProp = child.FindPropertyRelative("rendererIndex");
                 var intVal = EditorGUILayout.Popup("Renderer", rendererProp.intValue, rendererNames);
                 rendererProp.intValue = intVal;
                 EditorGUI.indentLevel--;
@@ -131,9 +131,9 @@ namespace MSU.Editor.Inspectors
                 EditorGUILayout.PropertyField(isCustom);
                 if(isCustom.boolValue)
                 {
-                    DrawProperty("customObject", child);
+                    DrawProperty("gameObjectPrefab", child);
 
-                    var childLocatorProp = child.FindPropertyRelative("childLocatorEntry");
+                    var childLocatorProp = child.FindPropertyRelative("childName");
                     var intVal = Array.IndexOf(childLocatorNames, childLocatorProp.stringValue);
                     if (intVal == -1)
                     {
@@ -148,7 +148,7 @@ namespace MSU.Editor.Inspectors
                 }
                 else
                 {
-                    var rendererProp = child.FindPropertyRelative("renderer");
+                    var rendererProp = child.FindPropertyRelative("rendererIndex");
                     var intVal = EditorGUILayout.Popup("Renderer", rendererProp.intValue, rendererNames);
                     rendererProp.intValue = intVal;
                 }
@@ -175,8 +175,8 @@ namespace MSU.Editor.Inspectors
                     continue;
 
                 EditorGUI.indentLevel++;
-                DrawProperty("newMesh", child);
-                var rendererProp = child.FindPropertyRelative("renderer");
+                DrawProperty("mesh", child);
+                var rendererProp = child.FindPropertyRelative("rendererIndex");
                 var intVal = EditorGUILayout.Popup("Renderer", rendererProp.intValue, rendererNames);
                 rendererProp.intValue = intVal;
                 EditorGUI.indentLevel--;
