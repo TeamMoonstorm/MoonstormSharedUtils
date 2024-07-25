@@ -35,6 +35,20 @@ namespace MSU
             Instance.HUDInstance = self;
         }
 
+        [ConCommand(commandName = "test_event_text", flags = ConVarFlags.None, helpText = "Tests the GameplayEventTextController with a generic EventTextRequest")]
+        private static void CC_TestEventText(ConCommandArgs args)
+        {
+            if (!Instance)
+                return;
+
+            Instance.EnqueueNewTextRequest(new EventTextRequest
+            {
+                eventToken = "Event Text Test",
+                eventColor = Color.cyan,
+                textDuration = 15
+            });
+        }
+
         public void EnqueueNewTextRequest(EventTextRequest request)
         {
             _textRequests.Enqueue(request);
@@ -132,9 +146,10 @@ namespace MSU
             {
                 base.OnEnter();
                 Juice.destroyOnEndOfTransition = false;
-                Juice.originalAlpha = 1;
                 Juice.transitionDuration = duration;
                 Juice.TransitionAlphaFadeIn();
+                Juice.originalAlpha = 1;
+                Juice.transitionEndAlpha = 1;
             }
 
             public override void Update()
