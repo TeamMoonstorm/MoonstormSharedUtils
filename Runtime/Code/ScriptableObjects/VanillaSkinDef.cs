@@ -14,14 +14,14 @@ namespace MSU
     {
         [Space(10)]
         [Header("MSU Data")]
-        [SerializeField] private string _bodyAddress;
-        [SerializeField] private string _displayAddress;
-        [SerializeField] private MoonstormBaseSkin[] _baseSkins = Array.Empty<MoonstormBaseSkin>();
-        [SerializeField] private MoonstormRendererInfo[] _rendererInfos = Array.Empty<MoonstormRendererInfo>();
-        [SerializeField] private MoonstormGameObjectActivation[] _gameObjectActivations = Array.Empty<MoonstormGameObjectActivation>();
-        [SerializeField] private MoonstormMeshReplacement[] _meshReplacements = Array.Empty<MoonstormMeshReplacement>();
-        [SerializeField] private MoonstormProjectileGhostReplacement[] _projectileGhostReplacements = Array.Empty<MoonstormProjectileGhostReplacement>();
-        [SerializeField] private MoonstormMinionSkinReplacement[] _minionSkinReplacements = Array.Empty<MoonstormMinionSkinReplacement>();
+        [SerializeField] internal string _bodyAddress;
+        [SerializeField] internal string _displayAddress;
+        [SerializeField] internal MoonstormBaseSkin[] _baseSkins = Array.Empty<MoonstormBaseSkin>();
+        [SerializeField] internal MoonstormRendererInfo[] _rendererInfos = Array.Empty<MoonstormRendererInfo>();
+        [SerializeField] internal MoonstormGameObjectActivation[] _gameObjectActivations = Array.Empty<MoonstormGameObjectActivation>();
+        [SerializeField] internal MoonstormMeshReplacement[] _meshReplacements = Array.Empty<MoonstormMeshReplacement>();
+        [SerializeField] internal MoonstormProjectileGhostReplacement[] _projectileGhostReplacements = Array.Empty<MoonstormProjectileGhostReplacement>();
+        [SerializeField] internal MoonstormMinionSkinReplacement[] _minionSkinReplacements = Array.Empty<MoonstormMinionSkinReplacement>();
 
         public int cachedRendererAmount;
 
@@ -118,8 +118,8 @@ namespace MSU
         [Serializable]
         public class MoonstormBaseSkin
         {
-            [SerializeField] private string _skinAddress;
-            [SerializeField] public SkinDef _skinDef;
+            [SerializeField] internal string _skinAddress;
+            [SerializeField] internal SkinDef _skinDef;
 
             public SkinDef SkinDef { get; private set; }
             public IEnumerator GetSkin()
@@ -242,9 +242,9 @@ namespace MSU
         public class MoonstormProjectileGhostReplacement
         {
             [SerializeField]
-            private string _projectilePrefabAddress;
+            internal string _projectilePrefabAddress;
             [SerializeField]
-            private GameObject _projectileGhostReplacement;
+            internal GameObject _projectileGhostReplacement;
 
             public ProjectileGhostReplacement ProjectileGhostReplacement { get; private set; }
             public IEnumerator GetProjectileGhostReplacement()
@@ -268,9 +268,9 @@ namespace MSU
         public class MoonstormMinionSkinReplacement
         {
             [SerializeField]
-            private string _minionPrefabAddress;
+            internal string _minionPrefabAddress;
             [SerializeField]
-            private SkinDef _minionSkin;
+            internal SkinDef _minionSkin;
 
             public MinionSkinReplacement MinionSkinReplacement { get; private set; }
             public IEnumerator GetMinionSkinReplacement()

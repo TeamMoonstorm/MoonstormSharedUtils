@@ -56,7 +56,8 @@ public static class ScriptableObjectUpdater
             UpgradeItemDisplayDictionary,
             UpgradeNamedIDRS,
             UpgradeMSUnlockableDef,
-            UpgradeVanillaSkinDefinition
+            UpgradeVanillaSkinDefinition,
+            UpgradeVanillaSkinDefinitionToVanillaSkinDef
         };
 
         using (var progressBar = new ProgressBar("Upgrading Scriptable Objects"))
@@ -87,7 +88,7 @@ public static class ScriptableObjectUpdater
         for (int i = 0; i < allMSInteractableDirectorCards.Length; i++)
         {
             var msInteractableDirectorCard = allMSInteractableDirectorCards[i];
-            UpdateProgressBar(progressBar, $"Upgrading {msInteractableDirectorCard.name}", Util.Remap(i, 0, allMSInteractableDirectorCards.Length, 0, 0.125f));
+            UpdateProgressBar(progressBar, $"Upgrading {msInteractableDirectorCard.name}", Util.Remap(i, 0, allMSInteractableDirectorCards.Length, 0, 0.11f));
             try
             {
                 MSU.InteractableCardProvider provider = ScriptableObject.CreateInstance<InteractableCardProvider>();
@@ -169,7 +170,7 @@ public static class ScriptableObjectUpdater
         for (int i = 0; i < allMsMonsterDirectorCards.Length; i++)
         {
             var msMonsterDirectorCard = allMsMonsterDirectorCards[i];
-            UpdateProgressBar(progressBar, $"Upgrading {msMonsterDirectorCard.name}", Util.Remap(i, 0, allMsMonsterDirectorCards.Length, 0.125f, 0.25f));
+            UpdateProgressBar(progressBar, $"Upgrading {msMonsterDirectorCard.name}", Util.Remap(i, 0, allMsMonsterDirectorCards.Length, 0.11f, 0.22f));
             try
             {
                 MSU.MonsterCardProvider provider = ScriptableObject.CreateInstance<MonsterCardProvider>();
@@ -251,7 +252,7 @@ public static class ScriptableObjectUpdater
         for(int i = 0; i < allMSEliteDefs.Length; i++)
         {
             var msEliteDef = allMSEliteDefs[i];
-            UpdateProgressBar(progressBar, $"Upgrading {msEliteDef.name}", Util.Remap(i, 0, allMSEliteDefs.Length, 0.25f, 0.375f));
+            UpdateProgressBar(progressBar, $"Upgrading {msEliteDef.name}", Util.Remap(i, 0, allMSEliteDefs.Length, 0.22f, 0.33f));
 
             try
             {
@@ -298,7 +299,7 @@ public static class ScriptableObjectUpdater
         for (int i = 0; i < allSerializableEliteTierDefs.Length; i++)
         {
             var old_SerializableEliteTierDef = allSerializableEliteTierDefs[i];
-            UpdateProgressBar(progressBar, $"Upgrading {old_SerializableEliteTierDef.name}", Util.Remap(i, 0, allSerializableEliteTierDefs.Length, 0.375f, 0.5f));
+            UpdateProgressBar(progressBar, $"Upgrading {old_SerializableEliteTierDef.name}", Util.Remap(i, 0, allSerializableEliteTierDefs.Length, 0.33f, 0.44f));
 
             try
             {
@@ -332,7 +333,7 @@ public static class ScriptableObjectUpdater
         for(int i = 0; i < allItemDisplayDictionaries.Length; i++)
         {
             var old_IDD = allItemDisplayDictionaries[i];
-            UpdateProgressBar(progressBar, $"Upgrading {old_IDD.name}", Util.Remap(i, 0, allItemDisplayDictionaries.Length, 0.5f, 0.625f));
+            UpdateProgressBar(progressBar, $"Upgrading {old_IDD.name}", Util.Remap(i, 0, allItemDisplayDictionaries.Length, 0.44f, 0.55f));
 
             try
             {
@@ -382,7 +383,7 @@ public static class ScriptableObjectUpdater
         for(int i = 0; i < allNamedIDRS.Length; i++)
         {
             var old_namedIDRS = allNamedIDRS[i];
-            UpdateProgressBar(progressBar, $"Upgrading {old_namedIDRS.name}", Util.Remap(i, 0, allNamedIDRS.Length, 0.625f, 0.75f));
+            UpdateProgressBar(progressBar, $"Upgrading {old_namedIDRS.name}", Util.Remap(i, 0, allNamedIDRS.Length, 0.55f, 0.66f));
 
             try
             {
@@ -433,7 +434,7 @@ public static class ScriptableObjectUpdater
         for(int i = 0; i < allMSUnlockableDef.Length; i++)
         {
             var msUnlockableDef = allMSUnlockableDef[i];
-            UpdateProgressBar(progressBar, $"Upgrading {msUnlockableDef.cachedName}", Util.Remap(i, 0, allMSUnlockableDef.Length, 0.75f, 0.875f));
+            UpdateProgressBar(progressBar, $"Upgrading {msUnlockableDef.cachedName}", Util.Remap(i, 0, allMSUnlockableDef.Length, 0.66f, 0.77f));
 
             try
             {
@@ -467,7 +468,7 @@ public static class ScriptableObjectUpdater
         for(int i = 0; i < allVanillaSkinDefinitions.Length; i++)
         {
             var old_skinDef = allVanillaSkinDefinitions[i];
-            UpdateProgressBar(progressBar, $"Upgrading {old_skinDef.name}", Util.Remap(i, 0, allVanillaSkinDefinitions.Length, 0.875f, 1f));
+            UpdateProgressBar(progressBar, $"Upgrading {old_skinDef.name}", Util.Remap(i, 0, allVanillaSkinDefinitions.Length, 0.77f, 0.88f));
 
             try
             {
@@ -563,6 +564,117 @@ public static class ScriptableObjectUpdater
             catch(Exception e)
             {
                 MSULog.Error($"Could not upgrade {old_skinDef.name}. {e}");
+            }
+        }
+    }
+
+    private static void UpgradeVanillaSkinDefinitionToVanillaSkinDef(ProgressBar progressBar)
+    {
+        var allVanillaSkinDefinitions = AssetDatabaseUtils.FindAssetsByType<MSU.VanillaSkinDefinition>().ToArray();
+
+        if(allVanillaSkinDefinitions.Length == 0)
+        {
+            return;
+        }
+
+        for(int i = 0; i < allVanillaSkinDefinitions.Length; i++)
+        {
+            var old_vanillaSkinDefinition = allVanillaSkinDefinitions[i];
+            UpdateProgressBar(progressBar, $"Upgrading {old_vanillaSkinDefinition.name}", Util.Remap(i, 0, allVanillaSkinDefinitions.Length, 0.88f, 1f));
+
+            try
+            {
+                var new_skinDef = ScriptableObject.CreateInstance<MSU.VanillaSkinDef>();
+
+                new_skinDef._bodyAddress = old_vanillaSkinDefinition.bodyAddress;
+                new_skinDef._displayAddress = old_vanillaSkinDefinition.displayAddress;
+                new_skinDef.icon = old_vanillaSkinDefinition.icon;
+                new_skinDef.nameToken = old_vanillaSkinDefinition.nameToken;
+                new_skinDef.unlockableDef = old_vanillaSkinDefinition.unlockableDef;
+
+                List<VanillaSkinDef.MoonstormBaseSkin> _baseSkinDefs = new List<VanillaSkinDef.MoonstormBaseSkin>();
+                foreach (var baseSkinDef in old_vanillaSkinDefinition._baseSkins)
+                {
+                    if (baseSkinDef.AssetExists)
+                    {
+                        _baseSkinDefs.Add(new VanillaSkinDef.MoonstormBaseSkin { _skinDef = baseSkinDef.Asset });
+                    }
+                    else
+                    {
+                        _baseSkinDefs.Add(new VanillaSkinDef.MoonstormBaseSkin { _skinAddress = baseSkinDef.Address });
+                    }
+                }
+                new_skinDef._baseSkins = _baseSkinDefs.ToArray();
+
+                var _gameObjectActivations = new List<VanillaSkinDef.MoonstormGameObjectActivation>();
+                foreach (var gameObjectActivation in old_vanillaSkinDefinition._gameObjectActivations)
+                {
+                    _gameObjectActivations.Add(new VanillaSkinDef.MoonstormGameObjectActivation
+                    {
+                        isCustomActivation = gameObjectActivation.isCustomActivation,
+                        localAngles = Vector3.zero,
+                        shouldActivate = gameObjectActivation.shouldActivate,
+                        localScale = Vector3.one,
+                        childName = gameObjectActivation.childLocatorEntry,
+                        gameObjectPrefab = gameObjectActivation.customObject,
+                        localPos = Vector3.zero,
+                        rendererIndex = gameObjectActivation.renderer
+                    });
+                }
+                new_skinDef._gameObjectActivations = _gameObjectActivations.ToArray();
+
+                var _meshReplacements = new List<MSU.VanillaSkinDef.MoonstormMeshReplacement>();
+                foreach (var meshReplacement in old_vanillaSkinDefinition._meshReplacements)
+                {
+                    _meshReplacements.Add(new MSU.VanillaSkinDef.MoonstormMeshReplacement
+                    {
+                        mesh = meshReplacement.newMesh,
+                        rendererIndex = meshReplacement.renderer
+                    });
+                }
+                new_skinDef._meshReplacements = _meshReplacements.ToArray();
+
+                var _minionSkinReplacements = new List<MSU.VanillaSkinDef.MoonstormMinionSkinReplacement>();
+                foreach (var minionSkinReplacement in old_vanillaSkinDefinition._minionSkinReplacements)
+                {
+                    _minionSkinReplacements.Add(new MSU.VanillaSkinDef.MoonstormMinionSkinReplacement
+                    {
+                        _minionPrefabAddress = minionSkinReplacement.minionPrefab.Address,
+                        _minionSkin = minionSkinReplacement.minionSkin,
+                    });
+                }
+                new_skinDef._minionSkinReplacements = _minionSkinReplacements.ToArray();
+
+                var _projectileGhostReplacements = new List<MSU.VanillaSkinDef.MoonstormProjectileGhostReplacement>();
+                foreach (var projectileGhostReplacement in old_vanillaSkinDefinition._projectileGhostReplacements)
+                {
+                    _projectileGhostReplacements.Add(new MSU.VanillaSkinDef.MoonstormProjectileGhostReplacement
+                    {
+                        _projectileGhostReplacement = projectileGhostReplacement.ghostReplacement,
+                        _projectilePrefabAddress = projectileGhostReplacement.projectilePrefab.Address
+                    });
+                }
+                new_skinDef._projectileGhostReplacements = _projectileGhostReplacements.ToArray();
+
+                var _rendererInfos = new List<MSU.VanillaSkinDef.MoonstormRendererInfo>();
+                foreach (var rendererInfo in old_vanillaSkinDefinition._rendererInfos)
+                {
+                    _rendererInfos.Add(new MSU.VanillaSkinDef.MoonstormRendererInfo
+                    {
+                        defaultMaterial = rendererInfo.defaultMaterial,
+                        defaultShadowCastingMode = rendererInfo.defaultShadowCastingMode,
+                        hideOnDeath = rendererInfo.hideOnDeath,
+                        ignoreOverlays = rendererInfo.ignoreOverlays,
+                        rendererIndex = rendererInfo.renderer
+                    });
+                }
+                new_skinDef._rendererInfos = _rendererInfos.ToArray();
+
+                UpgradeAsset(old_vanillaSkinDefinition, new_skinDef);
+            }
+            catch (Exception e)
+            {
+                MSULog.Error($"Could not upgrade {old_vanillaSkinDefinition.name}. {e}");
             }
         }
     }
