@@ -27,7 +27,7 @@ MonoBehaviour:
   m_Name: StageAssetBundles
   m_EditorClassIdentifier: 
   Active: 1
-  AssetBundleBuildOptions: 256
+  AssetBundleBuildOptions: 1
   buildTarget: 5
   recurseDirectories: 1
   simulate: 0
@@ -42,7 +42,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a3695521163bdd74fa2845bbd3438240, type: 3}
-  m_Name: AssetBundleBuild
+  m_Name: ChunkCompressedAssetBundleBuild
   m_EditorClassIdentifier: 
   Data:
   - {fileID: -5821674890629741944}
