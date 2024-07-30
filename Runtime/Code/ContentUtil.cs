@@ -194,7 +194,7 @@ namespace MSU
             FieldInfo[] fields = typeToPopulate.GetFields(BindingFlags.Static | BindingFlags.Public);
             foreach(FieldInfo fieldInfo in fields)
             {
-                if(fieldInfo.FieldType == typeof(TAsset))
+                if(fieldInfo.FieldType.IsSameOrSubclassOf(typeof(TAsset)))
                 {
                     string name = fieldInfo.Name;
                     TAsset val = assets.Find(name);
@@ -250,6 +250,25 @@ namespace MSU
         {
             var filtered = assetCollection.assets.Where(predicate).ToArray();
             AddContentFromCollectionInternal(contentPack, filtered);
+        }
+
+        /// <summary>
+        /// Finds an asset of name <paramref name="assetName"/> and type <typeparamref name="TAsset"/> inside an AssetCollection
+        /// </summary>
+        /// <typeparam name="TAsset">The type of the asset to find</typeparam>
+        /// <param name="collection">The collection that'll be searched</param>
+        /// <param name="assetName">The asset's name</param>
+        /// <returns>The found asset, null if no asset was found</returns>
+        public static TAsset FindAsset<TAsset>(this AssetCollection collection, string assetName) where TAsset : UnityEngine.Object
+        {
+            var result = collection.assets.OfType<TAsset>().Where(asset => string.Equals(asset.name, assetName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+#if DEBUG
+            if(!result)
+            {
+                MSULog.Warning($"Asset of type {typeof(TAsset).Name} and name {assetName} was not found in {collection}, are you sure youre typing the asset's name correctly?");
+            }
+#endif
+            return result;
         }
 
         private static void AddContentFromCollectionInternal(ContentPack contentPack, UnityEngine.Object[] assetCollection)

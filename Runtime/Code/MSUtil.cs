@@ -330,18 +330,6 @@ namespace MSU
         }
 
         /// <summary>
-        /// Finds an asset of name <paramref name="assetName"/> and type <typeparamref name="TAsset"/> inside an AssetCollection
-        /// </summary>
-        /// <typeparam name="TAsset">The type of the asset to find</typeparam>
-        /// <param name="collection">The collection that'll be searched</param>
-        /// <param name="assetName">The asset's name</param>
-        /// <returns>The found asset, null if no asset was found</returns>
-        public static TAsset FindAsset<TAsset>(this AssetCollection collection, string assetName) where TAsset : UnityEngine.Object
-        {
-            return collection.assets.OfType<TAsset>().Where(asset => string.Equals(asset.name, assetName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
-        }
-
-        /// <summary>
         /// Checks wether a Type is the same, or subclass of another type.
         /// </summary>
         public static bool IsSameOrSubclassOf(this Type type, Type otherType)
