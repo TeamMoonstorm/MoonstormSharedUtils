@@ -59,7 +59,9 @@ namespace MSU
             {
                 return interactableContentPieces;
             }
-
+#if DEBUG
+            MSULog.Info($"{plugin} has no registered interactables");
+#endif
             return Array.Empty<IInteractableContentPiece>();
         }
 
@@ -71,7 +73,13 @@ namespace MSU
         /// <returns>A Coroutine enumerator that can be Awaited or Yielded</returns>
         public static IEnumerator InitializeInteractables(BaseUnityPlugin plugin)
         {
-            if(_pluginToContentProvider.TryGetValue(plugin, out IContentPieceProvider<GameObject> provider))
+#if DEBUG
+            if (!_pluginToContentProvider.ContainsKey(plugin))
+            {
+                MSULog.Info($"{plugin} has no IContentPieceProvider registered in the InteractableModule.");
+            }
+#endif
+            if (_pluginToContentProvider.TryGetValue(plugin, out IContentPieceProvider<GameObject> provider))
             {
                 var enumerator = InitializeInteractablesFromProvider(plugin, provider);
                 while (enumerator.MoveNext())

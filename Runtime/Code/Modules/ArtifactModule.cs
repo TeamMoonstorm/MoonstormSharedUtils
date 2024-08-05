@@ -59,6 +59,9 @@ namespace MSU
             {
                 return artifacts;
             }
+#if DEBUG
+            MSULog.Info($"{plugin} has no registered artifacts");
+#endif
             return Array.Empty<IArtifactContentPiece>();
         }
 
@@ -70,6 +73,12 @@ namespace MSU
         /// <returns>A Coroutine enumerator that can be Awaited or Yielded</returns>
         public static IEnumerator InitializeArtifacts(BaseUnityPlugin plugin)
         {
+#if DEBUG
+            if(!_pluginToContentProvider.ContainsKey(plugin))
+            {
+                MSULog.Info($"{plugin} has no IContentPieceProvider registered in the ArtifactModule.");
+            }
+#endif
             if (_pluginToContentProvider.TryGetValue(plugin, out IContentPieceProvider<ArtifactDef> provider))
             {
                 var enumerator = InitializeArtifactsFromProvider(plugin, provider);

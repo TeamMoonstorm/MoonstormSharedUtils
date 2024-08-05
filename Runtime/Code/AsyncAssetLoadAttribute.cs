@@ -31,6 +31,9 @@ namespace MSU
             var instances = SearchableAttribute.GetInstances<AsyncAssetLoadAttribute>();
             if (instances == null)
             {
+#if DEBUG
+                MSULog.Info($"No instances of AsyncAssetLoadAttribute found in the current runtime context.");
+#endif
                 return new ParallelMultiStartCoroutine();
             }
 

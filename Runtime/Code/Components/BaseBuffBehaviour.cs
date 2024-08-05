@@ -105,16 +105,26 @@ namespace MSU
         protected virtual void OnFirstStackGained() { }
 
         /// <summary>
-        /// Called when this buff behaviour looses all of it's Stacks and it's previous stack was greater than 0. This is a replacement for unity's OnDisable method, which should not be used.
+        /// Called when this buff behaviour looses all of it's Stacks and it's previous stack was greater than 0.
         /// <para>This is basically syntaxis sugar, as "OnDisabled" can also be used for this effect.</para>
         /// </summary>
         protected virtual void OnAllStacksLost() { }
 
+        /// <summary>
+        /// Awake method for BaseBuffBehaviour
+        /// 
+        /// <br>Call the base method so that the <see cref="CharacterBody"/> property is properly initialized.</br>
+        /// </summary>
         protected virtual void Awake()
         {
             CharacterBody = GetComponent<CharacterBody>();
         }
 
+        /// <summary>
+        /// OnDestroy method for BaseBuffBehaviour
+        /// 
+        /// <br>Call the base method so that the buff behaviour gets properly destroyed and resources are freed.</br>
+        /// </summary>
         protected virtual void OnDestroy()
         {
             MSUContentManagement.OnBuffBehaviourDestroyed(CharacterBody, BuffIndex);

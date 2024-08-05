@@ -41,7 +41,7 @@ namespace MSU
         public IEnumerator Initialize()
         {
 #if DEBUG
-            MSULog.Debug($"Attempting to initialize and bake VanillaSkinDef {this}");
+            MSULog.Debug($"Attempting to initialize and bake {this}");
 #endif
             
             ParallelCoroutine coroutine = new ParallelCoroutine();

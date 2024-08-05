@@ -54,6 +54,9 @@ namespace MSU
             {
                 return scenes;
             }
+#if DEBUG
+            MSULog.Info($"{plugin} has no registered scenes");
+#endif
             return Array.Empty<ISceneContentPiece>();
         }
 
@@ -65,7 +68,13 @@ namespace MSU
         /// <returns>A Coroutine enumerator that can be Awaited or Yielded</returns>
         public static IEnumerator InitializeScenes(BaseUnityPlugin plugin)
         {
-            if(_pluginToContentProvider.TryGetValue(plugin, out IContentPieceProvider<SceneDef> provider))
+#if DEBUG
+            if (!_pluginToContentProvider.ContainsKey(plugin))
+            {
+                MSULog.Info($"{plugin} has no IContentPieceProvider registered in the SceneModule.");
+            }
+#endif
+            if (_pluginToContentProvider.TryGetValue(plugin, out IContentPieceProvider<SceneDef> provider))
             {
                 var enumerator = InitializeScenesFromProvider(plugin, provider);
                 while(enumerator.MoveNext())

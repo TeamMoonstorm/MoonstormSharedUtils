@@ -77,6 +77,10 @@ namespace MSU
     ///         <term><see cref="ItemTierDef"/></term>
     ///         <description><see cref="IItemTierContentPiece"/></description>
     ///     </item>
+    ///     <item>
+    ///         <term>Adding content to Vanilla Survivors</term>
+    ///         <description>If you wish to add new content to VanillaSurvivors, utilize the interface <see cref="IVanillaSurvivorContentPiece"/>. Read it's documentation as it works a bit different than other IContentPiece interfaces</description>
+    ///     </item>
     /// </list>
     /// </summary>
     /// <typeparam name="T">The type of asset that this ContentPiece represents</typeparam>

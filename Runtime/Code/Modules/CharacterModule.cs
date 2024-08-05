@@ -59,6 +59,9 @@ namespace MSU
             {
                 return characters;
             }
+#if DEBUG
+            MSULog.Info($"{plugin} has no registered characters");
+#endif
             return Array.Empty<ICharacterContentPiece>();
         }
 
@@ -70,7 +73,14 @@ namespace MSU
         /// <returns>A Coroutine enumerator that can be Awaited or Yielded</returns>
         public static IEnumerator InitializeCharacters(BaseUnityPlugin plugin)
         {
-            if(_pluginToContentProvider.TryGetValue(plugin, out IContentPieceProvider<GameObject> provider))
+#if DEBUG
+            if (!_pluginToContentProvider.ContainsKey(plugin))
+            {
+                MSULog.Info($"{plugin} has no IContentPieceProvider registered in the CharacterModule.");
+            }
+#endif
+
+            if (_pluginToContentProvider.TryGetValue(plugin, out IContentPieceProvider<GameObject> provider))
             {
                 var enumerator = InitializeCharactersFromProvider(plugin, provider);
                 while (enumerator.MoveNext())

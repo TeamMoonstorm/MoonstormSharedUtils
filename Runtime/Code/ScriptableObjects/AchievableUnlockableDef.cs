@@ -91,7 +91,7 @@ namespace MSU
         }
         private AchievementDef _tiedAchievementDef;
 
-        private void Awake()
+        private new void Awake()
         {
             base.Awake();
             _instances.Add(this);

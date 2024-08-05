@@ -456,7 +456,8 @@ namespace MSU.Config
         public static implicit operator T(ConfiguredVariable<T> cf) => cf.Value;
 
         /// <summary>
-        /// A class that contains the Delegate implementations of a specified ConfigEntry.        /// <para>This is done so that ConfiguredVariables created on the fly and not stored in member fields can be garbage collected. without keeping all the unecesary data.</para>
+        /// A class that contains the Delegate implementations of a specified ConfigEntry.        
+        /// /// <para>This is done so that ConfiguredVariables created on the fly and not stored in member fields can be garbage collected. without keeping all the unecesary data.</para>
         /// </summary>
         public class DelegateContainer
         {

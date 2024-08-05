@@ -32,12 +32,18 @@ namespace MSU
         private IStatItemBehavior[] _statItemBehaviors = Array.Empty<IStatItemBehavior>();
         private IBodyStatArgModifier[] _bodyStatArgModifiers = Array.Empty<IBodyStatArgModifier>();
 
-        private IEquipmentContentPiece _equipmentContentPiece;
-
         private void Start()
         {
             HasMaster = body.master;
             body.onInventoryChanged += CheckEquipments;
+
+            //This is done to ensure whatever "OnEquipmentObtained" logic runs when the body starts. since OnEquipmentObtained only gets called when the inventory changes, which doesnt happen at this time.
+            var eqpDef = EquipmentCatalog.GetEquipmentDef(body.inventory ? body.inventory.GetEquipmentIndex() : EquipmentIndex.None);
+            if(eqpDef && EquipmentModule.AllMoonstormEquipments.TryGetValue(eqpDef, out var iEquipmentContentPiece))
+            {
+                iEquipmentContentPiece.OnEquipmentObtained(body);
+            }
+            StartGetInterfaces();
         }
 
         private void CheckEquipments()

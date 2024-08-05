@@ -48,42 +48,42 @@ namespace MSU.Config
             return this;
         }
 
-        ///<inheritdoc cref="ConfiguredVariable.WithSection(ConfigFile)"/>
+        ///<inheritdoc cref="ConfiguredVariable.WithSection(string)"/>
         public new ConfiguredString WithSection(string section)
         {
             base.WithSection(section);
             return this;
         }
 
-        ///<inheritdoc cref="ConfiguredVariable.WithKey(ConfigFile)"/>
+        ///<inheritdoc cref="ConfiguredVariable.WithKey(string)"/>
         public new ConfiguredString WithKey(string key)
         {
             base.WithKey(key);
             return this;
         }
 
-        ///<inheritdoc cref="ConfiguredVariable.WithDescription(ConfigFile)"/>
+        ///<inheritdoc cref="ConfiguredVariable.WithDescription(string)"/>
         public new ConfiguredString WithDescription(string description)
         {
             base.WithDescription(description);
             return this;
         }
 
-        ///<inheritdoc cref="ConfiguredVariable.WithConfigIdentifier(ConfigFile)"/>
+        ///<inheritdoc cref="ConfiguredVariable.WithConfigIdentifier(string)"/>
         public new ConfiguredString WithConfigIdentifier(string identifier)
         {
             base.WithConfigIdentifier(identifier);
             return this;
         }
 
-        ///<inheritdoc cref="ConfiguredVariable.WithModGUID(ConfigFile)"/>
+        ///<inheritdoc cref="ConfiguredVariable.WithModGUID(BaseUnityPlugin)"/>
         public new ConfiguredString WithModGUID(BaseUnityPlugin plugin)
         {
             base.WithModGUID(plugin);
             return this;
         }
 
-        ///<inheritdoc cref="ConfiguredVariable.WithModName(ConfigFile)"/>
+        ///<inheritdoc cref="ConfiguredVariable.WithModName(BaseUnityPlugin)"/>
         public new ConfiguredString WithModName(BaseUnityPlugin plugin)
         {
             base.WithModName(plugin);

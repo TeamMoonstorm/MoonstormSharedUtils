@@ -56,6 +56,9 @@ namespace MSU
             {
                 return tiers;
             }
+#if DEBUG
+            MSULog.Info($"{plugin} has no registered ItemTiers");
+#endif
             return Array.Empty<IItemTierContentPiece>();
         }
 
@@ -67,7 +70,13 @@ namespace MSU
         /// <returns>A Coroutine enumerator that can be Awaited or Yielded.</returns>
         public static IEnumerator InitializeTiers(BaseUnityPlugin plugin)
         {
-            if(_pluginToContentProvider.TryGetValue(plugin, out IContentPieceProvider<ItemTierDef> provider))
+#if DEBUG
+            if (!_pluginToContentProvider.ContainsKey(plugin))
+            {
+                MSULog.Info($"{plugin} has no IContentPieceProvider registered in the ItemTierModule.");
+            }
+#endif
+            if (_pluginToContentProvider.TryGetValue(plugin, out IContentPieceProvider<ItemTierDef> provider))
             {
                 var enumerator = InitializeItemTiersFromProvider(plugin, provider);
                 while (enumerator.MoveNext())
