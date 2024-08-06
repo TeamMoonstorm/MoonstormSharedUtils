@@ -120,7 +120,7 @@ namespace MSU
             TextMeshProUGUI.text = tokenValue;
             TextMeshProUGUI.color = messageColor;
             TextMeshProUGUI.outlineColor = outlineColor;
-            TextMeshProUGUI.font = CurrentTextRequest.Value.customFontAsset.HasValue ? CurrentTextRequest.Value.customFontAsset : _bombadierFontAsset;
+            TextMeshProUGUI.font = CurrentTextRequest.Value.customFontAsset.HasValue ? CurrentTextRequest.Value.customFontAsset.Value : _bombadierFontAsset;
         }
 
         private void Start()
