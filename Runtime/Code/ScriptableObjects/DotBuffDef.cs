@@ -24,7 +24,7 @@ namespace MSU
         [Tooltip("A BuffDef to apply once this DOT ends")]
         public BuffDef terminalTimedBuff;
         [Tooltip("The duration of the BuffDef that's applied when this DOT ends")]
-        public float terminalTimedBuffDDuration;
+        public float terminalTimedBuffDuration;
         [Tooltip("If true, the timer of this DOT will be reset upon a new DOTStack being added.")]
         public bool resetTimerOnAdd;
 
@@ -58,10 +58,10 @@ namespace MSU
             DoInit();
         }
 
-        private void OnValidate()
+        private new void OnValidate()
         {
-            base.OnValidate();
             isDebuff = false;
+            iconPath = string.Empty;
 #if UNITY_EDITOR
             UnityEditor.EditorUtility.SetDirty(this);
 #endif
@@ -94,7 +94,7 @@ namespace MSU
                 damageColorIndex = damageColorIndex,
                 interval = interval,
                 terminalTimedBuff = terminalTimedBuff,
-                terminalTimedBuffDuration = terminalTimedBuffDDuration,
+                terminalTimedBuffDuration = terminalTimedBuffDuration,
             };
             DotIndex = DotAPI.RegisterDotDef(DotDef, DotBehaviour, DotVisual);
         }
