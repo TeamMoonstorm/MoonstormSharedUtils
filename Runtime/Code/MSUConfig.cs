@@ -87,7 +87,7 @@ namespace MSU
                 }
             });
 
-            _enableCommandInvoking = new ConfiguredBool(true)
+            _enableCommandInvoking = new ConfiguredBool(false)
             {
                 Section = "Command Invoking",
                 Description = "Invokes commands at run start, disabling this causes no commands to be invoked at run start.",

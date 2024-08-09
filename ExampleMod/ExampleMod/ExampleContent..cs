@@ -100,7 +100,7 @@ namespace ExampleMod
                 () =>
                 {
                     EquipmentModule.AddProvider(main, ContentUtil.CreateContentPieceProvider<EquipmentDef>(main, exampleContentPack));
-                    return EquipmentModule.InitialzeEquipments(main);
+                    return EquipmentModule.InitializeEquipments(main);
                 },
                 LoadFromAssetBundles
             };

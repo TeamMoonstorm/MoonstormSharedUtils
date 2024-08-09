@@ -90,7 +90,7 @@ namespace MSU
         /// </summary>
         /// <param name="plugin">The plugin to initialize it's Equipments</param>
         /// <returns>A Coroutine enumerator that can be Awaited or Yielded</returns>
-        public static IEnumerator InitialzeEquipments(BaseUnityPlugin plugin)
+        public static IEnumerator InitializeEquipments(BaseUnityPlugin plugin)
         {
 #if DEBUG
             if (!_pluginToContentProvider.ContainsKey(plugin))
