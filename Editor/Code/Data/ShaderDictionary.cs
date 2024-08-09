@@ -38,10 +38,20 @@ namespace MSU.Editor.Settings
             {
                 if (_yamlToHlsl == null)
                 {
-                    _yamlToHlsl = GetOrCreateSettings<ShaderDictionary>().shaderPairs
-                                        .Select(sp => (sp.hlsl.LoadShader(), sp.yaml.LoadShader()))
-                                        .Where(sp => sp.Item1 && sp.Item2)
-                                        .ToDictionary(k => k.Item2, v => v.Item1);
+                    var shaderPairs = GetOrCreateSettings<ShaderDictionary>().shaderPairs;
+                    _yamlToHlsl = new Dictionary<Shader, Shader>();
+                    foreach (var pair in shaderPairs)
+                    {
+                        var hlsl = pair.hlsl.LoadShader();
+                        var yaml = pair.yaml.LoadShader();
+
+                        if (_yamlToHlsl.ContainsKey(yaml))
+                        {
+                            continue;
+                        }
+                        _yamlToHlsl.Add(yaml, hlsl);
+                    }
+
                 }
                 return _yamlToHlsl;
             }
@@ -53,10 +63,19 @@ namespace MSU.Editor.Settings
             {
                 if (_hlslToYaml == null)
                 {
-                    _hlslToYaml = GetOrCreateSettings<ShaderDictionary>().shaderPairs
-                                        .Select(sp => (sp.hlsl.LoadShader(), sp.yaml.LoadShader()))
-                                        .Where(sp => sp.Item1 && sp.Item2)
-                                        .ToDictionary(k => k.Item1, v => v.Item2);
+                    var shaderPairs = GetOrCreateSettings<ShaderDictionary>().shaderPairs;
+                    _hlslToYaml = new Dictionary<Shader, Shader>();
+                    foreach(var pair in shaderPairs)
+                    {
+                        var hlsl = pair.hlsl.LoadShader();
+                        var yaml = pair.yaml.LoadShader();
+
+                        if(_hlslToYaml.ContainsKey(hlsl))
+                        {
+                            continue;
+                        }
+                        _hlslToYaml.Add(hlsl, yaml);
+                    }
                 }
                 return _hlslToYaml;
             }
