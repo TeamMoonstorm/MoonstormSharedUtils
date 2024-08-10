@@ -13,7 +13,7 @@ Shader "StubbedRoR2/Base/Shaders/HGDistortion" {
 	}
 	//DummyShaderTextExporter
 	SubShader{
-		Tags { "RenderType" = "Opaque" }
+		Tags { "RenderType" = "Opaque" "Queue" = "Overlay+1000" }
 		LOD 200
 		CGPROGRAM
 #pragma surface surf Standard
