@@ -45,6 +45,9 @@ namespace MSU.Editor.Settings
                         var hlsl = pair.hlsl.LoadShader();
                         var yaml = pair.yaml.LoadShader();
 
+                        if (!yaml)
+                            continue;
+
                         if (_yamlToHlsl.ContainsKey(yaml))
                         {
                             continue;
@@ -69,6 +72,9 @@ namespace MSU.Editor.Settings
                     {
                         var hlsl = pair.hlsl.LoadShader();
                         var yaml = pair.yaml.LoadShader();
+
+                        if (!hlsl)
+                            continue;
 
                         if(_hlslToYaml.ContainsKey(hlsl))
                         {
