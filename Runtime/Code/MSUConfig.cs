@@ -69,7 +69,7 @@ namespace MSU
                 ConfigFile = DebugConfig,
             };
 
-            _enableSelfConnect = new ConfiguredBool(true)
+            _enableSelfConnect = new ConfiguredBool(false)
             {
                 Section = "Debugging",
                 Description = "Allows you to connect to yourself using a second instance of the game, by hosting a private game with one and opening the console on the other and typing \"connect localhost:7777\"\nYou need to exit the lobby for this to take effect.",
