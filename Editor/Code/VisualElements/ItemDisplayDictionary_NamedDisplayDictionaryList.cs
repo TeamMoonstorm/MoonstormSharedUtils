@@ -1,6 +1,6 @@
 ﻿using RoR2;
-using RoR2EditorKit;
-using RoR2EditorKit.VisualElements;
+using RoR2.Editor;
+using RoR2.Editor.VisualElements;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;

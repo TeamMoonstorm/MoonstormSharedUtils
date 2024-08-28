@@ -1,4 +1,4 @@
-﻿using RoR2EditorKit.VisualElements;
+﻿using RoR2.Editor.VisualElements;
 using System;
 using ThunderKit.Core.UIElements;
 using UnityEditor;

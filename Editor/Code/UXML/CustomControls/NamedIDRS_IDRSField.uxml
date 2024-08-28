@@ -1,7 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
-    <RoR2EditorKit.VisualElements.HelpBox name="helpBox">
+    <RoR2.Editor.VisualElements.HelpBox name="helpBox">
         <Style src="IDRSUSS.uss" />
-    </RoR2EditorKit.VisualElements.HelpBox>
+    </RoR2.Editor.VisualElements.HelpBox>
     <uie:ObjectField label="Target IDRS" name="idrs" tooltip="The IDRS to modify">
         <Style src="IDRSUSS.uss" />
     </uie:ObjectField>

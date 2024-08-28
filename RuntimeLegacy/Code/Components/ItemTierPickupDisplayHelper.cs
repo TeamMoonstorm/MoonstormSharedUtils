@@ -13,10 +13,10 @@ namespace Moonstorm.Experimental
             On.RoR2.PickupDisplay.RebuildModel += PickupDisplay_RebuildModel;
         }
 
-        private static void PickupDisplay_RebuildModel(On.RoR2.PickupDisplay.orig_RebuildModel orig, PickupDisplay self)
+        private static void PickupDisplay_RebuildModel(On.RoR2.PickupDisplay.orig_RebuildModel orig, PickupDisplay self, GameObject _override)
         {
             var component = self.gameObject.EnsureComponent<ItemTierPickupDisplayHelper>();
-            orig(self);
+            orig(self, _override);
             component.OnPickupDisplayRebuildModel();
         }
 

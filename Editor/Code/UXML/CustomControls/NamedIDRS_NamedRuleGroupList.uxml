@@ -13,5 +13,5 @@
             <ui:Button text="Add Missing Entries" name="AddMissingEntries" tooltip="Looks thru all the KeyAssets in the ItemDisplayCatalog, and adds the missing ones to this NamedIDRS" style="width: 45%;" />
         </ui:VisualElement>
     </ui:VisualElement>
-    <RoR2EditorKit.VisualElements.ExtendedListView collection-resizable="true" show-height-handle-bar="false" create-context-menu-wrappers="false" name="ListView" base-list-view-height-pixels="200" list-view-item-height="36" style="height: 90%; padding-top: 5px;" />
+    <RoR2.Editor.VisualElements.ExtendedListView collection-resizable="true" show-height-handle-bar="false" create-context-menu-wrappers="false" name="ListView" base-list-view-height-pixels="200" list-view-item-height="36" style="height: 90%; padding-top: 5px;" />
 </ui:UXML>

@@ -1,4 +1,4 @@
-﻿using RoR2EditorKit.EditorWindows;
+﻿using RoR2.Editor.EditorWindows;
 
 namespace MSU.Editor.EditorWindows
 {

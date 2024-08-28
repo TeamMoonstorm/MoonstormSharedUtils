@@ -1,5 +1,5 @@
 ﻿using MSU.Editor.Settings;
-using RoR2EditorKit;
+using RoR2.Editor;
 using System;
 using System.Collections;
 using System.Collections.Generic;

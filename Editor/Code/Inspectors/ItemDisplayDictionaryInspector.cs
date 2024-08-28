@@ -1,5 +1,5 @@
 ﻿using MSU.Editor.EditorWindows;
-using RoR2EditorKit.EditorWindows;
+using RoR2.Editor.EditorWindows;
 using UnityEditor;
 using UnityEngine.UIElements;
 

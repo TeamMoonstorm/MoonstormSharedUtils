@@ -1,5 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
     <ui:Button text="Button" style="flex-direction: row-reverse;">
-        <RoR2EditorKit.VisualElements.HelpBox message-is-explicit="false" />
+        <RoR2.Editor.VisualElements.HelpBox message-is-explicit="false" />
     </ui:Button>
 </ui:UXML>

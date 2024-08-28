@@ -100,10 +100,10 @@ namespace MSU
             moduleAvailability.MakeAvailable();
         }
 
-        private static void RebuildCustomModel(On.RoR2.PickupDisplay.orig_RebuildModel orig, PickupDisplay self)
+        private static void RebuildCustomModel(On.RoR2.PickupDisplay.orig_RebuildModel orig, PickupDisplay self, GameObject modelObjectOverride)
         {
             var component = self.gameObject.EnsureComponent<ItemTierPickupDisplayHelper>();
-            orig(self);
+            orig(self, modelObjectOverride);
             component.RebuildCustomModel();
         }
 

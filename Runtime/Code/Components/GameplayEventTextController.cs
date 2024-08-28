@@ -99,7 +99,18 @@ namespace MSU
                 var value = CurrentTextRequest.Value;
 
                 var hasOverrideState = value.customTextState.HasValue;
-                EventTextState state = hasOverrideState ? (EventTextState)EntityStateCatalog.InstantiateState(value.customTextState.Value) : new FadeInState();
+
+                EventTextState state = null;
+                if(hasOverrideState)
+                {
+                    var val = value.customTextState.Value;
+                    state = (EventTextState)EntityStateCatalog.InstantiateState(ref val);
+                
+                }
+                else
+                {
+                    state = new FadeInState();
+                }
                 state.duration = hasOverrideState ? value.textDuration : value.textDuration / 3;
                 TextStateMachine.SetNextState(state);
             }

@@ -1,5 +1,5 @@
 ﻿using RoR2;
-using RoR2EditorKit;
+using RoR2.Editor;
 using System;
 using System.Collections.Generic;
 using System.Linq;

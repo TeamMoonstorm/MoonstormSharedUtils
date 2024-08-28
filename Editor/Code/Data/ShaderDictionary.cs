@@ -1,4 +1,4 @@
-﻿using RoR2EditorKit;
+﻿using RoR2.Editor;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -158,7 +158,7 @@ namespace MSU.Editor.Settings
         {
             string rootPath = AssetDatabase.GUIDToAssetPath(ShaderRootGUID);
             string directory = Path.GetDirectoryName(rootPath);
-            string folderToSearch = RoR2EditorKit.IOUtils.FormatPathForUnity(directory);
+            string folderToSearch = RoR2.Editor.IOUtils.FormatPathForUnity(directory);
             string[] guids = AssetDatabase.FindAssets("t:Shader", new string[] { folderToSearch });
 
             Shader[] shadersFound = guids?.Select(AssetDatabase.GUIDToAssetPath).Select(AssetDatabase.LoadAssetAtPath<Shader>).ToArray();

@@ -1,6 +1,6 @@
 ﻿using MSU.Editor.VisualElements;
 using R2API.Utils;
-using RoR2EditorKit;
+using RoR2.Editor;
 using System;
 using System.Globalization;
 using System.Linq;

@@ -1,8 +1,9 @@
 {
     "name": "MSU.Editor",
+    "rootNamespace": "",
     "references": [
         "ThunderKit.Core",
-        "RoR2EditorKit",
+        "RoR2.Editor",
         "ThunderKit.Markdown",
         "RoR2EditorScripts",
         "ThunderKit.Common",
@@ -36,7 +37,9 @@
         "R2API.Addressables.dll"
     ],
     "autoReferenced": true,
-    "defineConstraints": [],
+    "defineConstraints": [
+        "FIXME"
+    ],
     "versionDefines": [],
     "noEngineReferences": false
 }

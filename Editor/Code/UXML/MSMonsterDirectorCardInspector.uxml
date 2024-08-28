@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
     <ui:VisualElement name="InspectorDataContainer" class="genericHolder">
-        <Style src="/Packages/riskofthunder-ror2editorkit/Assets/USS/Inspectors/ScriptableObjectInspector.uss" />
+        <Style src="/Packages/riskofthunder-RoR2.Editor/Assets/USS/Inspectors/ScriptableObjectInspector.uss" />
         <uie:PropertyField name="m_Script" binding-path="m_Script" />
         <ui:Label text="Character Spawn Card" name="CharacterSpawnCard" tooltip="Section pertaining to the Interactable Spawn Card" class="genericHolderHeader separatorLabel" />
         <uie:PropertyField name="prefab" binding-path="prefab" />

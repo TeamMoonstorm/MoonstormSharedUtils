@@ -1,5 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
-    <RoR2EditorKit.VisualElements.HelpBox name="HelpBox" message-type="Info" message="Please Select a DisplayRule from the Element to the Left" />
+    <RoR2.Editor.VisualElements.HelpBox name="HelpBox" message-type="Info" message="Please Select a DisplayRule from the Element to the Left" />
     <ui:VisualElement name="StandardView">
         <ui:IMGUIContainer name="DisplayPrefab" />
         <ui:VisualElement name="IDPHContainer" style="border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px; border-left-color: rgb(93, 93, 93); border-right-color: rgb(93, 93, 93); border-top-color: rgb(93, 93, 93); border-bottom-color: rgb(93, 93, 93);">

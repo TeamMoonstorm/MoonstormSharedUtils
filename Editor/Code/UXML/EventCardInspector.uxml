@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
     <ui:VisualElement name="Container" class="genericHolder">
-        <Style src="/Packages/riskofthunder-ror2editorkit/Assets/USS/Inspectors/ScriptableObjectInspector.uss" />
+        <Style src="/Packages/riskofthunder-RoR2.Editor/Assets/USS/Inspectors/ScriptableObjectInspector.uss" />
         <ui:Label text="Label" name="scriptType" binding-path="m_Script.displayName" tooltip="The type of this object" class="scriptType genericHolderHeader" />
         <ui:VisualElement name="EventDataHolder" class="genericHolder">
             <ui:Label text="Event Data" name="EventData" class="genericHolderHeader" />

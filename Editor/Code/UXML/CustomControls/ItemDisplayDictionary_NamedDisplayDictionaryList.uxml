@@ -13,5 +13,5 @@
             <ui:Button text="Add Missing IDRS" name="AddMissingIDRS" tooltip="Adds all the missing IDRS to this Dictionary." style="width: 48%;" />
         </ui:VisualElement>
     </ui:VisualElement>
-    <RoR2EditorKit.VisualElements.ExtendedListView list-view-item-height="36" show-height-handle-bar="false" name="ExtendedListView" style="height: 100%;" />
+    <RoR2.Editor.VisualElements.ExtendedListView list-view-item-height="36" show-height-handle-bar="false" name="ExtendedListView" style="height: 100%;" />
 </ui:UXML>

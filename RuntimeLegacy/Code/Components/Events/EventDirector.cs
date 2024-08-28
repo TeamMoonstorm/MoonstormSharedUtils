@@ -241,7 +241,7 @@ namespace Moonstorm.Components
             Log($">Playing event {currentEventCard}" +
                 $"\n(Event state: {currentEventCard.eventState})");
 #endif
-            TargetedStateMachine.SetState(EntityStateCatalog.InstantiateState(currentEventCard.eventState));
+            TargetedStateMachine.SetState(EntityStateCatalog.InstantiateState(ref currentEventCard.eventState));
 
             if (currentEventCard.eventFlags.HasFlag(EventFlags.OncePerRun))
             {
@@ -422,7 +422,7 @@ namespace Moonstorm.Components
             FindIdleStateMachine(card);
             if (card && TargetedStateMachine && !IsEventBeingPlayed(card))
             {
-                TargetedStateMachine.SetState(EntityStateCatalog.InstantiateState(card.eventState));
+                TargetedStateMachine.SetState(EntityStateCatalog.InstantiateState(ref card.eventState));
                 return true;
             }
             return false;
@@ -453,7 +453,7 @@ namespace Moonstorm.Components
 
             Log($">Playing event {card}\n(Event state: {card.eventState})");
 
-            TargetedStateMachine.SetState(EntityStateCatalog.InstantiateState(card.eventState));
+            TargetedStateMachine.SetState(EntityStateCatalog.InstantiateState(ref card.eventState));
 
             if (card.eventFlags.HasFlag(EventFlags.OncePerRun))
             {

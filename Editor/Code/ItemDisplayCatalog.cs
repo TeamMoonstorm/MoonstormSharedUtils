@@ -1,4 +1,4 @@
-﻿using RoR2EditorKit;
+﻿using RoR2.Editor;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;

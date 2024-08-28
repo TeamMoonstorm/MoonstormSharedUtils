@@ -4,9 +4,9 @@ using ThunderKit.Core.Config;
 using ThunderKit.Core.Data;
 using ThunderKit.Integrations.Thunderstore;
 using UnityEditor;
-using Boo.Lang;
 using ThunderKit.Core.Windows;
 using ThunderKit.Core.Utilities;
+using System.Collections.Generic;
 
 namespace MSU.Editor.Importers
 {
