@@ -21,8 +21,10 @@ namespace MSU.Editor.EditorWindows
         [SerializeField]
         private string serializedObjectGUID;
 
-        private void OnEnable()
+        protected override void OnEnable()
         {
+            base.OnEnable();
+            serializedObject = null;
             Selection.selectionChanged += CheckForItemDisplayDictionary;
         }
 
@@ -40,16 +42,16 @@ namespace MSU.Editor.EditorWindows
                 return;
 
             UnityEngine.Object currentTarget = null;
-            if (SerializedObject != null)
+            if (serializedObject != null)
             {
-                var ptr = SerializedObject.GetFieldValue<IntPtr>("m_NativeObjectPtr");
+                var ptr = serializedObject.GetFieldValue<IntPtr>("m_NativeObjectPtr");
                 if (((int)ptr) == 0x0)
                 {
-                    SerializedObject = null;
+                    serializedObject = null;
                     SetSerializedObject(null);
                     return;
                 }
-                currentTarget = SerializedObject.targetObject;
+                currentTarget = serializedObject.targetObject;
             }
 
             if (currentTarget == obj)
@@ -57,14 +59,14 @@ namespace MSU.Editor.EditorWindows
 
             if (obj is ItemDisplayDictionary idd)
             {
-                SerializedObject?.ApplyModifiedProperties();
+                serializedObject?.ApplyModifiedProperties();
                 SetSerializedObject(idd);
-                serializedObjectGUID = AssetDatabaseUtils.GetGUIDFromAsset(obj);
+                serializedObjectGUID = AssetDatabaseUtil.GetAssetGUIDString(obj);
                 return;
             }
-            else if (!serializedObjectGUID.IsNullOrEmptyOrWhitespace())
+            else if (!serializedObjectGUID.IsNullOrEmptyOrWhiteSpace())
             {
-                SetSerializedObject(AssetDatabaseUtils.LoadAssetFromGUID<ItemDisplayDictionary>(serializedObjectGUID));
+                SetSerializedObject(AssetDatabaseUtil.LoadAssetFromGUID<ItemDisplayDictionary>(serializedObjectGUID));
                 return;
             }
             SetSerializedObject(null);
@@ -72,18 +74,17 @@ namespace MSU.Editor.EditorWindows
             void SetSerializedObject(ItemDisplayDictionary dictionary)
             {
                 var so = dictionary ? new SerializedObject(dictionary) : null;
-                OnKeyAssetSet(TargetType.AsValidOrNull()?.keyAsset as ScriptableObject);
+                OnKeyAssetSet(targetType.AsValidOrNull()?.keyAsset as ScriptableObject);
                 keyAssetField.CheckForIDD(so);
                 namedDisplayDictionaryList.CheckForIDD(so);
                 namedDisplayDictionary.CheckForIDD(so);
                 displayRule.CheckForIDD(so);
-                SerializedObject = so;
+                serializedObject = so;
             }
         }
 
-        protected override void CreateGUI()
+        protected override void FinalizeUI()
         {
-            base.CreateGUI();
             catalog = ItemDisplayCatalog.LoadCatalog();
             if (catalog == null)
             {
@@ -97,7 +98,7 @@ namespace MSU.Editor.EditorWindows
             displayRule = rootVisualElement.Q<ItemDisplayDictionary_DisplayRule>();
 
             CheckForItemDisplayDictionary();
-            OnKeyAssetSet(TargetType.AsValidOrNull()?.keyAsset as ScriptableObject);
+            OnKeyAssetSet(targetType.AsValidOrNull()?.keyAsset as ScriptableObject);
 
             keyAssetField.OnKeyAssetValueSet += OnKeyAssetSet;
             namedDisplayDictionaryList.Catalog = catalog;
@@ -114,14 +115,14 @@ namespace MSU.Editor.EditorWindows
             if (namedDisplayDictionary.CurrentEntry == obj)
                 return;
 
-            obj.extraData = TargetType.displayPrefabs.Where(x => x).Select(x => x.name).ToArray();
+            obj.extraData = targetType.displayPrefabs.Where(x => x).Select(x => x.name).ToArray();
             namedDisplayDictionary.CurrentEntry = obj;
             displayRule.CurrentEntry = null;
         }
 
         private void OnDisplayRuleButtonClick(CollectionButtonEntry obj)
         {
-            obj.extraData = TargetType.displayPrefabs.Where(x => x).Select(x => x.name).ToArray();
+            obj.extraData = targetType.displayPrefabs.Where(x => x).Select(x => x.name).ToArray();
             displayRule.CurrentEntry = obj;
         }
 

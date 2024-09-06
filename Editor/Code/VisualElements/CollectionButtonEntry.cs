@@ -1,4 +1,4 @@
-﻿using RoR2.Editor.VisualElements;
+﻿using RoR2.Editor;
 using System;
 using ThunderKit.Core.UIElements;
 using UnityEditor;
@@ -9,7 +9,7 @@ namespace MSU.Editor.VisualElements
     public class CollectionButtonEntry : VisualElement
     {
         public Button Button { get; }
-        public HelpBox HelpBox { get; }
+        public ExtendedHelpBox HelpBox { get; }
         public SerializedProperty SerializedProperty
         {
             get

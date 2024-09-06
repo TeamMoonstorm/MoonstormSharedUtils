@@ -51,7 +51,7 @@ namespace MSU.Editor.VisualElements
             }
         }
         public SerializedProperty SerializedProperty { get; private set; }
-        public HelpBox HelpBox { get; }
+        public ExtendedHelpBox HelpBox { get; }
         public IMGUIContainer DisplayPrefab { get; }
         public EnumField ItemDisplayRuleType { get; }
         public Button PasteButton { get; }
@@ -176,7 +176,7 @@ namespace MSU.Editor.VisualElements
                 return;
 
             int currentIndex = AvailableDisplayPrefabs.IndexOf(displayPrefab.stringValue);
-            if (currentIndex == -1 && displayPrefab.stringValue.IsNullOrEmptyOrWhitespace())
+            if (currentIndex == -1 && displayPrefab.stringValue.IsNullOrEmptyOrWhiteSpace())
             {
                 currentIndex = 0;
                 displayPrefab.stringValue = AvailableDisplayPrefabs[currentIndex];
@@ -217,7 +217,7 @@ namespace MSU.Editor.VisualElements
         {
             TemplateHelpers.GetTemplateInstance(nameof(NamedIDRS_NamedRule), this, (pth) => pth.ValidateUXMLPath());
 
-            HelpBox = this.Q<HelpBox>();
+            HelpBox = this.Q<ExtendedHelpBox>();
             standardViewContainer = this.Q<VisualElement>("StandardView");
             DisplayPrefab = this.Q<IMGUIContainer>();
             PasteButton = this.Q<Button>();

@@ -1,6 +1,6 @@
 ﻿using MSU.Editor.EditorWindows;
 using MSU;
-using RoR2.Editor.EditorWindows;
+using RoR2.Editor;
 using UnityEditor;
 using UnityEngine.UIElements;
 
@@ -21,12 +21,12 @@ namespace MSU.Editor.Inspectors
 
         private void Open()
         {
-            ExtendedEditorWindow window = ExtendedEditorWindow.OpenEditorWindow<NamedIDRSEditorWindow>(serializedObject);
+            ExtendedEditorWindow window = ExtendedEditorWindow.Open<NamedIDRSEditorWindow>(serializedObject.targetObject);
         }
         [MenuItem("Tools/MSEU/Windows/NamedIDRS Editor Window")]
         private static void OpenStatic()
         {
-            ExtendedEditorWindow.OpenEditorWindow<NamedIDRSEditorWindow>(false);
+            ExtendedEditorWindow.Open<NamedIDRSEditorWindow>();
         }
     }
 }

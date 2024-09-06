@@ -12,7 +12,7 @@ using UnityEngine.AddressableAssets;
 namespace MSU.Editor.Inspectors
 {
     [CustomEditor(typeof(VanillaSkinDef))]
-    public class VanillaSkinDefInspector : UnityEditor.Editor
+    public class VanillaSkinDefInspector : IMGUIScriptableObjectInspector<VanillaSkinDef>
     {
         private VanillaSkinDef _target;
 
@@ -24,35 +24,14 @@ namespace MSU.Editor.Inspectors
         {
             _target = (VanillaSkinDef)target;
             _bodyAddress = serializedObject.FindProperty("_bodyAddress");
-            if (_bodyAddress.stringValue.IsNullOrEmptyOrWhitespace())
+            if (_bodyAddress.stringValue.IsNullOrEmptyOrWhiteSpace())
                 return;
             UpdateArrays();
         }
 
         public override void OnInspectorGUI()
         {
-            IMGUIUtil.DrawCheckableProperty(serializedObject.FindProperty("_bodyAddress"), UpdateArrays);
-            DrawProperty("_displayAddress");
-            EditorGUILayout.Space(5);
-
-            if(serializedObject.FindProperty("_bodyAddress").stringValue.IsNullOrEmptyOrWhitespace())
-            {
-                EditorGUILayout.LabelField("Please input a body address.");
-                return;
-            }
-            DrawProperty("icon");
-            DrawProperty("nameToken");
-            DrawProperty("unlockableDef");
-            DrawProperty("_baseSkins");
-
-            DrawRendererInfos();
-            DrawGameObjectActivations();
-            DrawMeshReplacements();
-
-            DrawProperty("_projectileGhostReplacements");
-            DrawProperty("_minionSkinReplacements");
-
-            serializedObject.ApplyModifiedProperties();
+            
         }
 
         private void UpdateArrays()
@@ -198,5 +177,34 @@ namespace MSU.Editor.Inspectors
             EditorGUILayout.PropertyField(property);
         }
 
+        protected override void DrawIMGUI()
+        {
+            EditorGUI.BeginChangeCheck();
+            DrawProperty("_bodyAddress");
+            if (EditorGUI.EndChangeCheck())
+                UpdateArrays();
+
+            DrawProperty("_displayAddress");
+            EditorGUILayout.Space(5);
+
+            if (serializedObject.FindProperty("_bodyAddress").stringValue.IsNullOrEmptyOrWhiteSpace())
+            {
+                EditorGUILayout.LabelField("Please input a body address.");
+                return;
+            }
+            DrawProperty("icon");
+            DrawProperty("nameToken");
+            DrawProperty("unlockableDef");
+            DrawProperty("_baseSkins");
+
+            DrawRendererInfos();
+            DrawGameObjectActivations();
+            DrawMeshReplacements();
+
+            DrawProperty("_projectileGhostReplacements");
+            DrawProperty("_minionSkinReplacements");
+
+            serializedObject.ApplyModifiedProperties();
+        }
     }
 }

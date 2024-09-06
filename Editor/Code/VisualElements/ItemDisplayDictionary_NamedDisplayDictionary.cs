@@ -33,7 +33,7 @@ namespace MSU.Editor.VisualElements
         }
         private CollectionButtonEntry _currentEntry;
         public SerializedProperty SerializedProperty { get; private set; }
-        public HelpBox HelpBox { get; }
+        public ExtendedHelpBox HelpBox { get; }
         public TextField IDRSName { get; }
         public ExtendedListView ExtendedListView { get; }
         public event Action<CollectionButtonEntry> OnDisplayRuleButtonClicked;
@@ -132,7 +132,7 @@ namespace MSU.Editor.VisualElements
             string CheckChildName()
             {
                 var childNameProp = entry.SerializedProperty.FindPropertyRelative("childName");
-                var childName = childNameProp.stringValue.IsNullOrEmptyOrWhitespace() ? "RuntimeSetup" : childNameProp.stringValue;
+                var childName = childNameProp.stringValue.IsNullOrEmptyOrWhiteSpace() ? "RuntimeSetup" : childNameProp.stringValue;
 
                 entry.HelpBox.SetDisplay(childName == "RuntimeSetup");
                 entry.HelpBox.messageType = childName == "RuntimeSetup" ? MessageType.Info : MessageType.None;
@@ -188,7 +188,7 @@ namespace MSU.Editor.VisualElements
         public ItemDisplayDictionary_NamedDisplayDictionary()
         {
             TemplateHelpers.GetTemplateInstance(nameof(ItemDisplayDictionary_NamedDisplayDictionary), this, (pth) => pth.ValidateUXMLPath());
-            HelpBox = this.Q<HelpBox>();
+            HelpBox = this.Q<ExtendedHelpBox>();
             ExtendedListView = this.Q<ExtendedListView>();
             IDRSName = this.Q<TextField>();
             standardViewContainer = this.Q<VisualElement>("StandardView");

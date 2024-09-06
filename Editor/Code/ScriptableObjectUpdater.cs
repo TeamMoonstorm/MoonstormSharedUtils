@@ -24,19 +24,7 @@ public static class ScriptableObjectUpdater
     private static FieldInfo InteractableCardProvider_PairsField = typeof(InteractableCardProvider).GetField("_serializedCardPairs", BindingFlags.Instance | BindingFlags.NonPublic);
     private static FieldInfo MonsterCardProvider_PairsField = typeof(MonsterCardProvider).GetField("_serializedCardPairs", BindingFlags.Instance | BindingFlags.NonPublic);
 
-    [MenuItem("Tools/Penis")]
-    private static void Penis()
-    {
-        var materials = AssetDatabaseUtils.FindAssetsByType<Material>();
 
-        foreach(var material in materials)
-        {
-            if(material.shader.name.Contains("Addressable"))
-            {
-                MSULog.Info($"{material.name} using {material.shader.name}. (Path={AssetDatabase.GetAssetPath(material)}");
-            }
-        }
-    }
     [MenuItem("Tools/MSEU/Upgrade Scriptable Objects")]
     private static void UpdateMSUScriptableObjects()
     {
@@ -80,7 +68,7 @@ public static class ScriptableObjectUpdater
 
     private static void UpgradeMSInteractableDirectorCard(ProgressBar progressBar)
     {
-        var allMSInteractableDirectorCards = AssetDatabaseUtils.FindAssetsByType<MSInteractableDirectorCard>().ToArray();
+        var allMSInteractableDirectorCards = AssetDatabaseUtil.FindAssetsByType<MSInteractableDirectorCard>().ToArray();
 
         if (allMSInteractableDirectorCards.Length == 0)
             return;
@@ -162,7 +150,7 @@ public static class ScriptableObjectUpdater
 
     private static void UpgradeMSMonsterDirectorCard(ProgressBar progressBar)
     {
-        var allMsMonsterDirectorCards = AssetDatabaseUtils.FindAssetsByType<MSMonsterDirectorCard>().ToArray();
+        var allMsMonsterDirectorCards = AssetDatabaseUtil.FindAssetsByType<MSMonsterDirectorCard>().ToArray();
 
         if (allMsMonsterDirectorCards.Length == 0)
             return;
@@ -244,7 +232,7 @@ public static class ScriptableObjectUpdater
 
     private static void UpgradeMSEliteDef(ProgressBar progressBar)
     {
-        var allMSEliteDefs = AssetDatabaseUtils.FindAssetsByType<MSEliteDef>().ToArray();
+        var allMSEliteDefs = AssetDatabaseUtil.FindAssetsByType<MSEliteDef>().ToArray();
 
         if (allMSEliteDefs.Length == 0)
             return;
@@ -291,7 +279,7 @@ public static class ScriptableObjectUpdater
 
     private static void UpgradeSerializableEliteTierDef(ProgressBar progressBar)
     {
-        var allSerializableEliteTierDefs = AssetDatabaseUtils.FindAssetsByType<Moonstorm.SerializableEliteTierDef>().ToArray();
+        var allSerializableEliteTierDefs = AssetDatabaseUtil.FindAssetsByType<Moonstorm.SerializableEliteTierDef>().ToArray();
 
         if (allSerializableEliteTierDefs.Length == 0)
             return;
@@ -325,7 +313,7 @@ public static class ScriptableObjectUpdater
 
     private static void UpgradeItemDisplayDictionary(ProgressBar progressBar)
     {
-        var allItemDisplayDictionaries = AssetDatabaseUtils.FindAssetsByType<Moonstorm.ItemDisplayDictionary>().ToArray();
+        var allItemDisplayDictionaries = AssetDatabaseUtil.FindAssetsByType<Moonstorm.ItemDisplayDictionary>().ToArray();
 
         if (allItemDisplayDictionaries.Length == 0)
             return;
@@ -375,7 +363,7 @@ public static class ScriptableObjectUpdater
 
     private static void UpgradeNamedIDRS(ProgressBar progressBar)
     {
-        var allNamedIDRS = AssetDatabaseUtils.FindAssetsByType<NamedIDRS>().ToArray();
+        var allNamedIDRS = AssetDatabaseUtil.FindAssetsByType<NamedIDRS>().ToArray();
 
         if (allNamedIDRS.Length == 0)
             return;
@@ -426,7 +414,7 @@ public static class ScriptableObjectUpdater
 
     private static void UpgradeMSUnlockableDef(ProgressBar progressBar)
     {
-        var allMSUnlockableDef = AssetDatabaseUtils.FindAssetsByType<MSUnlockableDef>().ToArray();
+        var allMSUnlockableDef = AssetDatabaseUtil.FindAssetsByType<MSUnlockableDef>().ToArray();
 
         if (allMSUnlockableDef.Length == 0)
             return;
@@ -460,7 +448,7 @@ public static class ScriptableObjectUpdater
 
     private static void UpgradeVanillaSkinDefinition(ProgressBar progressBar)
     {
-        var allVanillaSkinDefinitions = AssetDatabaseUtils.FindAssetsByType<Moonstorm.VanillaSkinDefinition>().ToArray();
+        var allVanillaSkinDefinitions = AssetDatabaseUtil.FindAssetsByType<Moonstorm.VanillaSkinDefinition>().ToArray();
 
         if (allVanillaSkinDefinitions.Length == 0)
             return;
@@ -570,7 +558,7 @@ public static class ScriptableObjectUpdater
 
     private static void UpgradeVanillaSkinDefinitionToVanillaSkinDef(ProgressBar progressBar)
     {
-        var allVanillaSkinDefinitions = AssetDatabaseUtils.FindAssetsByType<MSU.VanillaSkinDefinition>().ToArray();
+        var allVanillaSkinDefinitions = AssetDatabaseUtil.FindAssetsByType<MSU.VanillaSkinDefinition>().ToArray();
 
         if(allVanillaSkinDefinitions.Length == 0)
         {

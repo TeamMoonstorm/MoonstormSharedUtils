@@ -1,6 +1,5 @@
 ﻿using RoR2;
 using RoR2.Editor;
-using RoR2.Editor.VisualElements;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -106,7 +105,8 @@ namespace MSU.Editor.VisualElements
 
             namedIDRS.rules = namedIDRS.rules.OrderBy(entry => entry.keyAssetName).ToList();
 
-            _serializedObject.ApplyAndUpdate();
+            _serializedObject.ApplyModifiedProperties();
+            _serializedObject.Update();
             ExtendedListView.Refresh();
         }
         private void AddAllEquipments()
@@ -188,7 +188,8 @@ namespace MSU.Editor.VisualElements
                 });
                 target.rules.Add(newEntry);
             }
-            _serializedObject.ApplyAndUpdate();
+            _serializedObject.ApplyModifiedProperties();
+            _serializedObject.Update();
             ExtendedListView.Refresh();
         }
 

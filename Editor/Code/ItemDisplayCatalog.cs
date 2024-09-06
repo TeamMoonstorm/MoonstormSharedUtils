@@ -42,7 +42,7 @@ namespace MSU.Editor
         }
         public ReadOnlyCollection<string> GetKeyAssetDisplays(string key)
         {
-            if (key.IsNullOrEmptyOrWhitespace())
+            if (key.IsNullOrEmptyOrWhiteSpace())
                 return null;
 
             if (ItemToDisplayPrefabs.ContainsKey(key))

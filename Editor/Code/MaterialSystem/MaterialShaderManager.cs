@@ -56,7 +56,7 @@ namespace MSU.Editor.ShaderSystem
 
         public static List<Material> GetAllMaterials()
         {
-            return RoR2.Editor.AssetDatabaseUtils.FindAssetsByType<Material>().Where(mat => ShaderDictionary.GetAllShadersFromDictionary().Contains(mat.shader)).ToList();
+            return RoR2.Editor.AssetDatabaseUtil.FindAssetsByType<Material>().Where(mat => ShaderDictionary.GetAllShadersFromDictionary().Contains(mat.shader)).ToList();
         }
     }
 }

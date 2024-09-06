@@ -69,12 +69,12 @@ namespace MSU.Editor.Pipelines
                     material.renderQueue = renderQueue;
                     if (swapType == SwapType.HlslToYaml && renderQueue == value.renderQueue)
                         material.renderQueue = -1;
-                    log.Add($"Swapped {MarkdownUtils.GenerateAssetLink(material)}'s shadder ({MarkdownUtils.GenerateAssetLink(shader)}) with {MarkdownUtils.GenerateAssetLink(value)}.");
+                    //log.Add($"Swapped {MarkdownUtils.GenerateAssetLink(material)}'s shadder ({MarkdownUtils.GenerateAssetLink(shader)}) with {MarkdownUtils.GenerateAssetLink(value)}.");
                     _modifiedMaterials.Add(material);
                 }
                 else
                 {
-                    log.Add($"Could not find matching shader for {MarkdownUtils.GenerateAssetLink(material)}'s shader ({MarkdownUtils.GenerateAssetLink(shader)}).");
+                    //log.Add($"Could not find matching shader for {MarkdownUtils.GenerateAssetLink(material)}'s shader ({MarkdownUtils.GenerateAssetLink(shader)}).");
                 }
             }
             return log;
@@ -82,7 +82,7 @@ namespace MSU.Editor.Pipelines
 
         private Material[] GetAllMaterials(Shader[] validShaders)
         {
-            return AssetDatabaseUtils.FindAssetsByType<Material>().Where(mat => validShaders.Contains(mat.shader)).ToArray();
+            return AssetDatabaseUtil.FindAssetsByType<Material>().Where(mat => validShaders.Contains(mat.shader)).ToArray();
         }
 
         private void RestoreShaders()

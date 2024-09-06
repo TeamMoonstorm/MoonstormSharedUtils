@@ -11,6 +11,7 @@ using UnityEngine.UIElements;
 
 namespace MSU.Editor.Settings
 {
+    //TODO: Move to a ScriptableSingleton
     public sealed class ShaderDictionary : ThunderKitSetting
     {
         const string ShaderRootGUID = "9baa48c4908f85f43ae0c54e90e44447";
@@ -42,8 +43,8 @@ namespace MSU.Editor.Settings
                     _yamlToHlsl = new Dictionary<Shader, Shader>();
                     foreach (var pair in shaderPairs)
                     {
-                        var hlsl = pair.hlsl.LoadShader();
-                        var yaml = pair.yaml.LoadShader();
+                        var hlsl = pair.hlsl.shader;
+                        var yaml = pair.yaml.shader;
 
                         if (!yaml)
                             continue;
@@ -70,8 +71,8 @@ namespace MSU.Editor.Settings
                     _hlslToYaml = new Dictionary<Shader, Shader>();
                     foreach(var pair in shaderPairs)
                     {
-                        var hlsl = pair.hlsl.LoadShader();
-                        var yaml = pair.yaml.LoadShader();
+                        var hlsl = pair.hlsl.shader;
+                        var yaml = pair.yaml.shader;
 
                         if (!hlsl)
                             continue;
@@ -144,8 +145,8 @@ namespace MSU.Editor.Settings
             var sd = GetOrCreateSettings<ShaderDictionary>();
             foreach (ShaderPair pair in sd.shaderPairs)
             {
-                var stubbed = pair.hlsl.LoadShader();
-                var orig = pair.yaml.LoadShader();
+                var stubbed = pair.hlsl.shader;
+                var orig = pair.yaml.shader;
                 if (stubbed != null && !list.Contains(stubbed))
                     list.Add(stubbed);
                 if (orig != null && !list.Contains(orig))
@@ -165,7 +166,7 @@ namespace MSU.Editor.Settings
 
             foreach (Shader shader in shadersFound)
             {
-                var stubbeds = shaderPairs.Select(sp => sp.hlsl.LoadShader());
+                var stubbeds = shaderPairs.Select(sp => sp.hlsl.shader);
                 if (!stubbeds.Contains(shader))
                 {
                     shaderPairs.Add(new ShaderPair(null, shader));
@@ -176,19 +177,19 @@ namespace MSU.Editor.Settings
 
         private void AttemptToFinishDictionaryAutomatically()
         {
-            Shader[] allYAMLShaders = AssetDatabaseUtils.FindAssetsByType<Shader>()
+            Shader[] allYAMLShaders = AssetDatabaseUtil.FindAssetsByType<Shader>()
                 .Where(shader => AssetDatabase.GetAssetPath(shader).EndsWith(".asset")).ToArray();
 
             foreach (ShaderPair pair in shaderPairs)
             {
-                var orig = pair.yaml.LoadShader();
-                var stubbed = pair.hlsl.LoadShader();
+                var orig = pair.yaml.shader;
+                var stubbed = pair.hlsl.shader;
                 if (orig || !stubbed)
                     continue;
 
                 if(stubbedShaderNameToYamlShaderName.TryGetValue(stubbed.name, out var yamlName))
                 {
-                    pair.yaml.SetShader(Shader.Find(yamlName));
+                    pair.yaml.shader = Shader.Find(yamlName);
                     continue;
                 }
 
@@ -209,7 +210,7 @@ namespace MSU.Editor.Settings
                 if (!origShader)
                     continue;
 
-                pair.yaml.SetShader(origShader);
+                pair.yaml.shader = origShader;
             }
             UnityEditor.EditorUtility.SetDirty(this);
         }

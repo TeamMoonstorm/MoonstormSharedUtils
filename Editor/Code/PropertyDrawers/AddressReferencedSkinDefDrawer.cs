@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MSU.AddressReferencedAssets;
-using RoR2.Editor.R2APIRelated.PropertyDrawers;
+using RoR2.Editor.PropertyDrawers;
 
 namespace MSU.Editor
 {

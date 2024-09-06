@@ -43,7 +43,7 @@ namespace MSU.Editor.Pipelines
                 result.totalStageAssemblyJobs++;
                 stageAssemblies.releaseBuild = buildMode == AssemblyBuildMode.Release;
                 EditorUtility.SetDirty(stageAssemblies);
-                result.context.Add($"Modified {MarkdownUtils.GenerateAssetLink(stageAssemblies)}'s StageAssemblies pipeline job (previous mode: {previousBuildMode}, new mode: {buildMode})");
+                //result.context.Add($"Modified {MarkdownUtils.GenerateAssetLink(stageAssemblies)}'s StageAssemblies pipeline job (previous mode: {previousBuildMode}, new mode: {buildMode})");
             }
 
             ExecutePipeline[] executePipelineJobs = jobs.OfType<ExecutePipeline>().ToArray();

@@ -1,6 +1,5 @@
 ﻿using RoR2;
 using RoR2.Editor;
-using RoR2.Editor.VisualElements;
 using System;
 using System.Globalization;
 using System.Linq;

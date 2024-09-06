@@ -1,6 +1,5 @@
 ﻿using RoR2;
 using RoR2.Editor;
-using RoR2.Editor.VisualElements;
 using System;
 using ThunderKit.Core.UIElements;
 using UnityEditor;
@@ -15,7 +14,7 @@ namespace MSU.Editor.VisualElements
         public new class UxmlFactory : UxmlFactory<ItemDisplayDictionary_KeyAssetField, UxmlTraits> { }
         public new class UxmlTraits : VisualElement.UxmlTraits { }
 
-        public HelpBox HelpBox { get; }
+        public ExtendedHelpBox HelpBox { get; }
         public ObjectField KeyAsset { get; }
         public ExtendedListView DisplayPrefabs { get; }
         public event Action<ScriptableObject> OnKeyAssetValueSet;
@@ -106,7 +105,7 @@ namespace MSU.Editor.VisualElements
             TemplateHelpers.GetTemplateInstance(GetType().Name, this, (pth) => pth.ValidateUXMLPath());
 
             _container = this.Q<VisualElement>("ContentContainer");
-            HelpBox = this.Q<HelpBox>();
+            HelpBox = this.Q<ExtendedHelpBox>();
             KeyAsset = this.Q<ObjectField>();
             DisplayPrefabs = this.Q<ExtendedListView>();
 

@@ -96,7 +96,8 @@ namespace MSU.Editor.VisualElements
 
             idd.displayDictionaryEntries = idd.displayDictionaryEntries.OrderBy(entry => entry.idrsName).ToList();
 
-            _serializedObject.ApplyAndUpdate();
+            _serializedObject.ApplyModifiedProperties();
+            _serializedObject.Update();
             ExtendedListView.Refresh();
         }
 
@@ -196,7 +197,8 @@ namespace MSU.Editor.VisualElements
                 });
                 target.displayDictionaryEntries.Add(newEntry);
             }
-            _serializedObject.ApplyAndUpdate();
+            _serializedObject.ApplyModifiedProperties();
+            _serializedObject.Update();
             ExtendedListView.Refresh();
         }
         private void ForceCatalogUpdate() => OnForceCatalogUpdate?.Invoke();

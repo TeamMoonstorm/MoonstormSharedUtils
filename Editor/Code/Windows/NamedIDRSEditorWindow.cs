@@ -22,8 +22,9 @@ namespace MSU.Editor.EditorWindows
         private string serializedObjectGUID;
 
 
-        private void OnEnable()
+        protected override void OnEnable()
         {
+            base.OnEnable();
             Selection.selectionChanged += CheckForNamedIDRS;
         }
         protected override void OnDisable()
@@ -39,16 +40,16 @@ namespace MSU.Editor.EditorWindows
                 return;
 
             UnityEngine.Object currentTarget = null;
-            if (SerializedObject != null)
+            if (serializedObject != null)
             {
-                var ptr = SerializedObject.GetFieldValue<IntPtr>("m_NativeObjectPtr");
+                var ptr = serializedObject.GetFieldValue<IntPtr>("m_NativeObjectPtr");
                 if (((int)ptr) == 0x0)
                 {
-                    SerializedObject = null;
+                    serializedObject = null;
                     SetSerializedObject(null);
                     return;
                 }
-                currentTarget = SerializedObject.targetObject;
+                currentTarget = serializedObject.targetObject;
             }
 
             if (currentTarget == obj)
@@ -58,12 +59,12 @@ namespace MSU.Editor.EditorWindows
 
             if (obj is NamedItemDisplayRuleSet namedIDRS)
             {
-                SerializedObject?.ApplyModifiedProperties();
+                serializedObject?.ApplyModifiedProperties();
                 SetSerializedObject(namedIDRS);
-                serializedObjectGUID = AssetDatabaseUtils.GetGUIDFromAsset(obj);
+                serializedObjectGUID = AssetDatabaseUtil.GetAssetGUID(obj);
                 return;
             }
-            else if (!serializedObjectGUID.IsNullOrEmptyOrWhitespace())
+            else if (!serializedObjectGUID.IsNullOrEmptyOrWhiteSpace())
             {
                 SetSerializedObject(AssetDatabase.LoadAssetAtPath<NamedItemDisplayRuleSet>(AssetDatabase.GUIDToAssetPath(serializedObjectGUID)));
                 return;
@@ -72,17 +73,16 @@ namespace MSU.Editor.EditorWindows
             void SetSerializedObject(NamedItemDisplayRuleSet _namedIDRS)
             {
                 var so = _namedIDRS ? new SerializedObject(_namedIDRS) : null;
-                OnIDRSFieldValueSet(TargetType.AsValidOrNull()?.targetItemDisplayRuleSet);
+                OnIDRSFieldValueSet(targetType.AsValidOrNull()?.targetItemDisplayRuleSet);
                 namedIDRSField.CheckForNamedIDRS(so);
                 namedRuleGroupList.CheckForNamedIDRS(so);
                 namedRuleGroup.CheckForNamedIDRS(so);
                 namedRule.CheckForNamedIDRS(so);
-                SerializedObject = so;
+                serializedObject = so;
             }
         }
-        protected override void CreateGUI()
+        protected override void FinalizeUI()
         {
-            base.CreateGUI();
             catalog = ItemDisplayCatalog.LoadCatalog();
             if (catalog == null)
             {
@@ -96,7 +96,7 @@ namespace MSU.Editor.EditorWindows
             namedRule = rootVisualElement.Q<NamedIDRS_NamedRule>(nameof(NamedIDRS_NamedRule));
 
             CheckForNamedIDRS();
-            OnIDRSFieldValueSet(TargetType?.targetItemDisplayRuleSet);
+            OnIDRSFieldValueSet(targetType?.targetItemDisplayRuleSet);
             namedIDRSField.OnIDRSFieldValueSet += OnIDRSFieldValueSet;
             namedRuleGroupList.Catalog = catalog;
             namedRuleGroupList.OnForceCatalogUpdate += UpdateCatalog;

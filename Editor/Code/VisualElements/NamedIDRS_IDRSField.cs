@@ -1,6 +1,5 @@
 ﻿using RoR2;
 using RoR2.Editor;
-using RoR2.Editor.VisualElements;
 using System;
 using ThunderKit.Core.UIElements;
 using UnityEditor;
@@ -31,7 +30,7 @@ namespace MSU.Editor.VisualElements
             }
         }
         public ObjectField ObjectField { get; }
-        public HelpBox HelpBox { get; }
+        public ExtendedHelpBox HelpBox { get; }
         public IBinding binding { get => ObjectField.binding; set => ObjectField.binding = value; }
         public string bindingPath { get => ObjectField.bindingPath; set => ObjectField.bindingPath = value; }
 
@@ -86,7 +85,7 @@ namespace MSU.Editor.VisualElements
             TemplateHelpers.GetTemplateInstance(nameof(NamedIDRS_IDRSField), this, (pth) => pth.ValidateUXMLPath());
 
             ObjectField = this.Q<ObjectField>();
-            HelpBox = this.Q<HelpBox>();
+            HelpBox = this.Q<ExtendedHelpBox>();
 
             RegisterCallback<AttachToPanelEvent>(OnAttach);
             RegisterCallback<DetachFromPanelEvent>(OnDetach);

@@ -1,5 +1,5 @@
 ﻿using MSU.Editor.EditorWindows;
-using RoR2.Editor.EditorWindows;
+using RoR2.Editor;
 using UnityEditor;
 using UnityEngine.UIElements;
 
@@ -22,15 +22,13 @@ namespace MSU.Editor.Inspectors
 
         private void Open()
         {
-            ExtendedEditorWindow.OpenEditorWindow<ItemDisplayDictionaryEditorWindow>(serializedObject);
+            ExtendedEditorWindow.Open<ItemDisplayDictionaryEditorWindow>(serializedObject.targetObject);
         }
 
-        [MenuItem("Tools/MSEU/Windows/ItemDisplayDictionary Editor Window")]
-#pragma warning disable IDE0051 // Remove unused private members
+        [MenuItem("Tools/MoonstormSharedUtils/Windows/ItemDisplayDictionary Editor Window")]
         private static void OpenStatic()
-#pragma warning restore IDE0051 // Remove unused private members
         {
-            ExtendedEditorWindow.OpenEditorWindow<ItemDisplayDictionaryEditorWindow>(false);
+            ExtendedEditorWindow.Open<ItemDisplayDictionaryEditorWindow>(null);
         }
     }
 }

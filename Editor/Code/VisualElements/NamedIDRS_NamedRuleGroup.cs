@@ -1,6 +1,5 @@
 ﻿using RoR2;
 using RoR2.Editor;
-using RoR2.Editor.VisualElements;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -35,7 +34,7 @@ namespace MSU.Editor.VisualElements
         }
         private CollectionButtonEntry _currentEntry;
         public SerializedProperty SerializedProperty { get; private set; }
-        public HelpBox HelpBox { get; }
+        public ExtendedHelpBox HelpBox { get; }
         public TextField KeyAsset { get; }
         public ReadOnlyCollection<string> DisplayPrefabs
         {
@@ -202,7 +201,7 @@ namespace MSU.Editor.VisualElements
         public NamedIDRS_NamedRuleGroup()
         {
             TemplateHelpers.GetTemplateInstance(nameof(NamedIDRS_NamedRuleGroup), this, (pth) => pth.ValidateUXMLPath());
-            HelpBox = this.Q<HelpBox>();
+            HelpBox = this.Q<ExtendedHelpBox>();
             ExtendedListView = this.Q<ExtendedListView>();
             KeyAsset = this.Q<TextField>();
             standardViewContainer = this.Q<VisualElement>("StandardView");
