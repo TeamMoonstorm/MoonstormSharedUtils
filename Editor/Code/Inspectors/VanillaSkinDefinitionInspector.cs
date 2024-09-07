@@ -20,18 +20,14 @@ namespace MSU.Editor.Inspectors
         private string[] rendererNames = Array.Empty<string>();
         private string[] childLocatorNames = Array.Empty<string>();
 
-        private void OnEnable()
+        protected override void OnEnable()
         {
+            base.OnEnable();
             _target = (VanillaSkinDef)target;
             _bodyAddress = serializedObject.FindProperty("_bodyAddress");
             if (_bodyAddress.stringValue.IsNullOrEmptyOrWhiteSpace())
                 return;
             UpdateArrays();
-        }
-
-        public override void OnInspectorGUI()
-        {
-            
         }
 
         private void UpdateArrays()
