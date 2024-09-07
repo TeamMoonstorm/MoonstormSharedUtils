@@ -24,6 +24,6 @@ namespace MSU
         /// <summary>
         /// The DirectorCard used for this Monster when <see cref="RoR2.RoR2Content.Artifacts.mixEnemyArtifactDef"/> is enabled. Can be Null
         /// </summary>
-        NullableRef<DirectorAPI.DirectorCardHolder> DissonanceCard { get; }
+        NullableRef<DirectorCardHolderExtended> DissonanceCard { get; }
     }
 }

@@ -186,7 +186,7 @@ namespace MSU
 
             DirectorCardCategorySelection[] selections = alwaysIncluded.Union(includedIfConditionsMet).Union(includedIfNoConditionsMet).ToArray();
 
-            DirectorAPI.DirectorCardHolder cardHolder = null;
+            DirectorCardHolderExtended cardHolder = null;
 
             if(stageInfo.stage == DirectorAPI.Stage.Custom)
             {
@@ -200,7 +200,7 @@ namespace MSU
             if (cardHolder == null)
                 return;
 
-            if (!cardHolder.Card.IsAvailable())
+            if (!cardHolder.IsAvailable())
                 return;
 
             foreach(DirectorCardCategorySelection selection in selections)

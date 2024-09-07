@@ -1,5 +1,7 @@
 ﻿using R2API;
+using R2API.AddressReferencedAssets;
 using RoR2;
+using RoR2.ExpansionManagement;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,10 +19,10 @@ namespace MSU
     public class MonsterCardProvider : ScriptableObject
     {
         /// <summary>
-        /// A Dictionary that contains this Monster's <see cref="DirectorAPI.DirectorCardHolder"/> for vanilla stages, which can be accessed by giving the corresponding key of type <see cref="DirectorAPI.Stage"/>
+        /// A Dictionary that contains this Monster's <see cref="DirectorCardHolderExtended"/> for vanilla stages, which can be accessed by giving the corresponding key of type <see cref="DirectorAPI.Stage"/>
         /// <br>For custom stages, use <see cref="CustomStageToCards"/></br>
         /// </summary>
-        public ReadOnlyDictionary<DirectorAPI.Stage, DirectorAPI.DirectorCardHolder> StageToCards
+        public ReadOnlyDictionary<DirectorAPI.Stage, DirectorCardHolderExtended> StageToCards
         {
             get
             {
@@ -31,13 +33,13 @@ namespace MSU
                 return _stageToCards;
             }
         }
-        private ReadOnlyDictionary<DirectorAPI.Stage, DirectorAPI.DirectorCardHolder> _stageToCards;
+        private ReadOnlyDictionary<DirectorAPI.Stage, DirectorCardHolderExtended> _stageToCards;
 
         /// <summary>
-        /// A Dictionary that contains this Monster's <see cref="DirectorAPI.DirectorCardHolder"/> for custom stages, which can be accessed by giving the corresponding key, which would be the custom stage's name.
+        /// A Dictionary that contains this Monster's <see cref="DirectorCardHolderExtended"/> for custom stages, which can be accessed by giving the corresponding key, which would be the custom stage's name.
         /// <br>For vanilla stages, use <see cref="StageToCards"/></br>
         /// </summary>
-        public ReadOnlyDictionary<string, DirectorAPI.DirectorCardHolder> CustomStageToCards
+        public ReadOnlyDictionary<string, DirectorCardHolderExtended> CustomStageToCards
         {
             get
             {
@@ -48,7 +50,7 @@ namespace MSU
                 return _customStageToCards;
             }
         }
-        private ReadOnlyDictionary<string, DirectorAPI.DirectorCardHolder> _customStageToCards;
+        private ReadOnlyDictionary<string, DirectorCardHolderExtended> _customStageToCards;
 
         [Tooltip("Contains your Monster's Cards")]
         public StageMonsterCardPair[] _serializedCardPairs = Array.Empty<StageMonsterCardPair>();
@@ -84,8 +86,8 @@ namespace MSU
         /// </summary>
         public void BuildDictionaries()
         {
-            var stageDict = new Dictionary<DirectorAPI.Stage, DirectorAPI.DirectorCardHolder>();
-            var customStageDict = new Dictionary<string, DirectorAPI.DirectorCardHolder>();
+            var stageDict = new Dictionary<DirectorAPI.Stage, DirectorCardHolderExtended>();
+            var customStageDict = new Dictionary<string, DirectorCardHolderExtended>();
 
             //Iterate thru pairs
             for (int i = 0; i < _serializedCardPairs.Length; i++)
@@ -134,13 +136,13 @@ namespace MSU
                 }
             }
 
-            _customStageToCards = new ReadOnlyDictionary<string, DirectorAPI.DirectorCardHolder>(customStageDict);
-            _stageToCards = new ReadOnlyDictionary<DirectorAPI.Stage, DirectorAPI.DirectorCardHolder>(stageDict);
+            _customStageToCards = new ReadOnlyDictionary<string, DirectorCardHolderExtended>(customStageDict);
+            _stageToCards = new ReadOnlyDictionary<DirectorAPI.Stage, DirectorCardHolderExtended>(stageDict);
         }
 
         /// <summary>
-        /// Represents a pair of <see cref="DirectorAPI.DirectorCardHolder"/> and stage metadata.
-        /// <br>Contains an implicit cast to cast from this struct to <see cref="DirectorAPI.DirectorCardHolder"/></br>
+        /// Represents a pair of <see cref="DirectorCardHolderExtended"/> and stage metadata.
+        /// <br>Contains an implicit cast to cast from this struct to <see cref="DirectorCardHolderExtended"/></br>
         /// </summary>
         [Serializable]
         public struct StageMonsterCardPair
@@ -163,15 +165,18 @@ namespace MSU
             [Tooltip("The weight for a new Category, only relevant if \"Monster Category\" is not \"Custom\".\n keep in mind that if the Category does not exist in the DirectorCardCategorySelection, the category will be added and this name will be used. if the Category exists, the card will just be added to it.")]
             public string customCategoryName;
 
+            [Tooltip("The required expansions for this pair to be picked. ALL the expansions referenced here must be enabled in the run.")]
+            public AddressReferencedExpansionDef[] requiredExpansions;
+
             [Tooltip("The actual DirectorCard for this pair.")]
             public AddressableDirectorCard card;
 
             /// <summary>
-            /// Cast for casting a <see cref="StageMonsterCardPair"/> into a valid <see cref="DirectorAPI.DirectorCardHolder"/>
+            /// Cast for casting a <see cref="StageMonsterCardPair"/> into a valid <see cref="DirectorCardHolderExtended"/>
             /// </summary>
-            public static implicit operator DirectorAPI.DirectorCardHolder(StageMonsterCardPair other)
+            public static implicit operator DirectorCardHolderExtended(StageMonsterCardPair other)
             {
-                return new DirectorAPI.DirectorCardHolder
+                return new DirectorCardHolderExtended
                 {
                     Card = new DirectorCard
                     {
@@ -189,7 +194,8 @@ namespace MSU
 
                     InteractableCategorySelectionWeight = 0,
                     CustomInteractableCategory = null,
-                    InteractableCategory = DirectorAPI.InteractableCategory.Invalid
+                    InteractableCategory = DirectorAPI.InteractableCategory.Invalid,
+                    requiredExpansionDefs = other.requiredExpansions.Where(ared => ared.AssetExists).Select(ared => (ExpansionDef)ared).ToArray()
                 };
             }
         }

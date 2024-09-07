@@ -38,6 +38,13 @@ namespace MSU
                 ItemTierDef tierDef = ItemTierCatalog.GetItemTierDef(tier);
                 if(tierDef && ItemTierModule._itemTierToPickupFX.TryGetValue(tierDef, out var prefab))
                 {
+                    if(!prefab)
+                    {
+#if DEBUG
+                        MSULog.Warning($"{tierDef} is being handled by the ItemTierModule but it's IItemTierContentPiece does not provide a custom prefab for VFX!");
+#endif
+                        return;
+                    }
                     _vfxInstance = Instantiate(prefab, _display.transform);
                     _vfxInstance.transform.position = Vector3.zero;
                 }

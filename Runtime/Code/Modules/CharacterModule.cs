@@ -9,7 +9,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-using static RoR2.RoR2Content;
 
 namespace MSU
 {
@@ -35,7 +34,7 @@ namespace MSU
         private static Dictionary<BaseUnityPlugin, ICharacterContentPiece[]> _pluginToCharacters = new Dictionary<BaseUnityPlugin, ICharacterContentPiece[]>();
         private static Dictionary<BaseUnityPlugin, IContentPieceProvider<GameObject>> _pluginToContentProvider = new Dictionary<BaseUnityPlugin, IContentPieceProvider<GameObject>>();
         private static HashSet<MonsterCardProvider> _monsterCardProviders = new HashSet<MonsterCardProvider>();
-        private static HashSet<DirectorAPI.DirectorCardHolder> _dissonanceCards = new HashSet<DirectorAPI.DirectorCardHolder>();
+        private static HashSet<DirectorCardHolderExtended> _dissonanceCards = new HashSet<DirectorCardHolderExtended>();
 
         /// <summary>
         /// Adds a new provider to the CharacterModule.
@@ -188,7 +187,7 @@ namespace MSU
             {
                 foreach (var dissonanceCard in _dissonanceCards)
                 {
-                    if (!dissonanceCard.Card.IsAvailable())
+                    if (!dissonanceCard.IsAvailable())
                         continue;
 
                     cardList.Add(dissonanceCard);
@@ -217,7 +216,7 @@ namespace MSU
                 .Concat(standardCategory.includedIfNoConditionsMet.Select(pe => pe.dccs))
                 .ToArray();
 
-            DirectorAPI.DirectorCardHolder cardHolder = null;
+            DirectorCardHolderExtended cardHolder = null;
             if(stageInfo.stage == DirectorAPI.Stage.Custom)
             {
                 monsterCardProvider.CustomStageToCards.TryGetValue(stageInfo.CustomStageName, out cardHolder);
@@ -230,7 +229,7 @@ namespace MSU
             if (cardHolder == null)
                 return;
 
-            if (!cardHolder.Card.IsAvailable())
+            if (!cardHolder.IsAvailable())
                 return;
 
             foreach(DirectorCardCategorySelection categorySelection in dccsCollection)

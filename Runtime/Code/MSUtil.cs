@@ -89,9 +89,13 @@ namespace MSU
         /// <summary>
         /// Returns an array of the enabled Expansions in a Run
         /// </summary>
-        /// <returns>An array of the enabled <see cref="ExpansionDef"/>s</returns>
+        /// <returns>An array of the enabled <see cref="ExpansionDef"/>s, or an empty array if the run instance is null.</returns>
         public static ExpansionDef[] GetEnabledExpansions(this Run run)
         {
+            if(!run)
+            {
+                return Array.Empty<ExpansionDef>();
+            }
             if (currentRun == run)
             {
                 return currentRunExpansionDefs;
