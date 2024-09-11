@@ -35,6 +35,9 @@ namespace MSU
         [Tooltip("The description token for this Achievement")]
         public string achievementDescriptionToken;
 
+        [Tooltip("This amount of lunar coins are rewarded to the player for obtaining the Achievement")]
+        public uint coinReward;
+
         /// <summary>
         /// Returns the PreRequisite Achievement required for this Achievement to be unlocked.
         /// <para>See <see cref="PreRequisiteAchievementIdentifier"/> for more info</para>
@@ -78,6 +81,7 @@ namespace MSU
                         type = (Type)achievementCondition,
                         achievedIcon = achievementIcon,
                         unachievedIcon = null,
+                        lunarCoinReward = coinReward,
                     };
                     var serverAchievementType = (Type)serverAchievementCondition;
                     if(serverAchievementType != null)

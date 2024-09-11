@@ -1,0 +1,44 @@
+{
+    "name": "MSU.Editor.ThunderKit",
+    "rootNamespace": "MSU.Editor",
+    "references": [
+        "GUID:dc7fc6fd30f870d4f88ff49d44ddfa58",
+        "GUID:08e20a9dcb84ac748840227dcac08af2",
+        "GUID:60983344ee8157d4ab97c25513f789c4",
+        "GUID:ba35f785b4f44bd47bb4409f676c3944",
+        "GUID:48abf88f565f4bb4fb35fbe2385f0894",
+        "GUID:280569ac301428d4d950fdf647900922",
+        "GUID:078963f7677f4ce47b920d40bf671f94"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "MSU_ROR2_IMPORTED",
+        "MSU_THUNDERKIT_ENABLED",
+        "MSU_R2EK_ENABLED"
+    ],
+    "versionDefines": [
+        {
+            "name": "riskofrain2",
+            "expression": "1.3.1",
+            "define": "MSU_ROR2_IMPORTED"
+        },
+        {
+            "name": "com.passivepicasso.thunderkit",
+            "expression": "9.0.0",
+            "define": "MSU_THUNDERKIT_ENABLED"
+        },
+        {
+            "name": "riskofthunder-ror2editorkit",
+            "expression": "5.0.0",
+            "define": "MSU_R2EK_ENABLED"
+        }
+    ],
+    "noEngineReferences": false
+}
