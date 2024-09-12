@@ -6,6 +6,7 @@ namespace MSU.Editor.Importers
     {
         public override int Priority => Constants.Priority.WWiseBlacklister;
         public override string Description => $"Blacklists the following assemblies:" +
+            $"\nAkSoundEngine.dll" +
             $"\nAk.Wwise.API.WAAPI.dll" +
             $"\nAK.WWise.Unity.API.dll" +
             $"\nAK.Wwise.Unity.API.WwiseTypes.dll" +

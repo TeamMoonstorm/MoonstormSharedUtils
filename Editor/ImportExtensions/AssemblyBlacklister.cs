@@ -19,6 +19,7 @@ namespace MSU.Editor.Importers
             Debug.Log($"Old: \n{old}");
             if (importConfig.ConfigurationExecutors.OfType<WWiseBlacklister>().Any(ie => ie.enabled))
             {
+                blacklist = blacklist.Append($"AkSoundEngine.dll");
                 blacklist = blacklist.Append($"Ak.Wwise.Api.WAAPI.dll");
                 blacklist = blacklist.Append($"AK.Wwise.Unity.API.dll");
                 blacklist = blacklist.Append($"AK.Wwise.Unity.API.WwiseTypes.dll");
