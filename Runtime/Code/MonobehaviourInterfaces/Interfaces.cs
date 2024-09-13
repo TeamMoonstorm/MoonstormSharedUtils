@@ -12,11 +12,11 @@ namespace MSU
         private static void Init()
         {
             MSULog.Info("Setting up Interfaces");
-            IL.RoR2.HealthComponent.TakeDamage += HealthComponent_TakeDamage;
+            IL.RoR2.HealthComponent.TakeDamageProcess += HealthComponent_TakeDamageProcess;
         }
 
         #region IOnIncomingDamageOtherserverReciever
-        private static void HealthComponent_TakeDamage(ILContext il)
+        private static void HealthComponent_TakeDamageProcess(ILContext il)
         {
             ILCursor c = new ILCursor(il);
 

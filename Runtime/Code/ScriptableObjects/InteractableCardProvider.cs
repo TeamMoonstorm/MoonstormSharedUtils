@@ -9,6 +9,7 @@ using UnityEngine;
 using System.Collections.ObjectModel;
 using R2API.AddressReferencedAssets;
 using RoR2.ExpansionManagement;
+using static MSU.MonsterCardProvider;
 
 namespace MSU
 {
@@ -93,7 +94,7 @@ namespace MSU
             for(int i = 0; i < _serializedCardPairs.Length; i++)
             {
                 var pair = _serializedCardPairs[i];
-                var stageFlags = pair.stageEnum;
+                var stageFlags = (DirectorAPI.Stage)pair.stage;
 
                 //Iterate thru stage enum values
                 foreach(DirectorAPI.Stage stageEnumValue in Enum.GetValues(typeof(DirectorAPI.Stage)))
@@ -140,6 +141,20 @@ namespace MSU
             _stageToCards = new ReadOnlyDictionary<DirectorAPI.Stage, DirectorCardHolderExtended>(stageDict);
         }
 
+        private void OnValidate()
+        {
+            for (int i = 0; i < _serializedCardPairs.Length; i++)
+            {
+                StageInteractableCardPair pair = _serializedCardPairs[i];
+                if(pair.stage.Value == default(DirectorAPI.StageSerde).Value && pair.stageEnum != default)
+                {
+                    pair.stage = new DirectorAPI.StageSerde((long)pair.stageEnum);
+                    pair.stageEnum = default;
+                    _serializedCardPairs[i] = pair;
+                }
+            }
+        }
+
         /// <summary>
         /// Represents a pair of <see cref="DirectorCardHolderExtended"/> and stage metadata.
         /// <br>Contains an implicit cast to cast from this struct to <see cref="DirectorCardHolderExtended"/></br>
@@ -148,8 +163,12 @@ namespace MSU
         public struct StageInteractableCardPair
         {
             [Header("Stage Metadata")]
-            [Tooltip("The stage enum for this pair, this only includes vanilla stages.\nif you want to add your interactable to a custom stage, set this to \"Custom\" and fill out the field \"Custom Stage Name\"")]
+            [Tooltip("The Serializable Stage enum value for this pair, this only includes vanilla stages.\nif you want to add your interactable to a custom stage, set this to \"Custom\" and fill out the field \"customSTageNames\".")]
+            public DirectorAPI.StageSerde stage;
+
+            [Obsolete("This cannot be serialized by unity anymore, and as such should not be used, this will be removed prior to MSU 2.0's release. Utilize the field \"stage\" and cast it to \"DirectorAPI.Stage\" instead.")]
             public DirectorAPI.Stage stageEnum;
+
             [Tooltip("The custom stage names for this pair, this is only used for custom, non vanilla stages.\nIf you want to add your interactable to a vanilla stage, leave this empty and utilize the field \"Stage Enum\"")]
             public List<string> customStageNames;
 
