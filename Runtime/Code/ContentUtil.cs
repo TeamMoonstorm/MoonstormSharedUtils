@@ -295,6 +295,19 @@ namespace MSU
             return result;
         }
 
+        public static TAsset[] FindAssets<TAsset>(this AssetCollection collection) where TAsset : UnityEngine.Object
+        {
+            var result = collection.assets.OfType<TAsset>().ToArray();
+
+#if DEBUG
+            if(result.Length == 0)
+            {
+                MSULog.Warning($"Could not find any assets of type {typeof(TAsset).Name} inside {collection}");
+            }
+#endif
+            return result;
+        }
+
         private static void AddContentFromCollectionInternal(ContentPack contentPack, UnityEngine.Object[] assetCollection)
         {
             foreach (var asset in assetCollection)
