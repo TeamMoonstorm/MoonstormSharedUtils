@@ -30,7 +30,7 @@ namespace MSU
         /// <summary>
         /// A texture that will be used to create the Bazaar material for your SceneDef.
         /// </summary>
-        Texture2D bazaarTextureBase { get; }
+        NullableRef<Texture> bazaarTextureBase { get; }
 
         /// <summary>
         /// The weight for this stage to be selected during the regular loop, this is only relevant if the <see cref="SceneDef.sceneType"/> is set to <see cref="SceneType.Stage"/>. This value can be null.

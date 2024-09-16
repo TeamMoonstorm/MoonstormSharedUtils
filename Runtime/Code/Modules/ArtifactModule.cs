@@ -178,9 +178,9 @@ namespace MSU
                         HG.ArrayUtils.ArrayAppend(ref array, artifactContentPiece);
                         _pluginToArtifacts[plugin] = array;
 
-                        if (artifactContentPiece.ArtifactCode)
+                        if (artifactContentPiece.artifactCode)
                         {
-                            ArtifactCodeAPI.AddCode(artifactContentPiece.asset, artifactContentPiece.ArtifactCode);
+                            ArtifactCodeAPI.AddCode(artifactContentPiece.asset, artifactContentPiece.artifactCode);
                         }
                         _moonstormArtifacts.Add(asset, artifactContentPiece);
                     }
