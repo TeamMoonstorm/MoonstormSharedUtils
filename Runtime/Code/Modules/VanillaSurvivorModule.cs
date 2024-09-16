@@ -23,7 +23,7 @@ namespace MSU
         private static Dictionary<BaseUnityPlugin, IVanillaSurvivorContentPiece[]> _pluginToVanillaSurvivorContentPieces = new Dictionary<BaseUnityPlugin, IVanillaSurvivorContentPiece[]>();
         private static Dictionary<BaseUnityPlugin, IContentPieceProvider> _pluginToContentProvider = new Dictionary<BaseUnityPlugin, IContentPieceProvider>();
 
-        public static void AddProvider(BaseUnityPlugin plugin, IContentPieceProvider<SurvivorDef> provider)
+        public static void AddProvider(BaseUnityPlugin plugin, IContentPieceProvider provider)
         {
             _pluginToContentProvider.Add(plugin, provider);
         }
