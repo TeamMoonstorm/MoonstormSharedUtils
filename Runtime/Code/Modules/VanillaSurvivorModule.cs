@@ -80,7 +80,6 @@ namespace MSU
 
                 vanillaSurvivors.Add(addition);
                 helper.Add(addition.LoadContentAsync);
-                helper.Add(LoadSurvivorDefAndAssignValues, addition);
             }
 
             helper.Start();
@@ -146,16 +145,6 @@ namespace MSU
             initializeAsyncCoroutine.Start();
             while (!initializeAsyncCoroutine.isDone)
                 yield return null;
-        }
-
-
-        private static IEnumerator LoadSurvivorDefAndAssignValues(IVanillaSurvivorContentPiece addition)
-        {
-            var request = Addressables.LoadAssetAsync<SurvivorDef>(addition.survivorDefAddress);
-            while (!request.IsDone)
-                yield return null;
-
-            addition.survivorDef = request.Result;
         }
     }
 }
