@@ -173,7 +173,9 @@ namespace MSU
                         if (sceneContentPiece.bossTrack.hasValue)
                             provider.contentPack.musicTrackDefs.AddSingle(sceneContentPiece.bossTrack.value);
 
-                        sceneContentPiece.asset.portalMaterial = StageRegistration.MakeBazaarSeerMaterial(sceneContentPiece.bazaarTextureBase);
+                        if(sceneContentPiece.bazaarTextureBase.hasValue)
+                            sceneContentPiece.asset.portalMaterial = StageRegistration.MakeBazaarSeerMaterial(sceneContentPiece.bazaarTextureBase);
+
 
                         if (sceneContentPiece.asset.sceneType == SceneType.Stage)
                         {
