@@ -9,7 +9,7 @@
             <ui:Button text="Attempt To Find Missing Keys" display-tooltip-when-elided="true" name="AttemptToFindMissingKeys" style="flex-grow: 0; max-width: none; width: 32.5%;" />
             <ui:Button text="Reload Internal Dictionary" display-tooltip-when-elided="true" name="ReloadInternalDictionary" style="flex-grow: 0; max-width: none; width: 32.5%;" />
         </ui:VisualElement>
-        <ui:ListView focusable="true" name="ShaderPairs" binding-path="shaderPairs" show-border="true" show-add-remove-footer="true" show-foldout-header="true" header-title="Shader Pairs" style="flex-grow: 1;" />
+        <ui:ListView focusable="true" name="ShaderPairs" binding-path="_shaderPairs" show-border="true" show-add-remove-footer="true" show-foldout-header="true" header-title="Shader Pairs" style="flex-grow: 1;" />
     </ui:VisualElement>
     <ui:VisualElement name="Footer">
         <ui:Button text="Save" display-tooltip-when-elided="true" name="Save" />
