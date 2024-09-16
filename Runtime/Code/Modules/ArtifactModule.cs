@@ -42,7 +42,7 @@ namespace MSU
         /// <br>For more info, see <see cref="IContentPieceProvider"/></br>
         /// </summary>
         /// <param name="plugin">The plugin that's adding the new provider</param>
-        /// <param name="provider">The provider from the plugin, can be one created using <see cref="ContentUtil.CreateContentPieceProvider{T}(BaseUnityPlugin, RoR2.ContentManagement.ContentPack)"/></param>
+        /// <param name="provider">The provider from the plugin, can be one created using <see cref="ContentUtil.CreateGenericContentPieceProvider{T}(BaseUnityPlugin, RoR2.ContentManagement.ContentPack)"/></param>
         public static void AddProvider(BaseUnityPlugin plugin, IContentPieceProvider<ArtifactDef> provider)
         {
             _pluginToContentProvider.Add(plugin, provider);

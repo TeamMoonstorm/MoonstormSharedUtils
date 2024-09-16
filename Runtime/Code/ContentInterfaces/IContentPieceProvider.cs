@@ -12,7 +12,7 @@ namespace MSU
     /// <summary>
     /// Base interface that provides ContentPieces
     /// <br>An <see cref="IContentPieceProvider"/>, as the name suggests, is an Interface used to provide <see cref="IContentPiece"/> implementing classes to MSU's Modules. Which then said modules utilize the ContentPieces provided by <see cref="GetContents"/> to initialize them.</br>
-    /// <br>If you do not want to create your own implementation of IContentPieceProvider, see <see cref="ContentUtil.CreateContentPieceProvider{T}(BepInEx.BaseUnityPlugin, ContentPack)"/> and <see cref="ContentUtil.CreateGameObjectContentPieceProvider{T}(BepInEx.BaseUnityPlugin, ContentPack)"/></br>
+    /// <br>If you do not want to create your own implementation of IContentPieceProvider, see <see cref="ContentUtil.CreateGenericContentPieceProvider{T}(BepInEx.BaseUnityPlugin, ContentPack)"/> and <see cref="ContentUtil.CreateGameObjectGenericContentPieceProvider{T}(BepInEx.BaseUnityPlugin, ContentPack)"/></br>
     /// </summary>
     public interface IContentPieceProvider
     {

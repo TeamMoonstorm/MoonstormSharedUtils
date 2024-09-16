@@ -65,60 +65,73 @@ namespace MSU
             equipmentDef.requiredExpansion = _dummyExpansion;
         }
 
+        public static IContentPieceProvider CreateContentPieceProvider<TContentPieceType>(BaseUnityPlugin plugin, ContentPack contentPack) where TContentPieceType : IContentPiece
+        {
+            return new ContentPieceProvider(AnalyzeForContentPieces<TContentPieceType>(plugin), contentPack);
+        }
+
+        public static IEnumerable<IContentPiece> AnalyzeForContentPieces<TContentPieceType>(BaseUnityPlugin plugin) where TContentPieceType : IContentPiece
+        {
+            var assembly = plugin.GetType().Assembly;
+            return ReflectionCache.GetTypes(assembly)
+                .Where(PassesFilterForContentPieceInterface<TContentPieceType>)
+                .Select(t => (IContentPiece)Activator.CreateInstance(t));
+        }
+
         /// <summary>
         /// See also <see cref="IContentPieceProvider"/>
         /// <para>Creates a new, generic ContentPieceProvider for the specified unity Object, this is done by analyzing the assembly from <paramref name="baseUnityPlugin"/> and creating new instances of classes that implement <see cref="IContentPiece{T}"/>.</para>
         /// </summary>
-        /// <typeparam name="T">The type of object that the provider provides.</typeparam>
+        /// <typeparam name="TUObjectType">The type of object that the provider provides.</typeparam>
         /// <param name="baseUnityPlugin">The plugin to scan for content pieces</param>
         /// <param name="contentPack">The plugin's ContentPack</param>
         /// <returns>An IContentPieceProvider with <paramref name="baseUnityPlugin"/>'s classes that implement <see cref="IContentPiece{T}"/></returns>
-        public static IContentPieceProvider<T> CreateContentPieceProvider<T>(BaseUnityPlugin baseUnityPlugin, ContentPack contentPack) where T : UnityEngine.Object
+        public static IContentPieceProvider<TUObjectType> CreateGenericContentPieceProvider<TUObjectType>(BaseUnityPlugin baseUnityPlugin, ContentPack contentPack) where TUObjectType : UnityEngine.Object
         {
-            return new GenericContentPieceProvider<T>(AnalyzeForContentPieces<T>(baseUnityPlugin), contentPack);
+            return new GenericContentPieceProvider<TUObjectType>(AnalyzeForGenericContentPieces<TUObjectType>(baseUnityPlugin), contentPack);
         }
 
         /// <summary>
         /// Analyzes the <paramref name="baseUnityPlugin"/>'s Assembly for classes that implement <see cref="IContentPiece{T}"/> and returns a collection of said classes's instances.
         /// <br>This is ideal for creating your own implementation of <see cref="IContentPieceProvider"/></br>
         /// </summary>
-        /// <typeparam name="T">The type of object to analyze for.</typeparam>
+        /// <typeparam name="TUObjectType">The type of object to analyze for.</typeparam>
         /// <param name="baseUnityPlugin">The plugin to analyze for content pieces</param>
         /// <returns>An Enumerable of <see cref="IContentPiece{T}"/></returns>
-        public static IEnumerable<IContentPiece<T>> AnalyzeForContentPieces<T>(BaseUnityPlugin baseUnityPlugin) where T : UnityEngine.Object
+        public static IEnumerable<IContentPiece<TUObjectType>> AnalyzeForGenericContentPieces<TUObjectType>(BaseUnityPlugin baseUnityPlugin) where TUObjectType : UnityEngine.Object
         {
             var assembly = baseUnityPlugin.GetType().Assembly;
             return ReflectionCache.GetTypes(assembly)
-                .Where(PassesFilter<T>)
-                .Select(t => (IContentPiece<T>)Activator.CreateInstance(t));
+                .Where(PassesFilterForObjectType<TUObjectType>)
+                .Select(t => (IContentPiece<TUObjectType>)Activator.CreateInstance(t));
         }
 
         /// <summary>
         /// See also <see cref="IContentPieceProvider"/>
-        /// <para>Creates a new, generic ContentPieceProvider that provides GameObjects with a specific component specified by <typeparamref name="T"/>, this is done by analyzing the assembly from <paramref name="baseUnityPlugin"/> and creating new instances of classes that implement <see cref="IGameObjectContentPiece{T}{T}"/>.</para>
+        /// <para>Creates a new, generic ContentPieceProvider that provides GameObjects with a specific component specified by <typeparamref name="TComponentType"/>, this is done by analyzing the assembly from <paramref name="baseUnityPlugin"/> and creating new instances of classes that implement <see cref="IGameObjectContentPiece{T}{T}"/>.</para>
         /// </summary>
-        /// <typeparam name="T">The component that the game objects have that the provider provides.</typeparam>
+        /// <typeparam name="TComponentType">The component that the game objects have that the provider provides.</typeparam>
         /// <param name="baseUnityPlugin">The plugin to scan for content pieces</param>
         /// <param name="contentPack">The plugin's ContentPack</param>
         /// <returns>An IContentPieceProvider with <paramref name="baseUnityPlugin"/>'s classes that implement <see cref="IGameObjectContentPiece{T}{T}"/></returns>
-        public static IContentPieceProvider<GameObject> CreateGameObjectContentPieceProvider<T>(BaseUnityPlugin baseUnityPlugin, ContentPack contentPack)
+        public static IContentPieceProvider<GameObject> CreateGameObjectGenericContentPieceProvider<TComponentType>(BaseUnityPlugin baseUnityPlugin, ContentPack contentPack)
         {
-            return new GenericContentPieceProvider<GameObject>(AnalyzeForGameObjectContentPieces<T>(baseUnityPlugin), contentPack);
+            return new GenericContentPieceProvider<GameObject>(AnalyzeForGameObjectGenericContentPieces<TComponentType>(baseUnityPlugin), contentPack);
         }
 
         /// <summary>
         /// Analyzes the <paramref name="baseUnityPlugin"/>'s Assembly for classes that implement <see cref="IGameObjectContentPiece{T}"/> and returns a collection of said classes's instances.
         /// <br>This is ideal for creating your own implementation of <see cref="IContentPieceProvider"/></br>
         /// </summary>
-        /// <typeparam name="T">The type of component to analyze for.</typeparam>
+        /// <typeparam name="TComponentTYpe">The type of component to analyze for.</typeparam>
         /// <param name="baseUnityPlugin">The plugin to analyze for content pieces</param>
-        /// <returns>An Enumerable of IContentPiece that have gameObjects with the component specified in <typeparamref name="T"/>></returns>
-        public static IEnumerable<IContentPiece<GameObject>> AnalyzeForGameObjectContentPieces<T>(BaseUnityPlugin baseUnityPlugin)
+        /// <returns>An Enumerable of IContentPiece that have gameObjects with the component specified in <typeparamref name="TComponentTYpe"/>></returns>
+        public static IEnumerable<IContentPiece<GameObject>> AnalyzeForGameObjectGenericContentPieces<TComponentTYpe>(BaseUnityPlugin baseUnityPlugin)
         {
             var assembly = baseUnityPlugin.GetType().Assembly;
 
             return ReflectionCache.GetTypes(assembly)
-                .Where(t => PassesFilter<GameObject>(t) && t.GetInterfaces().Contains(typeof(IGameObjectContentPiece<T>)))
+                .Where(t => PassesFilterForObjectType<GameObject>(t) && t.GetInterfaces().Contains(typeof(IGameObjectContentPiece<TComponentTYpe>)))
                 .Select(t => (IContentPiece<GameObject>)Activator.CreateInstance(t));
         }
 
@@ -376,11 +389,36 @@ namespace MSU
             }
         }
 
-        private static bool PassesFilter<T>(Type t) where T : UnityEngine.Object
+        private static bool PassesFilterForContentPieceInterface<TContentPieceInterface>(Type t) where TContentPieceInterface : IContentPiece
+        {
+            bool notAbstract = !t.IsAbstract;
+            bool implementsInterface = t.GetInterfaces().Contains(typeof(TContentPieceInterface));
+            return notAbstract && implementsInterface;
+        }
+        private static bool PassesFilterForObjectType<T>(Type t) where T : UnityEngine.Object
         {
             bool notAbstract = !t.IsAbstract;
             bool implementsInterface = t.GetInterfaces().Contains(typeof(IContentPiece<T>));
             return notAbstract && implementsInterface;
+        }
+
+        private class ContentPieceProvider : IContentPieceProvider
+        {
+            public ContentPack contentPack => _contentPack;
+
+            private ContentPack _contentPack;
+            private IContentPiece[] _contentPieces;
+
+            public IContentPiece[] GetContents()
+            {
+                return _contentPieces;
+            }
+
+            public ContentPieceProvider(IEnumerable<IContentPiece> contentPieces, ContentPack contentPack)
+            {
+                _contentPieces = contentPieces.ToArray();
+                _contentPack = contentPack;
+            }
         }
 
         private class GenericContentPieceProvider<T> : IContentPieceProvider<T> where T : UnityEngine.Object
