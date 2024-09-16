@@ -147,11 +147,18 @@ namespace MSU
                         }
                         var array = _pluginToItems[plugin];
                         HG.ArrayUtils.ArrayAppend(ref array, itemContentPiece);
+                        _pluginToItems[plugin] = array;
+
                         _moonstormItems.Add(asset, itemContentPiece);
                     }
+
+#if DEBUG
+                    MSULog.Info($"Item {item.GetType().FullName} initialized.");
+#endif
+
 #if DEBUG
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     MSULog.Error($"Item {item.GetType().FullName} threw an exception while initializing.\n{ex}");
                 }

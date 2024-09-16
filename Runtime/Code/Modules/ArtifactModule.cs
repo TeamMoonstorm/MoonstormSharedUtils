@@ -176,6 +176,7 @@ namespace MSU
                         }
                         var array = _pluginToArtifacts[plugin];
                         HG.ArrayUtils.ArrayAppend(ref array, artifactContentPiece);
+                        _pluginToArtifacts[plugin] = array;
 
                         if (artifactContentPiece.ArtifactCode)
                         {
@@ -183,6 +184,11 @@ namespace MSU
                         }
                         _moonstormArtifacts.Add(asset, artifactContentPiece);
                     }
+
+#if DEBUG
+                    MSULog.Info($"Artifact {artifact.GetType().FullName} initialized.");
+#endif
+
 #if DEBUG
                 }
                 catch (Exception ex)

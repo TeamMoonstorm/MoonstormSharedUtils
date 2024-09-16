@@ -33,18 +33,18 @@ namespace MSU
         Texture2D bazaarTextureBase { get; }
 
         /// <summary>
-        /// This interger dictates in what stage number this scene spawns, this is only relevant if the <see cref="SceneDef.sceneType"/> is set to <see cref="SceneType.Stage"/>
+        /// The weight for this stage to be selected during the regular loop, this is only relevant if the <see cref="SceneDef.sceneType"/> is set to <see cref="SceneType.Stage"/>. This value can be null.
         /// </summary>
-        int regularProgressionSlot { get; }
+        float? weightRelativeToSiblings { get; }
 
         /// <summary>
-        /// Wether this stage appears before looping, this is only relevant if the <see cref="SceneDef.sceneType"/> is set to <see cref="SceneType.Stage"/>
+        /// Wether this stage appears before looping, this is only relevant if the <see cref="SceneDef.sceneType"/> is set to <see cref="SceneType.Stage"/>. This value can be null.
         /// </summary>
-        bool preLoop { get; }
+        bool? preLoop { get; }
 
         /// <summary>
-        /// Wether this stage appears after looping, this is only relevant if the <see cref="SceneDef.sceneType"/> is set to <see cref="SceneType.Stage"/>
-        bool postLoop { get; }
+        /// Wether this stage appears after looping, this is only relevant if the <see cref="SceneDef.sceneType"/> is set to <see cref="SceneType.Stage"/>. This value can be null.
+        bool? postLoop { get; }
 
         /// <summary>
         /// Method called when a <see cref="Stage"/> ends and it's <see cref="Stage.sceneDef"/> is this Scene

@@ -1,4 +1,5 @@
 ﻿using RoR2;
+using System.Collections;
 
 namespace MSU
 {
@@ -6,5 +7,7 @@ namespace MSU
     {
         SurvivorDef survivorDef { get; set; }
         string survivorDefAddress { get; }
+
+        IEnumerator InitializeAsync();
     }
 }

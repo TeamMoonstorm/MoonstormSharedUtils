@@ -190,6 +190,8 @@ namespace MSU
 
                         var array = _pluginToTiers[plugin];
                         HG.ArrayUtils.ArrayAppend(ref array, itemTierContentPiece);
+                        _pluginToTiers[plugin] = array;
+
                         _moonstormItemTiers.Add(asset, itemTierContentPiece);
 
                         if (itemTierContentPiece.colorIndex)
@@ -204,6 +206,11 @@ namespace MSU
                         }
                         _itemTierToPickupFX.Add(asset, itemTierContentPiece.pickupDisplayVFX);
                     }
+
+#if DEBUG
+                    MSULog.Info($"ItemTier {tier.GetType().FullName} initialized.");
+#endif
+
 #if DEBUG
                 }
                 catch (Exception ex)

@@ -153,6 +153,7 @@ namespace MSU
                         }
                         var array = _pluginToInteractables[plugin];
                         HG.ArrayUtils.ArrayAppend(ref array, interactableContentPiece);
+                        _pluginToInteractables[plugin] = array;
 
                         if (interactableContentPiece.cardProvider)
                         {
@@ -160,6 +161,11 @@ namespace MSU
                         }
                         _moonstormInteractables.Add(interactableContentPiece.component, interactableContentPiece);
                     }
+
+#if DEBUG
+                    MSULog.Info($"Interactable {interactable.GetType().FullName} initialized.");
+#endif
+
 #if DEBUG
                 }
                 catch (Exception ex) 

@@ -242,6 +242,8 @@ namespace MSU
                         }
                         var array = _pluginToEquipments[plugin];
                         HG.ArrayUtils.ArrayAppend(ref array, equipmentContentPiece);
+                        _pluginToEquipments[plugin] = array;
+
                         _moonstormEquipments.Add(asset, equipmentContentPiece);
                     }
 
@@ -259,9 +261,14 @@ namespace MSU
                             BuffOverlays.AddBuffOverlay(asset.passiveBuffDef, eliteDefWithOverlayMaterial.overlayMaterial);
 
                     }
+
+#if DEBUG
+                    MSULog.Info($"Equipment {equipment.GetType().FullName} initialized.");
+#endif
+
 #if DEBUG
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     MSULog.Error($"Equipment {equipment.GetType().FullName} threw an exception while initializing.\n{ex}");
                 }

@@ -151,6 +151,7 @@ namespace MSU
                         }
                         var array = _pluginToCharacters[plugin];
                         HG.ArrayUtils.ArrayAppend(ref array, characterContentPiece);
+                        _pluginToCharacters[plugin] = array;
 
                         if (characterContentPiece.masterPrefab)
                         {
@@ -171,6 +172,11 @@ namespace MSU
                         if (monsterContentPiece.dissonanceCard)
                             _dissonanceCards.Add(monsterContentPiece.dissonanceCard);
                     }
+
+#if DEBUG
+                    MSULog.Info($"Body {body.GetType().FullName} initialized.");
+#endif
+
 #if DEBUG
                 }
                 catch (Exception ex)

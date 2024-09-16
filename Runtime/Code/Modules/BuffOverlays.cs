@@ -31,6 +31,7 @@ namespace MSU
 
             buffOverlayDictionary = new ReadOnlyDictionary<BuffDef, Material>(_buffOverlays);
             _buffOverlays = null;
+
         }
 
         /// <summary>

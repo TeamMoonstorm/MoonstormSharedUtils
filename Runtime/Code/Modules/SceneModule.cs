@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace MSU
 {
@@ -164,6 +165,7 @@ namespace MSU
                         }
                         var array = _pluginToScenes[plugin];
                         HG.ArrayUtils.ArrayAppend(ref array, sceneContentPiece);
+                        _pluginToScenes[plugin] = array;
 
                         if (sceneContentPiece.mainTrack.hasValue)
                             provider.contentPack.musicTrackDefs.AddSingle(sceneContentPiece.mainTrack.value);
@@ -175,10 +177,35 @@ namespace MSU
 
                         if (sceneContentPiece.asset.sceneType == SceneType.Stage)
                         {
-                            StageRegistration.RegisterSceneDefToLoop(sceneContentPiece.asset);
+                            float weight = 0;
+                            if(!sceneContentPiece.weightRelativeToSiblings.HasValue)
+                            {
+#if DEBUG
+                                MSULog.Warning($"Scene {scene.GetType().FullName} has it's SceneDef's sceneType value set to Stage, but the ISceneContentPiece doesnt have a weight value assigned! defaulting to 1");
+#endif
+                                weight = 1;
+                            }
+
+                            bool preLoop = sceneContentPiece.preLoop ?? false;
+                            bool postLoop = sceneContentPiece.postLoop ?? false;
+
+                            if (!preLoop && !postLoop)
+                            {
+#if DEBUG
+                                MSULog.Warning($"Scene {scene.GetType().FullName} has it's SceneDef's sceneType value set to stage, but both preLoop and postLoop booleans are false or null! this will cause the stage to not appear in the regular progression. defautling to pre loop and post loop.");
+#endif
+                                preLoop = true;
+                                postLoop = true;
+                            }
+                            StageRegistration.RegisterSceneDefToNormalProgression(sceneContentPiece.asset, weight, preLoop, postLoop);
                         }
                         _moonstormScenes.Add(scene.asset, sceneContentPiece);
                     }
+
+#if DEBUG
+                    MSULog.Info($"Scene {scene.GetType().FullName} initialized.");
+#endif
+
 #if DEBUG
                 }
                 catch (Exception ex)
