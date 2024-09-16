@@ -101,7 +101,7 @@ namespace MSU
             propertyFormatTokens = new List<FormatTokenAttribute>();
             fieldFormatTokens = new List<FormatTokenAttribute>();
             var allTokenModifiers = SearchableAttribute.GetInstances<FormatTokenAttribute>() ?? new List<SearchableAttribute>();
-            foreach (FormatTokenAttribute formatToken in allTokenModifiers)
+            foreach (FormatTokenAttribute formatToken in allTokenModifiers.Cast<FormatTokenAttribute>())
             {
                 if (formatToken.target is FieldInfo)
                 {
@@ -124,8 +124,8 @@ namespace MSU
             {
                 try
                 {
-                    var token = formatToken.LanguageToken;
-                    var formattingIndex = formatToken.FormattingIndex;
+                    var token = formatToken.languageToken;
+                    var formattingIndex = formatToken.formattingIndex;
                     //If the token is not in the dictionary, add it and initialize an empty array.
                     if (!dictionary.ContainsKey(token))
                     {

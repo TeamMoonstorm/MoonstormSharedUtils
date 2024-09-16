@@ -23,7 +23,7 @@ namespace MSU
         /// <br>The ReadOnlyDictionary has a special key evaluator which uses <see cref="CharacterBody.bodyIndex"/>, which allows prefab instances of <see cref="CharacterBody"/> to be used in this dictionary.</br>
         /// <br>Subscribe to <see cref="moduleAvailability"/> to ensure the dictionary is not empty.</br>
         /// </summary>
-        public static ReadOnlyDictionary<CharacterBody, ICharacterContentPiece> MoonstormCharacters { get; private set; }
+        public static ReadOnlyDictionary<CharacterBody, ICharacterContentPiece> moonstormCharacters { get; private set; }
         private static Dictionary<CharacterBody, ICharacterContentPiece> _moonstormCharacters = new Dictionary<CharacterBody, ICharacterContentPiece>(new CharacterBodyIndexEqualityComparer());
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace MSU
             MSULog.Info("Initializing Character Module...");
             DirectorAPI.MonsterActions += AddCustomMonsters;
 
-            MoonstormCharacters = new ReadOnlyDictionary<CharacterBody, ICharacterContentPiece>(_moonstormCharacters);
+            moonstormCharacters = new ReadOnlyDictionary<CharacterBody, ICharacterContentPiece>(_moonstormCharacters);
             _moonstormCharacters = null;
 
             moduleAvailability.MakeAvailable();
@@ -111,7 +111,7 @@ namespace MSU
             var helper = new ParallelMultiStartCoroutine();
             foreach(var character in content)
             {
-                if (!character.IsAvailable(provider.ContentPack))
+                if (!character.IsAvailable(provider.contentPack))
                     continue;
 
                 characters.Add(character);
@@ -135,12 +135,12 @@ namespace MSU
 #endif
                     body.Initialize();
 
-                    var asset = body.Asset;
-                    provider.ContentPack.bodyPrefabs.AddSingle(asset);
+                    var asset = body.asset;
+                    provider.contentPack.bodyPrefabs.AddSingle(asset);
 
                     if (body is IContentPackModifier packModifier)
                     {
-                        packModifier.ModifyContentPack(provider.ContentPack);
+                        packModifier.ModifyContentPack(provider.contentPack);
                     }
 
                     if (body is ICharacterContentPiece characterContentPiece)
@@ -152,24 +152,24 @@ namespace MSU
                         var array = _pluginToCharacters[plugin];
                         HG.ArrayUtils.ArrayAppend(ref array, characterContentPiece);
 
-                        if (characterContentPiece.MasterPrefab)
+                        if (characterContentPiece.masterPrefab)
                         {
-                            provider.ContentPack.masterPrefabs.AddSingle(characterContentPiece.MasterPrefab);
+                            provider.contentPack.masterPrefabs.AddSingle(characterContentPiece.masterPrefab);
                         }
-                        _moonstormCharacters.Add(characterContentPiece.Component, characterContentPiece);
+                        _moonstormCharacters.Add(characterContentPiece.component, characterContentPiece);
                     }
 
                     if (body is ISurvivorContentPiece survivorContentPiece)
                     {
-                        provider.ContentPack.survivorDefs.AddSingle(survivorContentPiece.SurvivorDef);
+                        provider.contentPack.survivorDefs.AddSingle(survivorContentPiece.survivorDef);
                     }
                     if (body is IMonsterContentPiece monsterContentPiece)
                     {
-                        if (monsterContentPiece.CardProvider)
-                            _monsterCardProviders.Add(monsterContentPiece.CardProvider);
+                        if (monsterContentPiece.cardProvider)
+                            _monsterCardProviders.Add(monsterContentPiece.cardProvider);
 
-                        if (monsterContentPiece.DissonanceCard)
-                            _dissonanceCards.Add(monsterContentPiece.DissonanceCard);
+                        if (monsterContentPiece.dissonanceCard)
+                            _dissonanceCards.Add(monsterContentPiece.dissonanceCard);
                     }
 #if DEBUG
                 }
@@ -219,11 +219,11 @@ namespace MSU
             DirectorCardHolderExtended cardHolder = null;
             if(stageInfo.stage == DirectorAPI.Stage.Custom)
             {
-                monsterCardProvider.CustomStageToCards.TryGetValue(stageInfo.CustomStageName, out cardHolder);
+                monsterCardProvider.customStageToCards.TryGetValue(stageInfo.CustomStageName, out cardHolder);
             }
             else
             {
-                monsterCardProvider.StageToCards.TryGetValue(stageInfo.stage, out cardHolder );
+                monsterCardProvider.stageToCards.TryGetValue(stageInfo.stage, out cardHolder );
             }
 
             if (cardHolder == null)

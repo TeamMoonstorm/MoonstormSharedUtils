@@ -31,18 +31,18 @@ namespace MSU
         /// <summary>
         /// The plugin's PluginInfo
         /// </summary>
-        public static PluginInfo PluginInfo { get; private set; }
+        public static PluginInfo pluginInfo { get; private set; }
         /// <summary>
         /// The AssetBundle for MSU
         /// </summary>
-        public static AssetBundle MSUAssetBundle { get; private set; }
-        private static string AssetBundleDir { get => Path.Combine(Path.GetDirectoryName(PluginInfo.Location), "assetbundles"); }
+        public static AssetBundle msuAssetBundle { get; private set; }
+        private static string assetBundleDir { get => Path.Combine(Path.GetDirectoryName(pluginInfo.Location), "assetbundles"); }
 
         private void Awake()
         {
-            PluginInfo = Info;
+            pluginInfo = Info;
             new MSULog(Logger);
-            MSUAssetBundle = AssetBundle.LoadFromFile(Path.Combine(AssetBundleDir, "runtimemsuassetbundle"));
+            msuAssetBundle = AssetBundle.LoadFromFile(Path.Combine(assetBundleDir, "runtimemsuassetbundle"));
             new MSUConfig(this);
 
 #if DEBUG

@@ -15,7 +15,7 @@ namespace MSU
 
     public static class GameplayEventCatalog
     {
-        public static int RegisteredGameplayEventCount => _registeredGameplayEventObjects.Length;
+        public static int registeredGameplayEventCount => _registeredGameplayEventObjects.Length;
 
         private static GameObject[] _gameplayEvents = Array.Empty<GameObject>();
         private static GameObject[] _registeredGameplayEventObjects = Array.Empty<GameObject>();
@@ -114,8 +114,8 @@ namespace MSU
                 var gameplayEventObject = validEvents[i];
                 var gameplayEventComponent = gameplayEventObject.GetComponent<GameplayEvent>();
 
-                gameplayEventComponent.GameplayEventIndex = (GameplayEventIndex)i;
-                _nameToEventIndex.Add(gameplayEventObject.name, gameplayEventComponent.GameplayEventIndex);
+                gameplayEventComponent.gameplayEventIndex = (GameplayEventIndex)i;
+                _nameToEventIndex.Add(gameplayEventObject.name, gameplayEventComponent.gameplayEventIndex);
             }
             return validEvents;
         }

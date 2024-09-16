@@ -11,18 +11,6 @@ namespace MSU.Editor
     [PipelineSupport(typeof(Pipeline))]
     public sealed class ChangeAssemblyBuildMode : PipelineJob
     {
-        private class ChangeAssemblyBuildModeResult
-        {
-            public int totalStageAssemblyJobs = 0;
-            public int totalRecursions = 0;
-            public int totalPipelinesAffected = 0;
-            public List<string> context = new List<string>();
-        }
-        public enum AssemblyBuildMode
-        {
-            Debug,
-            Release
-        }
         public AssemblyBuildMode buildMode = AssemblyBuildMode.Release;
 
         public override Task Execute(Pipeline pipeline)
@@ -53,6 +41,19 @@ namespace MSU.Editor
                 result.totalRecursions++;
                 FindAndSetBuildMode(executePipelinesPipelineJobs, result);
             }
+        }
+        public enum AssemblyBuildMode
+        {
+            Debug,
+            Release
+        }
+    
+        private class ChangeAssemblyBuildModeResult
+        {
+            public int totalStageAssemblyJobs = 0;
+            public int totalRecursions = 0;
+            public int totalPipelinesAffected = 0;
+            public List<string> context = new List<string>();
         }
     }
 }

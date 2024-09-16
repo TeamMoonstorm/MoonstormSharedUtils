@@ -20,7 +20,7 @@ namespace MSU
         /// </summary>
         /// <param name="gameplayEvent">The gameplay event to check</param>
         /// <returns>True if the event exists</returns>
-        public static bool GameplayEventExists(GameplayEvent gameplayEvent) => GameplayEventExists(gameplayEvent ? gameplayEvent.GameplayEventIndex : GameplayEventIndex.None);
+        public static bool GameplayEventExists(GameplayEvent gameplayEvent) => GameplayEventExists(gameplayEvent ? gameplayEvent.gameplayEventIndex : GameplayEventIndex.None);
 
         /// <summary>
         /// Checks if any instance of the GameplayEvent of index <paramref name="index"/> exists.
@@ -34,7 +34,7 @@ namespace MSU
 
             foreach (GameplayEvent gameplayEvent in InstanceTracker.GetInstancesList<GameplayEvent>())
             {
-                if (gameplayEvent.GameplayEventIndex == index)
+                if (gameplayEvent.gameplayEventIndex == index)
                     return true;
             }
 
@@ -46,7 +46,7 @@ namespace MSU
         /// </summary>
         /// <param name="gameplayEvent">The gameplay event to check</param>
         /// <returns>True if the event is playing</returns>
-        public static bool GameplayEventIsPlaying(GameplayEvent gameplayEvent) => GameplayEventIsPlaying(gameplayEvent ? gameplayEvent.GameplayEventIndex : GameplayEventIndex.None);
+        public static bool GameplayEventIsPlaying(GameplayEvent gameplayEvent) => GameplayEventIsPlaying(gameplayEvent ? gameplayEvent.gameplayEventIndex : GameplayEventIndex.None);
 
         /// <summary>
         /// Checks if any instance of the GameplayEvent of index <paramref name="index"/> is playing
@@ -57,8 +57,8 @@ namespace MSU
         {
             foreach(GameplayEvent gameplayEvent in InstanceTracker.GetInstancesList<GameplayEvent>())
             {
-                if(gameplayEvent.GameplayEventIndex == index)
-                    return gameplayEvent.IsPlaying;
+                if(gameplayEvent.gameplayEventIndex == index)
+                    return gameplayEvent.isPlaying;
             }
 
             return false;
@@ -69,7 +69,7 @@ namespace MSU
         /// </summary>
         /// <param name="prefabComponent">The GameplayEvent to retrieve</param>
         /// <returns>The GameplayEvent instance, null if no instance is found</returns>
-        public static GameplayEvent GetGameplayEventInstance(GameplayEvent prefabComponent) => GetGameplayEventInstance(prefabComponent ? prefabComponent.GameplayEventIndex : GameplayEventIndex.None);
+        public static GameplayEvent GetGameplayEventInstance(GameplayEvent prefabComponent) => GetGameplayEventInstance(prefabComponent ? prefabComponent.gameplayEventIndex : GameplayEventIndex.None);
 
         /// <summary>
         /// Returns the instance of the specified GameplayEvent that has the index <paramref name="index"/>
@@ -83,7 +83,7 @@ namespace MSU
 
             foreach(var evt in InstanceTracker.GetInstancesList<GameplayEvent>())
             {
-                if (evt.GameplayEventIndex == index)
+                if (evt.gameplayEventIndex == index)
                     return evt;
             }
 
@@ -103,7 +103,7 @@ namespace MSU
 
             foreach(GameplayEvent evt in list)
             {
-                if (evt.IsPlaying)
+                if (evt.isPlaying)
                     return true;
             }
 
@@ -137,7 +137,7 @@ namespace MSU
             if (eventPrefab.TryGetComponent<GameplayEvent>(out var evt))
                 return null;
 
-            if (evt.GameplayEventIndex == GameplayEventIndex.None)
+            if (evt.gameplayEventIndex == GameplayEventIndex.None)
                 return null;
 
             if(!args.skipEventRequirementChecks && eventPrefab.TryGetComponent<GameplayEventRequirement>(out var requirements))
@@ -148,7 +148,7 @@ namespace MSU
 
             if(!args.ignoreDuplicateEvents)
             {
-                if (GameplayEventExists(evt.GameplayEventIndex))
+                if (GameplayEventExists(evt.gameplayEventIndex))
                     return null;
             }
 
@@ -169,12 +169,12 @@ namespace MSU
                 evtInstance.beginOnStart = args.beginOnStartOverride.Value;
             }
 
-            if(!args.doNotAnnounceStart && GameplayEventTextController.Instance)
+            if(!args.doNotAnnounceStart && GameplayEventTextController.instance)
             {
-                GameplayEventTextController.Instance.EnqueueNewTextRequest(new GameplayEventTextController.EventTextRequest
+                GameplayEventTextController.instance.EnqueueNewTextRequest(new GameplayEventTextController.EventTextRequest
                 {
-                    eventToken = evtInstance.EventStartToken,
-                    eventColor = evtInstance.EventColor,
+                    eventToken = evtInstance.eventStartToken,
+                    eventColor = evtInstance.eventColor,
                     textDuration = args.announcementDuration ?? 6
                 });
             }

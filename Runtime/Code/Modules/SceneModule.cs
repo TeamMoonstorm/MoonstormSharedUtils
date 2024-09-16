@@ -21,7 +21,7 @@ namespace MSU
         /// A ReadOnlyDictionary that can be used for finding a SceneDef's ISceneContentPiece
         /// <para>Subscribe to <see cref="moduleAvailability"/> to ensure the Dictionary is not Empty.</para>
         /// </summary>
-        public static ReadOnlyDictionary<SceneDef, ISceneContentPiece> MoonstormScenes { get; private set; }
+        public static ReadOnlyDictionary<SceneDef, ISceneContentPiece> moonstormScenes { get; private set; }
         private static Dictionary<SceneDef, ISceneContentPiece> _moonstormScenes = new Dictionary<SceneDef, ISceneContentPiece>();
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace MSU
         [SystemInitializer(typeof(SceneCatalog))]
         private static void SystemInit()
         {
-            MoonstormScenes = new ReadOnlyDictionary<SceneDef, ISceneContentPiece>(_moonstormScenes);
+            moonstormScenes = new ReadOnlyDictionary<SceneDef, ISceneContentPiece>(_moonstormScenes);
             _moonstormScenes = null;
 
             Stage.onServerStageBegin += Stage_onServerStageBegin;
@@ -101,7 +101,7 @@ namespace MSU
         {
             var sceneDef = obj.sceneDef;
 
-            if (sceneDef && MoonstormScenes.TryGetValue(sceneDef, out var sceneContentPiece))
+            if (sceneDef && moonstormScenes.TryGetValue(sceneDef, out var sceneContentPiece))
             {
                 sceneContentPiece.OnServerStageComplete(obj);
             }
@@ -111,7 +111,7 @@ namespace MSU
         {
             var sceneDef = obj.sceneDef;
 
-            if(sceneDef && MoonstormScenes.TryGetValue(sceneDef, out var sceneContentPiece))
+            if(sceneDef && moonstormScenes.TryGetValue(sceneDef, out var sceneContentPiece))
             {
                 sceneContentPiece.OnServerStageBegin(obj);
             }
@@ -125,7 +125,7 @@ namespace MSU
             var helper = new ParallelMultiStartCoroutine();
             foreach(var scene in content)
             {
-                if (!scene.IsAvailable(provider.ContentPack))
+                if (!scene.IsAvailable(provider.contentPack))
                     continue;
 
                 _scenes.Add(scene);
@@ -148,12 +148,12 @@ namespace MSU
                 {
 #endif
                     scene.Initialize();
-                    var asset = scene.Asset;
-                    provider.ContentPack.sceneDefs.AddSingle(asset);
+                    var asset = scene.asset;
+                    provider.contentPack.sceneDefs.AddSingle(asset);
 
                     if (scene is IContentPackModifier packModifier)
                     {
-                        packModifier.ModifyContentPack(provider.ContentPack);
+                        packModifier.ModifyContentPack(provider.contentPack);
                     }
 
                     if (scene is ISceneContentPiece sceneContentPiece)
@@ -165,19 +165,19 @@ namespace MSU
                         var array = _pluginToScenes[plugin];
                         HG.ArrayUtils.ArrayAppend(ref array, sceneContentPiece);
 
-                        if (sceneContentPiece.MainTrack.HasValue)
-                            provider.ContentPack.musicTrackDefs.AddSingle(sceneContentPiece.MainTrack.Value);
+                        if (sceneContentPiece.mainTrack.hasValue)
+                            provider.contentPack.musicTrackDefs.AddSingle(sceneContentPiece.mainTrack.value);
 
-                        if (sceneContentPiece.BossTrack.HasValue)
-                            provider.ContentPack.musicTrackDefs.AddSingle(sceneContentPiece.BossTrack.Value);
+                        if (sceneContentPiece.bossTrack.hasValue)
+                            provider.contentPack.musicTrackDefs.AddSingle(sceneContentPiece.bossTrack.value);
 
-                        sceneContentPiece.Asset.portalMaterial = StageRegistration.MakeBazaarSeerMaterial(sceneContentPiece.BazaarTextureBase);
+                        sceneContentPiece.asset.portalMaterial = StageRegistration.MakeBazaarSeerMaterial(sceneContentPiece.bazaarTextureBase);
 
-                        if (sceneContentPiece.Asset.sceneType == SceneType.Stage)
+                        if (sceneContentPiece.asset.sceneType == SceneType.Stage)
                         {
-                            StageRegistration.RegisterSceneDefToLoop(sceneContentPiece.Asset);
+                            StageRegistration.RegisterSceneDefToLoop(sceneContentPiece.asset);
                         }
-                        _moonstormScenes.Add(scene.Asset, sceneContentPiece);
+                        _moonstormScenes.Add(scene.asset, sceneContentPiece);
                     }
 #if DEBUG
                 }

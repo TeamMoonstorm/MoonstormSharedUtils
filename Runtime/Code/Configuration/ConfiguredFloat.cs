@@ -21,14 +21,14 @@ namespace MSU.Config
     {
         /// <summary>
         /// The type of slider used for this ConfiguredFloat.
-        /// <para>Becomes ReadOnly if <see cref="ConfiguredVariable.IsConfigured"/> is true</para>
+        /// <para>Becomes ReadOnly if <see cref="ConfiguredVariable.isConfigured"/> is true</para>
         /// </summary>
-        public SliderTypeEnum SliderType
+        public SliderTypeEnum sliderType
         {
             get => _sliderType;
             set
             {
-                if (IsConfigured)
+                if (isConfigured)
                     return;
                 _sliderType = value;
             }
@@ -37,15 +37,15 @@ namespace MSU.Config
 
         /// <summary>
         /// The StepSliderConfig for this ConfiguredFloat's <see cref="RiskOfOptions.Options.StepSliderOption"/>
-        /// <br>Only used if <see cref="SliderType"/> equals to <see cref="SliderTypeEnum.Step"/></br>
-        /// <para>Becomes ReadOnly if <see cref="ConfiguredVariable.IsConfigured"/> is true</para>
+        /// <br>Only used if <see cref="sliderType"/> equals to <see cref="SliderTypeEnum.Step"/></br>
+        /// <para>Becomes ReadOnly if <see cref="ConfiguredVariable.isConfigured"/> is true</para>
         /// </summary>
-        public StepSliderConfig StepSliderConfig
+        public StepSliderConfig stepSliderConfig
         {
             get => _stepSliderConfig;
             set
             {
-                if (IsConfigured)
+                if (isConfigured)
                 {
                     return;
                 }
@@ -56,15 +56,15 @@ namespace MSU.Config
 
         /// <summary>
         /// The SliderConfig for this ConfiguredFloat's <see cref="RiskOfOptions.Options.SliderOption"/>
-        /// <br>Only used if <see cref="SliderType"/> equals to <see cref="SliderTypeEnum.Normal"/></br>
-        /// <para>Becomes ReadOnly if <see cref="ConfiguredVariable.IsConfigured"/> is true</para>
+        /// <br>Only used if <see cref="sliderType"/> equals to <see cref="SliderTypeEnum.Normal"/></br>
+        /// <para>Becomes ReadOnly if <see cref="ConfiguredVariable.isConfigured"/> is true</para>
         /// </summary>
-        public SliderConfig SliderConfig
+        public SliderConfig sliderConfig
         {
             get => _sliderConfig;
             set
             {
-                if(IsConfigured)
+                if(isConfigured)
                 {
                     return;
                 }
@@ -137,49 +137,49 @@ namespace MSU.Config
         }
 
         /// <summary>
-        /// Chainable method for setting <see cref="SliderType"/>
+        /// Chainable method for setting <see cref="sliderType"/>
         /// </summary>
         public ConfiguredFloat WithSliderType(SliderTypeEnum sliderType)
         {
-            SliderType = sliderType;
+            this.sliderType = sliderType;
             return this;
         }
 
         /// <summary>
-        /// Chainable method for setting <see cref="StepSliderConfig"/>
+        /// Chainable method for setting <see cref="stepSliderConfig"/>
         /// </summary>
         public ConfiguredFloat WithStepSliderConfig(StepSliderConfig stepSliderConfig)
         {
-            StepSliderConfig = stepSliderConfig;
+            this.stepSliderConfig = stepSliderConfig;
             return this;
         }
 
         /// <summary>
-        /// Chainable method for setting <see cref="SliderConfig"/>
+        /// Chainable method for setting <see cref="sliderConfig"/>
         /// </summary>
         public ConfiguredFloat WithSliderConfig(SliderConfig sliderConfig)
         {
-            SliderConfig = sliderConfig;
+            this.sliderConfig = sliderConfig;
             return this;
         }
         protected override void OnConfigured()
         {
             base.OnConfigured();
-            if (!(ModGUID.IsNullOrWhiteSpace() || ModName.IsNullOrWhiteSpace()))
+            if (!(modGUID.IsNullOrWhiteSpace() || modName.IsNullOrWhiteSpace()))
             {
-                bool separateEntry = ConfigSystem.ShouldCreateSeparateRiskOfOptionsEntry(ConfigFile);
-                string fileName = System.IO.Path.GetFileNameWithoutExtension(ConfigFile.ConfigFilePath);
-                var guid = separateEntry ? ModGUID + "." + fileName : ModGUID;
-                var name = separateEntry ? ModName + "." + fileName : ModName;
+                bool separateEntry = ConfigSystem.ShouldCreateSeparateRiskOfOptionsEntry(configFile);
+                string fileName = System.IO.Path.GetFileNameWithoutExtension(configFile.ConfigFilePath);
+                var guid = separateEntry ? modGUID + "." + fileName : modGUID;
+                var name = separateEntry ? modName + "." + fileName : modName;
                 BaseOption baseOption = null;
                 
-                switch(SliderType)
+                switch(sliderType)
                 {
                     case SliderTypeEnum.Normal:
-                        baseOption = SliderConfig == null ? new SliderOption(ConfigEntry) : new SliderOption(ConfigEntry, SliderConfig);
+                        baseOption = sliderConfig == null ? new SliderOption(configEntry) : new SliderOption(configEntry, sliderConfig);
                         break;
                     case SliderTypeEnum.Step:
-                        baseOption = StepSliderConfig == null ? new StepSliderOption(ConfigEntry) : new StepSliderOption(ConfigEntry, StepSliderConfig);
+                        baseOption = stepSliderConfig == null ? new StepSliderOption(configEntry) : new StepSliderOption(configEntry, stepSliderConfig);
                         break;
                 }
                 ModSettingsManager.AddOption(baseOption, guid, name);

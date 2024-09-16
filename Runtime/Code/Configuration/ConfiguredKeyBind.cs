@@ -21,14 +21,14 @@ namespace MSU.Config
     {
         /// <summary>
         /// An optional KeyBindConfig for this ConfiguredKeyBind's <see cref="RiskOfOptions.Options.KeyBindOption"/>
-        /// <para>Becomes ReadOnly if <see cref="ConfiguredVariable.IsConfigured"/> is true</para>
+        /// <para>Becomes ReadOnly if <see cref="ConfiguredVariable.isConfigured"/> is true</para>
         /// </summary>
-        public KeyBindConfig KeyBindConfig
+        public KeyBindConfig keyBindConfig
         {
             get => _keyBindConfig;
             set
             {
-                if (IsConfigured)
+                if (isConfigured)
                     return;
                 _keyBindConfig = value;
             }
@@ -38,17 +38,17 @@ namespace MSU.Config
         /// <summary>
         /// <inheritdoc cref="KeyboardShortcut.IsDown"/>
         /// </summary>
-        public bool IsDown => Value.IsDown();
+        public bool isDown => value.IsDown();
 
         /// <summary>
         /// <inheritdoc cref="KeyboardShortcut.IsPressed"/>
         /// </summary>
-        public bool IsPressed => Value.IsPressed();
+        public bool isPressed => value.IsPressed();
 
         /// <summary>
         /// <inheritdoc cref="KeyboardShortcut.IsUp"/>
         /// </summary>
-        public bool IsUp => Value.IsUp();
+        public bool isUp => value.IsUp();
 
         /// <inheritdoc cref="ConfiguredVariable{T}.DoConfigure"/>
         public new ConfiguredKeyBind DoConfigure()
@@ -114,24 +114,24 @@ namespace MSU.Config
         }
 
         /// <summary>
-        /// Chainable method for setting <see cref="KeyBindConfig"/>
+        /// Chainable method for setting <see cref="keyBindConfig"/>
         /// </summary>
         public ConfiguredKeyBind WithKeyBindConfig(KeyBindConfig config)
         {
-            KeyBindConfig = config;
+            keyBindConfig = config;
             return this;
         }
 
         protected override void OnConfigured()
         {
             base.OnConfigured();
-            if (!(ModGUID.IsNullOrWhiteSpace() || ModName.IsNullOrWhiteSpace()))
+            if (!(modGUID.IsNullOrWhiteSpace() || modName.IsNullOrWhiteSpace()))
             {
-                bool separateEntry = ConfigSystem.ShouldCreateSeparateRiskOfOptionsEntry(ConfigFile);
-                string fileName = System.IO.Path.GetFileNameWithoutExtension(ConfigFile.ConfigFilePath);
-                var guid = separateEntry ? ModGUID + "." + fileName : ModGUID;
-                var name = separateEntry ? ModName + "." + fileName : ModName;
-                KeyBindOption option = KeyBindConfig == null ? new KeyBindOption(ConfigEntry) : new KeyBindOption(ConfigEntry, KeyBindConfig);
+                bool separateEntry = ConfigSystem.ShouldCreateSeparateRiskOfOptionsEntry(configFile);
+                string fileName = System.IO.Path.GetFileNameWithoutExtension(configFile.ConfigFilePath);
+                var guid = separateEntry ? modGUID + "." + fileName : modGUID;
+                var name = separateEntry ? modName + "." + fileName : modName;
+                KeyBindOption option = keyBindConfig == null ? new KeyBindOption(configEntry) : new KeyBindOption(configEntry, keyBindConfig);
                 ModSettingsManager.AddOption(option, guid, name);
             }
         }

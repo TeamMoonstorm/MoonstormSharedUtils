@@ -14,16 +14,13 @@ namespace MSU.Editor.Inspectors
     [CustomEditor(typeof(VanillaSkinDef))]
     public class VanillaSkinDefInspector : IMGUIScriptableObjectInspector<VanillaSkinDef>
     {
-        private VanillaSkinDef _target;
-
         private SerializedProperty _bodyAddress;
-        private string[] rendererNames = Array.Empty<string>();
-        private string[] childLocatorNames = Array.Empty<string>();
+        private string[] _rendererNames = Array.Empty<string>();
+        private string[] _childLocatorNames = Array.Empty<string>();
 
         protected override void OnEnable()
         {
             base.OnEnable();
-            _target = (VanillaSkinDef)target;
             _bodyAddress = serializedObject.FindProperty("_bodyAddress");
             if (_bodyAddress.stringValue.IsNullOrEmptyOrWhiteSpace())
                 return;
@@ -39,7 +36,7 @@ namespace MSU.Editor.Inspectors
             {
                 renderers.Add(rendererInfo.renderer.gameObject.name);
             }
-            rendererNames = renderers.ToArray();
+            _rendererNames = renderers.ToArray();
 
             ChildLocator childLocator = obj.GetComponentInChildren<ChildLocator>();
             List<string> children = new List<string>();
@@ -47,7 +44,7 @@ namespace MSU.Editor.Inspectors
             {
                 children.Add(entry.name);
             }
-            childLocatorNames = children.ToArray();
+            _childLocatorNames = children.ToArray();
         }
 
         private void DrawRendererInfos()
@@ -76,7 +73,7 @@ namespace MSU.Editor.Inspectors
                 DrawProperty("hideOnDeath", child);
 
                 var rendererProp = child.FindPropertyRelative("rendererIndex");
-                var intVal = EditorGUILayout.Popup("Renderer", rendererProp.intValue, rendererNames);
+                var intVal = EditorGUILayout.Popup("Renderer", rendererProp.intValue, _rendererNames);
                 rendererProp.intValue = intVal;
                 EditorGUI.indentLevel--;
             }
@@ -109,13 +106,13 @@ namespace MSU.Editor.Inspectors
                     DrawProperty("gameObjectPrefab", child);
 
                     var childLocatorProp = child.FindPropertyRelative("childName");
-                    var intVal = Array.IndexOf(childLocatorNames, childLocatorProp.stringValue);
+                    var intVal = Array.IndexOf(_childLocatorNames, childLocatorProp.stringValue);
                     if (intVal == -1)
                     {
                         intVal = 0;
                     }
-                    intVal = EditorGUILayout.Popup("Child Locator Entry", intVal, childLocatorNames);
-                    childLocatorProp.stringValue = childLocatorNames[intVal];
+                    intVal = EditorGUILayout.Popup("Child Locator Entry", intVal, _childLocatorNames);
+                    childLocatorProp.stringValue = _childLocatorNames[intVal];
 
                     DrawProperty("localPos", child);
                     DrawProperty("localAngles", child);
@@ -124,7 +121,7 @@ namespace MSU.Editor.Inspectors
                 else
                 {
                     var rendererProp = child.FindPropertyRelative("rendererIndex");
-                    var intVal = EditorGUILayout.Popup("Renderer", rendererProp.intValue, rendererNames);
+                    var intVal = EditorGUILayout.Popup("Renderer", rendererProp.intValue, _rendererNames);
                     rendererProp.intValue = intVal;
                 }
                 EditorGUI.indentLevel--;
@@ -152,7 +149,7 @@ namespace MSU.Editor.Inspectors
                 EditorGUI.indentLevel++;
                 DrawProperty("mesh", child);
                 var rendererProp = child.FindPropertyRelative("rendererIndex");
-                var intVal = EditorGUILayout.Popup("Renderer", rendererProp.intValue, rendererNames);
+                var intVal = EditorGUILayout.Popup("Renderer", rendererProp.intValue, _rendererNames);
                 rendererProp.intValue = intVal;
                 EditorGUI.indentLevel--;
             }

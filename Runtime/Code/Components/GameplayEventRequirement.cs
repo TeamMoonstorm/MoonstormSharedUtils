@@ -20,7 +20,7 @@ namespace MSU
         /// <summary>
         /// The <see cref="MSU.GameplayEvent"/> that's tied to this GameplayEventRequirement
         /// </summary>
-        public GameplayEvent GameplayEvent { get; private set; }
+        public GameplayEvent gameplayEvent { get; private set; }
 
         [Tooltip("At least this amount of stages should be completed before this GameplayEvent can spawn")]
         public int minimumStageCompletions = -1;
@@ -37,11 +37,11 @@ namespace MSU
 
         /// <summary>
         /// Base method for <see cref="GameplayEventRequirement"/>
-        /// <br>Call the base method so <see cref="GameplayEvent"/> gets populated correctly.</br>
+        /// <br>Call the base method so <see cref="gameplayEvent"/> gets populated correctly.</br>
         /// </summary>
         protected virtual void Awake()
         {
-            GameplayEvent = GetComponent<GameplayEvent>();
+            gameplayEvent = GetComponent<GameplayEvent>();
         }
 
         /// <summary>

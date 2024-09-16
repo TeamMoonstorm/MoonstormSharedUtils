@@ -26,7 +26,7 @@ namespace MSU.Editor
             AssetDatabase.StartAssetEditing();
             try
             {
-                BeginShaderSwap(pipeline, swapType == SwapType.YamlToHlsl ? ShaderDictionary.YAMLToHLSL : ShaderDictionary.HLSLToYAML);
+                BeginShaderSwap(pipeline, swapType == SwapType.YamlToHlsl ? ShaderDictionary.yamlToHlsl : ShaderDictionary.hlslToYaml);
                 return Task.CompletedTask;
             }
             catch(Exception e)
@@ -86,7 +86,7 @@ namespace MSU.Editor
 
         private void RestoreShaders()
         {
-            var dictionary = swapType == SwapType.YamlToHlsl ? ShaderDictionary.HLSLToYAML : ShaderDictionary.YAMLToHLSL;
+            var dictionary = swapType == SwapType.YamlToHlsl ? ShaderDictionary.hlslToYaml : ShaderDictionary.yamlToHlsl;
             for(int i = 0; i < _modifiedMaterials.Count; i++)
             {
                 var material = _modifiedMaterials[i];

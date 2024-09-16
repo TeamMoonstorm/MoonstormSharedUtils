@@ -5,9 +5,8 @@
     {
         public static class Priority
         {
-            public const int WWiseBlacklister = TKPriority.AssemblyImport + 225_000;
-            public const int InstallDependencies = TKPriority.AddressableCatalog - 165_000;
-            public const int InstallFPTS = TKPriority.AddressableCatalog - 160_000;
+            public const int WWISE_BLACKLISTER = TKPriority.AssemblyImport + 225_000;
+            public const int INSTALL_DEPENDENCIES = TKPriority.AddressableCatalog - 165_000;
         }
     }
 }

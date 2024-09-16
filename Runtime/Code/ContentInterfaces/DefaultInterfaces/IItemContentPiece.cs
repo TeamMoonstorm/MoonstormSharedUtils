@@ -22,6 +22,6 @@ namespace MSU
         /// <summary>
         /// The ItemDisplayPrefabs for this Item, can be null.
         /// </summary>
-        NullableRef<List<GameObject>> ItemDisplayPrefabs { get; }
+        NullableRef<List<GameObject>> itemDisplayPrefabs { get; }
     }
 }

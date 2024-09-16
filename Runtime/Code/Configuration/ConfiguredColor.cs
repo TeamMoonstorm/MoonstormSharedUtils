@@ -21,14 +21,14 @@ namespace MSU.Config
     {
         /// <summary>
         /// An optional ColorOptionConfig for this ConfiguredColor's <see cref="RiskOfOptions.Options.ColorOption"/>
-        /// <para>Becomes ReadOnly if <see cref="ConfiguredVariable.IsConfigured"/> is true</para>
+        /// <para>Becomes ReadOnly if <see cref="ConfiguredVariable.isConfigured"/> is true</para>
         /// </summary>
-        public ColorOptionConfig ColorConfig
+        public ColorOptionConfig colorConfig
         {
             get => _colorConfig;
             set
             {
-                if (IsConfigured)
+                if (isConfigured)
                     return;
                 _colorConfig = value;
             }
@@ -99,24 +99,24 @@ namespace MSU.Config
         }
 
         /// <summary>
-        /// Chainable method fors setting <see cref="ColorConfig"/>
+        /// Chainable method fors setting <see cref="colorConfig"/>
         /// </summary>
         public ConfiguredColor WithColorOptionConfig(ColorOptionConfig config)
         {
-            ColorConfig = config;
+            colorConfig = config;
             return this;
         }
 
         protected override void OnConfigured()
         {
             base.OnConfigured();
-            if (!(ModGUID.IsNullOrWhiteSpace() || ModName.IsNullOrWhiteSpace()))
+            if (!(modGUID.IsNullOrWhiteSpace() || modName.IsNullOrWhiteSpace()))
             {
-                bool separateEntry = ConfigSystem.ShouldCreateSeparateRiskOfOptionsEntry(ConfigFile);
-                string fileName = System.IO.Path.GetFileNameWithoutExtension(ConfigFile.ConfigFilePath);
-                var guid = separateEntry ? ModGUID + "." + fileName : ModGUID;
-                var name = separateEntry ? ModName + "." + fileName : ModName;
-                var option = ColorConfig == null ? new ColorOption(ConfigEntry) : new ColorOption(ConfigEntry, ColorConfig);
+                bool separateEntry = ConfigSystem.ShouldCreateSeparateRiskOfOptionsEntry(configFile);
+                string fileName = System.IO.Path.GetFileNameWithoutExtension(configFile.ConfigFilePath);
+                var guid = separateEntry ? modGUID + "." + fileName : modGUID;
+                var name = separateEntry ? modName + "." + fileName : modName;
+                var option = colorConfig == null ? new ColorOption(configEntry) : new ColorOption(configEntry, colorConfig);
                 ModSettingsManager.AddOption(option, guid, name);
             }
         }

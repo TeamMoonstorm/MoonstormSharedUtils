@@ -14,22 +14,22 @@ namespace MSU
         /// <summary>
         /// A read only dictionary of BuffDef to Material. These materials are later applied as Overlays to CharacterBodies when they have the BuffDef
         /// </summary>
-        public static ReadOnlyDictionary<BuffDef, Material> BuffOverlayDictionary { get; private set; }
+        public static ReadOnlyDictionary<BuffDef, Material> buffOverlayDictionary { get; private set; }
         private static Dictionary<BuffDef, Material> _buffOverlays = new Dictionary<BuffDef, Material>();
 
         /// <summary>
         /// Wether the BuffOverlayDictionary has been created or not.
         /// </summary>
-        public static bool DictionaryCreated { get; private set; } = false;
+        public static bool dictionaryCreated { get; private set; } = false;
 
         [SystemInitializer(typeof(BuffCatalog))]
         private static void SystemInit()
         {
-            DictionaryCreated = true;
+            dictionaryCreated = true;
             MSULog.Info("Initializing Buff Overlays...");
             On.RoR2.CharacterModel.UpdateOverlays += AddBuffOverlay;
 
-            BuffOverlayDictionary = new ReadOnlyDictionary<BuffDef, Material>(_buffOverlays);
+            buffOverlayDictionary = new ReadOnlyDictionary<BuffDef, Material>(_buffOverlays);
             _buffOverlays = null;
         }
 
@@ -40,7 +40,7 @@ namespace MSU
         /// <param name="material">The Material for the BuffDef</param>
         public static void AddBuffOverlay(BuffDef def, Material material)
         {
-            if (DictionaryCreated)
+            if (dictionaryCreated)
             {
 #if DEBUG
                 MSULog.Info("Buff Overlay Dictionary already created.");
@@ -79,7 +79,7 @@ namespace MSU
             orig(self);
             if (!self.body)
                 return;
-            foreach(var (buff, material) in BuffOverlayDictionary)
+            foreach(var (buff, material) in buffOverlayDictionary)
             {
                 if (self.body.HasBuff(buff))
                     AddOverlay(self, material);

@@ -31,15 +31,15 @@ namespace MSU
         /// <summary>
         /// MSUConfig's ConfigFactory
         /// </summary>
-        public static ConfigFactory ConfigFactory { get; private set; }
+        public static ConfigFactory configFactory { get; private set; }
 
         /// <summary>
         /// The General Config File, it's identifier is <see cref="GENERAL"/>
         /// </summary>
-        public static ConfigFile GeneralConfig { get; private set; }
+        public static ConfigFile generalConfig { get; private set; }
 
 #if DEBUG
-        public static ConfigFile DebugConfig { get; private set; }
+        public static ConfigFile debugConfig { get; private set; }
 
         internal static ConfiguredBool _enableStackLogging;
         [AutoConfig]
@@ -64,16 +64,16 @@ namespace MSU
         {
             _enableStackLogging = new ConfiguredBool(false)
             {
-                Section = "Debugging",
-                Description = "When enabled, MSU will log a StackTrace whenever it logs a Warning, Error or a Fatal.",
-                ConfigFile = DebugConfig,
+                section = "Debugging",
+                description = "When enabled, MSU will log a StackTrace whenever it logs a Warning, Error or a Fatal.",
+                configFile = debugConfig,
             };
 
             _enableSelfConnect = new ConfiguredBool(false)
             {
-                Section = "Debugging",
-                Description = "Allows you to connect to yourself using a second instance of the game, by hosting a private game with one and opening the console on the other and typing \"connect localhost:7777\"\nYou need to exit the lobby for this to take effect.",
-                ConfigFile = DebugConfig,
+                section = "Debugging",
+                description = "Allows you to connect to yourself using a second instance of the game, by hosting a private game with one and opening the console on the other and typing \"connect localhost:7777\"\nYou need to exit the lobby for this to take effect.",
+                configFile = debugConfig,
             }.WithConfigChange((b) =>
             {
                 if (b)
@@ -89,17 +89,17 @@ namespace MSU
 
             _enableCommandInvoking = new ConfiguredBool(false)
             {
-                Section = "Command Invoking",
-                Description = "Invokes commands at run start, disabling this causes no commands to be invoked at run start.",
-                ConfigFile = DebugConfig
+                section = "Command Invoking",
+                description = "Invokes commands at run start, disabling this causes no commands to be invoked at run start.",
+                configFile = debugConfig
             };
 
             _invokeGod = new ConfiguredBool(true)
             {
-                Section = "Command Invoking",
-                Description = "Invokes the command \"god\"",
-                ConfigFile = DebugConfig,
-                CheckBoxConfig = new CheckBoxConfig
+                section = "Command Invoking",
+                description = "Invokes the command \"god\"",
+                configFile = debugConfig,
+                checkBoxConfig = new CheckBoxConfig
                 {
                     checkIfDisabled = () => !_enableCommandInvoking
                 }
@@ -107,10 +107,10 @@ namespace MSU
 
             _invokeStage1Pod = new ConfiguredBool(true)
             {
-                Section = "Command Invoking",
-                Description = "Invokes the command \"stage1_pod\" with the value 0",
-                ConfigFile = DebugConfig,
-                CheckBoxConfig = new CheckBoxConfig
+                section = "Command Invoking",
+                description = "Invokes the command \"stage1_pod\" with the value 0",
+                configFile = debugConfig,
+                checkBoxConfig = new CheckBoxConfig
                 {
                     checkIfDisabled = () => !_enableCommandInvoking
                 }
@@ -118,10 +118,10 @@ namespace MSU
 
             _invokeNoMonsters = new ConfiguredBool(true)
             {
-                Section = "Command Invoking",
-                Description = "Invokes the command \"no_monsters\"",
-                ConfigFile = DebugConfig,
-                CheckBoxConfig = new CheckBoxConfig
+                section = "Command Invoking",
+                description = "Invokes the command \"no_monsters\"",
+                configFile = debugConfig,
+                checkBoxConfig = new CheckBoxConfig
                 {
                     checkIfDisabled = () => !_enableCommandInvoking
                 }
@@ -129,10 +129,10 @@ namespace MSU
 
             _invoke100Dios = new ConfiguredBool(true)
             {
-                Section = "Command Invoking",
-                Description = "Invokes \"give_item\" with the params \"extralife 100\". Essentially gives 100 dios on run start",
-                ConfigFile = DebugConfig,
-                CheckBoxConfig = new CheckBoxConfig
+                section = "Command Invoking",
+                description = "Invokes \"give_item\" with the params \"extralife 100\". Essentially gives 100 dios on run start",
+                configFile = debugConfig,
+                checkBoxConfig = new CheckBoxConfig
                 {
                     checkIfDisabled = () => !_enableCommandInvoking
                 }
@@ -140,12 +140,12 @@ namespace MSU
 
             _enableDebugToolkitBindings = new ConfiguredBool(true)
             {
-                Section = "Debug Toolkit Bindings",
-                Description = "Enables the usage of bindings with DebugToolkit. Requires DebugToolkit to be installed.",
-                ConfigFile = DebugConfig,
-                CheckBoxConfig = new CheckBoxConfig
+                section = "Debug Toolkit Bindings",
+                description = "Enables the usage of bindings with DebugToolkit. Requires DebugToolkit to be installed.",
+                configFile = debugConfig,
+                checkBoxConfig = new CheckBoxConfig
                 {
-                    checkIfDisabled = () => !MSUtil.DebugToolkitInstalled
+                    checkIfDisabled = () => !MSUtil.debugToolkitInstalled
                 }
             };
 
@@ -157,12 +157,12 @@ namespace MSU
             GenerateDebugBinding(KeyCode.None, "SpawnAI Bind", "Binds the selected key to invoke \"spawn_ai\"", new DebugCommandBinding.Command("spawn_ai", "lemurian", "1"));
             _spawnAIParameters = new ConfiguredString("lemurian,1")
             {
-                Section = "Debug Toolkit Bindings",
-                Description = "The parameters for the SpawnAI Binding, The parametersmust be separated by \",\"",
-                ConfigFile = DebugConfig,
-                InputFieldConfig = new InputFieldConfig
+                section = "Debug Toolkit Bindings",
+                description = "The parameters for the SpawnAI Binding, The parametersmust be separated by \",\"",
+                configFile = debugConfig,
+                inputFieldConfig = new InputFieldConfig
                 {
-                    checkIfDisabled = () => !_enableCommandInvoking || !MSUtil.DebugToolkitInstalled
+                    checkIfDisabled = () => !_enableCommandInvoking || !MSUtil.debugToolkitInstalled
                 }
             }.WithConfigChange(s =>
             {
@@ -192,15 +192,15 @@ namespace MSU
 
         private void GenerateDebugBinding(KeyCode defaultVal, string key, string description, params DebugCommandBinding.Command[] commands)
         {
-            var configurableKeyBind = ConfigFactory.MakeConfiguredKeyBind(new KeyboardShortcut(defaultVal), c =>
+            var configurableKeyBind = configFactory.MakeConfiguredKeyBind(new KeyboardShortcut(defaultVal), c =>
             {
-                c.Section = "Debug Toolkit Bindings";
-                c.Description = description;
-                c.ConfigFile = DebugConfig;
-                c.Key = key;
-                c.KeyBindConfig = new KeyBindConfig
+                c.section = "Debug Toolkit Bindings";
+                c.description = description;
+                c.configFile = debugConfig;
+                c.key = key;
+                c.keyBindConfig = new KeyBindConfig
                 {
-                    checkIfDisabled = () => !_enableDebugToolkitBindings || !MSUtil.DebugToolkitInstalled
+                    checkIfDisabled = () => !_enableDebugToolkitBindings || !MSUtil.debugToolkitInstalled
                 };
             });
             configurableKeyBind.DoConfigure();
@@ -216,12 +216,12 @@ namespace MSU
 
         internal MSUConfig(BaseUnityPlugin bup)
         {
-            ConfigFactory = new ConfigFactory(bup, true);
-            GeneralConfig = ConfigFactory.CreateConfigFile(GENERAL, false);
-            var icon = MSUMain.MSUAssetBundle.LoadAsset<Sprite>("icon");
+            configFactory = new ConfigFactory(bup, true);
+            generalConfig = configFactory.CreateConfigFile(GENERAL, false);
+            var icon = MSUMain.msuAssetBundle.LoadAsset<Sprite>("icon");
 
 #if DEBUG
-            DebugConfig = ConfigFactory.CreateConfigFile(DEBUG, true);
+            debugConfig = configFactory.CreateConfigFile(DEBUG, true);
             ModSettingsManager.SetModIcon(icon, bup.Info.Metadata.GUID + "." + DEBUG, bup.Info.Metadata.Name + "." + DEBUG);
             ModSettingsManager.SetModDescription("The debug configuration of Moonstorm Shared Utils", bup.Info.Metadata.GUID + "." + DEBUG, bup.Info.Metadata.Name + "." + DEBUG);
             SetDebugConfigs();

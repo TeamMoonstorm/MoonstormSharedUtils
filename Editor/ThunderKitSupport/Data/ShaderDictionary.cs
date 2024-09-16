@@ -12,18 +12,18 @@ namespace MSU.Editor
     [FilePath("ProjectSettings/MSU/ShaderDictionary.asset", FilePathAttribute.Location.ProjectFolder)]
     public class ShaderDictionary : ScriptableSingleton<ShaderDictionary>
     {
-        const string ShaderRootGUID = "9baa48c4908f85f43ae0c54e90e44447";
+        const string SHADER_ROOT_GUID = "9baa48c4908f85f43ae0c54e90e44447";
 
         [SerializeField]
-        private List<ShaderPair> shaderPairs = new List<ShaderPair>();
+        private List<ShaderPair> _shaderPairs = new List<ShaderPair>();
 
-        public static Dictionary<Shader, Shader> YAMLToHLSL
+        public static Dictionary<Shader, Shader> yamlToHlsl
         {
             get
             {
                 if (_yamlToHlsl == null)
                 {
-                    var shaderPairs = instance.shaderPairs;
+                    var shaderPairs = instance._shaderPairs;
                     _yamlToHlsl = new Dictionary<Shader, Shader>();
                     foreach (var pair in shaderPairs)
                     {
@@ -45,13 +45,13 @@ namespace MSU.Editor
             }
         }
         private static Dictionary<Shader, Shader> _yamlToHlsl;
-        public static Dictionary<Shader, Shader> HLSLToYAML
+        public static Dictionary<Shader, Shader> hlslToYaml
         {
             get
             {
                 if (_hlslToYaml == null)
                 {
-                    var shaderPairs = instance.shaderPairs;
+                    var shaderPairs = instance._shaderPairs;
                     _hlslToYaml = new Dictionary<Shader, Shader>();
                     foreach (var pair in shaderPairs)
                     {
@@ -86,7 +86,7 @@ namespace MSU.Editor
         internal List<Shader> GetAllShadersFromDictionary()
         {
             List<Shader> list = new List<Shader>();
-            foreach (ShaderPair pair in shaderPairs)
+            foreach (ShaderPair pair in _shaderPairs)
             {
                 var stubbed = pair.hlsl.shader;
                 var orig = pair.yaml.shader;
@@ -100,7 +100,7 @@ namespace MSU.Editor
 
         public void AddDefaultStubbeds()
         {
-            string rootPath = AssetDatabase.GUIDToAssetPath(ShaderRootGUID);
+            string rootPath = AssetDatabase.GUIDToAssetPath(SHADER_ROOT_GUID);
             string directory = Path.GetDirectoryName(rootPath);
             string folderToSearch = RoR2.Editor.IOUtils.FormatPathForUnity(directory);
             string[] guids = AssetDatabase.FindAssets("t:Shader", new string[] { folderToSearch });
@@ -109,10 +109,10 @@ namespace MSU.Editor
 
             foreach (Shader shader in shadersFound)
             {
-                var stubbeds = shaderPairs.Select(sp => sp.hlsl.shader);
+                var stubbeds = _shaderPairs.Select(sp => sp.hlsl.shader);
                 if (!stubbeds.Contains(shader))
                 {
-                    shaderPairs.Add(new ShaderPair(null, shader));
+                    _shaderPairs.Add(new ShaderPair(null, shader));
                 }
             }
             DoSave();
@@ -123,7 +123,7 @@ namespace MSU.Editor
             Shader[] allYAMLShaders = AssetDatabaseUtil.FindAssetsByType<Shader>()
                 .Where(shader => AssetDatabase.GetAssetPath(shader).EndsWith(".asset")).ToArray();
 
-            foreach (ShaderPair pair in shaderPairs)
+            foreach (ShaderPair pair in _shaderPairs)
             {
                 var orig = pair.yaml.shader;
                 var stubbed = pair.hlsl.shader;
@@ -163,8 +163,8 @@ namespace MSU.Editor
             _yamlToHlsl = null;
             _hlslToYaml = null;
 
-            _ = YAMLToHLSL;
-            _ = HLSLToYAML;
+            _ = yamlToHlsl;
+            _ = hlslToYaml;
             DoSave();
         }
 
@@ -178,7 +178,7 @@ namespace MSU.Editor
             }
         }
 
-        [MenuItem(MSUConstants.MSUMenuRoot + "Shaders/Shader Dictionary", priority = -1000000)]
+        [MenuItem(MSUConstants.MSU_MENU_ROOT + "Shaders/Shader Dictionary", priority = -1000000)]
         public static void OpenSettings() => SettingsService.OpenProjectSettings("Project/R2EK Editor Settings");
 
         [Serializable]

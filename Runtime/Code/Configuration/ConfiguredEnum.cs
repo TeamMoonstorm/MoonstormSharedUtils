@@ -22,14 +22,14 @@ namespace MSU.Config
     {
         /// <summary>
         /// An optional ChoiceConfig for this ConfiguredEnum's <see cref="RiskOfOptions.Options.ChoiceOption"/>
-        /// <para>Becomes ReadOnly if <see cref="ConfiguredVariable.IsConfigured"/> is true</para>
+        /// <para>Becomes ReadOnly if <see cref="ConfiguredVariable.isConfigured"/> is true</para>
         /// </summary>
-        public ChoiceConfig ChoiceConfig
+        public ChoiceConfig choiceConfig
         {
             get => _choiceConfig;
             set
             {
-                if (IsConfigured)
+                if (isConfigured)
                     return;
                 _choiceConfig = value;
             }
@@ -100,24 +100,24 @@ namespace MSU.Config
         }
 
         /// <summary>
-        /// Chainable method for setting <see cref="ChoiceConfig"/>
+        /// Chainable method for setting <see cref="choiceConfig"/>
         /// </summary>
         public ConfiguredEnum<TEnum> WithChoiceConfig(ChoiceConfig choiceConfig)
         {
-            ChoiceConfig = choiceConfig;
+            this.choiceConfig = choiceConfig;
             return this;
         }
 
         protected override void OnConfigured()
         {
             base.OnConfigured();
-            if (!(ModGUID.IsNullOrWhiteSpace() || ModName.IsNullOrWhiteSpace()))
+            if (!(modGUID.IsNullOrWhiteSpace() || modName.IsNullOrWhiteSpace()))
             {
-                bool separateEntry = ConfigSystem.ShouldCreateSeparateRiskOfOptionsEntry(ConfigFile);
-                string fileName = System.IO.Path.GetFileNameWithoutExtension(ConfigFile.ConfigFilePath);
-                var guid = separateEntry ? ModGUID + "." + fileName : ModGUID;
-                var name = separateEntry ? ModName + "." + fileName : ModName;
-                var option = ChoiceConfig == null ? new ChoiceOption(ConfigEntry) : new ChoiceOption(ConfigEntry, ChoiceConfig);
+                bool separateEntry = ConfigSystem.ShouldCreateSeparateRiskOfOptionsEntry(configFile);
+                string fileName = System.IO.Path.GetFileNameWithoutExtension(configFile.ConfigFilePath);
+                var guid = separateEntry ? modGUID + "." + fileName : modGUID;
+                var name = separateEntry ? modName + "." + fileName : modName;
+                var option = choiceConfig == null ? new ChoiceOption(configEntry) : new ChoiceOption(configEntry, choiceConfig);
                 ModSettingsManager.AddOption(option, guid, name);
             }
         }

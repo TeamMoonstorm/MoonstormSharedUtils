@@ -21,7 +21,7 @@ namespace MSU
         public class Command
         {
             public string commandName;
-            public string[] Parameters => _parameters == null ? generateParameters() : _parameters;
+            public string[] parameters => _parameters == null ? generateParameters() : _parameters;
             private string[] _parameters;
             public Func<string[]> generateParameters;
 
@@ -42,7 +42,7 @@ namespace MSU
 
     internal class MSUDebug : MonoBehaviour
     {
-        private FieldInfo noEnemiesField;
+        private FieldInfo _noEnemiesField;
 
         private void Awake()
         {
@@ -68,7 +68,7 @@ namespace MSU
                     }
                 }
             };
-            if (MSUtil.DebugToolkitInstalled)
+            if (MSUtil.debugToolkitInstalled)
                 GetNoEnemiesField();
         }
 
@@ -78,7 +78,7 @@ namespace MSU
             Type t = Type.GetType("DebugToolkit.Commands.CurrentRun, DebugToolkit");
             if(t != null)
             {
-                noEnemiesField = t.GetField("noEnemies", BindingFlags.NonPublic | BindingFlags.Static);
+                _noEnemiesField = t.GetField("noEnemies", BindingFlags.NonPublic | BindingFlags.Static);
             }
         }
 
@@ -98,9 +98,9 @@ namespace MSU
                 MSUtil.InvokeCommand("stage1_pod", "0");
             if (MSUConfig._invokeNoMonsters)
             {
-                if(noEnemiesField != null)
+                if(_noEnemiesField != null)
                 {
-                    bool noEnemiesIsTrue = (bool)noEnemiesField.GetValue(null);
+                    bool noEnemiesIsTrue = (bool)_noEnemiesField.GetValue(null);
                     if(!noEnemiesIsTrue)
                     {
                         MSUtil.InvokeCommand("no_enemies", "1");
@@ -137,11 +137,11 @@ namespace MSU
 
             foreach (var binding in MSUConfig._bindings)
             {
-                if (binding.tiedKeyBind.IsDown)
+                if (binding.tiedKeyBind.isDown)
                 {
                     foreach (var command in binding.tiedCommands)
                     {
-                        MSUtil.InvokeCommand(command.commandName, command.Parameters);
+                        MSUtil.InvokeCommand(command.commandName, command.parameters);
                     }
                 }
             }

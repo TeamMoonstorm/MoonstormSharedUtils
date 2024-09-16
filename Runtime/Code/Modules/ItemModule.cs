@@ -21,7 +21,7 @@ namespace MSU
         /// A ReadOnlyDictionary that can be used for finding an Item's IItemContentPiece
         /// <para>Subscribe to <see cref="moduleAvailability"/> to ensure the Dictionary is not Empty.</para>
         /// </summary>
-        public static ReadOnlyDictionary<ItemDef, IItemContentPiece> MoonstormItems { get; private set; }
+        public static ReadOnlyDictionary<ItemDef, IItemContentPiece> moonstormItems { get; private set; }
         private static Dictionary<ItemDef, IItemContentPiece> _moonstormItems = new Dictionary<ItemDef, IItemContentPiece>();
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace MSU
         [SystemInitializer(typeof(ItemCatalog))]
         private static void SystemInit()
         {
-            MoonstormItems = new ReadOnlyDictionary<ItemDef, IItemContentPiece>(_moonstormItems);
+            moonstormItems = new ReadOnlyDictionary<ItemDef, IItemContentPiece>(_moonstormItems);
             _moonstormItems = null;
 
             moduleAvailability.MakeAvailable();
@@ -103,7 +103,7 @@ namespace MSU
             var helper = new ParallelMultiStartCoroutine();
             foreach(var item in content)
             {
-                if (!item.IsAvailable(provider.ContentPack))
+                if (!item.IsAvailable(provider.contentPack))
                     continue;
 
                 items.Add(item);
@@ -127,8 +127,8 @@ namespace MSU
 #endif
                     item.Initialize();
 
-                    var asset = item.Asset;
-                    provider.ContentPack.itemDefs.AddSingle(asset);
+                    var asset = item.asset;
+                    provider.contentPack.itemDefs.AddSingle(asset);
 
                     if (asset.deprecatedTier == ItemTier.Boss)
                     {
@@ -137,7 +137,7 @@ namespace MSU
 
                     if (item is IContentPackModifier packModifier)
                     {
-                        packModifier.ModifyContentPack(provider.ContentPack);
+                        packModifier.ModifyContentPack(provider.contentPack);
                     }
                     if (item is IItemContentPiece itemContentPiece)
                     {
@@ -161,7 +161,7 @@ namespace MSU
 
         private static void AddVoidItems(On.RoR2.Items.ContagiousItemManager.orig_Init orig)
         {
-            IVoidItemContentPiece[] voidItems = _moonstormItems == null ? MoonstormItems.Values.OfType<IVoidItemContentPiece>().ToArray() : _moonstormItems.Values.OfType<IVoidItemContentPiece>().ToArray();
+            IVoidItemContentPiece[] voidItems = _moonstormItems == null ? moonstormItems.Values.OfType<IVoidItemContentPiece>().ToArray() : _moonstormItems.Values.OfType<IVoidItemContentPiece>().ToArray();
 
             ItemRelationshipType contagiousItem = Addressables.LoadAssetAsync<ItemRelationshipType>("RoR2/DLC1/Common/ContagiousItem.asset").WaitForCompletion();
 
@@ -184,7 +184,7 @@ namespace MSU
                             ItemDef.Pair transformation = new ItemDef.Pair
                             {
                                 itemDef1 = itemToInfect,
-                                itemDef2 = voidItem.Asset
+                                itemDef2 = voidItem.asset
                             };
                             ItemDef.Pair[] existingInfections0 = ItemCatalog.itemRelationships[contagiousItem];
                             HG.ArrayUtils.ArrayAppend(ref existingInfections0, transformation);
@@ -192,7 +192,7 @@ namespace MSU
                         }
                         catch(Exception ex)
                         {
-                            MSULog.Error($"Failed to add transformation of {itemToInfect} to {voidItem.Asset}\n{ex}");
+                            MSULog.Error($"Failed to add transformation of {itemToInfect} to {voidItem.asset}\n{ex}");
                         }
                     }
                 }

@@ -12,7 +12,7 @@ namespace MSU
     //https://discord.com/channels/562704639141740588/562704639569428506/1227030308759801866
     /// <summary>
     /// BaseBuffBehaviour is a subclass of a MonoBehaviour that's used for managing a custom behaviour that's applied to a body when it obtains a specific Buff/Debuff
-    /// <para>Due to the nature of Buffs being Ephemeral, this Behaviour is not destroyed when the buff is removed, but instead it becomes disabled. Due to this reason, most, if not all behaviour interfaces will still get called even if the behaviour itself is disabled. For this reason it is recommended to break from the function early by checking if <see cref="HasAnyStacks"/> is false. The following code block is an exmaple.</para>
+    /// <para>Due to the nature of Buffs being Ephemeral, this Behaviour is not destroyed when the buff is removed, but instead it becomes disabled. Due to this reason, most, if not all behaviour interfaces will still get called even if the behaviour itself is disabled. For this reason it is recommended to break from the function early by checking if <see cref="hasAnyStacks"/> is false. The following code block is an exmaple.</para>
     /// <para>
     /// <code>
     /// public class MyBuffBehaviour : BaseBuffBehaviour, IOnKilledServerReceiver, IBodyStatArgModifier
@@ -56,7 +56,7 @@ namespace MSU
         /// Gets the total stacks of the BuffDef associated with this BaseBuffBehaviour.
         /// <br>This property is automatically updated whenever the Buff's count changes, once the value. Once the behaviour is added, it gets enabled or disabled as needed depending on the incoming value.</br>
         /// </summary>
-        public int BuffCount
+        public int buffCount
         {
             get
             {
@@ -87,17 +87,17 @@ namespace MSU
         /// <summary>
         /// The BuffIndex tied to this BaseBuffBehaviour
         /// </summary>
-        public BuffIndex BuffIndex { get; internal set; }
+        public BuffIndex buffIndex { get; internal set; }
 
         /// <summary>
         /// The CharacterBody that got this BaseBuffBehaviour
         /// </summary>
-        public CharacterBody CharacterBody { get; internal set; }
+        public CharacterBody characterBody { get; internal set; }
 
         /// <summary>
         /// Wether or not this BaseBuffBehaviour has any stacks
         /// </summary>
-        public bool HasAnyStacks => _buffCount > 0;
+        public bool hasAnyStacks => _buffCount > 0;
 
         /// <summary>
         /// Called when this buff behaviour is Initialized and obtains a new Stack value when the previous stack was 0. <para>This is basically syntaxis sugar, as "OnEnabled" can also be used for this effect.</para>
@@ -113,11 +113,11 @@ namespace MSU
         /// <summary>
         /// Awake method for BaseBuffBehaviour
         /// 
-        /// <br>Call the base method so that the <see cref="CharacterBody"/> property is properly initialized.</br>
+        /// <br>Call the base method so that the <see cref="characterBody"/> property is properly initialized.</br>
         /// </summary>
         protected virtual void Awake()
         {
-            CharacterBody = GetComponent<CharacterBody>();
+            characterBody = GetComponent<CharacterBody>();
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace MSU
         /// </summary>
         protected virtual void OnDestroy()
         {
-            MSUContentManagement.OnBuffBehaviourDestroyed(CharacterBody, BuffIndex);
+            MSUContentManagement.OnBuffBehaviourDestroyed(characterBody, buffIndex);
         }
     }
 }

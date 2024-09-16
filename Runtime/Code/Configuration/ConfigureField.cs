@@ -23,52 +23,52 @@ namespace MSU.Config
         /// <summary>
         /// An override for the ConfigEntry's Section, if left null, it'll use a "Nicified" version of the Declaring Type's name
         /// </summary>
-        public string ConfigSectionOverride { get; set; }
+        public string configSectionOverride { get; set; }
         
         /// <summary>
         /// An override for the ConfigEntry's Name, if left null, it'll use a "Nicified" version of the field/property's name
         /// </summary>
-        public string ConfigNameOverride { get; set; }
+        public string configNameOverride { get; set; }
 
         /// <summary>
         /// The description of the Config
         /// </summary>
-        public string ConfigDescOverride { get; set; }
+        public string configDescOverride { get; set; }
 
         /// <summary>
         /// Returns the ConfigFileIdentifier specified by this ConfigureField attribute.
         /// </summary>
-        public string ConfigFileIdentifier => _configFileIdentifier;
+        public string configFileIdentifier => _configFileIdentifier;
         private string _configFileIdentifier;
 
         /// <summary>
         /// Returns true if the attached MemberInfo is a Field
         /// </summary>
-        public bool AttachedMemberIsField => target is FieldInfo;
+        public bool attachedMemberIsField => target is FieldInfo;
         
         /// <summary>
         /// Returns the field that's attached to this ConfigureField
         /// </summary>
-        public FieldInfo AttachedField => (FieldInfo)target;
+        public FieldInfo attachedField => (FieldInfo)target;
 
         /// <summary>
         /// Returns the property that's attached to this ConfigureField
         /// </summary>
-        public PropertyInfo AttachedProperty => (PropertyInfo)target;
+        public PropertyInfo attachedProperty => (PropertyInfo)target;
 
         /// <summary>
         /// Returns the member that's attached to this ConfigureField
         /// </summary>
-        public MemberInfo AttachedMemberInfo => (MemberInfo)target;
+        public MemberInfo attachedMemberInfo => (MemberInfo)target;
 
         /// <summary>
         /// The ConfigEntry thats tied to this ConfigureField attribute.
         /// <br>See <see cref="GetConfigEntry{T}"/></br>
         /// </summary>
-        public ConfigEntryBase ConfigEntryBase { get; private set; }
+        public ConfigEntryBase configEntryBase { get; private set; }
 
         /// <summary>
-        /// Returns <see cref="ConfigEntryBase"/> as a generic ConfigEntry using casting.
+        /// Returns <see cref="configEntryBase"/> as a generic ConfigEntry using casting.
         /// </summary>
         /// <typeparam name="T">The type to use for the generic during casting</typeparam>
         /// <returns>The casted ConfigEntry</returns>
@@ -76,7 +76,7 @@ namespace MSU.Config
         {
             try
             {
-                return ConfigEntryBase == null ? null : (ConfigEntry<T>)ConfigEntryBase;
+                return configEntryBase == null ? null : (ConfigEntry<T>)configEntryBase;
             }
             catch(Exception e)
             {
@@ -94,55 +94,55 @@ namespace MSU.Config
 
         internal void ConfigureField<T>(ConfigFile configFile, T value)
         {
-            ConfigEntryBase = configFile.Bind<T>(GetSection(), GetName(), value, GetDescription());
+            configEntryBase = configFile.Bind<T>(GetSection(), GetName(), value, GetDescription());
             var entry = GetConfigEntry<T>();
             entry.SettingChanged += SettingChanged;
-            SetValue(ConfigEntryBase.BoxedValue);
+            SetValue(configEntryBase.BoxedValue);
             OnConfigured(configFile, value);
         }
 
         private void SettingChanged(object sender, EventArgs e)
         {
-            SetValue(ConfigEntryBase.BoxedValue);
+            SetValue(configEntryBase.BoxedValue);
         }
 
         private void SetValue(object boxedValue)
         {
-            if(AttachedMemberIsField)
+            if(attachedMemberIsField)
             {
-                AttachedField.SetValue(null, boxedValue);
+                attachedField.SetValue(null, boxedValue);
             }
             else
             {
-                var method = AttachedProperty.GetSetMethod();
+                var method = attachedProperty.GetSetMethod();
                 method?.Invoke(null, new object[] {boxedValue});
             }
         }
 
         private string GetSection()
         {
-            Type type = AttachedMemberInfo.DeclaringType;
-            if (!string.IsNullOrEmpty(ConfigSectionOverride))
+            Type type = attachedMemberInfo.DeclaringType;
+            if (!string.IsNullOrEmpty(configSectionOverride))
             {
-                return ConfigSectionOverride;
+                return configSectionOverride;
             }
             return MSUtil.NicifyString(type.Name);
         }
 
         private string GetName()
         {
-            if (!string.IsNullOrEmpty(ConfigNameOverride))
+            if (!string.IsNullOrEmpty(configNameOverride))
             {
-                return ConfigNameOverride;
+                return configNameOverride;
             }
-            return MSUtil.NicifyString(AttachedMemberInfo.Name);
+            return MSUtil.NicifyString(attachedMemberInfo.Name);
         }
 
         private string GetDescription()
         {
-            if (!string.IsNullOrEmpty(ConfigDescOverride))
+            if (!string.IsNullOrEmpty(configDescOverride))
             {
-                return ConfigDescOverride;
+                return configDescOverride;
             }
             return string.Empty;
         }
@@ -167,18 +167,18 @@ namespace MSU.Config
         /// <summary>
         /// The GUID of the mod that owns this ConfigurableField, Set automatically by the <see cref="ConfigSystem"/>.
         /// </summary>
-        public string ModGUID { get; internal set; }
+        public string modGUID { get; internal set; }
         /// <summary>
         /// The GUID of the mod that owns this ConfigurableField, Set automatically by the <see cref="ConfigSystem"/>.
         /// </summary>
-        public string ModName { get; internal set; }
+        public string modName { get; internal set; }
 
         protected override void OnConfigured(ConfigFile configFile, object value)
         {
             bool separateEntry = ConfigSystem.ShouldCreateSeparateRiskOfOptionsEntry(configFile);
             string fileName = Path.GetFileNameWithoutExtension(configFile.ConfigFilePath);
-            var guid = separateEntry ? ModGUID + "." + fileName : ModGUID;
-            var name = separateEntry ? ModGUID + "." + fileName : ModName;
+            var guid = separateEntry ? modGUID + "." + fileName : modGUID;
+            var name = separateEntry ? modGUID + "." + fileName : modName;
 
             switch (value)
             {
@@ -198,7 +198,7 @@ namespace MSU.Config
                     ModSettingsManager.AddOption(new ColorOption(GetConfigEntry<Color>()), guid, name);
                     break;
                 case Enum _enum:
-                    ModSettingsManager.AddOption(new ChoiceOption(ConfigEntryBase), guid, name);
+                    ModSettingsManager.AddOption(new ChoiceOption(configEntryBase), guid, name);
                     break;
                 case KeyboardShortcut _keyboardShortcut:
                     ModSettingsManager.AddOption(new KeyBindOption(GetConfigEntry<KeyboardShortcut>()), guid, name);

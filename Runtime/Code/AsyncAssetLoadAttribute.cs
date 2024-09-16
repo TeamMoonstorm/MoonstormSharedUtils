@@ -19,7 +19,7 @@ namespace MSU
         /// <summary>
         /// The MethodInfo that's attached to this Attribute
         /// </summary>
-        public MethodInfo TargetMethodInfo => target as MethodInfo;
+        public MethodInfo targetMethodInfo => target as MethodInfo;
 
         /// <summary>
         /// Creates a <see cref="ParallelMultiStartCoroutine"/> that contains all of your mod's instances of <see cref="AsyncAssetLoadAttribute"/>, which then can be called using <see cref="ParallelMultiStartCoroutine.Start"/> and all the methods decorated with the attribute will execute, which then can be awaited as needed.
@@ -47,7 +47,7 @@ namespace MSU
             var result = new ParallelMultiStartCoroutine();
             foreach (var attribute in attributes)
             {
-                result.Add((Func<IEnumerator>)attribute.TargetMethodInfo.CreateDelegate(typeof(Func<IEnumerator>)));
+                result.Add((Func<IEnumerator>)attribute.targetMethodInfo.CreateDelegate(typeof(Func<IEnumerator>)));
             }
             return result;
         }
@@ -57,7 +57,7 @@ namespace MSU
             if (!(_att is AsyncAssetLoadAttribute attribute))
                 return false;
 
-            var methodInfo = attribute.TargetMethodInfo;
+            var methodInfo = attribute.targetMethodInfo;
             
             if(!methodInfo.IsStatic)
             {
@@ -96,7 +96,7 @@ namespace MSU
 
         private static bool IsFromMod(AsyncAssetLoadAttribute attribute, BaseUnityPlugin plugin)
         {
-            var methodInfo = attribute.TargetMethodInfo;
+            var methodInfo = attribute.targetMethodInfo;
 
             var declaringType = methodInfo.DeclaringType;
             return declaringType.Assembly == plugin.GetType().Assembly;
@@ -107,7 +107,7 @@ namespace MSU
         /// </summary>
         public override string ToString()
         {
-            return $"AsyncAssetLoadAttribute(TargetMethod={TargetMethodInfo.DeclaringType.FullName}.{TargetMethodInfo.Name}())";
+            return $"AsyncAssetLoadAttribute(TargetMethod={targetMethodInfo.DeclaringType.FullName}.{targetMethodInfo.Name}())";
         }
     }
 }

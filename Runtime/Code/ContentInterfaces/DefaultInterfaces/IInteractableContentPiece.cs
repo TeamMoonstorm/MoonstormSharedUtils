@@ -19,6 +19,6 @@ namespace MSU
         /// <summary>
         /// The <see cref="InteractableCardProvider"/> for this Interactable.
         /// </summary>
-        NullableRef<InteractableCardProvider> CardProvider { get; }
+        NullableRef<InteractableCardProvider> cardProvider { get; }
     }
 }

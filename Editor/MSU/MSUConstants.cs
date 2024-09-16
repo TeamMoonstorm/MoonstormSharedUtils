@@ -7,13 +7,13 @@ namespace MSU.Editor
 {
     public static class MSUConstants
     {
-        public const string MoonstormSharedUtils = nameof(MoonstormSharedUtils);
-        public const string PackageFolderPath = "Packages/teammoonstorm-moonstormsharedutils";
-        public const string PackageName = "teammoonstorm-moonstormsharedutils";
+        public const string MOONSTORM_SHARED_UTILS = "MoonstormSharedUtils";
+        public const string PACKAGE_FOLDER_PATH = "Packages/teammoonstorm-moonstormsharedutils";
+        public const string PACKAGE_NAME = "teammoonstorm-moonstormsharedutils";
 
-        public const string MSUContextRoot = "Assets/Create/MSU/";
-        public const string MSUScriptableRoot = "Assets/MSU/";
-        public const string MSUMenuRoot = "Tools/MSU/";
+        public const string MSU_CONTEXT_ROOT = "Assets/Create/MSU/";
+        public const string MSU_SCRIPTABLE_ROOT = "Assets/MSU/";
+        public const string MSU_MENU_ROOT = "Tools/MSU/";
 
 
         public static class AssetGUIDS
@@ -22,36 +22,31 @@ namespace MSU.Editor
             public static AssetGUID<Texture2D> msuIcon = "b4436cc7271d9f64da5496beb774571d";
         }
 
-        private static T Load<T>(string guid) where T : UnityEngine.Object
-        {
-            return AssetDatabase.LoadAssetAtPath<T>(AssetDatabase.GUIDToAssetPath(guid));
-        }
-
         internal static bool ValidateUXMLPath(this string path)
         {
-            return path.Contains(PackageName);
+            return path.Contains(PACKAGE_NAME);
         }
 
         public static class FolderPaths
         {
-            private const string assets = "Assets";
-            private const string lib = "Library";
-            private const string scriptAssemblies = "ScriptAssemblies";
-            public static string LibraryFolder
+            private const string ASSETS = "Assets";
+            private const string LIBRARY = "Library";
+            private const string SCRIPT_ASSEMBLIES = "ScriptAssemblies";
+            public static string libraryFolder
             {
                 get
                 {
                     var assetsPath = Application.dataPath;
-                    var libFolder = assetsPath.Replace(assets, lib);
+                    var libFolder = assetsPath.Replace(ASSETS, LIBRARY);
                     return libFolder;
                 }
             }
 
-            public static string ScriptAssembliesFolder
+            public static string scriptAssembliesFolder
             {
                 get
                 {
-                    return Path.Combine(LibraryFolder, scriptAssemblies);
+                    return Path.Combine(libraryFolder, SCRIPT_ASSEMBLIES);
                 }
             }
         }

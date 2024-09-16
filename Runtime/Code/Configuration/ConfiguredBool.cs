@@ -20,14 +20,14 @@ namespace MSU.Config
     {
         /// <summary>
         /// An optional CheckBoxConfig for this ConfiguredBool's <see cref="RiskOfOptions.Options.CheckBoxOption"/>
-        /// <para>Becomes ReadOnly if <see cref="ConfiguredVariable.IsConfigured"/> is true</para>
+        /// <para>Becomes ReadOnly if <see cref="ConfiguredVariable.isConfigured"/> is true</para>
         /// </summary>
-        public CheckBoxConfig CheckBoxConfig
+        public CheckBoxConfig checkBoxConfig
         {
             get => _checkBoxConfig;
             set
             {
-                if (IsConfigured)
+                if (isConfigured)
                     return;
 
                 _checkBoxConfig = value;
@@ -99,25 +99,25 @@ namespace MSU.Config
         }
 
         /// <summary>
-        /// Chainable method for setting <see cref="CheckBoxConfig"/>
+        /// Chainable method for setting <see cref="checkBoxConfig"/>
         /// </summary>
 
         public ConfiguredBool WithCheckBoxConfig(CheckBoxConfig config)
         {
-            CheckBoxConfig = config;
+            checkBoxConfig = config;
             return this;
         }
 
         protected override void OnConfigured()
         {
             base.OnConfigured();
-            if (!(ModGUID.IsNullOrWhiteSpace() || ModName.IsNullOrWhiteSpace()))
+            if (!(modGUID.IsNullOrWhiteSpace() || modName.IsNullOrWhiteSpace()))
             {
-                bool separateEntry = ConfigSystem.ShouldCreateSeparateRiskOfOptionsEntry(ConfigFile);
-                string fileName = System.IO.Path.GetFileNameWithoutExtension(ConfigFile.ConfigFilePath);
-                var guid = separateEntry ? ModGUID + "." + fileName : ModGUID;
-                var name = separateEntry ? ModName + "." + fileName : ModName;
-                CheckBoxOption option = CheckBoxConfig == null ? new CheckBoxOption(ConfigEntry) : new CheckBoxOption(ConfigEntry, CheckBoxConfig);
+                bool separateEntry = ConfigSystem.ShouldCreateSeparateRiskOfOptionsEntry(configFile);
+                string fileName = System.IO.Path.GetFileNameWithoutExtension(configFile.ConfigFilePath);
+                var guid = separateEntry ? modGUID + "." + fileName : modGUID;
+                var name = separateEntry ? modName + "." + fileName : modName;
+                CheckBoxOption option = checkBoxConfig == null ? new CheckBoxOption(configEntry) : new CheckBoxOption(configEntry, checkBoxConfig);
                 ModSettingsManager.AddOption(option, guid, name);
             }
         }

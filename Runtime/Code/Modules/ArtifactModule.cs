@@ -25,7 +25,7 @@ namespace MSU
         /// A ReadOnlyDictionary that can be used for finding an ArtifactDef's IArtifactContentPiece.
         /// <br>Subscribe to <see cref="moduleAvailability"/> to ensure the dictionary is not empty.</br>
         /// </summary>
-        public static ReadOnlyDictionary<ArtifactDef, IArtifactContentPiece> MoonstormArtifacts { get; private set; }
+        public static ReadOnlyDictionary<ArtifactDef, IArtifactContentPiece> moonstormArtifacts { get; private set; }
         private static Dictionary<ArtifactDef, IArtifactContentPiece> _moonstormArtifacts = new Dictionary<ArtifactDef, IArtifactContentPiece>();
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace MSU
         [SystemInitializer(typeof(ArtifactCatalog))]
         private static void SystemInit()
         {
-            MoonstormArtifacts = new ReadOnlyDictionary<ArtifactDef, IArtifactContentPiece>(_moonstormArtifacts);
+            moonstormArtifacts = new ReadOnlyDictionary<ArtifactDef, IArtifactContentPiece>(_moonstormArtifacts);
             _moonstormArtifacts = null;
 
             RunArtifactManager.onArtifactEnabledGlobal += OnArtifactEnabled;
@@ -103,7 +103,7 @@ namespace MSU
 
         private static void OnArtifactDisabled(RunArtifactManager runArtifactManager, ArtifactDef artifactDef)
         {
-            foreach (var kvp in MoonstormArtifacts)
+            foreach (var kvp in moonstormArtifacts)
             {
                 if (!(artifactDef != kvp.Key))
                 {
@@ -117,7 +117,7 @@ namespace MSU
 
         private static void OnArtifactEnabled(RunArtifactManager runArtifactManager, ArtifactDef artifactDef)
         {
-            foreach (var kvp in MoonstormArtifacts)
+            foreach (var kvp in moonstormArtifacts)
             {
                 if (!(artifactDef != kvp.Key) && NetworkServer.active)
                 {
@@ -137,7 +137,7 @@ namespace MSU
             var helper = new ParallelMultiStartCoroutine();
             foreach (var artifact in content)
             {
-                if (!artifact.IsAvailable(provider.ContentPack))
+                if (!artifact.IsAvailable(provider.contentPack))
                     continue;
 
                 artifacts.Add(artifact);
@@ -160,12 +160,12 @@ namespace MSU
                 {
 #endif
                     artifact.Initialize();
-                    var asset = artifact.Asset;
-                    provider.ContentPack.artifactDefs.AddSingle(asset);
+                    var asset = artifact.asset;
+                    provider.contentPack.artifactDefs.AddSingle(asset);
 
                     if (artifact is IContentPackModifier packModifier)
                     {
-                        packModifier.ModifyContentPack(provider.ContentPack);
+                        packModifier.ModifyContentPack(provider.contentPack);
                     }
 
                     if (artifact is IArtifactContentPiece artifactContentPiece)
@@ -179,7 +179,7 @@ namespace MSU
 
                         if (artifactContentPiece.ArtifactCode)
                         {
-                            ArtifactCodeAPI.AddCode(artifactContentPiece.Asset, artifactContentPiece.ArtifactCode);
+                            ArtifactCodeAPI.AddCode(artifactContentPiece.asset, artifactContentPiece.ArtifactCode);
                         }
                         _moonstormArtifacts.Add(asset, artifactContentPiece);
                     }

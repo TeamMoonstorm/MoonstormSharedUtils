@@ -17,7 +17,7 @@ namespace MSU.Config
         /// <summary>
         /// Returns the path to the folder that contains a mod's Config Folder.
         /// </summary>
-        public string ConfigFolderPath
+        public string configFolderPath
         {
             get
             {
@@ -40,7 +40,7 @@ namespace MSU.Config
             {
                 fileName += ".cfg";
             }
-            var path = System.IO.Path.Combine(ConfigFolderPath, fileName);
+            var path = System.IO.Path.Combine(configFolderPath, fileName);
             ConfigFile configFile = new ConfigFile(path, true, _plugin.Info.Metadata);
 
             ConfigSystem.AddConfigFileAndIdentifier(identifier, configFile, _plugin, createSeparateRiskOfOptionsEntry);
@@ -48,7 +48,7 @@ namespace MSU.Config
         }
 
         /// <summary>
-        /// Creates a ConfiguredVariable of type <typeparamref name="TVal"/> and automatically sets it's <see cref="ConfiguredVariable.ModGUID"/> and <see cref="ConfiguredVariable.ModName"/> to the mod responsible for creating the ConfigFactory.
+        /// Creates a ConfiguredVariable of type <typeparamref name="TVal"/> and automatically sets it's <see cref="ConfiguredVariable.modGUID"/> and <see cref="ConfiguredVariable.modName"/> to the mod responsible for creating the ConfigFactory.
         /// </summary>
         /// <typeparam name="TVal">The type that the configurable variable will configure</typeparam>
         /// <param name="defaultVal">The default value for the variable</param>
@@ -59,15 +59,15 @@ namespace MSU.Config
             var metadata = _plugin.Info.Metadata;
             var cfg = new ConfiguredVariable<TVal>(defaultVal)
             {
-                ModGUID = metadata.GUID,
-                ModName = metadata.Name,
+                modGUID = metadata.GUID,
+                modName = metadata.Name,
             };
             initializer?.Invoke(cfg);
             return cfg;
         }
 
         /// <summary>
-        /// Creates a ConfiguredBool and automatically sets it's <see cref="ConfiguredVariable.ModGUID"/> and <see cref="ConfiguredVariable.ModName"/> to the mod responsible for creating the ConfigFactory.
+        /// Creates a ConfiguredBool and automatically sets it's <see cref="ConfiguredVariable.modGUID"/> and <see cref="ConfiguredVariable.modName"/> to the mod responsible for creating the ConfigFactory.
         /// </summary>
         /// <param name="defaultVal">The default value for the variable</param>
         /// <param name="initializer">Optional initializer</param>
@@ -77,15 +77,15 @@ namespace MSU.Config
             var metadata = _plugin.Info.Metadata;
             var cfg = new ConfiguredBool(defaultVal)
             {
-                ModGUID = metadata.GUID,
-                ModName = metadata.Name,
+                modGUID = metadata.GUID,
+                modName = metadata.Name,
             };
             initializer?.Invoke(cfg);
             return cfg;
         }
 
         /// <summary>
-        /// Creates a ConfiguredColor and automatically sets it's <see cref="ConfiguredVariable.ModGUID"/> and <see cref="ConfiguredVariable.ModName"/> to the mod responsible for creating the ConfigFactory.
+        /// Creates a ConfiguredColor and automatically sets it's <see cref="ConfiguredVariable.modGUID"/> and <see cref="ConfiguredVariable.modName"/> to the mod responsible for creating the ConfigFactory.
         /// </summary>
         /// <param name="defaultVal">The default value for the variable</param>
         /// <param name="initializer">Optional initializer</param>
@@ -95,15 +95,15 @@ namespace MSU.Config
             var metadata = _plugin.Info.Metadata;
             var cfg = new ConfiguredColor(defaultVal)
             {
-                ModGUID = metadata.GUID,
-                ModName = metadata.Name
+                modGUID = metadata.GUID,
+                modName = metadata.Name
             };
             initializer?.Invoke(cfg);
             return cfg;
         }
 
         /// <summary>
-        /// Creates a ConfiguredEnum of type <typeparamref name="TEnum"/> and automatically sets it's <see cref="ConfiguredVariable.ModGUID"/> and <see cref="ConfiguredVariable.ModName"/> to the mod responsible for creating the ConfigFactory.
+        /// Creates a ConfiguredEnum of type <typeparamref name="TEnum"/> and automatically sets it's <see cref="ConfiguredVariable.modGUID"/> and <see cref="ConfiguredVariable.modName"/> to the mod responsible for creating the ConfigFactory.
         /// </summary>
         /// <param name="defaultVal">The default value for the variable</param>
         /// <param name="initializer">Optional initializer</param>
@@ -113,15 +113,15 @@ namespace MSU.Config
             var metadata = _plugin.Info.Metadata;
             var cfg = new ConfiguredEnum<TEnum>(defaultVal)
             {
-                ModGUID = metadata.GUID,
-                ModName = metadata.Name
+                modGUID = metadata.GUID,
+                modName = metadata.Name
             };
             initializer?.Invoke(cfg);
             return cfg;
         }
 
         /// <summary>
-        /// Creates a ConfiguredFloat and automatically sets it's <see cref="ConfiguredVariable.ModGUID"/> and <see cref="ConfiguredVariable.ModName"/> to the mod responsible for creating the ConfigFactory.
+        /// Creates a ConfiguredFloat and automatically sets it's <see cref="ConfiguredVariable.modGUID"/> and <see cref="ConfiguredVariable.modName"/> to the mod responsible for creating the ConfigFactory.
         /// </summary>
         /// <param name="defaultVal">The default value for the variable</param>
         /// <param name="initializer">Optional initializer</param>
@@ -131,15 +131,15 @@ namespace MSU.Config
             var metadata = _plugin.Info.Metadata;
             var cfg = new ConfiguredFloat(defaultVal)
             {
-                ModGUID = metadata.GUID,
-                ModName = metadata.Name
+                modGUID = metadata.GUID,
+                modName = metadata.Name
             };
             initializer?.Invoke(cfg);
             return cfg;
         }
 
         /// <summary>
-        /// Creates a ConfiguredInt and automatically sets it's <see cref="ConfiguredVariable.ModGUID"/> and <see cref="ConfiguredVariable.ModName"/> to the mod responsible for creating the ConfigFactory.
+        /// Creates a ConfiguredInt and automatically sets it's <see cref="ConfiguredVariable.modGUID"/> and <see cref="ConfiguredVariable.modName"/> to the mod responsible for creating the ConfigFactory.
         /// </summary>
         /// <param name="defaultVal">The default value for the variable</param>
         /// <param name="initializer">Optional initializer</param>
@@ -149,15 +149,15 @@ namespace MSU.Config
             var metadata = _plugin.Info.Metadata;
             var cfg = new ConfiguredInt(defaultVal)
             {
-                ModGUID = metadata.GUID,
-                ModName = metadata.Name
+                modGUID = metadata.GUID,
+                modName = metadata.Name
             };
             initializer?.Invoke(cfg);
             return cfg;
         }
 
         /// <summary>
-        /// Creates a ConfiguredKeyBind and automatically sets it's <see cref="ConfiguredVariable.ModGUID"/> and <see cref="ConfiguredVariable.ModName"/> to the mod responsible for creating the ConfigFactory.
+        /// Creates a ConfiguredKeyBind and automatically sets it's <see cref="ConfiguredVariable.modGUID"/> and <see cref="ConfiguredVariable.modName"/> to the mod responsible for creating the ConfigFactory.
         /// </summary>
         /// <param name="defaultVal">The default value for the variable</param>
         /// <param name="initializer">Optional initializer</param>
@@ -167,15 +167,15 @@ namespace MSU.Config
             var metadata = _plugin.Info.Metadata;
             var cfg = new ConfiguredKeyBind(defaultVal)
             {
-                ModGUID = metadata.GUID,
-                ModName = metadata.Name
+                modGUID = metadata.GUID,
+                modName = metadata.Name
             };
             initializer?.Invoke(cfg);
             return cfg;
         }
 
         /// <summary>
-        /// Creates a ConfiguredString and automatically sets it's <see cref="ConfiguredVariable.ModGUID"/> and <see cref="ConfiguredVariable.ModName"/> to the mod responsible for creating the ConfigFactory.
+        /// Creates a ConfiguredString and automatically sets it's <see cref="ConfiguredVariable.modGUID"/> and <see cref="ConfiguredVariable.modName"/> to the mod responsible for creating the ConfigFactory.
         /// </summary>
         /// <param name="defaultVal">The default value for the variable</param>
         /// <param name="initializer">Optional initializer</param>
@@ -185,8 +185,8 @@ namespace MSU.Config
             var metadata = _plugin.Info.Metadata;
             var cfg = new ConfiguredString(defaultVal)
             {
-                ModGUID = metadata.GUID,
-                ModName = metadata.Name
+                modGUID = metadata.GUID,
+                modName = metadata.Name
             };
             initializer?.Invoke(cfg);
             return cfg;

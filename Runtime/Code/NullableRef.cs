@@ -20,11 +20,11 @@ namespace MSU
         /// The value stored by this NullableRef
         /// <para>Throws a NullReferenceException if no value is stored.</para>
         /// </summary>
-        public T Value
+        public T value
         {
             get
             {
-                if (!HasValue)
+                if (!hasValue)
                     throw new NullReferenceException();
                 return _value;
             }
@@ -39,7 +39,7 @@ namespace MSU
         /// <summary>
         /// Checks if this NullableRef has any Value that's not Null
         /// </summary>
-        public bool HasValue => (_value is UnityEngine.Object obj) ? obj : _value != null;
+        public bool hasValue => (_value is UnityEngine.Object obj) ? obj : _value != null;
 
         /// <summary>
         /// Tries to get the Value stored in this NullableRef
@@ -48,9 +48,9 @@ namespace MSU
         /// <returns>True if the value was obtained safely, false otherwise</returns>
         public bool TryGetValue(out T value)
         {
-            if (HasValue)
+            if (hasValue)
             {
-                value = Value;
+                value = this.value;
                 return true;
             }
         
@@ -63,7 +63,7 @@ namespace MSU
         /// </summary>
         public static implicit operator T(NullableRef<T> o)
         {
-            return o.Value;
+            return o.value;
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace MSU
         /// </summary>
         public static implicit operator bool(NullableRef<T> o)
         {
-            return o.HasValue;
+            return o.hasValue;
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace MSU
         /// </summary>
         public static implicit operator NullableRef<T>(T obj)
         {
-            return new NullableRef<T> { Value = obj };
+            return new NullableRef<T> { value = obj };
         }
 
         /// <summary>
@@ -88,19 +88,19 @@ namespace MSU
         /// <returns></returns>
         public override string ToString()
         {
-            if (HasValue)
-                return Value.ToString();
+            if (hasValue)
+                return value.ToString();
             return $"NullableRef<{typeof(T).Name}>(null)";
         }
 
         /// <summary>
         /// Returns a HashCode for this NullableRef using it's underlying value.
         /// </summary>
-        /// <returns>A valid HashCode if <see cref="HasValue"/> is true, otherwise it returns -1</returns>
+        /// <returns>A valid HashCode if <see cref="hasValue"/> is true, otherwise it returns -1</returns>
         public override int GetHashCode()
         {
-            if (HasValue)
-                return Value.GetHashCode();
+            if (hasValue)
+                return value.GetHashCode();
             return -1;
         }
     }

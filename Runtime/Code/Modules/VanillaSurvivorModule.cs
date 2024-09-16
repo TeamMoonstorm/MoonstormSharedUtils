@@ -15,7 +15,7 @@ namespace MSU
 {
     public static class VanillaSurvivorModule
     {
-        public static ReadOnlyDictionary<SurvivorDef, IVanillaSurvivorContentPiece[]> MoonstormVanillaSurvivorsContentPieces { get; private set; }
+        public static ReadOnlyDictionary<SurvivorDef, IVanillaSurvivorContentPiece[]> moonstormVanillaSurvivorsContentPieces { get; private set; }
         private static Dictionary<SurvivorDef, IVanillaSurvivorContentPiece[]> _moonstormVanillaSurvivorsContentPieces = new Dictionary<SurvivorDef, IVanillaSurvivorContentPiece[]>();
 
         public static ResourceAvailability moduleAvailability;
@@ -61,7 +61,7 @@ namespace MSU
         [SystemInitializer(typeof(SurvivorCatalog))]
         private static void SystemInit()
         {
-            MoonstormVanillaSurvivorsContentPieces = new ReadOnlyDictionary<SurvivorDef, IVanillaSurvivorContentPiece[]>(_moonstormVanillaSurvivorsContentPieces);
+            moonstormVanillaSurvivorsContentPieces = new ReadOnlyDictionary<SurvivorDef, IVanillaSurvivorContentPiece[]>(_moonstormVanillaSurvivorsContentPieces);
             _moonstormVanillaSurvivorsContentPieces = null;
 
             moduleAvailability.MakeAvailable();
@@ -76,7 +76,7 @@ namespace MSU
             var helper = new ParallelMultiStartCoroutine();
             foreach (var addition in content)
             {
-                if (!addition.IsAvailable(provider.ContentPack))
+                if (!addition.IsAvailable(provider.contentPack))
                     continue;
 
                 vanillaSurvivors.Add(addition);
@@ -85,7 +85,7 @@ namespace MSU
             }
 
             helper.Start();
-            while (!helper.IsDone)
+            while (!helper.isDone)
                 yield return null;
 
             InitializeVanillaSurvivorContentPieces(plugin, vanillaSurvivors, provider);
@@ -113,11 +113,11 @@ namespace MSU
 
         private static IEnumerator LoadSurvivorDefAndAssignValues(IVanillaSurvivorContentPiece addition)
         {
-            var request = Addressables.LoadAssetAsync<SurvivorDef>(addition.SurvivorDefAddress);
+            var request = Addressables.LoadAssetAsync<SurvivorDef>(addition.survivorDefAddress);
             while (!request.IsDone)
                 yield return null;
 
-            addition.SurvivorDef = request.Result;
+            addition.survivorDef = request.Result;
         }
     }
 }

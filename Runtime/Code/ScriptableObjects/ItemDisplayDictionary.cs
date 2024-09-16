@@ -122,14 +122,14 @@ namespace MSU
             if(index >= 0)
             {
                 var entry = displayDictionaryEntries[index];
-                if (entry.IsEmpty)
+                if (entry.isEmpty)
                     return keyAssetRuleGroup;
 
                 for(int i = 0; i < entry.rules.Count; i++)
                 {
                     DisplayRule rule = entry.rules[i];
                     rule.CreateRule(displayPrefabs);
-                    var finishedRule = rule.FinishedRule;
+                    var finishedRule = rule.finishedRule;
                     keyAssetRuleGroup.displayRuleGroup.AddDisplayRule(finishedRule);
                 }
             }
@@ -151,7 +151,7 @@ namespace MSU
             /// <summary>
             /// Checks if this dictionary entry is empty or not.
             /// </summary>
-            public bool IsEmpty => rules != null ? rules.Count == 0 : true;
+            public bool isEmpty => rules != null ? rules.Count == 0 : true;
 
             /// <summary>
             /// Adds a new DisplayRule to this DictionaryEntry
@@ -196,13 +196,13 @@ namespace MSU
             /// <summary>
             /// Contains the finished rule from this DisplayRule
             /// </summary>
-            public ItemDisplayRule FinishedRule { get; private set; }
+            public ItemDisplayRule finishedRule { get; private set; }
 
             internal void CreateRule(GameObject[] displayPrefabs)
             {
                 if(string.IsNullOrWhiteSpace(childName))
                 {
-                    FinishedRule = new ItemDisplayRule
+                    finishedRule = new ItemDisplayRule
                     {
                         childName = NO_VALUE,
                         followerPrefab = displayPrefabs[displayPrefabIndex],
@@ -215,7 +215,7 @@ namespace MSU
                     return;
                 }
 
-                FinishedRule = new ItemDisplayRule
+                finishedRule = new ItemDisplayRule
                 {
                     childName = childName,
                     followerPrefab = displayPrefabs[displayPrefabIndex],

@@ -19,7 +19,7 @@ namespace MSU
         /// <summary>
         /// Returns true if the execution of all the coroutines has finished. False otherwise
         /// </summary>
-        public bool IsDone
+        public bool isDone
         {
             get
             {
@@ -30,7 +30,7 @@ namespace MSU
             }
         }
 
-        public object Current => _internalCoroutine.Current;
+        object IEnumerator.Current => _internalCoroutine.Current;
 
         private IEnumerator _internalCoroutine;
 
@@ -228,7 +228,7 @@ namespace MSU
     /// </summary>
     public class ParallelCoroutine : IEnumerator
     {
-        private readonly List<IEnumerator> coroutinesList = new List<IEnumerator>();
+        private readonly List<IEnumerator> _coroutinesList = new List<IEnumerator>();
 
         private IEnumerator internalCoroutine;
 
@@ -241,7 +241,7 @@ namespace MSU
 
         public void Add(IEnumerator coroutine)
         {
-            coroutinesList.Add(coroutine);
+            _coroutinesList.Add(coroutine);
         }
 
         public bool MoveNext()
@@ -261,10 +261,10 @@ namespace MSU
             while (encounteredUnfinished)
             {
                 encounteredUnfinished = false;
-                int i = coroutinesList.Count - 1;
+                int i = _coroutinesList.Count - 1;
                 while (i >= 0)
                 {
-                    IEnumerator coroutine = coroutinesList[i];
+                    IEnumerator coroutine = _coroutinesList[i];
                     if (coroutine.MoveNext())
                     {
                         encounteredUnfinished = true;
@@ -272,7 +272,7 @@ namespace MSU
                     }
                     else
                     {
-                        coroutinesList.RemoveAt(i);
+                        _coroutinesList.RemoveAt(i);
                     }
                     int num = i - 1;
                     i = num;

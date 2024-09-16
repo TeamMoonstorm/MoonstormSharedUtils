@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using R2API.AddressReferencedAssets;
 using RoR2.ExpansionManagement;
 using static MSU.MonsterCardProvider;
+using UnityEngine.Serialization;
 
 namespace MSU
 {
@@ -21,9 +22,9 @@ namespace MSU
     {
         /// <summary>
         /// A Dictionary that contains this Interactable's <see cref="DirectorCardHolderExtended"/> for vanilla stages, which can be accessed by giving the corresponding key of type <see cref="DirectorAPI.Stage"/>.
-        /// <br>For custom stages, use <see cref="CustomStageToCards"/></br>
+        /// <br>For custom stages, use <see cref="customStageToCards"/></br>
         /// </summary>
-        public ReadOnlyDictionary<DirectorAPI.Stage, DirectorCardHolderExtended> StageToCards
+        public ReadOnlyDictionary<DirectorAPI.Stage, DirectorCardHolderExtended> stageToCards
         {
             get
             {
@@ -38,9 +39,9 @@ namespace MSU
 
         /// <summary>
         /// A Dictionary that contains this Interactable's <see cref="DirectorCardHolderExtended"/> for custom stages, which can be accessed by giving the corresponding key which would be the stage's name.
-        /// <br>For vanilla stages, use <see cref="StageToCards"/></br>
+        /// <br>For vanilla stages, use <see cref="stageToCards"/></br>
         /// </summary>
-        public ReadOnlyDictionary<string, DirectorCardHolderExtended> CustomStageToCards
+        public ReadOnlyDictionary<string, DirectorCardHolderExtended> customStageToCards
         {
             get
             {
@@ -53,8 +54,9 @@ namespace MSU
         }
         private ReadOnlyDictionary<string, DirectorCardHolderExtended> _customStageToCards;
 
+        [FormerlySerializedAs("_serializedCardPairs")]
         [Tooltip("Contains your Interactable's Cards.")]
-        public StageInteractableCardPair[] _serializedCardPairs = Array.Empty<StageInteractableCardPair>();
+        public StageInteractableCardPair[] serializedCardPairs = Array.Empty<StageInteractableCardPair>();
 
         /// <summary>
         /// Method that builds a <see cref="HashSet{T}"/> containing all the unique instances of SpawnCards held by this InteractableCardProvider.
@@ -64,7 +66,7 @@ namespace MSU
         public HashSet<SpawnCard> BuildSpawnCardSet()
         {
             HashSet<SpawnCard> result = new HashSet<SpawnCard>();
-            foreach (StageInteractableCardPair pair in _serializedCardPairs)
+            foreach (StageInteractableCardPair pair in serializedCardPairs)
             {
                 var card = pair.card;
 
@@ -83,7 +85,7 @@ namespace MSU
         }
 
         /// <summary>
-        /// Builds the <see cref="StageToCards"/> and the <see cref="CustomStageToCards"/> dictionaries
+        /// Builds the <see cref="stageToCards"/> and the <see cref="customStageToCards"/> dictionaries
         /// </summary>
         public void BuildDictionaries()
         {
@@ -91,9 +93,9 @@ namespace MSU
             var customStageDict = new Dictionary<string, DirectorCardHolderExtended>();
 
             //Iterate thru pairs
-            for(int i = 0; i < _serializedCardPairs.Length; i++)
+            for(int i = 0; i < serializedCardPairs.Length; i++)
             {
-                var pair = _serializedCardPairs[i];
+                var pair = serializedCardPairs[i];
                 var stageFlags = (DirectorAPI.Stage)pair.stage;
 
                 //Iterate thru stage enum values
@@ -141,20 +143,6 @@ namespace MSU
             _stageToCards = new ReadOnlyDictionary<DirectorAPI.Stage, DirectorCardHolderExtended>(stageDict);
         }
 
-        private void OnValidate()
-        {
-            for (int i = 0; i < _serializedCardPairs.Length; i++)
-            {
-                StageInteractableCardPair pair = _serializedCardPairs[i];
-                if(pair.stage.Value == default(DirectorAPI.StageSerde).Value && pair.stageEnum != default)
-                {
-                    pair.stage = new DirectorAPI.StageSerde((long)pair.stageEnum);
-                    pair.stageEnum = default;
-                    _serializedCardPairs[i] = pair;
-                }
-            }
-        }
-
         /// <summary>
         /// Represents a pair of <see cref="DirectorCardHolderExtended"/> and stage metadata.
         /// <br>Contains an implicit cast to cast from this struct to <see cref="DirectorCardHolderExtended"/></br>
@@ -165,9 +153,6 @@ namespace MSU
             [Header("Stage Metadata")]
             [Tooltip("The Serializable Stage enum value for this pair, this only includes vanilla stages.\nif you want to add your interactable to a custom stage, set this to \"Custom\" and fill out the field \"customSTageNames\".")]
             public DirectorAPI.StageSerde stage;
-
-            [Obsolete("This cannot be serialized by unity anymore, and as such should not be used, this will be removed prior to MSU 2.0's release. Utilize the field \"stage\" and cast it to \"DirectorAPI.Stage\" instead.")]
-            public DirectorAPI.Stage stageEnum;
 
             [Tooltip("The custom stage names for this pair, this is only used for custom, non vanilla stages.\nIf you want to add your interactable to a vanilla stage, leave this empty and utilize the field \"Stage Enum\"")]
             public List<string> customStageNames;

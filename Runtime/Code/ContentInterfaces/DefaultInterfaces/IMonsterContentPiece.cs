@@ -19,11 +19,11 @@ namespace MSU
         /// <summary>
         /// The <see cref="MonsterCardProvider"/> for this Monster. Can be Null.
         /// </summary>
-        NullableRef<MonsterCardProvider> CardProvider { get; }
+        NullableRef<MonsterCardProvider> cardProvider { get; }
 
         /// <summary>
         /// The DirectorCard used for this Monster when <see cref="RoR2.RoR2Content.Artifacts.mixEnemyArtifactDef"/> is enabled. Can be Null
         /// </summary>
-        NullableRef<DirectorCardHolderExtended> DissonanceCard { get; }
+        NullableRef<DirectorCardHolderExtended> dissonanceCard { get; }
     }
 }

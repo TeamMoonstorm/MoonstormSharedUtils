@@ -9,14 +9,14 @@ namespace MSU
 {
     internal static class ReflectionCache
     {
-        private static Dictionary<Assembly, Type[]> assemblyToTypes = new Dictionary<Assembly, Type[]>();
+        private static Dictionary<Assembly, Type[]> _assemblyToTypes = new Dictionary<Assembly, Type[]>();
         public static Type[] GetTypes(Assembly assembly)
         {
-            if (assemblyToTypes.ContainsKey(assembly))
-                return assemblyToTypes[assembly];
+            if (_assemblyToTypes.ContainsKey(assembly))
+                return _assemblyToTypes[assembly];
 
             Type[] types = assembly.GetTypes();
-            assemblyToTypes.Add(assembly, types);
+            _assemblyToTypes.Add(assembly, types);
             return types;
         }
     }

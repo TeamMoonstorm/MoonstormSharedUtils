@@ -11,10 +11,11 @@ namespace MSU
 {
     internal static class MSUContentManagement
     {
-        private static Dictionary<UnityObjectWrapperKey<CharacterBody>, MSUContentBehaviour> bodyToContentBehaviour = new Dictionary<UnityObjectWrapperKey<CharacterBody>, MSUContentBehaviour>();
+        private static Dictionary<UnityObjectWrapperKey<CharacterBody>, MSUContentBehaviour> _bodyToContentBehaviour = new Dictionary<UnityObjectWrapperKey<CharacterBody>, MSUContentBehaviour>();
 
         private static Dictionary<BuffIndex, Type> _buffToBehaviour = new Dictionary<BuffIndex, Type>();
         private static Dictionary<UnityObjectWrapperKey<CharacterBody>, Dictionary<BuffIndex, BaseBuffBehaviour>> _bodyToBuffBehaviourDictionary = new Dictionary<UnityObjectWrapperKey<CharacterBody>, Dictionary<BuffIndex, BaseBuffBehaviour>>();
+
         [SystemInitializer(typeof(BodyCatalog), typeof(BuffCatalog))]
         private static void SystemInit()
         {
@@ -22,7 +23,7 @@ namespace MSU
             CharacterBody.onBodyAwakeGlobal += OnBodyAwakeGlobal;
             CharacterBody.onBodyDestroyGlobal += OnBodyDestroyedGlobal;
 
-            if(MSUtil.HolyDLLInstalled)
+            if(MSUtil.holyDLLInstalled)
             {
 #if DEBUG
                 MSULog.Info("Holy installed, using custom RecalculateStats support");
@@ -45,7 +46,7 @@ namespace MSU
             if (sender.bodyIndex == BodyIndex.None)
                 return;
 
-            bodyToContentBehaviour[sender].GetStatCoefficients(args);
+            _bodyToContentBehaviour[sender].GetStatCoefficients(args);
         }
 
         private static void RecalculateStats(On.RoR2.CharacterBody.orig_RecalculateStats orig, CharacterBody self)
@@ -56,7 +57,7 @@ namespace MSU
                 return;
             }
 
-            var behaviour = bodyToContentBehaviour[self];
+            var behaviour = _bodyToContentBehaviour[self];
             behaviour.RecalculateStatsStart();
             orig(self);
             behaviour.RecalculateStatsEnd();
@@ -67,7 +68,7 @@ namespace MSU
             if (body.bodyIndex == BodyIndex.None)
                 return;
 
-            var behaviour = bodyToContentBehaviour[body];
+            var behaviour = _bodyToContentBehaviour[body];
             behaviour.RecalculateStatsStart();
             behaviour.GetStatCoefficients(args);
         }
@@ -81,7 +82,7 @@ namespace MSU
             }
 
             orig(self);
-            bodyToContentBehaviour[self].RecalculateStatsEnd();
+            _bodyToContentBehaviour[self].RecalculateStatsEnd();
         }
 
         private static void InitMSUContentBehaviourSystem()
@@ -163,14 +164,14 @@ namespace MSU
             if(!bodyBuffBehaviours.ContainsKey(buffType))
             {
                 var newBehaviour = (BaseBuffBehaviour)self.gameObject.AddComponent(_buffToBehaviour[buffType]);
-                newBehaviour.BuffIndex = buffType;
-                newBehaviour.BuffCount = newCount;
+                newBehaviour.buffIndex = buffType;
+                newBehaviour.buffCount = newCount;
                 bodyBuffBehaviours.Add(buffType, newBehaviour);
-                var manager = bodyToContentBehaviour[self];
+                var manager = _bodyToContentBehaviour[self];
                 manager.StartGetInterfaces();
                 return;
             }
-            bodyBuffBehaviours[buffType].BuffCount = newCount;
+            bodyBuffBehaviours[buffType].buffCount = newCount;
         }
 
 
@@ -179,7 +180,7 @@ namespace MSU
             if (obj.bodyIndex == BodyIndex.None)
                 return;
 
-            bodyToContentBehaviour.Remove(obj);
+            _bodyToContentBehaviour.Remove(obj);
             _bodyToBuffBehaviourDictionary.Remove(obj);
         }
 
@@ -188,7 +189,7 @@ namespace MSU
             if (obj.bodyIndex == BodyIndex.None)
                 return;
 
-            bodyToContentBehaviour.Add(obj, obj.GetComponent<MSUContentBehaviour>());
+            _bodyToContentBehaviour.Add(obj, obj.GetComponent<MSUContentBehaviour>());
             _bodyToBuffBehaviourDictionary.Add(obj, new Dictionary<BuffIndex, BaseBuffBehaviour>());
         }
 

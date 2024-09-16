@@ -22,7 +22,7 @@ namespace MSU
         /// A ReadOnlyDictionary that can be used for finding an ItemTier's IItemContentPiece
         /// <para>Subscribe to <see cref="moduleAvailability"/> to ensure the Dictionary is not Empty.</para>
         /// </summary>
-        public static ReadOnlyDictionary<ItemTierDef, IItemTierContentPiece> MoonstormItemTiers { get; private set; }
+        public static ReadOnlyDictionary<ItemTierDef, IItemTierContentPiece> moonstormItemTiers { get; private set; }
         private static Dictionary<ItemTierDef, IItemTierContentPiece> _moonstormItemTiers = new Dictionary<ItemTierDef, IItemTierContentPiece>();
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace MSU
         private static void SystemInit()
         {
             MSULog.Info("Initializing Item Tier Module...");
-            MoonstormItemTiers = new ReadOnlyDictionary<ItemTierDef, IItemTierContentPiece>(_moonstormItemTiers);
+            moonstormItemTiers = new ReadOnlyDictionary<ItemTierDef, IItemTierContentPiece>(_moonstormItemTiers);
             _moonstormItemTiers = null;
             BuildItemListForEachItemTier();
             Run.onRunStartGlobal += BuildDropTable;
@@ -116,14 +116,14 @@ namespace MSU
 
         private static void BuildDropTable(Run obj)
         {
-            foreach(var (itemTierDef, itemTierContentPiece) in MoonstormItemTiers)
+            foreach(var (itemTierDef, itemTierContentPiece) in moonstormItemTiers)
             {
-                itemTierContentPiece.AvailableTierDropList.Clear();
-                foreach(var itemIndex in itemTierContentPiece.ItemsWithThisTier)
+                itemTierContentPiece.availableTierDropList.Clear();
+                foreach(var itemIndex in itemTierContentPiece.itemsWithThisTier)
                 {
                     if(obj.availableItems.Contains(itemIndex))
                     {
-                        itemTierContentPiece.AvailableTierDropList.Add(PickupCatalog.FindPickupIndex(itemIndex));
+                        itemTierContentPiece.availableTierDropList.Add(PickupCatalog.FindPickupIndex(itemIndex));
                     }
                 }
             }
@@ -131,14 +131,14 @@ namespace MSU
 
         private static void BuildItemListForEachItemTier()
         {
-            foreach(var (itemTierDef, itemTierContentPiece) in MoonstormItemTiers)
+            foreach(var (itemTierDef, itemTierContentPiece) in moonstormItemTiers)
             {
-                itemTierContentPiece.ItemsWithThisTier.Clear();
+                itemTierContentPiece.itemsWithThisTier.Clear();
                 foreach(ItemDef itemDef in ItemCatalog.allItemDefs)
                 {
                     if(itemDef.tier == itemTierDef.tier)
                     {
-                        itemTierContentPiece.ItemsWithThisTier.Add(itemDef.itemIndex);
+                        itemTierContentPiece.itemsWithThisTier.Add(itemDef.itemIndex);
                     }
                 }
             }
@@ -152,7 +152,7 @@ namespace MSU
             var helper = new ParallelMultiStartCoroutine();
             foreach(var tier in content)
             {
-                if (!tier.IsAvailable(provider.ContentPack))
+                if (!tier.IsAvailable(provider.contentPack))
                     continue;
 
                 itemTiers.Add(tier);
@@ -176,12 +176,12 @@ namespace MSU
 #endif
                     tier.Initialize();
 
-                    var asset = tier.Asset;
-                    provider.ContentPack.itemTierDefs.AddSingle(asset);
+                    var asset = tier.asset;
+                    provider.contentPack.itemTierDefs.AddSingle(asset);
 
                     if (tier is IContentPackModifier packModifier)
                     {
-                        packModifier.ModifyContentPack(provider.ContentPack);
+                        packModifier.ModifyContentPack(provider.contentPack);
                     }
                     if (tier is IItemTierContentPiece itemTierContentPiece)
                     {
@@ -192,17 +192,17 @@ namespace MSU
                         HG.ArrayUtils.ArrayAppend(ref array, itemTierContentPiece);
                         _moonstormItemTiers.Add(asset, itemTierContentPiece);
 
-                        if (itemTierContentPiece.ColorIndex)
+                        if (itemTierContentPiece.colorIndex)
                         {
-                            ColorsAPI.AddSerializableColor(itemTierContentPiece.ColorIndex);
-                            asset.colorIndex = itemTierContentPiece.ColorIndex.Value.ColorIndex;
+                            ColorsAPI.AddSerializableColor(itemTierContentPiece.colorIndex);
+                            asset.colorIndex = itemTierContentPiece.colorIndex.value.ColorIndex;
                         }
-                        if (itemTierContentPiece.DarkColorIndex)
+                        if (itemTierContentPiece.darkColorIndex)
                         {
-                            ColorsAPI.AddSerializableColor(itemTierContentPiece.DarkColorIndex);
-                            asset.colorIndex = itemTierContentPiece.DarkColorIndex.Value.ColorIndex;
+                            ColorsAPI.AddSerializableColor(itemTierContentPiece.darkColorIndex);
+                            asset.colorIndex = itemTierContentPiece.darkColorIndex.value.ColorIndex;
                         }
-                        _itemTierToPickupFX.Add(asset, itemTierContentPiece.PickupDisplayVFX);
+                        _itemTierToPickupFX.Add(asset, itemTierContentPiece.pickupDisplayVFX);
                     }
 #if DEBUG
                 }

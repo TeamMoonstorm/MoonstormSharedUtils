@@ -12,7 +12,7 @@ namespace MSU.Editor.Importers
 {
     public class InstallDependencies : OptionalExecutor
     {
-        public override int Priority => Constants.Priority.InstallDependencies;
+        public override int Priority => Constants.Priority.INSTALL_DEPENDENCIES;
 
         public override string Description => "Installs Risk of Options, a framework that allows MSU to display your mod's configs in the game's options menu.";
 
@@ -20,7 +20,7 @@ namespace MSU.Editor.Importers
         private const string RISK_OF_OPTIONS = "Rune580-Risk_Of_Options";
         private const string SHADER_SWAPPER = "Smooth_Salad-ShaderSwapper";
 
-        private ThunderstoreSource transientStore;
+        private ThunderstoreSource _transientStore;
         public override bool Execute()
         {
             try
@@ -30,21 +30,21 @@ namespace MSU.Editor.Importers
 
                 if (!packageSource)
                 {
-                    if (transientStore)
-                        packageSource = transientStore;
+                    if (_transientStore)
+                        packageSource = _transientStore;
                     else
                     {
                         packageSource = CreateInstance<ThunderstoreSource>();
                         packageSource.Url = "https://thunderstore.io";
                         packageSource.name = TRANSIENT_STORE_NAME;
                         packageSource.ReloadPages(true);
-                        transientStore = packageSource;
+                        _transientStore = packageSource;
                     }
                 }
                 else if (packageSource.Packages == null || packageSource.Packages.Count == 0)
                     packageSource.ReloadPages(true);
                 else
-                    transientStore = packageSource;
+                    _transientStore = packageSource;
 
                 if(packageSource.Packages == null || packageSource.Packages.Count == 0)
                 {
@@ -97,8 +97,8 @@ namespace MSU.Editor.Importers
 
         public override void Cleanup()
         {
-            if (transientStore)
-                DestroyImmediate(transientStore);
+            if (_transientStore)
+                DestroyImmediate(_transientStore);
         }
     }
 }

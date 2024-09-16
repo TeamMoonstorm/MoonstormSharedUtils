@@ -20,17 +20,31 @@ namespace MSU
         /// <summary>
         /// An optional MusicTrackDef used to adding your stage's main music track to your ContentPack. Leave this null if you're reusing the game's music tracks
         /// </summary>
-        NullableRef<MusicTrackDef> MainTrack { get; }
+        NullableRef<MusicTrackDef> mainTrack { get; }
 
         /// <summary>
         /// An optional MusicTrackDef used to adding your stage's boss music track to your ContentPack. Leave this null if you're reusing the game's music tracks
         /// </summary>
-        NullableRef<MusicTrackDef> BossTrack { get; }
+        NullableRef<MusicTrackDef> bossTrack { get; }
 
         /// <summary>
         /// A texture that will be used to create the Bazaar material for your SceneDef.
         /// </summary>
-        Texture2D BazaarTextureBase { get; }
+        Texture2D bazaarTextureBase { get; }
+
+        /// <summary>
+        /// This interger dictates in what stage number this scene spawns, this is only relevant if the <see cref="SceneDef.sceneType"/> is set to <see cref="SceneType.Stage"/>
+        /// </summary>
+        int regularProgressionSlot { get; }
+
+        /// <summary>
+        /// Wether this stage appears before looping, this is only relevant if the <see cref="SceneDef.sceneType"/> is set to <see cref="SceneType.Stage"/>
+        /// </summary>
+        bool preLoop { get; }
+
+        /// <summary>
+        /// Wether this stage appears after looping, this is only relevant if the <see cref="SceneDef.sceneType"/> is set to <see cref="SceneType.Stage"/>
+        bool postLoop { get; }
 
         /// <summary>
         /// Method called when a <see cref="Stage"/> ends and it's <see cref="Stage.sceneDef"/> is this Scene

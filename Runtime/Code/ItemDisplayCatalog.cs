@@ -98,12 +98,12 @@ namespace MSU
                 PopulateDisplaysFromIDRS(idrs);
             }
 
-            foreach(var (_, item) in ItemModule.MoonstormItems)
+            foreach(var (_, item) in ItemModule.moonstormItems)
             {
                 PopulateDisplaysFromItems(item);
             }
 
-            foreach(var (_, equipment) in EquipmentModule.AllMoonstormEquipments)
+            foreach(var (_, equipment) in EquipmentModule.allMoonstormEquipments)
             {
                 PopulateDisplaysFromEquips(equipment);
             }
@@ -155,13 +155,13 @@ namespace MSU
 
         private static void PopulateDisplaysFromItems(IItemContentPiece item)
         {
-            if(!item.ItemDisplayPrefabs)
+            if(!item.itemDisplayPrefabs)
             {
                 return;
             }
 
-            List<GameObject> displayPrefabs = item.ItemDisplayPrefabs;
-            ItemDef itemDef = item.Asset;
+            List<GameObject> displayPrefabs = item.itemDisplayPrefabs;
+            ItemDef itemDef = item.asset;
 
             for(int i = 0; i < displayPrefabs.Count; i++)
             {
@@ -199,13 +199,13 @@ namespace MSU
 
         private static void PopulateDisplaysFromEquips(IEquipmentContentPiece equipment)
         {
-            if (!equipment.ItemDisplayPrefabs)
+            if (!equipment.itemDisplayPrefabs)
             {
                 return;
             }
 
-            List<GameObject> displayPrefabs = equipment.ItemDisplayPrefabs;
-            EquipmentDef itemDef = equipment.Asset;
+            List<GameObject> displayPrefabs = equipment.itemDisplayPrefabs;
+            EquipmentDef itemDef = equipment.asset;
 
             for (int i = 0; i < displayPrefabs.Count; i++)
             {
@@ -366,7 +366,7 @@ namespace MSU
 
             string json = JsonUtility.ToJson(cat, true);
 
-            var directory = System.IO.Path.GetDirectoryName(MSUMain.PluginInfo.Location);
+            var directory = System.IO.Path.GetDirectoryName(MSUMain.pluginInfo.Location);
             var fileName = "IDRSCatalog.json";
             var filePath = System.IO.Path.Combine(directory, fileName);
 

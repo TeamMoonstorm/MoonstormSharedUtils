@@ -9,7 +9,7 @@ namespace MSU
 {
     /// <summary>
     /// A DotBuffDef is an extension of <see cref="BuffDef"/> which allows for easy creation of Dots tied to BuffDefs. This class as well ensures that <see cref="BuffDef.isDebuff"/> is false for this particular DOT to avoid the DOT itself counting as 2 debuffs for DeathMark.
-    /// <br>In case you're using vanilla DamageColors or BuffDefs, you can call <see cref="Init"/> and then manually modify the DotDef stored in <see cref="DotDef"/></br>
+    /// <br>In case you're using vanilla DamageColors or BuffDefs, you can call <see cref="Init"/> and then manually modify the DotDef stored in <see cref="dotDef"/></br>
     /// </summary>
     [CreateAssetMenu(fileName = "New DotBuffDef", menuName = "MSU/DotBuffDef")]
     public class DotBuffDef : BuffDef
@@ -31,28 +31,28 @@ namespace MSU
         /// <summary>
         /// The DotDef stored by this DotBuffDef. Returns null if <see cref="Init"/> has not been called
         /// </summary>
-        public DotController.DotDef DotDef { get; private set; } = null;
+        public DotController.DotDef dotDef { get; private set; } = null;
         /// <summary>
-        /// The DotIndex that represents <see cref="DotDef"/>
+        /// The DotIndex that represents <see cref="dotDef"/>
         /// </summary>
-        public DotController.DotIndex DotIndex { get; private set; } = DotController.DotIndex.None;
+        public DotController.DotIndex dotIndex { get; private set; } = DotController.DotIndex.None;
         
         /// <summary>
         /// <inheritdoc cref="DotAPI.CustomDotBehaviour"/>
         /// </summary>
-        public DotAPI.CustomDotBehaviour DotBehaviour { get; set; }
+        public DotAPI.CustomDotBehaviour dotBehaviour { get; set; }
 
         /// <summary>
         /// <inheritdoc cref="DotAPI.CustomDotVisual"/>
         /// </summary>
-        public DotAPI.CustomDotVisual DotVisual { get; set; }
+        public DotAPI.CustomDotVisual dotVisual { get; set; }
 
         /// <summary>
-        /// Initializes this DotBuffDef, by doing this, the property <see cref="DotDef"/> is created using the metadata stored in this DotBuffDef and then it's added to the game using <see cref="R2API.DotAPI"/>
+        /// Initializes this DotBuffDef, by doing this, the property <see cref="dotDef"/> is created using the metadata stored in this DotBuffDef and then it's added to the game using <see cref="R2API.DotAPI"/>
         /// </summary>
         public void Init()
         {
-            if (DotDef != null || DotIndex != DotController.DotIndex.None)
+            if (dotDef != null || dotIndex != DotController.DotIndex.None)
                 return;
 
             DoInit();
@@ -86,7 +86,7 @@ namespace MSU
                 damageColorIndex = damageColor.DamageColorIndex;
             }
 
-            DotDef = new DotController.DotDef
+            dotDef = new DotController.DotDef
             {
                 associatedBuff = this,
                 resetTimerOnAdd = resetTimerOnAdd,
@@ -96,7 +96,7 @@ namespace MSU
                 terminalTimedBuff = terminalTimedBuff,
                 terminalTimedBuffDuration = terminalTimedBuffDuration,
             };
-            DotIndex = DotAPI.RegisterDotDef(DotDef, DotBehaviour, DotVisual);
+            dotIndex = DotAPI.RegisterDotDef(dotDef, dotBehaviour, dotVisual);
         }
     }
 }

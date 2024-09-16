@@ -22,7 +22,7 @@ namespace MSU
         /// <summary>
         /// The ItemDisplayPrefabs for this Equipment, can be null.
         /// </summary>
-        NullableRef<List<GameObject>> ItemDisplayPrefabs { get; }
+        NullableRef<List<GameObject>> itemDisplayPrefabs { get; }
 
         /// <summary>
         /// Method that's ran when an EquipmentSlot tries to execute this Equipment

@@ -4,7 +4,7 @@ namespace MSU
 {
     public interface IVanillaSurvivorContentPiece : IContentPiece
     {
-        SurvivorDef SurvivorDef { get; set; }
-        string SurvivorDefAddress { get; }
+        SurvivorDef survivorDef { get; set; }
+        string survivorDefAddress { get; }
     }
 }

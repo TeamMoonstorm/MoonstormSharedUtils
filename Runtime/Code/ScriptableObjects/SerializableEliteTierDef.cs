@@ -26,24 +26,24 @@ namespace MSU
         /// <summary>
         /// Stores the finalized EliteTierDef, Null by default and gets populated by <see cref="Init"/>
         /// </summary>
-        public CombatDirector.EliteTierDef EliteTierDef { get; private set; }
+        public CombatDirector.EliteTierDef eliteTierDef { get; private set; }
 
         /// <summary>
-        /// Stores the EliteTierIndex that was assigned when <see cref="EliteTierDef"/> was populated
+        /// Stores the EliteTierIndex that was assigned when <see cref="eliteTierDef"/> was populated
         /// </summary>
-        public int EliteTierIndex { get; private set; }
+        public int eliteTierIndex { get; private set; }
 
         /// <summary>
         /// Checks wether or not this EliteDef is available. Override this to implement custom availability checking.
         /// </summary>
-        public Func<SpawnCard.EliteRules, bool> IsAvailableCheck { get; set; }
+        public Func<SpawnCard.EliteRules, bool> isAvailableCheck { get; set; }
 
         /// <summary>
         /// Creates an initializes the EliteTierDef
         /// </summary>
         public void Init()
         {
-            if(EliteTierDef != null || EliteTierIndex != -1)
+            if(eliteTierDef != null || eliteTierIndex != -1)
             {
                 return;
             }
@@ -60,16 +60,16 @@ namespace MSU
 
         private void DoInit()
         {
-            IsAvailableCheck = IsAvailableCheck ?? DefaultAvailability;
+            isAvailableCheck = isAvailableCheck ?? DefaultAvailability;
 
-            EliteTierDef = new CombatDirector.EliteTierDef
+            eliteTierDef = new CombatDirector.EliteTierDef
             {
                 eliteTypes = elites.Where(x => x.AssetExists).Select(x => x.Asset).ToArray(),
                 canSelectWithoutAvailableEliteDef = canBeSelectedWithoutAvailableEliteDef,
-                isAvailable = IsAvailableCheck,
+                isAvailable = isAvailableCheck,
                 costMultiplier = costMultiplier,
             };
-            EliteTierIndex = EliteAPI.AddCustomEliteTier(EliteTierDef);
+            eliteTierIndex = EliteAPI.AddCustomEliteTier(eliteTierDef);
         }
 
         private static bool DefaultAvailability(SpawnCard.EliteRules rules) => true;

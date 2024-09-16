@@ -24,7 +24,7 @@ namespace MSU
         /// <br>The ReadOnlyDictionary has a special Key Evaluator that Evaluates keys based off the IInteractable's <see cref="NetworkIdentity.assetId"/> to check if two interactables are the same. This allows instances of the interactable to be used as keys.</br>
         /// <br>Subscribe to <see cref="moduleAvailability"/> to ensure the dictionary is not empty.</br>
         /// </summary>
-        public static ReadOnlyDictionary<IInteractable, IInteractableContentPiece> MoonstormInteractables { get; private set; }
+        public static ReadOnlyDictionary<IInteractable, IInteractableContentPiece> moonstormInteractables { get; private set; }
         private static Dictionary<IInteractable, IInteractableContentPiece> _moonstormInteractables = new Dictionary<IInteractable, IInteractableContentPiece>(new IInteractableNetworkIdentityAssetIDComparer());
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace MSU
             MSULog.Info("Initializing Interactable Module...");
             DirectorAPI.InteractableActions += AddCustomInteractables;
 
-            MoonstormInteractables = new ReadOnlyDictionary<IInteractable, IInteractableContentPiece>(_moonstormInteractables);
+            moonstormInteractables = new ReadOnlyDictionary<IInteractable, IInteractableContentPiece>(_moonstormInteractables);
             _moonstormInteractables = null;
 
             moduleAvailability.MakeAvailable();
@@ -110,7 +110,7 @@ namespace MSU
             var helper = new ParallelMultiStartCoroutine();
             foreach (var interactable in content)
             {
-                if (!interactable.IsAvailable(provider.ContentPack))
+                if (!interactable.IsAvailable(provider.contentPack))
                     continue;
 
                 interactables.Add(interactable);
@@ -134,15 +134,15 @@ namespace MSU
 #endif
                     interactable.Initialize();
 
-                    var asset = interactable.Asset;
+                    var asset = interactable.asset;
                     if (asset.TryGetComponent<NetworkIdentity>(out _))
                     {
-                        provider.ContentPack.networkedObjectPrefabs.AddSingle(asset);
+                        provider.contentPack.networkedObjectPrefabs.AddSingle(asset);
                     }
 
                     if (interactable is IContentPackModifier packModifier)
                     {
-                        packModifier.ModifyContentPack(provider.ContentPack);
+                        packModifier.ModifyContentPack(provider.contentPack);
                     }
 
                     if (interactable is IInteractableContentPiece interactableContentPiece)
@@ -154,11 +154,11 @@ namespace MSU
                         var array = _pluginToInteractables[plugin];
                         HG.ArrayUtils.ArrayAppend(ref array, interactableContentPiece);
 
-                        if (interactableContentPiece.CardProvider)
+                        if (interactableContentPiece.cardProvider)
                         {
-                            _interactableCardProviders.Add(interactableContentPiece.CardProvider);
+                            _interactableCardProviders.Add(interactableContentPiece.cardProvider);
                         }
-                        _moonstormInteractables.Add(interactableContentPiece.Component, interactableContentPiece);
+                        _moonstormInteractables.Add(interactableContentPiece.component, interactableContentPiece);
                     }
 #if DEBUG
                 }
@@ -190,11 +190,11 @@ namespace MSU
 
             if(stageInfo.stage == DirectorAPI.Stage.Custom)
             {
-                interactableCardProvider.CustomStageToCards.TryGetValue(stageInfo.CustomStageName, out  cardHolder);
+                interactableCardProvider.customStageToCards.TryGetValue(stageInfo.CustomStageName, out  cardHolder);
             }
             else
             {
-                interactableCardProvider.StageToCards.TryGetValue(stageInfo.stage, out cardHolder);
+                interactableCardProvider.stageToCards.TryGetValue(stageInfo.stage, out cardHolder);
             }
 
             if (cardHolder == null)

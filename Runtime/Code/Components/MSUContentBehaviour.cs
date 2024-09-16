@@ -19,7 +19,7 @@ namespace MSU
         /// <summary>
         /// Wether or not the body tied to this ContentBehaviour has a CharacterMaster
         /// </summary>
-        public bool HasMaster { get; private set; }
+        public bool hasMaster { get; private set; }
         /// <summary>
         /// The body attached to this ContentBehaviour
         /// </summary>
@@ -34,12 +34,12 @@ namespace MSU
 
         private void Start()
         {
-            HasMaster = body.master;
+            hasMaster = body.master;
             body.onInventoryChanged += CheckEquipments;
 
             //This is done to ensure whatever "OnEquipmentObtained" logic runs when the body starts. since OnEquipmentObtained only gets called when the inventory changes, which doesnt happen at this time.
             var eqpDef = EquipmentCatalog.GetEquipmentDef(body.inventory ? body.inventory.GetEquipmentIndex() : EquipmentIndex.None);
-            if(eqpDef && EquipmentModule.AllMoonstormEquipments.TryGetValue(eqpDef, out var iEquipmentContentPiece))
+            if(eqpDef && EquipmentModule.allMoonstormEquipments.TryGetValue(eqpDef, out var iEquipmentContentPiece))
             {
                 iEquipmentContentPiece.OnEquipmentObtained(body);
             }
@@ -49,7 +49,7 @@ namespace MSU
         private void CheckEquipments()
         {
             StartGetInterfaces();
-            if (!HasMaster)
+            if (!hasMaster)
                 return;
 
             EquipmentDef def = EquipmentCatalog.GetEquipmentDef(body.inventory.GetEquipmentIndex());

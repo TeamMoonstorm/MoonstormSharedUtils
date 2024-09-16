@@ -20,14 +20,14 @@ namespace MSU.Config
     {
         /// <summary>
         /// An optional InputFieldConfig for this ConfiguredString's <see cref="RiskOfOptions.Options.StringInputFieldOption"/>
-        /// <para>Becomes ReadOnly if <see cref="ConfiguredVariable.IsConfigured"/> is true</para>
+        /// <para>Becomes ReadOnly if <see cref="ConfiguredVariable.isConfigured"/> is true</para>
         /// </summary>
-        public InputFieldConfig InputFieldConfig
+        public InputFieldConfig inputFieldConfig
         {
             get => _inputFieldConfig;
             set
             {
-                if (IsConfigured)
+                if (isConfigured)
                     return;
                 _inputFieldConfig = value;
             }
@@ -98,11 +98,11 @@ namespace MSU.Config
         }
 
         /// <summary>
-        /// Chainable method for setting <see cref="InputFieldConfig"/>
+        /// Chainable method for setting <see cref="inputFieldConfig"/>
         /// </summary>
         public ConfiguredString WithInputFieldConfig(InputFieldConfig config)
         {
-            InputFieldConfig = config;
+            inputFieldConfig = config;
             return this;
         }
 
@@ -110,13 +110,13 @@ namespace MSU.Config
         protected override void OnConfigured()
         {
             base.OnConfigured();
-            if (!(ModGUID.IsNullOrWhiteSpace() || ModName.IsNullOrWhiteSpace()))
+            if (!(modGUID.IsNullOrWhiteSpace() || modName.IsNullOrWhiteSpace()))
             {
-                bool separateEntry = ConfigSystem.ShouldCreateSeparateRiskOfOptionsEntry(ConfigFile);
-                string fileName = System.IO.Path.GetFileNameWithoutExtension(ConfigFile.ConfigFilePath);
-                var guid = separateEntry ? ModGUID + "." + fileName : ModGUID;
-                var name = separateEntry ? ModName + "." + fileName : ModName;
-                var option = InputFieldConfig == null ? new StringInputFieldOption(ConfigEntry) : new StringInputFieldOption(ConfigEntry, InputFieldConfig);
+                bool separateEntry = ConfigSystem.ShouldCreateSeparateRiskOfOptionsEntry(configFile);
+                string fileName = System.IO.Path.GetFileNameWithoutExtension(configFile.ConfigFilePath);
+                var guid = separateEntry ? modGUID + "." + fileName : modGUID;
+                var name = separateEntry ? modName + "." + fileName : modName;
+                var option = inputFieldConfig == null ? new StringInputFieldOption(configEntry) : new StringInputFieldOption(configEntry, inputFieldConfig);
                 ModSettingsManager.AddOption(option, guid, name);
             }
         }

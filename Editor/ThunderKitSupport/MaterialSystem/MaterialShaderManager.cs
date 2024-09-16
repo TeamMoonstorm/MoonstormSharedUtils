@@ -10,7 +10,7 @@ namespace MSU.Editor
         public static void Upgrade(Material material)
         {
             var currentShader = material.shader;
-            if (ShaderDictionary.HLSLToYAML.TryGetValue(currentShader, out Shader realShader))
+            if (ShaderDictionary.hlslToYaml.TryGetValue(currentShader, out Shader realShader))
             {
                 if (realShader)
                 {
@@ -23,7 +23,7 @@ namespace MSU.Editor
         public static void Downgrade(Material material)
         {
             var currentShader = material.shader;
-            if (ShaderDictionary.YAMLToHLSL.TryGetValue(currentShader, out Shader stubbedShader))
+            if (ShaderDictionary.yamlToHlsl.TryGetValue(currentShader, out Shader stubbedShader))
             {
                 if (stubbedShader)
                 {
@@ -33,7 +33,7 @@ namespace MSU.Editor
             }
         }
 
-        [MenuItem(MSUConstants.MSUMenuRoot + "Shaders/Upgrade All")]
+        [MenuItem(MSUConstants.MSU_MENU_ROOT + "Shaders/Upgrade All")]
         public static void UpgradeAllShaders()
         {
             foreach (Material material in GetAllMaterials())
@@ -43,7 +43,7 @@ namespace MSU.Editor
             AssetDatabase.SaveAssets();
         }
 
-        [MenuItem(MSUConstants.MSUMenuRoot + "Shaders/Downgrade All")]
+        [MenuItem(MSUConstants.MSU_MENU_ROOT + "Shaders/Downgrade All")]
         public static void DowngradeAllShaders()
         {
             foreach (Material material in GetAllMaterials())

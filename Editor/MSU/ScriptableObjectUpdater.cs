@@ -21,11 +21,11 @@ using MSU.Editor;
 
 public static class ScriptableObjectUpdater
 {
-    private static FieldInfo InteractableCardProvider_PairsField = typeof(InteractableCardProvider).GetField("_serializedCardPairs", BindingFlags.Instance | BindingFlags.NonPublic);
-    private static FieldInfo MonsterCardProvider_PairsField = typeof(MonsterCardProvider).GetField("_serializedCardPairs", BindingFlags.Instance | BindingFlags.NonPublic);
+    private static FieldInfo _interactableCardProvider_PairsField = typeof(InteractableCardProvider).GetField("_serializedCardPairs", BindingFlags.Instance | BindingFlags.NonPublic);
+    private static FieldInfo _monsterCardProvider_PairsField = typeof(MonsterCardProvider).GetField("_serializedCardPairs", BindingFlags.Instance | BindingFlags.NonPublic);
 
 
-    [MenuItem(MSUConstants.MSUMenuRoot + "Upgrade Scriptable Objects")]
+    [MenuItem(MSUConstants.MSU_MENU_ROOT + "Upgrade Scriptable Objects")]
     private static void UpdateMSUScriptableObjects()
     {
         if (!EditorUtility.DisplayDialog("Upgrade Scriptable Objects", "By accepting this menu, Unity will attempt to upgrade your Legacy MoonstormSharedUtils ScriptableObjects into their new, MSU.Runtime Scriptable Object version (An example is MSEliteDef -> ExtendedEliteDef). This utility does not upgrade Event related scriptable objects.\n\n" +
@@ -89,7 +89,7 @@ public static class ScriptableObjectUpdater
                         {
                             pairs.Add(new InteractableCardProvider.StageInteractableCardPair
                             {
-                                stageEnum = DirectorAPI.Stage.Custom,
+                                stage = DirectorAPI.Stage.Custom,
                                 customStageNames = new List<string>() { customStage },
                                 interactableCategory = msInteractableDirectorCard.interactableCategory,
                                 customCategoryName = isCustomCategory ? msInteractableDirectorCard.customCategory : string.Empty,
@@ -113,7 +113,7 @@ public static class ScriptableObjectUpdater
                     {
                         pairs.Add(new InteractableCardProvider.StageInteractableCardPair
                         {
-                            stageEnum = stageEnum,
+                            stage = stageEnum,
                             customCategoryName = isCustomCategory ? msInteractableDirectorCard.customCategory : string.Empty,
                             customCategoryWeight = isCustomCategory ? msInteractableDirectorCard.customCategoryWeight : 0,
                             customStageNames = new List<string>(),
@@ -132,7 +132,7 @@ public static class ScriptableObjectUpdater
                     }
                 }
 
-                InteractableCardProvider_PairsField.SetValue(provider, pairs.ToArray());
+                _interactableCardProvider_PairsField.SetValue(provider, pairs.ToArray());
 
                 UpgradeAsset(msInteractableDirectorCard, provider);
             }
@@ -170,7 +170,7 @@ public static class ScriptableObjectUpdater
                         {
                             pairs.Add(new MonsterCardProvider.StageMonsterCardPair
                             {
-                                stageEnum = DirectorAPI.Stage.Custom,
+                                stage = DirectorAPI.Stage.Custom,
                                 customStageNames = new List<string>() { customStage },
                                 monsterCategory = msMonsterDirectorCard.monsterCategory,
                                 customCategoryName = isCustomCategory ? msMonsterDirectorCard.customCategory : string.Empty,
@@ -194,7 +194,7 @@ public static class ScriptableObjectUpdater
                     {
                         pairs.Add(new MonsterCardProvider.StageMonsterCardPair
                         {
-                            stageEnum = stageEnum,
+                            stage = stageEnum,
                             customCategoryName = isCustomCategory ? msMonsterDirectorCard.customCategory : string.Empty,
                             customCategoryWeight = isCustomCategory ? msMonsterDirectorCard.customCategoryWeight : 0,
                             customStageNames = new List<string>(),
@@ -213,7 +213,7 @@ public static class ScriptableObjectUpdater
                     }
                 }
 
-                MonsterCardProvider_PairsField.SetValue(provider, pairs.ToArray());
+                _monsterCardProvider_PairsField.SetValue(provider, pairs.ToArray());
 
                 UpgradeAsset(msMonsterDirectorCard, provider);
             }
@@ -437,221 +437,11 @@ public static class ScriptableObjectUpdater
 
     private static void UpgradeVanillaSkinDefinition()
     {
-        var allVanillaSkinDefinitions = AssetDatabaseUtil.FindAssetsByType<Moonstorm.VanillaSkinDefinition>().ToArray();
-
-        if (allVanillaSkinDefinitions.Length == 0)
-            return;
-
-        for(int i = 0; i < allVanillaSkinDefinitions.Length; i++)
-        {
-            var old_skinDef = allVanillaSkinDefinitions[i];
-
-            try
-            {
-                var new_skinDef = ScriptableObject.CreateInstance<MSU.VanillaSkinDefinition>();
-
-                new_skinDef.bodyAddress = old_skinDef.bodyAddress;
-                new_skinDef.displayAddress = old_skinDef.displayAddress;
-                new_skinDef.icon = old_skinDef.icon;
-                new_skinDef.nameToken = old_skinDef.nameToken;
-                new_skinDef.unlockableDef = old_skinDef.unlockableDef;
-
-                List<AddressReferencedSkinDef> _baseSkinDefs = new List<AddressReferencedSkinDef>();
-                foreach(var baseSkinDef in old_skinDef._baseSkins)
-                {
-                    var asset = baseSkinDef.skin;
-                    if(asset)
-                    {
-                        _baseSkinDefs.Add(new AddressReferencedSkinDef { Asset = asset });
-                    }
-                    else
-                    {
-                        _baseSkinDefs.Add(new AddressReferencedSkinDef { Address = baseSkinDef.skinAddress });
-                    }
-                }
-                new_skinDef._baseSkins = _baseSkinDefs.ToArray();
-
-                var _gameObjectActivations = new List<MSU.VanillaSkinDefinition.CustomGameObjectActivation>();
-                foreach(var gameObjectActivation in old_skinDef._gameObjectActivations)
-                {
-                    _gameObjectActivations.Add(new MSU.VanillaSkinDefinition.CustomGameObjectActivation
-                    {
-                        isCustomActivation = gameObjectActivation.isCustomActivation,
-                        localAngles = Vector3.zero,
-                        shouldActivate = gameObjectActivation.shouldActivate,
-                        localScale = Vector3.one,
-                        childLocatorEntry = gameObjectActivation.childName,
-                        customObject = gameObjectActivation.gameObjectPrefab,
-                        localPos = Vector3.zero,
-                        renderer = gameObjectActivation.rendererIndex
-                    });
-                }
-                new_skinDef._gameObjectActivations = _gameObjectActivations.ToArray();
-
-                var _meshReplacements = new List<MSU.VanillaSkinDefinition.CustomMeshReplacement>();
-                foreach(var meshReplacement in old_skinDef._meshReplacements)
-                {
-                    _meshReplacements.Add(new MSU.VanillaSkinDefinition.CustomMeshReplacement
-                    {
-                        newMesh = meshReplacement.mesh,
-                        renderer = meshReplacement.rendererIndex
-                    });
-                }
-                new_skinDef._meshReplacements = _meshReplacements.ToArray();
-
-                var _minionSkinReplacements = new List<MSU.VanillaSkinDefinition.AddressedMinionSkinReplacement>();
-                foreach(var minionSkinReplacement in old_skinDef._minionSkinReplacements)
-                {
-                    _minionSkinReplacements.Add(new MSU.VanillaSkinDefinition.AddressedMinionSkinReplacement
-                    {
-                        minionPrefab = minionSkinReplacement.minionPrefabAddress,
-                        minionSkin = minionSkinReplacement.minionSkin,
-                    });
-                }
-                new_skinDef._minionSkinReplacements = _minionSkinReplacements.ToArray();
-
-                var _projectileGhostReplacements = new List<MSU.VanillaSkinDefinition.AddressedProjectileGhostReplacement>();
-                foreach(var projectileGhostReplacement in old_skinDef._projectileGhostReplacements)
-                {
-                    _projectileGhostReplacements.Add(new MSU.VanillaSkinDefinition.AddressedProjectileGhostReplacement
-                    {
-                        ghostReplacement = projectileGhostReplacement.projectileGhostReplacement,
-                        projectilePrefab = projectileGhostReplacement.projectilePrefabAddress
-                    });
-                }
-                new_skinDef._projectileGhostReplacements = _projectileGhostReplacements.ToArray();
-
-                var _rendererInfos = new List<MSU.VanillaSkinDefinition.RendererInfo>();
-                foreach(var rendererInfo in old_skinDef._rendererInfos)
-                {
-                    _rendererInfos.Add(new MSU.VanillaSkinDefinition.RendererInfo
-                    {
-                        defaultMaterial = rendererInfo.defaultMaterial,
-                        defaultShadowCastingMode = rendererInfo.defaultShadowCastingMode,
-                        hideOnDeath = rendererInfo.hideOnDeath,
-                        ignoreOverlays = rendererInfo.ignoreOverlays,
-                        renderer = rendererInfo.rendererIndex
-                    });
-                }
-                new_skinDef._rendererInfos = _rendererInfos.ToArray();
-
-                UpgradeAsset(old_skinDef, new_skinDef);
-            }
-            catch(Exception e)
-            {
-                MSULog.Error($"Could not upgrade {old_skinDef.name}. {e}");
-            }
-        }
     }
 
     private static void UpgradeVanillaSkinDefinitionToVanillaSkinDef()
     {
-        var allVanillaSkinDefinitions = AssetDatabaseUtil.FindAssetsByType<MSU.VanillaSkinDefinition>().ToArray();
 
-        if(allVanillaSkinDefinitions.Length == 0)
-        {
-            return;
-        }
-
-        for(int i = 0; i < allVanillaSkinDefinitions.Length; i++)
-        {
-            var old_vanillaSkinDefinition = allVanillaSkinDefinitions[i];
-
-            try
-            {
-                var new_skinDef = ScriptableObject.CreateInstance<MSU.VanillaSkinDef>();
-
-                new_skinDef._bodyAddress = old_vanillaSkinDefinition.bodyAddress;
-                new_skinDef._displayAddress = old_vanillaSkinDefinition.displayAddress;
-                new_skinDef.icon = old_vanillaSkinDefinition.icon;
-                new_skinDef.nameToken = old_vanillaSkinDefinition.nameToken;
-                new_skinDef.unlockableDef = old_vanillaSkinDefinition.unlockableDef;
-
-                List<VanillaSkinDef.MoonstormBaseSkin> _baseSkinDefs = new List<VanillaSkinDef.MoonstormBaseSkin>();
-                foreach (var baseSkinDef in old_vanillaSkinDefinition._baseSkins)
-                {
-                    if (baseSkinDef.AssetExists)
-                    {
-                        _baseSkinDefs.Add(new VanillaSkinDef.MoonstormBaseSkin { _skinDef = baseSkinDef.Asset });
-                    }
-                    else
-                    {
-                        _baseSkinDefs.Add(new VanillaSkinDef.MoonstormBaseSkin { _skinAddress = baseSkinDef.Address });
-                    }
-                }
-                new_skinDef._baseSkins = _baseSkinDefs.ToArray();
-
-                var _gameObjectActivations = new List<VanillaSkinDef.MoonstormGameObjectActivation>();
-                foreach (var gameObjectActivation in old_vanillaSkinDefinition._gameObjectActivations)
-                {
-                    _gameObjectActivations.Add(new VanillaSkinDef.MoonstormGameObjectActivation
-                    {
-                        isCustomActivation = gameObjectActivation.isCustomActivation,
-                        localAngles = Vector3.zero,
-                        shouldActivate = gameObjectActivation.shouldActivate,
-                        localScale = Vector3.one,
-                        childName = gameObjectActivation.childLocatorEntry,
-                        gameObjectPrefab = gameObjectActivation.customObject,
-                        localPos = Vector3.zero,
-                        rendererIndex = gameObjectActivation.renderer
-                    });
-                }
-                new_skinDef._gameObjectActivations = _gameObjectActivations.ToArray();
-
-                var _meshReplacements = new List<MSU.VanillaSkinDef.MoonstormMeshReplacement>();
-                foreach (var meshReplacement in old_vanillaSkinDefinition._meshReplacements)
-                {
-                    _meshReplacements.Add(new MSU.VanillaSkinDef.MoonstormMeshReplacement
-                    {
-                        mesh = meshReplacement.newMesh,
-                        rendererIndex = meshReplacement.renderer
-                    });
-                }
-                new_skinDef._meshReplacements = _meshReplacements.ToArray();
-
-                var _minionSkinReplacements = new List<MSU.VanillaSkinDef.MoonstormMinionSkinReplacement>();
-                foreach (var minionSkinReplacement in old_vanillaSkinDefinition._minionSkinReplacements)
-                {
-                    _minionSkinReplacements.Add(new MSU.VanillaSkinDef.MoonstormMinionSkinReplacement
-                    {
-                        _minionPrefabAddress = minionSkinReplacement.minionPrefab.Address,
-                        _minionSkin = minionSkinReplacement.minionSkin,
-                    });
-                }
-                new_skinDef._minionSkinReplacements = _minionSkinReplacements.ToArray();
-
-                var _projectileGhostReplacements = new List<MSU.VanillaSkinDef.MoonstormProjectileGhostReplacement>();
-                foreach (var projectileGhostReplacement in old_vanillaSkinDefinition._projectileGhostReplacements)
-                {
-                    _projectileGhostReplacements.Add(new MSU.VanillaSkinDef.MoonstormProjectileGhostReplacement
-                    {
-                        _projectileGhostReplacement = projectileGhostReplacement.ghostReplacement,
-                        _projectilePrefabAddress = projectileGhostReplacement.projectilePrefab.Address
-                    });
-                }
-                new_skinDef._projectileGhostReplacements = _projectileGhostReplacements.ToArray();
-
-                var _rendererInfos = new List<MSU.VanillaSkinDef.MoonstormRendererInfo>();
-                foreach (var rendererInfo in old_vanillaSkinDefinition._rendererInfos)
-                {
-                    _rendererInfos.Add(new MSU.VanillaSkinDef.MoonstormRendererInfo
-                    {
-                        defaultMaterial = rendererInfo.defaultMaterial,
-                        defaultShadowCastingMode = rendererInfo.defaultShadowCastingMode,
-                        hideOnDeath = rendererInfo.hideOnDeath,
-                        ignoreOverlays = rendererInfo.ignoreOverlays,
-                        rendererIndex = rendererInfo.renderer
-                    });
-                }
-                new_skinDef._rendererInfos = _rendererInfos.ToArray();
-
-                UpgradeAsset(old_vanillaSkinDefinition, new_skinDef);
-            }
-            catch (Exception e)
-            {
-                MSULog.Error($"Could not upgrade {old_vanillaSkinDefinition.name}. {e}");
-            }
-        }
     }
 
     private static void UpgradeAsset(UnityEngine.Object originalAsset, UnityEngine.Object newVersion)

@@ -42,7 +42,7 @@ namespace MSU
         /// Returns the PreRequisite Achievement required for this Achievement to be unlocked.
         /// <para>See <see cref="PreRequisiteAchievementIdentifier"/> for more info</para>
         /// </summary>
-        public string PreRequisiteAchievement
+        public string preRequisiteAchievement
         {
             get
             {
@@ -64,7 +64,7 @@ namespace MSU
         /// <summary>
         /// Returns the generated AchievementDef that's tied to this Unlockable
         /// </summary>
-        public AchievementDef TiedAchievementDef
+        public AchievementDef tiedAchievementDef
         {
             get
             {
@@ -75,7 +75,7 @@ namespace MSU
                     {
                         identifier = identifier,
                         unlockableRewardIdentifier = cachedName,
-                        prerequisiteAchievementIdentifier = PreRequisiteAchievement,
+                        prerequisiteAchievementIdentifier = preRequisiteAchievement,
                         nameToken = achievementNameToken,
                         descriptionToken = achievementDescriptionToken,
                         type = (Type)achievementCondition,
@@ -119,7 +119,7 @@ namespace MSU
                 if (def.index == UnlockableIndex.None)
                     continue;
 
-                var tiedAchievement = def.TiedAchievementDef;
+                var tiedAchievement = def.tiedAchievementDef;
                 if (!tiedAchievement.achievedIcon)
                 {
 #if DEBUG

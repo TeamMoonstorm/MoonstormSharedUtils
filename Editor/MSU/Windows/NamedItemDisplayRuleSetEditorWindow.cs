@@ -255,7 +255,7 @@ namespace MSU.Editor.EditorWindows
             _ruleEditor.SetEnabled(obj);
         }
 
-        [MenuItem(MSUConstants.MSUMenuRoot + "Windows/Named Item Display Rule Set Editor Window")]
+        [MenuItem(MSUConstants.MSU_MENU_ROOT + "Windows/Named Item Display Rule Set Editor Window")]
         private static void Open()
         {
             var selection = Selection.activeObject;

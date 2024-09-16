@@ -19,6 +19,6 @@ namespace MSU
         /// <summary>
         /// The Character's Master Prefab, this is added to your ContentPack's CharacterMasters array. Can be null.
         /// </summary>
-        NullableRef<GameObject> MasterPrefab { get; }
+        NullableRef<GameObject> masterPrefab { get; }
     }
 }

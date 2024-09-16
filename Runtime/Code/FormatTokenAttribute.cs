@@ -20,24 +20,24 @@ namespace MSU
         /// <summary>
         /// The language token to be formatted
         /// </summary>
-        public string LanguageToken { get; private set; }
+        public string languageToken { get; private set; }
         
         /// <summary>
         /// A type of operation to apply to the value stored in the field/property this attribute is attached to.
         /// </summary>
-        public OperationTypeEnum? OperationType { get; private set; }
+        public OperationTypeEnum? operationType { get; private set; }
 
         /// <summary>
-        /// A number to use to modify the value stored in the field/property this attribute is attached to. Only relevant if there's a value in <see cref="OperationType"/>
+        /// A number to use to modify the value stored in the field/property this attribute is attached to. Only relevant if there's a value in <see cref="operationType"/>
         /// <para>
         /// </summary>
-        public float? OperationData { get; private set; }
+        public float? operationData { get; private set; }
 
         /// <summary>
         /// The index used during the formatting process
         /// </summary>ob
         /// 
-        public int FormattingIndex { get; private set; }
+        public int formattingIndex { get; private set; }
 
         private object _cachedFormattingValue;
 
@@ -61,7 +61,7 @@ namespace MSU
 
             if(valueType.IsSubclassOf(typeof(ConfiguredVariable)))
             {
-                PropertyInfo configEntryBase = valueType.GetProperty(nameof(ConfiguredVariable.ConfigEntryBase), BindingFlags.Public | BindingFlags.Instance);
+                PropertyInfo configEntryBase = valueType.GetProperty(nameof(ConfiguredVariable.configEntryBase), BindingFlags.Public | BindingFlags.Instance);
                 var cfg = (ConfigEntryBase)configEntryBase.GetMethod?.Invoke(value, null);
                 value = cfg.BoxedValue;
             }
@@ -71,9 +71,9 @@ namespace MSU
 
             if(IsNumber(value))
             {
-                if(OperationType.HasValue && OperationData.HasValue)
+                if(operationType.HasValue && operationData.HasValue)
                 {
-                    switch(OperationType.Value)
+                    switch(operationType.Value)
                     {
                         case OperationTypeEnum.MultiplyByN:
                             _cachedFormattingValue = MultiplyByN(CastToFloat(value));
@@ -108,31 +108,31 @@ namespace MSU
 
         private object MultiplyByN(float number)
         {
-            var coef = OperationData.Value;
+            var coef = operationData.Value;
             return number * coef;
         }
 
         private object DivideByN(float number)
         {
-            var dividend = OperationData.Value;
+            var dividend = operationData.Value;
             return number / dividend;
         }
 
         private object AddN(float number)
         {
-            var addend = OperationData.Value;
+            var addend = operationData.Value;
             return number + addend;
         }
 
         private object SubtractN(float number)
         {
-            var subtrahend = OperationData;
+            var subtrahend = operationData;
             return number - subtrahend;
         }
 
         private object ModuloN(float number)
         {
-            var modulo = OperationData.Value;
+            var modulo = operationData.Value;
             return number % modulo;
         }
 
@@ -158,8 +158,8 @@ namespace MSU
         /// <param name="formattingIndex">The index to format</param>
         public FormatTokenAttribute(string token, int formattingIndex = 0)
         {
-            LanguageToken = token;
-            FormattingIndex = formattingIndex;
+            languageToken = token;
+            this.formattingIndex = formattingIndex;
         }
 
         /// <summary>
@@ -171,10 +171,10 @@ namespace MSU
         /// <param name="formattingIndex">The index to format</param>
         public FormatTokenAttribute(string token, OperationTypeEnum opType, float opData, int formattingIndex = 0)
         {
-            LanguageToken = token;
-            OperationType = opType;
-            OperationData = opData;
-            FormattingIndex = formattingIndex;
+            languageToken = token;
+            operationType = opType;
+            operationData = opData;
+            this.formattingIndex = formattingIndex;
         }
 
         /// <summary>

@@ -23,27 +23,27 @@ namespace MSU
         /// <br>This Dictionary contains both Elite and NonElite Equipments.</br>
         /// <para>Subscribe to <see cref="moduleAvailability"/> to ensure the dictionary is not empty.</para>
         /// </summary>
-        public static ReadOnlyDictionary<EquipmentDef, IEquipmentContentPiece> AllMoonstormEquipments { get; private set; }
+        public static ReadOnlyDictionary<EquipmentDef, IEquipmentContentPiece> allMoonstormEquipments { get; private set; }
 
         /// <summary>
         /// A ReadOnlyDictionary that can be used for finding an Elite's IEliteContentPiece by using the Elite's EquipmentDef.
         /// <br>This Dictionary contains only Elite Equipments</br>
         /// <para>Subscribe to <see cref="moduleAvailability"/> to ensure the dictionary is not empty.</para>
         /// </summary>
-        public static ReadOnlyDictionary<EquipmentDef, IEliteContentPiece> MoonstormEliteEquipments { get; private set; }
+        public static ReadOnlyDictionary<EquipmentDef, IEliteContentPiece> moonstormEliteEquipments { get; private set; }
 
         /// <summary>
         /// A ReadOnlyDictionary that can be used for finding a NonElite Equipment's IEquipmentContentPiece.
         /// <br>This Dictionary contains only Non Elite Equipments.</br>
         /// <para>Subscribe to <see cref="moduleAvailability"/> to ensure the dictionary is not empty.</para>
         /// </summary>
-        public static ReadOnlyDictionary<EquipmentDef, IEquipmentContentPiece> NonEliteMoonstormEquipments { get; private set; }
+        public static ReadOnlyDictionary<EquipmentDef, IEquipmentContentPiece> nonEliteMoonstormEquipments { get; private set; }
 
         /// <summary>
         /// A ReadOnlyCollection of all the EliteDefs added by MSU.
         /// <para>Subscribe to <see cref="moduleAvailability"/> to ensure the dictionary is not empty.</para>
         /// </summary>
-        public static ReadOnlyCollection<EliteDef> MoonstormEliteDefs { get; private set; }
+        public static ReadOnlyCollection<EliteDef> moonstormEliteDefs { get; private set; }
 
         private static Dictionary<EquipmentDef, IEquipmentContentPiece> _moonstormEquipments = new Dictionary<EquipmentDef, IEquipmentContentPiece>();
 
@@ -126,7 +126,7 @@ namespace MSU
                 if(eqp is IEliteContentPiece eliteContent)
                 {
                     eliteEquips.Add(eqpDef, eliteContent);
-                    eliteDefs.AddRange(eliteContent.EliteDefs);
+                    eliteDefs.AddRange(eliteContent.eliteDefs);
                 }
                 else
                 {
@@ -134,15 +134,15 @@ namespace MSU
                 }
             }
 
-            AllMoonstormEquipments = new ReadOnlyDictionary<EquipmentDef, IEquipmentContentPiece>(allEquips);
-            MoonstormEliteEquipments = new ReadOnlyDictionary<EquipmentDef, IEliteContentPiece>(eliteEquips);
-            NonEliteMoonstormEquipments = new ReadOnlyDictionary<EquipmentDef, IEquipmentContentPiece>(nonEliteEquips);
-            MoonstormEliteDefs = new ReadOnlyCollection<EliteDef>(eliteDefs);
+            allMoonstormEquipments = new ReadOnlyDictionary<EquipmentDef, IEquipmentContentPiece>(allEquips);
+            moonstormEliteEquipments = new ReadOnlyDictionary<EquipmentDef, IEliteContentPiece>(eliteEquips);
+            nonEliteMoonstormEquipments = new ReadOnlyDictionary<EquipmentDef, IEquipmentContentPiece>(nonEliteEquips);
+            moonstormEliteDefs = new ReadOnlyCollection<EliteDef>(eliteDefs);
 
             CombatDirector.EliteTierDef[] vanillaTiers = R2API.EliteAPI.VanillaEliteTiers;
-            foreach(EliteDef eliteDef in MoonstormEliteDefs)
+            foreach(EliteDef eliteDef in moonstormEliteDefs)
             {
-                if (!(eliteDef is ExtendedEliteDef eed))
+                if (eliteDef is not ExtendedEliteDef eed)
                     continue;
 
                 switch(eed.eliteTier)
@@ -169,7 +169,7 @@ namespace MSU
         private static void CallOnEquipmentGained(On.RoR2.CharacterBody.orig_OnEquipmentGained orig, CharacterBody self, EquipmentDef equipmentDef)
         {
             orig(self, equipmentDef);
-            if(AllMoonstormEquipments.TryGetValue(equipmentDef, out var contentPiece))
+            if(allMoonstormEquipments.TryGetValue(equipmentDef, out var contentPiece))
             {
                 contentPiece.OnEquipmentObtained(self);
             }
@@ -178,7 +178,7 @@ namespace MSU
         private static void CallOnEquipmentLost(On.RoR2.CharacterBody.orig_OnEquipmentLost orig, CharacterBody self, EquipmentDef equipmentDef)
         {
             orig(self, equipmentDef);
-            if (AllMoonstormEquipments.TryGetValue(equipmentDef, out var contentPiece))
+            if (allMoonstormEquipments.TryGetValue(equipmentDef, out var contentPiece))
             {
                 contentPiece.OnEquipmentLost(self);
             }
@@ -186,7 +186,7 @@ namespace MSU
 
         private static bool PerformAction(On.RoR2.EquipmentSlot.orig_PerformEquipmentAction orig, EquipmentSlot self, EquipmentDef equipmentDef)
         {
-            if(AllMoonstormEquipments.TryGetValue(equipmentDef, out var equipment))
+            if(allMoonstormEquipments.TryGetValue(equipmentDef, out var equipment))
             {
                 return equipment.Execute(self);
             }
@@ -202,7 +202,7 @@ namespace MSU
 
             foreach(var equipment in content)
             {
-                if (!equipment.IsAvailable(provider.ContentPack))
+                if (!equipment.IsAvailable(provider.contentPack))
                     continue;
 
                 equipments.Add(equipment);
@@ -226,12 +226,12 @@ namespace MSU
 #endif
                     equipment.Initialize();
 
-                    var asset = equipment.Asset;
-                    provider.ContentPack.equipmentDefs.AddSingle(asset);
+                    var asset = equipment.asset;
+                    provider.contentPack.equipmentDefs.AddSingle(asset);
 
                     if (equipment is IContentPackModifier packModifier)
                     {
-                        packModifier.ModifyContentPack(provider.ContentPack);
+                        packModifier.ModifyContentPack(provider.contentPack);
                     }
 
                     if (equipment is IEquipmentContentPiece equipmentContentPiece)
@@ -247,13 +247,13 @@ namespace MSU
 
                     if (equipment is IEliteContentPiece eliteContentPiece)
                     {
-                        foreach (var eliteDef in eliteContentPiece.EliteDefs)
+                        foreach (var eliteDef in eliteContentPiece.eliteDefs)
                         {
-                            provider.ContentPack.eliteDefs.AddSingle(eliteDef);
+                            provider.contentPack.eliteDefs.AddSingle(eliteDef);
                         }
-                        provider.ContentPack.buffDefs.AddSingle(asset.passiveBuffDef);
+                        provider.contentPack.buffDefs.AddSingle(asset.passiveBuffDef);
 
-                        var eliteDefWithOverlayMaterial = eliteContentPiece.EliteDefs.OfType<ExtendedEliteDef>().FirstOrDefault(eed => eed.overlayMaterial);
+                        var eliteDefWithOverlayMaterial = eliteContentPiece.eliteDefs.OfType<ExtendedEliteDef>().FirstOrDefault(eed => eed.overlayMaterial);
 
                         if(eliteDefWithOverlayMaterial)
                             BuffOverlays.AddBuffOverlay(asset.passiveBuffDef, eliteDefWithOverlayMaterial.overlayMaterial);

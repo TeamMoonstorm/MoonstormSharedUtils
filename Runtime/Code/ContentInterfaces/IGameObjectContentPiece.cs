@@ -19,6 +19,6 @@ namespace MSU
         /// <summary>
         /// The key component to this GameObject.
         /// </summary>
-        T Component { get; }
+        T component { get; }
     }
 }

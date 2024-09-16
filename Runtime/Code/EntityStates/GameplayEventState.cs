@@ -15,11 +15,11 @@ namespace EntityStates.GameplayEvents
         /// <summary>
         /// The GameplayEvent that instantiated this state.
         /// </summary>
-        public GameplayEvent GameplayEvent { get; private set; }
+        public GameplayEvent gameplayEvent { get; private set; }
         public override void OnEnter()
         {
             base.OnEnter();
-            GameplayEvent = GetComponent<GameplayEvent>();
+            gameplayEvent = GetComponent<GameplayEvent>();
         }
     }
 }

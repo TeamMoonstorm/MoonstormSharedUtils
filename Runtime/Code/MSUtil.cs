@@ -22,13 +22,13 @@ namespace MSU
         /// <summary>
         /// Wether or not DebugToolKit by iHarbHD is installed
         /// </summary>
-        public static bool DebugToolkitInstalled => IsModInstalled("iHarbHD.DebugToolkit");
+        public static bool debugToolkitInstalled => IsModInstalled("iHarbHD.DebugToolkit");
         /// <summary>
         /// Wether or not HolyDLL by RandomlyAwesome is installed
         /// </summary>
-        public static bool HolyDLLInstalled => IsModInstalled("xyz.yekoc.Holy");
-        private static Run currentRun;
-        private static ExpansionDef[] currentRunExpansionDefs = Array.Empty<ExpansionDef>();
+        public static bool holyDLLInstalled => IsModInstalled("xyz.yekoc.Holy");
+        private static Run _currentRun;
+        private static ExpansionDef[] _currentRunExpansionDefs = Array.Empty<ExpansionDef>();
         private static FieldInfo _configEntryTypedValueField;
 
         /// <summary>
@@ -96,14 +96,14 @@ namespace MSU
             {
                 return Array.Empty<ExpansionDef>();
             }
-            if (currentRun == run)
+            if (_currentRun == run)
             {
-                return currentRunExpansionDefs;
+                return _currentRunExpansionDefs;
             }
 
-            currentRun = run;
-            currentRunExpansionDefs = ExpansionCatalog.expansionDefs.Where(x => run.IsExpansionEnabled(x)).ToArray();
-            return currentRunExpansionDefs;
+            _currentRun = run;
+            _currentRunExpansionDefs = ExpansionCatalog.expansionDefs.Where(x => run.IsExpansionEnabled(x)).ToArray();
+            return _currentRunExpansionDefs;
         }
 
         /// <summary>

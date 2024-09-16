@@ -62,7 +62,7 @@ namespace MSU
             var keyAssetList = new List<ItemDisplayRuleSet.KeyAssetRuleGroup>();
             foreach(var ruleGroup in rules)
             {
-                if (ruleGroup.IsEmpty)
+                if (ruleGroup.isEmpty)
                     continue;
 
                 var keyAssetName = ruleGroup.keyAssetName;
@@ -92,7 +92,7 @@ namespace MSU
                 for(int i = 0; i < ruleGroup.rules.Count; i++)
                 {
                     DisplayRule rule = ruleGroup.rules[i];
-                    keyAssetGroup.displayRuleGroup.AddDisplayRule(rule.FinishedRule);
+                    keyAssetGroup.displayRuleGroup.AddDisplayRule(rule.finishedRule);
                 }
                 keyAssetList.Add(keyAssetGroup);
             }
@@ -114,7 +114,7 @@ namespace MSU
             /// <summary>
             /// Checks if this rule group is empty or not
             /// </summary>
-            public bool IsEmpty => rules != null ? rules.Count == 0 : true;
+            public bool isEmpty => rules != null ? rules.Count == 0 : true;
 
             /// <summary>
             /// Adds a new DisplayRule to this RuleGroup
@@ -159,7 +159,7 @@ namespace MSU
             /// <summary>
             /// Contains the finished rule from this DisplayRule
             /// </summary>
-            public ItemDisplayRule FinishedRule
+            public ItemDisplayRule finishedRule
             {
                 get
                 {

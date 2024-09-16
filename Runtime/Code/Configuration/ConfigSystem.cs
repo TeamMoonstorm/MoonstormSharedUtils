@@ -118,14 +118,14 @@ namespace MSU.Config
                 }
                 catch(Exception e)
                 {
-                    MSULog.Error($"Error while configuring {attribute.AttachedMemberInfo.Name}. {e}");
+                    MSULog.Error($"Error while configuring {attribute.attachedMemberInfo.Name}. {e}");
                 }
             }
         }
 
         private static void ConfigureConfigureField(ConfigureFieldAttribute attribute)
         {
-            MemberInfo memberInfo = attribute.AttachedMemberInfo;
+            MemberInfo memberInfo = attribute.attachedMemberInfo;
             Type declaringType = memberInfo.DeclaringType;
             Func<object> getAction = null;
             switch(memberInfo)
@@ -152,14 +152,14 @@ namespace MSU.Config
                 throw new InvalidOperationException($"ConfigureField attribute for {declaringType.FullName}.{memberInfo.Name} cannot be configured as the Field's Type ({valueType.FullName}) is not supported by BepInEx's TomlTypeConverter");
             }
 
-            string identifier = attribute.ConfigFileIdentifier;
+            string identifier = attribute.configFileIdentifier;
             PluginInfo pluginInfo = FindPluginInfo(declaringType.Assembly);
             ConfigFile file = identifier.IsNullOrWhiteSpace() ? pluginInfo.Instance.Config : GetConfigFile(identifier);
 
             if(attribute is RiskOfOptionsConfigureFieldAttribute rooAttribute)
             {
-                rooAttribute.ModGUID = pluginInfo.Metadata.GUID;
-                rooAttribute.ModName = pluginInfo.Metadata.Name;
+                rooAttribute.modGUID = pluginInfo.Metadata.GUID;
+                rooAttribute.modName = pluginInfo.Metadata.Name;
             }
 
             ConfigureInternal(attribute, file, val);
@@ -235,37 +235,37 @@ namespace MSU.Config
             if (configuredVariable == null)
                 return;
 
-            if (configuredVariable.IsConfigured)
+            if (configuredVariable.isConfigured)
                 return;
 
-            if (!configuredVariable.CanBeConfigured)
+            if (!configuredVariable.canBeConfigured)
                 return;
 
-            if(configuredVariable.ConfigFile == null)
+            if(configuredVariable.configFile == null)
             {
-                ConfigFile file = configuredVariable.ConfigFileIdentifier.IsNullOrWhiteSpace() ? FindPluginInfo(memberInfo.DeclaringType.Assembly).Instance.Config : GetConfigFile(configuredVariable.ConfigFileIdentifier);
+                ConfigFile file = configuredVariable.configFileIdentifier.IsNullOrWhiteSpace() ? FindPluginInfo(memberInfo.DeclaringType.Assembly).Instance.Config : GetConfigFile(configuredVariable.configFileIdentifier);
 
                 if (file == null)
                     throw new NullReferenceException("Configfile is null");
 
-                configuredVariable.ConfigFile = file;
+                configuredVariable.configFile = file;
             }
 
-            configuredVariable.Section = configuredVariable.Section.IsNullOrWhiteSpace() ? MSUtil.NicifyString(memberInfo.DeclaringType.Name) : configuredVariable.Section;
-            configuredVariable.Key = configuredVariable.Key.IsNullOrWhiteSpace() ? MSUtil.NicifyString(memberInfo.Name) : configuredVariable.Key;
-            if (configuredVariable.Description.IsNullOrWhiteSpace() || !instance.DescriptionOverride.IsNullOrWhiteSpace())
+            configuredVariable.section = configuredVariable.section.IsNullOrWhiteSpace() ? MSUtil.NicifyString(memberInfo.DeclaringType.Name) : configuredVariable.section;
+            configuredVariable.key = configuredVariable.key.IsNullOrWhiteSpace() ? MSUtil.NicifyString(memberInfo.Name) : configuredVariable.key;
+            if (configuredVariable.description.IsNullOrWhiteSpace() || !instance.descriptionOverride.IsNullOrWhiteSpace())
             {
-                configuredVariable.Description = instance.DescriptionOverride;
+                configuredVariable.description = instance.descriptionOverride;
             }
 
-            if(configuredVariable.ModGUID.IsNullOrWhiteSpace())
+            if(configuredVariable.modGUID.IsNullOrWhiteSpace())
             {
-                configuredVariable.ModGUID = _configToPluginOwner[configuredVariable.ConfigFile].Info.Metadata.GUID;
+                configuredVariable.modGUID = _configToPluginOwner[configuredVariable.configFile].Info.Metadata.GUID;
             }
             
-            if(configuredVariable.ModName.IsNullOrWhiteSpace())
+            if(configuredVariable.modName.IsNullOrWhiteSpace())
             {
-                configuredVariable.ModName = _configToPluginOwner[configuredVariable.ConfigFile].Info.Metadata.Name;
+                configuredVariable.modName = _configToPluginOwner[configuredVariable.configFile].Info.Metadata.Name;
             }
             configuredVariable.Configure();
         }

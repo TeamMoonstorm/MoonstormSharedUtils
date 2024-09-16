@@ -22,12 +22,12 @@ namespace MSU
         /// <summary>
         /// The CharacterMaster that's tied to this BaseItemMasterBehaviour
         /// </summary>
-        public CharacterMaster Master { get; private set; }
+        public CharacterMaster master { get; private set; }
 
         protected virtual void Awake()
         {
-            this.Master = BaseItemMasterBehaviour.earlyAssignmentMaster;
-            BaseItemMasterBehaviour.earlyAssignmentMaster = null;
+            this.master = BaseItemMasterBehaviour._earlyAssignmentMaster;
+            BaseItemMasterBehaviour._earlyAssignmentMaster = null;
         }
 
         [SystemInitializer(new Type[]
@@ -160,9 +160,9 @@ namespace MSU
                     }
                 }
             }
-            BaseItemMasterBehaviour.server.SetItemTypePairs(server);
-            BaseItemMasterBehaviour.client.SetItemTypePairs(client);
-            BaseItemMasterBehaviour.shared.SetItemTypePairs(shared);
+            BaseItemMasterBehaviour._server.SetItemTypePairs(server);
+            BaseItemMasterBehaviour._client.SetItemTypePairs(client);
+            BaseItemMasterBehaviour._shared.SetItemTypePairs(shared);
             On.RoR2.CharacterMaster.Awake += CharacterMaster_Awake;
             On.RoR2.CharacterMaster.OnDestroy += CharacterMaster_OnDestroy;
             On.RoR2.CharacterMaster.OnInventoryChanged += CharacterMaster_OnInventoryChanged;
@@ -172,19 +172,19 @@ namespace MSU
         {
             BaseItemMasterBehaviour[] value = BaseItemMasterBehaviour.GetNetworkContext().behaviorArraysPool.Request();
             //SS2Log.Info("adding " + self + " of value " + value + " in charmast awake");
-            BaseItemMasterBehaviour.masterToItemBehaviors.Add(self, value);
+            BaseItemMasterBehaviour._masterToItemBehaviors.Add(self, value);
             orig(self);
         }
 
         private static void CharacterMaster_OnDestroy(On.RoR2.CharacterMaster.orig_OnDestroy orig, CharacterMaster self)
         {
             orig(self);
-            BaseItemMasterBehaviour[] array = BaseItemMasterBehaviour.masterToItemBehaviors[self];
+            BaseItemMasterBehaviour[] array = BaseItemMasterBehaviour._masterToItemBehaviors[self];
             for (int i = 0; i < array.Length; i++)
             {
                 Destroy(array[i]);
             }
-            BaseItemMasterBehaviour.masterToItemBehaviors.Remove(self);
+            BaseItemMasterBehaviour._masterToItemBehaviors.Remove(self);
             if (NetworkServer.active || NetworkClient.active)
             {
                 BaseItemMasterBehaviour.GetNetworkContext().behaviorArraysPool.Return(array);
@@ -206,15 +206,15 @@ namespace MSU
             {
                 if (clientActive)
                 {
-                    return ref BaseItemMasterBehaviour.shared;
+                    return ref BaseItemMasterBehaviour._shared;
                 }
-                return ref BaseItemMasterBehaviour.server;
+                return ref BaseItemMasterBehaviour._server;
             }
             else
             {
                 if (clientActive)
                 {
-                    return ref BaseItemMasterBehaviour.client;
+                    return ref BaseItemMasterBehaviour._client;
                 }
                 throw new InvalidOperationException("Neither server nor client is running.");
             }
@@ -225,7 +225,7 @@ namespace MSU
             ref BaseItemMasterBehaviour.NetworkContextSet networkContext = ref BaseItemMasterBehaviour.GetNetworkContext();
             //SS2Log.Info("Calling problem line");
             BaseItemMasterBehaviour[] arr;
-            bool success = BaseItemMasterBehaviour.masterToItemBehaviors.TryGetValue(master, out arr);
+            bool success = BaseItemMasterBehaviour._masterToItemBehaviors.TryGetValue(master, out arr);
             if (!success)
             {
                 //SS2Log.Info("Failed to Find"); //My understanding is this gets called post-master being destroyed therefore the master it's looking for is null -> original function throws an error?
@@ -268,9 +268,9 @@ namespace MSU
                 }
                 else
                 {
-                    BaseItemMasterBehaviour.earlyAssignmentMaster = master;
+                    BaseItemMasterBehaviour._earlyAssignmentMaster = master;
                     behavior = (BaseItemMasterBehaviour)master.gameObject.AddComponent(behaviorType);
-                    BaseItemMasterBehaviour.earlyAssignmentMaster = null;
+                    BaseItemMasterBehaviour._earlyAssignmentMaster = null;
                 }
             }
             if (behavior != null)
@@ -284,15 +284,15 @@ namespace MSU
         /// </summary>
         public int stack;
 
-        private static BaseItemMasterBehaviour.NetworkContextSet server;
+        private static BaseItemMasterBehaviour.NetworkContextSet _server;
 
-        private static BaseItemMasterBehaviour.NetworkContextSet client;
+        private static BaseItemMasterBehaviour.NetworkContextSet _client;
 
-        private static BaseItemMasterBehaviour.NetworkContextSet shared;
+        private static BaseItemMasterBehaviour.NetworkContextSet _shared;
 
-        private static CharacterMaster earlyAssignmentMaster = null;
+        private static CharacterMaster _earlyAssignmentMaster = null;
 
-        private static Dictionary<UnityObjectWrapperKey<CharacterMaster>, BaseItemMasterBehaviour[]> masterToItemBehaviors = new Dictionary<UnityObjectWrapperKey<CharacterMaster>, BaseItemMasterBehaviour[]>();
+        private static Dictionary<UnityObjectWrapperKey<CharacterMaster>, BaseItemMasterBehaviour[]> _masterToItemBehaviors = new Dictionary<UnityObjectWrapperKey<CharacterMaster>, BaseItemMasterBehaviour[]>();
 
         private struct NetworkContextSet
         {

@@ -19,6 +19,6 @@ namespace MSU
         /// <summary>
         /// The Elites that represent this Elite Content Piece, this is a list to allow Tier1 elites, which have both a normal and honor def.
         /// </summary>
-        List<EliteDef> EliteDefs { get; }
+        List<EliteDef> eliteDefs { get; }
     }
 }

@@ -178,12 +178,16 @@ namespace MSU
         /// <param name="assets">The AssetCollection to use for population.</param>
         public static void PopulateTypeFields<TAsset>(Type typeToPopulate, NamedAssetCollection<TAsset> assets) where TAsset : UnityEngine.Object
         {
+#if DEBUG
             MSULog.Info($"Attempting to populate {typeToPopulate.FullName} with {assets.Count} assets");
+#endif
 
-            List<TAsset> notAssignedAssets = assets.assetInfos.Select(item => item.asset).ToList();
             string[] array = new string[assets.Length];
 
+#if DEBUG
+            List<TAsset> notAssignedAssets = assets.assetInfos.Select(item => item.asset).ToList();
             StringBuilder failureLog = new StringBuilder();
+#endif
 
             for (int i = 0; i < assets.Length; i++)
             {
@@ -200,16 +204,21 @@ namespace MSU
                     TAsset val = assets.Find(name);
                     if(val != null)
                     {
+#if DEBUG
                         notAssignedAssets.Remove(val);
                         fieldInfo.SetValue(null, val);
+#endif
                         continue;
                     }
 
                     missingAssets++;
+#if DEBUG
                     failureLog.AppendLine($"Failed to assign {fieldInfo.DeclaringType.FullName}.{fieldInfo.Name}: Asset Not Found.");
+#endif
                 }
             }
 
+#if DEBUG
             if(failureLog.Length > 1)
             {
                 failureLog.Insert(0, $"Failed to assign {missingAssets} field(s), logging which ones have failed.");
@@ -226,6 +235,7 @@ namespace MSU
                 }
                 MSULog.Warning(failureLog);
             }
+#endif
         }
 
         /// <summary>
@@ -374,11 +384,12 @@ namespace MSU
 
         private class GenericContentPieceProvider<T> : IContentPieceProvider<T> where T : UnityEngine.Object
         {
-            public ContentPack ContentPack => _contentPack;
+            public ContentPack contentPack => _contentPack;
 
 
             private ContentPack _contentPack;
             private IContentPiece<T>[] _contentPieces;
+
             public IContentPiece<T>[] GetContents()
             {
                 return _contentPieces;

@@ -19,7 +19,7 @@ namespace MSU
         /// <summary>
         /// The ContentPack to be populated with the Contents in <see cref="GetContents"/>
         /// </summary>
-        ContentPack ContentPack { get; }
+        ContentPack contentPack { get; }
         /// <summary>
         /// All the ContentPieces stored by this provider.
         /// </summary>

@@ -20,14 +20,14 @@ namespace MSU.Config
     {
         /// <summary>
         /// An optional IntSliderConfig for this ConfiguredInt's <see cref="RiskOfOptions.Options.IntSliderOption"/>
-        /// <para>Becomes ReadOnly if <see cref="ConfiguredVariable.IsConfigured"/> is true</para>
+        /// <para>Becomes ReadOnly if <see cref="ConfiguredVariable.isConfigured"/> is true</para>
         /// </summary>
-        public IntSliderConfig SliderConfig
+        public IntSliderConfig sliderConfig
         {
             get => _sliderConfig;
             set
             {
-                if (IsConfigured)
+                if (isConfigured)
                     return;
                 _sliderConfig = value;
             }
@@ -98,24 +98,24 @@ namespace MSU.Config
         }
 
         /// <summary>
-        /// Chainable method for setting <see cref="SliderConfig"/>
+        /// Chainable method for setting <see cref="sliderConfig"/>
         /// </summary>
         public ConfiguredInt WithIntSliderConfig(IntSliderConfig config)
         {
-            SliderConfig = config;
+            sliderConfig = config;
             return this;
         }
 
         protected override void OnConfigured()
         {
             base.OnConfigured();
-            if (!(ModGUID.IsNullOrWhiteSpace() || ModName.IsNullOrWhiteSpace()))
+            if (!(modGUID.IsNullOrWhiteSpace() || modName.IsNullOrWhiteSpace()))
             {
-                bool separateEntry = ConfigSystem.ShouldCreateSeparateRiskOfOptionsEntry(ConfigFile);
-                string fileName = System.IO.Path.GetFileNameWithoutExtension(ConfigFile.ConfigFilePath);
-                var guid = separateEntry ? ModGUID + "." + fileName : ModGUID;
-                var name = separateEntry ? ModName + "." + fileName : ModName;
-                var option = SliderConfig == null ? new IntSliderOption(ConfigEntry) : new IntSliderOption(ConfigEntry, SliderConfig);
+                bool separateEntry = ConfigSystem.ShouldCreateSeparateRiskOfOptionsEntry(configFile);
+                string fileName = System.IO.Path.GetFileNameWithoutExtension(configFile.ConfigFilePath);
+                var guid = separateEntry ? modGUID + "." + fileName : modGUID;
+                var name = separateEntry ? modName + "." + fileName : modName;
+                var option = sliderConfig == null ? new IntSliderOption(configEntry) : new IntSliderOption(configEntry, sliderConfig);
                 ModSettingsManager.AddOption(option, guid, name);
             }
         }

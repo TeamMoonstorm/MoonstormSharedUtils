@@ -23,22 +23,22 @@ namespace MSU
         /// </summary>
         public CharacterModel characterModel;
 
-        private GameObject effectInstance;
+        private GameObject _effectInstance;
 
         internal void AssignNewElite(EliteIndex eliteIndex)
         {
             //Incoming index is none, or the incoming index is not an ExtendedEliteDef, destroy effect instance if needed.
             if (eliteIndex == EliteIndex.None || !(EliteCatalog.GetEliteDef(eliteIndex) is ExtendedEliteDef eed))
             {
-                if (effectInstance)
-                    Destroy(effectInstance);
+                if (_effectInstance)
+                    Destroy(_effectInstance);
                 return;
             }
 
             if (!eed || !eed.effect)
                 return;
 
-            effectInstance = Instantiate(eed.effect, body.aimOriginTransform, false);
+            _effectInstance = Instantiate(eed.effect, body.aimOriginTransform, false);
 
         }
     }

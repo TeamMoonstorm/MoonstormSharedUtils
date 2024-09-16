@@ -89,6 +89,6 @@ namespace MSU
         /// <summary>
         /// The asset that's implemented by this ContentPiece
         /// </summary>
-        T Asset { get; }
+        T asset { get; }
     }
 }

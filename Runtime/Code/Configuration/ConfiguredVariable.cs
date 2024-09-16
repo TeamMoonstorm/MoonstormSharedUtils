@@ -13,16 +13,16 @@ namespace MSU.Config
     public abstract class ConfiguredVariable
     {
         /// <summary>
-        /// The <see cref="ConfigFile"/> that this ConfiguredVariable is bound to.
-        /// <para>If left null before the Configuration process, a CopnfigFile is attempted to be obtained using <see cref="ConfigSystem.GetConfigFile(string)"/> and the value stored in <see cref="ConfigFileIdentifier"/></para>
-        /// <para>Becomes ReadOnly if <see cref="IsConfigured"/> is true.</para>
+        /// The <see cref="configFile"/> that this ConfiguredVariable is bound to.
+        /// <para>If left null before the Configuration process, a CopnfigFile is attempted to be obtained using <see cref="ConfigSystem.GetConfigFile(string)"/> and the value stored in <see cref="configFileIdentifier"/></para>
+        /// <para>Becomes ReadOnly if <see cref="isConfigured"/> is true.</para>
         /// </summary>
-        public ConfigFile ConfigFile
+        public ConfigFile configFile
         {
             get => _configFile;
             set
             {
-                if (IsConfigured)
+                if (isConfigured)
                     return;
                 _configFile = value;
             }
@@ -33,20 +33,20 @@ namespace MSU.Config
         /// <summary>
         /// The ConfigEntryBase of this ConfiguredVariable, usually set when <see cref="Configure"/> is called.
         /// </summary>
-        public ConfigEntryBase ConfigEntryBase { get; protected set; }
+        public ConfigEntryBase configEntryBase { get; protected set; }
 
         /// <summary>
         /// The Config Section for this ConfiguredVariable.
         /// <br>Cannot be null</br>
         /// <para>If the ConfiguredVariable is decorated by <see cref="AutoConfigAttribute"/>, a "Nicified" string of the Declaring Type's name is used.</para>
-        /// <para>Becomes ReadOnly if <see cref="IsConfigured"/> is true.</para>
+        /// <para>Becomes ReadOnly if <see cref="isConfigured"/> is true.</para>
         /// </summary>
-        public string Section
+        public string section
         {
             get => _section;
             set
             {
-                if (IsConfigured)
+                if (isConfigured)
                     return;
                 _section = value;
             }
@@ -57,14 +57,14 @@ namespace MSU.Config
         /// The Config Key for this ConfiguredVariable.
         /// <br>Cannot be null</br>
         /// <para>If the ConfiguredVariable is decorated by <see cref="AutoConfigAttribute"/>, a "Nicified" string of the Declaring Type's name is used.</para>
-        /// <para>Becomes ReadOnly if <see cref="IsConfigured"/> is true.</para>
+        /// <para>Becomes ReadOnly if <see cref="isConfigured"/> is true.</para>
         /// </summary>
-        public string Key
+        public string key
         {
             get => _key;
             set
             {
-                if (IsConfigured)
+                if (isConfigured)
                     return;
                 _key = value;
             }
@@ -73,14 +73,14 @@ namespace MSU.Config
 
         /// <summary>
         /// The Config Description
-        /// <para>Becomes ReadOnly if <see cref="IsConfigured"/> is true.</para>
+        /// <para>Becomes ReadOnly if <see cref="isConfigured"/> is true.</para>
         /// </summary>
-        public string Description
+        public string description
         {
             get => _description;
             set
             {
-                if (IsConfigured)
+                if (isConfigured)
                     return;
 
                 _description = value;
@@ -90,15 +90,15 @@ namespace MSU.Config
 
         /// <summary>
         /// The ConfigFileIdentifier for this ConfigurableVariable
-        /// <para>When provided, and <see cref="ConfigFile"/> is null, the ConfigFile is obtained using <see cref="ConfigSystem.GetConfigFile(string)"/></para>
-        /// <para>Becomes ReadOnly if <see cref="IsConfigured"/> is true.</para>
+        /// <para>When provided, and <see cref="configFile"/> is null, the ConfigFile is obtained using <see cref="ConfigSystem.GetConfigFile(string)"/></para>
+        /// <para>Becomes ReadOnly if <see cref="isConfigured"/> is true.</para>
         /// </summary>
-        public string ConfigFileIdentifier
+        public string configFileIdentifier
         {
             get => _configFileIdentifier;
             set
             {
-                if (!IsConfigured)
+                if (!isConfigured)
                     return;
                 _configFileIdentifier = value;
             }
@@ -107,14 +107,14 @@ namespace MSU.Config
 
         /// <summary>
         /// The ModGUID that owns this ConfiguredVariable, used mainly for Risk of Options implementation
-        /// <para>Becomes ReadOnly if <see cref="IsConfigured"/> is true</para>
+        /// <para>Becomes ReadOnly if <see cref="isConfigured"/> is true</para>
         /// </summary>
-        public string ModGUID
+        public string modGUID
         {
             get => _modGUID;
             set
             {
-                if (IsConfigured)
+                if (isConfigured)
                     return;
                 _modGUID = value;
             }
@@ -122,15 +122,15 @@ namespace MSU.Config
         private string _modGUID;
 
         /// <summary>
-        /// The Human Readable Name for <see cref="ModGUID"/>, used mainly for Risk of Options implementation
-        /// <para>Becomes ReadOnly if <see cref="IsConfigured"/> is true</para>
+        /// The Human Readable Name for <see cref="modGUID"/>, used mainly for Risk of Options implementation
+        /// <para>Becomes ReadOnly if <see cref="isConfigured"/> is true</para>
         /// </summary>
-        public string ModName
+        public string modName
         {
             get => _modName;
             set
             {
-                if (IsConfigured)
+                if (isConfigured)
                     return;
                 _modName = value;
             }
@@ -139,19 +139,19 @@ namespace MSU.Config
 
 
         /// <summary>
-        /// Returns an unique hashcode for this ConfiguredVariable, using the HashCode of <see cref="Key"/> and <see cref="Section"/>
+        /// Returns an unique hashcode for this ConfiguredVariable, using the HashCode of <see cref="key"/> and <see cref="section"/>
         /// </summary>
-        public int ConfigHash => Convert.ToInt32(_key.GetHashCode() / 2) + (_section.GetHashCode() / 2);
+        public int configHash => Convert.ToInt32(_key.GetHashCode() / 2) + (_section.GetHashCode() / 2);
 
         /// <summary>
         /// Wether the Variable is actually Configurable by the <see cref="BepInEx.Configuration.TomlTypeConverter"/>
         /// </summary>
-        public bool CanBeConfigured { get; protected set; } = false;
+        public bool canBeConfigured { get; protected set; } = false;
         /// <summary>
         /// Wether this ConfigurableVariable has already been configued.
         /// <para>When set to true, most if not all properties for the ConfigruableVariable become ReadOnly</para>
         /// </summary>
-        public bool IsConfigured { get; protected set; } = false;
+        public bool isConfigured { get; protected set; } = false;
 
         /// <summary>
         /// Implement the configuration of this ConfigurableVariable here
@@ -159,65 +159,65 @@ namespace MSU.Config
         public abstract void Configure();
 
         /// <summary>
-        /// Chainable method for setting <see cref="ConfigFile"/>
+        /// Chainable method for setting <see cref="configFile"/>
         /// </summary>
         public ConfiguredVariable WithConfigFile(ConfigFile configFile)
         {
-            ConfigFile = configFile;
+            this.configFile = configFile;
             return this;
         }
 
         /// <summary>
-        /// Chainable method for setting <see cref="Section"/>
+        /// Chainable method for setting <see cref="section"/>
         /// </summary>
         public ConfiguredVariable WithSection(string section)
         {
-            Section = section;
+            this.section = section;
             return this;
         }
 
         /// <summary>
-        /// Chainable method for setting <see cref="Key"/>
+        /// Chainable method for setting <see cref="key"/>
         /// </summary>
         public ConfiguredVariable WithKey(string key)
         {
-            Key = key;
+            this.key = key;
             return this;
         }
 
         /// <summary>
-        /// Chainable method for setting <see cref="Description"/>
+        /// Chainable method for setting <see cref="description"/>
         /// </summary>
         public ConfiguredVariable WithDescription(string description)
         {
-            Description = description;
+            this.description = description;
             return this;
         }
 
         /// <summary>
-        /// Chainable method for setting <see cref="ConfigFileIdentifier"/>
+        /// Chainable method for setting <see cref="configFileIdentifier"/>
         /// </summary>
         public ConfiguredVariable WithConfigIdentifier(string identifier)
         {
-            ConfigFileIdentifier = identifier;
+            configFileIdentifier = identifier;
             return this;
         }
 
         /// <summary>
-        /// Chainable method for setting <see cref="ModGUID"/>
+        /// Chainable method for setting <see cref="modGUID"/>
         /// </summary>
         public ConfiguredVariable WithModGUID(BaseUnityPlugin plugin)
         {
-            ModGUID = plugin.Info.Metadata.GUID;
+            modGUID = plugin.Info.Metadata.GUID;
             return this;
         }
 
         /// <summary>
-        /// Chainable method for setting <see cref="ModName"/>
+        /// Chainable method for setting <see cref="modName"/>
         /// </summary>
         public ConfiguredVariable WithModName(BaseUnityPlugin plugin)
         {
-            ModName = plugin.Info.Metadata.Name;
+            modName = plugin.Info.Metadata.Name;
             return this;
         }
 
@@ -232,7 +232,7 @@ namespace MSU.Config
         /// <param name="defaultValue">The default value for this variable</param>
         public ConfiguredVariable(object defaultValue)
         {
-            CanBeConfigured = TomlTypeConverter.CanConvert(defaultValue.GetType());
+            canBeConfigured = TomlTypeConverter.CanConvert(defaultValue.GetType());
         }
 
         /// <summary>
@@ -244,7 +244,7 @@ namespace MSU.Config
             /// <summary>
             /// An optional override for the ConfiguredVariable's Description.
             /// </summary>
-            public string DescriptionOverride { get; set; }
+            public string descriptionOverride { get; set; }
 
             /// <summary>
             /// Returns a readable version of the attribute.
@@ -265,39 +265,39 @@ namespace MSU.Config
     /// <typeparam name="T">The type of value that this ConfigurableVariable uses, for a list of valid types, see <see cref="TomlTypeConverter"/></typeparam>
     public class ConfiguredVariable<T> : ConfiguredVariable
     {
-        private static Dictionary<int, DelegateContainer> configHashToDelegates = new Dictionary<int, DelegateContainer>();
+        private static Dictionary<int, DelegateContainer> _configHashToDelegates = new Dictionary<int, DelegateContainer>();
 
         /// <summary>
         /// The default value for this ConfigurableVariable
         /// </summary>
-        public T DefaultValue { get; } = default(T);
+        public T defaultValue { get; } = default(T);
 
         /// <summary>
         /// The ConfigEntry for this ConfigurableVariable
         /// </summary>
-        public ConfigEntry<T> ConfigEntry { get; private set; }
+        public ConfigEntry<T> configEntry { get; private set; }
 
         /// <summary>
         /// The current and valid value of this ConfigurableVariable. Usually <see cref="ConfigEntry.Value"/>
         /// </summary>
-        public T Value => ConfigEntry == null ? DefaultValue : ConfigEntry.Value;
+        public T value => configEntry == null ? defaultValue : configEntry.Value;
 
         /// <summary>
-        /// A delegate that gets invoked whenever the setting of <see cref="ConfigEntry"/> changes.
-        /// <para>Once <see cref="ConfiguredVariable.IsConfigured"/> is true, the OnConfigChanged becomes readonly.</para>
+        /// A delegate that gets invoked whenever the setting of <see cref="configEntry"/> changes.
+        /// <para>Once <see cref="ConfiguredVariable.isConfigured"/> is true, the OnConfigChanged becomes readonly.</para>
         /// </summary>
 
-        public event OnConfigChangedDelegate OnConfigChanged
+        public event OnConfigChangedDelegate onConfigChanged
         {
             add
             {
-                if (IsConfigured)
+                if (isConfigured)
                     return;
                 _onConfigChanged += value;
             }
             remove
             {
-                if (IsConfigured)
+                if (isConfigured)
                     return;
                 _onConfigChanged -= value;
             }
@@ -316,7 +316,7 @@ namespace MSU.Config
         /// Returns the <see cref="DelegateContainer"/> for the specified ConfiguredVariable
         /// </summary>
         /// <returns>The DelegateContainer for the ConfigEntry, if no DelegateContainer exists for said config it returns null.</returns>
-        public static DelegateContainer GetDelegateContainer(ConfiguredVariable configuredVariable) => GetDelegateContainer(configuredVariable.ConfigHash);
+        public static DelegateContainer GetDelegateContainer(ConfiguredVariable configuredVariable) => GetDelegateContainer(configuredVariable.configHash);
 
         /// <summary>
         /// <br>Returns the <see cref="DelegateContainer"/> for the specified <paramref name="configHash"/></br>
@@ -324,7 +324,7 @@ namespace MSU.Config
         /// <returns>The DelegateContainer for the ConfigEntry, if no DelegateContainer exists for said config it returns null.</returns>
         public static DelegateContainer GetDelegateContainer(int configHash)
         {
-            if (configHashToDelegates.TryGetValue(configHash, out var delegateContainer))
+            if (_configHashToDelegates.TryGetValue(configHash, out var delegateContainer))
                 return delegateContainer;
             return null;
         }
@@ -339,44 +339,44 @@ namespace MSU.Config
         /// </summary>
         public ConfiguredVariable<T> DoConfigure()
         {
-            if (IsConfigured || !CanBeConfigured)
+            if (isConfigured || !canBeConfigured)
                 return this;
 
-            if(ConfigFile == null)
+            if(configFile == null)
             {
-                if(ConfigFileIdentifier.IsNullOrWhiteSpace())
+                if(configFileIdentifier.IsNullOrWhiteSpace())
                 {
                     throw new NullReferenceException("ConfigFileIdentifier is Null, Empty or WhiteSpace");
                 }
 
-                var configFile = ConfigSystem.GetConfigFile(ConfigFileIdentifier);
+                var configFile = ConfigSystem.GetConfigFile(configFileIdentifier);
                 if (configFile == null)
                     throw new NullReferenceException("ConfigFile is null");
 
-                ConfigFile = configFile;
+                base.configFile = configFile;
             }
 
-            if (Section.IsNullOrWhiteSpace())
+            if (section.IsNullOrWhiteSpace())
                 throw new NullReferenceException("Section is Null, Empty or WhiteSpace");
 
-            if (Key.IsNullOrWhiteSpace())
+            if (key.IsNullOrWhiteSpace())
                 throw new NullReferenceException("Key is Null, Empty or WhiteSpace");
 
-            ConfigEntry = ConfigFile.Bind(Section, Key, DefaultValue, Description);
-            ConfigEntryBase = ConfigEntry;
+            configEntry = configFile.Bind(section, key, defaultValue, description);
+            configEntryBase = configEntry;
 
             if(_onConfigChanged != null)
             {
-                if (!configHashToDelegates.ContainsKey(ConfigHash))
-                    configHashToDelegates[ConfigHash] = default(DelegateContainer);
+                if (!_configHashToDelegates.ContainsKey(configHash))
+                    _configHashToDelegates[configHash] = default(DelegateContainer);
 
                 var val = new DelegateContainer();
-                val.ConfigEntry = ConfigEntry;
+                val.configEntry = configEntry;
                 val.SetListeners(_onConfigChanged);
                 val.Raise();
-                configHashToDelegates[ConfigHash] = val;
+                _configHashToDelegates[configHash] = val;
             }
-            IsConfigured = true;
+            isConfigured = true;
             OnConfigured();
             return this;
         }
@@ -440,20 +440,20 @@ namespace MSU.Config
         /// </summary>
         public ConfiguredVariable<T> WithConfigChange(OnConfigChangedDelegate del)
         {
-            OnConfigChanged += del;
+            onConfigChanged += del;
             return this;
         }
 
         ///<inheritdoc cref="ConfiguredVariable.ConfiguredVariable(object)"/>
         public ConfiguredVariable(T defaultValue) : base(defaultValue)
         {
-            DefaultValue = defaultValue;
+            this.defaultValue = defaultValue;
         }
 
         /// <summary>
         /// Implicitly casts the value of <paramref name="cf"/> to <typeparamref name="T"/>
         /// </summary>
-        public static implicit operator T(ConfiguredVariable<T> cf) => cf.Value;
+        public static implicit operator T(ConfiguredVariable<T> cf) => cf.value;
 
         /// <summary>
         /// A class that contains the Delegate implementations of a specified ConfigEntry.        
@@ -464,7 +464,7 @@ namespace MSU.Config
             /// <summary>
             /// The ConfigEntry associated with this DelegateContainer
             /// </summary>
-            public ConfigEntry<T> ConfigEntry
+            public ConfigEntry<T> configEntry
             {
                 get => _configEntry;
                 set
@@ -479,7 +479,7 @@ namespace MSU.Config
             }
             private ConfigEntry<T> _configEntry;
 
-            internal event OnConfigChangedDelegate OnConfigChanged;
+            internal event OnConfigChangedDelegate onConfigChanged;
 
             private void InvokeDelegates(object sender, EventArgs args)
             {
@@ -491,14 +491,14 @@ namespace MSU.Config
             /// </summary>
             public void Raise()
             {
-                if (ConfigEntry != null)
-                    OnConfigChanged?.Invoke((T)ConfigEntry.BoxedValue);
+                if (configEntry != null)
+                    onConfigChanged?.Invoke((T)configEntry.BoxedValue);
             }
 
 
             internal void SetListeners(OnConfigChangedDelegate listeners)
             {
-                OnConfigChanged = listeners;
+                onConfigChanged = listeners;
             }
         }
 

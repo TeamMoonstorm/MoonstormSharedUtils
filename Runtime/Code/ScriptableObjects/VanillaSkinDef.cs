@@ -79,7 +79,7 @@ namespace MSU
             //Fills the unfilled base fields
             foreach (var item in _baseSkins)
             {
-                var skin = item.SkinDef;
+                var skin = item.skinDef;
                 HG.ArrayUtils.ArrayAppend(ref baseSkins, skin);
             }
             rootObject = model.gameObject;
@@ -97,11 +97,11 @@ namespace MSU
             }
             foreach(var item in _projectileGhostReplacements)
             {
-                HG.ArrayUtils.ArrayAppend(ref projectileGhostReplacements, item.ProjectileGhostReplacement);
+                HG.ArrayUtils.ArrayAppend(ref projectileGhostReplacements, item.projectileGhostReplacement);
             }
             foreach(var item in _minionSkinReplacements)
             {
-                HG.ArrayUtils.ArrayAppend(ref minionSkinReplacements, item.MinionSkinReplacement);
+                HG.ArrayUtils.ArrayAppend(ref minionSkinReplacements, item.minionSkinReplacement);
             }
 
             base.Bake();
@@ -121,12 +121,12 @@ namespace MSU
             [SerializeField] internal string _skinAddress;
             [SerializeField] internal SkinDef _skinDef;
 
-            public SkinDef SkinDef { get; private set; }
+            public SkinDef skinDef { get; private set; }
             public IEnumerator GetSkin()
             {
                 if(_skinDef)
                 {
-                    SkinDef = _skinDef;
+                    skinDef = _skinDef;
                     yield break;
                 }
 
@@ -246,7 +246,7 @@ namespace MSU
             [SerializeField]
             internal GameObject _projectileGhostReplacement;
 
-            public ProjectileGhostReplacement ProjectileGhostReplacement { get; private set; }
+            public ProjectileGhostReplacement projectileGhostReplacement { get; private set; }
             public IEnumerator GetProjectileGhostReplacement()
             {
                 var load = Addressables.LoadAssetAsync<GameObject>(_projectilePrefabAddress);
@@ -254,7 +254,7 @@ namespace MSU
                 while (!load.IsDone)
                     yield return null;
 
-                ProjectileGhostReplacement = new ProjectileGhostReplacement
+                projectileGhostReplacement = new ProjectileGhostReplacement
                 {
                     projectileGhostReplacementPrefab = _projectileGhostReplacement,
                     projectilePrefab = load.Result
@@ -272,14 +272,14 @@ namespace MSU
             [SerializeField]
             internal SkinDef _minionSkin;
 
-            public MinionSkinReplacement MinionSkinReplacement { get; private set; }
+            public MinionSkinReplacement minionSkinReplacement { get; private set; }
             public IEnumerator GetMinionSkinReplacement()
             {
                 var load = Addressables.LoadAssetAsync<GameObject>(_minionPrefabAddress);
                 while (!load.IsDone)
                     yield return null;
 
-                MinionSkinReplacement = new MinionSkinReplacement
+                minionSkinReplacement = new MinionSkinReplacement
                 {
                     minionBodyPrefab = load.Result,
                     minionSkin = _minionSkin,

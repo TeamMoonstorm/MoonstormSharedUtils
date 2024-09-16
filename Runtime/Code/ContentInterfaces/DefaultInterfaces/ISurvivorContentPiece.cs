@@ -18,6 +18,6 @@ namespace MSU
         /// <summary>
         /// The survivor's SurvivorDef
         /// </summary>
-        SurvivorDef SurvivorDef { get; }
+        SurvivorDef survivorDef { get; }
     }
 }

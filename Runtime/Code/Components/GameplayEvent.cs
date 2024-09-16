@@ -26,7 +26,7 @@ namespace MSU
         /// <summary>
         /// Retrieves the Token that contains the Start message for this event.
         /// </summary>
-        public string EventStartToken => _eventStartToken;
+        public string eventStartToken => _eventStartToken;
         [Header("Gameplay Event Metadata")]
         [Tooltip("When the event starts, this Token is used to inform the players.")]
         [SerializeField] private string _eventStartToken;
@@ -34,7 +34,7 @@ namespace MSU
         /// <summary>
         /// Retrieves the sound effect that should play when the event starts.
         /// </summary>
-        public NetworkSoundEventDef EventStartSfx => _eventStartSfx;
+        public NetworkSoundEventDef eventStartSfx => _eventStartSfx;
         [Tooltip("When the event starts, this sound effect is played to inform the players.")]
         [SerializeField] private NetworkSoundEventDef _eventStartSfx;
 
@@ -42,7 +42,7 @@ namespace MSU
         /// Retrieves the Token that contains the End message for this event.
         /// <br>Irrelevant if <see cref="doNotAnnounceEnding"/> is set to true</br>
         /// </summary>
-        public string EventEndToken => _eventEndToken;
+        public string eventEndToken => _eventEndToken;
         [Tooltip("When the event ends, this token is used to inform the players. \nIrrelevant if \"doNotAnnounceEnding\" is set to true.")]
         [SerializeField] private string _eventEndToken;
 
@@ -50,7 +50,7 @@ namespace MSU
         /// Retrieves the sound effect that should play when the event ends.
         /// <br>Irrelevant if <see cref="doNotAnnounceEnding"/> is set to true</br>
         /// </summary>
-        public NetworkSoundEventDef EventEndSfx => _eventEndSfx;
+        public NetworkSoundEventDef eventEndSfx => _eventEndSfx;
 
         [Tooltip("When the event ends, this sound effect is played to inform the players. \nIrrelevant if \"doNotAnnounceEnding\" is set to true.")]
         [SerializeField] private NetworkSoundEventDef _eventEndSfx;
@@ -58,19 +58,19 @@ namespace MSU
         /// <summary>
         /// Retrieves the Color that's used for the messages of this event.
         /// </summary>
-        public Color EventColor => _eventColor;
+        public Color eventColor => _eventColor;
         [Tooltip("This color is used for the messages displayed when the event starts and ends. An outline color is calculated automatically.")]
         [SerializeField] private Color _eventColor;
 
         /// <summary>
         /// Called when any event begins.
         /// </summary>
-        public static event GameplayEventDelegate OnEventStartGlobal;
+        public static event GameplayEventDelegate onEventStartGlobal;
 
         /// <summary>
         /// Called when this specific event begins
         /// </summary>
-        public event GameplayEventDelegate OnEventStart;
+        public event GameplayEventDelegate onEventStart;
         [Space, Header("Gameplay Event Hooks")]
         [Tooltip("Called when this specific event begins")]
         [SerializeField] private UnityGameplayEvent _onEventStart;
@@ -78,11 +78,11 @@ namespace MSU
         /// <summary>
         /// Called when any event ends
         /// </summary>
-        public static event GameplayEventDelegate OnEventEndGlobal;
+        public static event GameplayEventDelegate onEventEndGlobal;
         /// <summary>
         /// Called when this specific event ends.
         /// </summary>
-        public event GameplayEventDelegate OnEventEnd;
+        public event GameplayEventDelegate onEventEnd;
         [Tooltip("Called when this specific event ends")]
         [SerializeField] private UnityGameplayEvent _onEventEnd;
 
@@ -90,17 +90,17 @@ namespace MSU
         /// The GameplayEventIndex assigned to this GameplayEvent. set at runtime when the prefab is added to the <see cref="GameplayEventCatalog"/>
         /// </summary>
         [field:NonSerialized]
-        public GameplayEventIndex GameplayEventIndex { get; internal set; }
+        public GameplayEventIndex gameplayEventIndex { get; internal set; }
 
         /// <summary>
         /// Checks wether this event is playing or not
         /// </summary>
-        public bool IsPlaying { get; private set; }
+        public bool isPlaying { get; private set; }
 
         /// <summary>
         /// The GameplayEventRequirement attached to this GameplayEvent, this value can be null.
         /// </summary>
-        public NullableRef<GameplayEventRequirement> GameplayEventRequirement { get; private set; }
+        public NullableRef<GameplayEventRequirement> gameplayEventRequirement { get; private set; }
 
         /// <summary>
         /// The total duration of the announcement for this event.
@@ -111,12 +111,12 @@ namespace MSU
         private void Awake()
         {
             InstanceTracker.Add(this);
-            GameplayEventRequirement = GetComponent<GameplayEventRequirement>();
+            gameplayEventRequirement = GetComponent<GameplayEventRequirement>();
         }
 
         private void Start()
         {
-            if(beginOnStart && !IsPlaying)
+            if(beginOnStart && !isPlaying)
             {
                 StartEvent();
             }
@@ -124,7 +124,7 @@ namespace MSU
 
         private void OnDestroy()
         {
-            if(IsPlaying)
+            if(isPlaying)
             {
                 EndEvent();
             }
@@ -136,12 +136,12 @@ namespace MSU
         /// </summary>
         public void StartEvent()
         {
-            if (IsPlaying)
+            if (isPlaying)
                 return;
 
-            IsPlaying = true;
-            OnEventStartGlobal?.Invoke(this);
-            OnEventStart?.Invoke(this);
+            isPlaying = true;
+            onEventStartGlobal?.Invoke(this);
+            onEventStart?.Invoke(this);
             _onEventStart?.Invoke(this);
         }
 
@@ -151,20 +151,20 @@ namespace MSU
         /// </summary>
         public void EndEvent()
         {
-            if (!IsPlaying)
+            if (!isPlaying)
                 return;
 
-            IsPlaying = false;
-            OnEventEndGlobal?.Invoke(this);
-            OnEventEnd?.Invoke(this);
+            isPlaying = false;
+            onEventEndGlobal?.Invoke(this);
+            onEventEnd?.Invoke(this);
             _onEventEnd?.Invoke(this);
 
-            if(!doNotAnnounceEnding && GameplayEventTextController.Instance)
+            if(!doNotAnnounceEnding && GameplayEventTextController.instance)
             {
-                GameplayEventTextController.Instance.EnqueueNewTextRequest(new GameplayEventTextController.EventTextRequest
+                GameplayEventTextController.instance.EnqueueNewTextRequest(new GameplayEventTextController.EventTextRequest
                 {
-                    eventColor = EventColor,
-                    eventToken = EventEndToken,
+                    eventColor = eventColor,
+                    eventToken = eventEndToken,
                     textDuration = announcementDuration
                 });
             }

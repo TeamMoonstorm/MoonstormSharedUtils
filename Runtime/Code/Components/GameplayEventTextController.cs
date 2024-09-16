@@ -21,36 +21,36 @@ namespace MSU
         /// <summary>
         /// Returns the current instance of the GameplayEventTextController.
         /// </summary>
-        public static GameplayEventTextController Instance { get; private set; }
+        public static GameplayEventTextController instance { get; private set; }
         private static GameObject _prefab;
 
         /// <summary>
         /// The EntityStateMachine that's running the required fade in/out states of the text.
         /// </summary>
-        public EntityStateMachine TextStateMachine { get; private set; }
+        public EntityStateMachine textStateMachine { get; private set; }
 
         /// <summary>
         /// The <see cref="HGTextMeshProUGUI"/> component that's displaying the event text.
         /// </summary>
-        public HGTextMeshProUGUI TextMeshProUGUI { get; private set; }
+        public HGTextMeshProUGUI textMeshProUGUI { get; private set; }
 
         /// <summary>
         /// The HUD instance that this GameplayEventTextController is a child of.
         /// </summary>
-        public HUD HUDInstance { get; private set; }
+        public HUD hudInstance { get; private set; }
         private Queue<EventTextRequest> _textRequests = new Queue<EventTextRequest>();
 
         /// <summary>
         /// Returns the current event text request that's being processed.
         /// </summary>
-        public EventTextRequest? CurrentTextRequest { get; private set; }
+        public EventTextRequest? currentTextRequest { get; private set; }
 
         private TMPro.TMP_FontAsset _bombadierFontAsset;
 
         [SystemInitializer]
         private static void SystemInit()
         {
-            _prefab = MSUMain.MSUAssetBundle.LoadAsset<GameObject>("GameplayEventText");
+            _prefab = MSUMain.msuAssetBundle.LoadAsset<GameObject>("GameplayEventText");
             On.RoR2.UI.HUD.Awake += SpawnAndGetInstance;
         }
 
@@ -58,16 +58,16 @@ namespace MSU
         {
             orig(self);
             GameObject.Instantiate(_prefab, self.mainContainer.transform);
-            Instance.HUDInstance = self;
+            instance.hudInstance = self;
         }
 
         [ConCommand(commandName = "test_event_text", flags = ConVarFlags.None, helpText = "Tests the GameplayEventTextController with a generic EventTextRequest")]
         private static void CC_TestEventText(ConCommandArgs args)
         {
-            if (!Instance)
+            if (!instance)
                 return;
 
-            Instance.EnqueueNewTextRequest(new EventTextRequest
+            instance.EnqueueNewTextRequest(new EventTextRequest
             {
                 eventToken = "Event Text Test",
                 eventColor = Color.cyan,
@@ -87,16 +87,16 @@ namespace MSU
         private void Update()
         {
             //no request being processed, and there's a pending request, dequeue and initialize.
-            if(!CurrentTextRequest.HasValue && _textRequests.Count > 0)
+            if(!currentTextRequest.HasValue && _textRequests.Count > 0)
             {
                 DequeueAndInitializeRequest();
                 return;
             }
 
             //If there is a request, and its not being proceessed, process it.
-            if(CurrentTextRequest.HasValue && TextStateMachine.state is Idle)
+            if(currentTextRequest.HasValue && textStateMachine.state is Idle)
             {
-                var value = CurrentTextRequest.Value;
+                var value = currentTextRequest.Value;
 
                 var hasOverrideState = value.customTextState.HasValue;
 
@@ -112,48 +112,48 @@ namespace MSU
                     state = new FadeInState();
                 }
                 state.duration = hasOverrideState ? value.textDuration : value.textDuration / 3;
-                TextStateMachine.SetNextState(state);
+                textStateMachine.SetNextState(state);
             }
         }
 
         internal void NullCurrentRequest()
         {
-            CurrentTextRequest = null;
+            currentTextRequest = null;
         }
 
         private void DequeueAndInitializeRequest()
         {
-            CurrentTextRequest = _textRequests.Dequeue();
-            string tokenValue = CurrentTextRequest.Value.TokenValue;
-            Color messageColor = CurrentTextRequest.Value.eventColor;
-            Color outlineColor = CurrentTextRequest.Value.GetBestOutlineColor();
+            currentTextRequest = _textRequests.Dequeue();
+            string tokenValue = currentTextRequest.Value.tokenValue;
+            Color messageColor = currentTextRequest.Value.eventColor;
+            Color outlineColor = currentTextRequest.Value.GetBestOutlineColor();
 
-            TextMeshProUGUI.text = tokenValue;
-            TextMeshProUGUI.color = messageColor;
-            TextMeshProUGUI.outlineColor = outlineColor;
-            TextMeshProUGUI.font = CurrentTextRequest.Value.customFontAsset.HasValue ? CurrentTextRequest.Value.customFontAsset.Value : _bombadierFontAsset;
+            textMeshProUGUI.text = tokenValue;
+            textMeshProUGUI.color = messageColor;
+            textMeshProUGUI.outlineColor = outlineColor;
+            textMeshProUGUI.font = currentTextRequest.Value.customFontAsset.hasValue ? currentTextRequest.Value.customFontAsset.value : _bombadierFontAsset;
         }
 
         private void Start()
         {
-            _bombadierFontAsset = TextMeshProUGUI.font;
+            _bombadierFontAsset = textMeshProUGUI.font;
         }
 
         private void Awake()
         {
-            TextStateMachine = GetComponent<EntityStateMachine>();
-            TextMeshProUGUI = GetComponent<HGTextMeshProUGUI>();
+            textStateMachine = GetComponent<EntityStateMachine>();
+            textMeshProUGUI = GetComponent<HGTextMeshProUGUI>();
         }
 
         private void OnEnable()
         {
-            Instance = this;
-            TextMeshProUGUI.text = string.Empty;
+            instance = this;
+            textMeshProUGUI.text = string.Empty;
         }
         private void OnDisable()
         {
-            if (Instance == this)
-                Instance = null;
+            if (instance == this)
+                instance = null;
         }
 
         /// <summary>
@@ -162,7 +162,7 @@ namespace MSU
         public struct EventTextRequest
         {
             /// <summary>
-            /// The token to use for the text, the <see cref="GameplayEventTextController"/> uses <see cref="TokenValue"/> to obtain the correct string in the current language.
+            /// The token to use for the text, the <see cref="GameplayEventTextController"/> uses <see cref="tokenValue"/> to obtain the correct string in the current language.
             /// </summary>
             public string eventToken;
             /// <summary>
@@ -177,7 +177,7 @@ namespace MSU
             public float textDuration;
 
             /// <summary>
-            /// If supplied, the <see cref="GameplayEventTextController.TextStateMachine"/>'s state will be set to this state, The state needs to inherit from <see cref="EventTextState"/>.
+            /// If supplied, the <see cref="GameplayEventTextController.textStateMachine"/>'s state will be set to this state, The state needs to inherit from <see cref="EventTextState"/>.
             /// <br>remember to eventually set the state machine's state back to main, otherwise no more text requests will be processed.</br>
             /// <br>The final state (the one that sets the state machine's state back to main) should also call <see cref="EventTextState.NullRequest"/> for proper disposal of the request.</br>
             /// </summary>
@@ -191,7 +191,7 @@ namespace MSU
             /// <summary>
             /// The value of <see cref="eventToken"/> using the currently loaded language
             /// </summary>
-            public string TokenValue => Language.GetString(eventToken);
+            public string tokenValue => Language.GetString(eventToken);
 
             /// <summary>
             /// Obtains the best outline color to use with <see cref="eventColor"/>
@@ -217,12 +217,12 @@ namespace MSU
             /// <summary>
             /// Returns the GameplayEventTextcontroller that created this state.
             /// </summary>
-            public GameplayEventTextController TextController { get; private set; }
+            public GameplayEventTextController textController { get; private set; }
 
             /// <summary>
             /// The UIJuice component attached to the <see cref="GameplayEventTextController"/>
             /// </summary>
-            public UIJuice Juice { get; private set; }
+            public UIJuice uiJuice { get; private set; }
 
             /// <summary>
             /// The total duration this state should last.
@@ -232,8 +232,8 @@ namespace MSU
             public override void OnEnter()
             {
                 base.OnEnter();
-                TextController = GetComponent<GameplayEventTextController>();
-                Juice = GetComponent<UIJuice>();
+                textController = GetComponent<GameplayEventTextController>();
+                uiJuice = GetComponent<UIJuice>();
             }
 
             /// <summary>
@@ -241,7 +241,7 @@ namespace MSU
             /// </summary>
             protected virtual void NullRequest()
             {
-                TextController.NullCurrentRequest();
+                textController.NullCurrentRequest();
             }
         }
 
@@ -253,11 +253,11 @@ namespace MSU
             public override void OnEnter()
             {
                 base.OnEnter();
-                Juice.destroyOnEndOfTransition = false;
-                Juice.transitionDuration = duration;
-                Juice.TransitionAlphaFadeIn();
-                Juice.originalAlpha = 1;
-                Juice.transitionEndAlpha = 1;
+                uiJuice.destroyOnEndOfTransition = false;
+                uiJuice.transitionDuration = duration;
+                uiJuice.TransitionAlphaFadeIn();
+                uiJuice.originalAlpha = 1;
+                uiJuice.transitionEndAlpha = 1;
             }
 
             public override void Update()
@@ -299,7 +299,7 @@ namespace MSU
             public override void OnEnter()
             {
                 base.OnEnter();
-                Juice.TransitionAlphaFadeOut();
+                uiJuice.TransitionAlphaFadeOut();
             }
 
             public override void Update()
@@ -307,7 +307,7 @@ namespace MSU
                 base.Update();
                 if(age > duration)
                 {
-                    TextController.NullCurrentRequest();
+                    textController.NullCurrentRequest();
                     outer.SetNextStateToMain();
                 }
             }
