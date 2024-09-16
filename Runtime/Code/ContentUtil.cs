@@ -206,8 +206,9 @@ namespace MSU
                     {
 #if DEBUG
                         notAssignedAssets.Remove(val);
-                        fieldInfo.SetValue(null, val);
 #endif
+                        fieldInfo.SetValue(null, val);
+
                         continue;
                     }
 
