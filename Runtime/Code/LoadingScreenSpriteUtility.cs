@@ -9,9 +9,9 @@ namespace MSU
     public static class LoadingScreenSpriteUtility
     {
         private static List<SimpleSpriteAnimation> _animations = new List<SimpleSpriteAnimation>();
-        private static HashSet<AssetBundle> _bundles;
+        private static HashSet<AssetBundle> _bundles = new HashSet<AssetBundle>();
         private static bool _hooked = false;
-        private static bool _alreadyPastLoadingScreen;
+        private static bool _alreadyPastLoadingScreen = false;
 
         public static void AddSpriteAnimations(AssetBundle bundleLoadedOnAwake)
         {
