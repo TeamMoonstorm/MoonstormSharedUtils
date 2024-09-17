@@ -8,13 +8,25 @@ using UnityEngine;
 
 namespace MSU
 {
+    /// <summary>
+    /// Represents an index for a <see cref="GameplayEvent"/>, these are assigned to different gameplay event prefabs at runtime.
+    /// </summary>
     public enum GameplayEventIndex
     {
+        /// <summary>
+        /// Represents an invalid gameplay event index
+        /// </summary>
         None = -1,
     }
 
+    /// <summary>
+    /// The <see cref="GameplayEventCatalog"/> is a catalog used for managing, adding and cataloguing <see cref="GameplayEvent"/> game objects to the game.
+    /// </summary>
     public static class GameplayEventCatalog
     {
+        /// <summary>
+        /// Returns the total amount of registered gameplay events
+        /// </summary>
         public static int registeredGameplayEventCount => _registeredGameplayEventObjects.Length;
 
         private static GameObject[] _gameplayEvents = Array.Empty<GameObject>();
@@ -23,10 +35,19 @@ namespace MSU
 
         private static readonly Dictionary<string, GameplayEventIndex> _nameToEventIndex = new Dictionary<string, GameplayEventIndex>(StringComparer.OrdinalIgnoreCase);
 
+        /// <summary>
+        /// Represents the availability for this Catalog, methods subscribed to this get called when the catalog finishes initializing
+        /// </summary>
         public static ResourceAvailability catalogAvailability = default(ResourceAvailability);
         private static bool _initialized = false;
 
         #region Find/Get methods
+        /// <summary>
+        /// Finds a <see cref="GameplayEventIndex"/> with the name <paramref name="eventName"/> and returns it.
+        /// <br>Throws an exception if the catalog has not been initialized.</br>
+        /// </summary>
+        /// <param name="eventName">The name of the event to find</param>
+        /// <returns>A valid <see cref="GameplayEventIndex"/>, or <see cref="GameplayEventIndex.None"/> if no GameplayEvent is found.</returns>
         public static GameplayEventIndex FindEventIndex(string eventName)
         {
             ThrowIfNotInitialized();
@@ -37,6 +58,12 @@ namespace MSU
             return GameplayEventIndex.None;
         }
 
+        /// <summary>
+        /// Retrieves the GameObject associated to the specified <see cref="GameplayEventIndex"/>.
+        /// <br>Throws an exception if the catalog has not been initialized</br>
+        /// </summary>
+        /// <param name="index">The index of the event</param>
+        /// <returns>The GameObject of the <see cref="GameplayEvent"/></returns>
         public static GameObject GetGameplayEventObject(GameplayEventIndex index)
         {
             ThrowIfNotInitialized();
@@ -44,6 +71,12 @@ namespace MSU
             return HG.ArrayUtils.GetSafe(_registeredGameplayEventObjects, (int)index);
         }
 
+        /// <summary>
+        /// Retrieves the GameplayEvent component associated to the specified <see cref="GameplayEventIndex"/>
+        /// <br>Throws an exception if the catalog has not been initialized</br>
+        /// </summary>
+        /// <param name="index">The index of the event</param>
+        /// <returns>The GameplayEvent which index is equal to <paramref name="index"/></returns>
         public static GameplayEvent GetGameplayEvent(GameplayEventIndex index)
         {
             ThrowIfNotInitialized();
@@ -53,6 +86,11 @@ namespace MSU
         #endregion
 
         #region Add Methods
+        /// <summary>
+        /// Adds all the <see cref="GameObject"/> found within <paramref name="gameplayEventGameObjects"/> to the <see cref="GameplayEventCatalog"/>.
+        /// <br>Throws an exception if the catalog has already initialized.</br>
+        /// </summary>
+        /// <param name="gameplayEventGameObjects">The GameplayEvent GameObjects to add</param>
         public static void AddGameplayEvents(GameObject[] gameplayEventGameObjects)
         {
             ThrowIfInitialized();
@@ -62,6 +100,11 @@ namespace MSU
             }
         }
 
+        /// <summary>
+        /// Adds a single <paramref name="gameplayEventGameObject"/> to the <see cref="GameplayEventCatalog"/>
+        /// <br>Throws an exception if the catalog has already initialized</br>
+        /// </summary>
+        /// <param name="gameplayEventGameObject">The GameplayEvent GameObject to add</param>
         public static void AddGameplayEvent(GameObject gameplayEventGameObject)
         {
             ThrowIfInitialized();

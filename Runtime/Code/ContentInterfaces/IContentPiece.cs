@@ -15,7 +15,7 @@ namespace MSU
     /// <para>It contains methods to check if the class is available for the game using <see cref="IsAvailable(ContentPack)"/>, which can be checked via configurations or by checking if a dependant content is added, a method to load it's assets asynchronously using <see cref="LoadContentAsync"/>, and an <see cref="Initialize"/> method.</para>
     /// <para>All ContentInterfaces that come built in with MSU have a corresponding Module, which is used for initialization and generic implementation of functionality for said content</para>
     /// <br>While this is the base, it is heavily recommended to utilize an interface that implements <see cref="IContentPiece{T}"/>.</br>
-    /// <br>See also <see cref="IContentPackModifier"/> and <see cref="IUnlockableContent"/></br>
+    /// <br>See also <see cref="IContentPackModifier"/></br>
     /// </summary>
     public interface IContentPiece
     {

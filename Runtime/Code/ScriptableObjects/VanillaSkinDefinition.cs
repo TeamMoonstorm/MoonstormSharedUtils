@@ -10,9 +10,7 @@ using UnityEngine.UIElements;
 
 namespace MSU
 {
-    /// <summary>
-    /// A <see cref="VanillaSkinDefinition"/> is an extension of <see cref="SkinDef"/> that allows for creating skins for vanilla CharacterBodies
-    /// </summary>
+    [Obsolete("This class exists purely as legacy code and will be removed in MSU 2.1.0")]
     public class VanillaSkinDefinition : SkinDef
     {
         [Tooltip("The Address for the CharacterBody")]
@@ -106,10 +104,6 @@ namespace MSU
 
         #region Internal Types
 
-        /// <summary>
-        /// A Wrapper for <see cref="SkinDef.rendererInfos"/>
-        /// <para>Used for replacing materials and modifying the values of a RendererInfo</para>
-        /// </summary>
         [Serializable]
         public struct RendererInfo
         {
@@ -138,10 +132,6 @@ namespace MSU
             }
         }
 
-        /// <summary>
-        /// A Wrapper for <see cref="SkinDef.gameObjectActivations"/>
-        /// <para>It also allows for creating and instantiating new GameObjects to skins via child locator entries</para>
-        /// </summary>
         [Serializable]
         public struct CustomGameObjectActivation
         {
@@ -213,10 +203,6 @@ namespace MSU
             }
         }
 
-        /// <summary>
-        /// A Wrapper for <see cref="SkinDef.MeshReplacement"/>
-        /// <br>Used to replace meshes</br>
-        /// </summary>
         [Serializable]
         public struct CustomMeshReplacement
         {
@@ -235,9 +221,6 @@ namespace MSU
             }
         }
 
-        /// <summary>
-        /// A Wrapper for <see cref="SkinDef.ProjectileGhostReplacement"/>
-        /// </summary>
         [Serializable]
         public struct AddressedProjectileGhostReplacement
         {
@@ -256,9 +239,6 @@ namespace MSU
             }
         }
 
-        /// <summary>
-        /// A Wrapper for <see cref="SkinDef.MinionSkinReplacement"/>
-        /// </summary>
         [Serializable]
         public struct AddressedMinionSkinReplacement
         {

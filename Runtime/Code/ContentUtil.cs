@@ -65,17 +65,33 @@ namespace MSU
             equipmentDef.requiredExpansion = _dummyExpansion;
         }
 
+        /// <summary>
+        /// See also <see cref="IContentPieceProvider"/>
+        /// <para>Creates a new, non generic ContentPieceProvider for the specified interface that inherits from <see cref="IContentPiece"/>, which is the typeParam <typeparamref name="TContentPieceType"/>. This is done by analyzing the assembly from <paramref name="plugin"/> and creating new instances of classes that implement <typeparamref name="TContentPieceType"/></para>
+        /// <br>This is particularly useful for creating a ContentPieceProvider for the <see cref="VanillaSurvivorModule"/>, where you can just set <typeparamref name="TContentPieceType"/> to <see cref="IVanillaSurvivorContentPiece"/></br>
+        /// </summary>
+        /// <typeparam name="TContentPieceType">The type of interface the provider will provide</typeparam>
+        /// <param name="plugin">The plugin to scan for content pieces</param>
+        /// <param name="contentPack">The plugin's content pack</param>
+        /// <returns>An IContentPieceProvider with <paramref name="plugin"/>'s classes that implement <typeparamref name="TContentPieceType"/></returns>
         public static IContentPieceProvider CreateContentPieceProvider<TContentPieceType>(BaseUnityPlugin plugin, ContentPack contentPack) where TContentPieceType : IContentPiece
         {
             return new ContentPieceProvider(AnalyzeForContentPieces<TContentPieceType>(plugin), contentPack);
         }
 
-        public static IEnumerable<IContentPiece> AnalyzeForContentPieces<TContentPieceType>(BaseUnityPlugin plugin) where TContentPieceType : IContentPiece
+        /// <summary>
+        /// Analyzes the <paramref name="plugin"/>'s Assembly for classes that inherit from <see cref="IContentPiece"/>, which is the typeParam <typeparamref name="TContentPieceType"/>.
+        /// <br>This is ideal for creating your own implementation of <see cref="IContentPieceProvider"/></br>
+        /// </summary>
+        /// <typeparam name="TContentPieceType">The type of interface the provider will provide</typeparam>
+        /// <param name="plugin">The plugin to scan for content pieces</param>
+        /// <returns>An Enumerable of <typeparamref name="TContentPieceType"/></returns>
+        public static IEnumerable<TContentPieceType> AnalyzeForContentPieces<TContentPieceType>(BaseUnityPlugin plugin) where TContentPieceType : IContentPiece
         {
             var assembly = plugin.GetType().Assembly;
             return ReflectionCache.GetTypes(assembly)
                 .Where(PassesFilterForContentPieceInterface<TContentPieceType>)
-                .Select(t => (IContentPiece)Activator.CreateInstance(t));
+                .Select(t => (TContentPieceType)Activator.CreateInstance(t));
         }
 
         /// <summary>
@@ -295,6 +311,12 @@ namespace MSU
             return result;
         }
 
+        /// <summary>
+        /// Finds all assets of type <typeparamref name="TAsset"/> inside an AssetCollection
+        /// </summary>
+        /// <typeparam name="TAsset">The type of the asset to find</typeparam>
+        /// <param name="collection">The collection that'll be searched</param>
+        /// <returns>An array of <typeparamref name="TAsset"/>, if no assets where found, it returns an empty array.</returns>
         public static TAsset[] FindAssets<TAsset>(this AssetCollection collection) where TAsset : UnityEngine.Object
         {
             var result = collection.assets.OfType<TAsset>().ToArray();

@@ -237,7 +237,7 @@ namespace MSU
             }
 
             /// <summary>
-            /// Method used for nulling the current request in the TExtController, usually the request that instantiated this state.
+            /// Method used for nulling the current request in the TextController, usually the request that instantiated this state.
             /// </summary>
             protected virtual void NullRequest()
             {

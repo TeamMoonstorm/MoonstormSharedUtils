@@ -6,28 +6,46 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine.AddressableAssets;
-using static RoR2.RoR2Content;
 
 namespace MSU
 {
+    /// <summary>
+    /// The <see cref="VanillaSurvivorModule"/> is a Module that handles classes that implement <see cref="IVanillaSurvivorContentPiece"/>.
+    /// <para>The <see cref="VanillaSurvivorModule"/>'s main job is to handle the proper initialization of new content added to vanilla survivors, this is done by keeping track of all the instances of <see cref="IVanillaSurvivorContentPiece"/> that affect a survivor. which can be obtained by using <see cref="moonstormVanillaSurvivorsContentPieces"/></para>
+    /// </summary>
     public static class VanillaSurvivorModule
     {
+        /// <summary>
+        /// A ReadOnlyDictionary that can be used for obtaining all the <see cref="IVanillaSurvivorContentPiece"/> that modify a SurvivorDef
+        /// <br>Subscribe to <see cref="moduleAvailability"/> to ensure the dictionary is not empty</br>
+        /// </summary>
         public static ReadOnlyDictionary<SurvivorDef, IVanillaSurvivorContentPiece[]> moonstormVanillaSurvivorsContentPieces { get; private set; }
         private static Dictionary<SurvivorDef, IVanillaSurvivorContentPiece[]> _moonstormVanillaSurvivorsContentPieces = new Dictionary<SurvivorDef, IVanillaSurvivorContentPiece[]>();
 
+        /// <summary>
+        /// Represents the Availability of this module
+        /// </summary>
         public static ResourceAvailability moduleAvailability;
 
         private static Dictionary<BaseUnityPlugin, IVanillaSurvivorContentPiece[]> _pluginToVanillaSurvivorContentPieces = new Dictionary<BaseUnityPlugin, IVanillaSurvivorContentPiece[]>();
         private static Dictionary<BaseUnityPlugin, IContentPieceProvider> _pluginToContentProvider = new Dictionary<BaseUnityPlugin, IContentPieceProvider>();
 
+        /// <summary>
+        /// Adds a new provider to the VanillaSurvivorModule.
+        /// <br>For more info, see <see cref="IContentPieceProvider"/></br>
+        /// </summary>
+        /// <param name="plugin">The plugin that's adding the new provider</param>
+        /// <param name="provider">The provider from the plugin, can be one created using <see cref="ContentUtil.CreateContentPieceProvider{TContentPieceType}(BaseUnityPlugin, RoR2.ContentManagement.ContentPack)"/>. Make sure that "TContentPiece" is set to "IVanillaSurvivorContentPiece"</param>
         public static void AddProvider(BaseUnityPlugin plugin, IContentPieceProvider provider)
         {
             _pluginToContentProvider.Add(plugin, provider);
         }
 
+        /// <summary>
+        /// Retrieves all the <see cref="IVanillaSurvivorContentPiece"/> that where added by the specified plugin.
+        /// </summary>
+        /// <param name="plugin">The plugin to obtain it's VanillaSurvivorContentPieces</param>
+        /// <returns>An array of <see cref="IVanillaSurvivorContentPiece"/>, if the plugin has not added any VanillaSurvivorContentPieces, it returns an empty array.</returns>
         public static IVanillaSurvivorContentPiece[] GetVanillaSurvivorContentPieces(BaseUnityPlugin plugin)
         {
             if (_pluginToVanillaSurvivorContentPieces.TryGetValue(plugin, out var vanillaSurvivorContentPieces))
@@ -40,6 +58,12 @@ namespace MSU
             return Array.Empty<IVanillaSurvivorContentPiece>();
         }
 
+        /// <summary>
+        /// A Coroutine used to initialize the VanillaSurvivorContentPieces added by <paramref name="plugin"/>.
+        /// <br>The Coroutine yield breaks if the plugin has not added it's specified provider using <see cref="AddProvider(BaseUnityPlugin, IContentPieceProvider)"/></br>
+        /// </summary>
+        /// <param name="plugin">The plugin to initialize it's VanillaSurvivorContentPieces</param>
+        /// <returns>A Coroutine that can be awaited or yielded</returns>
         public static IEnumerator InitializeVanillaSurvivorContentPieces(BaseUnityPlugin plugin)
         {
 #if DEBUG
