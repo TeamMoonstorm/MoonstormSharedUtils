@@ -11,9 +11,17 @@ namespace MSU
         private static List<SimpleSpriteAnimation> _animations = new List<SimpleSpriteAnimation>();
         private static HashSet<AssetBundle> _bundles;
         private static bool _hooked = false;
+        private static bool _alreadyPastLoadingScreen;
 
         public static void AddSpriteAnimations(AssetBundle bundleLoadedOnAwake)
         {
+            if (_alreadyPastLoadingScreen)
+            {
+                MSULog.Info("Too late! we're already past the loading screen...");
+                return;
+            }
+
+            HookIfNeeded();
             _bundles.Add(bundleLoadedOnAwake);
             foreach(var ssa in bundleLoadedOnAwake.LoadAllAssets<SimpleSpriteAnimation>())
             {
@@ -23,6 +31,13 @@ namespace MSU
 
         public static void AddSpriteAnimation(SimpleSpriteAnimation animation, AssetBundle parentBundle)
         {
+
+            if (_alreadyPastLoadingScreen)
+            {
+                MSULog.Info("Too late! we're already past the loading screen...");
+                return;
+            }
+
             HookIfNeeded();
 
             _bundles.Add(parentBundle);
@@ -41,6 +56,7 @@ namespace MSU
 
         private static void UnhookAndUnload(On.RoR2.UI.MainMenu.MainMenuController.orig_Awake orig, RoR2.UI.MainMenu.MainMenuController self)
         {
+            _alreadyPastLoadingScreen = true;
             _hooked = false;
             On.RoR2.PickRandomObjectOnAwake.Awake -= AddSpriteAnimations;
             On.RoR2.UI.MainMenu.MainMenuController.Awake -= UnhookAndUnload;
