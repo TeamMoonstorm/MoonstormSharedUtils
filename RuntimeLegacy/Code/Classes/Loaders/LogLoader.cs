@@ -15,7 +15,7 @@ namespace Moonstorm.Loaders
         {
             try
             {
-                if(Instance != null)
+                if (Instance != null)
                 {
                     throw new InvalidOperationException($"Singleton class \"{typeof(T).Name}\" inheriting LogLoader was instantiated twice.");
                 }
@@ -128,7 +128,7 @@ namespace Moonstorm.Loaders
         {
 #if DEBUG
             LogSource.LogMessage(FormatString(data, i, member));
-            if(BreakOn.HasFlag(BreakOnLog.Message))
+            if (BreakOn.HasFlag(BreakOnLog.Message))
             {
                 TryBreak();
             }
@@ -154,7 +154,7 @@ namespace Moonstorm.Loaders
         {
             LogSource.LogDebug(FormatString(data, i, member));
 #if DEBUG
-            if(BreakOn.HasFlag(BreakOnLog.Debug))
+            if (BreakOn.HasFlag(BreakOnLog.Debug))
             {
                 TryBreak();
             }
@@ -165,7 +165,7 @@ namespace Moonstorm.Loaders
         {
 #if DEBUG
             LogSource.LogWarning(FormatString(data, i, member));
-            if(BreakOn.HasFlag(BreakOnLog.Warning))
+            if (BreakOn.HasFlag(BreakOnLog.Warning))
             {
                 TryBreak();
             }

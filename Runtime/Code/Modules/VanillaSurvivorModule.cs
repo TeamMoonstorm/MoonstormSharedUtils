@@ -1,5 +1,4 @@
 ﻿using BepInEx;
-using R2API;
 using RoR2;
 using System;
 using System.Collections;
@@ -129,23 +128,23 @@ namespace MSU
                     initializeAsyncCoroutine.Add(piece.InitializeAsync);
                     var survivorDef = piece.survivorDef;
 
-                    if(piece is IContentPackModifier packModifier)
+                    if (piece is IContentPackModifier packModifier)
                     {
                         packModifier.ModifyContentPack(provider.contentPack);
                     }
 
                     IVanillaSurvivorContentPiece[] array = Array.Empty<IVanillaSurvivorContentPiece>();
 
-                    if(!_moonstormVanillaSurvivorsContentPieces.ContainsKey(survivorDef))
+                    if (!_moonstormVanillaSurvivorsContentPieces.ContainsKey(survivorDef))
                         _moonstormVanillaSurvivorsContentPieces.Add(survivorDef, Array.Empty<IVanillaSurvivorContentPiece>());
                     else
                     {
                         array = _moonstormVanillaSurvivorsContentPieces[survivorDef];
                         HG.ArrayUtils.ArrayAppend(ref array, piece);
                         _moonstormVanillaSurvivorsContentPieces[survivorDef] = array;
-                    }    
+                    }
 
-                    if(!_pluginToVanillaSurvivorContentPieces.ContainsKey(plugin))
+                    if (!_pluginToVanillaSurvivorContentPieces.ContainsKey(plugin))
                     {
                         _pluginToVanillaSurvivorContentPieces.Add(plugin, Array.Empty<IVanillaSurvivorContentPiece>());
                     }
@@ -153,7 +152,7 @@ namespace MSU
                     HG.ArrayUtils.ArrayAppend(ref array, piece);
                     _pluginToVanillaSurvivorContentPieces[plugin] = array;
 
-                    
+
 #if DEBUG
                     MSULog.Info($"VanillaSurvivorAddition {piece.GetType().FullName} initialized.");
 #endif

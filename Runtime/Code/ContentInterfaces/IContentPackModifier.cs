@@ -1,10 +1,4 @@
-﻿using R2API.ScriptableObjects;
-using RoR2.ContentManagement;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using RoR2.ContentManagement;
 
 namespace MSU
 {

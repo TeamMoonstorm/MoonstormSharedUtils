@@ -1,11 +1,9 @@
 ﻿using RoR2;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Rendering;
-using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace MSU
 {
@@ -68,22 +66,22 @@ namespace MSU
 #if DEBUG
             MSULog.Debug($"Attempting to initialize and bake {this}");
 #endif
-            
+
             ParallelCoroutine coroutine = new ParallelCoroutine();
             var bodyAddressLoad = Addressables.LoadAssetAsync<GameObject>(_bodyAddress);
             var displayAddressLoad = Addressables.LoadAssetAsync<GameObject>(_displayAddress);
-            
+
             coroutine.Add(bodyAddressLoad);
             coroutine.Add(displayAddressLoad);
-            foreach(MoonstormBaseSkin baseSkin in _baseSkins)
+            foreach (MoonstormBaseSkin baseSkin in _baseSkins)
             {
                 coroutine.Add(baseSkin.GetSkin());
             }
-            foreach(MoonstormProjectileGhostReplacement projectileGhostReplacement in _projectileGhostReplacements)
+            foreach (MoonstormProjectileGhostReplacement projectileGhostReplacement in _projectileGhostReplacements)
             {
                 coroutine.Add(projectileGhostReplacement.GetProjectileGhostReplacement());
             }
-            foreach(MoonstormMinionSkinReplacement minionSkinReplacement in _minionSkinReplacements)
+            foreach (MoonstormMinionSkinReplacement minionSkinReplacement in _minionSkinReplacements)
             {
                 coroutine.Add(minionSkinReplacement.GetMinionSkinReplacement());
             }
@@ -108,23 +106,23 @@ namespace MSU
                 HG.ArrayUtils.ArrayAppend(ref baseSkins, skin);
             }
             rootObject = model.gameObject;
-            foreach(var item in _rendererInfos)
+            foreach (var item in _rendererInfos)
             {
                 HG.ArrayUtils.ArrayAppend(ref rendererInfos, item.GetRendererInfo(model));
             }
-            foreach(var item in _gameObjectActivations)
+            foreach (var item in _gameObjectActivations)
             {
                 HG.ArrayUtils.ArrayAppend(ref gameObjectActivations, item.GetGameObjectActivation(model, displayModel));
             }
-            foreach(var item in _meshReplacements)
+            foreach (var item in _meshReplacements)
             {
                 HG.ArrayUtils.ArrayAppend(ref meshReplacements, item.GetMeshReplacement(model));
             }
-            foreach(var item in _projectileGhostReplacements)
+            foreach (var item in _projectileGhostReplacements)
             {
                 HG.ArrayUtils.ArrayAppend(ref projectileGhostReplacements, item.projectileGhostReplacement);
             }
-            foreach(var item in _minionSkinReplacements)
+            foreach (var item in _minionSkinReplacements)
             {
                 HG.ArrayUtils.ArrayAppend(ref minionSkinReplacements, item.minionSkinReplacement);
             }
@@ -161,7 +159,7 @@ namespace MSU
             /// <returns>A coroutine which can be awaited</returns>
             public IEnumerator GetSkin()
             {
-                if(_skinDef)
+                if (_skinDef)
                 {
                     skinDef = _skinDef;
                     yield break;
@@ -357,7 +355,7 @@ namespace MSU
             public IEnumerator GetProjectileGhostReplacement()
             {
                 var load = Addressables.LoadAssetAsync<GameObject>(_projectilePrefabAddress);
-                
+
                 while (!load.IsDone)
                     yield return null;
 

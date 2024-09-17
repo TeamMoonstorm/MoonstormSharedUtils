@@ -56,6 +56,7 @@ namespace Moonstorm
         internal static ConfigurableBool eventAnnouncementsAsChatMessages;
         internal static ConfigurableBool familyEventUsesEventAnnouncementInsteadOfChatMessage;
 
+        [System.Obsolete]
         internal void Init()
         {
             generalConfig = CreateConfigFile(general, false);
@@ -75,6 +76,7 @@ namespace Moonstorm
 #endif
         }
 
+        [System.Obsolete]
         private void SetConfigs()
         {
 #if DEBUG

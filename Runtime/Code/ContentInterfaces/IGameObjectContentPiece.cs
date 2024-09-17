@@ -1,6 +1,4 @@
 ﻿using RoR2;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace MSU
@@ -14,7 +12,7 @@ namespace MSU
     /// This can also be an Interface, such is the case for <see cref="IInteractableContentPiece"/>, which has T set to <see cref="IInteractable"/>
     /// </br>
     /// </typeparam>
-    public interface IGameObjectContentPiece<T> : IContentPiece<GameObject> 
+    public interface IGameObjectContentPiece<T> : IContentPiece<GameObject>
     {
         /// <summary>
         /// The key component to this GameObject.

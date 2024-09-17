@@ -42,7 +42,7 @@ namespace MSU.Editor.UIElements
 
         public void OnBoundSerializedObjectChange(SerializedObject so)
         {
-            if(so?.targetObject is not NamedItemDisplayRuleSet)
+            if (so?.targetObject is not NamedItemDisplayRuleSet)
             {
                 this.SetDisplay(false);
                 return;

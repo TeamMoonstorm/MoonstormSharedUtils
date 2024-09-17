@@ -1,4 +1,3 @@
-using Moonstorm;
 using RoR2.Editor;
 using System;
 using System.Collections.ObjectModel;
@@ -76,7 +75,7 @@ namespace MSU.Editor.UIElements
             newProperty.serializedObject.ApplyModifiedProperties();
             string keyAssetName = newProperty.FindPropertyRelative("keyAssetName").stringValue;
             instance.extraData = catalog.GetKeyAssetDisplays(keyAssetName);
-            if(instance.extraData == null)
+            if (instance.extraData == null)
             {
                 instance.helpBox.SetDisplay(true);
                 instance.button.text = "Invalid Rule Group";

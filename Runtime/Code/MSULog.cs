@@ -60,7 +60,7 @@ namespace MSU
 
             _log.Log(level, data2);
 #if DEBUG
-            if(MSUConfig._enableStackLogging && (level.HasFlag(LogLevel.Warning) || level.HasFlag(LogLevel.Error) || level.HasFlag(LogLevel.Fatal)))
+            if (MSUConfig._enableStackLogging && (level.HasFlag(LogLevel.Warning) || level.HasFlag(LogLevel.Error) || level.HasFlag(LogLevel.Fatal)))
             {
                 _log.LogMessage(new StackTrace());
             }

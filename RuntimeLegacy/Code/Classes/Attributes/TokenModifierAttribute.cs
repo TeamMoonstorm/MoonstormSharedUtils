@@ -1,5 +1,4 @@
-﻿using BepInEx;
-using BepInEx.Configuration;
+﻿using BepInEx.Configuration;
 using HG.Reflection;
 using Moonstorm.Config;
 using System;

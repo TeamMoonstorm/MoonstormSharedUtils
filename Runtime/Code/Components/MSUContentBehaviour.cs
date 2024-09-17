@@ -1,12 +1,7 @@
-﻿using MSU;
-using R2API;
+﻿using R2API;
 using RoR2;
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace MSU
@@ -39,7 +34,7 @@ namespace MSU
 
             //This is done to ensure whatever "OnEquipmentObtained" logic runs when the body starts. since OnEquipmentObtained only gets called when the inventory changes, which doesnt happen at this time.
             var eqpDef = EquipmentCatalog.GetEquipmentDef(body.inventory ? body.inventory.GetEquipmentIndex() : EquipmentIndex.None);
-            if(eqpDef && EquipmentModule.allMoonstormEquipments.TryGetValue(eqpDef, out var iEquipmentContentPiece))
+            if (eqpDef && EquipmentModule.allMoonstormEquipments.TryGetValue(eqpDef, out var iEquipmentContentPiece))
             {
                 iEquipmentContentPiece.OnEquipmentObtained(body);
             }

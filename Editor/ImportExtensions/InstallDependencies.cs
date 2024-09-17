@@ -1,12 +1,11 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
 using System.Linq;
 using ThunderKit.Core.Config;
 using ThunderKit.Core.Data;
+using ThunderKit.Core.Utilities;
 using ThunderKit.Integrations.Thunderstore;
 using UnityEditor;
-using ThunderKit.Core.Windows;
-using ThunderKit.Core.Utilities;
-using System.Collections.Generic;
+using UnityEngine;
 
 namespace MSU.Editor.Importers
 {
@@ -46,18 +45,18 @@ namespace MSU.Editor.Importers
                 else
                     _transientStore = packageSource;
 
-                if(packageSource.Packages == null || packageSource.Packages.Count == 0)
+                if (packageSource.Packages == null || packageSource.Packages.Count == 0)
                 {
                     Debug.LogWarning($"PackageSource at \"{packageSource.Url}\" has no packages");
                     return false;
                 }
 
                 List<(PackageGroup, string)> packages = new List<(PackageGroup, string)>();
-                foreach(string dependency in GetDependencyIDs())
+                foreach (string dependency in GetDependencyIDs())
                 {
                     var pkg = packageSource.Packages.FirstOrDefault(p => p.DependencyId == dependency);
 
-                    if(pkg != null && !pkg.Installed)
+                    if (pkg != null && !pkg.Installed)
                     {
                         packages.Add((pkg, "latest"));
                     }
@@ -67,12 +66,12 @@ namespace MSU.Editor.Importers
                     return true;
 
                 var task = packageSource.InstallPackages(packages);
-                while(!task.IsCompleted)
+                while (!task.IsCompleted)
                 {
                     Debug.Log("Waiting for Completion...");
                 }
             }
-            catch(System.Exception e)
+            catch (System.Exception e)
             {
                 Debug.LogError(e);
                 return false;

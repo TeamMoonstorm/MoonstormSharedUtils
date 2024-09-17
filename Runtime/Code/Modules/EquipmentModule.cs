@@ -6,9 +6,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using UnityEngine;
-using UnityEngine.AddressableAssets;
-using static RoR2.RoR2Content;
 
 namespace MSU
 {
@@ -120,10 +117,10 @@ namespace MSU
             var eliteEquips = new Dictionary<EquipmentDef, IEliteContentPiece>();
             var eliteDefs = new List<EliteDef>();
 
-            foreach(var(eqpDef, eqp) in _moonstormEquipments)
+            foreach (var (eqpDef, eqp) in _moonstormEquipments)
             {
                 allEquips.Add(eqpDef, eqp);
-                if(eqp is IEliteContentPiece eliteContent)
+                if (eqp is IEliteContentPiece eliteContent)
                 {
                     eliteEquips.Add(eqpDef, eliteContent);
                     eliteDefs.AddRange(eliteContent.eliteDefs);
@@ -140,12 +137,12 @@ namespace MSU
             moonstormEliteDefs = new ReadOnlyCollection<EliteDef>(eliteDefs);
 
             CombatDirector.EliteTierDef[] vanillaTiers = R2API.EliteAPI.VanillaEliteTiers;
-            foreach(EliteDef eliteDef in moonstormEliteDefs)
+            foreach (EliteDef eliteDef in moonstormEliteDefs)
             {
                 if (eliteDef is not ExtendedEliteDef eed)
                     continue;
 
-                switch(eed.eliteTier)
+                switch (eed.eliteTier)
                 {
                     case ExtendedEliteDef.VanillaTier.HonorDisabled:
                         HG.ArrayUtils.ArrayAppend(ref vanillaTiers[1].eliteTypes, eliteDef);
@@ -169,7 +166,7 @@ namespace MSU
         private static void CallOnEquipmentGained(On.RoR2.CharacterBody.orig_OnEquipmentGained orig, CharacterBody self, EquipmentDef equipmentDef)
         {
             orig(self, equipmentDef);
-            if(allMoonstormEquipments.TryGetValue(equipmentDef, out var contentPiece))
+            if (allMoonstormEquipments.TryGetValue(equipmentDef, out var contentPiece))
             {
                 contentPiece.OnEquipmentObtained(self);
             }
@@ -186,7 +183,7 @@ namespace MSU
 
         private static bool PerformAction(On.RoR2.EquipmentSlot.orig_PerformEquipmentAction orig, EquipmentSlot self, EquipmentDef equipmentDef)
         {
-            if(allMoonstormEquipments.TryGetValue(equipmentDef, out var equipment))
+            if (allMoonstormEquipments.TryGetValue(equipmentDef, out var equipment))
             {
                 return equipment.Execute(self);
             }
@@ -200,7 +197,7 @@ namespace MSU
 
             var helper = new ParallelMultiStartCoroutine();
 
-            foreach(var equipment in content)
+            foreach (var equipment in content)
             {
                 if (!equipment.IsAvailable(provider.contentPack))
                     continue;
@@ -218,7 +215,7 @@ namespace MSU
 
         private static void InitializeEquipments(BaseUnityPlugin plugin, List<IContentPiece<EquipmentDef>> equipments, IContentPieceProvider<EquipmentDef> provider)
         {
-            foreach(var equipment in equipments)
+            foreach (var equipment in equipments)
             {
 #if DEBUG
                 try
@@ -257,7 +254,7 @@ namespace MSU
 
                         var eliteDefWithOverlayMaterial = eliteContentPiece.eliteDefs.OfType<ExtendedEliteDef>().FirstOrDefault(eed => eed.overlayMaterial);
 
-                        if(eliteDefWithOverlayMaterial)
+                        if (eliteDefWithOverlayMaterial)
                             BuffOverlays.AddBuffOverlay(asset.passiveBuffDef, eliteDefWithOverlayMaterial.overlayMaterial);
 
                     }

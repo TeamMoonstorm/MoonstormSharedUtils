@@ -6,11 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Serialization;
-using static MSU.InteractableCardProvider;
 
 namespace MSU
 {
@@ -28,7 +25,7 @@ namespace MSU
         {
             get
             {
-                if(_stageToCards == null)
+                if (_stageToCards == null)
                 {
                     BuildDictionaries();
                 }
@@ -45,7 +42,7 @@ namespace MSU
         {
             get
             {
-                if(_customStageToCards == null)
+                if (_customStageToCards == null)
                 {
                     BuildDictionaries();
                 }
@@ -66,7 +63,7 @@ namespace MSU
         public HashSet<SpawnCard> BuildSpawnCardSet()
         {
             HashSet<SpawnCard> result = new HashSet<SpawnCard>();
-            foreach(StageMonsterCardPair pair in serializedCardPairs)
+            foreach (StageMonsterCardPair pair in serializedCardPairs)
             {
                 var card = pair.card;
 
@@ -74,7 +71,7 @@ namespace MSU
                     continue;
 
                 var spawnCard = card.spawnCard;
-                if(!spawnCard.AssetExists)
+                if (!spawnCard.AssetExists)
                 {
                     continue;
                 }

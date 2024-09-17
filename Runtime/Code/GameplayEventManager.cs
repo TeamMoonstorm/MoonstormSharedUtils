@@ -1,10 +1,4 @@
 ﻿using RoR2;
-using RoR2.UI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -55,9 +49,9 @@ namespace MSU
         /// <returns>True if the event is playing</returns>
         public static bool GameplayEventIsPlaying(GameplayEventIndex index)
         {
-            foreach(GameplayEvent gameplayEvent in InstanceTracker.GetInstancesList<GameplayEvent>())
+            foreach (GameplayEvent gameplayEvent in InstanceTracker.GetInstancesList<GameplayEvent>())
             {
-                if(gameplayEvent.gameplayEventIndex == index)
+                if (gameplayEvent.gameplayEventIndex == index)
                     return gameplayEvent.isPlaying;
             }
 
@@ -81,7 +75,7 @@ namespace MSU
             if (!GameplayEventExists(index))
                 return null;
 
-            foreach(var evt in InstanceTracker.GetInstancesList<GameplayEvent>())
+            foreach (var evt in InstanceTracker.GetInstancesList<GameplayEvent>())
             {
                 if (evt.gameplayEventIndex == index)
                     return evt;
@@ -97,11 +91,11 @@ namespace MSU
         public static bool AnyGameplayEventIsPlaying()
         {
             var list = InstanceTracker.GetInstancesList<GameplayEvent>();
-            
+
             if (list.Count == 0)
                 return false;
 
-            foreach(GameplayEvent evt in list)
+            foreach (GameplayEvent evt in list)
             {
                 if (evt.isPlaying)
                     return true;
@@ -140,13 +134,13 @@ namespace MSU
             if (evt.gameplayEventIndex == GameplayEventIndex.None)
                 return null;
 
-            if(!args.skipEventRequirementChecks && eventPrefab.TryGetComponent<GameplayEventRequirement>(out var requirements))
+            if (!args.skipEventRequirementChecks && eventPrefab.TryGetComponent<GameplayEventRequirement>(out var requirements))
             {
                 if (!requirements.IsAvailable())
                     return null;
             }
 
-            if(!args.ignoreDuplicateEvents)
+            if (!args.ignoreDuplicateEvents)
             {
                 if (GameplayEventExists(evt.gameplayEventIndex))
                     return null;
@@ -154,22 +148,22 @@ namespace MSU
 
             GameplayEvent evtInstance = UnityEngine.Object.Instantiate(eventPrefab).GetComponent<GameplayEvent>();
             NetworkServer.Spawn(evtInstance.gameObject);
-            if(args.announcementDuration.HasValue)
+            if (args.announcementDuration.HasValue)
             {
                 evtInstance.announcementDuration = args.announcementDuration.Value;
             }
 
-            if(args.expirationTimer.HasValue)
+            if (args.expirationTimer.HasValue)
             {
                 evtInstance.gameObject.AddComponent<DestroyOnTimer>().duration = args.expirationTimer.Value;
             }
 
-            if(args.beginOnStartOverride.HasValue)
+            if (args.beginOnStartOverride.HasValue)
             {
                 evtInstance.beginOnStart = args.beginOnStartOverride.Value;
             }
 
-            if(!args.doNotAnnounceStart && GameplayEventTextController.instance)
+            if (!args.doNotAnnounceStart && GameplayEventTextController.instance)
             {
                 GameplayEventTextController.instance.EnqueueNewTextRequest(new GameplayEventTextController.EventTextRequest
                 {

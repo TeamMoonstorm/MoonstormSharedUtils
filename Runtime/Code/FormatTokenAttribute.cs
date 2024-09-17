@@ -2,12 +2,8 @@
 using HG.Reflection;
 using MSU.Config;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MSU
 {
@@ -21,7 +17,7 @@ namespace MSU
         /// The language token to be formatted
         /// </summary>
         public string languageToken { get; private set; }
-        
+
         /// <summary>
         /// A type of operation to apply to the value stored in the field/property this attribute is attached to.
         /// </summary>
@@ -44,11 +40,11 @@ namespace MSU
         internal object GetFormattingValue()
         {
             object value = null;
-            if(target is FieldInfo fi)
+            if (target is FieldInfo fi)
             {
                 value = fi.GetValue(null);
             }
-            else if(target is PropertyInfo pi)
+            else if (target is PropertyInfo pi)
             {
                 value = pi.GetMethod?.Invoke(null, null);
             }
@@ -59,7 +55,7 @@ namespace MSU
 
             Type valueType = value.GetType();
 
-            if(valueType.IsSubclassOf(typeof(ConfiguredVariable)))
+            if (valueType.IsSubclassOf(typeof(ConfiguredVariable)))
             {
                 PropertyInfo configEntryBase = valueType.GetProperty(nameof(ConfiguredVariable.configEntryBase), BindingFlags.Public | BindingFlags.Instance);
                 var cfg = (ConfigEntryBase)configEntryBase.GetMethod?.Invoke(value, null);
@@ -69,11 +65,11 @@ namespace MSU
             if (value == null)
                 return string.Empty;
 
-            if(IsNumber(value))
+            if (IsNumber(value))
             {
-                if(operationType.HasValue && operationData.HasValue)
+                if (operationType.HasValue && operationData.HasValue)
                 {
-                    switch(operationType.Value)
+                    switch (operationType.Value)
                     {
                         case OperationTypeEnum.MultiplyByN:
                             _cachedFormattingValue = MultiplyByN(CastToFloat(value));

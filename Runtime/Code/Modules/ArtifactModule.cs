@@ -1,16 +1,11 @@
 ﻿using BepInEx;
-using MSU;
 using R2API;
 using RoR2;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using UnityEngine;
-using UnityEngine.AddressableAssets;
 using UnityEngine.Networking;
-using static RoR2.RoR2Content;
 
 namespace MSU
 {
@@ -74,7 +69,7 @@ namespace MSU
         public static IEnumerator InitializeArtifacts(BaseUnityPlugin plugin)
         {
 #if DEBUG
-            if(!_pluginToContentProvider.ContainsKey(plugin))
+            if (!_pluginToContentProvider.ContainsKey(plugin))
             {
                 MSULog.Info($"{plugin} has no IContentPieceProvider registered in the ArtifactModule.");
             }
@@ -153,10 +148,10 @@ namespace MSU
 
         private static void InitializeArtifacts(BaseUnityPlugin plugin, List<IContentPiece<ArtifactDef>> artifacts, IContentPieceProvider<ArtifactDef> provider)
         {
-            foreach(var artifact in artifacts)
+            foreach (var artifact in artifacts)
             {
 #if DEBUG
-                try 
+                try
                 {
 #endif
                     artifact.Initialize();
@@ -199,4 +194,4 @@ namespace MSU
             }
         }
     }
-} 
+}

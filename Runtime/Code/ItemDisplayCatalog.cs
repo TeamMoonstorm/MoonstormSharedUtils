@@ -93,17 +93,17 @@ namespace MSU
 
         private static void CreateDisplayDictionary()
         {
-            foreach(ItemDisplayRuleSet idrs in _idrsDictionary.Values)
+            foreach (ItemDisplayRuleSet idrs in _idrsDictionary.Values)
             {
                 PopulateDisplaysFromIDRS(idrs);
             }
 
-            foreach(var (_, item) in ItemModule.moonstormItems)
+            foreach (var (_, item) in ItemModule.moonstormItems)
             {
                 PopulateDisplaysFromItems(item);
             }
 
-            foreach(var (_, equipment) in EquipmentModule.allMoonstormEquipments)
+            foreach (var (_, equipment) in EquipmentModule.allMoonstormEquipments)
             {
                 PopulateDisplaysFromEquips(equipment);
             }
@@ -111,13 +111,13 @@ namespace MSU
 
         private static void PopulateDisplaysFromIDRS(ItemDisplayRuleSet idrs)
         {
-            foreach(var ruleGroup in idrs.keyAssetRuleGroups)
+            foreach (var ruleGroup in idrs.keyAssetRuleGroups)
             {
                 if (ruleGroup.displayRuleGroup.isEmpty)
                     continue;
 
                 var rulesArray = ruleGroup.displayRuleGroup.rules;
-                for(int i = 0; i < rulesArray.Length; i++)
+                for (int i = 0; i < rulesArray.Length; i++)
                 {
                     var rule = rulesArray[i];
                     var displayPrefab = rule.followerPrefab;
@@ -126,7 +126,7 @@ namespace MSU
 
                     string key = displayPrefab.name.IsNullOrWhiteSpace() ? $"{ruleGroup.keyAsset.name}Display_{i}" : displayPrefab.name;
 
-                    if(!_displayDictionary.ContainsKey(key))
+                    if (!_displayDictionary.ContainsKey(key))
                     {
                         _displayDictionary.Add(key, displayPrefab);
                     }
@@ -137,7 +137,7 @@ namespace MSU
                             continue;
 
                         int startingIndex = i - 1;
-                        while(_displayDictionary.ContainsKey(key))
+                        while (_displayDictionary.ContainsKey(key))
                         {
                             startingIndex++;
                             key = $"{ruleGroup.keyAsset.name}Display_{startingIndex}";
@@ -155,7 +155,7 @@ namespace MSU
 
         private static void PopulateDisplaysFromItems(IItemContentPiece item)
         {
-            if(!item.itemDisplayPrefabs)
+            if (!item.itemDisplayPrefabs)
             {
                 return;
             }
@@ -163,7 +163,7 @@ namespace MSU
             List<GameObject> displayPrefabs = item.itemDisplayPrefabs;
             ItemDef itemDef = item.asset;
 
-            for(int i = 0; i < displayPrefabs.Count; i++)
+            for (int i = 0; i < displayPrefabs.Count; i++)
             {
                 var displayPrefab = displayPrefabs[i];
 
@@ -172,7 +172,7 @@ namespace MSU
 
                 string key = displayPrefab.name.IsNullOrWhiteSpace() ? $"{itemDef.name}Display_{i}" : displayPrefab.name;
 
-                if(!_displayDictionary.ContainsKey(key))
+                if (!_displayDictionary.ContainsKey(key))
                 {
                     _displayDictionary.Add(key, displayPrefab);
                 }
@@ -295,7 +295,7 @@ namespace MSU
         {
             Dictionary<string, HashSet<string>> target = null;
 
-            switch(keyAsset)
+            switch (keyAsset)
             {
                 case ItemDef id:
                     target = _itemToDisplayPrefabs;
@@ -313,7 +313,7 @@ namespace MSU
                 target[keyName] = new HashSet<string>(_comparer);
             }
 
-            for(int i = 0; i < displayPrefabs.Count; i++)
+            for (int i = 0; i < displayPrefabs.Count; i++)
             {
                 var displayPrefab = displayPrefabs[i];
                 if (!displayPrefab)

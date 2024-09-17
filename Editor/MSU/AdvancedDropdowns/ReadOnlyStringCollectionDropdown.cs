@@ -17,7 +17,7 @@ namespace MSU.Editor
         {
             var rootItem = new Item(_rootItemKey, string.Empty);
             rootItem.AddChild(new Item("None", ""));
-            foreach(var entry in _collection)
+            foreach (var entry in _collection)
             {
                 rootItem.AddChild(new Item(ObjectNames.NicifyVariableName(entry), entry));
             }
@@ -35,7 +35,7 @@ namespace MSU.Editor
 
             var rect = EditorGUILayout.BeginHorizontal();
             GUILayout.Label(label, GUILayout.ExpandWidth(false));
-            if(EditorGUILayout.DropdownButton(new GUIContent(displayValue), FocusType.Passive))
+            if (EditorGUILayout.DropdownButton(new GUIContent(displayValue), FocusType.Passive))
             {
                 Rect labelRect = GUILayoutUtility.GetLastRect();
 

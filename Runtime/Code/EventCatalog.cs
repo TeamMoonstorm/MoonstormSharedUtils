@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace MSU
@@ -94,7 +92,7 @@ namespace MSU
         public static void AddGameplayEvents(GameObject[] gameplayEventGameObjects)
         {
             ThrowIfInitialized();
-            foreach(GameObject go in gameplayEventGameObjects)
+            foreach (GameObject go in gameplayEventGameObjects)
             {
                 AddGameplayEvent(go);
             }
@@ -109,7 +107,7 @@ namespace MSU
         {
             ThrowIfInitialized();
 
-            if(!gameplayEventGameObject.TryGetComponent<GameplayEvent>(out var @event))
+            if (!gameplayEventGameObject.TryGetComponent<GameplayEvent>(out var @event))
             {
 #if DEBUG
                 MSULog.Warning($"GameObject {gameplayEventGameObject} does not have a GameplayEvent component!");
@@ -140,19 +138,19 @@ namespace MSU
         private static List<GameObject> RegisterGameplayEvents()
         {
             List<GameObject> validEvents = new List<GameObject>();
-            for(int i = 0; i < _gameplayEvents.Length; i++)
+            for (int i = 0; i < _gameplayEvents.Length; i++)
             {
                 try
                 {
                     RegisterGameplayEvent(_gameplayEvents[i], validEvents);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     MSULog.Error(e);
                 }
             }
 
-            for(int i = 0; i < validEvents.Count; i++)
+            for (int i = 0; i < validEvents.Count; i++)
             {
                 var gameplayEventObject = validEvents[i];
                 var gameplayEventComponent = gameplayEventObject.GetComponent<GameplayEvent>();
@@ -165,7 +163,7 @@ namespace MSU
 
         private static void RegisterGameplayEvent(GameObject gameplayEvent, List<GameObject> validEvents)
         {
-            if(!gameplayEvent.TryGetComponent<GameplayEvent>(out var eventComponent))
+            if (!gameplayEvent.TryGetComponent<GameplayEvent>(out var eventComponent))
             {
                 throw new NullReferenceException($"GameObject {gameplayEvent} does not contain a GameplayEvent component.");
             }
@@ -182,7 +180,7 @@ namespace MSU
 
         private static void ThrowIfInitialized()
         {
-            if(_initialized)
+            if (_initialized)
             {
                 throw new InvalidOperationException("GameplayEventCatalog has already initialized.");
             }

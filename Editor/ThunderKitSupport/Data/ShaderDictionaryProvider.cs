@@ -48,7 +48,7 @@ namespace MSU.Editor
         private void Save()
         {
             serializedObject?.ApplyModifiedProperties();
-            if(dictionary)
+            if (dictionary)
             {
                 dictionary.DoSave();
             }

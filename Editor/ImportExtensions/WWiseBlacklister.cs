@@ -10,7 +10,7 @@ namespace MSU.Editor.Importers
             $"\nAk.Wwise.API.WAAPI.dll" +
             $"\nAK.WWise.Unity.API.dll" +
             $"\nAK.Wwise.Unity.API.WwiseTypes.dll" +
-            $"\nAK.Wwise.Unity.MonoBehaviour.dll"+
+            $"\nAK.Wwise.Unity.MonoBehaviour.dll" +
             $"\nAK.Wwise.Unity.Timeline" +
             $"\nUseful if your project uses the Wwise Integration";
         public override string Name => $"Wwise Blacklister";

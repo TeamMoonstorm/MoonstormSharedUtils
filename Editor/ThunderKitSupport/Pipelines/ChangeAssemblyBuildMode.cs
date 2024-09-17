@@ -47,7 +47,7 @@ namespace MSU.Editor
             Debug,
             Release
         }
-    
+
         private class ChangeAssemblyBuildModeResult
         {
             public int totalStageAssemblyJobs = 0;

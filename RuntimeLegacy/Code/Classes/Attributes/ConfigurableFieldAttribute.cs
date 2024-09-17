@@ -1,6 +1,5 @@
 ﻿using BepInEx.Configuration;
 using HG.Reflection;
-using Moonstorm.Config;
 using RiskOfOptions;
 using RiskOfOptions.Options;
 using System;

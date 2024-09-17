@@ -2,12 +2,9 @@
 using MSU.Config;
 using RoR2;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace MSU
@@ -76,7 +73,7 @@ namespace MSU
         private void GetNoEnemiesField()
         {
             Type t = Type.GetType("DebugToolkit.Commands.CurrentRun, DebugToolkit");
-            if(t != null)
+            if (t != null)
             {
                 _noEnemiesField = t.GetField("noEnemies", BindingFlags.NonPublic | BindingFlags.Static);
             }
@@ -98,10 +95,10 @@ namespace MSU
                 MSUtil.InvokeCommand("stage1_pod", "0");
             if (MSUConfig._invokeNoMonsters)
             {
-                if(_noEnemiesField != null)
+                if (_noEnemiesField != null)
                 {
                     bool noEnemiesIsTrue = (bool)_noEnemiesField.GetValue(null);
-                    if(!noEnemiesIsTrue)
+                    if (!noEnemiesIsTrue)
                     {
                         MSUtil.InvokeCommand("no_enemies", "1");
                     }
@@ -111,7 +108,7 @@ namespace MSU
                     MSUtil.InvokeCommand("no_enemies", "1");
                 }
             }
-            if(MSUConfig._invoke100Dios)
+            if (MSUConfig._invoke100Dios)
                 MSUtil.InvokeCommand("give_item", "extralife", "100", GetNetworkUser().ToString());
         }
 

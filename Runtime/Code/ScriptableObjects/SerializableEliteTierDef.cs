@@ -2,10 +2,7 @@
 using R2API.AddressReferencedAssets;
 using RoR2;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace MSU
@@ -43,12 +40,12 @@ namespace MSU
         /// </summary>
         public void Init()
         {
-            if(eliteTierDef != null || eliteTierIndex != -1)
+            if (eliteTierDef != null || eliteTierIndex != -1)
             {
                 return;
             }
 
-            if(AddressReferencedAsset.Initialized)
+            if (AddressReferencedAsset.Initialized)
             {
                 DoInit();
             }

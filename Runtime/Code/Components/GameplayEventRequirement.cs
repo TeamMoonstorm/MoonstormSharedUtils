@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
-using R2API.AddressReferencedAssets;
+﻿using R2API.AddressReferencedAssets;
 using RoR2;
 using RoR2.ExpansionManagement;
+using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace MSU
 {
@@ -90,7 +87,7 @@ namespace MSU
         /// <returns>True if all the expansions are enabled, false otherwise.</returns>
         protected bool CheckExpansions()
         {
-            foreach(AddressReferencedExpansionDef expansionDef in requiredExpansions)
+            foreach (AddressReferencedExpansionDef expansionDef in requiredExpansions)
             {
                 if (!expansionDef)
                     continue;

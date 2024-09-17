@@ -1,5 +1,4 @@
 ﻿using UnityEditor;
-using UnityEditorInternal.VR;
 using UnityEngine;
 
 namespace MSU.Editor.ShaderSystem
@@ -63,7 +62,7 @@ namespace MSU.Editor.ShaderSystem
         {
             EditorGUILayout.LabelField(new GUIContent("WARNING (Hover Me.)", "This AddressableMaterialShader is deprecated, click the button below to update"));
 
-            if(GUILayout.Button("Upgrade"))
+            if (GUILayout.Button("Upgrade"))
             {
                 SerializedObject so = obj.serializedObject;
                 SerializedProperty sp = so.FindProperty("m_Shader");

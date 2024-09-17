@@ -2,11 +2,9 @@
 using R2API.AddressReferencedAssets;
 using RoR2;
 using System;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Rendering;
-using UnityEngine.UIElements;
 
 namespace MSU
 {
@@ -64,27 +62,27 @@ namespace MSU
                 HG.ArrayUtils.ArrayAppend(ref baseSkins, baseSkin.Asset);
             }
             rootObject = characterModel.gameObject;
-            foreach(var item in _rendererInfos)
+            foreach (var item in _rendererInfos)
             {
                 var rendererInfo = item.Upgrade(characterModel);
                 HG.ArrayUtils.ArrayAppend(ref rendererInfos, rendererInfo);
             }
-            foreach(var item in _gameObjectActivations)
+            foreach (var item in _gameObjectActivations)
             {
                 var gameObjectActivation = item.Upgrade(characterModel, displayModel);
                 HG.ArrayUtils.ArrayAppend(ref gameObjectActivations, gameObjectActivation);
             }
-            foreach(var item in _meshReplacements)
+            foreach (var item in _meshReplacements)
             {
                 var meshReplacement = item.Upgrade(characterModel);
                 HG.ArrayUtils.ArrayAppend(ref meshReplacements, meshReplacement);
             }
-            foreach(var item in _projectileGhostReplacements)
+            foreach (var item in _projectileGhostReplacements)
             {
                 var ghostReplacement = item.Upgrade();
                 HG.ArrayUtils.ArrayAppend(ref projectileGhostReplacements, ghostReplacement);
             }
-            foreach(var item in _minionSkinReplacements)
+            foreach (var item in _minionSkinReplacements)
             {
                 var minionSkin = item.Upgrade();
                 HG.ArrayUtils.ArrayAppend(ref minionSkinReplacements, minionSkin);
@@ -162,7 +160,7 @@ namespace MSU
             private SkinDef.GameObjectActivation CreateCustomActivation(CharacterModel characterModel, CharacterModel displayModel)
             {
                 Transform child = characterModel.GetComponent<ChildLocator>().FindChild(childLocatorEntry);
-                if(!child)
+                if (!child)
                 {
                     MSULog.Warning($"Cannot create custom game object activation since \"{childLocatorEntry}\" is not a valid entry for model {characterModel}");
                     return new GameObjectActivation { };
@@ -228,7 +226,7 @@ namespace MSU
             public AddressReferencedPrefab projectilePrefab;
             [Tooltip("The new ghost prefab for the projectile")]
             public GameObject ghostReplacement;
-        
+
             internal SkinDef.ProjectileGhostReplacement Upgrade()
             {
                 return new ProjectileGhostReplacement

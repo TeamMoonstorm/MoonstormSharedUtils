@@ -3,12 +3,6 @@ using BepInEx.Configuration;
 using RiskOfOptions;
 using RiskOfOptions.OptionConfigs;
 using RiskOfOptions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEditor;
 
 namespace MSU.Config
 {
@@ -64,7 +58,7 @@ namespace MSU.Config
             get => _sliderConfig;
             set
             {
-                if(isConfigured)
+                if (isConfigured)
                 {
                     return;
                 }
@@ -172,8 +166,8 @@ namespace MSU.Config
                 var guid = separateEntry ? modGUID + "." + fileName : modGUID;
                 var name = separateEntry ? modName + "." + fileName : modName;
                 BaseOption baseOption = null;
-                
-                switch(sliderType)
+
+                switch (sliderType)
                 {
                     case SliderTypeEnum.Normal:
                         baseOption = sliderConfig == null ? new SliderOption(configEntry) : new SliderOption(configEntry, sliderConfig);

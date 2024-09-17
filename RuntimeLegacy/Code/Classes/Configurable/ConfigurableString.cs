@@ -3,7 +3,6 @@ using BepInEx.Configuration;
 using RiskOfOptions;
 using RiskOfOptions.OptionConfigs;
 using RiskOfOptions.Options;
-using System;
 
 namespace Moonstorm.Config
 {

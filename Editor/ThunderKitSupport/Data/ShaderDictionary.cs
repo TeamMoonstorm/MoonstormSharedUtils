@@ -1,6 +1,5 @@
 using RoR2.Editor;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -172,7 +171,7 @@ namespace MSU.Editor
         static void CreateDictionaryOnDomainReload()
         {
             var dict = instance;
-            if(dict)
+            if (dict)
             {
                 dict.ReloadDictionaries();
             }

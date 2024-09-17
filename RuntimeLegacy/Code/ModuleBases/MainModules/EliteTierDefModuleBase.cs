@@ -1,10 +1,8 @@
 ﻿using R2API.AddressReferencedAssets;
 using RoR2;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using static RoR2.CombatDirector;
 
 namespace Moonstorm
 {

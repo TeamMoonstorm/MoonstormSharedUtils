@@ -1,10 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using ShaderSwapper;
 using System.Linq;
+using UnityEngine;
 using UnityEngine.AddressableAssets;
-using System;
 
 namespace MSU
 {
@@ -127,7 +126,7 @@ namespace MSU
         {
             ParallelMultiStartCoroutine helper = new ParallelMultiStartCoroutine();
 
-            foreach(var material in materials)
+            foreach (var material in materials)
             {
                 helper.Add(ShaderSwapper.ShaderSwapper.UpgradeStubbedShaderAsync, material);
             }
@@ -171,7 +170,7 @@ namespace MSU
                 yield return null;
 
             var loadedMat = asyncOp.Result;
-            if(!loadedMat)
+            if (!loadedMat)
             {
                 MSULog.Warning($"{material}'s AddressableMaterialShader's address returned a null object. (Address={address})");
                 yield break;
@@ -192,11 +191,11 @@ namespace MSU
 #endif
             var shaderName = mat.shader.name;
 
-            if(shaderName == "MSU/AddressableMaterialShader")
+            if (shaderName == "MSU/AddressableMaterialShader")
             {
                 return true;
             }
-            else if(shaderName == "DEPRECATED/AddressableMaterialShader")
+            else if (shaderName == "DEPRECATED/AddressableMaterialShader")
             {
                 MSULog.Warning($"Material wtih name {mat.name} has its Shader set to \"DEPRECATED/AddressableMaterialShader\", this shader will be removed in future releases as its been replaced by the shader \"MSU/AddressableMaterialShader\"." +
                     $"\nThis message is purely a warning and the material's addressable representation will be loaded regardless.");

@@ -1,9 +1,6 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
-using RiskOfOptions;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace MSU.Config
@@ -36,7 +33,7 @@ namespace MSU.Config
         public ConfigFile CreateConfigFile(string identifier, bool createSeparateRiskOfOptionsEntry = false)
         {
             string fileName = identifier;
-            if(!fileName.EndsWith(".cfg", StringComparison.OrdinalIgnoreCase))
+            if (!fileName.EndsWith(".cfg", StringComparison.OrdinalIgnoreCase))
             {
                 fileName += ".cfg";
             }

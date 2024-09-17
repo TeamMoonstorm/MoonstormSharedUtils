@@ -1,6 +1,5 @@
 ﻿using BepInEx.Logging;
 using Moonstorm.Loaders;
-using System.Runtime.CompilerServices;
 
 namespace Moonstorm
 {

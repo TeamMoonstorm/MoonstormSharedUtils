@@ -1,6 +1,6 @@
+using R2API;
 using RoR2;
 using RoR2.ExpansionManagement;
-using R2API;
 using System;
 using System.Linq;
 

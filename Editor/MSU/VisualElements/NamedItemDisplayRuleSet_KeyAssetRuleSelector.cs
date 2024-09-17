@@ -2,7 +2,6 @@ using RoR2.Editor;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Reflection;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using UnityEditor.UIElements;
@@ -23,7 +22,7 @@ namespace MSU.Editor.UIElements
             get => _currentlyInspectedEntry;
             set
             {
-                if(_currentlyInspectedEntry != value)
+                if (_currentlyInspectedEntry != value)
                 {
                     value?.representingProperty.serializedObject.ApplyModifiedProperties();
                     _currentlyInspectedEntry = value;
@@ -40,7 +39,7 @@ namespace MSU.Editor.UIElements
         public event Action<PropertySelectorButton> onNamedRuleButtonClicked;
         public void OnBoundSerializedObjectChange(SerializedObject so)
         {
-            if(so == null)
+            if (so == null)
             {
                 this.SetDisplay(false);
                 currentlyInspectedEntry = null;
@@ -80,7 +79,7 @@ namespace MSU.Editor.UIElements
         private void UpdateButtonDisplay(PropertySelectorButton instance)
         {
             var newProperty = instance.representingProperty;
-            if(newProperty == null)
+            if (newProperty == null)
             {
                 return;
             }
@@ -97,7 +96,7 @@ namespace MSU.Editor.UIElements
             }
 
             displayName.stringValue = displayName.stringValue.IsNullOrEmptyOrWhiteSpace() ? displays.FirstOrDefault() : displayName.stringValue;
-            if(displays.Contains(displayName.stringValue))
+            if (displays.Contains(displayName.stringValue))
             {
                 string childName = CheckChildName();
                 instance.button.text = $"{displayName.stringValue}|{childName}";
@@ -147,7 +146,7 @@ namespace MSU.Editor.UIElements
 
         private void UpdateBinding()
         {
-            if(currentlyInspectedEntry == null || currentlyInspectedEntry.representingProperty == null)
+            if (currentlyInspectedEntry == null || currentlyInspectedEntry.representingProperty == null)
             {
                 buttonListView.Unbind();
                 helpBox.SetDisplay(true);
@@ -175,7 +174,7 @@ namespace MSU.Editor.UIElements
             string newVal = item.value;
             var potentialCollection = catalog.GetKeyAssetDisplays(newVal);
             bool shouldUpdate = false;
-            if(potentialCollection == null)
+            if (potentialCollection == null)
             {
                 helpBox.message = "The KeyAsset value for this entry may be invalid, as the value wasnt found in the ItemDisplayCatalog, are your sure your ItemDisplayCatalog is up to date?";
                 helpBox.messageType = MessageType.Info;

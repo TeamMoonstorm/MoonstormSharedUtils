@@ -3,10 +3,7 @@ using BepInEx.Configuration;
 using RoR2;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace MSU.Config
@@ -19,7 +16,7 @@ namespace MSU.Config
         private static readonly Dictionary<ConfigFile, BaseUnityPlugin> _configToPluginOwner = new Dictionary<ConfigFile, BaseUnityPlugin>();
         private static readonly Dictionary<string, ConfigFile> _identifierToConfigFile = new Dictionary<string, ConfigFile>(StringComparer.OrdinalIgnoreCase);
         private static readonly HashSet<ConfigFile> _configFilesWithSeparateRiskOfOptionsEntries = new HashSet<ConfigFile>();
-        
+
         /// <summary>
         /// Retrieves a <see cref="ConfigFile"/> with the identifier specified in <paramref name="identifier"/>
         /// </summary>
@@ -27,7 +24,7 @@ namespace MSU.Config
         /// <returns>A valid ConfigFile if it exists in the ConfigSystem, otherwise returns null.</returns>
         public static ConfigFile GetConfigFile(string identifier)
         {
-            if(!_identifierToConfigFile.TryGetValue(identifier, out ConfigFile configFile))
+            if (!_identifierToConfigFile.TryGetValue(identifier, out ConfigFile configFile))
             {
 #if DEBUG
                 MSULog.Warning($"Couldd not find a config file with the identifier \"{identifier}\"");
@@ -46,8 +43,8 @@ namespace MSU.Config
         /// <param name="tiedPlugin">The plugint that's respnsible for adding <paramref name="configFile"/></param>
         /// <param name="createSeparateRiskOfOptionsEntry">If true, the ConfigSystem will create a new Risk of Options entry for the ConfigFile.</param>
         public static void AddConfigFileAndIdentifier(string identifier, ConfigFile configFile, BaseUnityPlugin tiedPlugin, bool createSeparateRiskOfOptionsEntry = false)
-        { 
-            if(_identifierToConfigFile.ContainsKey(identifier))
+        {
+            if (_identifierToConfigFile.ContainsKey(identifier))
             {
                 MSULog.Warning($"Cannot add a ConfigFile with the identifier \"{identifier}\" as that identifier is already being used.");
                 return;
@@ -55,7 +52,7 @@ namespace MSU.Config
 
             _configToPluginOwner.Add(configFile, tiedPlugin);
             _identifierToConfigFile.Add(identifier, configFile);
-            if(createSeparateRiskOfOptionsEntry)
+            if (createSeparateRiskOfOptionsEntry)
                 _configFilesWithSeparateRiskOfOptionsEntries.Add(configFile);
         }
 
@@ -82,7 +79,7 @@ namespace MSU.Config
 
         private static PluginInfo FindPluginInfo(Assembly asm)
         {
-            foreach(var (name, pInfo) in BepInEx.Bootstrap.Chainloader.PluginInfos)
+            foreach (var (name, pInfo) in BepInEx.Bootstrap.Chainloader.PluginInfos)
             {
                 if (asm.Location == pInfo.Location)
                     return pInfo;
@@ -110,13 +107,13 @@ namespace MSU.Config
                 return;
 
             MSULog.Info($"Configuring a total of {instances.Count} ConfigureField attributes");
-            foreach(ConfigureFieldAttribute attribute in instances)
+            foreach (ConfigureFieldAttribute attribute in instances)
             {
                 try
                 {
                     ConfigureConfigureField(attribute);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     MSULog.Error($"Error while configuring {attribute.attachedMemberInfo.Name}. {e}");
                 }
@@ -128,7 +125,7 @@ namespace MSU.Config
             MemberInfo memberInfo = attribute.attachedMemberInfo;
             Type declaringType = memberInfo.DeclaringType;
             Func<object> getAction = null;
-            switch(memberInfo)
+            switch (memberInfo)
             {
                 case PropertyInfo pInfo:
                     var methodInfo = pInfo.GetGetMethod();
@@ -156,7 +153,7 @@ namespace MSU.Config
             PluginInfo pluginInfo = FindPluginInfo(declaringType.Assembly);
             ConfigFile file = identifier.IsNullOrWhiteSpace() ? pluginInfo.Instance.Config : GetConfigFile(identifier);
 
-            if(attribute is RiskOfOptionsConfigureFieldAttribute rooAttribute)
+            if (attribute is RiskOfOptionsConfigureFieldAttribute rooAttribute)
             {
                 rooAttribute.modGUID = pluginInfo.Metadata.GUID;
                 rooAttribute.modName = pluginInfo.Metadata.Name;
@@ -166,7 +163,7 @@ namespace MSU.Config
 
             void ConfigureInternal(ConfigureFieldAttribute att, ConfigFile configFile, object value)
             {
-                switch(val)
+                switch (val)
                 {
                     case string _string: att.ConfigureField(configFile, _string); break;
                     case bool _bool: att.ConfigureField(configFile, _bool); break;
@@ -202,13 +199,13 @@ namespace MSU.Config
 
             MSULog.Info($"Auto Configuring a total of {instances.Count} ConfiguredVariables");
 
-            foreach(ConfiguredVariable.AutoConfigAttribute instance in instances)
+            foreach (ConfiguredVariable.AutoConfigAttribute instance in instances)
             {
                 try
                 {
                     ConfigureAutoConfig(instance);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     MSULog.Error($"Error while auto configuring a ConfiguredVariable: {instance}\n{e}");
                 }
@@ -219,7 +216,7 @@ namespace MSU.Config
         {
             MemberInfo memberInfo = (MemberInfo)instance.target;
             ConfiguredVariable configuredVariable = null;
-            switch(memberInfo)
+            switch (memberInfo)
             {
                 case PropertyInfo pInfo:
                     var methodInfo = pInfo.GetGetMethod();
@@ -241,7 +238,7 @@ namespace MSU.Config
             if (!configuredVariable.canBeConfigured)
                 return;
 
-            if(configuredVariable.configFile == null)
+            if (configuredVariable.configFile == null)
             {
                 ConfigFile file = configuredVariable.configFileIdentifier.IsNullOrWhiteSpace() ? FindPluginInfo(memberInfo.DeclaringType.Assembly).Instance.Config : GetConfigFile(configuredVariable.configFileIdentifier);
 
@@ -258,12 +255,12 @@ namespace MSU.Config
                 configuredVariable.description = instance.descriptionOverride;
             }
 
-            if(configuredVariable.modGUID.IsNullOrWhiteSpace())
+            if (configuredVariable.modGUID.IsNullOrWhiteSpace())
             {
                 configuredVariable.modGUID = _configToPluginOwner[configuredVariable.configFile].Info.Metadata.GUID;
             }
-            
-            if(configuredVariable.modName.IsNullOrWhiteSpace())
+
+            if (configuredVariable.modName.IsNullOrWhiteSpace())
             {
                 configuredVariable.modName = _configToPluginOwner[configuredVariable.configFile].Info.Metadata.Name;
             }

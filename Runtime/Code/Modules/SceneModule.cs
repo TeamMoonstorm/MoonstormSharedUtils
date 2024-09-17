@@ -5,10 +5,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
 
 namespace MSU
 {
@@ -51,7 +47,7 @@ namespace MSU
         /// <returns>An array of ISceneContentPiece, if the plugin has not added any scenes, it returns an empty Array</returns>
         public static ISceneContentPiece[] GetScenes(BaseUnityPlugin plugin)
         {
-            if(!_pluginToScenes.TryGetValue(plugin, out var scenes))
+            if (!_pluginToScenes.TryGetValue(plugin, out var scenes))
             {
                 return scenes;
             }
@@ -78,7 +74,7 @@ namespace MSU
             if (_pluginToContentProvider.TryGetValue(plugin, out IContentPieceProvider<SceneDef> provider))
             {
                 var enumerator = InitializeScenesFromProvider(plugin, provider);
-                while(enumerator.MoveNext())
+                while (enumerator.MoveNext())
                 {
                     yield return null;
                 }
@@ -112,7 +108,7 @@ namespace MSU
         {
             var sceneDef = obj.sceneDef;
 
-            if(sceneDef && moonstormScenes.TryGetValue(sceneDef, out var sceneContentPiece))
+            if (sceneDef && moonstormScenes.TryGetValue(sceneDef, out var sceneContentPiece))
             {
                 sceneContentPiece.OnServerStageBegin(obj);
             }
@@ -124,7 +120,7 @@ namespace MSU
             List<IContentPiece<SceneDef>> _scenes = new List<IContentPiece<SceneDef>>();
 
             var helper = new ParallelMultiStartCoroutine();
-            foreach(var scene in content)
+            foreach (var scene in content)
             {
                 if (!scene.IsAvailable(provider.contentPack))
                     continue;
@@ -142,7 +138,7 @@ namespace MSU
 
         private static void InitializeScenes(BaseUnityPlugin plugin, List<IContentPiece<SceneDef>> scenes, IContentPieceProvider<SceneDef> provider)
         {
-            foreach(var scene in scenes)
+            foreach (var scene in scenes)
             {
 #if DEBUG
                 try
@@ -173,14 +169,14 @@ namespace MSU
                         if (sceneContentPiece.bossTrack.hasValue)
                             provider.contentPack.musicTrackDefs.AddSingle(sceneContentPiece.bossTrack.value);
 
-                        if(sceneContentPiece.bazaarTextureBase.hasValue)
+                        if (sceneContentPiece.bazaarTextureBase.hasValue)
                             sceneContentPiece.asset.portalMaterial = StageRegistration.MakeBazaarSeerMaterial(sceneContentPiece.bazaarTextureBase);
 
 
                         if (sceneContentPiece.asset.sceneType == SceneType.Stage)
                         {
                             float weight = 0;
-                            if(!sceneContentPiece.weightRelativeToSiblings.HasValue)
+                            if (!sceneContentPiece.weightRelativeToSiblings.HasValue)
                             {
 #if DEBUG
                                 MSULog.Warning($"Scene {scene.GetType().FullName} has it's SceneDef's sceneType value set to Stage, but the ISceneContentPiece doesnt have a weight value assigned! defaulting to 1");

@@ -1,9 +1,6 @@
 ﻿using RoR2;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace MSU
@@ -36,7 +33,7 @@ namespace MSU
             {
                 MSULog.Info("Initializing ItemDdisplayDictionaries");
                 HashSet<ItemDisplayRuleSet> modifiedIDRS = new HashSet<ItemDisplayRuleSet>();
-                foreach(ItemDisplayDictionary dictionary in _instances)
+                foreach (ItemDisplayDictionary dictionary in _instances)
                 {
                     var keyAsset = dictionary.keyAsset;
 
@@ -46,7 +43,7 @@ namespace MSU
                     bool isItem = keyAsset is ItemDef;
                     bool isEquipment = keyAsset is EquipmentDef;
 
-                    if(!isItem && !isEquipment)
+                    if (!isItem && !isEquipment)
                     {
                         MSULog.Warning($"Item display dictionary {dictionary} has an invalid key asset, a key asset must be either an ItemDef or EquipmentDef.");
                         continue;
@@ -55,7 +52,7 @@ namespace MSU
                     id = isItem ? (ItemDef)keyAsset : null;
                     ed = isEquipment ? (EquipmentDef)keyAsset : null;
 
-                    if(id && id.itemIndex == ItemIndex.None)
+                    if (id && id.itemIndex == ItemIndex.None)
                     {
 #if DEBUG
                         MSULog.Debug($"Not appending valuees from {dictionary}, as its ItemDef's index is none.");
@@ -70,13 +67,13 @@ namespace MSU
                         continue;
                     }
 
-                    for(int i = 0; i < dictionary.displayDictionaryEntries.Count; i++)
+                    for (int i = 0; i < dictionary.displayDictionaryEntries.Count; i++)
                     {
                         try
                         {
                             var entry = dictionary.displayDictionaryEntries[i];
                             ItemDisplayRuleSet target = ItemDisplayCatalog.GetItemDisplayRuleSet(entry.idrsName);
-                            if(!target)
+                            if (!target)
                             {
 #if DEBUG
                                 MSULog.Warning($"Not appending values of {dictionary}'s {i} index, as the target idrs is null.");
@@ -119,13 +116,13 @@ namespace MSU
             };
 
             var index = displayDictionaryEntries.FindIndex(x => x.idrsName == key);
-            if(index >= 0)
+            if (index >= 0)
             {
                 var entry = displayDictionaryEntries[index];
                 if (entry.isEmpty)
                     return keyAssetRuleGroup;
 
-                for(int i = 0; i < entry.rules.Count; i++)
+                for (int i = 0; i < entry.rules.Count; i++)
                 {
                     DisplayRule rule = entry.rules[i];
                     rule.CreateRule(displayPrefabs);
@@ -200,7 +197,7 @@ namespace MSU
 
             internal void CreateRule(GameObject[] displayPrefabs)
             {
-                if(string.IsNullOrWhiteSpace(childName))
+                if (string.IsNullOrWhiteSpace(childName))
                 {
                     finishedRule = new ItemDisplayRule
                     {

@@ -6,8 +6,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace MSU
@@ -54,7 +52,7 @@ namespace MSU
         /// <returns>An array of ICharacterContentPieces, if the plugin has not added any characters, it returns an empty Array.</returns>
         public static ICharacterContentPiece[] GetCharacters(BaseUnityPlugin plugin)
         {
-            if(_pluginToCharacters.TryGetValue(plugin, out var characters))
+            if (_pluginToCharacters.TryGetValue(plugin, out var characters))
             {
                 return characters;
             }
@@ -109,7 +107,7 @@ namespace MSU
             List<IGameObjectContentPiece<CharacterBody>> characters = new List<IGameObjectContentPiece<CharacterBody>>();
 
             var helper = new ParallelMultiStartCoroutine();
-            foreach(var character in content)
+            foreach (var character in content)
             {
                 if (!character.IsAvailable(provider.contentPack))
                     continue;
@@ -210,8 +208,8 @@ namespace MSU
         private static void AddCustomMonster(MonsterCardProvider monsterCardProvider, DccsPool pool, DirectorAPI.StageInfo stageInfo)
         {
             var standardCategory = pool.poolCategories.FirstOrDefault(category => category.name == DirectorAPI.Helpers.MonsterPoolCategories.Standard);
-            
-            if(standardCategory == null)
+
+            if (standardCategory == null)
             {
                 MSULog.Warning($"Couldn't find standard category for current stage! not adding {monsterCardProvider}.");
                 return;
@@ -223,13 +221,13 @@ namespace MSU
                 .ToArray();
 
             DirectorCardHolderExtended cardHolder = null;
-            if(stageInfo.stage == DirectorAPI.Stage.Custom)
+            if (stageInfo.stage == DirectorAPI.Stage.Custom)
             {
                 monsterCardProvider.customStageToCards.TryGetValue(stageInfo.CustomStageName, out cardHolder);
             }
             else
             {
-                monsterCardProvider.stageToCards.TryGetValue(stageInfo.stage, out cardHolder );
+                monsterCardProvider.stageToCards.TryGetValue(stageInfo.stage, out cardHolder);
             }
 
             if (cardHolder == null)
@@ -238,7 +236,7 @@ namespace MSU
             if (!cardHolder.IsAvailable())
                 return;
 
-            foreach(DirectorCardCategorySelection categorySelection in dccsCollection)
+            foreach (DirectorCardCategorySelection categorySelection in dccsCollection)
             {
                 categorySelection.AddCard(cardHolder);
             }

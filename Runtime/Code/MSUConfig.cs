@@ -3,14 +3,9 @@ using BepInEx.Configuration;
 using MSU.Config;
 using RiskOfOptions;
 using RiskOfOptions.OptionConfigs;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.UIElements;
 using AutoConfig = MSU.Config.ConfiguredVariable.AutoConfigAttribute;
 
 namespace MSU
@@ -59,7 +54,7 @@ namespace MSU
         [AutoConfig]
         internal static ConfiguredString _spawnAIParameters;
         internal static HashSet<DebugCommandBinding> _bindings = new HashSet<DebugCommandBinding>();
-    
+
         private void SetDebugConfigs()
         {
             _enableStackLogging = new ConfiguredBool(false)

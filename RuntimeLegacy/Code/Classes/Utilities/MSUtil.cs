@@ -113,7 +113,7 @@ namespace Moonstorm
 
         public static Type[] GetTypesSafe(this Assembly assembly)
         {
-            if(assemblyToTypesCached.TryGetValue(assembly.GetName(), out var type))
+            if (assemblyToTypesCached.TryGetValue(assembly.GetName(), out var type))
             {
                 return type;
             }

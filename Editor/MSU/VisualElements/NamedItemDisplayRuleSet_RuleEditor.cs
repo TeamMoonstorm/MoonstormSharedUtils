@@ -1,8 +1,6 @@
 using RoR2;
 using RoR2.Editor;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
@@ -30,7 +28,7 @@ namespace MSU.Editor.UIElements
             get => _currentlyInspectedEntry;
             set
             {
-                if(_currentlyInspectedEntry != value)
+                if (_currentlyInspectedEntry != value)
                 {
                     value?.representingProperty.serializedObject.ApplyModifiedProperties();
                     _currentlyInspectedEntry = value;
@@ -53,7 +51,7 @@ namespace MSU.Editor.UIElements
 
         public void OnBoundSerializedObjectChange(SerializedObject so)
         {
-            if(so == null)
+            if (so == null)
             {
                 this.SetDisplay(false);
                 currentlyInspectedEntry = null;
@@ -66,7 +64,7 @@ namespace MSU.Editor.UIElements
 
         private void UpdateBinding()
         {
-            if(currentlyInspectedEntry == null || currentlyInspectedEntry.representingProperty == null)
+            if (currentlyInspectedEntry == null || currentlyInspectedEntry.representingProperty == null)
             {
                 helpBox.SetDisplay(true);
                 helpBox.message = "Please Select a NamedRuleGroup Entry from the Sidebar";
@@ -74,7 +72,7 @@ namespace MSU.Editor.UIElements
                 _controlContainer.SetDisplay(false);
                 _availableDisplayPrefabs = null;
                 _dropdown = null;
-                
+
                 _ruleTypeProp = null;
                 _limbMaskProp = null;
                 _displayPrefabProp = null;

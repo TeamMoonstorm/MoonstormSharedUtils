@@ -1,12 +1,9 @@
-using HG;
-using R2API.Utils;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 
 namespace MSU
-{   
+{
     /// <summary>
     /// Class used for wrapping multiple coroutine methods, which then can be started on parallel and subsecuently awaited on parallel
     /// 
@@ -181,14 +178,14 @@ namespace MSU
             yield return null;
 
             bool encounteredUnfinished = true;
-            while(encounteredUnfinished)
+            while (encounteredUnfinished)
             {
                 encounteredUnfinished = false;
                 int i = _wrappers.Count - 1;
-                while(i >= 0)
+                while (i >= 0)
                 {
                     Wrapper wrapper = _wrappers[i];
-                    if(!wrapper.coroutine.IsDone())
+                    if (!wrapper.coroutine.IsDone())
                     {
                         encounteredUnfinished = true;
                         yield return wrapper.coroutine.Current;

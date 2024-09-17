@@ -1,8 +1,6 @@
 using MSU.Editor.UIElements;
-using RoR2.Achievements;
 using RoR2.Editor;
 using System;
-using System.Globalization;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.UIElements;
@@ -77,7 +75,7 @@ namespace MSU.Editor.EditorWindows
                 currentTarget = serializedObject.targetObject;
             }
 
-            if(currentTarget == obj)
+            if (currentTarget == obj)
             {
                 return;
             }
@@ -91,7 +89,7 @@ namespace MSU.Editor.EditorWindows
                 windowProjectSettings.SetSettingValue(nameof(_lastEditedNIDRSGUID), _lastEditedNIDRSGUID);
                 return;
             }
-            else if(!_lastEditedNIDRSGUID.IsNullOrEmptyOrWhiteSpace())
+            else if (!_lastEditedNIDRSGUID.IsNullOrEmptyOrWhiteSpace())
             {
                 nidrs = AssetDatabaseUtil.LoadAssetFromGUID<NamedItemDisplayRuleSet>(_lastEditedNIDRSGUID, null);
                 _currentlyInspected.value = nidrs;
@@ -105,28 +103,28 @@ namespace MSU.Editor.EditorWindows
         {
             base.OnSerializedObjectChanged();
             rootVisualElement.Unbind();
-            if(serializedObject != null)
+            if (serializedObject != null)
             {
                 rootVisualElement.Bind(serializedObject);
             }
-            foreach(var callback in _boundCallbacks)
+            foreach (var callback in _boundCallbacks)
             {
                 try
                 {
                     callback.OnBoundSerializedObjectChange(serializedObject);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Debug.LogError(e);
                 }
             }
-            if(serializedObject == null)
+            if (serializedObject == null)
             {
                 Debug.Log("No Serialized Object");
                 _helpBoxContainer.SetDisplay(true);
                 _controlContainer.SetDisplay(false);
             }
-            else if(serializedObject.targetObject is not NamedItemDisplayRuleSet)
+            else if (serializedObject.targetObject is not NamedItemDisplayRuleSet)
             {
                 Debug.Log("Target object is not an NIDRS");
                 _helpBoxContainer.SetDisplay(true);
@@ -212,7 +210,7 @@ namespace MSU.Editor.EditorWindows
             if (_ruleEditor.currentlyInspectedEntry == null)
                 return;
 
-            if(obj.Contains(_ruleEditor.currentlyInspectedEntry.index))
+            if (obj.Contains(_ruleEditor.currentlyInspectedEntry.index))
             {
                 _ruleEditor.currentlyInspectedEntry = null;
             }
@@ -223,7 +221,7 @@ namespace MSU.Editor.EditorWindows
             if (_keyAssetRuleSelector.currentlyInspectedEntry == null)
                 return;
 
-            if(obj.Contains(_keyAssetRuleSelector.currentlyInspectedEntry.index))
+            if (obj.Contains(_keyAssetRuleSelector.currentlyInspectedEntry.index))
             {
                 _keyAssetRuleSelector.currentlyInspectedEntry = null;
                 _ruleEditor.currentlyInspectedEntry = null;
@@ -242,7 +240,7 @@ namespace MSU.Editor.EditorWindows
         private void ReloadCatalog()
         {
             _catalog = ItemDisplayCatalog.LoadCatalog();
-            foreach(var catalogReceiver in _catalogReceivers)
+            foreach (var catalogReceiver in _catalogReceivers)
             {
                 catalogReceiver.catalog = _catalog;
             }
@@ -260,7 +258,7 @@ namespace MSU.Editor.EditorWindows
         {
             var selection = Selection.activeObject;
             UnityEngine.Object obj = null;
-            if(selection is NamedItemDisplayRuleSet)
+            if (selection is NamedItemDisplayRuleSet)
             {
                 obj = selection;
             }

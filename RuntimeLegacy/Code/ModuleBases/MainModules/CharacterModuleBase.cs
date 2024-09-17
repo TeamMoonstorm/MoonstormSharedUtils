@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Runtime.InteropServices;
 using UnityEngine;
 
 namespace Moonstorm
@@ -21,7 +20,7 @@ namespace Moonstorm
                     if (x == null || y == null)
                         return false;
 
-                    if (x.tiedMonsterBase == null || y.tiedMonsterBase == null) 
+                    if (x.tiedMonsterBase == null || y.tiedMonsterBase == null)
                         return false;
 
                     return x.tiedMonsterBase == y.tiedMonsterBase;
@@ -118,7 +117,7 @@ namespace Moonstorm
             MonsterBase[] monsterBases = MonstersWithCards.ToArray();
 
             int num = 0;
-            foreach(MonsterBase monsterBase in monsterBases)
+            foreach (MonsterBase monsterBase in monsterBases)
             {
                 AddMonsterBaseToRun(monsterBase, run, runExpansions, ref num);
             }
@@ -185,7 +184,7 @@ namespace Moonstorm
                     continue;
                 }
 #endif
-                
+
                 //Add card to monster collection hash set
                 monsterCollection.cards.Add(card);
                 monsterCollection.tiedMonsterBase = monsterBase;
@@ -221,9 +220,9 @@ namespace Moonstorm
 
         private static MonsterCollectionFuncPair FindMonsterCollection(MonsterBase monsterBase, HashSet<MonsterCollectionFuncPair> set)
         {
-            foreach(MonsterCollectionFuncPair collection in set)
+            foreach (MonsterCollectionFuncPair collection in set)
             {
-                if(collection.tiedMonsterBase == monsterBase)
+                if (collection.tiedMonsterBase == monsterBase)
                 {
                     return collection;
                 }
@@ -276,7 +275,7 @@ namespace Moonstorm
 
             foreach (MonsterCollectionFuncPair monsterCollection in monsters)
             {
-                if(!monsterCollection.IsAvailable(stageInfo))
+                if (!monsterCollection.IsAvailable(stageInfo))
                 {
                     continue;
                 }
@@ -284,7 +283,7 @@ namespace Moonstorm
                 {
                     foreach (DirectorCardCategorySelection categorySelection in dccs)
                     {
-                        foreach(var card in monsterCollection.cards)
+                        foreach (var card in monsterCollection.cards)
                         {
                             categorySelection.AddCard(card.DirectorCardHolder);
                         }

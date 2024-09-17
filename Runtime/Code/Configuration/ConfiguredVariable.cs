@@ -342,9 +342,9 @@ namespace MSU.Config
             if (isConfigured || !canBeConfigured)
                 return this;
 
-            if(configFile == null)
+            if (configFile == null)
             {
-                if(configFileIdentifier.IsNullOrWhiteSpace())
+                if (configFileIdentifier.IsNullOrWhiteSpace())
                 {
                     throw new NullReferenceException("ConfigFileIdentifier is Null, Empty or WhiteSpace");
                 }
@@ -365,7 +365,7 @@ namespace MSU.Config
             configEntry = configFile.Bind(section, key, defaultValue, description);
             configEntryBase = configEntry;
 
-            if(_onConfigChanged != null)
+            if (_onConfigChanged != null)
             {
                 if (!_configHashToDelegates.ContainsKey(configHash))
                     _configHashToDelegates[configHash] = default(DelegateContainer);
@@ -469,7 +469,7 @@ namespace MSU.Config
                 get => _configEntry;
                 set
                 {
-                    if(_configEntry != null)
+                    if (_configEntry != null)
                     {
                         _configEntry.SettingChanged -= InvokeDelegates;
                     }

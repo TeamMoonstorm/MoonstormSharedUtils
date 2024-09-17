@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace MSU
@@ -53,7 +49,7 @@ namespace MSU
                 value = this.value;
                 return true;
             }
-        
+
             value = default(T);
             return false;
         }

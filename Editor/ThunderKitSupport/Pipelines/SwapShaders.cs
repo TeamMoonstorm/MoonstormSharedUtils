@@ -1,6 +1,5 @@
 ﻿using RoR2.Editor;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,7 +8,6 @@ using ThunderKit.Core.Manifests.Datums;
 using ThunderKit.Core.Pipelines;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Networking;
 
 namespace MSU.Editor
 {
@@ -29,7 +27,7 @@ namespace MSU.Editor
                 BeginShaderSwap(pipeline, swapType == SwapType.YamlToHlsl ? ShaderDictionary.yamlToHlsl : ShaderDictionary.hlslToYaml);
                 return Task.CompletedTask;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 pipeline.Log(LogLevel.Error, "Exception during SwapShaders job, restoring any material that may have been modified", e.ToString());
                 RestoreShaders();
@@ -56,12 +54,12 @@ namespace MSU.Editor
         private List<string> CommitSwap(Material[] materials, Dictionary<Shader, Shader> dictionary)
         {
             var log = new List<string>();
-            for(int i = 0; i < materials.Length; i++)
+            for (int i = 0; i < materials.Length; i++)
             {
                 var material = materials[i];
                 var shader = material.shader;
 
-                if(dictionary.TryGetValue(shader, out Shader value))
+                if (dictionary.TryGetValue(shader, out Shader value))
                 {
                     int renderQueue = material.renderQueue;
                     material.shader = value;
@@ -87,12 +85,12 @@ namespace MSU.Editor
         private void RestoreShaders()
         {
             var dictionary = swapType == SwapType.YamlToHlsl ? ShaderDictionary.hlslToYaml : ShaderDictionary.yamlToHlsl;
-            for(int i = 0; i < _modifiedMaterials.Count; i++)
+            for (int i = 0; i < _modifiedMaterials.Count; i++)
             {
                 var material = _modifiedMaterials[i];
                 var shader = material.shader;
 
-                if(dictionary.TryGetValue(shader, out Shader value))
+                if (dictionary.TryGetValue(shader, out Shader value))
                 {
                     int renderQueue = material.renderQueue;
                     material.shader = value;

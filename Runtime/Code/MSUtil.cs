@@ -1,16 +1,12 @@
-﻿using UnityEngine;
-using R2API.ScriptableObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BepInEx;
+﻿using BepInEx.Configuration;
 using RoR2;
 using RoR2.ExpansionManagement;
-using BepInEx.Configuration;
-using System.Reflection;
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using UnityEngine;
 
 namespace MSU
 {
@@ -70,6 +66,11 @@ namespace MSU
 #endif
         }
 
+        public static void AddLoadingScreenSpriteAnim()
+        {
+
+        }
+
 
 #if DEBUG
         public static void InvokeCommand(string commandName, params string[] arguments)
@@ -85,14 +86,14 @@ namespace MSU
         }
 #endif
 
-#region Extensions
+        #region Extensions
         /// <summary>
         /// Returns an array of the enabled Expansions in a Run
         /// </summary>
         /// <returns>An array of the enabled <see cref="ExpansionDef"/>s, or an empty array if the run instance is null.</returns>
         public static ExpansionDef[] GetEnabledExpansions(this Run run)
         {
-            if(!run)
+            if (!run)
             {
                 return Array.Empty<ExpansionDef>();
             }
@@ -114,7 +115,7 @@ namespace MSU
         /// <returns>A new instance of T if it wasnt found in the GameObject, otherwise it returns an existing instance</returns>
         public static T EnsureComponent<T>(this GameObject obj) where T : MonoBehaviour
         {
-            if(obj.TryGetComponent<T>(out var t))
+            if (obj.TryGetComponent<T>(out var t))
             {
                 return t;
             }
@@ -388,6 +389,6 @@ namespace MSU
             Type genericType = configEntryType.GetGenericTypeDefinition();
             _configEntryTypedValueField = genericType.GetField("_typedValue", BindingFlags.Instance | BindingFlags.NonPublic);
         }
-#endregion
+        #endregion
     }
 }

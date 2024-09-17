@@ -255,7 +255,7 @@ namespace Moonstorm.Components
 
             LastSuccesfulEventCard = currentEventCard;
 
-            
+
             eventCredits -= effectiveCost;
             TotalCreditsSpent += effectiveCost;
 #if DEBUG

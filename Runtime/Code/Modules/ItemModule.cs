@@ -5,9 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using UnityEngine;
 using UnityEngine.AddressableAssets;
-using static RoR2.RoR2Content;
 
 namespace MSU
 {
@@ -52,7 +50,7 @@ namespace MSU
         /// <returns>An array of IItemContentPieces, if the plugin has not added any Items, it returns an empty Array</returns>
         public static IItemContentPiece[] GetItems(BaseUnityPlugin plugin)
         {
-            if(_pluginToItems.TryGetValue(plugin, out var items))
+            if (_pluginToItems.TryGetValue(plugin, out var items))
             {
                 return items;
             }
@@ -68,6 +66,7 @@ namespace MSU
         /// </summary>
         /// <param name="plugin">The plugin to initialize it's Items</param>
         /// <returns>A Coroutine enumerator that can be Awaited or Yielded.</returns>
+        [Obsolete]
         public static IEnumerator InitializeItems(BaseUnityPlugin plugin)
         {
 #if DEBUG
@@ -79,7 +78,7 @@ namespace MSU
             if (_pluginToContentProvider.TryGetValue(plugin, out IContentPieceProvider<ItemDef> provider))
             {
                 var enumerator = InitializeItemsFromProvider(plugin, provider);
-                while(enumerator.MoveNext())
+                while (enumerator.MoveNext())
                 {
                     yield return null;
                 }
@@ -95,13 +94,15 @@ namespace MSU
 
             moduleAvailability.MakeAvailable();
         }
+
+        [Obsolete]
         private static IEnumerator InitializeItemsFromProvider(BaseUnityPlugin plugin, IContentPieceProvider<ItemDef> provider)
         {
             IContentPiece<ItemDef>[] content = provider.GetContents();
             List<IContentPiece<ItemDef>> items = new List<IContentPiece<ItemDef>>();
 
             var helper = new ParallelMultiStartCoroutine();
-            foreach(var item in content)
+            foreach (var item in content)
             {
                 if (!item.IsAvailable(provider.contentPack))
                     continue;
@@ -117,9 +118,10 @@ namespace MSU
             InitializeItems(plugin, items, provider);
         }
 
+        [Obsolete]
         private static void InitializeItems(BaseUnityPlugin plugin, List<IContentPiece<ItemDef>> items, IContentPieceProvider<ItemDef> provider)
         {
-            foreach(var item in items)
+            foreach (var item in items)
             {
 #if DEBUG
                 try
@@ -174,16 +176,16 @@ namespace MSU
 
             for (int i = 0; i < voidItems.Length; i++)
             {
-                IVoidItemContentPiece voidItem = voidItems[i];  
+                IVoidItemContentPiece voidItem = voidItems[i];
                 try
                 {
                     List<ItemDef> itemsToInfect = voidItem.GetInfectableItems();
-                    if(itemsToInfect.Count == 0)
+                    if (itemsToInfect.Count == 0)
                     {
                         throw new Exception($"The IVoidItemContentPiece {voidItem.GetType().Name} failed to provide any item to infect, Is the function returning ItemDefs properly?");
                     }
 
-                    for(int j = 0; j < itemsToInfect.Count; j++)
+                    for (int j = 0; j < itemsToInfect.Count; j++)
                     {
                         ItemDef itemToInfect = itemsToInfect[j];
                         try
@@ -197,26 +199,26 @@ namespace MSU
                             HG.ArrayUtils.ArrayAppend(ref existingInfections0, transformation);
                             ItemCatalog.itemRelationships[contagiousItem] = existingInfections0;
                         }
-                        catch(Exception ex)
+                        catch (Exception ex)
                         {
                             MSULog.Error($"Failed to add transformation of {itemToInfect} to {voidItem.asset}\n{ex}");
                         }
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     MSULog.Error($"IVoidItemContentPiece {voidItem.GetType().Name} failed to intialize properly\n{ex}");
                 }
             }
 
             List<ItemDef.Pair> bossVoidPairs = new List<ItemDef.Pair>();
-            foreach(ItemDef bossItem in _bossItems)
+            foreach (ItemDef bossItem in _bossItems)
             {
                 bossVoidPairs.Add(new ItemDef.Pair
                 {
                     itemDef1 = bossItem,
                     itemDef2 = RoR2.DLC1Content.Items.VoidMegaCrabItem
-                });   
+                });
             }
             ItemDef.Pair[] existingInfections1 = ItemCatalog.itemRelationships[contagiousItem];
             existingInfections1 = existingInfections1.Union(bossVoidPairs).ToArray();

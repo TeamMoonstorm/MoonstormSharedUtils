@@ -5,7 +5,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using UnityEngine;
 
 namespace MSU
 {
@@ -58,14 +57,14 @@ namespace MSU
                 return false;
 
             var methodInfo = attribute.targetMethodInfo;
-            
-            if(!methodInfo.IsStatic)
+
+            if (!methodInfo.IsStatic)
             {
                 MSULog.Info($"{attribute} is not applied to a Static method");
             }
 
             var returnType = methodInfo.ReturnType;
-            if(returnType == null || returnType == typeof(void))
+            if (returnType == null || returnType == typeof(void))
             {
 #if DEBUG
                 MSULog.Info($"{attribute}'s method return type is not IEnumerator");
@@ -73,7 +72,7 @@ namespace MSU
                 return false;
             }
 
-            if(!returnType.IsSameOrSubclassOf(typeof(IEnumerator)))
+            if (!returnType.IsSameOrSubclassOf(typeof(IEnumerator)))
             {
 #if DEBUG
                 MSULog.Info($"{attribute}'s method return type is not IEnumerator");
@@ -83,7 +82,7 @@ namespace MSU
 
             var parameters = methodInfo.GetGenericArguments();
 
-            if(parameters.Length != 0)
+            if (parameters.Length != 0)
             {
 #if DEBUG
                 MSULog.Info($"{attribute}'s method signatures contains parameters, this is not allowed.");

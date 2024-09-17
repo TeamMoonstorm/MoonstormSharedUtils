@@ -1,13 +1,10 @@
-﻿using RiskOfOptions.Components.Panel;
+﻿using MSU.Config;
+using RiskOfOptions.Components.Panel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Reflection;
 using SearchableAttribute = HG.Reflection.SearchableAttribute;
-using System.Xml.Linq;
-using MSU.Config;
 
 namespace MSU
 {
@@ -53,7 +50,7 @@ namespace MSU
 
             _cachedFormattingArray = new Dictionary<string, FormatTokenAttribute[]>();
 
-            foreach(var (token, formattingArray) in formattingDictionaryFromFields)
+            foreach (var (token, formattingArray) in formattingDictionaryFromFields)
             {
                 //Add token from dictionary, this replaces the array, but that's ok as this dictionary is currently empty
                 _cachedFormattingArray[token] = Array.Empty<FormatTokenAttribute>();
@@ -160,7 +157,7 @@ namespace MSU
                 return;
 
             MSULog.Info($"Formatting a total of {_cachedFormattingArray.Count} tokens.");
-            foreach(var (token, attributes) in _cachedFormattingArray)
+            foreach (var (token, attributes) in _cachedFormattingArray)
             {
                 try
                 {
@@ -176,7 +173,7 @@ namespace MSU
 #endif
                     FormatToken(lang, token, attributes);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     MSULog.Error($"{e}\n(Token={token})");
                 }

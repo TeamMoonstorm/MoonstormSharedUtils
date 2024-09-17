@@ -109,7 +109,7 @@ namespace Moonstorm
             InteractableBase[] interactableBases = InteractablesWithCards.ToArray();
 
             int num = 0;
-            foreach(InteractableBase interactableBase in interactableBases)
+            foreach (InteractableBase interactableBase in interactableBases)
             {
                 AddInteractableBaseToRun(interactableBase, run, runExpansions, ref num);
             }
@@ -120,33 +120,33 @@ namespace Moonstorm
 
         private static void AddInteractableBaseToRun(InteractableBase interactableBase, Run run, ExpansionDef[] runExpansions, ref int totalInteractablesAdded)
         {
-            foreach(MSInteractableDirectorCard card in interactableBase.InteractableDirectorCards)
+            foreach (MSInteractableDirectorCard card in interactableBase.InteractableDirectorCards)
             {
                 try
                 {
                     //If card cant appear, skip
-                    if(!card.IsAvailable(runExpansions))
+                    if (!card.IsAvailable(runExpansions))
                     {
                         continue;
                     }
 
-                    foreach(DirectorAPI.Stage stageValue in Enum.GetValues(typeof(DirectorAPI.Stage)))
+                    foreach (DirectorAPI.Stage stageValue in Enum.GetValues(typeof(DirectorAPI.Stage)))
                     {
-                        if(stageValue == DirectorAPI.Stage.Custom && card.stages.HasFlag
+                        if (stageValue == DirectorAPI.Stage.Custom && card.stages.HasFlag
                             (stageValue))
                         {
                             AddCardToCustomStages(card, interactableBase);
                             continue;
                         }
 
-                        if(card.stages.HasFlag(stageValue))
+                        if (card.stages.HasFlag(stageValue))
                         {
                             AddCardToStage(card, interactableBase, stageValue);
                         }
                     }
                     totalInteractablesAdded++;
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     MSULog.Error($"{e}\nCard: {card}");
                 }
@@ -155,7 +155,7 @@ namespace Moonstorm
 
         private static void AddCardToCustomStages(MSInteractableDirectorCard card, InteractableBase interactableBase)
         {
-            foreach(string baseStageName in card.customStages)
+            foreach (string baseStageName in card.customStages)
             {
                 //If the dictionary doesnt have an entry for this custom stage, create a new one alongside the list of monsters.
                 if (!currentCustomStageToCards.ContainsKey(baseStageName))
@@ -264,7 +264,7 @@ namespace Moonstorm
             List<DirectorCardCategorySelection> cardSelections = alwaysIncluded.Concat(includedIfConditionsMet).Concat(includedIfNoConditions).ToList();
             foreach (InteractableCollectionFuncPair collection in interactables)
             {
-                if(!collection.IsAvailable(stageInfo))
+                if (!collection.IsAvailable(stageInfo))
                 {
                     continue;
                 }
@@ -273,7 +273,7 @@ namespace Moonstorm
                 {
                     foreach (DirectorCardCategorySelection cardCategorySelection in cardSelections)
                     {
-                        foreach(var card in collection.cards)
+                        foreach (var card in collection.cards)
                         {
                             cardCategorySelection.AddCard(card.DirectorCardHolder);
                         }

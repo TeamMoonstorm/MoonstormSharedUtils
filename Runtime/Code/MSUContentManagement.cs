@@ -2,7 +2,6 @@
 using R2API;
 using RoR2;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
@@ -23,7 +22,7 @@ namespace MSU
             CharacterBody.onBodyAwakeGlobal += OnBodyAwakeGlobal;
             CharacterBody.onBodyDestroyGlobal += OnBodyDestroyedGlobal;
 
-            if(MSUtil.holyDLLInstalled)
+            if (MSUtil.holyDLLInstalled)
             {
 #if DEBUG
                 MSULog.Info("Holy installed, using custom RecalculateStats support");
@@ -87,7 +86,7 @@ namespace MSU
 
         private static void InitMSUContentBehaviourSystem()
         {
-            for(int i = 0; i < BodyCatalog.bodyPrefabs.Length; i++)
+            for (int i = 0; i < BodyCatalog.bodyPrefabs.Length; i++)
             {
                 try
                 {
@@ -97,7 +96,7 @@ namespace MSU
                     manager.body = bodyPrefab.GetComponent<CharacterBody>();
 
                     var characterModel = bodyPrefab.GetComponentInChildren<CharacterModel>();
-                    if(characterModel)
+                    if (characterModel)
                     {
                         var eliteBehaviour = characterModel.gameObject.AddComponent<MSUEliteBehaviour>();
                         eliteBehaviour.characterModel = characterModel;
@@ -107,7 +106,7 @@ namespace MSU
 
                     BodyCatalog.bodyPrefabs[i] = bodyPrefab;
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     MSULog.Error(e);
                 }
@@ -120,7 +119,7 @@ namespace MSU
 
             Type buffBehaviourType = typeof(BaseBuffBehaviour);
             Type buffDefType = typeof(BuffDef);
-            foreach(BaseBuffBehaviour.BuffDefAssociation attribute in attributes)
+            foreach (BaseBuffBehaviour.BuffDefAssociation attribute in attributes)
             {
                 MethodInfo methodInfo = (MethodInfo)attribute.target;
                 if (!methodInfo.IsStatic)
@@ -161,7 +160,7 @@ namespace MSU
                 return;
 
             var bodyBuffBehaviours = _bodyToBuffBehaviourDictionary[self];
-            if(!bodyBuffBehaviours.ContainsKey(buffType))
+            if (!bodyBuffBehaviours.ContainsKey(buffType))
             {
                 var newBehaviour = (BaseBuffBehaviour)self.gameObject.AddComponent(_buffToBehaviour[buffType]);
                 newBehaviour.buffIndex = buffType;

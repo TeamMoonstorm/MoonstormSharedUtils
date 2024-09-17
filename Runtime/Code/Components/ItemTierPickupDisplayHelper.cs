@@ -1,9 +1,4 @@
 ﻿using RoR2;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace MSU
@@ -33,12 +28,12 @@ namespace MSU
                 return;
 
             ItemTier tier = def.itemTier;
-            if(tier > ItemTier.AssignedAtRuntime)
+            if (tier > ItemTier.AssignedAtRuntime)
             {
                 ItemTierDef tierDef = ItemTierCatalog.GetItemTierDef(tier);
-                if(tierDef && ItemTierModule._itemTierToPickupFX.TryGetValue(tierDef, out var prefab))
+                if (tierDef && ItemTierModule._itemTierToPickupFX.TryGetValue(tierDef, out var prefab))
                 {
-                    if(!prefab)
+                    if (!prefab)
                     {
 #if DEBUG
                         MSULog.Warning($"{tierDef} is being handled by the ItemTierModule but it's IItemTierContentPiece does not provide a custom prefab for VFX!");

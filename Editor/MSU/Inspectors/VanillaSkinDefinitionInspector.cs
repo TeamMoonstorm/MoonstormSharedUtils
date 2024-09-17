@@ -2,9 +2,6 @@
 using RoR2.Editor;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -51,7 +48,7 @@ namespace MSU.Editor.Inspectors
         {
             SerializedProperty parentProperty = serializedObject.FindProperty("_rendererInfos");
             EditorGUILayout.PropertyField(parentProperty, false);
-            if(!parentProperty.isExpanded)
+            if (!parentProperty.isExpanded)
             {
                 return;
             }
@@ -89,7 +86,7 @@ namespace MSU.Editor.Inspectors
 
             EditorGUI.indentLevel++;
             parentProperty.arraySize = EditorGUILayout.DelayedIntField("Size", parentProperty.arraySize);
-            for(int i = 0; i < parentProperty.arraySize; i++)
+            for (int i = 0; i < parentProperty.arraySize; i++)
             {
                 var child = parentProperty.GetArrayElementAtIndex(i);
 
@@ -101,7 +98,7 @@ namespace MSU.Editor.Inspectors
                 DrawProperty("shouldActivate", child);
                 var isCustom = child.FindPropertyRelative("isCustomActivation");
                 EditorGUILayout.PropertyField(isCustom);
-                if(isCustom.boolValue)
+                if (isCustom.boolValue)
                 {
                     DrawProperty("gameObjectPrefab", child);
 

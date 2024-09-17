@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
@@ -73,7 +72,7 @@ namespace Moonstorm.Components.Addressables
 
         private void Inject(MemberInfo memberInfo)
         {
-            switch(memberInfo)
+            switch (memberInfo)
             {
                 case PropertyInfo pInfo: InjectPropertyInfo(pInfo); break;
                 case FieldInfo fInfo: InjectFieldInfo(fInfo); break;
@@ -103,7 +102,7 @@ namespace Moonstorm.Components.Addressables
                 {
                     fieldInfo.SetValue(targetComponent, Asset);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     MSULog.Error(e);
                 }

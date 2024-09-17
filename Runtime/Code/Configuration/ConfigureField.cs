@@ -1,15 +1,10 @@
 ﻿using BepInEx.Configuration;
 using HG.Reflection;
 using RiskOfOptions;
-using RiskOfOptions.OptionConfigs;
 using RiskOfOptions.Options;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace MSU.Config
@@ -24,7 +19,7 @@ namespace MSU.Config
         /// An override for the ConfigEntry's Section, if left null, it'll use a "Nicified" version of the Declaring Type's name
         /// </summary>
         public string configSectionOverride { get; set; }
-        
+
         /// <summary>
         /// An override for the ConfigEntry's Name, if left null, it'll use a "Nicified" version of the field/property's name
         /// </summary>
@@ -45,7 +40,7 @@ namespace MSU.Config
         /// Returns true if the attached MemberInfo is a Field
         /// </summary>
         public bool attachedMemberIsField => target is FieldInfo;
-        
+
         /// <summary>
         /// Returns the field that's attached to this ConfigureField
         /// </summary>
@@ -78,7 +73,7 @@ namespace MSU.Config
             {
                 return configEntryBase == null ? null : (ConfigEntry<T>)configEntryBase;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 MSULog.Error(e);
                 return null;
@@ -108,14 +103,14 @@ namespace MSU.Config
 
         private void SetValue(object boxedValue)
         {
-            if(attachedMemberIsField)
+            if (attachedMemberIsField)
             {
                 attachedField.SetValue(null, boxedValue);
             }
             else
             {
                 var method = attachedProperty.GetSetMethod();
-                method?.Invoke(null, new object[] {boxedValue});
+                method?.Invoke(null, new object[] { boxedValue });
             }
         }
 

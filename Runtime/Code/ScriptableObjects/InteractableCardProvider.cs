@@ -1,15 +1,12 @@
-﻿using RoR2;
-using R2API;
+﻿using R2API;
+using R2API.AddressReferencedAssets;
+using RoR2;
+using RoR2.ExpansionManagement;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
 using System.Collections.ObjectModel;
-using R2API.AddressReferencedAssets;
-using RoR2.ExpansionManagement;
-using static MSU.MonsterCardProvider;
+using System.Linq;
+using UnityEngine;
 using UnityEngine.Serialization;
 
 namespace MSU
@@ -93,27 +90,27 @@ namespace MSU
             var customStageDict = new Dictionary<string, DirectorCardHolderExtended>();
 
             //Iterate thru pairs
-            for(int i = 0; i < serializedCardPairs.Length; i++)
+            for (int i = 0; i < serializedCardPairs.Length; i++)
             {
                 var pair = serializedCardPairs[i];
                 var stageFlags = (DirectorAPI.Stage)pair.stage;
 
                 //Iterate thru stage enum values
-                foreach(DirectorAPI.Stage stageEnumValue in Enum.GetValues(typeof(DirectorAPI.Stage)))
+                foreach (DirectorAPI.Stage stageEnumValue in Enum.GetValues(typeof(DirectorAPI.Stage)))
                 {
                     //If the pair has a custom flag, add said custom stage names to the dictionary.
-                    if(stageEnumValue == DirectorAPI.Stage.Custom && stageFlags.HasFlag(stageEnumValue))
+                    if (stageEnumValue == DirectorAPI.Stage.Custom && stageFlags.HasFlag(stageEnumValue))
                     {
-                        if(pair.customStageNames == null)
+                        if (pair.customStageNames == null)
                         {
                             continue;
                         }
 
                         //Iterate thru stage names
-                        foreach(var stageName in pair.customStageNames)
+                        foreach (var stageName in pair.customStageNames)
                         {
                             //If a previous pair already added a card, continue and log warning
-                            if(customStageDict.ContainsKey(stageName))
+                            if (customStageDict.ContainsKey(stageName))
                             {
 #if DEBUG
                                 MSULog.Warning($"Cannot add {this}'s {i} card pair to custom stage {stageName} because there's already a card pair associated to said stage.");
@@ -127,7 +124,7 @@ namespace MSU
                     //if the pair has any other value thats not custom, add it to the regular dictionary.
                     if (stageEnumValue != DirectorAPI.Stage.Custom && stageFlags.HasFlag(stageEnumValue))
                     {
-                        if(stageDict.ContainsKey(stageEnumValue))
+                        if (stageDict.ContainsKey(stageEnumValue))
                         {
 #if DEBUG
                             MSULog.Warning($"Cannot add {this}'s {i} card pair to stage {Enum.GetName(typeof(DirectorAPI.Stage), stageEnumValue)} because there's already a card pair associated to said stage.");

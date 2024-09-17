@@ -6,8 +6,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -55,7 +53,7 @@ namespace MSU
         /// <returns>An array of IInteractableContentPieces, if the plugin has not added any Interactables, it returns an empty Array.</returns>
         public static IInteractableContentPiece[] GetInteractables(BaseUnityPlugin plugin)
         {
-            if(_pluginToInteractables.TryGetValue(plugin, out var interactableContentPieces))
+            if (_pluginToInteractables.TryGetValue(plugin, out var interactableContentPieces))
             {
                 return interactableContentPieces;
             }
@@ -126,7 +124,7 @@ namespace MSU
 
         private static void InitializeInteractables(BaseUnityPlugin plugin, List<IGameObjectContentPiece<IInteractable>> interactables, IContentPieceProvider<GameObject> provider)
         {
-            foreach(var interactable in interactables)
+            foreach (var interactable in interactables)
             {
 #if DEBUG
                 try
@@ -168,7 +166,7 @@ namespace MSU
 
 #if DEBUG
                 }
-                catch (Exception ex) 
+                catch (Exception ex)
                 {
                     MSULog.Error($"Interactable {interactable.GetType().FullName} threw an exception while initializing.\n{ex}");
                 }
@@ -178,7 +176,7 @@ namespace MSU
 
         private static void AddCustomInteractables(DccsPool pool, DirectorAPI.StageInfo stageInfo)
         {
-            foreach(var interactableCardProvider in _interactableCardProviders)
+            foreach (var interactableCardProvider in _interactableCardProviders)
             {
                 AddCustomInteractable(interactableCardProvider, pool, stageInfo);
             }
@@ -194,9 +192,9 @@ namespace MSU
 
             DirectorCardHolderExtended cardHolder = null;
 
-            if(stageInfo.stage == DirectorAPI.Stage.Custom)
+            if (stageInfo.stage == DirectorAPI.Stage.Custom)
             {
-                interactableCardProvider.customStageToCards.TryGetValue(stageInfo.CustomStageName, out  cardHolder);
+                interactableCardProvider.customStageToCards.TryGetValue(stageInfo.CustomStageName, out cardHolder);
             }
             else
             {
@@ -209,7 +207,7 @@ namespace MSU
             if (!cardHolder.IsAvailable())
                 return;
 
-            foreach(DirectorCardCategorySelection selection in selections)
+            foreach (DirectorCardCategorySelection selection in selections)
             {
                 selection.AddCard(cardHolder);
             }

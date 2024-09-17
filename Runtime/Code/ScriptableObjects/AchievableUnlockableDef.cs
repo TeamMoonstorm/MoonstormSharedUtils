@@ -1,14 +1,10 @@
-﻿using HG;
+﻿using BepInEx;
+using HG;
 using RoR2;
 using RoR2.Achievements;
-using UnityEngine;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BepInEx;
-using RoR2BepInExPack;
+using UnityEngine;
 
 namespace MSU
 {
@@ -46,11 +42,11 @@ namespace MSU
         {
             get
             {
-                if(!_preRequisiteAchievement.achievementIdentifier.IsNullOrWhiteSpace())
+                if (!_preRequisiteAchievement.achievementIdentifier.IsNullOrWhiteSpace())
                 {
                     return _preRequisiteAchievement.achievementIdentifier;
                 }
-                else if(_preRequisiteAchievement.unlockableDef)
+                else if (_preRequisiteAchievement.unlockableDef)
                 {
                     return _preRequisiteAchievement.unlockableDef.cachedName + ".Achievement";
                 }
@@ -68,7 +64,7 @@ namespace MSU
         {
             get
             {
-                if(_tiedAchievementDef == null)
+                if (_tiedAchievementDef == null)
                 {
                     var identifier = cachedName + ".Achievement";
                     _tiedAchievementDef = new AchievementDef
@@ -84,7 +80,7 @@ namespace MSU
                         lunarCoinReward = coinReward,
                     };
                     var serverAchievementType = (Type)serverAchievementCondition;
-                    if(serverAchievementType != null)
+                    if (serverAchievementType != null)
                     {
                         _tiedAchievementDef.serverTrackerType = serverAchievementType;
                     }

@@ -1,7 +1,5 @@
 ﻿using RoR2;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Networking;
@@ -89,7 +87,7 @@ namespace MSU
         /// <summary>
         /// The GameplayEventIndex assigned to this GameplayEvent. set at runtime when the prefab is added to the <see cref="GameplayEventCatalog"/>
         /// </summary>
-        [field:NonSerialized]
+        [field: NonSerialized]
         public GameplayEventIndex gameplayEventIndex { get; internal set; }
 
         /// <summary>
@@ -116,7 +114,7 @@ namespace MSU
 
         private void Start()
         {
-            if(beginOnStart && !isPlaying)
+            if (beginOnStart && !isPlaying)
             {
                 StartEvent();
             }
@@ -124,7 +122,7 @@ namespace MSU
 
         private void OnDestroy()
         {
-            if(isPlaying)
+            if (isPlaying)
             {
                 EndEvent();
             }
@@ -159,7 +157,7 @@ namespace MSU
             onEventEnd?.Invoke(this);
             _onEventEnd?.Invoke(this);
 
-            if(!doNotAnnounceEnding && GameplayEventTextController.instance)
+            if (!doNotAnnounceEnding && GameplayEventTextController.instance)
             {
                 GameplayEventTextController.instance.EnqueueNewTextRequest(new GameplayEventTextController.EventTextRequest
                 {
@@ -185,5 +183,5 @@ namespace MSU
     /// </summary>
     /// <param name="gameplayEvent">The GameplayEvent that raised this delegate.</param>
 
-    public delegate void GameplayEventDelegate (GameplayEvent gameplayEvent);
+    public delegate void GameplayEventDelegate(GameplayEvent gameplayEvent);
 }

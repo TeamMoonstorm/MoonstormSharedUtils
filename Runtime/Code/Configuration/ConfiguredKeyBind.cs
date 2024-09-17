@@ -1,17 +1,11 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
-using HG.BlendableTypes;
 using RiskOfOptions;
 using RiskOfOptions.OptionConfigs;
 using RiskOfOptions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MSU.Config
-{    
+{
     /// <summary>
     /// <inheritdoc cref="ConfiguredVariable{T}"/>
     /// <br>Also contains necesary info for implementing the Config with Risk of Options.</br>

@@ -1,23 +1,17 @@
 ﻿using Moonstorm;
 using MSU;
+using MSU.Editor;
+using R2API;
 using RoR2.Editor;
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Threading;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
-using R2API;
-using System.Reflection;
-using System.IO;
-using RoR2;
 using MSULog = MSU.MSULog;
 using Path = System.IO.Path;
-using UnityEditor.VersionControl;
-using UnityEngine.Profiling;
-using MSU.AddressReferencedAssets;
-using MSU.Editor;
 
 public static class ScriptableObjectUpdater
 {
@@ -55,7 +49,7 @@ public static class ScriptableObjectUpdater
             {
                 action();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MSULog.Error($"Could not finish upgrade method \"{action.Method.Name}\". {ex}");
             }
@@ -231,7 +225,7 @@ public static class ScriptableObjectUpdater
         if (allMSEliteDefs.Length == 0)
             return;
 
-        for(int i = 0; i < allMSEliteDefs.Length; i++)
+        for (int i = 0; i < allMSEliteDefs.Length; i++)
         {
             var msEliteDef = allMSEliteDefs[i];
 
@@ -246,7 +240,7 @@ public static class ScriptableObjectUpdater
                 extendedEliteDef.eliteRamp = msEliteDef.eliteRamp;
 
                 ExtendedEliteDef.VanillaTier tier = ExtendedEliteDef.VanillaTier.None;
-                switch(msEliteDef.eliteTier)
+                switch (msEliteDef.eliteTier)
                 {
                     case VanillaEliteTier.HonorActive: tier = ExtendedEliteDef.VanillaTier.HonorActive; break;
                     case VanillaEliteTier.HonorDisabled: tier = ExtendedEliteDef.VanillaTier.HonorDisabled; break;
@@ -263,7 +257,7 @@ public static class ScriptableObjectUpdater
 
                 UpgradeAsset(msEliteDef, extendedEliteDef);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 MSULog.Error($"Could not upgrade {msEliteDef}. {e}");
             }
@@ -289,7 +283,7 @@ public static class ScriptableObjectUpdater
                 new_SerializableEliteTierDef.costMultiplier = old_SerializableEliteTierDef.costMultiplier;
 
                 new_SerializableEliteTierDef.elites = new R2API.AddressReferencedAssets.AddressReferencedEliteDef[old_SerializableEliteTierDef.elites.Length];
-                for(int j = 0; j < old_SerializableEliteTierDef.elites.Length; i++)
+                for (int j = 0; j < old_SerializableEliteTierDef.elites.Length; i++)
                 {
                     new_SerializableEliteTierDef.elites[j] = old_SerializableEliteTierDef.elites[j];
                 }
@@ -310,7 +304,7 @@ public static class ScriptableObjectUpdater
         if (allItemDisplayDictionaries.Length == 0)
             return;
 
-        for(int i = 0; i < allItemDisplayDictionaries.Length; i++)
+        for (int i = 0; i < allItemDisplayDictionaries.Length; i++)
         {
             var old_IDD = allItemDisplayDictionaries[i];
 
@@ -326,7 +320,7 @@ public static class ScriptableObjectUpdater
                 {
                     var newDictionaryEntry = new MSU.ItemDisplayDictionary.DisplayDictionaryEntry { idrsName = entry.idrsName };
 
-                    foreach(var subEntry in entry.displayRules)
+                    foreach (var subEntry in entry.displayRules)
                     {
                         newDictionaryEntry.AddDisplayRule(new MSU.ItemDisplayDictionary.DisplayRule
                         {
@@ -345,7 +339,7 @@ public static class ScriptableObjectUpdater
 
                 UpgradeAsset(old_IDD, new_IDD);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 MSULog.Error($"Could not upgrade {old_IDD.name}. {e}");
             }
@@ -359,7 +353,7 @@ public static class ScriptableObjectUpdater
         if (allNamedIDRS.Length == 0)
             return;
 
-        for(int i = 0; i < allNamedIDRS.Length; i++)
+        for (int i = 0; i < allNamedIDRS.Length; i++)
         {
             var old_namedIDRS = allNamedIDRS[i];
 
@@ -371,11 +365,11 @@ public static class ScriptableObjectUpdater
 
                 List<NamedItemDisplayRuleSet.RuleGroup> newRuleGroups = new List<NamedItemDisplayRuleSet.RuleGroup>();
 
-                foreach(var entry in old_namedIDRS.namedRuleGroups)
+                foreach (var entry in old_namedIDRS.namedRuleGroups)
                 {
                     var newRuleGroupEntry = new NamedItemDisplayRuleSet.RuleGroup { keyAssetName = entry.keyAssetName };
 
-                    foreach(var subEntry in entry.rules)
+                    foreach (var subEntry in entry.rules)
                     {
                         newRuleGroupEntry.AddRule(new NamedItemDisplayRuleSet.DisplayRule
                         {
@@ -395,7 +389,7 @@ public static class ScriptableObjectUpdater
 
                 UpgradeAsset(old_namedIDRS, new_namedIDRS);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 MSULog.Error($"Could not upgrade {old_namedIDRS.name}. {e}");
             }
@@ -409,7 +403,7 @@ public static class ScriptableObjectUpdater
         if (allMSUnlockableDef.Length == 0)
             return;
 
-        for(int i = 0; i < allMSUnlockableDef.Length; i++)
+        for (int i = 0; i < allMSUnlockableDef.Length; i++)
         {
             var msUnlockableDef = allMSUnlockableDef[i];
 
@@ -428,7 +422,7 @@ public static class ScriptableObjectUpdater
 
                 UpgradeAsset(msUnlockableDef, achievableUnlockableDef);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 MSULog.Error($"Could not upgrade {msUnlockableDef.cachedName}. {e}");
             }

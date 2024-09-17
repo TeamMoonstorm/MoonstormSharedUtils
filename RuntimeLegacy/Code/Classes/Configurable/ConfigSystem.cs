@@ -1,7 +1,6 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
 using Moonstorm.Config;
-using Moonstorm.Loaders;
 using RoR2;
 using System;
 using System.Collections.Generic;

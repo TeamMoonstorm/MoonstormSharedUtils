@@ -1,11 +1,7 @@
 ﻿using EntityStates;
 using RoR2;
 using RoR2.UI;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace MSU
@@ -87,25 +83,25 @@ namespace MSU
         private void Update()
         {
             //no request being processed, and there's a pending request, dequeue and initialize.
-            if(!currentTextRequest.HasValue && _textRequests.Count > 0)
+            if (!currentTextRequest.HasValue && _textRequests.Count > 0)
             {
                 DequeueAndInitializeRequest();
                 return;
             }
 
             //If there is a request, and its not being proceessed, process it.
-            if(currentTextRequest.HasValue && textStateMachine.state is Idle)
+            if (currentTextRequest.HasValue && textStateMachine.state is Idle)
             {
                 var value = currentTextRequest.Value;
 
                 var hasOverrideState = value.customTextState.HasValue;
 
                 EventTextState state = null;
-                if(hasOverrideState)
+                if (hasOverrideState)
                 {
                     var val = value.customTextState.Value;
                     state = (EventTextState)EntityStateCatalog.InstantiateState(ref val);
-                
+
                 }
                 else
                 {
@@ -263,7 +259,7 @@ namespace MSU
             public override void Update()
             {
                 base.Update();
-                if(age > duration)
+                if (age > duration)
                 {
                     outer.SetNextState(new WaitState
                     {
@@ -281,7 +277,7 @@ namespace MSU
             public override void Update()
             {
                 base.Update();
-                if(age > duration)
+                if (age > duration)
                 {
                     outer.SetNextState(new FadeOutState
                     {
@@ -305,7 +301,7 @@ namespace MSU
             public override void Update()
             {
                 base.Update();
-                if(age > duration)
+                if (age > duration)
                 {
                     textController.NullCurrentRequest();
                     outer.SetNextStateToMain();

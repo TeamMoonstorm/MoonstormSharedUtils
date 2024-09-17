@@ -13,7 +13,7 @@ namespace MSU.Editor.UIElements
             get => _representingProperty;
             set
             {
-                if(_representingProperty != value)
+                if (_representingProperty != value)
                 {
                     _representingProperty = value;
                     updateRepresentation?.Invoke(this);

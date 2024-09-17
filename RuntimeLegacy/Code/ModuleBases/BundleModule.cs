@@ -14,7 +14,7 @@ namespace Moonstorm
             throw new System.NotSupportedException($"A BundleModule does not have a ContentBase by definition.");
         }
 
-        protected IEnumerable<T> GetContentClasses<T>(Type excludedType = null) where T : ContentBase
+        protected new IEnumerable<T> GetContentClasses<T>(Type excludedType = null) where T : ContentBase
         {
             throw new System.NotSupportedException($"A BundleModule does not have a ContentBase by definition.");
         }

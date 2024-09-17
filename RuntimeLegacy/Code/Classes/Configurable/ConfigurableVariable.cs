@@ -1,6 +1,5 @@
 using BepInEx;
 using BepInEx.Configuration;
-using HG.Reflection;
 using System;
 using System.Collections.Generic;
 
@@ -66,7 +65,7 @@ namespace Moonstorm.Config
             }
         }
         private string _description = string.Empty;
-        
+
         public string ConfigIdentifier
         {
             get => _configIdentifier;

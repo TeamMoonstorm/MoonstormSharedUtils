@@ -1,7 +1,6 @@
 ﻿using RoR2;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using UnityEditor;
 using UnityEngine;
 
 namespace MSU
@@ -48,8 +47,8 @@ namespace MSU
 #endif
                 return;
             }
-            
-            if(!def)
+
+            if (!def)
             {
 #if DEBUG
                 MSULog.Warning($"BuffDef is null for overlay with material {material}");
@@ -57,7 +56,7 @@ namespace MSU
                 return;
             }
 
-            if(!material)
+            if (!material)
             {
 #if DEBUG
                 MSULog.Warning($"Material is null for buff def {def}");
@@ -65,7 +64,7 @@ namespace MSU
                 return;
             }
 
-            if(_buffOverlays.ContainsKey(def))
+            if (_buffOverlays.ContainsKey(def))
             {
 #if DEBUG
                 MSULog.Info($"The BuffDef {def} already has an overlay material assigned. (Material={_buffOverlays[def]})");
@@ -80,7 +79,7 @@ namespace MSU
             orig(self);
             if (!self.body)
                 return;
-            foreach(var (buff, material) in buffOverlayDictionary)
+            foreach (var (buff, material) in buffOverlayDictionary)
             {
                 if (self.body.HasBuff(buff))
                     AddOverlay(self, material);

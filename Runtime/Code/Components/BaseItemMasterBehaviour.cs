@@ -1,15 +1,12 @@
 ﻿using HG;
 using JetBrains.Annotations;
 using RoR2;
+using RoR2.Items;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine.Networking;
-using UnityEngine;
-using RoR2.Items;
 using System.Reflection;
+using UnityEngine;
+using UnityEngine.Networking;
 
 namespace MSU
 {

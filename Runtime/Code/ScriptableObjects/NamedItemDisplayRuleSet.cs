@@ -2,11 +2,7 @@
 using RoR2;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
-using static RoR2.ItemDisplayRuleSet;
 
 namespace MSU
 {
@@ -60,7 +56,7 @@ namespace MSU
         private ItemDisplayRuleSet.KeyAssetRuleGroup[] GetKeyAssetRuleGroups()
         {
             var keyAssetList = new List<ItemDisplayRuleSet.KeyAssetRuleGroup>();
-            foreach(var ruleGroup in rules)
+            foreach (var ruleGroup in rules)
             {
                 if (ruleGroup.isEmpty)
                     continue;
@@ -75,12 +71,12 @@ namespace MSU
                 }
 
                 var itemIndex = ItemCatalog.FindItemIndex(keyAssetName);
-                if(itemIndex != ItemIndex.None && !keyAsset)
+                if (itemIndex != ItemIndex.None && !keyAsset)
                 {
                     keyAsset = ItemCatalog.GetItemDef(itemIndex);
                 }
 
-                if(!keyAsset)
+                if (!keyAsset)
                 {
 #if DEBUG
                     MSULog.Warning($"Could not get key asset of name {keyAssetName} (Index: {rules.IndexOf(ruleGroup)}). {this}");
@@ -89,7 +85,7 @@ namespace MSU
                 }
 
                 var keyAssetGroup = new ItemDisplayRuleSet.KeyAssetRuleGroup { keyAsset = keyAsset };
-                for(int i = 0; i < ruleGroup.rules.Count; i++)
+                for (int i = 0; i < ruleGroup.rules.Count; i++)
                 {
                     DisplayRule rule = ruleGroup.rules[i];
                     keyAssetGroup.displayRuleGroup.AddDisplayRule(rule.finishedRule);
@@ -163,10 +159,10 @@ namespace MSU
             {
                 get
                 {
-                    if(!_finishedRule.HasValue)
+                    if (!_finishedRule.HasValue)
                     {
                         GameObject prefab = ItemDisplayCatalog.GetItemDisplay(displayPrefabName);
-                        if(childName.IsNullOrWhiteSpace())
+                        if (childName.IsNullOrWhiteSpace())
                         {
                             _finishedRule = new ItemDisplayRule
                             {

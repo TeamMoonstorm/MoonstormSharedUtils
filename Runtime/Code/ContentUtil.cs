@@ -1,22 +1,17 @@
 ﻿using BepInEx;
-using RoR2.Skills;
-using R2API.ScriptableObjects;
 using RoR2;
 using RoR2.ContentManagement;
+using RoR2.EntitlementManagement;
+using RoR2.ExpansionManagement;
+using RoR2.Projectile;
+using RoR2.Skills;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
-using RoR2.ExpansionManagement;
-using R2API.Utils;
-using RoR2.EntitlementManagement;
 using UnityEngine.Networking;
-using RoR2.Projectile;
-using EntityStates;
 
 namespace MSU
 {
@@ -37,7 +32,7 @@ namespace MSU
             //setting expansion to an invalid value makes it impossible for it to appear in lobby.
             artifactDef.requiredExpansion = _dummyExpansion;
         }
-        
+
         /// <summary>
         /// Disables the provided Survivor by setting it's <see cref="SurvivorDef.hidden"/> boolean to True.
         /// </summary>
@@ -169,7 +164,7 @@ namespace MSU
                 return;
             }
 
-            if(name.IsNullOrWhiteSpace())
+            if (name.IsNullOrWhiteSpace())
             {
 #if DEBUG
                 MSULog.Warning($"Content {content} does not have a valid name! ({name}). assigning a generic name...");
@@ -177,7 +172,7 @@ namespace MSU
                 name = backupName;
             }
 
-            if(collection.nameToAsset.ContainsKey(name))
+            if (collection.nameToAsset.ContainsKey(name))
             {
 #if DEBUG
                 MSULog.Warning($"Content {content} cant be added because an asset with the name \"{name}\" is already registered. Using a generic name.");
@@ -225,13 +220,13 @@ namespace MSU
 
             int missingAssets = 0;
             FieldInfo[] fields = typeToPopulate.GetFields(BindingFlags.Static | BindingFlags.Public);
-            foreach(FieldInfo fieldInfo in fields)
+            foreach (FieldInfo fieldInfo in fields)
             {
-                if(fieldInfo.FieldType.IsSameOrSubclassOf(typeof(TAsset)))
+                if (fieldInfo.FieldType.IsSameOrSubclassOf(typeof(TAsset)))
                 {
                     string name = fieldInfo.Name;
                     TAsset val = assets.Find(name);
-                    if(val != null)
+                    if (val != null)
                     {
 #if DEBUG
                         notAssignedAssets.Remove(val);
@@ -249,17 +244,17 @@ namespace MSU
             }
 
 #if DEBUG
-            if(failureLog.Length > 1)
+            if (failureLog.Length > 1)
             {
                 failureLog.Insert(0, $"Failed to assign {missingAssets} field(s), logging which ones have failed.");
                 MSULog.Warning(failureLog.ToString());
                 failureLog.Clear();
             }
 
-            if(notAssignedAssets.Count > 0)
+            if (notAssignedAssets.Count > 0)
             {
                 failureLog.AppendLine($"There where {notAssignedAssets} Assets that have not been assigned to fields inside {typeToPopulate.FullName}. Listing assets:");
-                foreach(var asset in notAssignedAssets)
+                foreach (var asset in notAssignedAssets)
                 {
                     failureLog.AppendLine(asset.name);
                 }
@@ -303,7 +298,7 @@ namespace MSU
         {
             var result = collection.assets.OfType<TAsset>().Where(asset => string.Equals(asset.name, assetName, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
 #if DEBUG
-            if(!result)
+            if (!result)
             {
                 MSULog.Warning($"Asset of type {typeof(TAsset).Name} and name {assetName} was not found in {collection}, are you sure youre typing the asset's name correctly?");
             }
@@ -322,7 +317,7 @@ namespace MSU
             var result = collection.assets.OfType<TAsset>().ToArray();
 
 #if DEBUG
-            if(result.Length == 0)
+            if (result.Length == 0)
             {
                 MSULog.Warning($"Could not find any assets of type {typeof(TAsset).Name} inside {collection}");
             }
@@ -382,32 +377,32 @@ namespace MSU
         {
             NetworkIdentity identity = go.GetComponent<NetworkIdentity>();
             bool isNetworkedByDefault = false;
-            if(go.TryGetComponent<CharacterBody>(out var bodyComponent))
+            if (go.TryGetComponent<CharacterBody>(out var bodyComponent))
             {
                 isNetworkedByDefault = true;
                 contentPack.bodyPrefabs.AddSingle(go);
             }
-            if(go.TryGetComponent<CharacterMaster>(out var masterComponent))
+            if (go.TryGetComponent<CharacterMaster>(out var masterComponent))
             {
                 isNetworkedByDefault = true;
                 contentPack.masterPrefabs.AddSingle(go);
             }
-            if(go.TryGetComponent<ProjectileController>(out var controllerComponent))
+            if (go.TryGetComponent<ProjectileController>(out var controllerComponent))
             {
                 isNetworkedByDefault = true;
                 contentPack.projectilePrefabs.AddSingle(go);
             }
-            if(go.TryGetComponent<Run>(out var runComponent))
+            if (go.TryGetComponent<Run>(out var runComponent))
             {
                 isNetworkedByDefault = true;
                 contentPack.gameModePrefabs.AddSingle(go);
             }
-            if(go.TryGetComponent<EffectComponent>(out var effectComponent))
+            if (go.TryGetComponent<EffectComponent>(out var effectComponent))
             {
                 contentPack.effectDefs.AddSingle(new EffectDef(go));
             }
 
-            if(identity && !isNetworkedByDefault)
+            if (identity && !isNetworkedByDefault)
             {
                 contentPack.networkedObjectPrefabs.AddSingle(go);
             }
@@ -415,9 +410,9 @@ namespace MSU
 
         private static void AddEntityStateTypes(EntityStateTypeCollection collection, ContentPack contentPack)
         {
-            foreach(var type in collection.stateTypes)
+            foreach (var type in collection.stateTypes)
             {
-                if(type.stateType != null)
+                if (type.stateType != null)
                 {
                     contentPack.entityStateTypes.AddSingle(type.stateType);
                 }

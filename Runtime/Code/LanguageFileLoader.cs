@@ -1,9 +1,6 @@
 ﻿using BepInEx;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using UnityEngine;
 
 namespace MSU
 {
@@ -33,12 +30,12 @@ namespace MSU
         {
             List<string> moddedFolders = new List<string>();
 
-            foreach(var (plugin, langFolderName) in _pluginsWithLanguageFiles)
+            foreach (var (plugin, langFolderName) in _pluginsWithLanguageFiles)
             {
                 var directoryName = Path.GetDirectoryName(plugin.Info.Location);
                 var lantguageDirectory = Path.Combine(directoryName, langFolderName);
 
-                if(Directory.Exists(lantguageDirectory))
+                if (Directory.Exists(lantguageDirectory))
                 {
                     var newDirectories = Directory.EnumerateDirectories(lantguageDirectory, self.name);
                     moddedFolders.AddRange(newDirectories);

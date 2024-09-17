@@ -5,9 +5,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace MSU
@@ -52,7 +49,7 @@ namespace MSU
         /// <returns>An array of IItemTierContentPiece, if the plugin has not added any ItemTiers, it returns an empty Array</returns>
         public static IItemTierContentPiece[] GetItemTiers(BaseUnityPlugin plugin)
         {
-            if(_pluginToTiers.TryGetValue(plugin, out var tiers))
+            if (_pluginToTiers.TryGetValue(plugin, out var tiers))
             {
                 return tiers;
             }
@@ -116,12 +113,12 @@ namespace MSU
 
         private static void BuildDropTable(Run obj)
         {
-            foreach(var (itemTierDef, itemTierContentPiece) in moonstormItemTiers)
+            foreach (var (itemTierDef, itemTierContentPiece) in moonstormItemTiers)
             {
                 itemTierContentPiece.availableTierDropList.Clear();
-                foreach(var itemIndex in itemTierContentPiece.itemsWithThisTier)
+                foreach (var itemIndex in itemTierContentPiece.itemsWithThisTier)
                 {
-                    if(obj.availableItems.Contains(itemIndex))
+                    if (obj.availableItems.Contains(itemIndex))
                     {
                         itemTierContentPiece.availableTierDropList.Add(PickupCatalog.FindPickupIndex(itemIndex));
                     }
@@ -131,12 +128,12 @@ namespace MSU
 
         private static void BuildItemListForEachItemTier()
         {
-            foreach(var (itemTierDef, itemTierContentPiece) in moonstormItemTiers)
+            foreach (var (itemTierDef, itemTierContentPiece) in moonstormItemTiers)
             {
                 itemTierContentPiece.itemsWithThisTier.Clear();
-                foreach(ItemDef itemDef in ItemCatalog.allItemDefs)
+                foreach (ItemDef itemDef in ItemCatalog.allItemDefs)
                 {
-                    if(itemDef.tier == itemTierDef.tier)
+                    if (itemDef.tier == itemTierDef.tier)
                     {
                         itemTierContentPiece.itemsWithThisTier.Add(itemDef.itemIndex);
                     }
@@ -150,7 +147,7 @@ namespace MSU
             List<IContentPiece<ItemTierDef>> itemTiers = new List<IContentPiece<ItemTierDef>>();
 
             var helper = new ParallelMultiStartCoroutine();
-            foreach(var tier in content)
+            foreach (var tier in content)
             {
                 if (!tier.IsAvailable(provider.contentPack))
                     continue;
@@ -168,7 +165,7 @@ namespace MSU
 
         private static void InitializeItemTiers(BaseUnityPlugin plugin, List<IContentPiece<ItemTierDef>> itemTiers, IContentPieceProvider<ItemTierDef> provider)
         {
-            foreach(var tier in itemTiers)
+            foreach (var tier in itemTiers)
             {
 #if DEBUG
                 try

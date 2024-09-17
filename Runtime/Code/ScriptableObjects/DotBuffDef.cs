@@ -1,8 +1,6 @@
 ﻿using R2API;
 using R2API.ScriptableObjects;
 using RoR2;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace MSU
@@ -36,7 +34,7 @@ namespace MSU
         /// The DotIndex that represents <see cref="dotDef"/>
         /// </summary>
         public DotController.DotIndex dotIndex { get; private set; } = DotController.DotIndex.None;
-        
+
         /// <summary>
         /// <inheritdoc cref="DotAPI.CustomDotBehaviour"/>
         /// </summary>
@@ -58,6 +56,7 @@ namespace MSU
             DoInit();
         }
 
+        [System.Obsolete]
         private new void OnValidate()
         {
             isDebuff = false;
@@ -69,7 +68,7 @@ namespace MSU
 
         private void DoInit()
         {
-            if(isDebuff)
+            if (isDebuff)
             {
 #if DEBUG
                 MSULog.Warning($"DotBuffDef {name} is marked as a Debuff, this will cause this DOT to count as 2 debuffs for DeathMark! setting isDebuff to false.");
@@ -77,9 +76,9 @@ namespace MSU
                 isDebuff = false;
             }
             DamageColorIndex damageColorIndex = DamageColorIndex.Default;
-            if(damageColor)
+            if (damageColor)
             {
-                if(damageColor.DamageColorIndex != DamageColorIndex.Default)
+                if (damageColor.DamageColorIndex != DamageColorIndex.Default)
                 {
                     ColorsAPI.AddSerializableDamageColor(damageColor);
                 }
