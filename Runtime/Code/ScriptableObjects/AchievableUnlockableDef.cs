@@ -44,7 +44,13 @@ namespace MSU
             {
                 if (!_preRequisiteAchievement.achievementIdentifier.IsNullOrWhiteSpace())
                 {
-                    return _preRequisiteAchievement.achievementIdentifier;
+                    var identifier = _preRequisiteAchievement.achievementIdentifier;
+                    var split = identifier.Split('.');
+
+                    if (split[split.Length - 1] != "Achievement")
+                        identifier += ".Achievement";
+
+                    return identifier;
                 }
                 else if (_preRequisiteAchievement.unlockableDef)
                 {
