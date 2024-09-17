@@ -13,7 +13,7 @@ namespace MSU
         /// <summary>
         /// A read only dictionary of BuffDef to Material. These materials are later applied as Overlays to CharacterBodies when they have the BuffDef
         /// </summary>
-        public static ReadOnlyDictionary<BuffDef, Material> buffOverlayDictionary { get; private set; }
+        public static ReadOnlyDictionary<BuffIndex, Material> buffOverlayDictionary { get; private set; }
         private static Dictionary<BuffDef, Material> _buffOverlays = new Dictionary<BuffDef, Material>();
 
         /// <summary>
@@ -27,10 +27,39 @@ namespace MSU
             dictionaryCreated = true;
             MSULog.Info("Initializing Buff Overlays...");
             On.RoR2.CharacterModel.UpdateOverlays += AddBuffOverlay;
+            On.RoR2.CharacterBody.OnBuffFirstStackGained += ForceUpdateIfNeeded;
+            On.RoR2.CharacterBody.OnBuffFinalStackLost += ForceUpdateOnBuffFinalStackLostIfNeeded;
 
-            buffOverlayDictionary = new ReadOnlyDictionary<BuffDef, Material>(_buffOverlays);
-            _buffOverlays = null;
+            Dictionary<BuffIndex, Material> readOnlyBase = new Dictionary<BuffIndex, Material>();
+            foreach (var (bd, material) in _buffOverlays)
+            {
+                if (bd.buffIndex == BuffIndex.None)
+                    continue;
 
+                readOnlyBase[bd.buffIndex] = material;
+            }
+            buffOverlayDictionary = new ReadOnlyDictionary<BuffIndex, Material>(readOnlyBase);
+
+        }
+
+        private static void ForceUpdateOnBuffFinalStackLostIfNeeded(On.RoR2.CharacterBody.orig_OnBuffFinalStackLost orig, CharacterBody self, BuffDef buffDef)
+        {
+            orig(self, buffDef);
+
+            if (buffOverlayDictionary.ContainsKey(buffDef.buffIndex) && self.modelLocator && self.modelLocator.modelTransform && self.modelLocator.modelTransform.TryGetComponent<CharacterModel>(out var mdl))
+            {
+                mdl.forceUpdate = true;
+            }
+        }
+
+        private static void ForceUpdateIfNeeded(On.RoR2.CharacterBody.orig_OnBuffFirstStackGained orig, CharacterBody self, BuffDef buffDef)
+        {
+            orig(self, buffDef);
+
+            if (buffOverlayDictionary.ContainsKey(buffDef.buffIndex) && self.modelLocator && self.modelLocator.modelTransform && self.modelLocator.modelTransform.TryGetComponent<CharacterModel>(out var mdl))
+            {
+                mdl.forceUpdate = true;
+            }
         }
 
         /// <summary>
@@ -77,8 +106,10 @@ namespace MSU
         private static void AddBuffOverlay(On.RoR2.CharacterModel.orig_UpdateOverlays orig, CharacterModel self)
         {
             orig(self);
+
             if (!self.body)
                 return;
+
             foreach (var (buff, material) in buffOverlayDictionary)
             {
                 if (self.body.HasBuff(buff))
