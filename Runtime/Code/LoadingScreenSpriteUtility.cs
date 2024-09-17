@@ -9,12 +9,23 @@ namespace MSU
     public static class LoadingScreenSpriteUtility
     {
         private static List<SimpleSpriteAnimation> _animations = new List<SimpleSpriteAnimation>();
+        private static HashSet<AssetBundle> _bundles;
         private static bool _hooked = false;
 
-        public static void AddSpriteAnimation(SimpleSpriteAnimation animation)
+        public static void AddSpriteAnimations(AssetBundle bundleLoadedOnAwake)
+        {
+            _bundles.Add(bundleLoadedOnAwake);
+            foreach(var ssa in bundleLoadedOnAwake.LoadAllAssets<SimpleSpriteAnimation>())
+            {
+                _animations.Add(ssa);
+            }
+        }
+
+        public static void AddSpriteAnimation(SimpleSpriteAnimation animation, AssetBundle parentBundle)
         {
             HookIfNeeded();
 
+            _bundles.Add(parentBundle);
             _animations.Add(animation);
         }
 
@@ -23,7 +34,21 @@ namespace MSU
             if (_hooked)
                 return;
 
+            _hooked = true;
             On.RoR2.PickRandomObjectOnAwake.Awake += AddSpriteAnimations;
+            On.RoR2.UI.MainMenu.MainMenuController.Awake += UnhookAndUnload;
+        }
+
+        private static void UnhookAndUnload(On.RoR2.UI.MainMenu.MainMenuController.orig_Awake orig, RoR2.UI.MainMenu.MainMenuController self)
+        {
+            _hooked = false;
+            On.RoR2.PickRandomObjectOnAwake.Awake -= AddSpriteAnimations;
+            On.RoR2.UI.MainMenu.MainMenuController.Awake -= UnhookAndUnload;
+
+            foreach(var bundle in _bundles)
+            {
+                bundle.Unload(true);
+            }
         }
 
         private static void AddSpriteAnimations(On.RoR2.PickRandomObjectOnAwake.orig_Awake orig, PickRandomObjectOnAwake self)
