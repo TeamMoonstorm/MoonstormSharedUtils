@@ -1,5 +1,6 @@
 ﻿using RoR2;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -27,11 +28,12 @@ namespace MSU
         /// </summary>
         public static int registeredGameplayEventCount => _registeredGameplayEventObjects.Length;
 
-        private static GameObject[] _gameplayEvents = Array.Empty<GameObject>();
         private static GameObject[] _registeredGameplayEventObjects = Array.Empty<GameObject>();
         private static GameplayEvent[] _registeredGameplayEventComponents = Array.Empty<GameplayEvent>();
 
         private static readonly Dictionary<string, GameplayEventIndex> _nameToEventIndex = new Dictionary<string, GameplayEventIndex>(StringComparer.OrdinalIgnoreCase);
+
+        public static event CollectGameplayEventContentProvidersDelegate collectGameplayEventContentProviders;
 
         /// <summary>
         /// Represents the availability for this Catalog, methods subscribed to this get called when the catalog finishes initializing
@@ -83,62 +85,47 @@ namespace MSU
         }
         #endregion
 
-        #region Add Methods
-        /// <summary>
-        /// Adds all the <see cref="GameObject"/> found within <paramref name="gameplayEventGameObjects"/> to the <see cref="GameplayEventCatalog"/>.
-        /// <br>Throws an exception if the catalog has already initialized.</br>
-        /// </summary>
-        /// <param name="gameplayEventGameObjects">The GameplayEvent GameObjects to add</param>
-        public static void AddGameplayEvents(GameObject[] gameplayEventGameObjects)
-        {
-            ThrowIfInitialized();
-            foreach (GameObject go in gameplayEventGameObjects)
-            {
-                AddGameplayEvent(go);
-            }
-        }
-
-        /// <summary>
-        /// Adds a single <paramref name="gameplayEventGameObject"/> to the <see cref="GameplayEventCatalog"/>
-        /// <br>Throws an exception if the catalog has already initialized</br>
-        /// </summary>
-        /// <param name="gameplayEventGameObject">The GameplayEvent GameObject to add</param>
-        public static void AddGameplayEvent(GameObject gameplayEventGameObject)
-        {
-            ThrowIfInitialized();
-
-            if (!gameplayEventGameObject.TryGetComponent<GameplayEvent>(out var @event))
-            {
-#if DEBUG
-                MSULog.Warning($"GameObject {gameplayEventGameObject} does not have a GameplayEvent component!");
-#endif
-                return;
-            }
-
-            HG.ArrayUtils.ArrayAppend(ref _gameplayEvents, gameplayEventGameObject);
-        }
-        #endregion
-
         #region Internal Methods
         [SystemInitializer]
-        private static void Init()
+        private static IEnumerator Init()
         {
+            List<IGameplayEventContentProvider> contentProviders = new List<IGameplayEventContentProvider>();
+
+            collectGameplayEventContentProviders?.Invoke(AddGameplayEventContentProvider);
+
+            List<GameObject> loadedEvents = new List<GameObject>();
+
+            ParallelMultiStartCoroutine coroutine = new ParallelMultiStartCoroutine();
+            foreach(var contentProvider in contentProviders)
+            {
+                yield return null;
+                coroutine.Add(contentProvider.LoadGameplayEventsAsync, loadedEvents);
+            }
+
+            coroutine.Start();
+            while (!coroutine.isDone)
+                yield return null;
+
             _nameToEventIndex.Clear();
 
-            _gameplayEvents = _gameplayEvents.OrderBy(go => go.name).ToArray();
+            loadedEvents = loadedEvents.OrderBy(go => go.name).ToList();
 
-            _registeredGameplayEventObjects = RegisterGameplayEvents().ToArray();
+            _registeredGameplayEventObjects = RegisterGameplayEvents(loadedEvents).ToArray();
             _registeredGameplayEventComponents = _registeredGameplayEventObjects.Select(g => g.GetComponent<GameplayEvent>()).ToArray();
-            _gameplayEvents = null;
 
             _initialized = true;
             catalogAvailability.MakeAvailable();
+
+            void AddGameplayEventContentProvider(IGameplayEventContentProvider contentProvider)
+            {
+                contentProviders.Add(contentProvider);
+            }
         }
 
-        private static List<GameObject> RegisterGameplayEvents()
+        private static List<GameObject> RegisterGameplayEvents(List<GameObject> _gameplayEvents)
         {
             List<GameObject> validEvents = new List<GameObject>();
-            for (int i = 0; i < _gameplayEvents.Length; i++)
+            for (int i = 0; i < _gameplayEvents.Count; i++)
             {
                 try
                 {
@@ -170,6 +157,7 @@ namespace MSU
 
             validEvents.Add(gameplayEvent);
         }
+
         private static void ThrowIfNotInitialized()
         {
             if (!_initialized)
@@ -177,14 +165,14 @@ namespace MSU
                 throw new InvalidOperationException("GameplayEventCatalog not Initialized. Use \"catalogAvailability\" to call a method when the GameplayEventCatalog is initialized.");
             }
         }
-
-        private static void ThrowIfInitialized()
-        {
-            if (_initialized)
-            {
-                throw new InvalidOperationException("GameplayEventCatalog has already initialized.");
-            }
-        }
         #endregion
+
+        public delegate void AddGameplayEventContentProviderDelegate(IGameplayEventContentProvider provider);
+        public delegate void CollectGameplayEventContentProvidersDelegate(AddGameplayEventContentProviderDelegate addGameplayEventContentProvider);
+        public interface IGameplayEventContentProvider
+        {
+
+            IEnumerator LoadGameplayEventsAsync(List<GameObject> dest);
+        }
     }
 }

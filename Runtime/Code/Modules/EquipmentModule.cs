@@ -106,7 +106,7 @@ namespace MSU
         }
 
         [SystemInitializer(typeof(EquipmentCatalog))]
-        private static void SystemInit()
+        private static IEnumerator SystemInit()
         {
             On.RoR2.EquipmentSlot.PerformEquipmentAction += PerformAction;
             On.RoR2.CharacterBody.OnEquipmentLost += CallOnEquipmentLost;
@@ -119,6 +119,7 @@ namespace MSU
 
             foreach (var (eqpDef, eqp) in _moonstormEquipments)
             {
+                yield return null;
                 allEquips.Add(eqpDef, eqp);
                 if (eqp is IEliteContentPiece eliteContent)
                 {
@@ -139,6 +140,8 @@ namespace MSU
             CombatDirector.EliteTierDef[] vanillaTiers = R2API.EliteAPI.VanillaEliteTiers;
             foreach (EliteDef eliteDef in moonstormEliteDefs)
             {
+                yield return null;
+
                 if (eliteDef is not ExtendedEliteDef eed)
                     continue;
 

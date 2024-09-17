@@ -3,6 +3,7 @@ using HG;
 using RoR2;
 using RoR2.Achievements;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -109,8 +110,10 @@ namespace MSU
         }
 
         [SystemInitializer]
-        private static void SystemInit()
+        private static IEnumerator SystemInit()
         {
+            yield return null;
+
             RoR2BepInExPack.VanillaFixes.SaferAchievementManager.OnCollectAchievementDefs += AddInstances;
         }
 

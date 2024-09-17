@@ -2,6 +2,7 @@
 using MonoMod.Cil;
 using RoR2;
 using System;
+using System.Collections;
 
 namespace MSU
 {
@@ -9,8 +10,9 @@ namespace MSU
     {
         internal static event Action<HealthComponent, DamageInfo> @event;
         [SystemInitializer]
-        private static void Init()
+        private static IEnumerator Init()
         {
+            yield return null;
             MSULog.Info("Setting up Interfaces");
             IL.RoR2.HealthComponent.TakeDamageProcess += HealthComponent_TakeDamageProcess;
         }

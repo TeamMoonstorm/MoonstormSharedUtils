@@ -1,4 +1,5 @@
 ﻿using RoR2;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
@@ -22,7 +23,7 @@ namespace MSU
         public static bool dictionaryCreated { get; private set; } = false;
 
         [SystemInitializer(typeof(BuffCatalog))]
-        private static void SystemInit()
+        private static IEnumerator SystemInit()
         {
             dictionaryCreated = true;
             MSULog.Info("Initializing Buff Overlays...");
@@ -33,13 +34,13 @@ namespace MSU
             Dictionary<BuffIndex, Material> readOnlyBase = new Dictionary<BuffIndex, Material>();
             foreach (var (bd, material) in _buffOverlays)
             {
+                yield return null;
                 if (bd.buffIndex == BuffIndex.None)
                     continue;
 
                 readOnlyBase[bd.buffIndex] = material;
             }
             buffOverlayDictionary = new ReadOnlyDictionary<BuffIndex, Material>(readOnlyBase);
-
         }
 
         private static void ForceUpdateOnBuffFinalStackLostIfNeeded(On.RoR2.CharacterBody.orig_OnBuffFinalStackLost orig, CharacterBody self, BuffDef buffDef)

@@ -1,6 +1,7 @@
 ﻿using EntityStates;
 using RoR2;
 using RoR2.UI;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -44,9 +45,13 @@ namespace MSU
         private TMPro.TMP_FontAsset _bombadierFontAsset;
 
         [SystemInitializer]
-        private static void SystemInit()
+        private static IEnumerator SystemInit()
         {
-            _prefab = MSUMain.msuAssetBundle.LoadAsset<GameObject>("GameplayEventText");
+            var request = MSUMain.msuAssetBundle.LoadAssetAsync<GameObject>("GameplayEventText");
+            while (!request.isDone)
+                yield return null;
+
+            _prefab = request.asset as GameObject;
             On.RoR2.UI.HUD.Awake += SpawnAndGetInstance;
         }
 

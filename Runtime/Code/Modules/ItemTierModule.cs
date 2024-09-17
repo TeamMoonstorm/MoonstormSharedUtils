@@ -84,12 +84,16 @@ namespace MSU
         }
 
         [SystemInitializer(typeof(ItemCatalog), typeof(ItemTierCatalog))]
-        private static void SystemInit()
+        private static IEnumerator SystemInit()
         {
             MSULog.Info("Initializing Item Tier Module...");
             moonstormItemTiers = new ReadOnlyDictionary<ItemTierDef, IItemTierContentPiece>(_moonstormItemTiers);
             _moonstormItemTiers = null;
-            BuildItemListForEachItemTier();
+
+            var subroutine = BuildItemListForEachItemTier();
+            while (!subroutine.IsDone())
+                yield return null;
+
             Run.onRunStartGlobal += BuildDropTable;
             On.RoR2.PickupDisplay.DestroyModel += DestroyCustomModel;
             On.RoR2.PickupDisplay.RebuildModel += RebuildCustomModel;
@@ -126,13 +130,15 @@ namespace MSU
             }
         }
 
-        private static void BuildItemListForEachItemTier()
+        private static IEnumerator BuildItemListForEachItemTier()
         {
             foreach (var (itemTierDef, itemTierContentPiece) in moonstormItemTiers)
             {
+                yield return null;
                 itemTierContentPiece.itemsWithThisTier.Clear();
                 foreach (ItemDef itemDef in ItemCatalog.allItemDefs)
                 {
+                    yield return null;
                     if (itemDef.tier == itemTierDef.tier)
                     {
                         itemTierContentPiece.itemsWithThisTier.Add(itemDef.itemIndex);

@@ -2,6 +2,7 @@
 using BepInEx.Configuration;
 using RoR2;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
@@ -88,8 +89,9 @@ namespace MSU.Config
         }
 
         [SystemInitializer]
-        private static void Init()
+        private static IEnumerator Init()
         {
+            yield return null;
             RoR2Application.onLoad += BindConfig;
         }
 

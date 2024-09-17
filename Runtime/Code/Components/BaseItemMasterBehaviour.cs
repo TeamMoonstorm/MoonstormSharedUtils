@@ -3,6 +3,7 @@ using JetBrains.Annotations;
 using RoR2;
 using RoR2.Items;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
@@ -31,7 +32,7 @@ namespace MSU
         {
             typeof(ItemCatalog)
         })]
-        private static void Init()
+        private static IEnumerator Init()
         {
             List<BaseItemBodyBehavior.ItemTypePair> server = new List<BaseItemBodyBehavior.ItemTypePair>();
             List<BaseItemBodyBehavior.ItemTypePair> client = new List<BaseItemBodyBehavior.ItemTypePair>();
@@ -43,6 +44,7 @@ namespace MSU
             Type itemDefType = typeof(ItemDef);
             foreach (BaseItemMasterBehaviour.ItemDefAssociationAttribute itemDefAssociationAttribute in attributeList)
             {
+                yield return null;
                 MethodInfo methodInfo;
                 if ((methodInfo = (itemDefAssociationAttribute.target as MethodInfo)) == null)
                 {

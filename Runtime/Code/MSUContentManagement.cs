@@ -2,6 +2,7 @@
 using R2API;
 using RoR2;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
@@ -16,8 +17,10 @@ namespace MSU
         private static Dictionary<UnityObjectWrapperKey<CharacterBody>, Dictionary<BuffIndex, BaseBuffBehaviour>> _bodyToBuffBehaviourDictionary = new Dictionary<UnityObjectWrapperKey<CharacterBody>, Dictionary<BuffIndex, BaseBuffBehaviour>>();
 
         [SystemInitializer(typeof(BodyCatalog), typeof(BuffCatalog))]
-        private static void SystemInit()
+        private static IEnumerator SystemInit()
         {
+            yield return null;
+
             On.RoR2.CharacterBody.SetBuffCount += SetBuffBehaviourCount;
             CharacterBody.onBodyAwakeGlobal += OnBodyAwakeGlobal;
             CharacterBody.onBodyDestroyGlobal += OnBodyDestroyedGlobal;
@@ -36,8 +39,13 @@ namespace MSU
                 RecalculateStatsAPI.GetStatCoefficients += GetStatsCoefficients;
             }
 
-            InitMSUContentBehaviourSystem();
-            InitBuffBehaviourSystem();
+            ParallelMultiStartCoroutine coroutine = new ParallelMultiStartCoroutine();
+            coroutine.Add(InitMSUContentBehaviourSystem);
+            coroutine.Add(InitBuffBehaviourSystem);
+
+            coroutine.Start();
+            while (!coroutine.isDone)
+                yield return null;
         }
 
         private static void GetStatsCoefficients(CharacterBody sender, RecalculateStatsAPI.StatHookEventArgs args)
@@ -84,10 +92,11 @@ namespace MSU
             _bodyToContentBehaviour[self].RecalculateStatsEnd();
         }
 
-        private static void InitMSUContentBehaviourSystem()
+        private static IEnumerator InitMSUContentBehaviourSystem()
         {
             for (int i = 0; i < BodyCatalog.bodyPrefabs.Length; i++)
             {
+                yield return null;
                 try
                 {
                     GameObject bodyPrefab = BodyCatalog.bodyPrefabs[i];
@@ -112,7 +121,7 @@ namespace MSU
                 }
             }
         }
-        private static void InitBuffBehaviourSystem()
+        private static IEnumerator InitBuffBehaviourSystem()
         {
             List<BaseBuffBehaviour.BuffDefAssociation> attributes = new List<BaseBuffBehaviour.BuffDefAssociation>();
             HG.Reflection.SearchableAttribute.GetInstances(attributes);
@@ -121,6 +130,7 @@ namespace MSU
             Type buffDefType = typeof(BuffDef);
             foreach (BaseBuffBehaviour.BuffDefAssociation attribute in attributes)
             {
+                yield return null;
                 MethodInfo methodInfo = (MethodInfo)attribute.target;
                 if (!methodInfo.IsStatic)
                     continue;
