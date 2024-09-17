@@ -89,8 +89,10 @@ namespace MSU
         }
 
         [SystemInitializer]
-        private static void SystemInit()
+        private static IEnumerator SystemInit()
         {
+            yield return null;
+
             MSULog.Info("Initializing Interactable Module...");
             DirectorAPI.InteractableActions += AddCustomInteractables;
 

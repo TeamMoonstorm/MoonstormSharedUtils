@@ -1,6 +1,7 @@
 ﻿using BepInEx;
 using RoR2;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -39,8 +40,10 @@ namespace MSU
         }
 
         [SystemInitializer]
-        private static void SystemInitializer()
+        private static IEnumerator SystemInitializer()
         {
+            yield return null;
+
             RoR2Application.onLoad += () =>
             {
                 CreateIDRSDictionary();

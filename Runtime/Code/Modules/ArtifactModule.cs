@@ -86,8 +86,10 @@ namespace MSU
         }
 
         [SystemInitializer(typeof(ArtifactCatalog))]
-        private static void SystemInit()
+        private static IEnumerator SystemInit()
         {
+            yield return null;
+
             moonstormArtifacts = new ReadOnlyDictionary<ArtifactDef, IArtifactContentPiece>(_moonstormArtifacts);
             _moonstormArtifacts = null;
 

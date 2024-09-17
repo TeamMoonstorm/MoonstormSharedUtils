@@ -92,6 +92,7 @@ namespace MSU.Config
         private static IEnumerator Init()
         {
             yield return null;
+
             RoR2Application.onLoad += BindConfig;
         }
 

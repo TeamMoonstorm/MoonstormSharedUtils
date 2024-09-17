@@ -82,8 +82,9 @@ namespace MSU
         }
 
         [SystemInitializer(typeof(SurvivorCatalog))]
-        private static void SystemInit()
+        private static IEnumerator SystemInit()
         {
+            yield return null;
             moonstormVanillaSurvivorsContentPieces = new ReadOnlyDictionary<SurvivorDef, IVanillaSurvivorContentPiece[]>(_moonstormVanillaSurvivorsContentPieces);
             _moonstormVanillaSurvivorsContentPieces = null;
 

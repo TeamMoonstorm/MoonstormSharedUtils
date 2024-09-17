@@ -83,8 +83,10 @@ namespace MSU
         }
 
         [SystemInitializer(typeof(SceneCatalog))]
-        private static void SystemInit()
+        private static IEnumerator SystemInit()
         {
+            yield return null;
+
             moonstormScenes = new ReadOnlyDictionary<SceneDef, ISceneContentPiece>(_moonstormScenes);
             _moonstormScenes = null;
 

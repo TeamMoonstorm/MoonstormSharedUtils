@@ -87,8 +87,10 @@ namespace MSU
         }
 
         [SystemInitializer(typeof(ItemCatalog))]
-        private static void SystemInit()
+        private static IEnumerator SystemInit()
         {
+            yield return null;
+
             moonstormItems = new ReadOnlyDictionary<ItemDef, IItemContentPiece>(_moonstormItems);
             _moonstormItems = null;
 

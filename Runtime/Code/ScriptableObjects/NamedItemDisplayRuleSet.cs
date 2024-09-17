@@ -1,6 +1,7 @@
 ﻿using BepInEx;
 using RoR2;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -26,8 +27,10 @@ namespace MSU
         private void OnDestroy() => _instances.Remove(this);
 
         [SystemInitializer]
-        private static void SystemInitializer()
+        private static IEnumerator SystemInitializer()
         {
+            yield return null;
+
             ItemDisplayCatalog.catalogAvailability.CallWhenAvailable(() =>
             {
                 MSULog.Info("Initializing NamedItemDisplayRuleSets");

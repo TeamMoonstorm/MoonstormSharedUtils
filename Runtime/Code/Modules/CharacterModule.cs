@@ -89,8 +89,10 @@ namespace MSU
         }
 
         [SystemInitializer(typeof(BodyCatalog))]
-        private static void SystemInit()
+        private static IEnumerator SystemInit()
         {
+            yield return null;
+
             MSULog.Info("Initializing Character Module...");
             DirectorAPI.MonsterActions += AddCustomMonsters;
 
