@@ -71,7 +71,7 @@ namespace MSU
         /// <returns>An IContentPieceProvider with <paramref name="plugin"/>'s classes that implement <typeparamref name="TContentPieceType"/></returns>
         public static IContentPieceProvider CreateContentPieceProvider<TContentPieceType>(BaseUnityPlugin plugin, ContentPack contentPack) where TContentPieceType : IContentPiece
         {
-            return new ContentPieceProvider(AnalyzeForContentPieces<TContentPieceType>(plugin), contentPack);
+            return new ContentPieceProvider(AnalyzeForContentPieces<TContentPieceType>(plugin).OfType<IContentPiece>(), contentPack);
         }
 
         /// <summary>

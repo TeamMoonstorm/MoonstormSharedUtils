@@ -1,4 +1,4 @@
-Copyright © 2022-2023 TeamMoonstorm
+Copyright © 2022-2024 TeamMoonstorm
 
 Permission is hereby granted, free of charge, to any person depending
 on this software and associated documentation files (the "Software")
