@@ -89,6 +89,7 @@ namespace MSU
         [SystemInitializer]
         private static IEnumerator Init()
         {
+            MSULog.Info("Initializing the GameplayEvent Catalog...");
             List<IGameplayEventContentProvider> contentProviders = new List<IGameplayEventContentProvider>();
 
             collectGameplayEventContentProviders?.Invoke(AddGameplayEventContentProvider);

@@ -88,6 +88,8 @@ namespace MSU
         [SystemInitializer(typeof(ArtifactCatalog))]
         private static IEnumerator SystemInit()
         {
+            MSULog.Info("Initializing the Artifact Module...");
+
             yield return null;
 
             moonstormArtifacts = new ReadOnlyDictionary<ArtifactDef, IArtifactContentPiece>(_moonstormArtifacts);

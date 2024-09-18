@@ -91,9 +91,10 @@ namespace MSU
         [SystemInitializer(typeof(BodyCatalog))]
         private static IEnumerator SystemInit()
         {
+            MSULog.Info("Initializing the Character Module...");
+
             yield return null;
 
-            MSULog.Info("Initializing Character Module...");
             DirectorAPI.MonsterActions += AddCustomMonsters;
 
             moonstormCharacters = new ReadOnlyDictionary<CharacterBody, ICharacterContentPiece>(_moonstormCharacters);

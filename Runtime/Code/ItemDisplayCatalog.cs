@@ -46,6 +46,7 @@ namespace MSU
 
             RoR2Application.onLoad += () =>
             {
+                MSULog.Info("Initializing the ItemDisplayCatalog...");
                 CreateIDRSDictionary();
                 CreateDisplayDictionary();
                 catalogAvailability.MakeAvailable();

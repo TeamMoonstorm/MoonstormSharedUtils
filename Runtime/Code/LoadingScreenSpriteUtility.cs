@@ -6,6 +6,9 @@ using UnityEngine;
 
 namespace MSU
 {
+    /// <summary>
+    /// Utility class for adding new Sprite Animations to the Loading Screen
+    /// </summary>
     public static class LoadingScreenSpriteUtility
     {
         private static List<SimpleSpriteAnimation> _animations = new List<SimpleSpriteAnimation>();
@@ -13,6 +16,12 @@ namespace MSU
         private static bool _hooked = false;
         private static bool _alreadyPastLoadingScreen = false;
 
+        /// <summary>
+        /// Adds all the <see cref="SimpleSpriteAnimation"/>s found within <paramref name="bundleLoadedOnAwake"/> to the loading screen.
+        /// 
+        /// <para>Due to needing the bundle in <paramref name="bundleLoadedOnAwake"/> to be loaded on Awake time, MSU will UNLOAD the passed bundle once the title screen is reached, its recommended that you use a separate bundle EXCLUSIVELY for these SimpleSpriteAnimations.</para>
+        /// </summary>
+        /// <param name="bundleLoadedOnAwake">The bundle that contains the sprite animations, and which will be unloaded once the main menu appears</param>
         public static void AddSpriteAnimations(AssetBundle bundleLoadedOnAwake)
         {
             if (_alreadyPastLoadingScreen)
@@ -29,6 +38,13 @@ namespace MSU
             }
         }
 
+        /// <summary>
+        /// Adds the specified <see cref="SimpleSpriteAnimation"/> in <paramref name="animation"/> to the loading screen.
+        /// 
+        /// <para>Due to needing the bundle in <paramref name="parentBundle"/> to be loaded on Awake time, MSU will UNLOAD the passed bundle once the title screen is reached, its recommended that you use a separate bundle EXCLUSIVELY for these SimpleSpriteAnimations.</para>
+        /// </summary>
+        /// <param name="animation">The sprite animation to add</param>
+        /// <param name="parentBundle">The bundle from which <paramref name="animation"/> was loaded. this bundle will be unloaded once the main menu appears.</param>
         public static void AddSpriteAnimation(SimpleSpriteAnimation animation, AssetBundle parentBundle)
         {
 

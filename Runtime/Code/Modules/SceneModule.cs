@@ -85,6 +85,8 @@ namespace MSU
         [SystemInitializer(typeof(SceneCatalog))]
         private static IEnumerator SystemInit()
         {
+            MSULog.Info("Initializing the Scene Module...");
+
             yield return null;
 
             moonstormScenes = new ReadOnlyDictionary<SceneDef, ISceneContentPiece>(_moonstormScenes);

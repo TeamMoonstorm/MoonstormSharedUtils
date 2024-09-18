@@ -19,6 +19,7 @@ namespace MSU
         [SystemInitializer(typeof(BodyCatalog), typeof(BuffCatalog))]
         private static IEnumerator SystemInit()
         {
+            MSULog.Info("Initializing the generalized MSU Content Management system...");
             yield return null;
 
             On.RoR2.CharacterBody.SetBuffCount += SetBuffBehaviourCount;

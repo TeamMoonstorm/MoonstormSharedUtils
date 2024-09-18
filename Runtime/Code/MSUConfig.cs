@@ -33,6 +33,17 @@ namespace MSU
         /// </summary>
         public static ConfigFile generalConfig { get; private set; }
 
+        [AutoConfig]
+        internal static ConfiguredFloat _maxOpacityForEventMessage;
+        [AutoConfig]
+        internal static ConfiguredFloat _eventMessageFontSize;
+        [AutoConfig]
+        internal static ConfiguredFloat _eventMessageYOffset;
+        [AutoConfig]
+        internal static ConfiguredFloat _eventMessageXOffset;
+        [AutoConfig]
+        internal static ConfiguredBool _familyEventUsesEventAnnouncementInsteadOfChatMessage;
+
 #if DEBUG
         public static ConfigFile debugConfig { get; private set; }
 
@@ -209,12 +220,78 @@ namespace MSU
         }
 #endif
 
+        private void SetGeneralConfigs()
+        {
+            _maxOpacityForEventMessage = new ConfiguredFloat(0.75f)
+            {
+                section = "Gameplay Event Messages",
+                description = "The Maximum opacity for the Gameplay Event Messages.",
+                configFile = generalConfig,
+                sliderType = ConfiguredFloat.SliderTypeEnum.Normal,
+                sliderConfig = new SliderConfig
+                {
+                    min = 0f,
+                    max = 1f,
+                    FormatString = "{0:0.0%}",
+                }
+            };
+
+            _eventMessageFontSize = new ConfiguredFloat(0.75f)
+            {
+                section = "Gameplay Event Messages",
+                description = "The Size of the font used in the Gameplay Event Message.",
+                configFile = generalConfig,
+                sliderType = ConfiguredFloat.SliderTypeEnum.Normal,
+                sliderConfig = new SliderConfig
+                {
+                    min = 0f,
+                    max = 0f
+                }
+            };
+
+            _eventMessageYOffset = new ConfiguredFloat(150f)
+            {
+                section = "Gameplay Event Messages",
+                description = "The Y Offset for the Gameplay Event Message.",
+                configFile = generalConfig,
+                sliderType = ConfiguredFloat.SliderTypeEnum.Normal,
+                sliderConfig = new SliderConfig
+                {
+                    min = 0f,
+                    max = 3456,
+                    FormatString = "{0:0.0}",
+                }
+            };
+
+            _eventMessageXOffset = new ConfiguredFloat(0f)
+            {
+                section = "Gameplay Event Messages",
+                description = "The X Offset for the Gameplay Event Message.",
+                configFile = generalConfig,
+                sliderType = ConfiguredFloat.SliderTypeEnum.Normal,
+                sliderConfig = new SliderConfig
+                {
+                    min = -4096f,
+                    max = 4096,
+                    FormatString = "{0:0.0}",
+                }
+            };
+
+            _familyEventUsesEventAnnouncementInsteadOfChatMessage = new ConfiguredBool(true)
+            {
+                section = "Gameplay Event Messages",
+                description = "Setting this to True causes the family event chat message to display as a Gameplay Event announcement instead.",
+                configFile = generalConfig,
+            };
+        }
+
         internal MSUConfig(BaseUnityPlugin bup)
         {
             configFactory = new ConfigFactory(bup, true);
             generalConfig = configFactory.CreateConfigFile(GENERAL, false);
             var icon = MSUMain.msuAssetBundle.LoadAsset<Sprite>("icon");
 
+            SetGeneralConfigs();
 #if DEBUG
             debugConfig = configFactory.CreateConfigFile(DEBUG, true);
             ModSettingsManager.SetModIcon(icon, bup.Info.Metadata.GUID + "." + DEBUG, bup.Info.Metadata.Name + "." + DEBUG);

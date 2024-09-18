@@ -108,6 +108,8 @@ namespace MSU
         [SystemInitializer(typeof(EquipmentCatalog))]
         private static IEnumerator SystemInit()
         {
+            MSULog.Info("Initializing the Equipment Module...");
+
             On.RoR2.EquipmentSlot.PerformEquipmentAction += PerformAction;
             On.RoR2.CharacterBody.OnEquipmentLost += CallOnEquipmentLost;
             On.RoR2.CharacterBody.OnEquipmentGained += CallOnEquipmentGained;

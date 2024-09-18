@@ -84,6 +84,8 @@ namespace MSU
         [SystemInitializer(typeof(SurvivorCatalog))]
         private static IEnumerator SystemInit()
         {
+            MSULog.Info("Initializing the VanillaSurvivor Module...");
+
             yield return null;
             moonstormVanillaSurvivorsContentPieces = new ReadOnlyDictionary<SurvivorDef, IVanillaSurvivorContentPiece[]>(_moonstormVanillaSurvivorsContentPieces);
             _moonstormVanillaSurvivorsContentPieces = null;

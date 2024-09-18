@@ -42,17 +42,64 @@ namespace MSU
         /// </summary>
         public EventTextRequest? currentTextRequest { get; private set; }
 
+        /// <summary>
+        /// Returns the RectTransform of this object
+        /// </summary>
+        public RectTransform rectTransform { get; private set; }
+
         private TMPro.TMP_FontAsset _bombadierFontAsset;
 
         [SystemInitializer]
         private static IEnumerator SystemInit()
         {
+            MSULog.Info("Initializing the GameplayEventTextController...");
+
             var request = MSUMain.msuAssetBundle.LoadAssetAsync<GameObject>("GameplayEventText");
             while (!request.isDone)
                 yield return null;
 
             _prefab = request.asset as GameObject;
             On.RoR2.UI.HUD.Awake += SpawnAndGetInstance;
+
+            MSUConfig._eventMessageFontSize.onConfigChanged += SetTextSize;
+            MSUConfig._familyEventUsesEventAnnouncementInsteadOfChatMessage.onConfigChanged += ShouldAnnounceFamilyEventsAsGameplayEvents;
+        }
+
+        private static void ShouldAnnounceFamilyEventsAsGameplayEvents(bool announceAsGameplayEvents)
+        {
+            if(announceAsGameplayEvents)
+            {
+                On.RoR2.ClassicStageInfo.BroadcastFamilySelection -= BroadcastFamilySelection;
+                On.RoR2.ClassicStageInfo.BroadcastFamilySelection += BroadcastFamilySelection;
+                return;
+            }
+            On.RoR2.ClassicStageInfo.BroadcastFamilySelection -= BroadcastFamilySelection;
+        }
+
+        private static IEnumerator BroadcastFamilySelection(On.RoR2.ClassicStageInfo.orig_BroadcastFamilySelection orig, ClassicStageInfo self, string familySelectionChatString)
+        {
+            if(!instance)
+            {
+                yield return orig(self, familySelectionChatString);
+                yield break;
+            }
+
+            yield return new WaitForSeconds(6);
+            instance.EnqueueNewTextRequest(new EventTextRequest
+            {
+                eventColor = Color.white,
+                eventToken = familySelectionChatString,
+                textDuration = 6f
+            });
+        }
+
+        private static void SetTextSize(float newVal)
+        {
+            if (!instance)
+                return;
+
+            instance.textMeshProUGUI.fontSize = newVal;
+            instance.textMeshProUGUI.fontSizeMax = newVal;
         }
 
         private static void SpawnAndGetInstance(On.RoR2.UI.HUD.orig_Awake orig, RoR2.UI.HUD self)
@@ -133,6 +180,8 @@ namespace MSU
             textMeshProUGUI.color = messageColor;
             textMeshProUGUI.outlineColor = outlineColor;
             textMeshProUGUI.font = currentTextRequest.Value.customFontAsset.hasValue ? currentTextRequest.Value.customFontAsset.value : _bombadierFontAsset;
+
+            rectTransform.anchoredPosition = new Vector3(MSUConfig._eventMessageXOffset, MSUConfig._eventMessageYOffset);
         }
 
         private void Start()
@@ -144,6 +193,7 @@ namespace MSU
         {
             textStateMachine = GetComponent<EntityStateMachine>();
             textMeshProUGUI = GetComponent<HGTextMeshProUGUI>();
+            rectTransform = GetComponent<RectTransform>();
         }
 
         private void OnEnable()
@@ -257,7 +307,7 @@ namespace MSU
                 uiJuice.destroyOnEndOfTransition = false;
                 uiJuice.transitionDuration = duration;
                 uiJuice.TransitionAlphaFadeIn();
-                uiJuice.originalAlpha = 1;
+                uiJuice.originalAlpha = MSUConfig._maxOpacityForEventMessage;
                 uiJuice.transitionEndAlpha = 1;
             }
 

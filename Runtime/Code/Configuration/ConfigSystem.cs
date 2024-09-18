@@ -98,6 +98,7 @@ namespace MSU.Config
 
         private static void BindConfig()
         {
+            MSULog.Info("Binding the Configs within the MSU Config System...");
             BindConfigureFieldAttributes();
             BindAutoConfigAttributes();
         }

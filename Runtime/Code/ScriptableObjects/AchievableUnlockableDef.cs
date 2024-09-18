@@ -119,6 +119,7 @@ namespace MSU
 
         private static void AddInstances(List<string> arg1, Dictionary<string, AchievementDef> arg2, List<AchievementDef> arg3)
         {
+            MSULog.Info("Adding Achievements from AchievableUnlockableDefs...");
             foreach (AchievableUnlockableDef def in _instances)
             {
                 if (def.index == UnlockableIndex.None)

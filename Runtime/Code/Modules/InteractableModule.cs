@@ -91,9 +91,10 @@ namespace MSU
         [SystemInitializer]
         private static IEnumerator SystemInit()
         {
+            MSULog.Info("Initializing the Interactable Module...");
+
             yield return null;
 
-            MSULog.Info("Initializing Interactable Module...");
             DirectorAPI.InteractableActions += AddCustomInteractables;
 
             moonstormInteractables = new ReadOnlyDictionary<IInteractable, IInteractableContentPiece>(_moonstormInteractables);

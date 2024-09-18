@@ -87,6 +87,7 @@ namespace MSU
         private static IEnumerator SystemInit()
         {
             MSULog.Info("Initializing Item Tier Module...");
+
             moonstormItemTiers = new ReadOnlyDictionary<ItemTierDef, IItemTierContentPiece>(_moonstormItemTiers);
             _moonstormItemTiers = null;
 

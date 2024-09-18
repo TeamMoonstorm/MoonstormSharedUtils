@@ -34,6 +34,7 @@ namespace MSU
         })]
         private static IEnumerator Init()
         {
+            MSULog.Info("Initializing the BaseItemMasterBehaviour system...");
             List<BaseItemBodyBehavior.ItemTypePair> server = new List<BaseItemBodyBehavior.ItemTypePair>();
             List<BaseItemBodyBehavior.ItemTypePair> client = new List<BaseItemBodyBehavior.ItemTypePair>();
             List<BaseItemBodyBehavior.ItemTypePair> shared = new List<BaseItemBodyBehavior.ItemTypePair>();
