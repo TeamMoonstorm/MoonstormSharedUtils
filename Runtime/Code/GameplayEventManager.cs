@@ -147,33 +147,26 @@ namespace MSU
             }
 
             GameplayEvent evtInstance = UnityEngine.Object.Instantiate(eventPrefab).GetComponent<GameplayEvent>();
-            NetworkServer.Spawn(evtInstance.gameObject);
-            if (args.announcementDuration.HasValue)
-            {
-                evtInstance.announcementDuration = args.announcementDuration.Value;
-            }
 
-            if (args.expirationTimer.HasValue)
-            {
-                evtInstance.gameObject.AddComponent<DestroyOnTimer>().duration = args.expirationTimer.Value;
-            }
-
-            if (args.beginOnStartOverride.HasValue)
+            if(args.beginOnStartOverride.HasValue)
             {
                 evtInstance.beginOnStart = args.beginOnStartOverride.Value;
             }
 
-            if (!args.doNotAnnounceStart && GameplayEventTextController.instance)
+            if(args.expirationTimerOverride.HasValue)
             {
-                GameplayEventTextController.instance.EnqueueNewTextRequest(new GameplayEventTextController.EventTextRequest
-                {
-                    eventToken = evtInstance.eventStartToken,
-                    eventColor = evtInstance.eventColor,
-                    textDuration = args.announcementDuration ?? 6
-                });
+                evtInstance.eventDuration = args.expirationTimerOverride.Value;
             }
 
-            evtInstance.doNotAnnounceEnding = args.doNotAnnounceEnd;
+            if(args.announcementDurationOverride.HasValue)
+            {
+                evtInstance.announcementDuration = args.announcementDurationOverride.Value;
+            }
+
+            evtInstance.doNotAnnounceEnd = args.doNotAnnounceEnd;
+            evtInstance.doNotAnnounceStart = args.doNotAnnounceStart;
+
+            NetworkServer.Spawn(evtInstance.gameObject);
 
             return evtInstance;
         }
@@ -189,11 +182,6 @@ namespace MSU
             public readonly GameObject gameplayEventPrefab;
 
             /// <summary>
-            /// If a value is provided, the event will self destruct after this amount of seconds
-            /// </summary>
-            public readonly float? expirationTimer;
-
-            /// <summary>
             /// If true, the GameplayEvent will ignore all requirement checks, even if it has a <see cref="GameplayEventRequirement"/> attached
             /// </summary>
             public readonly bool skipEventRequirementChecks;
@@ -203,25 +191,19 @@ namespace MSU
             /// </summary>
             public readonly bool ignoreDuplicateEvents;
 
-            /// <summary>
-            /// If a value is provided, the gameplayEvent can either start automatically or start when it's <see cref="GameplayEvent.StartEvent"/> is called
-            /// </summary>
-            public readonly bool? beginOnStartOverride;
-
-            /// <summary>
-            /// If provided, the GameplayEvent will display its announcement for this amount of seconds
-            /// </summary>
-            public readonly float? announcementDuration;
-
-            /// <summary>
-            /// If true, the GameplayEvent will not announce its start
-            /// </summary>
             public readonly bool doNotAnnounceStart;
 
-            /// <summary>
-            /// If true, the GameplayEvent will not announce its ending
-            /// </summary>
             public readonly bool doNotAnnounceEnd;
+
+            public readonly bool? beginOnStartOverride;
+
+            public readonly float? expirationTimerOverride;
+
+            public readonly float? announcementDurationOverride;
+
+            public readonly EntityStateIndex? customTextStateIndex;
+
+            public readonly GenericObjectIndex? customTMPFontAssetIndex;
         }
     }
 }

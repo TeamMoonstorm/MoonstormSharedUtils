@@ -1,9 +1,12 @@
 ﻿using EntityStates;
+using R2API.Networking.Interfaces;
 using RoR2;
 using RoR2.UI;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace MSU
 {
@@ -90,7 +93,7 @@ namespace MSU
                 eventColor = Color.white,
                 eventToken = familySelectionChatString,
                 textDuration = 6f
-            });
+            }, true);
         }
 
         private static void SetTextSize(float newVal)
@@ -120,16 +123,33 @@ namespace MSU
                 eventToken = "Event Text Test",
                 eventColor = Color.cyan,
                 textDuration = 15
-            });
+            }, true);
         }
 
         /// <summary>
         /// Enqueues a new <see cref="EventTextRequest"/> to be displayed
         /// </summary>
         /// <param name="request">The EventText to display</param>
-        public void EnqueueNewTextRequest(EventTextRequest request)
+        public void EnqueueNewTextRequest(EventTextRequest request, bool sendOverNetwork)
         {
             _textRequests.Enqueue(request);
+            if(sendOverNetwork)
+            {
+                if (NetworkServer.active)
+                    SendRequestToClients(request);
+                else
+                    SendRequestToServerAndOtherClients(request);
+            }
+        }
+
+        private void SendRequestToClients(EventTextRequest request)
+        {
+            new SendEventTextRequestToClientsMessage(request).Send(R2API.Networking.NetworkDestination.Clients);
+        }
+
+        private void SendRequestToServerAndOtherClients(EventTextRequest request)
+        {
+            new SendEventTExtRequestToServerAndClientsMessage(request).Send(R2API.Networking.NetworkDestination.Server | R2API.Networking.NetworkDestination.Clients);
         }
 
         private void Update()
@@ -175,11 +195,12 @@ namespace MSU
             string tokenValue = currentTextRequest.Value.tokenValue;
             Color messageColor = currentTextRequest.Value.eventColor;
             Color outlineColor = currentTextRequest.Value.GetBestOutlineColor();
+            GenericObjectIndex tmpFontIndex = currentTextRequest.Value.genericObjectIndexThatPointsToTMP_FontAsset;
 
             textMeshProUGUI.text = tokenValue;
             textMeshProUGUI.color = messageColor;
             textMeshProUGUI.outlineColor = outlineColor;
-            textMeshProUGUI.font = currentTextRequest.Value.customFontAsset.hasValue ? currentTextRequest.Value.customFontAsset.value : _bombadierFontAsset;
+            textMeshProUGUI.font = tmpFontIndex == GenericObjectIndex.None ? HGTextMeshProUGUI.defaultLanguageFont : GenericUnityObjectCatalog.GetObject<TMP_FontAsset>(tmpFontIndex);
 
             rectTransform.anchoredPosition = new Vector3(MSUConfig._eventMessageXOffset, MSUConfig._eventMessageYOffset);
         }
@@ -235,9 +256,9 @@ namespace MSU
             public SerializableEntityStateType? customTextState;
 
             /// <summary>
-            /// If supplied, this font asset is used for the lifetime of this Request, if no FontAsset is supplied, the base game's "Bombardier" font is used.
+            /// Index that represents a <see cref="TMPro.TMP_FontAsset"/>, which will be used as the font for the text, if no index is supploed, the current language's font is used.
             /// </summary>
-            public NullableRef<TMPro.TMP_FontAsset> customFontAsset;
+            public GenericObjectIndex genericObjectIndexThatPointsToTMP_FontAsset;
 
             /// <summary>
             /// The value of <see cref="eventToken"/> using the currently loaded language
@@ -361,6 +382,91 @@ namespace MSU
                     textController.NullCurrentRequest();
                     outer.SetNextStateToMain();
                 }
+            }
+        }
+
+        internal class SendEventTExtRequestToServerAndClientsMessage : INetMessage
+        {
+            public EventTextRequest request;
+
+            public void Deserialize(NetworkReader reader)
+            {
+                request = default;
+                request.eventToken = reader.ReadString();
+                request.eventColor = reader.ReadColor();
+                request.textDuration = reader.ReadSingle();
+
+                if (reader.ReadBoolean())
+                    request.customTextState = new SerializableEntityStateType(EntityStateCatalog.GetStateType(reader.ReadEntityStateIndex()));
+
+                request.genericObjectIndexThatPointsToTMP_FontAsset = reader.ReadGenericObjectIndex();
+            }
+
+            public void OnReceived()
+            {
+                instance.EnqueueNewTextRequest(request, false);
+            }
+
+            public void Serialize(NetworkWriter writer)
+            {
+                writer.Write(request.eventToken);
+                writer.Write(request.eventColor);
+                writer.Write(request.textDuration);
+
+                writer.Write(request.customTextState.HasValue);
+                if (request.customTextState.HasValue)
+                    writer.Write(EntityStateCatalog.GetStateIndex(request.customTextState.Value.stateType));
+
+                writer.Write(request.genericObjectIndexThatPointsToTMP_FontAsset);
+            }
+
+            public SendEventTExtRequestToServerAndClientsMessage(EventTextRequest request)
+            {
+                this.request = request;
+            }
+        }
+
+        internal class SendEventTextRequestToClientsMessage : INetMessage
+        {
+            public EventTextRequest request;
+
+            public void Deserialize(NetworkReader reader)
+            {
+                request = default;
+                request.eventToken = reader.ReadString();
+                request.eventColor = reader.ReadColor();
+                request.textDuration = reader.ReadSingle();
+
+                if (reader.ReadBoolean())
+                    request.customTextState = new SerializableEntityStateType(EntityStateCatalog.GetStateType(reader.ReadEntityStateIndex()));
+
+                request.genericObjectIndexThatPointsToTMP_FontAsset = reader.ReadGenericObjectIndex();
+            }
+
+            public void OnReceived()
+            {
+                if (NetworkServer.active)
+                    return;
+
+                instance.EnqueueNewTextRequest(request, false);
+            }
+
+            public void Serialize(NetworkWriter writer)
+            {
+                writer.Write(request.eventToken);
+                writer.Write(request.eventColor);
+                writer.Write(request.textDuration);
+
+                writer.Write(request.customTextState.HasValue);
+                if (request.customTextState.HasValue)
+                    writer.Write(EntityStateCatalog.GetStateIndex(request.customTextState.Value.stateType));
+
+                writer.Write(request.genericObjectIndexThatPointsToTMP_FontAsset);
+            }
+
+            public SendEventTextRequestToClientsMessage(EventTextRequest request)
+            {
+                this.request = request;
             }
         }
     }

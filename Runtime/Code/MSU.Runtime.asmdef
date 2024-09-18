@@ -1,5 +1,6 @@
 {
     "name": "MSU.Runtime",
+    "rootNamespace": "",
     "references": [
         "Unity.Postprocessing.Runtime",
         "com.unity.multiplayer-hlapi.Runtime",
@@ -42,7 +43,8 @@
         "MonoMod.RuntimeDetour.dll",
         "ShaderSwapper.dll",
         "R2API.Dot.dll",
-        "R2API.Stages.dll"
+        "R2API.Stages.dll",
+        "R2API.Networking.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [],

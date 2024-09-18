@@ -109,6 +109,7 @@ namespace MSU
             {
                 try
                 {
+                    anim.transform.SetParent(self.transform);
                     anim.transform.position = new Vector3(96, 0, 0);
                     HG.ArrayUtils.ArrayAppend(ref self.ObjectsToSelect, anim);
                 }
