@@ -236,7 +236,7 @@ namespace MSU
                 }
             };
 
-            _eventMessageFontSize = new ConfiguredFloat(0.75f)
+            _eventMessageFontSize = new ConfiguredFloat(61f)
             {
                 section = "Gameplay Event Messages",
                 description = "The Size of the font used in the Gameplay Event Message.",
@@ -245,7 +245,9 @@ namespace MSU
                 sliderConfig = new SliderConfig
                 {
                     min = 0f,
-                    max = 0f
+                    max = 100f,
+
+                    FormatString = "{0:0.0}",
                 }
             };
 
@@ -291,6 +293,8 @@ namespace MSU
             generalConfig = configFactory.CreateConfigFile(GENERAL, false);
             var icon = MSUMain.msuAssetBundle.LoadAsset<Sprite>("icon");
 
+            ModSettingsManager.SetModIcon(icon, bup.Info.Metadata.GUID, bup.Info.Metadata.Name);
+            ModSettingsManager.SetModDescription("An API focused with the intention of working in an editor enviroment using ThunderKit, MSU is a modular API system designed for ease of use and simplicity.", bup.Info.Metadata.GUID, bup.Info.Metadata.Name);
             SetGeneralConfigs();
 #if DEBUG
             debugConfig = configFactory.CreateConfigFile(DEBUG, true);
