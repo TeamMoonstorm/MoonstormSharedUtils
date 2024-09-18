@@ -10,6 +10,7 @@ namespace MSU
     /// <summary>
     /// MSU's main class
     /// </summary>
+    [BepInDependency(R2API.Networking.NetworkingAPI.PluginGUID, BepInDependency.DependencyFlags.HardDependency)]
     [BepInDependency("com.rune580.riskofoptions")]
     [BepInDependency("iHarbHD.DebugToolkit", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInPlugin(GUID, MODNAME, VERSION)]

@@ -1,4 +1,5 @@
 ﻿using EntityStates;
+using R2API.Networking;
 using R2API.Networking.Interfaces;
 using RoR2;
 using RoR2.UI;
@@ -66,6 +67,8 @@ namespace MSU
 
             MSUConfig._eventMessageFontSize.onConfigChanged += SetTextSize;
             MSUConfig._familyEventUsesEventAnnouncementInsteadOfChatMessage.onConfigChanged += ShouldAnnounceFamilyEventsAsGameplayEvents;
+
+            NetworkingAPI.RegisterMessageType<SendEventTextRequestToClientsMessage>();
         }
 
         private static void ShouldAnnounceFamilyEventsAsGameplayEvents(bool announceAsGameplayEvents)
@@ -132,24 +135,17 @@ namespace MSU
         /// <param name="request">The EventText to display</param>
         public void EnqueueNewTextRequest(EventTextRequest request, bool sendOverNetwork)
         {
-            _textRequests.Enqueue(request);
             if(sendOverNetwork)
             {
-                if (NetworkServer.active)
-                    SendRequestToClients(request);
-                else
-                    SendRequestToServerAndOtherClients(request);
+                SendRequestOverNetwork(request);
+                return;
             }
+            _textRequests.Enqueue(request);
         }
 
-        private void SendRequestToClients(EventTextRequest request)
+        private void SendRequestOverNetwork(EventTextRequest request)
         {
-            new SendEventTextRequestToClientsMessage(request).Send(R2API.Networking.NetworkDestination.Clients);
-        }
-
-        private void SendRequestToServerAndOtherClients(EventTextRequest request)
-        {
-            new SendEventTExtRequestToServerAndClientsMessage(request).Send(R2API.Networking.NetworkDestination.Server | R2API.Networking.NetworkDestination.Clients);
+            new SendEventTextRequestToClientsMessage(request).Send(NetworkDestination.Clients | NetworkDestination.Server);
         }
 
         private void Update()
@@ -385,47 +381,6 @@ namespace MSU
             }
         }
 
-        internal class SendEventTExtRequestToServerAndClientsMessage : INetMessage
-        {
-            public EventTextRequest request;
-
-            public void Deserialize(NetworkReader reader)
-            {
-                request = default;
-                request.eventToken = reader.ReadString();
-                request.eventColor = reader.ReadColor();
-                request.textDuration = reader.ReadSingle();
-
-                if (reader.ReadBoolean())
-                    request.customTextState = new SerializableEntityStateType(EntityStateCatalog.GetStateType(reader.ReadEntityStateIndex()));
-
-                request.genericObjectIndexThatPointsToTMP_FontAsset = reader.ReadGenericObjectIndex();
-            }
-
-            public void OnReceived()
-            {
-                instance.EnqueueNewTextRequest(request, false);
-            }
-
-            public void Serialize(NetworkWriter writer)
-            {
-                writer.Write(request.eventToken);
-                writer.Write(request.eventColor);
-                writer.Write(request.textDuration);
-
-                writer.Write(request.customTextState.HasValue);
-                if (request.customTextState.HasValue)
-                    writer.Write(EntityStateCatalog.GetStateIndex(request.customTextState.Value.stateType));
-
-                writer.Write(request.genericObjectIndexThatPointsToTMP_FontAsset);
-            }
-
-            public SendEventTExtRequestToServerAndClientsMessage(EventTextRequest request)
-            {
-                this.request = request;
-            }
-        }
-
         internal class SendEventTextRequestToClientsMessage : INetMessage
         {
             public EventTextRequest request;
@@ -445,9 +400,6 @@ namespace MSU
 
             public void OnReceived()
             {
-                if (NetworkServer.active)
-                    return;
-
                 instance.EnqueueNewTextRequest(request, false);
             }
 
@@ -468,6 +420,8 @@ namespace MSU
             {
                 this.request = request;
             }
+
+            public SendEventTextRequestToClientsMessage() { }
         }
     }
 }
