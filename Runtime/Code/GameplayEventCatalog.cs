@@ -130,7 +130,7 @@ namespace MSU
             {
                 try
                 {
-                    RegisterGameplayEvent(_gameplayEvents[i], validEvents);
+                    EnsureValidity(_gameplayEvents[i], validEvents);
                 }
                 catch (Exception e)
                 {
@@ -149,7 +149,7 @@ namespace MSU
             return validEvents;
         }
 
-        private static void RegisterGameplayEvent(GameObject gameplayEvent, List<GameObject> validEvents)
+        private static void EnsureValidity(GameObject gameplayEvent, List<GameObject> validEvents)
         {
             if (!gameplayEvent.TryGetComponent<GameplayEvent>(out var eventComponent))
             {

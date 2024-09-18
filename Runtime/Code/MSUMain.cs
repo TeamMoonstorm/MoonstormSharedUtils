@@ -1,6 +1,9 @@
 ﻿using BepInEx;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace MSU
 {
@@ -34,6 +37,7 @@ namespace MSU
         /// </summary>
         public static AssetBundle msuAssetBundle { get; private set; }
         private static string assetBundleDir { get => Path.Combine(Path.GetDirectoryName(pluginInfo.Location), "assetbundles"); }
+
 
         private void Awake()
         {

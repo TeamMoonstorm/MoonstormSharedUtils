@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace MSU
 {
@@ -375,6 +376,26 @@ namespace MSU
         public static bool IsDone(this IEnumerator coroutineEnumerator)
         {
             return !coroutineEnumerator.MoveNext();
+        }
+
+        public static void Write(this NetworkWriter writer, GameplayEventIndex gameplayEventIndex)
+        {
+            writer.WritePackedIndex32((int)gameplayEventIndex);
+        }
+
+        public static GameplayEventIndex ReadGameplayEventIndex(this NetworkReader reader)
+        {
+            return (GameplayEventIndex)reader.ReadPackedIndex32();
+        }
+
+        public static void Write(this NetworkWriter writer, GenericObjectIndex genericObjectIndex)
+        {
+            writer.WritePackedIndex32((int)genericObjectIndex);
+        }
+
+        public static GenericObjectIndex ReadGenericObjectIndex(this NetworkReader reader)
+        {
+            return (GenericObjectIndex)reader.ReadPackedIndex32();
         }
 
         static MSUtil()

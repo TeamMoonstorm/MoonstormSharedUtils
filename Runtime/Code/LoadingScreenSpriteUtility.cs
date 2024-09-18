@@ -11,10 +11,12 @@ namespace MSU
     /// </summary>
     public static class LoadingScreenSpriteUtility
     {
-        private static List<SimpleSpriteAnimation> _animations = new List<SimpleSpriteAnimation>();
+        private static List<GameObject> _walkGameObjects = new List<GameObject>();
         private static HashSet<AssetBundle> _bundles = new HashSet<AssetBundle>();
+
         private static bool _hooked = false;
         private static bool _alreadyPastLoadingScreen = false;
+        private static GameObject _walkPrefab;
 
         /// <summary>
         /// Adds all the <see cref="SimpleSpriteAnimation"/>s found within <paramref name="bundleLoadedOnAwake"/> to the loading screen.
@@ -34,7 +36,10 @@ namespace MSU
             _bundles.Add(bundleLoadedOnAwake);
             foreach(var ssa in bundleLoadedOnAwake.LoadAllAssets<SimpleSpriteAnimation>())
             {
-                _animations.Add(ssa);
+                var instance = GameObject.Instantiate(_walkPrefab);
+                instance.name = ssa.name + "Animator";
+                _walkPrefab.GetComponentInChildren<SimpleSpriteAnimator>().animation = ssa;
+                _walkGameObjects.Add(instance);
             }
         }
 
@@ -57,7 +62,11 @@ namespace MSU
             HookIfNeeded();
 
             _bundles.Add(parentBundle);
-            _animations.Add(animation);
+
+            var instance = GameObject.Instantiate(_walkPrefab);
+            instance.name = animation.name + "Animator";
+            _walkPrefab.GetComponentInChildren<SimpleSpriteAnimator>().animation = animation;
+            _walkGameObjects.Add(instance);
         }
 
         private static void HookIfNeeded() 
@@ -68,6 +77,7 @@ namespace MSU
             _hooked = true;
             On.RoR2.PickRandomObjectOnAwake.Awake += AddSpriteAnimations;
             On.RoR2.UI.MainMenu.MainMenuController.Awake += UnhookAndUnload;
+            _walkPrefab = MSUMain.msuAssetBundle.LoadAsset<GameObject>("CustomSpriteWalk");
         }
 
         private static void UnhookAndUnload(On.RoR2.UI.MainMenu.MainMenuController.orig_Awake orig, RoR2.UI.MainMenu.MainMenuController self)
@@ -76,11 +86,18 @@ namespace MSU
             _hooked = false;
             On.RoR2.PickRandomObjectOnAwake.Awake -= AddSpriteAnimations;
             On.RoR2.UI.MainMenu.MainMenuController.Awake -= UnhookAndUnload;
+            _walkPrefab = null;
 
+            foreach(var anim in _walkGameObjects)
+            {
+                GameObject.Destroy(anim);
+            }
+            _walkGameObjects.Clear();
             foreach(var bundle in _bundles)
             {
                 bundle.Unload(true);
             }
+            _bundles.Clear();
         }
 
         private static void AddSpriteAnimations(On.RoR2.PickRandomObjectOnAwake.orig_Awake orig, PickRandomObjectOnAwake self)
@@ -88,26 +105,12 @@ namespace MSU
             if (self.gameObject.name != "MiniScene")
                 goto callOrig;
 
-            Transform commandoWalk = self.transform.Find("CommandoWalk");
-
-            if (!commandoWalk)
-                goto callOrig;
-
-            foreach(var anim in _animations)
+            foreach(var anim in _walkGameObjects)
             {
                 try
                 {
-                    GameObject copyOfCommandoWalk = UnityEngine.Object.Instantiate(commandoWalk.gameObject);
-                    Transform copyOfCommandoWalkTransform = copyOfCommandoWalk.transform;
-
-                    copyOfCommandoWalkTransform.SetParent(self.transform);
-
-                    Transform spriteTransform = copyOfCommandoWalkTransform.Find("MonsterSprite");
-                    SimpleSpriteAnimator animator = spriteTransform.GetComponent<SimpleSpriteAnimator>();
-
-                    animator.animation = anim;
-
-                    HG.ArrayUtils.ArrayAppend(ref self.ObjectsToSelect, copyOfCommandoWalk);
+                    anim.transform.position = new Vector3(96, 0, 0);
+                    HG.ArrayUtils.ArrayAppend(ref self.ObjectsToSelect, anim);
                 }
                 catch(Exception e)
                 {
