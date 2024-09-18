@@ -37,8 +37,9 @@ namespace MSU
             foreach(var ssa in bundleLoadedOnAwake.LoadAllAssets<SimpleSpriteAnimation>())
             {
                 var instance = GameObject.Instantiate(_walkPrefab);
+
                 instance.name = ssa.name + "Animator";
-                _walkPrefab.GetComponentInChildren<SimpleSpriteAnimator>().animation = ssa;
+                instance.GetComponentInChildren<SimpleSpriteAnimator>().animation = ssa;
                 _walkGameObjects.Add(instance);
             }
         }
@@ -64,8 +65,9 @@ namespace MSU
             _bundles.Add(parentBundle);
 
             var instance = GameObject.Instantiate(_walkPrefab);
+
             instance.name = animation.name + "Animator";
-            _walkPrefab.GetComponentInChildren<SimpleSpriteAnimator>().animation = animation;
+            instance.GetComponentInChildren<SimpleSpriteAnimator>().animation = animation;
             _walkGameObjects.Add(instance);
         }
 
@@ -110,7 +112,10 @@ namespace MSU
                 try
                 {
                     anim.transform.SetParent(self.transform);
-                    anim.transform.position = new Vector3(96, 0, 0);
+
+                    anim.transform.position = Vector3.zero;
+                    anim.transform.localPosition = new Vector3(96, 0, 0);
+
                     HG.ArrayUtils.ArrayAppend(ref self.ObjectsToSelect, anim);
                 }
                 catch(Exception e)
