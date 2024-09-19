@@ -1,0 +1,17 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Packages/riskofthunder-ror2editorkit/Assets/VisualElements/R2EKGlobalStlye.uss?fileID=7433441132597879392&amp;guid=81861b4c6318b874391de872e1793059&amp;type=3#R2EKGlobalStlye" />
+    <ui:VisualElement name="Header">
+        <ui:Label text="Shader Dictionary" display-tooltip-when-elided="true" class="r2ek-text_header r2ek-bombardier r2ek-text_center_aligned" />
+    </ui:VisualElement>
+    <ui:VisualElement name="Center" style="flex-grow: 0;">
+        <ui:VisualElement name="Buttons" style="flex-direction: row; justify-content: center;">
+            <ui:Button text="Add Default Stubbed Shaders" display-tooltip-when-elided="true" name="AddDefaultStubbedShaders" style="flex-grow: 0; max-width: none; width: 32.5%;" />
+            <ui:Button text="Attempt To Find Missing Keys" display-tooltip-when-elided="true" name="AttemptToFindMissingKeys" style="flex-grow: 0; max-width: none; width: 32.5%;" />
+            <ui:Button text="Reload Internal Dictionary" display-tooltip-when-elided="true" name="ReloadInternalDictionary" style="flex-grow: 0; max-width: none; width: 32.5%;" />
+        </ui:VisualElement>
+        <ui:ListView focusable="true" name="ShaderPairs" binding-path="_shaderPairs" show-border="true" show-add-remove-footer="true" show-foldout-header="true" header-title="Shader Pairs" style="flex-grow: 1;" />
+    </ui:VisualElement>
+    <ui:VisualElement name="Footer">
+        <ui:Button text="Save" display-tooltip-when-elided="true" name="Save" />
+    </ui:VisualElement>
+</ui:UXML>

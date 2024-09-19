@@ -1,0 +1,35 @@
+{
+    "name": "MSU.Editor.ImportExtensions",
+    "rootNamespace": "MSU.Editor.Importers",
+    "references": [
+        "GUID:280569ac301428d4d950fdf647900922",
+        "GUID:fb8ce2e2486231249a0954d5da518927",
+        "GUID:48abf88f565f4bb4fb35fbe2385f0894",
+        "GUID:fb1d83a89d7108b4f86d74c4ed9d2013"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "MSU_R2_IMPORT_EXTENSIONS_ENABLED",
+        "MSU_THUNDERKIT_ENABLED"
+    ],
+    "versionDefines": [
+        {
+            "name": "riskofthunder-ror2importextensions",
+            "expression": "1.6.0",
+            "define": "MSU_R2_IMPORT_EXTENSIONS_ENABLED"
+        },
+        {
+            "name": "com.passivepicasso.thunderkit",
+            "expression": "9.0.0",
+            "define": "MSU_THUNDERKIT_ENABLED"
+        }
+    ],
+    "noEngineReferences": false
+}

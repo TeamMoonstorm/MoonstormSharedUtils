@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 870831823, guid: 6640684985c93709256019488ea570c0, type: 3}
+  m_Name: MSUSCP
+  m_EditorClassIdentifier: 
+  bodyPrefabs: []
+  masterPrefabs: []
+  projectilePrefabs: []
+  gameModePrefabs: []
+  effectPrefabs: []
+  networkedObjectPrefabs:
+  - {fileID: 6129970050706187277, guid: 637525fed156c554b9471c98b903fbbb, type: 3}
+  skillDefs: []
+  skillFamilies: []
+  sceneDefs: []
+  itemDefs: []
+  itemTierDefs: []
+  itemRelationshipProviders: []
+  itemRelationshipTypes: []
+  equipmentDefs: []
+  buffDefs: []
+  eliteDefs: []
+  unlockableDefs: []
+  survivorDefs: []
+  artifactDefs: []
+  surfaceDefs: []
+  networkSoundEventDefs: []
+  musicTrackDefs: []
+  gameEndingDefs: []
+  miscPickupDefs: []
+  entityStateConfigurations:
+  - {fileID: 11400000, guid: 66849a078b067e444b36f65b4a984602, type: 2}
+  entityStateTypes:
+  - _typeName: EntityStates.Events.DummyEventState, MoonstormSharedUtils, Version=1.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  expansionDefs: []
+  entitlementDefs: []

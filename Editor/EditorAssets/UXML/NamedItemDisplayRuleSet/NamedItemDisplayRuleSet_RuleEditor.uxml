@@ -1,0 +1,13 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <RoR2.Editor.ExtendedHelpBox message-type="Info" message="Please Select a Rule from the Sidebar." />
+    <ui:VisualElement name="ControlContainer">
+        <uie:EnumField label="Rule Type" value="ParentedPrefab" name="RuleType" type="RoR2.ItemDisplayRuleType, RoR2" />
+        <ui:IMGUIContainer name="DisplayPrefabName" />
+        <ui:VisualElement name="LimbMaskContainer" />
+        <ui:Button text="Paste Values from Clipboard" display-tooltip-when-elided="true" name="PasteFromClipboard" />
+        <ui:TextField picking-mode="Ignore" label="Child Name" name="ChildName" />
+        <uie:Vector3Field label="Local Position" name="LocalPos" />
+        <uie:Vector3Field label="Local Angles" name="LocalAngles" />
+        <uie:Vector3Field label="Local Scale" name="LocalScales" />
+    </ui:VisualElement>
+</ui:UXML>

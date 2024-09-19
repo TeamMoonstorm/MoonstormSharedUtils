@@ -1,8 +1,67 @@
-# '1.6.3' - Addressable Fix
+# '2.0.0' - Seekers of the API
+
+## General
+
+* Updated to version ``1.3.Z`` of the Game, otherwise known as the Seekers of the Storm release.
+* Updated to version ``2021.3.33`` of Unity.
+* A Complete ground up rewrite of the API, Moonstorm Shared Utils version 2.0 is the most stable and performant version created yet.
+* While there have been hundreds, if not thousands of changes below the hood, you can look below for the main changes MSU 2.0 brings.
 
 ## Runtime
 
-* Fixed the AddressableInjector not working outside of the unity editor.
+### Major Changes:
+
+* Asset loading is now completely asynchronous, utilization of the ``IContentPackProvider`` system and understanding of ``Coroutines`` is heavily encouraged for initializing your content.
+* Most of the API marked as obsolete has been removed.
+* Classes have been changed their names to better reflect what they do (``TokenModifier`` has been renamed to ``FormatToken``)
+* The old API, now called "MoonstormSharedUtils.Legacy" internally, is still included in the GithubRepo, this was done to allow a "smooth" switch between both versions of the API
+    * The LegacyAPI will be removed in a future version, and does not work ingame, it exists purely to ensure no references in unity are lost.
+
+#### "Loader" classes have been removed completely.
+
+* ``Loader`` classes such as ``AssetLoader``, ``ConfigLoader``, ``LanguageLoader`` and others where confusing to utilize and obfuscated too much code of what was going on behind the scenes.
+    * We recommend utilizing the ``MSUTemplate`` github repo (coming soon) to create new mods utilizing MSU, the Template already comes with prebuilt static classes that handle Assets, Configs, Logging and ``IContentPackProvider`` classes that replace the now defunct "Loader" classes.
+    * For language loading, you can now use the ``LanguageFileLoader`` class.
+    * Most of the methods relating to the ConfigurationSystem has been consolidated into the ``ConfigFactory`` class.
+
+#### Modules and Content Classes have changed drasticly
+
+* Modules are no longer instantiable and are now static.
+    * This has been done to avoid the confusing system of "inheriting" from a module to utilize it's functionality.
+    * For curated process of content initialized and added to the game, you can utilize the ``IContentProvider`` system from the API.
+
+* ContentBase classes and it's subclasses have been replaced.
+    * This system was replaced by the IContentPiece system. a "Content Piece" is any type of Asset or Object that adds new features to the game.
+    * Loading of assets on the constructor level is now discouraged, as ``IContentPiece``contains a coroutine method that'll be called by its module to load it's asset asynchronously in parallel.
+    * ``IContentPiece``s still rely on modules for initialization. To initialize your mod's content you can utilize it's respective module's ``Initialize`` method, which works as a coroutine that you can await in your ContentPackProvider.
+
+* Added the IContentPieceProvider system.
+    * A ContentPieceProvider, like its name says, provides IContentPiece instances to a MSU Module.
+    * You can either create the provider manually, or utilize the methods inside ``ContentUtil`` to automatically scan and create a provider for your content.
+
+* The following modules and content classes have been removed:
+    * ``EliteModuleBase`` && ``EliteBase``
+        * The functionality of the module has been assigned to the ``EquipmentModule``, while now you can use the ``IEliteContentPiece`` to create elite equipments.
+    * ``BuffModuleBase`` && ``BuffBase``
+        * Buff overlays have been assigned to a new class called the ``BuffOverlays`` class.
+    * ``DamageTypeModuleBase`` && ``DamageTypeBase``
+    * ``ProjectileModuleBase`` && ``ProjectileBase``
+    * ``UnlockablesModuleBase`` && ``UnlockableBase``
+    * The removed classes with no alternatives have been removed because the type of "Content" they managed cannot exist "by themselves". For example, a "DamageType" does not exist on its own, it's always related to a proper content piece such as a Character.
+
+#### Events have been reworked completely.
+
+* The ``EventDirector`` system, while it had good intentions, it proved to be difficult to work with and not scalable for bigger projects, as such, the Event system has been replaced by the ``GameplayEvent`` system.
+    * ``GameplayEvent``s are custom GameObjects that change how the game's played in a temporary fashion, the mod ``Starstorm2`` showcases what's possible with this framework. Events being GameObjects means you can properly utilize the Component framework that unity provides.
+    * ``GameplayEvent`` are no longer spawned automatically by MSU, instead, the mod author must utilize the ``GameplayEventManager`` for spawning new events according to their desired functionality.
+    * The ``GameplayEvent`` system also has the ``GameplayEventRequirement`` component, a component that can be inherited to specify custom requirements for a ``GameplayEvent`` to be spawned succesfully using the ``GameplayEventManager``.
+    * The EventText system has been rewritten, and now no longer overlaps texts and supports more features.
+    * EntityState based events are still supported, as ``GameplayEvents`` are NetworkBehaviours and as such can utilize the EntityStateMachine system.
+
+#### Buff Behaviours are no longer Ephemeral.
+
+* While the BuffBehaviour system allowed modders to create complex monobehaviours when buffs where applied, it had the fatal flaw of Buffs not being something "constant" for a body (they can be timed). This in turn caused issues related to GarbageCollection and FrameDrops for potentially constant creation and destruction of Components.
+    * To remedy this, BuffBehaviours are now static and will never be removed from the body, instead, the behaviours will be dynamically enabled and disabled depending on the amount of buffs the body has.
 
 # '1.6.2' - Whoops
 

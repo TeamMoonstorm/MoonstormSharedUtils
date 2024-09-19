@@ -1,70 +1,59 @@
 ﻿using RoR2;
-using System;
 using UnityEngine;
 
-namespace Moonstorm.Experimental
+namespace MSU
 {
     /// <summary>
-    /// A monobehaviour that displays a custom ItemTier pickup display
+    /// A class utilized to display custom Pickup VFX for new ItemTiers added using MSU's Systems.
     /// </summary>
     public class ItemTierPickupDisplayHelper : MonoBehaviour
     {
-        [SystemInitializer(new Type[] { typeof(ItemTierCatalog), typeof(ItemTierModuleBase) })]
-        private static void SystemInitializer()
-        {
-            On.RoR2.PickupDisplay.DestroyModel += PickupDisplay_DestroyModel;
-            On.RoR2.PickupDisplay.RebuildModel += PickupDisplay_RebuildModel;
-        }
-
-        private static void PickupDisplay_RebuildModel(On.RoR2.PickupDisplay.orig_RebuildModel orig, PickupDisplay self)
-        {
-            var component = self.gameObject.EnsureComponent<ItemTierPickupDisplayHelper>();
-            orig(self);
-            component.OnPickupDisplayRebuildModel();
-        }
-
-        private static void PickupDisplay_DestroyModel(On.RoR2.PickupDisplay.orig_DestroyModel orig, PickupDisplay self)
-        {
-            var component = self.gameObject.EnsureComponent<ItemTierPickupDisplayHelper>();
-            orig(self);
-            component.OnPickupDisplayDestroyModel();
-        }
-
-        private PickupDisplay display;
-        private GameObject effectInstance;
-
+        private PickupDisplay _display;
+        private GameObject _vfxInstance;
         private void Awake()
         {
-            display = GetComponent<PickupDisplay>();
+            _display = GetComponent<PickupDisplay>();
         }
 
-        private void OnPickupDisplayRebuildModel()
+        /// <summary>
+        /// Rebuilds the custom model.
+        /// </summary>
+        public void RebuildCustomModel()
         {
-            if (!display)
+            if (!_display)
                 return;
 
-            PickupDef pickupDef = PickupCatalog.GetPickupDef(display.pickupIndex);
-            ItemIndex itemIndex = pickupDef?.itemIndex ?? ItemIndex.None;
-            if (itemIndex != ItemIndex.None)
+            PickupDef def = PickupCatalog.GetPickupDef(_display.pickupIndex);
+            if (def == null)
+                return;
+
+            ItemTier tier = def.itemTier;
+            if (tier > ItemTier.AssignedAtRuntime)
             {
-                ItemTier itemTier = ItemCatalog.GetItemDef(itemIndex).tier;
-                ItemTierDef itemTierDef = ItemTierCatalog.GetItemTierDef(itemTier);
-                if (itemTierDef && ItemTierModuleBase.MoonstormItemTiers.TryGetValue(itemTierDef, out var itemTierBase))
+                ItemTierDef tierDef = ItemTierCatalog.GetItemTierDef(tier);
+                if (tierDef && ItemTierModule._itemTierToPickupFX.TryGetValue(tierDef, out var prefab))
                 {
-                    if (itemTierBase != null && itemTierBase.PickupDisplayVFX)
+                    if (!prefab)
                     {
-                        effectInstance = Instantiate(itemTierBase.PickupDisplayVFX, display.gameObject.transform);
-                        effectInstance.transform.position = Vector3.zero;
+#if DEBUG
+                        MSULog.Warning($"{tierDef} is being handled by the ItemTierModule but it's IItemTierContentPiece does not provide a custom prefab for VFX!");
+#endif
+                        return;
                     }
+                    _vfxInstance = Instantiate(prefab, _display.transform);
+                    _vfxInstance.transform.position = Vector3.zero;
                 }
             }
         }
 
-        private void OnPickupDisplayDestroyModel()
+        /// <summary>
+        /// Destroys the custom model
+        /// </summary>
+        public void DestroyCustomModel()
         {
-            if (effectInstance)
+            if (_vfxInstance)
             {
-                Destroy(effectInstance);
+                Destroy(_vfxInstance);
             }
         }
     }

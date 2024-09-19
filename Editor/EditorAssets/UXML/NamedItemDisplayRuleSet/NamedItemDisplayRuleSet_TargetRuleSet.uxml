@@ -1,0 +1,6 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <ui:VisualElement name="Root">
+        <RoR2.Editor.ExtendedHelpBox message-type="Info" message="No TargetIDRS set, please assign a Target IDRS to this Named ItemDisplayRuleSet." name="NoTarget" is-dismissable="false" />
+        <uie:ObjectField label="Target IDRS" name="IDRSSelector" type="RoR2.ItemDisplayRuleSet, RoR2" />
+    </ui:VisualElement>
+</ui:UXML>

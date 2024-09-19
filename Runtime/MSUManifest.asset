@@ -18,7 +18,7 @@ MonoBehaviour:
   Name: MoonstormSharedUtils
   Description: An API focused with the intention of working in an editor enviroment
     using ThunderKit, MSU is a modular API system designed for ease of use and simplicity.
-  Version: 1.6.3
+  Version: 2.0.0
   Dependencies:
   - {fileID: 11400000, guid: 184f0fdf3edcd6bad171410f4e0fd947, type: 2}
   - {fileID: 11400000, guid: 1f1d261aeee91427ddd08b6378ec4e5a, type: 2}
@@ -28,9 +28,13 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 98480314448d120c05e373472456e52b, type: 2}
   - {fileID: 11400000, guid: c4d029bdf5bc95fb2fff2155c8689ef3, type: 2}
   - {fileID: 11400000, guid: 19f404b4f1d413a691a8b0edda7faba9, type: 2}
-  - {fileID: 11400000, guid: e3489f21cf727f06414f0494e9dce911, type: 2}
   - {fileID: 11400000, guid: 1938606488471c579b629a339fdab043, type: 2}
+  - {fileID: 11400000, guid: 484664494380feb55f0413b710f656ac, type: 2}
+  - {fileID: 11400000, guid: 1b5df2a4c826b6f799002dab33a6b684, type: 2}
+  - {fileID: 11400000, guid: d7d8ed5ac59df8acbbc4983f1ebba079, type: 2}
+  - {fileID: 11400000, guid: 142afce8924776fa9b3b5c1567df80aa, type: 2}
   - {fileID: 11400000, guid: e8166746ca0c6d98ee8c97fe787f2b80, type: 2}
+  - {fileID: 11400000, guid: 48f050b3512173aba0a952f846a557fa, type: 2}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -64,7 +68,7 @@ MonoBehaviour:
   m_Name: ThunderstoreData
   m_EditorClassIdentifier: 
   StagingPaths:
-  - <BuildPath>
+  - <MSUBuildPath>
   url: https://github.com/TeamMoonstorm/MoonstormSharedUtils
 --- !u!114 &426352536190054080
 MonoBehaviour:
@@ -79,9 +83,9 @@ MonoBehaviour:
   m_Name: AssemblyDefinitions
   m_EditorClassIdentifier: 
   StagingPaths:
-  - <BuildPathPlugins>
+  - <MSUBuildPathPlugins>
   definitions:
-  - {fileID: 5897886265953266890, guid: 027c693fefcac6548859a0eec81eed3d, type: 3}
+  - {fileID: 5897886265953266890, guid: 08e20a9dcb84ac748840227dcac08af2, type: 3}
 --- !u!114 &3240393688467726566
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -95,7 +99,7 @@ MonoBehaviour:
   m_Name: Files
   m_EditorClassIdentifier: 
   StagingPaths:
-  - <BuildPath>
+  - <MSUBuildPath>
   includeMetaFiles: 0
   files:
   - {fileID: 4900000, guid: b3596cfdbadf835458f195bf3ef1afcc, type: 3}
@@ -114,9 +118,8 @@ MonoBehaviour:
   m_Name: AssetBundleDefinitions
   m_EditorClassIdentifier: 
   StagingPaths:
-  - <BuildPathAssets>
+  - <MSUBuildPathAssets>
   assetBundles:
-  - assetBundleName: msuassets
+  - assetBundleName: runtimemsuassetbundle
     assets:
-    - {fileID: 102900000, guid: 0570538a4ad4d7f4c8b5aec4440734c0, type: 3}
-    - {fileID: 102900000, guid: 071e77fdeac30b44e8eed0fd1cd25e4f, type: 3}
+    - {fileID: 102900000, guid: c1895b7b41943e741ab6b390f9f4aa69, type: 3}

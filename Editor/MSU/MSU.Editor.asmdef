@@ -1,0 +1,49 @@
+{
+    "name": "MSU.Editor",
+    "rootNamespace": "MSU.Editor",
+    "references": [
+        "GUID:60983344ee8157d4ab97c25513f789c4",
+        "GUID:08e20a9dcb84ac748840227dcac08af2",
+        "GUID:b98f29b9e3ee2334e8770ed329a19188",
+        "GUID:027c693fefcac6548859a0eec81eed3d"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "RoR2.dll",
+        "Unity.Addressables.dll",
+        "Unity.ResourceManager.dll",
+        "R2API.Addressables.dll",
+        "R2API.Director.dll",
+        "HGCSharpUtils.dll",
+        "HGUnityUtils.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "MSU_ROR2_IMPORTED",
+        "MSU_R2EK_ENABLED",
+        "MSU_R2API_ADDRESSABLES"
+    ],
+    "versionDefines": [
+        {
+            "name": "riskofrain2",
+            "expression": "1.3.1",
+            "define": "MSU_ROR2_IMPORTED"
+        },
+        {
+            "name": "riskofthunder-ror2editorkit",
+            "expression": "5.0.0",
+            "define": "MSU_R2EK_ENABLED"
+        },
+        {
+            "name": "riskofthunder-r2api_addressables",
+            "expression": "1.0.3",
+            "define": "MSU_R2API_ADDRESSABLES"
+        }
+    ],
+    "noEngineReferences": false
+}
