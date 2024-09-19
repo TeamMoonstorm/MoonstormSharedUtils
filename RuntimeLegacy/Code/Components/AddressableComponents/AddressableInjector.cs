@@ -64,6 +64,8 @@ namespace Moonstorm.Components.Addressables
                 return;
 #if UNITY_EDITOR
             Asset = Instantiate(_asset);
+#else
+            Asset = _asset;
 #endif
             Asset.hideFlags = HideFlags.DontSaveInEditor | HideFlags.NotEditable | HideFlags.DontSaveInBuild;
 
