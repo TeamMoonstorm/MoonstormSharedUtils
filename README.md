@@ -29,7 +29,7 @@ MSU is a passion project from one of TeamMoonstorm's members, Nebby. as such, he
 
 MSU will forever be free to use and never gated behind paywalls, however, donations are incredibly appreciated.
 
-[![ko-fi](https://raw.githubusercontent.com/TeamMoonstorm/MoonstormSharedUtils/tree/main/Docs/Readme/SupportNebby.png)](https://ko-fi.com/nebby1999)
+[![ko-fi](https://raw.githubusercontent.com/TeamMoonstorm/MoonstormSharedUtils/main/Docs/Readme/SupportNebby.png)](https://ko-fi.com/nebby1999)
 
 ## Mods Utilizing MSU
 
