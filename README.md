@@ -39,7 +39,11 @@ MSU will forever be free to use and never gated behind paywalls, however, donati
 (Note: click the icon to open a new tab to the Mod!)
 | Icon/URL | Name | Description |
 |--|--|--|
-|[![StarstormIcon](https://gcdn.thunderstore.io/live/repository/icons/shbones-ShbonesVariants-0.0.2.png.128x128_q95.png)](https://thunderstore.io/package/shbones/ShbonesVariants/)| Shbones Variants | Adds new monster variants to the game using Nebby's VarianceAPI. |
+|[![StarstormIcon](https://raw.githubusercontent.com/TeamMoonstorm/MoonstormSharedUtils/main/Docs/Readme/SS2Logo.png)](https://thunderstore.io/package/TeamMoonstorm/Starstorm2/)| Starstorm2 | A sequel to Starstorm 1. Adds new survivors, mechanics, items, skills, enemies, and more! |
+|[![LostInTransitIcon](https://raw.githubusercontent.com/TeamMoonstorm/MoonstormSharedUtils/main/Docs/Readme/LITLogo.png)](https://thunderstore.io/package/LostInTransitTeam/LostInTransit/)| Lost in Transit | Lost in Transit is a mod focused on restoring features lost from Risk of Rain 1, currently including items. |
+|[![VarianceAPIIcon](https://raw.githubusercontent.com/TeamMoonstorm/MoonstormSharedUtils/main/Docs/Readme/VAPILogo.png)](https://thunderstore.io/package/Nebby/VarianceAPI/) | Variance API | VarianceAPI allows you to create Variants for CharacterBodies, Variants can have different textures, lights, skills, and more. |
+|[![FortunesFromTheScrapyardIcon](https://raw.githubusercontent.com/TeamMoonstorm/MoonstormSharedUtils/main/Docs/Readme/FFTSLogo.png)](https://discord.gg/n3SnnJkBmb) | TO BE RELEASED - Fortunes from the Scrapyard | An expansion-esque content mod that revolves around a third party Space Corporation, and visually based on Junkyard and Cyberpunk themes. |
+|[![RulersOfTheRedPlaneIcon](https://raw.githubusercontent.com/TeamMoonstorm/MoonstormSharedUtils/main/Docs/Readme/RORPLogo.png)](https://thunderstore.io/package/IEye/Rulers_of_the_Red_Plane/) | Rulers of the Red Plane | A general content mod expanding upon the Red Plane |
 
 </p>
 </details>
