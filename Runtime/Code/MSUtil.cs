@@ -68,6 +68,13 @@ namespace MSU
         }
 
 #if DEBUG
+        /// <summary>
+        /// DEBUG ONLY
+        /// <para></para>
+        /// Invokes a command of name <paramref name="commandName"/> with the arguments specified in <paramref name="arguments"/>
+        /// </summary>
+        /// <param name="commandName">The name of the command</param>
+        /// <param name="arguments">The arguments for the command</param>
         public static void InvokeCommand(string commandName, params string[] arguments)
         {
             if (!RoR2.Console.instance)
@@ -378,21 +385,42 @@ namespace MSU
             return !coroutineEnumerator.MoveNext();
         }
 
+        /// <summary>
+        /// Write <paramref name="gameplayEventIndex"/> as an Int32 to the network writer
+        /// </summary>
+        /// <param name="writer">The writer writing</param>
+        /// <param name="gameplayEventIndex">The index to write</param>
         public static void Write(this NetworkWriter writer, GameplayEventIndex gameplayEventIndex)
         {
             writer.WritePackedIndex32((int)gameplayEventIndex);
         }
 
+        /// <summary>
+        /// Read the incoming data of <paramref name="reader"/> as a <see cref="GameplayEventIndex"/>
+        /// </summary>
+        /// <param name="reader">The reader reading</param>
+        /// <returns>The GameplayEventIndex</returns>
         public static GameplayEventIndex ReadGameplayEventIndex(this NetworkReader reader)
         {
             return (GameplayEventIndex)reader.ReadPackedIndex32();
         }
 
+        /// <summary>
+        /// Write <paramref name="genericObjectIndex"/> as an Int32 to the network writer
+        /// </summary>
+        /// <param name="writer">The writer writing</param>
+        /// <param name="genericObjectIndex">The index to write</param>
         public static void Write(this NetworkWriter writer, GenericObjectIndex genericObjectIndex)
         {
             writer.WritePackedIndex32((int)genericObjectIndex);
         }
 
+
+        /// <summary>
+        /// Read the incoming data of <paramref name="reader"/> as a <see cref="GenericObjectIndex"/>
+        /// </summary>
+        /// <param name="reader">The reader reading</param>
+        /// <returns>The GameplayEventIndex</returns>
         public static GenericObjectIndex ReadGenericObjectIndex(this NetworkReader reader)
         {
             return (GenericObjectIndex)reader.ReadPackedIndex32();

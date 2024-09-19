@@ -100,6 +100,7 @@ namespace MSU.Config
             sliderConfig = config;
             return this;
         }
+        /// <inheritdoc/>
 
         protected override void OnConfigured()
         {

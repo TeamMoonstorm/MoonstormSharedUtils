@@ -1,17 +1,29 @@
 ﻿using BepInEx;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 namespace MSU
 {
     /// <summary>
     /// MSU's main class
     /// </summary>
-    [BepInDependency(R2API.Networking.NetworkingAPI.PluginGUID, BepInDependency.DependencyFlags.HardDependency)]
+    #region R2API
+    [BepInDependency(R2API.R2API.PluginGUID)]
+    [BepInDependency(R2API.ContentManagement.R2APIContentManager.PluginGUID)]
+    [BepInDependency(R2API.ArtifactCodeAPI.PluginGUID)]
+    [BepInDependency(R2API.ColorsAPI.PluginGUID)]
+    [BepInDependency(R2API.DamageAPI.PluginGUID)]
+    [BepInDependency(R2API.DirectorAPI.PluginGUID)]
+    [BepInDependency(R2API.EliteAPI.PluginGUID)]
+    [BepInDependency(R2API.RecalculateStatsAPI.PluginGUID)]
+    [BepInDependency(R2API.AddressablesPlugin.PluginGUID)]
+    [BepInDependency(R2API.DotAPI.PluginGUID)]
+    [BepInDependency(R2API.Networking.NetworkingAPI.PluginGUID)]
+    [BepInDependency(R2API.StageRegistration.PluginGUID)]
+    [BepInDependency(R2API.Networking.NetworkingAPI.PluginGUID)]
+    #endregion
     [BepInDependency("com.rune580.riskofoptions")]
+    [BepInDependency("xyz.yekoc.Holy", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("iHarbHD.DebugToolkit", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInPlugin(GUID, MODNAME, VERSION)]
     public class MSUMain : BaseUnityPlugin

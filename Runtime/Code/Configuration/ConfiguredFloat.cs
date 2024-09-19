@@ -156,6 +156,7 @@ namespace MSU.Config
             this.sliderConfig = sliderConfig;
             return this;
         }
+        /// <inheritdoc/>
         protected override void OnConfigured()
         {
             base.OnConfigured();

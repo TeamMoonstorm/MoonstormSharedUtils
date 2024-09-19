@@ -167,6 +167,7 @@ namespace MSU.Config
         /// The GUID of the mod that owns this ConfigurableField, Set automatically by the <see cref="ConfigSystem"/>.
         /// </summary>
         public string modName { get; internal set; }
+        /// <inheritdoc/>
 
         protected override void OnConfigured(ConfigFile configFile, object value)
         {

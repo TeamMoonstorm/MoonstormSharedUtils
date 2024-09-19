@@ -101,6 +101,7 @@ namespace MSU.Config
             colorConfig = config;
             return this;
         }
+        /// <inheritdoc/>
 
         protected override void OnConfigured()
         {

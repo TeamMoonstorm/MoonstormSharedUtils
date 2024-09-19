@@ -102,6 +102,7 @@ namespace MSU.Config
             this.choiceConfig = choiceConfig;
             return this;
         }
+        /// <inheritdoc/>
 
         protected override void OnConfigured()
         {

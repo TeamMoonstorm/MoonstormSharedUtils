@@ -278,7 +278,7 @@ namespace MSU.Config
         public ConfigEntry<T> configEntry { get; private set; }
 
         /// <summary>
-        /// The current and valid value of this ConfigurableVariable. Usually <see cref="ConfigEntry.Value"/>
+        /// The current and valid value of this ConfigurableVariable. Usually <see cref="configEntry"/>'s value.
         /// </summary>
         public T value => configEntry == null ? defaultValue : configEntry.Value;
 
@@ -328,6 +328,7 @@ namespace MSU.Config
                 return delegateContainer;
             return null;
         }
+        /// <inheritdoc/>
 
         public override void Configure()
         {
@@ -393,42 +394,42 @@ namespace MSU.Config
             return this;
         }
 
-        ///<inheritdoc cref="ConfiguredVariable.WithSection(ConfigFile)"/>
+        ///<inheritdoc cref="ConfiguredVariable.WithSection(string)"/>
         public new ConfiguredVariable<T> WithSection(string section)
         {
             base.WithSection(section);
             return this;
         }
 
-        ///<inheritdoc cref="ConfiguredVariable.WithKey(ConfigFile)"/>
+        ///<inheritdoc cref="ConfiguredVariable.WithKey(string)"/>
         public new ConfiguredVariable<T> WithKey(string key)
         {
             base.WithKey(key);
             return this;
         }
 
-        ///<inheritdoc cref="ConfiguredVariable.WithDescription(ConfigFile)"/>
+        ///<inheritdoc cref="ConfiguredVariable.WithDescription(string)"/>
         public new ConfiguredVariable<T> WithDescription(string description)
         {
             base.WithDescription(description);
             return this;
         }
 
-        ///<inheritdoc cref="ConfiguredVariable.WithConfigIdentifier(ConfigFile)"/>
+        ///<inheritdoc cref="ConfiguredVariable.WithConfigIdentifier(string)"/>
         public new ConfiguredVariable<T> WithConfigIdentifier(string identifier)
         {
             base.WithConfigIdentifier(identifier);
             return this;
         }
 
-        ///<inheritdoc cref="ConfiguredVariable.WithModGUID(ConfigFile)"/>
+        ///<inheritdoc cref="ConfiguredVariable.WithModGUID(BaseUnityPlugin)"/>
         public new ConfiguredVariable<T> WithModGUID(BaseUnityPlugin plugin)
         {
             base.WithModGUID(plugin);
             return this;
         }
 
-        ///<inheritdoc cref="ConfiguredVariable.WithModName(ConfigFile)"/>
+        ///<inheritdoc cref="ConfiguredVariable.WithModName(BaseUnityPlugin)"/>
         public new ConfiguredVariable<T> WithModName(BaseUnityPlugin plugin)
         {
             base.WithModName(plugin);

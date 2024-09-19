@@ -115,6 +115,7 @@ namespace MSU.Config
             keyBindConfig = config;
             return this;
         }
+        /// <inheritdoc/>
 
         protected override void OnConfigured()
         {

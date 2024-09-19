@@ -10,6 +10,9 @@ namespace MSU
     /// </summary>
     public struct CharacterBodyIndexEqualityComparer : IEqualityComparer<CharacterBody>
     {
+        /// <summary>
+        /// Checks if two body's indices are equal.
+        /// </summary>
         public bool Equals(CharacterBody x, CharacterBody y)
         {
             if (!x || !y)
@@ -20,7 +23,9 @@ namespace MSU
 
             return x.bodyIndex == y.bodyIndex;
         }
-
+        /// <summary>
+        /// Obtains the HashCode for a given CharacterBody
+        /// </summary>
         public int GetHashCode(CharacterBody obj)
         {
             return obj.GetHashCode();
@@ -32,6 +37,9 @@ namespace MSU
     /// </summary>
     public struct IInteractableNetworkIdentityAssetIDComparer : IEqualityComparer<IInteractable>
     {
+        /// <summary>
+        /// Compares if two interactable's <see cref="NetworkIdentity.assetId"/> are equal
+        /// </summary>
         public bool Equals(IInteractable x, IInteractable y)
         {
             if (x == null || y == null)
@@ -52,6 +60,9 @@ namespace MSU
             return xNetID.assetId.Equals(yNetID.assetId);
         }
 
+        /// <summary>
+        /// Obtains the HashCode for a given <see cref="IInteractable"/>
+        /// </summary>
         public int GetHashCode(IInteractable obj)
         {
             return obj?.GetHashCode() ?? -1;

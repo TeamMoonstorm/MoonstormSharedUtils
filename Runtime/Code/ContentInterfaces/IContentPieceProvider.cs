@@ -1,5 +1,4 @@
 ﻿using RoR2.ContentManagement;
-using UnityEngine;
 
 namespace MSU
 {
@@ -25,7 +24,7 @@ namespace MSU
     /// See <see cref="IContentPieceProvider"/> for more information about ContentProviders.
     /// <br>A generic version of <see cref="IContentPieceProvider"/> that can be used to specify the kind of Content to be provided.</br>
     /// </summary>
-    /// <typeparam name="T">The type of content to provide, if its a component, utilize <see cref="GameObject>"/></typeparam>
+    /// <typeparam name="T">The type of content to provide, if its a component, utilize <see cref="UnityEngine.GameObject"/></typeparam>
     public interface IContentPieceProvider<T> : IContentPieceProvider where T : UnityEngine.Object
     {
         /// <inheritdoc cref="IContentPieceProvider.GetContents"/>

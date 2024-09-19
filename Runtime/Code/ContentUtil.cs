@@ -36,7 +36,7 @@ namespace MSU
         /// <summary>
         /// Disables the provided Survivor by setting it's <see cref="SurvivorDef.hidden"/> boolean to True.
         /// </summary>
-        /// <param name="survivorDef">The Survivor to Disable<./param>
+        /// <param name="survivorDef">The Survivor to Disable</param>
         public static void DisableSurvivor(SurvivorDef survivorDef)
         {
             survivorDef.hidden = true;
@@ -119,12 +119,12 @@ namespace MSU
 
         /// <summary>
         /// See also <see cref="IContentPieceProvider"/>
-        /// <para>Creates a new, generic ContentPieceProvider that provides GameObjects with a specific component specified by <typeparamref name="TComponentType"/>, this is done by analyzing the assembly from <paramref name="baseUnityPlugin"/> and creating new instances of classes that implement <see cref="IGameObjectContentPiece{T}{T}"/>.</para>
+        /// <para>Creates a new, generic ContentPieceProvider that provides GameObjects with a specific component specified by <typeparamref name="TComponentType"/>, this is done by analyzing the assembly from <paramref name="baseUnityPlugin"/> and creating new instances of classes that implement <see cref="IGameObjectContentPiece{T}"/>.</para>
         /// </summary>
         /// <typeparam name="TComponentType">The component that the game objects have that the provider provides.</typeparam>
         /// <param name="baseUnityPlugin">The plugin to scan for content pieces</param>
         /// <param name="contentPack">The plugin's ContentPack</param>
-        /// <returns>An IContentPieceProvider with <paramref name="baseUnityPlugin"/>'s classes that implement <see cref="IGameObjectContentPiece{T}{T}"/></returns>
+        /// <returns>An IContentPieceProvider with <paramref name="baseUnityPlugin"/>'s classes that implement <see cref="IGameObjectContentPiece{T}"/></returns>
         public static IContentPieceProvider<GameObject> CreateGameObjectGenericContentPieceProvider<TComponentType>(BaseUnityPlugin baseUnityPlugin, ContentPack contentPack)
         {
             return new GenericContentPieceProvider<GameObject>(AnalyzeForGameObjectGenericContentPieces<TComponentType>(baseUnityPlugin), contentPack);
@@ -264,7 +264,7 @@ namespace MSU
         }
 
         /// <summary>
-        /// Adds all and any Content pieces from the AssetCollection found in <paramref name="collection"/> to the ContentPack specified in <paramref name="contentPack"/>.
+        /// Adds all and any Content pieces from the AssetCollection found in <paramref name="assetCollection"/> to the ContentPack specified in <paramref name="contentPack"/>.
         /// <br>This is ideal to store a Content's required assets. For example, you can have a <see cref="ISurvivorContentPiece"/> that calls this method inside <see cref="IContentPackModifier.ModifyContentPack(ContentPack)"/> to add the survivor's states, skillDefs, that are found inside the survivor's AssetCollection.</br>
         /// </summary>
         /// <param name="contentPack">The content pack to modify</param>
@@ -276,7 +276,7 @@ namespace MSU
 
         /// <summary>
         /// <inheritdoc cref="AddContentFromAssetCollection(ContentPack, AssetCollection)"/>
-        /// <para>Unlike the 2 argument overload, this version of the method accepts a predicate to filter assets from being added to the collection. This can be done for example to avoid adding the UnlockableDefs from an asset collection for the purposes of later adding them using the <see cref="IUnlockableContent"/> system.</para>
+        /// <para>Unlike the 2 argument overload, this version of the method accepts a predicate to filter assets from being added to the collection. This can be done for example to avoid adding the UnlockableDefs from an asset.</para>
         /// </summary>
         /// <param name="contentPack">The content pack to modify</param>
         /// <param name="assetCollection">The asset collection to use.</param>

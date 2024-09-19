@@ -100,6 +100,7 @@ namespace MSU.Config
             inputFieldConfig = config;
             return this;
         }
+        /// <inheritdoc/>
 
 
         protected override void OnConfigured()

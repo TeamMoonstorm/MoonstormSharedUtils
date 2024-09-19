@@ -25,7 +25,6 @@ namespace MSU
 
         /// <summary>
         /// A number to use to modify the value stored in the field/property this attribute is attached to. Only relevant if there's a value in <see cref="operationType"/>
-        /// <para>
         /// </summary>
         public float? operationData { get; private set; }
 

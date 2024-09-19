@@ -73,7 +73,7 @@ namespace MSU
 
         private static void ShouldAnnounceFamilyEventsAsGameplayEvents(bool announceAsGameplayEvents)
         {
-            if(announceAsGameplayEvents)
+            if (announceAsGameplayEvents)
             {
                 On.RoR2.ClassicStageInfo.BroadcastFamilySelection -= BroadcastFamilySelection;
                 On.RoR2.ClassicStageInfo.BroadcastFamilySelection += BroadcastFamilySelection;
@@ -84,7 +84,7 @@ namespace MSU
 
         private static IEnumerator BroadcastFamilySelection(On.RoR2.ClassicStageInfo.orig_BroadcastFamilySelection orig, ClassicStageInfo self, string familySelectionChatString)
         {
-            if(!instance)
+            if (!instance)
             {
                 yield return orig(self, familySelectionChatString);
                 yield break;
@@ -133,9 +133,10 @@ namespace MSU
         /// Enqueues a new <see cref="EventTextRequest"/> to be displayed
         /// </summary>
         /// <param name="request">The EventText to display</param>
+        /// <param name="sendOverNetwork">If true, the supplied request will be sent over the network</param>
         public void EnqueueNewTextRequest(EventTextRequest request, bool sendOverNetwork)
         {
-            if(sendOverNetwork)
+            if (sendOverNetwork)
             {
                 SendRequestOverNetwork(request);
                 return;
@@ -296,6 +297,7 @@ namespace MSU
             /// The total duration this state should last.
             /// </summary>
             public float duration;
+            /// <inheritdoc/>
 
             public override void OnEnter()
             {
@@ -318,6 +320,7 @@ namespace MSU
         /// </summary>
         public class FadeInState : EventTextState
         {
+            /// <inheritdoc/>
             public override void OnEnter()
             {
                 base.OnEnter();
@@ -327,6 +330,7 @@ namespace MSU
                 uiJuice.originalAlpha = MSUConfig._maxOpacityForEventMessage;
                 uiJuice.transitionEndAlpha = 1;
             }
+            /// <inheritdoc/>
 
             public override void Update()
             {
@@ -346,6 +350,7 @@ namespace MSU
         /// </summary>
         public class WaitState : EventTextState
         {
+            /// <inheritdoc/>
             public override void Update()
             {
                 base.Update();
@@ -364,11 +369,13 @@ namespace MSU
         /// </summary>
         public class FadeOutState : EventTextState
         {
+            /// <inheritdoc/>
             public override void OnEnter()
             {
                 base.OnEnter();
                 uiJuice.TransitionAlphaFadeOut();
             }
+            /// <inheritdoc/>
 
             public override void Update()
             {

@@ -1,7 +1,7 @@
-using System.Collections.Generic;
 using RoR2;
 using RoR2.UI;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace MSU
@@ -34,7 +34,7 @@ namespace MSU
 
             HookIfNeeded();
             _bundles.Add(bundleLoadedOnAwake);
-            foreach(var ssa in bundleLoadedOnAwake.LoadAllAssets<SimpleSpriteAnimation>())
+            foreach (var ssa in bundleLoadedOnAwake.LoadAllAssets<SimpleSpriteAnimation>())
             {
                 var instance = GameObject.Instantiate(_walkPrefab);
 
@@ -71,7 +71,7 @@ namespace MSU
             _walkGameObjects.Add(instance);
         }
 
-        private static void HookIfNeeded() 
+        private static void HookIfNeeded()
         {
             if (_hooked)
                 return;
@@ -90,12 +90,12 @@ namespace MSU
             On.RoR2.UI.MainMenu.MainMenuController.Awake -= UnhookAndUnload;
             _walkPrefab = null;
 
-            foreach(var anim in _walkGameObjects)
+            foreach (var anim in _walkGameObjects)
             {
                 GameObject.Destroy(anim);
             }
             _walkGameObjects.Clear();
-            foreach(var bundle in _bundles)
+            foreach (var bundle in _bundles)
             {
                 bundle.Unload(true);
             }
@@ -107,7 +107,7 @@ namespace MSU
             if (self.gameObject.name != "MiniScene")
                 goto callOrig;
 
-            foreach(var anim in _walkGameObjects)
+            foreach (var anim in _walkGameObjects)
             {
                 try
                 {
@@ -118,7 +118,7 @@ namespace MSU
 
                     HG.ArrayUtils.ArrayAppend(ref self.ObjectsToSelect, anim);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     MSULog.Error($"Failed to add sprite animation for {anim}.\n{e}");
                 }

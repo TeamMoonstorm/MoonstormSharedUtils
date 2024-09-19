@@ -120,6 +120,11 @@ namespace MSU
         }*/
 
         #region ADD
+
+        /// <summary>
+        /// Adds a new coroutine method to call and process
+        /// </summary>
+        /// <param name="func">The coroutine method</param>
         public void Add(Func<IEnumerator> func)
         {
             _wrappers.Add(new Wrapper
@@ -128,6 +133,12 @@ namespace MSU
             });
         }
 
+        /// <summary>
+        /// Adds a new coroutine method that accepts one argument
+        /// </summary>
+        /// <typeparam name="T1">The type of the argument</typeparam>
+        /// <param name="func">The coroutine method</param>
+        /// <param name="arg">The first argument for the method</param>
         public void Add<T1>(Func<T1, IEnumerator> func, T1 arg)
         {
             _wrappers.Add(new Wrapper
@@ -137,6 +148,14 @@ namespace MSU
             });
         }
 
+        /// <summary>
+        /// Adds a new coroutine method that accepts two argument
+        /// </summary>
+        /// <typeparam name="T1">The type of the first argument</typeparam>
+        /// <typeparam name="T2">The type of the second argument</typeparam>
+        /// <param name="func">The coroutine method</param>
+        /// <param name="arg1">The first argument for the method</param>
+        /// <param name="arg2">The second argument for the method</param>
         public void Add<T1, T2>(Func<T1, T2, IEnumerator> func, T1 arg1, T2 arg2)
         {
             _wrappers.Add(new Wrapper
@@ -146,6 +165,16 @@ namespace MSU
             });
         }
 
+        /// <summary>
+        /// Adds a new coroutine method that accepts three argument
+        /// </summary>
+        /// <typeparam name="T1">The type of the first argument</typeparam>
+        /// <typeparam name="T2">The type of the second argument</typeparam>
+        /// <typeparam name="T3">The type fo the third argument</typeparam>
+        /// <param name="func">The coroutine method</param>
+        /// <param name="arg1">The first argument for the method</param>
+        /// <param name="arg2">The second argument for the method</param>
+        /// <param name="arg3">The third argument for the method</param>
         public void Add<T1, T2, T3>(Func<T1, T2, T3, IEnumerator> func, T1 arg1, T2 arg2, T3 arg3)
         {
             _wrappers.Add(new Wrapper
@@ -155,6 +184,18 @@ namespace MSU
             });
         }
 
+        /// <summary>
+        /// Adds a new coroutine method that accepts four arguments
+        /// </summary>
+        /// <typeparam name="T1">The type of the first argument</typeparam>
+        /// <typeparam name="T2">The type of the second argument</typeparam>
+        /// <typeparam name="T3">The type of the third argument</typeparam>
+        /// <typeparam name="T4">The type of the fourth argument</typeparam>
+        /// <param name="func">The coroutine method</param>
+        /// <param name="arg1">The first argument for the method</param>
+        /// <param name="arg2">The second argument for the method</param>
+        /// <param name="arg3">The third argument for the method</param>
+        /// <param name="arg4">The fourth argument for the method</param>
         public void Add<T1, T2, T3, T4>(Func<T1, T2, T3, T4, IEnumerator> func, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
         {
             _wrappers.Add(new Wrapper
@@ -163,6 +204,22 @@ namespace MSU
                 args = new object[] { arg1, arg2, arg3, arg4 }
             });
         }
+
+        /// <summary>
+        /// Adds a new coroutine method that accepts five arguments
+        /// <para>If five arguments isnt enough, create an issue on the github so more can be added</para>
+        /// </summary>
+        /// <typeparam name="T1">The type of the first argument</typeparam>
+        /// <typeparam name="T2">The type of the second argument</typeparam>
+        /// <typeparam name="T3">The type of the third argument</typeparam>
+        /// <typeparam name="T4">The type of the fourth argument</typeparam>
+        /// <typeparam name="T5">The type of the fifth argument</typeparam>
+        /// <param name="func">The coroutine method</param>
+        /// <param name="arg1">The first argument for the method</param>
+        /// <param name="arg2">The second argument for the method</param>
+        /// <param name="arg3">The third argument for the method</param>
+        /// <param name="arg4">The fourth argument for the method</param>
+        /// <param name="arg5">The fifth argument for the method</param>
         public void Add<T1, T2, T3, T4, T5>(Func<T1, T2, T3, T4, T5, IEnumerator> func, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
         {
             _wrappers.Add(new Wrapper
@@ -229,23 +286,40 @@ namespace MSU
 
         private IEnumerator internalCoroutine;
 
+        /// <summary>
+        /// The current object that was yielded
+        /// </summary>
         public object Current => internalCoroutine.Current;
 
+        /// <summary>
+        /// Constructor for Parallel Coroutine
+        /// </summary>
         public ParallelCoroutine()
         {
             internalCoroutine = InternalCoroutine();
         }
 
+        /// <summary>
+        /// Adds a new coroutine to process
+        /// </summary>
+        /// <param name="coroutine">The coroutine to process</param>
         public void Add(IEnumerator coroutine)
         {
             _coroutinesList.Add(coroutine);
         }
 
+        /// <summary>
+        /// Processes the coroutines
+        /// </summary>
+        /// <returns>True if the coroutines are NOT finished, false if the coroutines ARE finished</returns>
         public bool MoveNext()
         {
             return internalCoroutine.MoveNext();
         }
 
+        /// <summary>
+        /// resets the internal coroutine
+        /// </summary>
         public void Reset()
         {
             internalCoroutine.Reset();

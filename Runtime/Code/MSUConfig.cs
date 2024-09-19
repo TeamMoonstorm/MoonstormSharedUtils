@@ -21,6 +21,11 @@ namespace MSU
         public const string GENERAL = "MSU.General";
 
 #if DEBUG
+        /// <summary>
+        /// DEBUG ONLY
+        /// <para></para>
+        /// Identifier for MSU's Debug config file.
+        /// </summary>
         public const string DEBUG = "MSU.Debug";
 #endif
         /// <summary>
@@ -45,6 +50,11 @@ namespace MSU
         internal static ConfiguredBool _familyEventUsesEventAnnouncementInsteadOfChatMessage;
 
 #if DEBUG
+        /// <summary>
+        /// DEBUG ONLY
+        /// <para></para>
+        /// The Debug Config file, it's identifier is <see cref="DEBUG"/>
+        /// </summary>
         public static ConfigFile debugConfig { get; private set; }
 
         internal static ConfiguredBool _enableStackLogging;

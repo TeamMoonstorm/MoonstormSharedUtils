@@ -11,6 +11,7 @@ namespace EntityStates.GameplayEvents
         /// The GameplayEvent that instantiated this state.
         /// </summary>
         public GameplayEvent gameplayEvent { get; private set; }
+        /// <inheritdoc/>
         public override void OnEnter()
         {
             base.OnEnter();

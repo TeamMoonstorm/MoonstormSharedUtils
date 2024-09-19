@@ -148,17 +148,17 @@ namespace MSU
 
             GameplayEvent evtInstance = UnityEngine.Object.Instantiate(eventPrefab).GetComponent<GameplayEvent>();
 
-            if(args.beginOnStartOverride.HasValue)
+            if (args.beginOnStartOverride.HasValue)
             {
                 evtInstance.beginOnStart = args.beginOnStartOverride.Value;
             }
 
-            if(args.expirationTimerOverride.HasValue)
+            if (args.expirationTimerOverride.HasValue)
             {
                 evtInstance.eventDuration = args.expirationTimerOverride.Value;
             }
 
-            if(args.announcementDurationOverride.HasValue)
+            if (args.announcementDurationOverride.HasValue)
             {
                 evtInstance.announcementDuration = args.announcementDurationOverride.Value;
             }
@@ -191,18 +191,39 @@ namespace MSU
             /// </summary>
             public readonly bool ignoreDuplicateEvents;
 
+            /// <summary>
+            /// If set to true, the GameplayEvent will not announce when it starts.
+            /// </summary>
             public readonly bool doNotAnnounceStart;
 
+            /// <summary>
+            /// If set to true, the GameplayEvent will not announce when it ends
+            /// </summary>
             public readonly bool doNotAnnounceEnd;
 
+            /// <summary>
+            /// If true is supplied, the GameplayEvent wont Start on it Start method, instead you'll have to manually call <see cref="GameplayEvent.StartEvent"/>
+            /// </summary>
             public readonly bool? beginOnStartOverride;
 
+            /// <summary>
+            /// If a value is supplied, the GameplayEvent will end once it has reached this lifetime.
+            /// </summary>
             public readonly float? expirationTimerOverride;
 
+            /// <summary>
+            /// If a value is supplied, the GameplayEvent announcement duration is overwritten to this value
+            /// </summary>
             public readonly float? announcementDurationOverride;
 
+            /// <summary>
+            /// If an index is supplied, the GameplayEventText's <see cref="GameplayEventTextController.EventTextState"/> is set to this state, more info can be seen in <see cref="GameplayEventTextController.EventTextRequest.customTextState"/>
+            /// </summary>
             public readonly EntityStateIndex? customTextStateIndex;
 
+            /// <summary>
+            /// If an index is supplied, the GameplayEventText's Font is set to this font, more info can be seen in <see cref="GameplayEventTextController.EventTextRequest.genericObjectIndexThatPointsToTMP_FontAsset"/>
+            /// </summary>
             public readonly GenericObjectIndex? customTMPFontAssetIndex;
         }
     }

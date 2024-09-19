@@ -16,18 +16,31 @@ namespace MSU
     /// </summary>
     public sealed class GameplayEvent : NetworkBehaviour
     {
+        /// <summary>
+        /// When set to true, this GameplayEvent will call <see cref="StartEvent"/> on it's <see cref="Start"/> method
+        /// </summary>
         [Tooltip("When set to true, this gameplay event will call \"StartEvent\" on it's Start method")]
         [SyncVar]
         public bool beginOnStart;
 
+        /// <summary>
+        /// When the event does an announcement, the announcement duration of the text will be set to this value.
+        /// <br>It can be overwritten by the <see cref="GameplayEventManager.SpawnGameplayEvent(GameplayEventManager.GameplayEventSpawnArgs)"/> method</br>
+        /// </summary>
         public float announcementDuration { get => _announcementDuration; set => _announcementDuration = value; }
         [Header("Gameplay Event Metadata")]
         [SyncVar]
+        [Tooltip("When the event does an announcement, the announcement duration of the text will be this value. This value can be overwritten by the GameplayEventManager's spawn method at runtime.")]
         [SerializeField] private float _announcementDuration = 6;
 
+        /// <summary>
+        /// If this value is greater than 0, the event will automatically stop once it has existed for this duration.
+        /// </summary>
         public float eventDuration { get => _eventDuration; set => _eventDuration = value; }
         [SerializeField, SyncVar]
+        [Tooltip("Is this value is greater than 0, the event will automatically stop once it has existed for this duration.")]
         private float _eventDuration = -1;
+
         /// <summary>
         /// Retrieves the Token that contains the Start message for this event.
         /// </summary>
@@ -123,12 +136,18 @@ namespace MSU
         /// <summary>
         /// If set to true, this event will not announce its ending.
         /// </summary>
-        public bool doNotAnnounceEnd { get; set; }
+        public bool doNotAnnounceEnd { get => _doNotAnnounceEnd; set => _doNotAnnounceEnd = value; }
         [SyncVar]
         private bool _doNotAnnounceEnd;
 
+        /// <summary>
+        /// If supplied, the GameplayEvent will enqueue a text that'll use this state.
+        /// </summary>
         public EntityStateIndex? customTextStateIndex { get; set; }
 
+        /// <summary>
+        /// If supplied, the GameplayEvent will use this font asset for it's announcement text
+        /// </summary>
         public GenericObjectIndex? customTMPFontAssetIndex { get; set; }
 
         /// <summary>
@@ -193,7 +212,7 @@ namespace MSU
                 return;
 
             _eventDurationStopwatch += Time.fixedDeltaTime;
-            if(_eventDurationStopwatch > eventDuration)
+            if (_eventDurationStopwatch > eventDuration)
             {
                 EndEvent();
             }
@@ -253,7 +272,7 @@ namespace MSU
         [Client]
         private void Client_OnIsPlayingChanged(bool newVal)
         {
-            if(newVal)
+            if (newVal)
             {
                 onEventStartGlobal?.Invoke(this);
                 onEventStart?.Invoke(this);
@@ -268,6 +287,9 @@ namespace MSU
             AnnounceEvent();
         }
 
+        /// <summary>
+        /// Serializes <see cref="customTextStateIndex"/> and <see cref="customTMPFontAssetIndex"/>
+        /// </summary>
         public override bool OnSerialize(NetworkWriter writer, bool initialState)
         {
             if (!initialState)
@@ -284,14 +306,17 @@ namespace MSU
             return true;
         }
 
+        /// <summary>
+        /// Deserializes <see cref="customTextStateIndex"/> and <see cref="customTMPFontAssetIndex"/>
+        /// </summary>
         public override void OnDeserialize(NetworkReader reader, bool initialState)
         {
-            if(initialState)
+            if (initialState)
             {
-                if(reader.ReadBoolean())
+                if (reader.ReadBoolean())
                     customTextStateIndex = reader.ReadEntityStateIndex();
-    
-                if(reader.ReadBoolean())
+
+                if (reader.ReadBoolean())
                     customTMPFontAssetIndex = reader.ReadGenericObjectIndex();
             }
         }

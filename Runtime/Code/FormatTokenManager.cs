@@ -5,7 +5,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using UnityEngine;
 using SearchableAttribute = HG.Reflection.SearchableAttribute;
 
 namespace MSU
@@ -20,7 +19,7 @@ namespace MSU
             MSULog.Info("Initializing FormatTokenManager");
             var subroutine = CreateFormattingArray();
 
-            while(!subroutine.IsDone())
+            while (!subroutine.IsDone())
             {
                 yield return null;
             }
@@ -141,7 +140,7 @@ namespace MSU
             if (source.Count == 0)
                 yield break;
 
-            foreach(FormatTokenAttribute formatToken in source)
+            foreach (FormatTokenAttribute formatToken in source)
             {
                 yield return null;
                 try
@@ -168,7 +167,7 @@ namespace MSU
                     }
                     dest[token] = dictArray;
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     MSULog.Error(e);
                 }

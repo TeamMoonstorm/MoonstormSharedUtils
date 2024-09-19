@@ -102,6 +102,7 @@ namespace MSU.Config
             checkBoxConfig = config;
             return this;
         }
+        /// <inheritdoc/>
 
         protected override void OnConfigured()
         {

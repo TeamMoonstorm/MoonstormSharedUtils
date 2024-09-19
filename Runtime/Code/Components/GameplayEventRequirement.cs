@@ -1,6 +1,5 @@
 ﻿using R2API.AddressReferencedAssets;
 using RoR2;
-using RoR2.ExpansionManagement;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -43,7 +42,7 @@ namespace MSU
 
         /// <summary>
         /// Checks if the GameplayEvent attached to this GameplayEventRequirement can spawn.
-        /// <br>By default it checks for StageCompletion count, required & forbidden unlockables, <see cref="ExpansionDef"/>s and the Teleporter's charge</br>
+        /// <br>By default it checks for StageCompletion count, required and forbidden unlockables, <see cref="RoR2.ExpansionManagement.ExpansionDef"/>s and the Teleporter's charge</br>
         /// </summary>
         /// <returns>True if the GameplayEvent can spawn, false otherwise.</returns>
         public virtual bool IsAvailable()
@@ -101,7 +100,7 @@ namespace MSU
         /// <summary>
         /// Checks if the Teleporter's charge fraction is less than the <see cref="maximumTeleportCharge"/>
         /// </summary>
-        /// <returns>True if there is no <see cref="TeleporterInteraction.instance"/>, or if <see cref="TeleporterInteraction.instance.chargeFraction"/> is less than <see cref="maximumTeleportCharge"/></returns>
+        /// <returns>True if there is no <see cref="TeleporterInteraction.instance"/>, or if <see cref="TeleporterInteraction.chargeFraction"/> is less than <see cref="maximumTeleportCharge"/></returns>
         protected bool CheckTeleporterCharge()
         {
             if (!TeleporterInteraction.instance)

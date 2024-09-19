@@ -31,6 +31,7 @@ namespace Moonstorm
         public static AssetBundle MSUAssetBundle { get; private set; }
         private static string AssemblyDir { get => Path.Combine(Path.GetDirectoryName(PluginInfo.Location), "assetbundles"); }
 
+        [System.Obsolete]
         private void Awake()
         {
             Instance = this;

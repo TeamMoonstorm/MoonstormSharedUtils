@@ -33,6 +33,9 @@ namespace MSU
 
         private static readonly Dictionary<string, GameplayEventIndex> _nameToEventIndex = new Dictionary<string, GameplayEventIndex>(StringComparer.OrdinalIgnoreCase);
 
+        /// <summary>
+        /// Event ran when the <see cref="GameplayEventCatalog"/> is collecting all the content providers, from which the events will be obtained
+        /// </summary>
         public static event CollectGameplayEventContentProvidersDelegate collectGameplayEventContentProviders;
 
         /// <summary>
@@ -97,7 +100,7 @@ namespace MSU
             List<GameObject> loadedEvents = new List<GameObject>();
 
             ParallelMultiStartCoroutine coroutine = new ParallelMultiStartCoroutine();
-            foreach(var contentProvider in contentProviders)
+            foreach (var contentProvider in contentProviders)
             {
                 yield return null;
                 coroutine.Add(contentProvider.LoadGameplayEventsAsync, loadedEvents);
@@ -168,11 +171,28 @@ namespace MSU
         }
         #endregion
 
+        /// <summary>
+        /// Delegate used to add a new <see cref="IGameplayEventContentProvider"/> to the catalog
+        /// </summary>
+        /// <param name="provider">The provider to add</param>
         public delegate void AddGameplayEventContentProviderDelegate(IGameplayEventContentProvider provider);
+
+        /// <summary>
+        /// Delegate used to collect <see cref="IGameplayEventContentProvider"/> to the catalog.
+        /// </summary>
+        /// <param name="addGameplayEventContentProvider">The add method</param>
         public delegate void CollectGameplayEventContentProvidersDelegate(AddGameplayEventContentProviderDelegate addGameplayEventContentProvider);
+
+        /// <summary>
+        /// An Interface you can implement to add new entries to the <see cref="GameplayEventCatalog"/>
+        /// </summary>
         public interface IGameplayEventContentProvider
         {
-
+            /// <summary>
+            /// Implement this interface to load any events you'd like to add to the <see cref="GameplayEventCatalog"/>
+            /// </summary>
+            /// <param name="dest">The list with all the vent game objects, do not remove, clear or replace this list, only add to it</param>
+            /// <returns>A coroutine that the catalog uses to await the process</returns>
             IEnumerator LoadGameplayEventsAsync(List<GameObject> dest);
         }
     }
