@@ -54,6 +54,7 @@ MSU will forever be free to use and never gated behind paywalls, however, donati
 * IDeath and Harb for helping out with various coding questions.
 * KingEnderBrine and RuneFox237 for the RoR2SkinBuilder, which was used as a base for the VanillaSkinDef system.
 * GrooveSalad for helping out during the conceptualization of the module system and providing the StubbedShaders.
+* UnknownGlaze for MSU's Logo
 * The Starstorm 2 Team, for allowing nebby to go off the deep end and create MSU in the first place.
 * The Fortunes from the Scrapyard team, for believing in my goals and utilizing MSU for their mod.
 * KevinFromHPCustomerService, for creating the original modules systems that eventually became MSU 2.0
