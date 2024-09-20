@@ -28,6 +28,12 @@ namespace MSU
                 var effect = Instantiate(eed.effect, parent, false);
                 _eliteBuffIndexToEffectInstance[eliteBuffIndex] = effect;
             }
+            if (!_eliteBuffIndexToEffectInstance[eliteBuffIndex]) //It could be that the C++ object was destroyed but not the C# one, instantiate it again just in case.
+            {
+                var parent = characterModel ? characterModel.transform : body ? body.transform : transform;
+                var effect = Instantiate(eed.effect, parent, false);
+                _eliteBuffIndexToEffectInstance[eliteBuffIndex] = effect;
+            }
             _eliteBuffIndexToEffectInstance[eliteBuffIndex].SetActive(true);
         }
 
@@ -36,6 +42,9 @@ namespace MSU
             if (!_eliteBuffIndexToEffectInstance.ContainsKey(eliteBuffIndex))
                 return;
 
+            if (!_eliteBuffIndexToEffectInstance[eliteBuffIndex]) //It could be that the C++ object was destroyed but not the C# one, instantiate it again just in case.
+                return;
+                
             _eliteBuffIndexToEffectInstance[eliteBuffIndex].SetActive(false);
         }
     }
