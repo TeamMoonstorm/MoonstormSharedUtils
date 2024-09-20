@@ -30,7 +30,7 @@ namespace MSU
         private void Start()
         {
             hasMaster = body.master;
-            body.onInventoryChanged += CheckEquipments;
+            body.onInventoryChanged += StartGetInterfaces;
 
             //This is done to ensure whatever "OnEquipmentObtained" logic runs when the body starts. since OnEquipmentObtained only gets called when the inventory changes, which doesnt happen at this time.
             var eqpDef = EquipmentCatalog.GetEquipmentDef(body.inventory ? body.inventory.GetEquipmentIndex() : EquipmentIndex.None);
@@ -39,29 +39,6 @@ namespace MSU
                 iEquipmentContentPiece.OnEquipmentObtained(body);
             }
             StartGetInterfaces();
-        }
-
-        private void CheckEquipments()
-        {
-            StartGetInterfaces();
-            if (!hasMaster)
-                return;
-
-            EquipmentDef def = EquipmentCatalog.GetEquipmentDef(body.inventory.GetEquipmentIndex());
-
-            if (def && eliteBehaviour)
-                CheckEliteBehaviour(def);
-        }
-
-        private void CheckEliteBehaviour(EquipmentDef def)
-        {
-            //Try removing elite qualities if thee incomming def isnt an Elite Equipment.
-            if (!def.passiveBuffDef || !def.passiveBuffDef.isElite)
-            {
-                eliteBehaviour.AssignNewElite(EliteIndex.None);
-                return;
-            }
-            eliteBehaviour.AssignNewElite(def.passiveBuffDef.eliteDef.eliteIndex);
         }
 
         /// <summary>

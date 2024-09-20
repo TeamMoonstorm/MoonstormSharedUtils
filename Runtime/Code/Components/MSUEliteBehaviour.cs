@@ -1,4 +1,5 @@
 ﻿using RoR2;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace MSU
@@ -17,23 +18,25 @@ namespace MSU
         /// </summary>
         public CharacterModel characterModel;
 
-        private GameObject _effectInstance;
+        private Dictionary<BuffIndex, GameObject> _eliteBuffIndexToEffectInstance = new Dictionary<BuffIndex, GameObject>();
 
-        internal void AssignNewElite(EliteIndex eliteIndex)
+        internal void OnEliteBuffFirstStackGained(BuffIndex eliteBuffIndex, ExtendedEliteDef eed)
         {
-            //Incoming index is none, or the incoming index is not an ExtendedEliteDef, destroy effect instance if needed.
-            if (eliteIndex == EliteIndex.None || !(EliteCatalog.GetEliteDef(eliteIndex) is ExtendedEliteDef eed))
+            if (!_eliteBuffIndexToEffectInstance.ContainsKey(eliteBuffIndex))
             {
-                if (_effectInstance)
-                    Destroy(_effectInstance);
-                return;
+                var parent = characterModel ? characterModel.transform : body ? body.transform : transform;
+                var effect = Instantiate(eed.effect, parent, false);
+                _eliteBuffIndexToEffectInstance[eliteBuffIndex] = effect;
             }
+            _eliteBuffIndexToEffectInstance[eliteBuffIndex].SetActive(true);
+        }
 
-            if (!eed || !eed.effect)
+        internal void OnEliteBuffFinalStackLost(BuffIndex eliteBuffIndex, ExtendedEliteDef eed)
+        {
+            if (!_eliteBuffIndexToEffectInstance.ContainsKey(eliteBuffIndex))
                 return;
 
-            _effectInstance = Instantiate(eed.effect, body.aimOriginTransform, false);
-
+            _eliteBuffIndexToEffectInstance[eliteBuffIndex].SetActive(false);
         }
     }
 }
