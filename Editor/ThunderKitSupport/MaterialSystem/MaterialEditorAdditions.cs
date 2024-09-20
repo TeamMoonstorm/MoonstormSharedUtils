@@ -53,8 +53,9 @@ namespace MSU.Editor.ShaderSystem
         {
             ShowAboutLabel();
             SerializedObject so = obj.serializedObject;
-            SerializedProperty shaderKeywords = so.FindProperty("m_ShaderKeywords");
-            shaderKeywords.stringValue = EditorGUILayout.TextField(new GUIContent("Address"), shaderKeywords.stringValue);
+            SerializedProperty shaderKeywords = so.FindProperty("m_InvalidKeywords");
+            shaderKeywords.arraySize = 1;
+            shaderKeywords.GetArrayElementAtIndex(0).stringValue = EditorGUILayout.TextField(new GUIContent("Address"), shaderKeywords.GetArrayElementAtIndex(0).stringValue);
             so.ApplyModifiedProperties();
         }
 

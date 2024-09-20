@@ -66,7 +66,6 @@ namespace MSU
         /// </summary>
         /// <param name="plugin">The plugin to initialize it's Items</param>
         /// <returns>A Coroutine enumerator that can be Awaited or Yielded.</returns>
-        [Obsolete]
         public static IEnumerator InitializeItems(BaseUnityPlugin plugin)
         {
 #if DEBUG
@@ -99,7 +98,6 @@ namespace MSU
             moduleAvailability.MakeAvailable();
         }
 
-        [Obsolete]
         private static IEnumerator InitializeItemsFromProvider(BaseUnityPlugin plugin, IContentPieceProvider<ItemDef> provider)
         {
             IContentPiece<ItemDef>[] content = provider.GetContents();
@@ -122,7 +120,6 @@ namespace MSU
             InitializeItems(plugin, items, provider);
         }
 
-        [Obsolete]
         private static void InitializeItems(BaseUnityPlugin plugin, List<IContentPiece<ItemDef>> items, IContentPieceProvider<ItemDef> provider)
         {
             foreach (var item in items)
