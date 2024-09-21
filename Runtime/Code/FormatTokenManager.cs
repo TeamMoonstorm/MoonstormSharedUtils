@@ -1,5 +1,6 @@
 ﻿using MSU.Config;
 using RiskOfOptions.Components.Panel;
+using RoR2;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -24,29 +25,59 @@ namespace MSU
                 yield return null;
             }
 
-            On.RoR2.Language.LoadStrings += (orig, self) =>
+            On.RoR2.Language.LoadStrings += Language_LoadStrings;
+            RoR2Application.onLoad += () =>
             {
-                orig(self);
-                FormatTokensInLanguage(self);
+                MSULog.Info($"Ensuring tokens are formatted on english language.");
+                AddTokensFromLanguageFileLoaderAndFormatThem(Language.english);
             };
-            RoR2.RoR2Application.onLoad += () => FormatTokensInLanguage(null);
+            RoR2.Language.onCurrentLanguageChanged += Language_onCurrentLanguageChanged;
 
             ModOptionPanelController.OnModOptionsExit += () =>
             {
-                string langName = RoR2.Language.currentLanguageName;
-                RoR2.Language.currentLanguage?.UnloadStrings();
-                RoR2.Language.SetCurrentLanguage(langName);
+                MSULog.Info($"Reformatting Tokens.");
+
+                AddTokensFromLanguageFileLoaderAndFormatThem(RoR2.Language.currentLanguage);
             };
         }
 
-        private static void FormatTokensInLanguage(RoR2.Language lang)
+        private static void Language_LoadStrings(On.RoR2.Language.orig_LoadStrings orig, RoR2.Language self)
         {
-            lang = lang ?? RoR2.Language.currentLanguage;
+            orig(self);
+            MSULog.Info($"Loading strings for {self.name}");
+            AddTokensFromLanguageFileLoaderAndFormatThem(self);
+            On.RoR2.Language.LoadStrings -= Language_LoadStrings;
+        }
 
-            if (_cachedFormattingArray == null)
-                CreateFormattingArray();
+        private static void Language_onCurrentLanguageChanged()
+        {
+            MSULog.Info($"Changed to language {RoR2.Language.currentLanguageName}.");
 
-            FormatTokens(lang);
+            AddTokensFromLanguageFileLoaderAndFormatThem(RoR2.Language.currentLanguage);
+        }
+
+        private static void AddTokensFromLanguageFileLoaderAndFormatThem(RoR2.Language currentLanguage)
+        {
+            var langName = currentLanguage.name;
+            //See if we have custom tokens to add
+            if(LanguageFileLoader._languageNameToRawTokenData.TryGetValue(langName, out var rawtokenData))
+            {
+                foreach(var (token, value) in rawtokenData)
+                {
+                    //If there's a formatting option for this array, utilize it and overwrite the value.
+                    if(_cachedFormattingArray.TryGetValue(token, out var cachedFormattingArray))
+                    {
+                        currentLanguage.stringsByToken[token] = FormatString(token, value, cachedFormattingArray);
+                        continue;
+                    }
+                    //Otherwise just ensure the token exists.
+                    currentLanguage.stringsByToken[token] = value;
+                }
+                return;
+            }
+#if DEBUG
+            MSULog.Info($"No tokens are available on language {langName}...");
+#endif
         }
 
         private static IEnumerator CreateFormattingArray()
@@ -174,41 +205,18 @@ namespace MSU
             }
         }
 
-        private static void FormatTokens(RoR2.Language lang)
+        private static string FormatString(string token, string value, FormatTokenAttribute[] formattingArray)
         {
-            if (_cachedFormattingArray.Count == 0)
-                return;
-
-            MSULog.Info($"Formatting a total of {_cachedFormattingArray.Count} tokens.");
-            foreach (var (token, attributes) in _cachedFormattingArray)
+            try
             {
-                try
-                {
-                    if (!lang.stringsByToken.ContainsKey(token))
-                    {
-#if DEBUG
-                        MSULog.Error($"Token {token} could not be found in the tokenToModifiers dictionary in {lang.name}! Either the mod that implements the token doesnt support the language {lang.name} or theyre adding their tokens via R2Api's LanguageAPI");
-#endif
-                        continue;
-                    }
-#if DEBUG
-                    MSULog.Debug($"Modifying {token}");
-#endif
-                    FormatToken(lang, token, attributes);
-                }
-                catch (Exception e)
-                {
-                    MSULog.Error($"{e}\n(Token={token})");
-                }
+                object[] format = formattingArray.Select(att => att.GetFormattingValue()).ToArray();
+                return string.Format(value, format);
             }
-        }
-
-        private static void FormatToken(RoR2.Language lang, string token, FormatTokenAttribute[] formattingArray)
-        {
-            var tokenValue = lang.stringsByToken[token];
-            object[] format = formattingArray.Select(att => att.GetFormattingValue()).ToArray();
-            var formatted = string.Format(tokenValue, format);
-            lang.stringsByToken[token] = formatted;
+            catch(Exception e)
+            {
+                MSULog.Error($"Failed to format string value for token {token}. unformatted string will be used.\n{e}");
+            }
+            return value;
         }
     }
 }

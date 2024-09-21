@@ -71,23 +71,23 @@ namespace MSU
                     switch (operationType.Value)
                     {
                         case OperationTypeEnum.MultiplyByN:
-                            _cachedFormattingValue = MultiplyByN(CastToFloat(value));
+                            value = MultiplyByN(CastToFloat(value));
                             break;
                         case OperationTypeEnum.DivideByN:
-                            _cachedFormattingValue = DivideByN(CastToFloat(value));
+                            value = DivideByN(CastToFloat(value));
                             break;
                         case OperationTypeEnum.AddN:
-                            _cachedFormattingValue = AddN(CastToFloat(value));
+                            value = AddN(CastToFloat(value));
                             break;
                         case OperationTypeEnum.ModuloN:
-                            _cachedFormattingValue = ModuloN(CastToFloat(value));
+                            value = ModuloN(CastToFloat(value));
                             break;
                         case OperationTypeEnum.SubtractN:
-                            _cachedFormattingValue = SubtractN(CastToFloat(value));
+                            value = SubtractN(CastToFloat(value));
                             break;
                     }
                 }
-                _cachedFormattingValue = _cachedFormattingValue ?? value;
+                _cachedFormattingValue = value;
             }
             else
             {

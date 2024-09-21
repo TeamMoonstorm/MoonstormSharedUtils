@@ -43,7 +43,8 @@
         "ShaderSwapper.dll",
         "R2API.Dot.dll",
         "R2API.Stages.dll",
-        "R2API.Networking.dll"
+        "R2API.Networking.dll",
+        "Newtonsoft.Json.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [],
