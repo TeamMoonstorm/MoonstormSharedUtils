@@ -6,63 +6,22 @@ namespace Moonstorm.Experimental
 {
     public class ItemTierPickupDisplayHelper : MonoBehaviour
     {
-        [SystemInitializer(new Type[] { typeof(ItemTierCatalog), typeof(ItemTierModuleBase) })]
-        private static void SystemInitializer()
-        {
-            On.RoR2.PickupDisplay.DestroyModel += PickupDisplay_DestroyModel;
-            On.RoR2.PickupDisplay.RebuildModel += PickupDisplay_RebuildModel;
-        }
-
-        private static void PickupDisplay_RebuildModel(On.RoR2.PickupDisplay.orig_RebuildModel orig, PickupDisplay self, GameObject _override)
-        {
-            var component = self.gameObject.EnsureComponent<ItemTierPickupDisplayHelper>();
-            orig(self, _override);
-            component.OnPickupDisplayRebuildModel();
-        }
-
-        private static void PickupDisplay_DestroyModel(On.RoR2.PickupDisplay.orig_DestroyModel orig, PickupDisplay self)
-        {
-            var component = self.gameObject.EnsureComponent<ItemTierPickupDisplayHelper>();
-            orig(self);
-            component.OnPickupDisplayDestroyModel();
-        }
-
         private PickupDisplay display;
         private GameObject effectInstance;
 
         private void Awake()
         {
-            display = GetComponent<PickupDisplay>();
+            throw new System.NotImplementedException();
         }
 
         private void OnPickupDisplayRebuildModel()
         {
-            if (!display)
-                return;
-
-            PickupDef pickupDef = PickupCatalog.GetPickupDef(display.pickupIndex);
-            ItemIndex itemIndex = pickupDef?.itemIndex ?? ItemIndex.None;
-            if (itemIndex != ItemIndex.None)
-            {
-                ItemTier itemTier = ItemCatalog.GetItemDef(itemIndex).tier;
-                ItemTierDef itemTierDef = ItemTierCatalog.GetItemTierDef(itemTier);
-                if (itemTierDef && ItemTierModuleBase.MoonstormItemTiers.TryGetValue(itemTierDef, out var itemTierBase))
-                {
-                    if (itemTierBase != null && itemTierBase.PickupDisplayVFX)
-                    {
-                        effectInstance = Instantiate(itemTierBase.PickupDisplayVFX, display.gameObject.transform);
-                        effectInstance.transform.position = Vector3.zero;
-                    }
-                }
-            }
+            throw new System.NotImplementedException();
         }
 
         private void OnPickupDisplayDestroyModel()
         {
-            if (effectInstance)
-            {
-                Destroy(effectInstance);
-            }
+            throw new System.NotImplementedException();
         }
     }
 }

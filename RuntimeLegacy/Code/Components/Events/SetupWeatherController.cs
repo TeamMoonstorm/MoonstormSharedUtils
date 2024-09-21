@@ -18,32 +18,7 @@ namespace Moonstorm.Components
 
         void Awake()
         {
-
-            if (SceneWeatherController.instance)
-            {
-                weatherController = SceneWeatherController.instance;
-                EventDirector.Instance.weatherParamsWhenSceneStarted = weatherController.initialWeatherParams;
-                EventDirector.Instance.weatherRtpcWhenStarted = (string.IsNullOrEmpty(weatherController.rtpcWeather)) ? string.Empty : weatherController.rtpcWeather;
-            }
-            else if (!blacklistedScenes.Contains(SceneInfo.instance.sceneDef.baseSceneName))
-            {
-                weatherController = SceneInfo.instance.gameObject.AddComponent<SceneWeatherController>();
-                weatherController.sun = FindSun();
-                weatherController.fogMaterial = GetFogMaterial();
-                weatherController.initialWeatherParams = GetInitialParams();
-                weatherController.weatherLerpOverChargeTime = MoonstormSharedUtils.MSUAssetBundle.LoadAsset<AnimationCurveAsset>("curveLinear").value;
-
-                if (EventDirector.Instance)
-                    EventDirector.Instance.weatherParamsWhenSceneStarted = weatherController.initialWeatherParams;
-
-                weatherController.weatherLerp = 0f;
-
-                if (EventDirector.Instance)
-                    EventDirector.Instance.weatherRtpcWhenStarted = (weatherController.rtpcWeather is null) ? "" : weatherController.rtpcWeather;
-
-                weatherController.rtpcWeather = "";
-            }
-            Destroy(this);
+            throw new System.NotImplementedException();
         }
 
 
@@ -54,26 +29,18 @@ namespace Moonstorm.Components
          */
         private Light FindSun()
         {
-            var sunLight = FindObjectOfType<NGSS_Directional>()?.GetComponent<Light>(); ;
-            if (!sunLight)
-                MSULog.Warning("Could not find sun object.");
-            return sunLight;
+            throw new System.NotImplementedException();
         }
 
         //TODO: set up fog shit
         private Material GetFogMaterial()
         {
-            return null;
+            throw new System.NotImplementedException();
         }
 
         private SceneWeatherController.WeatherParams GetInitialParams()
         {
-            return new SceneWeatherController.WeatherParams
-            {
-                sunColor = weatherController.sun ? weatherController.sun.color : Color.clear,
-                sunIntensity = weatherController.sun ? weatherController.sun.intensity : 0
-                //Add fog
-            };
+            throw new System.NotImplementedException();
         }
 
     }

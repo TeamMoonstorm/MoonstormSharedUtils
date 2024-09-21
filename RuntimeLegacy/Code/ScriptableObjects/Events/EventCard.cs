@@ -29,9 +29,6 @@ namespace Moonstorm
         public NetworkSoundEventDef startSound;
 
 
-        [EnumMask(typeof(DirectorAPI.Stage))]
-        public DirectorAPI.Stage availableStages;
-
         public List<string> customStageNames = new List<string>();
 
         public string category;
@@ -53,62 +50,12 @@ namespace Moonstorm
 
         public virtual bool IsAvailable()
         {
-            if (!Run.instance)
-            {
-                return false;
-            }
-
-            if (Run.instance.stageClearCount <= minimumStageCompletions)
-            {
-                return false;
-            }
-
-            var expansionsEnabled = true;
-            foreach (AddressReferencedExpansionDef ed in requiredExpansionDefs)
-            {
-                expansionsEnabled = Run.instance.IsExpansionEnabled(ed);
-            }
-            if (!expansionsEnabled)
-            {
-                return false;
-            }
-
-            bool requiredUnlockableUnlocked = !requiredUnlock || Run.instance.IsUnlockableUnlocked(requiredUnlock);
-            bool forbiddenUnlockableUnlocked = forbiddenUnlock && Run.instance.DoesEveryoneHaveThisUnlockableUnlocked(forbiddenUnlock);
-            if (!(requiredUnlockableUnlocked && !forbiddenUnlockableUnlocked))
-            {
-                return false;
-            }
-
-            if (eventFlags.HasFlag(EventFlags.OncePerRun))
-            {
-                if (Run.instance.GetEventFlag(OncePerRunFlag))
-                {
-                    return false;
-                }
-            }
-
-
-
-            //If it doesnt have the flag or it does and the loop is greater than 0
-            bool flag2 = !eventFlags.HasFlag(EventFlags.AfterLoop) || Run.instance.loopClearCount > 0;
-            //If it doesnt have the flag or it does and the void fields have been visited
-            bool flag3 = !eventFlags.HasFlag(EventFlags.AfterVoidFields) || Run.instance.GetEventFlag("ArenaPortalTaken");
-
-            if (!(flag2 || flag3))
-            {
-                return false;
-            }
-
-            return true;
+            throw new System.NotImplementedException();
         }
 
         public float GetEffectiveCost(int totalRepetitions)
         {
-            if (totalRepetitions <= 0)
-                return cost;
-
-            return cost + (cost * repeatedSelectionCostCoefficient * totalRepetitions);
+            throw new System.NotImplementedException();
         }
     }
 }

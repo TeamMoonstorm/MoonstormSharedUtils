@@ -18,9 +18,9 @@ namespace Moonstorm
             public string skinAddress;
             public SkinDef skin;
 
-            internal async Task<SkinDef> Upgrade()
+            internal  Task<SkinDef> Upgrade()
             {
-                return !skin ? await Addressables.LoadAssetAsync<SkinDef>(skinAddress).Task : skin;
+                throw new System.NotImplementedException();
             }
         }
 
@@ -35,20 +35,7 @@ namespace Moonstorm
 
             internal CharacterModel.RendererInfo Upgrade(CharacterModel model)
             {
-                if (rendererIndex < 0 || rendererIndex > model.baseRendererInfos.Length)
-                {
-                    throw new IndexOutOfRangeException($"Renderer Index of MSGameObjectActivation is out of bounds. (index: {rendererIndex})");
-                }
-
-                var baseRenderInfo = model.baseRendererInfos[rendererIndex];
-                return new CharacterModel.RendererInfo
-                {
-                    defaultMaterial = defaultMaterial,
-                    defaultShadowCastingMode = defaultShadowCastingMode,
-                    hideOnDeath = hideOnDeath,
-                    ignoreOverlays = ignoreOverlays,
-                    renderer = baseRenderInfo.renderer
-                };
+                throw new System.NotImplementedException();
             }
         }
 
@@ -72,34 +59,12 @@ namespace Moonstorm
 
             private SkinDef.GameObjectActivation CreateCustomActivation(CharacterModel model, CharacterModel displayModel)
             {
-                Transform child = model.childLocator.FindChild(childName);
-                if (child)
-                {
-                    GameObject objectInstance = Instantiate(gameObjectPrefab, child, false);
-                    objectInstance.SetActive(false);
-                    //This instantiates it on the display model too so it shows up in the menu
-                    if (displayModel)
-                        Instantiate(gameObjectPrefab, model.childLocator.FindChild(childName), false).SetActive(false);
-                    return new SkinDef.GameObjectActivation
-                    {
-                        gameObject = objectInstance,
-                        shouldActivate = false
-                    };
-                }
-                MSULog.Error($"Error: child {childName} to parent {gameObjectPrefab} to not found. Did you misspell the name?");
-                return new SkinDef.GameObjectActivation { };
+                throw new System.NotImplementedException();
             }
 
             private SkinDef.GameObjectActivation CreateActivationFromRendererIndex(CharacterModel model)
             {
-                if (rendererIndex < 0 || rendererIndex > model.baseRendererInfos.Length)
-                {
-                    throw new IndexOutOfRangeException($"Renderer Index of MSGameObjectActivation is out of bounds. (index: {rendererIndex})");
-                }
-                var goActivation = new SkinDef.GameObjectActivation();
-                goActivation.shouldActivate = shouldActivate;
-                goActivation.gameObject = model.baseRendererInfos[rendererIndex].renderer.gameObject;
-                return goActivation;
+                throw new System.NotImplementedException();
             }
         }
 
@@ -112,14 +77,7 @@ namespace Moonstorm
 
             internal SkinDef.MeshReplacement Upgrade(CharacterModel model)
             {
-                if (rendererIndex < 0 || rendererIndex > model.baseRendererInfos.Length)
-                {
-                    throw new IndexOutOfRangeException($"Renderer Index of MSGameObjectActivation is out of bounds. (index: {rendererIndex})");
-                }
-                var meshReplacement = new SkinDef.MeshReplacement();
-                meshReplacement.mesh = mesh;
-                meshReplacement.renderer = model.baseRendererInfos[rendererIndex].renderer;
-                return meshReplacement;
+                throw new System.NotImplementedException();
             }
         }
 
@@ -129,13 +87,9 @@ namespace Moonstorm
             public string projectilePrefabAddress;
             public GameObject projectileGhostReplacement;
 
-            internal async Task<SkinDef.ProjectileGhostReplacement> Upgrade()
+            internal  Task<SkinDef.ProjectileGhostReplacement> Upgrade()
             {
-                var prefab = await Addressables.LoadAssetAsync<GameObject>(projectilePrefabAddress).Task;
-                var ghostReplacement = new SkinDef.ProjectileGhostReplacement();
-                ghostReplacement.projectilePrefab = prefab;
-                ghostReplacement.projectileGhostReplacementPrefab = projectileGhostReplacement;
-                return ghostReplacement;
+                throw new System.NotImplementedException();
             }
         }
 
@@ -145,13 +99,9 @@ namespace Moonstorm
             public string minionPrefabAddress;
             public SkinDef minionSkin;
 
-            internal async Task<SkinDef.MinionSkinReplacement> Upgrade()
+            internal  Task<SkinDef.MinionSkinReplacement> Upgrade()
             {
-                var prefab = await Addressables.LoadAssetAsync<GameObject>(minionPrefabAddress).Task;
-                var minionReplacement = new SkinDef.MinionSkinReplacement();
-                minionReplacement.minionBodyPrefab = prefab;
-                minionReplacement.minionSkin = minionSkin;
-                return minionReplacement;
+                throw new System.NotImplementedException();
             }
         }
         #endregion
@@ -175,162 +125,36 @@ namespace Moonstorm
         [HideInInspector]
         public int rendererAmounts;
 
-        private new async void Awake()
+        private new  void Awake()
         {
-            if (Application.IsPlaying(this))
-            {
-                try
-                {
-                    MSULog.Debug($"Attempting to finalize {this}");
-                    var bodyPrefab = await Addressables.LoadAssetAsync<GameObject>(bodyAddress).Task;
-                    var modelObject = bodyPrefab.GetComponent<ModelLocator>()?.modelTransform?.gameObject;
-                    var displayPrefab = await Addressables.LoadAssetAsync<GameObject>(displayAddress).Task;
-
-                    CharacterModel model = modelObject.GetComponent<CharacterModel>();
-                    CharacterModel displayModel = displayPrefab.GetComponentInChildren<CharacterModel>();
-
-                    //Fills the unfilled base fields
-                    foreach (var item in _baseSkins)
-                    {
-                        var skin = await item.Upgrade();
-                        HG.ArrayUtils.ArrayAppend(ref baseSkins, skin);
-                    }
-                    rootObject = modelObject;
-                    foreach (var item in _rendererInfos)
-                    {
-                        HG.ArrayUtils.ArrayAppend(ref rendererInfos, item.Upgrade(model));
-                    }
-                    foreach (var item in _gameObjectActivations)
-                    {
-                        HG.ArrayUtils.ArrayAppend(ref gameObjectActivations, item.Upgrade(model, displayModel));
-                    }
-                    foreach (var item in _meshReplacements)
-                    {
-                        HG.ArrayUtils.ArrayAppend(ref meshReplacements, item.Upgrade(model));
-                    }
-                    foreach (var item in _projectileGhostReplacements)
-                    {
-                        var ghostReplacement = await item.Upgrade();
-                        HG.ArrayUtils.ArrayAppend(ref projectileGhostReplacements, ghostReplacement);
-                    }
-                    foreach (var item in _minionSkinReplacements)
-                    {
-                        var minionSkin = await item.Upgrade();
-                        HG.ArrayUtils.ArrayAppend(ref minionSkinReplacements, minionSkin);
-                    }
-
-                    base.Awake();
-
-                    //Adds the skindefs to the models
-                    ModelSkinController controller = model.GetComponent<ModelSkinController>();
-                    if (controller)
-                        HG.ArrayUtils.ArrayAppend(ref controller.skins, this);
-                    controller = displayModel.GetComponent<ModelSkinController>();
-                    if (controller)
-                        HG.ArrayUtils.ArrayAppend(ref controller.skins, this);
-                }
-                catch (Exception e)
-                {
-                    MSULog.Error(e);
-                }
-            }
+            throw new System.NotImplementedException();
         }
 
         #region Validators
-        private void OnValidate()
+
+        private  void GetRendererCount()
         {
-            GetRendererCount();
-            ValidateDisplayAddress();
-            ValidateBaseSkinAddresses();
-            ValidateProjectileAddresses();
-            ValidateMinionAddresses();
+            throw new System.NotImplementedException();
         }
 
-        private async void GetRendererCount()
+        private  void ValidateDisplayAddress()
         {
-            Object obj = null;
-            try
-            {
-                obj = await Addressables.LoadAssetAsync<GameObject>(bodyAddress).Task;
-                var modelLoc = (obj as GameObject).GetComponent<ModelLocator>();
-                var modelTransform = modelLoc._modelTransform;
-                var charModel = modelTransform.gameObject.GetComponent<CharacterModel>();
-
-                rendererAmounts = charModel.baseRendererInfos.Length;
-            }
-            catch (Exception e)
-            {
-                MSULog.Error($"Failed to validate renderer counts for {this}: {e}");
-            }
+            throw new System.NotImplementedException();
         }
 
-        private async void ValidateDisplayAddress()
+        private  void ValidateBaseSkinAddresses()
         {
-            try
-            {
-                var obj = await Addressables.LoadAssetAsync<GameObject>(displayAddress).Task;
-            }
-            catch (Exception e)
-            {
-                MSULog.Error($"Failed to validate Display Address for {this}: {e}");
-            }
+            throw new System.NotImplementedException();
         }
 
-        private async void ValidateBaseSkinAddresses()
+        private  void ValidateProjectileAddresses()
         {
-            for (int i = 0; i < _baseSkins.Length; i++)
-            {
-                UnityEngine.Object obj = null;
-                try
-                {
-                    obj = await Addressables.LoadAssetAsync<SkinDef>(_baseSkins[i].skinAddress).Task;
-                }
-                catch (Exception e)
-                {
-                    MSULog.Error($"Failed to validate projectile ghost replacement index {i}: {e}");
-                }
-            }
+            throw new System.NotImplementedException();
         }
 
-        private async void ValidateProjectileAddresses()
+        private  void ValidateMinionAddresses()
         {
-            for (int i = 0; i < _projectileGhostReplacements.Length; i++)
-            {
-                UnityEngine.Object obj = null;
-                try
-                {
-                    obj = await Addressables.LoadAssetAsync<GameObject>(_projectileGhostReplacements[i].projectilePrefabAddress).Task;
-                    var projectile = (GameObject)obj;
-                    if (!projectile.GetComponent<ProjectileController>())
-                    {
-                        throw new InvalidOperationException($"Projectile Ghost Replacement provides an address for a game object that does not have a ProjectileController component.");
-                    }
-                }
-                catch (Exception e)
-                {
-                    MSULog.Error($"Failed to validate projectile ghost replacement index {i}: {e}");
-                }
-            }
-        }
-
-        private async void ValidateMinionAddresses()
-        {
-            for (int i = 0; i < _minionSkinReplacements.Length; i++)
-            {
-                try
-                {
-                    Object obj = await Addressables.LoadAssetAsync<GameObject>(_minionSkinReplacements[i].minionPrefabAddress).Task;
-                    var body = (GameObject)obj;
-                    if (!body.GetComponent<CharacterBody>())
-                    {
-                        throw new InvalidOperationException($"Minion Skin Replacement provides an address for a game object that does not have a CharacterBody component.");
-                    }
-                }
-                catch (Exception e)
-                {
-                    MSULog.Error($"Failed to validate projectile ghost replacement index {i}: {e}");
-                }
-            }
+            throw new System.NotImplementedException();
         }
         #endregion
     }

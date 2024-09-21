@@ -18,10 +18,7 @@ namespace Moonstorm
 
             public void AddRule(AddressNamedDisplayRule rule)
             {
-                if (rules == null)
-                    rules = new List<AddressNamedDisplayRule>();
-
-                rules.Add(rule);
+                throw new System.NotImplementedException();
             }
         }
 
@@ -49,32 +46,7 @@ namespace Moonstorm
 
             internal void CreateRule()
             {
-                GameObject prefab = ItemDisplayCatalog.GetItemDisplay(displayPrefabName);
-                if (string.IsNullOrEmpty(childName))
-                {
-                    finishedRule = new ItemDisplayRule
-                    {
-                        childName = NoValue,
-                        localAngles = Vector3.zero,
-                        localPos = Vector3.zero,
-                        localScale = Vector3.zero,
-                        followerPrefab = prefab,
-                        limbMask = limbMask,
-                        ruleType = ruleType
-                    };
-                    return;
-                }
-
-                finishedRule = new ItemDisplayRule
-                {
-                    childName = childName,
-                    localAngles = localAngles,
-                    localPos = localPos,
-                    localScale = localScales,
-                    followerPrefab = prefab,
-                    limbMask = limbMask,
-                    ruleType = ruleType
-                };
+                throw new System.NotImplementedException();
             }
         }
 
@@ -87,78 +59,21 @@ namespace Moonstorm
 
         private void Awake()
         {
-            instances.AddIfNotInCollection(this);
+            throw new System.NotImplementedException();
         }
         private void OnDestroy()
         {
-            instances.RemoveIfInCollection(this);
+            throw new System.NotImplementedException();
         }
 
-        [SystemInitializer]
         private static void SystemInitializer()
         {
-            ItemDisplayCatalog.catalogAvailability.CallWhenAvailable(() =>
-            {
-                MSULog.Info($"Initializing NamedIDRS");
-                foreach (NamedIDRS namedIdrs in instances)
-                {
-                    try
-                    {
-                        foreach (ItemDisplayRuleSet.KeyAssetRuleGroup keyAssetRuleGroup in namedIdrs.GetKeyAssetRuleGroups())
-                        {
-                            HG.ArrayUtils.ArrayAppend(ref namedIdrs.idrs.keyAssetRuleGroups, keyAssetRuleGroup);
-                        }
-                        namedIdrs.idrs.GenerateRuntimeValues();
-#if DEBUG
-                        MSULog.Debug($"Finished appending values from {namedIdrs} to {namedIdrs.idrs}");
-#endif
-                    }
-                    catch (Exception e)
-                    {
-                        MSULog.Error($"{e}\n({namedIdrs}");
-                    }
-                }
-            });
+            throw new System.NotImplementedException();
         }
 
         internal ItemDisplayRuleSet.KeyAssetRuleGroup[] GetKeyAssetRuleGroups()
         {
-            var keyAssetList = new List<ItemDisplayRuleSet.KeyAssetRuleGroup>();
-            foreach (var namedRuleGroup in namedRuleGroups)
-            {
-                var keyAssetName = namedRuleGroup.keyAssetName;
-                UnityEngine.Object keyAsset = null;
-                var equipmentIndex = EquipmentCatalog.FindEquipmentIndex(keyAssetName);
-                if (equipmentIndex != EquipmentIndex.None && !keyAsset)
-                {
-                    keyAsset = EquipmentCatalog.GetEquipmentDef(equipmentIndex);
-                }
-                var itemIndex = ItemCatalog.FindItemIndex(keyAssetName);
-                if (itemIndex != ItemIndex.None && !keyAsset)
-                {
-                    keyAsset = ItemCatalog.GetItemDef(itemIndex);
-                }
-
-                if (!keyAsset)
-                {
-#if DEBUG
-                    MSULog.Warning($"Could not get key asset of name {keyAssetName} (Index: {namedRuleGroups.IndexOf(namedRuleGroup)}). {this}");
-#endif
-                    continue;
-                }
-
-                var keyAssetGroup = new ItemDisplayRuleSet.KeyAssetRuleGroup { keyAsset = keyAsset };
-
-                for (int i = 0; i < namedRuleGroup.rules.Count; i++)
-                {
-                    AddressNamedDisplayRule rule = namedRuleGroup.rules[i];
-                    rule.CreateRule();
-                    keyAssetGroup.displayRuleGroup.AddDisplayRule(rule.finishedRule);
-                }
-                keyAssetList.Add(keyAssetGroup);
-            }
-            namedRuleGroups.Clear();
-            return keyAssetList.ToArray();
+            throw new System.NotImplementedException();
         }
     }
 }

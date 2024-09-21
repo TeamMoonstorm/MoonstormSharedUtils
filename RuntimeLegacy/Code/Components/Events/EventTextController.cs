@@ -24,64 +24,22 @@ namespace Moonstorm.Components
         private float actualWarningDuration;
         private void Start()
         {
-            actualWarningDuration = warningDuration / 3;
-            uiJuice.transitionDuration = actualWarningDuration;
-            fadeState = EventFadeState.FadeIn;
-            if (fadeOnStart)
-                BeginFade();
+            throw new System.NotImplementedException();
         }
 
         public void BeginFade()
         {
-            switch (fadeState)
-            {
-                case EventFadeState.FadeIn:
-                    uiJuice.destroyOnEndOfTransition = false;
-                    fading = true;
-                    uiJuice.originalAlpha = MSUConfig.maxOpacityForEventMessage;
-                    uiJuice.TransitionAlphaFadeIn();
-                    break;
-                case EventFadeState.Wait:
-                    fading = true;
-                    break;
-                case EventFadeState.FadeOut:
-                    uiJuice.destroyOnEndOfTransition = true;
-                    fading = true;
-                    uiJuice.TransitionAlphaFadeOut();
-                    break;
-            }
+            throw new System.NotImplementedException();
         }
 
         private void Update()
         {
-            if (fading)
-            {
-                internalStopwatch += Time.unscaledDeltaTime;
-                if (internalStopwatch > warningDuration)
-                {
-                    FadeEnd();
-                }
-            }
+            throw new System.NotImplementedException();
         }
 
         private void FadeEnd()
         {
-            fading = false;
-            internalStopwatch = 0;
-
-            if (fadeState == EventFadeState.FadeIn)
-            {
-                fadeState = EventFadeState.Wait;
-                BeginFade();
-                return;
-            }
-            else if (fadeState == EventFadeState.Wait)
-            {
-                fadeState = EventFadeState.FadeOut;
-                BeginFade();
-                return;
-            }
-            Destroy(gameObject);
+            throw new System.NotImplementedException();
         }
     }
 }

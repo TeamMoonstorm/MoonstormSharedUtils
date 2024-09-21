@@ -14,95 +14,45 @@ namespace Moonstorm.Components
 
         public MoonstormEliteBehavior eliteBehavior;
 
-        IStatItemBehavior[] statItemBehaviors = Array.Empty<IStatItemBehavior>();
-
-        IBodyStatArgModifier[] bodyStatArgModifiers = Array.Empty<IBodyStatArgModifier>();
-
         private void Start()
         {
-            body.onInventoryChanged += CheckItemEquipments;
+            throw new System.NotImplementedException();
         }
 
         public void CheckItemEquipments()
         {
-            if (!hasMaster)
-                return;
-
-            foreach (var equipment in EquipmentModuleBase.AllMoonstormEquipments)
-            {
-                if (body.inventory.GetEquipmentIndex() == equipment.Key.equipmentIndex)
-                {
-                    //this is stupid
-                    var bod = body;
-                    equipment.Value.AddBehavior(ref bod, 1);
-                    break;
-                }
-            }
-
-            if (eliteBehavior)
-                CheckEliteBehavior();
-
-            StartGetInterfaces();
+            throw new System.NotImplementedException();
         }
 
         public void StartGetInterfaces() => StartCoroutine(GetInterfaces());
 
         private IEnumerator GetInterfaces()
         {
-            yield return new WaitForEndOfFrame();
-            statItemBehaviors = GetComponents<IStatItemBehavior>();
-            bodyStatArgModifiers = GetComponents<IBodyStatArgModifier>();
-            body.healthComponent.onIncomingDamageReceivers = GetComponents<IOnIncomingDamageServerReceiver>();
-            body.healthComponent.onTakeDamageReceivers = GetComponents<IOnTakeDamageServerReceiver>();
+            throw new System.NotImplementedException();
         }
 
         private void CheckEliteBehavior()
         {
-            bool isElite = false;
-            foreach (var eliteEqp in EquipmentModuleBase.EliteMoonstormEquipments)
-            {
-                if (body.inventory.GetEquipmentIndex() == eliteEqp.Key.equipmentIndex)
-                {
-                    isElite = true;
-                    break;
-                }
-            }
-            if (!isElite)
-                return;
-
-            eliteBehavior.characterModel.UpdateOverlays();
-            body.RecalculateStats();
-            foreach (var eliteDef in EliteModuleBase.MoonstormElites)
-            {
-                if (body.isElite && eliteBehavior.characterModel.myEliteIndex == eliteDef.eliteIndex)
-                {
-                    eliteBehavior.SetNewElite(eliteDef);
-                }
-            }
+            throw new System.NotImplementedException();
         }
 
         public void RunStatRecalculationsStart()
         {
-            foreach (var statBehavior in statItemBehaviors)
-                statBehavior.RecalculateStatsStart();
+            throw new System.NotImplementedException();
         }
 
         public void RunStatRecalculationsEnd()
         {
-            foreach (var statBehavior in statItemBehaviors)
-                statBehavior.RecalculateStatsEnd();
+            throw new System.NotImplementedException();
         }
 
         public void RunStatHookEventModifiers(R2API.RecalculateStatsAPI.StatHookEventArgs args)
         {
-            foreach (var statModifier in bodyStatArgModifiers)
-            {
-                statModifier.ModifyStatArguments(args);
-            }
+            throw new System.NotImplementedException();
         }
         private void OnDestroy()
         {
-            body.onInventoryChanged -= CheckItemEquipments;
+            throw new System.NotImplementedException();
         }
     }
 }
