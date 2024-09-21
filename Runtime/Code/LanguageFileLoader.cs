@@ -67,7 +67,7 @@ namespace MSU
             return Directory.Exists(directory);
         }
 
-        public static Dictionary<string, List<string>> GetLanguageNameToJSONPaths(string languageFolderDirectory)
+        private static Dictionary<string, List<string>> GetLanguageNameToJSONPaths(string languageFolderDirectory)
         {
             var result = new Dictionary<string, List<string>>();
             var newDirectories = Directory.EnumerateDirectories(languageFolderDirectory);

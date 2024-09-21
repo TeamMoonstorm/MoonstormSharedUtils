@@ -1,3 +1,19 @@
+# '2.1.0' - Fixes and Async Additions
+
+## Runtime:
+
+* Adjusted the ``ShaderUtil`` class to also copy over the render queue for addressable material shaders
+* Addressable Material Shaders now work properly in the editor again
+* Removed accidental ``[Obsolete]`` attributes from ItemModule
+* ``ExtendedEliteDef``'s effect now gets tied to its buffdef, so that if the player gets the buff from wake of vultures the effect spawns properly
+* Fixed an issue where the ``MSUEliteBehaviour`` would spawn multiple effect prefabs.
+* Fixed an issue where the ``FormatToken`` attribute wouldnt properly retrieve the corrent formatting value.
+* Changed around how language is loaded.
+    * LanguageFiles are now loaded by the ``LanguageFileLoader``
+    * Loading can either be synchronous or asynchronous.
+    * Language tokens are added directly to the currently loaded language.
+        * This fixes an issue where MSU would wrongfully unload the english language, causing issues with other mods.
+
 # '2.0.0' - Seekers of the API
 
 ## General
