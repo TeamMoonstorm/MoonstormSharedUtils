@@ -30,15 +30,40 @@ namespace MSU
         private void Start()
         {
             hasMaster = body.master;
-            body.onInventoryChanged += StartGetInterfaces;
+            body.onInventoryChanged += CheckEquipmentAndStartGetInterfaces; ;
 
             //This is done to ensure whatever "OnEquipmentObtained" logic runs when the body starts. since OnEquipmentObtained only gets called when the inventory changes, which doesnt happen at this time.
             var eqpDef = EquipmentCatalog.GetEquipmentDef(body.inventory ? body.inventory.GetEquipmentIndex() : EquipmentIndex.None);
             if (eqpDef && EquipmentModule.allMoonstormEquipments.TryGetValue(eqpDef, out var iEquipmentContentPiece))
             {
                 iEquipmentContentPiece.OnEquipmentObtained(body);
+                //If the equipment we started with is an elite equipment, assign new index immediatly
+                if(eqpDef.passiveBuffDef && eqpDef.passiveBuffDef.isElite)
+                {
+                    eliteBehaviour.AssignNewIndex(eqpDef.passiveBuffDef.eliteDef.eliteIndex);
+                }
             }
             StartGetInterfaces();
+        }
+
+        private void CheckEquipmentAndStartGetInterfaces()
+        {
+            StartGetInterfaces();
+
+            if (!hasMaster)
+                return;
+
+            EquipmentDef currentDef = EquipmentCatalog.GetEquipmentDef(body.inventory.GetEquipmentIndex());
+
+            if(currentDef && eliteBehaviour)
+            {
+                if(!currentDef.passiveBuffDef || !currentDef.passiveBuffDef.isElite)
+                {
+                    eliteBehaviour.AssignNewIndex(EliteIndex.None);
+                    return;
+                }
+                eliteBehaviour.AssignNewIndex(currentDef.passiveBuffDef.eliteDef.eliteIndex);
+            }
         }
 
         /// <summary>

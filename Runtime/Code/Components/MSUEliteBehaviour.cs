@@ -18,34 +18,38 @@ namespace MSU
         /// </summary>
         public CharacterModel characterModel;
 
-        private Dictionary<BuffIndex, GameObject> _eliteBuffIndexToEffectInstance = new Dictionary<BuffIndex, GameObject>();
+        private GameObject _effectInstance;
+        private EliteIndex _assignedIndex;
 
-        internal void OnEliteBuffFirstStackGained(BuffIndex eliteBuffIndex, ExtendedEliteDef eed)
+        internal void AssignNewIndex(EliteIndex index)
         {
-            if (!_eliteBuffIndexToEffectInstance.ContainsKey(eliteBuffIndex))
+            //Incoming index is same, return early.
+            if (_assignedIndex == index)
+                return;
+
+            _assignedIndex = index;
+            //destroy effect if it exists because we're no longer an elite.
+            if(_assignedIndex == EliteIndex.None)
             {
-                var parent = characterModel ? characterModel.transform : body ? body.transform : transform;
-                var effect = Instantiate(eed.effect, parent, false);
-                _eliteBuffIndexToEffectInstance[eliteBuffIndex] = effect;
+                if (_effectInstance)
+                    Destroy(_effectInstance);
+                return;
             }
-            if (!_eliteBuffIndexToEffectInstance[eliteBuffIndex]) //It could be that the C++ object was destroyed but not the C# one, instantiate it again just in case.
+
+            //We're being assigned a new index, destroy the effect then create the new one if it exists..
+            if (_effectInstance)
+                Destroy(_effectInstance);
+
+            if(EquipmentModule.eliteIndexToEffectPrefab.TryGetValue(index, out var prefab))
             {
-                var parent = characterModel ? characterModel.transform : body ? body.transform : transform;
-                var effect = Instantiate(eed.effect, parent, false);
-                _eliteBuffIndexToEffectInstance[eliteBuffIndex] = effect;
+                _effectInstance = Instantiate(prefab, characterModel ? characterModel.transform : body ? body.transform : transform, false);
             }
-            _eliteBuffIndexToEffectInstance[eliteBuffIndex].SetActive(true);
         }
 
-        internal void OnEliteBuffFinalStackLost(BuffIndex eliteBuffIndex, ExtendedEliteDef eed)
+        private void OnDestroy()
         {
-            if (!_eliteBuffIndexToEffectInstance.ContainsKey(eliteBuffIndex))
-                return;
-
-            if (!_eliteBuffIndexToEffectInstance[eliteBuffIndex]) //It could be that the C++ object was destroyed but not the C# one, instantiate it again just in case.
-                return;
-                
-            _eliteBuffIndexToEffectInstance[eliteBuffIndex].SetActive(false);
+            if (_effectInstance)
+                Destroy(_effectInstance);
         }
     }
 }

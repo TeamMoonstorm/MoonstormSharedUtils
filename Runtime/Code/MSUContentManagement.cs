@@ -22,8 +22,6 @@ namespace MSU
             MSULog.Info("Initializing the generalized MSU Content Management system...");
             yield return null;
 
-            On.RoR2.CharacterBody.OnBuffFirstStackGained += CallEliteBehaviourFirstStackMethod;
-            On.RoR2.CharacterBody.OnBuffFinalStackLost += CallEliteBehaviourFinalStackMethod;
             On.RoR2.CharacterBody.SetBuffCount += SetBuffBehaviourCount;
             CharacterBody.onBodyAwakeGlobal += OnBodyAwakeGlobal;
             CharacterBody.onBodyDestroyGlobal += OnBodyDestroyedGlobal;
@@ -49,44 +47,6 @@ namespace MSU
             coroutine.Start();
             while (!coroutine.isDone)
                 yield return null;
-        }
-
-        private static void CallEliteBehaviourFinalStackMethod(On.RoR2.CharacterBody.orig_OnBuffFinalStackLost orig, CharacterBody self, BuffDef buffDef)
-        {
-            orig(self, buffDef);
-            if (self.bodyIndex == BodyIndex.None)
-                return;
-
-            if (!buffDef.isElite)
-                return;
-
-            if (buffDef.eliteDef is not ExtendedEliteDef eed)
-                return;
-
-            var behaviour = _bodyToContentBehaviour[self];
-            if (!behaviour.eliteBehaviour)
-                return;
-
-            behaviour.eliteBehaviour.OnEliteBuffFinalStackLost(buffDef.buffIndex, eed);
-        }
-
-        private static void CallEliteBehaviourFirstStackMethod(On.RoR2.CharacterBody.orig_OnBuffFirstStackGained orig, CharacterBody self, BuffDef buffDef)
-        {
-            orig(self, buffDef);
-            if (self.bodyIndex == BodyIndex.None)
-                return;
-
-            if (!buffDef.isElite)
-                return;
-
-            if (buffDef.eliteDef is not ExtendedEliteDef eed)
-                return;
-
-            var behaviour = _bodyToContentBehaviour[self];
-            if (!behaviour.eliteBehaviour)
-                return;
-
-            behaviour.eliteBehaviour.OnEliteBuffFirstStackGained(buffDef.buffIndex, eed);
         }
 
         private static void GetStatsCoefficients(CharacterBody sender, RecalculateStatsAPI.StatHookEventArgs args)

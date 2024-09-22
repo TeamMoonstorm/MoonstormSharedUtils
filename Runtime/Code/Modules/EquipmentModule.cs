@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using UnityEngine;
 
 namespace MSU
 {
@@ -41,6 +42,12 @@ namespace MSU
         /// <para>Subscribe to <see cref="moduleAvailability"/> to ensure the dictionary is not empty.</para>
         /// </summary>
         public static ReadOnlyCollection<EliteDef> moonstormEliteDefs { get; private set; }
+
+        /// <summary>
+        /// A ReadOnlyDictionary of the Effect Prefabs associated to Elite Indices.
+        /// <para>Subscribe to <see cref="moduleAvailability"/> to ensure the dictionary is not empty.</para>
+        /// </summary>
+        public static ReadOnlyDictionary<EliteIndex, GameObject> eliteIndexToEffectPrefab { get; private set; }
 
         private static Dictionary<EquipmentDef, IEquipmentContentPiece> _moonstormEquipments = new Dictionary<EquipmentDef, IEquipmentContentPiece>();
 
@@ -117,6 +124,7 @@ namespace MSU
             var allEquips = new Dictionary<EquipmentDef, IEquipmentContentPiece>();
             var nonEliteEquips = new Dictionary<EquipmentDef, IEquipmentContentPiece>();
             var eliteEquips = new Dictionary<EquipmentDef, IEliteContentPiece>();
+            var eliteIndexToEffect = new Dictionary<EliteIndex, GameObject>();
             var eliteDefs = new List<EliteDef>();
 
             foreach (var (eqpDef, eqp) in _moonstormEquipments)
@@ -127,6 +135,14 @@ namespace MSU
                 {
                     eliteEquips.Add(eqpDef, eliteContent);
                     eliteDefs.AddRange(eliteContent.eliteDefs);
+                    foreach(var eliteDef in eliteContent.eliteDefs)
+                    {
+                        yield return null;
+                        if(eliteDef is ExtendedEliteDef eed && eed.effect)
+                        {
+                            eliteIndexToEffect.Add(eed.eliteIndex, eed.effect);
+                        }
+                    }
                 }
                 else
                 {
@@ -138,6 +154,7 @@ namespace MSU
             moonstormEliteEquipments = new ReadOnlyDictionary<EquipmentDef, IEliteContentPiece>(eliteEquips);
             nonEliteMoonstormEquipments = new ReadOnlyDictionary<EquipmentDef, IEquipmentContentPiece>(nonEliteEquips);
             moonstormEliteDefs = new ReadOnlyCollection<EliteDef>(eliteDefs);
+            eliteIndexToEffectPrefab = new ReadOnlyDictionary<EliteIndex, GameObject>(eliteIndexToEffect);
 
             CombatDirector.EliteTierDef[] vanillaTiers = R2API.EliteAPI.VanillaEliteTiers;
             foreach (EliteDef eliteDef in moonstormEliteDefs)
