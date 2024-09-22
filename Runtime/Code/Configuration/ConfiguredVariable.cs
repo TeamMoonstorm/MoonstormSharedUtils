@@ -118,7 +118,7 @@ namespace MSU.Config
             get => _configFileIdentifier;
             set
             {
-                if (!isConfigured)
+                if (isConfigured)
                 {
 #if DEBUG
                     LogReadOnly(nameof(configFileIdentifier));
