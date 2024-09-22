@@ -23,7 +23,12 @@ namespace MSU.Config
             set
             {
                 if (isConfigured)
+                {
+#if DEBUG
+                    LogReadOnly(nameof(inputFieldConfig));
+#endif
                     return;
+                }
                 _inputFieldConfig = value;
             }
         }

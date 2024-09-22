@@ -23,7 +23,12 @@ namespace MSU.Config
             set
             {
                 if (isConfigured)
+                {
+#if DEBUG
+                    LogReadOnly(nameof(sliderType));
+#endif
                     return;
+                }
                 _sliderType = value;
             }
         }
@@ -41,6 +46,9 @@ namespace MSU.Config
             {
                 if (isConfigured)
                 {
+#if DEBUG
+                    LogReadOnly(nameof(stepSliderConfig));
+#endif
                     return;
                 }
                 _stepSliderConfig = value;
@@ -60,6 +68,9 @@ namespace MSU.Config
             {
                 if (isConfigured)
                 {
+#if DEBUG
+                    LogReadOnly(nameof(sliderConfig));
+#endif
                     return;
                 }
                 _sliderConfig = value;

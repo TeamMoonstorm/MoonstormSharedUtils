@@ -24,7 +24,12 @@ namespace MSU.Config
             set
             {
                 if (isConfigured)
+                {
+#if DEBUG
+                    LogReadOnly(nameof(colorConfig));
+#endif
                     return;
+                }
                 _colorConfig = value;
             }
         }

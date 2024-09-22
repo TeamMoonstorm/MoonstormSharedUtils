@@ -25,7 +25,12 @@ namespace MSU.Config
             set
             {
                 if (isConfigured)
+                {
+#if DEBUG
+                    LogReadOnly(nameof(choiceConfig));
+#endif
                     return;
+                }
                 _choiceConfig = value;
             }
         }

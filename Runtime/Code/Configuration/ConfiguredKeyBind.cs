@@ -23,7 +23,12 @@ namespace MSU.Config
             set
             {
                 if (isConfigured)
+                {
+#if DEBUG
+                    LogReadOnly(nameof(keyBindConfig));
+#endif
                     return;
+                }
                 _keyBindConfig = value;
             }
         }

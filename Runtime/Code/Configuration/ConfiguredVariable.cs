@@ -23,7 +23,12 @@ namespace MSU.Config
             set
             {
                 if (isConfigured)
+                {
+#if DEBUG
+                    LogReadOnly(nameof(configFile));
+#endif
                     return;
+                }
                 _configFile = value;
             }
         }
@@ -47,7 +52,12 @@ namespace MSU.Config
             set
             {
                 if (isConfigured)
+                {
+#if DEBUG
+                    LogReadOnly(nameof(section));
+#endif
                     return;
+                }
                 _section = value;
             }
         }
@@ -65,7 +75,12 @@ namespace MSU.Config
             set
             {
                 if (isConfigured)
+                {
+#if DEBUG
+                    LogReadOnly(nameof(key));
+#endif
                     return;
+                }
                 _key = value;
             }
         }
@@ -81,7 +96,12 @@ namespace MSU.Config
             set
             {
                 if (isConfigured)
+                {
+#if DEBUG
+                    LogReadOnly(nameof(description));
+#endif
                     return;
+                }
 
                 _description = value;
             }
@@ -99,7 +119,12 @@ namespace MSU.Config
             set
             {
                 if (!isConfigured)
+                {
+#if DEBUG
+                    LogReadOnly(nameof(configFileIdentifier));
+#endif
                     return;
+                }
                 _configFileIdentifier = value;
             }
         }
@@ -115,7 +140,12 @@ namespace MSU.Config
             set
             {
                 if (isConfigured)
+                {
+#if DEBUG
+                    LogReadOnly(nameof(modGUID));
+#endif
                     return;
+                }
                 _modGUID = value;
             }
         }
@@ -131,7 +161,12 @@ namespace MSU.Config
             set
             {
                 if (isConfigured)
+                {
+#if DEBUG
+                    LogReadOnly(nameof(modName));
+#endif
                     return;
+                }
                 _modName = value;
             }
         }
@@ -221,6 +256,26 @@ namespace MSU.Config
             return this;
         }
 
+#if DEBUG
+        /// <summary>
+        /// This is a Debug Only Method.
+        /// <para>Logs a message to the console using MSU's logger to say that a specific property cant be overwritten because it has already been configured and as such is now read only.</para>
+        /// </summary>
+        /// <param name="propertyName">The name of the property</param>
+        protected virtual void LogReadOnly(string propertyName)
+        {
+            MSULog.Warning($"Cannot overwrite the value in {propertyName} of {this} because it has already been configured.");
+        }
+#endif
+
+        /// <summary>
+        /// Returns a string representation of the Configured Variable
+        /// </summary>
+        public override string ToString()
+        {
+            return $"{GetType().Name}(Section={section}, Key={key}, ConfigFile={(configFile != null ? System.IO.Path.GetFileName(configFile.ConfigFilePath) : configFileIdentifier)}";
+        }
+
         /// <summary>
         /// Parameterless Constructor
         /// </summary>
@@ -292,13 +347,23 @@ namespace MSU.Config
             add
             {
                 if (isConfigured)
+                {
+#if DEBUG
+                    LogReadOnly(nameof(onConfigChanged));
+#endif
                     return;
+                }
                 _onConfigChanged += value;
             }
             remove
             {
                 if (isConfigured)
+                {
+#if DEBUG
+                    LogReadOnly(nameof(onConfigChanged));
+#endif
                     return;
+                }
                 _onConfigChanged -= value;
             }
         }
