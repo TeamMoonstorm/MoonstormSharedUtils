@@ -175,7 +175,7 @@ namespace MSU
                 while (!task.IsCompleted)
                     yield return null;
 
-                output.value = path;
+                output.value = task.Result;
                 yield break;
             }
         }
