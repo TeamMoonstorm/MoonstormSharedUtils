@@ -17,6 +17,7 @@ namespace MSU.Config
         private static readonly Dictionary<ConfigFile, BaseUnityPlugin> _configToPluginOwner = new Dictionary<ConfigFile, BaseUnityPlugin>();
         private static readonly Dictionary<string, ConfigFile> _identifierToConfigFile = new Dictionary<string, ConfigFile>(StringComparer.OrdinalIgnoreCase);
         private static readonly HashSet<ConfigFile> _configFilesWithSeparateRiskOfOptionsEntries = new HashSet<ConfigFile>();
+        public static bool configsBound { get; private set; }
 
         /// <summary>
         /// Retrieves a <see cref="ConfigFile"/> with the identifier specified in <paramref name="identifier"/>
@@ -101,6 +102,7 @@ namespace MSU.Config
             MSULog.Info("Binding the Configs within the MSU Config System...");
             BindConfigureFieldAttributes();
             BindAutoConfigAttributes();
+            configsBound = true;
         }
 
         private static void BindConfigureFieldAttributes()

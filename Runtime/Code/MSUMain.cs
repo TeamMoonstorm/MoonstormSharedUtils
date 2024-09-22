@@ -45,6 +45,7 @@ namespace MSU
         /// The plugin's PluginInfo
         /// </summary>
         public static PluginInfo pluginInfo { get; private set; }
+        public static MSUMain instance { get; private set; }
         /// <summary>
         /// The AssetBundle for MSU
         /// </summary>
@@ -54,6 +55,7 @@ namespace MSU
 
         private void Awake()
         {
+            instance = this;
             pluginInfo = Info;
             new MSULog(Logger);
             msuAssetBundle = AssetBundle.LoadFromFile(Path.Combine(assetBundleDir, "runtimemsuassetbundle"));

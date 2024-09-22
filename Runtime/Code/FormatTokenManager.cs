@@ -25,12 +25,13 @@ namespace MSU
                 yield return null;
             }
 
-            On.RoR2.Language.LoadStrings += Language_LoadStrings;
-            RoR2Application.onLoad += () =>
+            foreach(var lang in Language.GetAllLanguages())
             {
-                MSULog.Info($"Ensuring tokens are formatted on english language.");
-                AddTokensFromLanguageFileLoaderAndFormatThem(Language.english);
-            };
+#if DEBUG
+                MSULog.Info($"Adding tokens for language {lang}");
+#endif
+                AddTokensFromLanguageFileLoaderAndFormatThem(lang);
+            }
             RoR2.Language.onCurrentLanguageChanged += Language_onCurrentLanguageChanged;
 
             ModOptionPanelController.OnModOptionsExit += () =>
@@ -39,14 +40,6 @@ namespace MSU
 
                 AddTokensFromLanguageFileLoaderAndFormatThem(RoR2.Language.currentLanguage);
             };
-        }
-
-        private static void Language_LoadStrings(On.RoR2.Language.orig_LoadStrings orig, RoR2.Language self)
-        {
-            orig(self);
-            MSULog.Info($"Loading strings for {self.name}");
-            AddTokensFromLanguageFileLoaderAndFormatThem(self);
-            On.RoR2.Language.LoadStrings -= Language_LoadStrings;
         }
 
         private static void Language_onCurrentLanguageChanged()
@@ -62,22 +55,43 @@ namespace MSU
             //See if we have custom tokens to add
             if(LanguageFileLoader._languageNameToRawTokenData.TryGetValue(langName, out var rawtokenData))
             {
+                List<(string, string)> tokensToFormatOnRoutine = new List<(string, string)>();
                 foreach(var (token, value) in rawtokenData)
                 {
-                    //If there's a formatting option for this array, utilize it and overwrite the value.
+
+                    //If there's a formatting option for this token, add it to a list we'll later process on a coroutine. check method coroutine for more info
                     if(_cachedFormattingArray.TryGetValue(token, out var cachedFormattingArray))
                     {
-                        currentLanguage.stringsByToken[token] = FormatString(token, value, cachedFormattingArray);
+                        tokensToFormatOnRoutine.Add((token, value));
                         continue;
                     }
                     //Otherwise just ensure the token exists.
                     currentLanguage.stringsByToken[token] = value;
+                }
+                if(tokensToFormatOnRoutine.Count > 0)
+                {
+                    MSUMain.instance.StartCoroutine(FormatTokensWhenConfigsAreBound(currentLanguage, tokensToFormatOnRoutine));
                 }
                 return;
             }
 #if DEBUG
             MSULog.Info($"No tokens are available on language {langName}...");
 #endif
+        }
+
+        
+        // We need to wait for the config system to be bound because most of the time FormatToken attributes are assigned to fields that end up being configured.
+        private static IEnumerator FormatTokensWhenConfigsAreBound(Language target, List<(string, string)> tokenValuePair)
+        {
+            while (!ConfigSystem.configsBound)
+            {
+                yield return null;
+            }
+
+            foreach (var (token, value) in tokenValuePair)
+            {
+                target.SetStringByToken(token, FormatString(token, value, _cachedFormattingArray[token]));
+            }
         }
 
         private static IEnumerator CreateFormattingArray()
