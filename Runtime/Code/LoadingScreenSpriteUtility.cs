@@ -2,6 +2,7 @@ using RoR2;
 using RoR2.UI;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace MSU
@@ -11,7 +12,7 @@ namespace MSU
     /// </summary>
     public static class LoadingScreenSpriteUtility
     {
-        private static List<GameObject> _walkGameObjects = new List<GameObject>();
+        private static List<SimpleSpriteAnimation> _anims = new List<SimpleSpriteAnimation>();
         private static HashSet<AssetBundle> _bundles = new HashSet<AssetBundle>();
 
         private static bool _hooked = false;
@@ -36,11 +37,7 @@ namespace MSU
             _bundles.Add(bundleLoadedOnAwake);
             foreach (var ssa in bundleLoadedOnAwake.LoadAllAssets<SimpleSpriteAnimation>())
             {
-                var instance = GameObject.Instantiate(_walkPrefab);
-
-                instance.name = ssa.name + "Animator";
-                instance.GetComponentInChildren<SimpleSpriteAnimator>().animation = ssa;
-                _walkGameObjects.Add(instance);
+                _anims.Add(ssa);
             }
         }
 
@@ -63,12 +60,7 @@ namespace MSU
             HookIfNeeded();
 
             _bundles.Add(parentBundle);
-
-            var instance = GameObject.Instantiate(_walkPrefab);
-
-            instance.name = animation.name + "Animator";
-            instance.GetComponentInChildren<SimpleSpriteAnimator>().animation = animation;
-            _walkGameObjects.Add(instance);
+            _anims.Add(animation);
         }
 
         private static void HookIfNeeded()
@@ -78,7 +70,9 @@ namespace MSU
 
             _hooked = true;
             On.RoR2.PickRandomObjectOnAwake.Awake += AddSpriteAnimations;
+#if !DEBUG
             On.RoR2.UI.MainMenu.MainMenuController.Awake += UnhookAndUnload;
+#endif
             _walkPrefab = MSUMain.msuAssetBundle.LoadAsset<GameObject>("CustomSpriteWalk");
         }
 
@@ -90,11 +84,7 @@ namespace MSU
             On.RoR2.UI.MainMenu.MainMenuController.Awake -= UnhookAndUnload;
             _walkPrefab = null;
 
-            foreach (var anim in _walkGameObjects)
-            {
-                GameObject.Destroy(anim);
-            }
-            _walkGameObjects.Clear();
+            _anims.Clear();
             foreach (var bundle in _bundles)
             {
                 bundle.Unload(true);
@@ -107,16 +97,18 @@ namespace MSU
             if (self.gameObject.name != "MiniScene")
                 goto callOrig;
 
-            foreach (var anim in _walkGameObjects)
+            foreach (var anim in _anims)
             {
                 try
                 {
-                    anim.transform.SetParent(self.transform);
+                    var instance = GameObject.Instantiate(_walkPrefab, self.transform);
 
-                    anim.transform.position = Vector3.zero;
-                    anim.transform.localPosition = new Vector3(96, 0, 0);
+                    instance.name = $"{anim}Animator";
+                    var animator = instance.GetComponentInChildren<SimpleSpriteAnimator>();
+                    animator.animation = anim;
+                    animator.target.sprite = anim.frames.FirstOrDefault().sprite;
 
-                    HG.ArrayUtils.ArrayAppend(ref self.ObjectsToSelect, anim);
+                    HG.ArrayUtils.ArrayAppend(ref self.ObjectsToSelect, instance);
                 }
                 catch (Exception e)
                 {
