@@ -19,7 +19,7 @@ namespace MSU
         public CharacterModel characterModel;
 
         private GameObject _effectInstance;
-        private EliteIndex _assignedIndex;
+        private EliteIndex _assignedIndex = EliteIndex.None;
 
         internal void AssignNewIndex(EliteIndex index)
         {
