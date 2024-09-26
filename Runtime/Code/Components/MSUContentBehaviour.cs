@@ -103,5 +103,10 @@ namespace MSU
                 _statItemBehaviors[i].RecalculateStatsEnd();
             }
         }
+
+        private void OnDestroy()
+        {
+            Destroy(eliteBehaviour);
+        }
     }
 }
