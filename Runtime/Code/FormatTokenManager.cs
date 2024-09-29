@@ -90,7 +90,15 @@ namespace MSU
 
             foreach (var (token, value) in tokenValuePair)
             {
-                target.SetStringByToken(token, FormatString(token, value, _cachedFormattingArray[token]));
+                try
+                {
+                    target.SetStringByToken(token, FormatString(token, value, _cachedFormattingArray[token]));
+                }
+                catch(Exception e)
+                {
+                    MSULog.Error($"Failed to format string value for token {token} in language {target.name}. unformatted string will be used.\n{e}");
+                    target.SetStringByToken(token, value);
+                }
             }
         }
 
@@ -221,16 +229,8 @@ namespace MSU
 
         private static string FormatString(string token, string value, FormatTokenAttribute[] formattingArray)
         {
-            try
-            {
-                object[] format = formattingArray.Select(att => att.GetFormattingValue()).ToArray();
-                return string.Format(value, format);
-            }
-            catch(Exception e)
-            {
-                MSULog.Error($"Failed to format string value for token {token}. unformatted string will be used.\n{e}");
-            }
-            return value;
+            object[] format = formattingArray.Select(att => att.GetFormattingValue()).ToArray();
+            return string.Format(value, format);
         }
     }
 }
