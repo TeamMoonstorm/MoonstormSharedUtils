@@ -45,7 +45,12 @@ namespace MSU
         /// The plugin's PluginInfo
         /// </summary>
         public static PluginInfo pluginInfo { get; private set; }
+
+        /// <summary>
+        /// Access to MSU's instance plugin.
+        /// </summary>
         public static MSUMain instance { get; private set; }
+
         /// <summary>
         /// The AssetBundle for MSU
         /// </summary>
