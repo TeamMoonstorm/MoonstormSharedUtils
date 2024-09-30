@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Moonstorm.Components
 {
+    [Obsolete]
     public class WindZoneController : MonoBehaviour
     {
         public static WindZoneController instance

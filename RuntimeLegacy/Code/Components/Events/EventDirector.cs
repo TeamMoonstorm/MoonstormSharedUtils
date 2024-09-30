@@ -1,6 +1,7 @@
 ﻿using BepInEx;
 using RoR2;
 using RoR2.ConVar;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -10,6 +11,7 @@ using UnityEngine.Networking;
 
 namespace Moonstorm.Components
 {
+    [Obsolete]
     [RequireComponent(typeof(NetworkStateMachine))]
     public class EventDirector : MonoBehaviour
     {

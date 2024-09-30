@@ -10,6 +10,7 @@ using static R2API.DirectorAPI;
 
 namespace Moonstorm
 {
+    [Obsolete]
     public class MSMonsterDirectorCard : CharacterSpawnCard
     {
         public struct PrefabComparer : IEqualityComparer<MSMonsterDirectorCard>

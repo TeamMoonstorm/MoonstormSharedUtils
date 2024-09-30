@@ -1,8 +1,10 @@
 ﻿using RoR2;
+using System;
 using UnityEngine;
 
 namespace Moonstorm
 {
+    [Obsolete]
     public class MSEliteDef : EliteDef
     {
         public VanillaEliteTier eliteTier;
@@ -16,6 +18,7 @@ namespace Moonstorm
         public GameObject effect;
     }
 
+    [Obsolete]
     public enum VanillaEliteTier
     {
         None = 0,

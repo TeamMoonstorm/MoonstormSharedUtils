@@ -5,6 +5,7 @@ using System;
 
 namespace Moonstorm
 {
+    [Obsolete]
     public class MSUnlockableDef : UnlockableDef
     {
         [Serializable]

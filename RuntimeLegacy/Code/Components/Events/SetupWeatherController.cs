@@ -1,9 +1,11 @@
 ﻿using RoR2;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Moonstorm.Components
 {
+    [Obsolete]
     public class SetupWeatherController : MonoBehaviour
     {
         //It could potentially be worth it to reverse this list and add only scenes that are guaranteed to work.

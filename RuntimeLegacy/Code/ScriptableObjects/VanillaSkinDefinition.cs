@@ -9,6 +9,7 @@ using Object = UnityEngine.Object;
 
 namespace Moonstorm
 {
+    [Obsolete]
     public class VanillaSkinDefinition : SkinDef
     {
         #region Internal Types

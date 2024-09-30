@@ -1,8 +1,10 @@
 using RoR2;
+using System;
 using UnityEngine;
 
 namespace Moonstorm.Components
 {
+    [Obsolete]
     [RequireComponent(typeof(CharacterBody))]
     public class MoonstormEliteBehavior : MonoBehaviour
     {

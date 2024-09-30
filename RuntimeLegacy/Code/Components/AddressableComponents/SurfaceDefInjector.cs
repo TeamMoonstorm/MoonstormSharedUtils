@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Moonstorm.Components.Addressables
 {
+    [Obsolete]
     public class SurfaceDefInjector : MonoBehaviour
     {
         public string surfaceDefAddress;

@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Moonstorm.Experimental
 {
+    [Obsolete]
     public class ItemTierPickupDisplayHelper : MonoBehaviour
     {
         private PickupDisplay display;

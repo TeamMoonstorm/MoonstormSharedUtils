@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace Moonstorm.Components
 {
+    [Obsolete]
     public class MoonstormContentManager : MonoBehaviour
     {
         public bool hasMaster;

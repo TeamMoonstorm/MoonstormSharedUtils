@@ -8,6 +8,7 @@ using UnityEngine;
 
 namespace Moonstorm
 {
+    [Obsolete]
     public class EventCard : ScriptableObject
     {
         public EventIndex EventIndex { get; internal set; }
