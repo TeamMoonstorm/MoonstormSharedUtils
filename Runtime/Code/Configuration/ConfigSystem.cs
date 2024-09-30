@@ -17,6 +17,10 @@ namespace MSU.Config
         private static readonly Dictionary<ConfigFile, BaseUnityPlugin> _configToPluginOwner = new Dictionary<ConfigFile, BaseUnityPlugin>();
         private static readonly Dictionary<string, ConfigFile> _identifierToConfigFile = new Dictionary<string, ConfigFile>(StringComparer.OrdinalIgnoreCase);
         private static readonly HashSet<ConfigFile> _configFilesWithSeparateRiskOfOptionsEntries = new HashSet<ConfigFile>();
+
+        /// <summary>
+        /// Returns true when the ConfigSystem has bound all the Configuration related systems, such as <see cref="ConfigureFieldAttribute"/> or <see cref="ConfiguredVariable.AutoConfigAttribute"/>
+        /// </summary>
         public static bool configsBound { get; private set; }
 
         /// <summary>

@@ -5,14 +5,24 @@
 * Adjusted the ``ShaderUtil`` class to also copy over the render queue for addressable material shaders
 * Addressable Material Shaders now work properly in the editor again
 * Removed accidental ``[Obsolete]`` attributes from ItemModule
-* ``ExtendedEliteDef``'s effect now gets tied to its buffdef, so that if the player gets the buff from wake of vultures the effect spawns properly
 * Fixed an issue where the ``MSUEliteBehaviour`` would spawn multiple effect prefabs.
+* Fixed an issue where the ``MSUEliteBehaviour`` would not destroy itself when the ``MSUContentManager`` behaviour was destroyed, causing effects to linger on
 * Fixed an issue where the ``FormatToken`` attribute wouldnt properly retrieve the corrent formatting value.
+* Fixed an Issue where ``ConfiguredVariable.configFileIdentifier`` was being treated as ReadOnly *Before* the config was bound.
+* Added log methods when an end user attempts to change a now read only property of a ``ConfiguredVariable``
+* Added an instance property to ``MSUMain``
+* Added a boolean property to the ``ConfigSystem``to check if the Configuration systems have been bound
+* Fixed various issues with the ``LoadingScreenSpriteUtility``
 * Changed around how language is loaded.
     * LanguageFiles are now loaded by the ``LanguageFileLoader``
     * Loading can either be synchronous or asynchronous.
     * Language tokens are added directly to the currently loaded language.
         * This fixes an issue where MSU would wrongfully unload the english language, causing issues with other mods.
+
+## Legacy:
+
+* Removed all the classes that do not inherit from ``UnityEngine.Object``.
+* All the classes and structs left have been marked as ``Obsolete``.
 
 # '2.0.0' - Seekers of the API
 
