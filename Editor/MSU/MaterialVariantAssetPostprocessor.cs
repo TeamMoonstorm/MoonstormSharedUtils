@@ -18,7 +18,7 @@ namespace MSU.Editor
                 }
 
                 var material = AssetDatabase.LoadAssetAtPath<Material>(path);
-                foreach(var matVariant in MaterialVariant._instances)
+                foreach(var matVariant in MaterialVariant.instances)
                 {
                     if(matVariant.originalMaterial != material)
                     {
