@@ -170,6 +170,9 @@ namespace MSU
 #if UNITY_EDITOR
         public void ApplyEditor()
         {
+            if(!originalMaterial)
+                return;
+                
             _material.shader = originalMaterial.shader;
             _material.CopyPropertiesFromMaterial(originalMaterial);
             _material.renderQueue = originalMaterial.renderQueue;

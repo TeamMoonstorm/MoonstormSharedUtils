@@ -35,6 +35,7 @@ namespace MSU.Editor.Inspectors
                     return;
                 }
 
+                _objectInstances.Add(targetMaterial.GetInstanceID());
                 if(AssetDatabase.GetMainAssetTypeAtPath(AssetDatabase.GetAssetPath(targetMaterial)) == typeof(MaterialVariant))
                 {
                     AssetDatabase.LoadAssetAtPath<MaterialVariant>(AssetDatabase.GetAssetPath(targetMaterial)).ApplyEditor();
