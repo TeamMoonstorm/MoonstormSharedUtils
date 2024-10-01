@@ -10,7 +10,6 @@ namespace MSU.Editor
         static string[] OnWillSaveAssets(string[] paths)
         {
             List<string> newPaths = new List<string>(paths);
-            Debug.Log("OnWillSaveAssets");
             foreach (string path in paths)
             {
                 if(!path.EndsWith(".mat"))

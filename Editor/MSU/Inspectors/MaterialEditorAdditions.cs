@@ -61,7 +61,7 @@ namespace MSU.Editor.Inspectors
             SerializedObject so = obj.serializedObject;
             SerializedProperty shaderKeywords = so.FindProperty("m_InvalidKeywords");
             shaderKeywords.arraySize = 2;
-            if(shaderKeywords.GetArrayElementAtIndex(0).stringValue == shaderKeywords.GetArrayElementAtIndex(1).stringValue)
+            if (shaderKeywords.GetArrayElementAtIndex(0).stringValue == shaderKeywords.GetArrayElementAtIndex(1).stringValue)
             {
                 shaderKeywords.GetArrayElementAtIndex(1).stringValue = string.Empty;
             }
@@ -69,14 +69,22 @@ namespace MSU.Editor.Inspectors
             EditorGUI.BeginChangeCheck();
             var addressKeyword = shaderKeywords.GetArrayElementAtIndex(0);
             addressKeyword.stringValue = EditorGUILayout.DelayedTextField(new GUIContent("Address"), addressKeyword.stringValue);
+            var addressKeywordStringValue = addressKeyword.stringValue;
             if (EditorGUI.EndChangeCheck() || shaderKeywords.GetArrayElementAtIndex(1).stringValue.IsNullOrEmptyOrWhiteSpace())
             {
                 var stubbedShaderKeyword = shaderKeywords.GetArrayElementAtIndex(1);
 
                 var mat = Addressables.LoadAssetAsync<Material>(addressKeyword.stringValue).WaitForCompletion();
-                if(mat && ShaderDictionary.addressableShaderNameToStubbed.TryGetValue(mat.shader.name, out var stubbed))
+                if (mat && ShaderDictionary.addressableShaderNameToStubbed.TryGetValue(mat.shader.name, out var stubbed))
                 {
                     stubbedShaderKeyword.stringValue = stubbed.name;
+                }
+                else
+                {
+                    shaderKeywords.arraySize = 1;
+                    shaderKeywords.GetArrayElementAtIndex(0).stringValue = addressKeywordStringValue;
+                    EditorGUILayout.HelpBox("ShaderDictionary is not populated, please populate with at least the stubbed shaders.", MessageType.Warning, true);
+                    MSULog.Warning($"Shader Dictionary is not populated, please populate with at least stubbed shaders");
                 }
             }
             so.ApplyModifiedProperties();
