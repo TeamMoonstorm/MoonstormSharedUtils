@@ -22,7 +22,12 @@ namespace MSU
 
         private void OnValidate()
         {
-            var nameCheck = $"mat{name}";
+            var nameCheck = $"{name}";
+            if(!nameCheck.StartsWith("mat"))
+            {
+                nameCheck = $"mat{nameCheck}";
+            }
+
             if(_material.name != nameCheck)
             {
                 _material.name = nameCheck;
