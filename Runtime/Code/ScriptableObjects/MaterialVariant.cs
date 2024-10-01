@@ -16,7 +16,7 @@ namespace MSU
         public static List<MaterialVariant> _instances = new List<MaterialVariant>();
         public Material originalMaterial;
 #endif
-
+        public Material material => _material;
         [SerializeField] internal Material _material;
         [SerializeField] private SerializedMaterialProperty[] _propertyOverrides;
 
