@@ -2,6 +2,8 @@ using UnityEngine;
 using System.Linq;
 using UnityEngine.Rendering;
 using System;
+using System.Collections.Generic;
+using System.Collections;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -11,6 +13,7 @@ namespace MSU
     public class MaterialVariant : ScriptableObject
     {
 #if UNITY_EDITOR
+        public static List<MaterialVariant> _instances = new List<MaterialVariant>();
         public Material originalMaterial;
 #endif
 
@@ -29,11 +32,45 @@ namespace MSU
             }
         }
 
+        public IEnumerator ApplyOverrides()
+        {
+            while (_material.shader.name == "MSU/AddressableMaterialShader")
+            {
+                yield return null;
+            }
+
+            foreach (var propOverride in _propertyOverrides)
+            {
+                switch (propOverride.propertyType)
+                {
+                    case ShaderPropertyType.Color:
+                        _material.SetColor(propOverride.propertyName, propOverride.GetValue<Color>());
+                        break;
+                    case ShaderPropertyType.Float:
+                    case ShaderPropertyType.Range:
+                        _material.SetFloat(propOverride.propertyName, propOverride.GetValue<float>());
+                        break;
+                    case ShaderPropertyType.Int:
+                        _material.SetInt(propOverride.propertyName, (int)propOverride.GetValue<float>());
+                        break;
+                    case ShaderPropertyType.Vector:
+                        _material.SetVector(propOverride.propertyName, propOverride.GetValue<Vector4>());
+                        break;
+                    case ShaderPropertyType.TexEnv:
+                        var texRef = propOverride.GetValue<TextureReference>();
+                        _material.SetTexture(propOverride.propertyName, texRef.texture);
+                        _material.SetTextureOffset(propOverride.propertyName, texRef.offset);
+                        _material.SetTextureScale(propOverride.propertyName, texRef.scale);
+                        break;
+                }
+            }
+        }
+
         [Serializable]
         internal struct SerializedMaterialProperty
         {
             public string propertyName;
-            public UnityEditor.ShaderUtil.ShaderPropertyType propertyType;
+            public ShaderPropertyType propertyType;
 
             [SerializeField]
             private float _floatValue;
@@ -48,16 +85,16 @@ namespace MSU
             {
                 switch(propertyType)
                 {
-                    case UnityEditor.ShaderUtil.ShaderPropertyType.Vector:
+                    case ShaderPropertyType.Vector:
                         return _vectorValue;
-                    case UnityEditor.ShaderUtil.ShaderPropertyType.Color:
+                    case ShaderPropertyType.Color:
                         return _colorValue;
-                    case UnityEditor.ShaderUtil.ShaderPropertyType.Int:
+                    case ShaderPropertyType.Int:
                         return (int)_floatValue;
-                    case UnityEditor.ShaderUtil.ShaderPropertyType.Range:
-                    case UnityEditor.ShaderUtil.ShaderPropertyType.Float:
+                    case ShaderPropertyType.Range:
+                    case ShaderPropertyType.Float:
                         return _floatValue;
-                    case UnityEditor.ShaderUtil.ShaderPropertyType.TexEnv:
+                    case ShaderPropertyType.TexEnv:
                         return _textureReference;
                 }
                 return null;
@@ -72,22 +109,22 @@ namespace MSU
             {
                 switch (value)
                 {
-                    case Color c when propertyType == UnityEditor.ShaderUtil.ShaderPropertyType.Color:
+                    case Color c when propertyType == ShaderPropertyType.Color:
                         _colorValue = c;
                         break;
-                    case Vector4 v when propertyType == UnityEditor.ShaderUtil.ShaderPropertyType.Vector:
+                    case Vector4 v when propertyType == ShaderPropertyType.Vector:
                         _vectorValue = v;
                         break;
-                    case float f when propertyType == UnityEditor.ShaderUtil.ShaderPropertyType.Range:
+                    case float f when propertyType == ShaderPropertyType.Range:
                         _floatValue = f;
                         break;
-                    case float f when propertyType == UnityEditor.ShaderUtil.ShaderPropertyType.Float:
+                    case float f when propertyType == ShaderPropertyType.Float:
                         _floatValue = f;
                         break;
-                    case int f when propertyType == UnityEditor.ShaderUtil.ShaderPropertyType.Int:
+                    case int f when propertyType == ShaderPropertyType.Int:
                         _floatValue = f;
                         break;
-                    case TextureReference tr when propertyType == UnityEditor.ShaderUtil.ShaderPropertyType.TexEnv:
+                    case TextureReference tr when propertyType == ShaderPropertyType.TexEnv:
                         _textureReference = tr;
                         break;
                 }
@@ -101,5 +138,73 @@ namespace MSU
             public Vector2 offset;
             public Vector2 scale;
         }
+
+        internal enum ShaderPropertyType
+        {
+            //
+            // Summary:
+            //     Color Property.
+            Color,
+            //
+            // Summary:
+            //     Vector Property.
+            Vector,
+            //
+            // Summary:
+            //     Float Property.
+            Float,
+            //
+            // Summary:
+            //     Range Property.
+            Range,
+            //
+            // Summary:
+            //     Texture Property.
+            TexEnv,
+            //
+            // Summary:
+            //     Int Property.
+            Int
+        }
+
+#if UNITY_EDITOR
+        public void ApplyEditor()
+        {
+            _material.shader = originalMaterial.shader;
+            _material.CopyPropertiesFromMaterial(originalMaterial);
+            _material.renderQueue = originalMaterial.renderQueue;
+
+            foreach(var propOverride in _propertyOverrides)
+            {
+                switch (propOverride.propertyType)
+                {
+                    case ShaderPropertyType.Color:
+                        _material.SetColor(propOverride.propertyName, propOverride.GetValue<Color>());
+                        break;
+                    case ShaderPropertyType.Float:
+                    case ShaderPropertyType.Range:
+                        _material.SetFloat(propOverride.propertyName, propOverride.GetValue<float>());
+                        break;
+                    case ShaderPropertyType.Int:
+                        _material.SetInt(propOverride.propertyName, (int)propOverride.GetValue<float>());
+                        break;
+                    case ShaderPropertyType.Vector:
+                        _material.SetVector(propOverride.propertyName, propOverride.GetValue<Vector4>());
+                        break;
+                    case ShaderPropertyType.TexEnv:
+                        var texRef = propOverride.GetValue<TextureReference>();
+                        _material.SetTexture(propOverride.propertyName, texRef.texture);
+                        _material.SetTextureOffset(propOverride.propertyName, texRef.offset);
+                        _material.SetTextureScale(propOverride.propertyName, texRef.scale);
+                        break;
+                }
+            }
+            EditorUtility.SetDirty(_material);
+        }
+        public MaterialVariant()
+        {
+            _instances.Add(this);
+        }
+#endif
     }
 }

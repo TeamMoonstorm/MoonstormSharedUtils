@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace MSU.Editor
 {
@@ -71,6 +72,43 @@ namespace MSU.Editor
             }
         }
         private static Dictionary<Shader, Shader> _hlslToYaml;
+
+        public static Dictionary<string, Shader> addressableShaderNameToStubbed
+        {
+            get
+            {
+                if(_addressableShaderNameToStubbed == null)
+                {
+                    var pairs = instance._shaderPairs;
+                    _addressableShaderNameToStubbed = new Dictionary<string, Shader>();
+                    foreach(var pair in pairs)
+                    {
+                        var hlsl = pair.hlsl.shader;
+
+                        if (!hlsl)
+                            continue;
+
+                        var substringName = hlsl.name.Substring("Stubbed".Length);
+                        Shader addressableShader = null;
+                        try
+                        {
+                            addressableShader = Addressables.LoadAssetAsync<Shader>(substringName + ".shader").WaitForCompletion();
+                        }
+                        catch(Exception e) { }
+
+                        if (!addressableShader)
+                            continue;
+
+                        if (_addressableShaderNameToStubbed.ContainsKey(addressableShader.name))
+                            continue;
+
+                        _addressableShaderNameToStubbed.Add(addressableShader.name, hlsl);
+                    }
+                }
+                return _addressableShaderNameToStubbed;
+            }
+        }
+        private static Dictionary<string, Shader> _addressableShaderNameToStubbed;
 
         public static Dictionary<string, string> stubbedShaderNameToYamlShaderName = new Dictionary<string, string>
         {
@@ -161,9 +199,11 @@ namespace MSU.Editor
         {
             _yamlToHlsl = null;
             _hlslToYaml = null;
+            _addressableShaderNameToStubbed = null;
 
             _ = yamlToHlsl;
             _ = hlslToYaml;
+            _ = addressableShaderNameToStubbed;
             DoSave();
         }
 

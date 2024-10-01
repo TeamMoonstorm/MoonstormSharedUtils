@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace MSU.Editor
 {
-    public static class MaterialShaderManager
+    public static class ShaderUpgradeDowngradeHandler
     {
         public static void Upgrade(Material material)
         {

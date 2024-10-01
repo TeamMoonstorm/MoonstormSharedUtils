@@ -1,11 +1,18 @@
-﻿using UnityEditor;
+using RoR2.Editor;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
-namespace MSU.Editor.ShaderSystem
+namespace MSU.Editor.Inspectors
 {
     [InitializeOnLoad]
-    public class MaterialEditorAdditions
+    public static class MaterialEditorAdditions
     {
+        public static event Action<MaterialEditor> onDraw;
+        public static HashSet<int> _objectInstances = new HashSet<int>();
         static MaterialEditorAdditions()
         {
             UnityEditor.Editor.finishedDefaultHeaderGUI += Draw;
@@ -13,22 +20,30 @@ namespace MSU.Editor.ShaderSystem
 
         private static void Draw(UnityEditor.Editor obj)
         {
-            if (!(obj is MaterialEditor materialEditor))
+            if(obj is not MaterialEditor materialEditor)
             {
+                _objectInstances.Clear();
                 return;
             }
 
-            var id = GUIUtility.GetControlID(new GUIContent("Pick shader asset"), FocusType.Passive);
-
             Material targetMaterial = materialEditor.target as Material;
-            Shader shader = targetMaterial.shader;
-            if (shader.name.StartsWith("Stubbed"))
+
+            if (targetMaterial.hideFlags.HasFlag(HideFlags.NotEditable))
             {
-                if (GUILayout.Button("Upgrade to Real Shader"))
+                if(_objectInstances.Contains(targetMaterial.GetInstanceID()))
                 {
-                    MaterialShaderManager.Upgrade((Material)materialEditor.target);
+                    return;
                 }
+
+                if(AssetDatabase.GetMainAssetTypeAtPath(AssetDatabase.GetAssetPath(targetMaterial)) == typeof(MaterialVariant))
+                {
+                    AssetDatabase.LoadAssetAtPath<MaterialVariant>(AssetDatabase.GetAssetPath(targetMaterial)).ApplyEditor();
+                }
+                return;
             }
+
+            Shader shader = targetMaterial.shader;
+
             if (shader.name == "MSU/AddressableMaterialShader")
             {
                 AddressableMaterialShaderHeader(obj);
@@ -37,16 +52,7 @@ namespace MSU.Editor.ShaderSystem
             {
                 UpgradeAddressableMaterialShader(obj);
             }
-
-            if (GUILayout.Button("Pick shader asset"))
-            {
-                EditorGUIUtility.ShowObjectPicker<Shader>(null, false, null, id);
-            }
-
-            if (Event.current.commandName == "ObjectSelectorUpdated" && EditorGUIUtility.GetObjectPickerControlID() == id)
-            {
-                materialEditor.SetShader(EditorGUIUtility.GetObjectPickerObject() as Shader, true);
-            }
+            onDraw?.Invoke(materialEditor);
         }
 
         private static void AddressableMaterialShaderHeader(UnityEditor.Editor obj)
@@ -54,8 +60,25 @@ namespace MSU.Editor.ShaderSystem
             ShowAboutLabel();
             SerializedObject so = obj.serializedObject;
             SerializedProperty shaderKeywords = so.FindProperty("m_InvalidKeywords");
-            shaderKeywords.arraySize = 1;
-            shaderKeywords.GetArrayElementAtIndex(0).stringValue = EditorGUILayout.TextField(new GUIContent("Address"), shaderKeywords.GetArrayElementAtIndex(0).stringValue);
+            shaderKeywords.arraySize = 2;
+            if(shaderKeywords.GetArrayElementAtIndex(0).stringValue == shaderKeywords.GetArrayElementAtIndex(1).stringValue)
+            {
+                shaderKeywords.GetArrayElementAtIndex(1).stringValue = string.Empty;
+            }
+
+            EditorGUI.BeginChangeCheck();
+            var addressKeyword = shaderKeywords.GetArrayElementAtIndex(0);
+            addressKeyword.stringValue = EditorGUILayout.DelayedTextField(new GUIContent("Address"), addressKeyword.stringValue);
+            if (EditorGUI.EndChangeCheck() || shaderKeywords.GetArrayElementAtIndex(1).stringValue.IsNullOrEmptyOrWhiteSpace())
+            {
+                var stubbedShaderKeyword = shaderKeywords.GetArrayElementAtIndex(1);
+
+                var mat = Addressables.LoadAssetAsync<Material>(addressKeyword.stringValue).WaitForCompletion();
+                if(mat && ShaderDictionary.addressableShaderNameToStubbed.TryGetValue(mat.shader.name, out var stubbed))
+                {
+                    stubbedShaderKeyword.stringValue = stubbed.name;
+                }
+            }
             so.ApplyModifiedProperties();
         }
 
