@@ -75,6 +75,10 @@ namespace MSU.Editor.Inspectors
             {
                 var stubbedShaderKeyword = shaderKeywords.GetArrayElementAtIndex(1);
 
+                var resourceLocations = Addressables.LoadResourceLocationsAsync(addressKeyword.stringValue).WaitForCompletion();
+                if(!resourceLocations.Any())
+                    return;
+                    
                 var mat = Addressables.LoadAssetAsync<Material>(addressKeyword.stringValue).WaitForCompletion();
                 if (mat && ShaderDictionary.addressableShaderNameToStubbed.TryGetValue(mat.shader.name, out var stubbed))
                 {
