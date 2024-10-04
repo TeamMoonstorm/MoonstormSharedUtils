@@ -19,6 +19,12 @@ namespace MSU
         [Tooltip("An overlay material for this elite, which will be applied to it's model.")]
         public Material overlayMaterial;
 
+        [Tooltip("If true, The color associated to this elite will be applied to the character's lights.")]
+        public bool applyLightColorOverrides;
+
+        [Tooltip("A Material that will be used to replace particle system's materials.")]
+        public Material particleReplacementMaterial;
+
         [Tooltip("An effect to spawn on the Elite.")]
         public GameObject effect;
 

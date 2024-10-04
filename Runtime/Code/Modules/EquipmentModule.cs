@@ -1,4 +1,6 @@
 ﻿using BepInEx;
+using Mono.Cecil.Cil;
+using MonoMod.Cil;
 using R2API;
 using RoR2;
 using System;
@@ -120,6 +122,7 @@ namespace MSU
             On.RoR2.EquipmentSlot.PerformEquipmentAction += PerformAction;
             On.RoR2.CharacterBody.OnEquipmentLost += CallOnEquipmentLost;
             On.RoR2.CharacterBody.OnEquipmentGained += CallOnEquipmentGained;
+            IL.RoR2.CharacterModel.InstanceUpdate += HandleEliteOverrides;
 
             var allEquips = new Dictionary<EquipmentDef, IEquipmentContentPiece>();
             var nonEliteEquips = new Dictionary<EquipmentDef, IEquipmentContentPiece>();
@@ -183,6 +186,36 @@ namespace MSU
             }
 
             moduleAvailability.MakeAvailable();
+        }
+
+        private static void HandleEliteOverrides(MonoMod.Cil.ILContext il)
+        {
+            ILCursor cursor = new ILCursor(il);
+
+            bool success = cursor.TryGotoNext(x => x.MatchLdarg(0),
+                x => x.MatchLdnull(),
+                x => x.MatchStfld<CharacterModel>(nameof(CharacterModel.particleMaterialOverride)));
+
+            if(!success)
+            {
+                MSULog.Fatal("Failed to match the required instructions for Elite light and particle material replacements!");
+                IL.RoR2.CharacterModel.InstanceUpdate -= HandleEliteOverrides;
+                return;
+            }
+
+            cursor.Emit(OpCodes.Ldarg_0);
+            cursor.EmitDelegate<Action<CharacterModel>>(HandleEliteOverridesInternal);
+
+            void HandleEliteOverridesInternal(CharacterModel characterModel)
+            {
+                var def = EliteCatalog.GetEliteDef(characterModel.myEliteIndex);
+
+                if(def is ExtendedEliteDef ed)
+                {
+                    characterModel.lightColorOverride = ed.applyLightColorOverrides ? ed.color : null;
+                    characterModel.particleMaterialOverride = ed.particleReplacementMaterial;
+                }
+            }
         }
 
         private static void CallOnEquipmentGained(On.RoR2.CharacterBody.orig_OnEquipmentGained orig, CharacterBody self, EquipmentDef equipmentDef)
