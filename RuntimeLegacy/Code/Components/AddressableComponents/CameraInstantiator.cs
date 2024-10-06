@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Moonstorm.Components.Addressables
 {
+    [Obsolete]
     public class CameraInstantiator : MonoBehaviour
     {
         public const string CAMERA_ADDRESS = "RoR2/Base/Core/Main Camera.prefab";

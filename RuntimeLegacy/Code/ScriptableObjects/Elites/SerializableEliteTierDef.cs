@@ -6,6 +6,7 @@ using static RoR2.CombatDirector;
 
 namespace Moonstorm
 {
+    [Obsolete]
     public class SerializableEliteTierDef : ScriptableObject
     {
         public float costMultiplier;

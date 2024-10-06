@@ -2,6 +2,7 @@
 
 namespace Moonstorm
 {
+    [Obsolete]
     [Flags]
     public enum EventFlags : uint
     {

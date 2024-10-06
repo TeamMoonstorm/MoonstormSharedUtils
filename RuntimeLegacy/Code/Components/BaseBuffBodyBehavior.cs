@@ -9,6 +9,7 @@ using UnityEngine.Networking;
 
 namespace Moonstorm.Components
 {
+    [Obsolete]
     public abstract class BaseBuffBodyBehavior : MonoBehaviour
     {
         private struct BuffTypePair

@@ -6,6 +6,7 @@ using Object = UnityEngine.Object;
 
 namespace Moonstorm.Components.Addressables
 {
+    [Obsolete]
     public class AddressableInjector : MonoBehaviour
     {
         public string address;

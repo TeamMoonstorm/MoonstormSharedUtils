@@ -1,8 +1,10 @@
 ﻿using RoR2.UI;
+using System;
 using UnityEngine;
 
 namespace Moonstorm.Components
 {
+    [Obsolete]
     public class EventTextController : MonoBehaviour
     {
         public enum EventFadeState

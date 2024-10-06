@@ -1,9 +1,11 @@
 ﻿using RoR2;
+using System;
 using System.Linq;
 using UnityEngine;
 
 namespace Moonstorm.Components
 {
+    [Obsolete]
     [RequireComponent(typeof(CharacterModel))]
     public class MoonstormIDH : MonoBehaviour
     {

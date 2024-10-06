@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Moonstorm
 {
+    [Obsolete]
     public class EventDirectorCategorySelection : ScriptableObject
     {
         [Serializable]

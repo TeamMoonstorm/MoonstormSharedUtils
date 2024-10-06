@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace Moonstorm
 {
+    [Obsolete]
     public class NamedIDRS : ScriptableObject
     {
         [Serializable]

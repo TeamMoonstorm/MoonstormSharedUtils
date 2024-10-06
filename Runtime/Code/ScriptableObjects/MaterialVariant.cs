@@ -68,7 +68,7 @@ namespace MSU
         {
             while (_material.shader.name == "MSU/AddressableMaterialShader")
             {
-                yield return new WaitForEndOfFrame();
+                yield return null;
             }
 
             foreach (var propOverride in _propertyOverrides)

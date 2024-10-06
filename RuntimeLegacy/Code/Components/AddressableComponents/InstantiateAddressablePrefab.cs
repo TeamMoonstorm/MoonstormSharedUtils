@@ -5,6 +5,7 @@ using UnityEngine.Networking;
 namespace Moonstorm.Components.Addressables
 {
 
+    [Obsolete]
     public class InstantiateAddressablePrefab : MonoBehaviour
     {
         [SerializeField] private string address;
