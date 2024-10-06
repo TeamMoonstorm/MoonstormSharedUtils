@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using UnityEngine;
 using SearchableAttribute = HG.Reflection.SearchableAttribute;
 
 namespace MSU
@@ -22,7 +23,7 @@ namespace MSU
 
             while (!subroutine.IsDone())
             {
-                yield return null;
+                yield return new WaitForEndOfFrame();
             }
 
             foreach(var lang in Language.GetAllLanguages())
@@ -85,7 +86,7 @@ namespace MSU
         {
             while (!ConfigSystem.configsBound)
             {
-                yield return null;
+                yield return new WaitForEndOfFrame();
             }
 
             foreach (var (token, value) in tokenValuePair)
@@ -109,7 +110,7 @@ namespace MSU
 
             var subroutine = GetFormatTokenLists(propertyFormatTokens, fieldFormatTokens);
             while (!subroutine.IsDone())
-                yield return null;
+                yield return new WaitForEndOfFrame();
 
             Dictionary<string, FormatTokenAttribute[]> formattingDictionaryFromFields = new Dictionary<string, FormatTokenAttribute[]>();
             Dictionary<string, FormatTokenAttribute[]> formattingDictionaryFromProperties = new Dictionary<string, FormatTokenAttribute[]>();
@@ -120,19 +121,19 @@ namespace MSU
 
             parallelSubroutine.Start();
             while (!parallelSubroutine.isDone)
-                yield return null;
+                yield return new WaitForEndOfFrame();
 
             _cachedFormattingArray = new Dictionary<string, FormatTokenAttribute[]>();
 
             foreach (var (token, formattingArray) in formattingDictionaryFromFields)
             {
-                yield return null;
+                yield return new WaitForEndOfFrame();
                 //Add token from dictionary, this replaces the array, but that's ok as this dictionary is currently empty
                 _cachedFormattingArray[token] = Array.Empty<FormatTokenAttribute>();
                 var arrayFromCache = _cachedFormattingArray[token];
                 for (int i = 0; i < formattingArray.Length; i++)
                 {
-                    yield return null;
+                    yield return new WaitForEndOfFrame();
                     //Resize if needed
                     if (arrayFromCache.Length < i + 1)
                     {
@@ -147,7 +148,7 @@ namespace MSU
             }
             foreach (var (token, formattingArray) in formattingDictionaryFromProperties)
             {
-                yield return null;
+                yield return new WaitForEndOfFrame();
                 //We do not overwrite the array if the token is already in the dictionary.
                 //This is due to the fact that the kye may already be in the dictionary due to being created from fields with the token modifiers
 
@@ -158,7 +159,7 @@ namespace MSU
                 var arrayFromCache = _cachedFormattingArray[token];
                 for (int i = 0; i < formattingArray.Length; i++)
                 {
-                    yield return null;
+                    yield return new WaitForEndOfFrame();
                     if (arrayFromCache.Length < i + 1)
                     {
                         Array.Resize(ref arrayFromCache, i + 1);
@@ -176,7 +177,7 @@ namespace MSU
             var allTokenModifiers = SearchableAttribute.GetInstances<FormatTokenAttribute>() ?? new List<SearchableAttribute>();
             foreach (FormatTokenAttribute formatToken in allTokenModifiers.Cast<FormatTokenAttribute>())
             {
-                yield return null;
+                yield return new WaitForEndOfFrame();
                 if (formatToken.target is FieldInfo)
                 {
                     fieldFormatTokens.Add(formatToken);
@@ -195,7 +196,7 @@ namespace MSU
 
             foreach (FormatTokenAttribute formatToken in source)
             {
-                yield return null;
+                yield return new WaitForEndOfFrame();
                 try
                 {
                     var token = formatToken.languageToken;

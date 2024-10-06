@@ -31,11 +31,11 @@ namespace MSU
 
             helper.Start();
             while (!helper.IsDone())
-                yield return null;
+                yield return new WaitForEndOfFrame();
 
             var addressableMaterialLoadingRoutine = LoadAddressableMaterialShadersAsync(list);
             while (addressableMaterialLoadingRoutine.MoveNext())
-                yield return null;
+                yield return new WaitForEndOfFrame();
 
         }
 
@@ -50,11 +50,11 @@ namespace MSU
 
             var enumerator = LoadMaterialsFromBundle(bundle, list, IsShaderAddressableShader);
             while (enumerator.MoveNext())
-                yield return null;
+                yield return new WaitForEndOfFrame();
 
             var addressableMaterialLoadingRoutine = LoadAddressableMaterialShadersAsync(list);
             while (addressableMaterialLoadingRoutine.MoveNext())
-                yield return null;
+                yield return new WaitForEndOfFrame();
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace MSU
 
             helper.Start();
             while (!helper.IsDone())
-                yield return null;
+                yield return new WaitForEndOfFrame();
         }
 
         /// <summary>
@@ -100,12 +100,12 @@ namespace MSU
 
             helper1.Start();
             while (!helper1.IsDone())
-                yield return null;
+                yield return new WaitForEndOfFrame();
 
             var enumerator = SwapStubbedShadersAsync(materials);
 
             while (enumerator.MoveNext())
-                yield return null;
+                yield return new WaitForEndOfFrame();
 
         }
 
@@ -133,7 +133,7 @@ namespace MSU
 
             helper.Start();
             while (!helper.IsDone())
-                yield return null;
+                yield return new WaitForEndOfFrame();
         }
 
         /// <summary>
@@ -150,7 +150,7 @@ namespace MSU
 
             var request = bundle.LoadAllAssetsAsync<Material>();
             while (!request.isDone)
-                yield return null;
+                yield return new WaitForEndOfFrame();
 
             materials.AddRange(request.allAssets.OfType<Material>().Where(filter));
         }
@@ -167,7 +167,7 @@ namespace MSU
 
             var asyncOp = Addressables.LoadAssetAsync<Material>(address);
             while (!asyncOp.IsDone)
-                yield return null;
+                yield return new WaitForEndOfFrame();
 
             var loadedMat = asyncOp.Result;
             if (!loadedMat)

@@ -78,7 +78,7 @@ namespace MSU
                 var enumerator = InitializeItemTiersFromProvider(plugin, provider);
                 while (enumerator.MoveNext())
                 {
-                    yield return null;
+                    yield return new WaitForEndOfFrame();
                 }
             }
         }
@@ -93,13 +93,20 @@ namespace MSU
 
             var subroutine = BuildItemListForEachItemTier();
             while (!subroutine.IsDone())
-                yield return null;
+                yield return new WaitForEndOfFrame();
 
+            moduleAvailability.MakeAvailable();
+
+            if(moonstormItemTiers.Count == 0)
+            {
+#if DEBUG
+                MSULog.Info("Not doing ItemTierModule hooks since no ItemTiers are registered.");
+#endif
+                yield break;
+            }
             Run.onRunStartGlobal += BuildDropTable;
             On.RoR2.PickupDisplay.DestroyModel += DestroyCustomModel;
             On.RoR2.PickupDisplay.RebuildModel += RebuildCustomModel;
-
-            moduleAvailability.MakeAvailable();
         }
 
         private static void RebuildCustomModel(On.RoR2.PickupDisplay.orig_RebuildModel orig, PickupDisplay self, GameObject modelObjectOverride)
@@ -135,11 +142,11 @@ namespace MSU
         {
             foreach (var (itemTierDef, itemTierContentPiece) in moonstormItemTiers)
             {
-                yield return null;
+                yield return new WaitForEndOfFrame();
                 itemTierContentPiece.itemsWithThisTier.Clear();
                 foreach (ItemDef itemDef in ItemCatalog.allItemDefs)
                 {
-                    yield return null;
+                    yield return new WaitForEndOfFrame();
                     if (itemDef.tier == itemTierDef.tier)
                     {
                         itemTierContentPiece.itemsWithThisTier.Add(itemDef.itemIndex);
@@ -165,7 +172,7 @@ namespace MSU
 
             helper.Start();
             while (!helper.IsDone())
-                yield return null;
+                yield return new WaitForEndOfFrame();
 
             InitializeItemTiers(plugin, itemTiers, provider);
         }

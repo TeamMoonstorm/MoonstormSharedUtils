@@ -63,6 +63,26 @@ namespace MSU
             _anims.Add(animation);
         }
 
+        /// <summary>
+        /// Adds the specified <see cref="SimpleSpriteAnimation"/> in <paramref name="animation"/> to the loading screen.
+        /// 
+        /// <para>The SimpleSpriteAnimation will be DESTROYED once the loading screen is finished.</para>
+        /// </summary>
+        /// <param name="animation">The sprite animation to add</param>
+        /// <param name="parentBundle">The bundle from which <paramref name="animation"/> was loaded. this bundle will be unloaded once the main menu appears.</param>
+        public static void AddSpriteAnimation(SimpleSpriteAnimation animation)
+        {
+            if (_alreadyPastLoadingScreen)
+            {
+                MSULog.Info("Too late! we're already past the loading screen...");
+                return;
+            }
+
+            HookIfNeeded();
+
+            _anims.Add(animation);
+        }
+
         private static void HookIfNeeded()
         {
             if (_hooked)
@@ -84,10 +104,15 @@ namespace MSU
             On.RoR2.UI.MainMenu.MainMenuController.Awake -= UnhookAndUnload;
             _walkPrefab = null;
 
+            foreach(var anim in _anims)
+            {
+                UnityEngine.Object.Destroy(anim);
+            }
             _anims.Clear();
             foreach (var bundle in _bundles)
             {
-                bundle.Unload(true);
+                if(bundle)
+                    bundle.Unload(true);
             }
             _bundles.Clear();
         }

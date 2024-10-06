@@ -60,7 +60,7 @@ namespace MSU
 
             var request = MSUMain.msuAssetBundle.LoadAssetAsync<GameObject>("GameplayEventText");
             while (!request.isDone)
-                yield return null;
+                yield return new WaitForEndOfFrame();
 
             _prefab = request.asset as GameObject;
             On.RoR2.UI.HUD.Awake += SpawnAndGetInstance;

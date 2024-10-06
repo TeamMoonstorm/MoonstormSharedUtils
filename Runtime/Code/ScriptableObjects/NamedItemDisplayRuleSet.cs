@@ -29,7 +29,7 @@ namespace MSU
         [SystemInitializer]
         private static IEnumerator SystemInitializer()
         {
-            yield return null;
+            yield return new WaitForEndOfFrame();
 
             ItemDisplayCatalog.catalogAvailability.CallWhenAvailable(() =>
             {

@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using UObject = UnityEngine.Object;
 
 namespace MSU
@@ -93,13 +94,13 @@ namespace MSU
 
             foreach (var contentProvider in contentProviders)
             {
-                yield return null;
+                yield return new WaitForEndOfFrame();
                 coroutine.Add(contentProvider.LoadGenericObjectsAsync, loadedObjects);
             }
 
             coroutine.Start();
             while (!coroutine.isDone)
-                yield return null;
+                yield return new WaitForEndOfFrame();
 
             _nameToGenericObjectIndex.Clear();
 

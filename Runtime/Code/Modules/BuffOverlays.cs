@@ -27,20 +27,29 @@ namespace MSU
         {
             dictionaryCreated = true;
             MSULog.Info("Initializing Buff Overlays...");
-            On.RoR2.CharacterModel.UpdateOverlays += AddBuffOverlay;
-            On.RoR2.CharacterBody.OnBuffFirstStackGained += ForceUpdateIfNeeded;
-            On.RoR2.CharacterBody.OnBuffFinalStackLost += ForceUpdateOnBuffFinalStackLostIfNeeded;
 
             Dictionary<BuffIndex, Material> readOnlyBase = new Dictionary<BuffIndex, Material>();
             foreach (var (bd, material) in _buffOverlays)
             {
-                yield return null;
+                yield return new WaitForEndOfFrame();
                 if (bd.buffIndex == BuffIndex.None)
                     continue;
 
                 readOnlyBase[bd.buffIndex] = material;
             }
             buffOverlayDictionary = new ReadOnlyDictionary<BuffIndex, Material>(readOnlyBase);
+
+            if(buffOverlayDictionary.Count == 0)
+            {
+#if DEBUG
+                MSULog.Info("Not doing BuffOverlays hooks since there are no buff overlays registered.");
+#endif
+                yield break;
+            }
+
+            On.RoR2.CharacterModel.UpdateOverlays += AddBuffOverlay;
+            On.RoR2.CharacterBody.OnBuffFirstStackGained += ForceUpdateIfNeeded;
+            On.RoR2.CharacterBody.OnBuffFinalStackLost += ForceUpdateOnBuffFinalStackLostIfNeeded;
         }
 
         private static void ForceUpdateOnBuffFinalStackLostIfNeeded(On.RoR2.CharacterBody.orig_OnBuffFinalStackLost orig, CharacterBody self, BuffDef buffDef)

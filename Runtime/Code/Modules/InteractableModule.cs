@@ -82,7 +82,7 @@ namespace MSU
                 var enumerator = InitializeInteractablesFromProvider(plugin, provider);
                 while (enumerator.MoveNext())
                 {
-                    yield return null;
+                    yield return new WaitForEndOfFrame();
                 }
             }
             yield break;
@@ -93,14 +93,20 @@ namespace MSU
         {
             MSULog.Info("Initializing the Interactable Module...");
 
-            yield return null;
-
-            DirectorAPI.InteractableActions += AddCustomInteractables;
+            yield return new WaitForEndOfFrame();
 
             moonstormInteractables = new ReadOnlyDictionary<IInteractable, IInteractableContentPiece>(_moonstormInteractables);
             _moonstormInteractables = null;
-
             moduleAvailability.MakeAvailable();
+
+            if(moonstormInteractables.Count == 0)
+            {
+#if DEBUG
+                MSULog.Info("Not doing InteractableModule hooks since no interactables are registered.");
+#endif
+                yield break;
+            }
+            DirectorAPI.InteractableActions += AddCustomInteractables;
         }
 
         private static IEnumerator InitializeInteractablesFromProvider(BaseUnityPlugin plugin, IContentPieceProvider<GameObject> provider)
@@ -120,7 +126,7 @@ namespace MSU
 
             helper.Start();
             while (!helper.IsDone())
-                yield return null;
+                yield return new WaitForEndOfFrame();
 
             InitializeInteractables(plugin, interactables, provider);
         }

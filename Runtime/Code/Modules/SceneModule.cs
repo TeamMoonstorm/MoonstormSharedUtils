@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using UnityEngine;
 
 namespace MSU
 {
@@ -76,7 +77,7 @@ namespace MSU
                 var enumerator = InitializeScenesFromProvider(plugin, provider);
                 while (enumerator.MoveNext())
                 {
-                    yield return null;
+                    yield return new WaitForEndOfFrame();
                 }
             }
             yield break;
@@ -87,15 +88,22 @@ namespace MSU
         {
             MSULog.Info("Initializing the Scene Module...");
 
-            yield return null;
+            yield return new WaitForEndOfFrame();
 
             moonstormScenes = new ReadOnlyDictionary<SceneDef, ISceneContentPiece>(_moonstormScenes);
             _moonstormScenes = null;
 
+            moduleAvailability.MakeAvailable();
+
+            if(moonstormScenes.Count == 0)
+            {
+#if DEBUG
+                MSULog.Info("Not doing SceneModule hooks since no Scenes are registered.");
+#endif
+                yield break;
+            }
             Stage.onServerStageBegin += Stage_onServerStageBegin;
             Stage.onServerStageComplete += Stage_onServerStageComplete;
-
-            moduleAvailability.MakeAvailable();
         }
 
         private static void Stage_onServerStageComplete(Stage obj)
@@ -135,7 +143,7 @@ namespace MSU
 
             helper.Start();
             while (!helper.IsDone())
-                yield return null;
+                yield return new WaitForEndOfFrame();
 
             InitializeScenes(plugin, _scenes, provider);
         }

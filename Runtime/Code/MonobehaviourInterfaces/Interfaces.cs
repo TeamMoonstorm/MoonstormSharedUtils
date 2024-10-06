@@ -3,6 +3,7 @@ using MonoMod.Cil;
 using RoR2;
 using System;
 using System.Collections;
+using UnityEngine;
 
 namespace MSU
 {
@@ -13,7 +14,7 @@ namespace MSU
         private static IEnumerator Init()
         {
             MSULog.Info("Setting up Interfaces");
-            yield return null;
+            yield return new WaitForEndOfFrame();
             IL.RoR2.HealthComponent.TakeDamageProcess += HealthComponent_TakeDamageProcess;
         }
 

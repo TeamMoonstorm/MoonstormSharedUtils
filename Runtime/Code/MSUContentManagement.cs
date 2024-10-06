@@ -20,7 +20,15 @@ namespace MSU
         private static IEnumerator SystemInit()
         {
             MSULog.Info("Initializing the generalized MSU Content Management system...");
-            yield return null;
+            yield return new WaitForEndOfFrame();
+
+            ParallelMultiStartCoroutine coroutine = new ParallelMultiStartCoroutine();
+            coroutine.Add(InitMSUContentBehaviourSystem);
+            coroutine.Add(InitBuffBehaviourSystem);
+
+            coroutine.Start();
+            while (!coroutine.isDone)
+                yield return new WaitForEndOfFrame();
 
             On.RoR2.CharacterBody.SetBuffCount += SetBuffBehaviourCount;
             CharacterBody.onBodyAwakeGlobal += OnBodyAwakeGlobal;
@@ -39,14 +47,6 @@ namespace MSU
                 On.RoR2.CharacterBody.RecalculateStats += RecalculateStats;
                 RecalculateStatsAPI.GetStatCoefficients += GetStatsCoefficients;
             }
-
-            ParallelMultiStartCoroutine coroutine = new ParallelMultiStartCoroutine();
-            coroutine.Add(InitMSUContentBehaviourSystem);
-            coroutine.Add(InitBuffBehaviourSystem);
-
-            coroutine.Start();
-            while (!coroutine.isDone)
-                yield return null;
         }
 
         private static void GetStatsCoefficients(CharacterBody sender, RecalculateStatsAPI.StatHookEventArgs args)
@@ -97,7 +97,7 @@ namespace MSU
         {
             for (int i = 0; i < BodyCatalog.bodyPrefabs.Length; i++)
             {
-                yield return null;
+                yield return new WaitForEndOfFrame();
                 try
                 {
                     GameObject bodyPrefab = BodyCatalog.bodyPrefabs[i];
@@ -131,7 +131,7 @@ namespace MSU
             Type buffDefType = typeof(BuffDef);
             foreach (BaseBuffBehaviour.BuffDefAssociation attribute in attributes)
             {
-                yield return null;
+                yield return new WaitForEndOfFrame();
                 MethodInfo methodInfo = (MethodInfo)attribute.target;
                 if (!methodInfo.IsStatic)
                     continue;

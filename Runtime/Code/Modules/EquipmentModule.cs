@@ -1,4 +1,4 @@
-﻿using BepInEx;
+using BepInEx;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using R2API;
@@ -109,7 +109,7 @@ namespace MSU
                 var enumerator = InitializeEquipmentsFromProvider(plugin, provider);
 
                 while (enumerator.MoveNext())
-                    yield return null;
+                    yield return new WaitForEndOfFrame();
             }
             yield break;
         }
@@ -119,11 +119,6 @@ namespace MSU
         {
             MSULog.Info("Initializing the Equipment Module...");
 
-            On.RoR2.EquipmentSlot.PerformEquipmentAction += PerformAction;
-            On.RoR2.CharacterBody.OnEquipmentLost += CallOnEquipmentLost;
-            On.RoR2.CharacterBody.OnEquipmentGained += CallOnEquipmentGained;
-            IL.RoR2.CharacterModel.InstanceUpdate += HandleEliteOverrides;
-
             var allEquips = new Dictionary<EquipmentDef, IEquipmentContentPiece>();
             var nonEliteEquips = new Dictionary<EquipmentDef, IEquipmentContentPiece>();
             var eliteEquips = new Dictionary<EquipmentDef, IEliteContentPiece>();
@@ -132,7 +127,7 @@ namespace MSU
 
             foreach (var (eqpDef, eqp) in _moonstormEquipments)
             {
-                yield return null;
+                yield return new WaitForEndOfFrame();
                 allEquips.Add(eqpDef, eqp);
                 if (eqp is IEliteContentPiece eliteContent)
                 {
@@ -140,7 +135,7 @@ namespace MSU
                     eliteDefs.AddRange(eliteContent.eliteDefs);
                     foreach(var eliteDef in eliteContent.eliteDefs)
                     {
-                        yield return null;
+                        yield return new WaitForEndOfFrame();
                         if(eliteDef is ExtendedEliteDef eed && eed.effect)
                         {
                             eliteIndexToEffect.Add(eed.eliteIndex, eed.effect);
@@ -162,7 +157,7 @@ namespace MSU
             CombatDirector.EliteTierDef[] vanillaTiers = R2API.EliteAPI.VanillaEliteTiers;
             foreach (EliteDef eliteDef in moonstormEliteDefs)
             {
-                yield return null;
+                yield return new WaitForEndOfFrame();
 
                 if (eliteDef is not ExtendedEliteDef eed)
                     continue;
@@ -186,6 +181,17 @@ namespace MSU
             }
 
             moduleAvailability.MakeAvailable();
+
+            if(allMoonstormEquipments.Count == 0)
+            {
+#if DEBUG
+                MSULog.Info("Not doing EquipmentModule hooks since no equipments are registered.");
+#endif
+                yield break;
+            }
+            On.RoR2.EquipmentSlot.PerformEquipmentAction += PerformAction;
+            On.RoR2.CharacterBody.OnEquipmentLost += CallOnEquipmentLost;
+            On.RoR2.CharacterBody.OnEquipmentGained += CallOnEquipmentGained;
         }
 
         private static void HandleEliteOverrides(MonoMod.Cil.ILContext il)
@@ -263,7 +269,7 @@ namespace MSU
 
             helper.Start();
             while (!helper.IsDone())
-                yield return null;
+                yield return new WaitForEndOfFrame();
 
             InitializeEquipments(plugin, equipments, provider);
         }

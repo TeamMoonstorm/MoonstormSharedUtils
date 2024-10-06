@@ -102,13 +102,13 @@ namespace MSU
             ParallelMultiStartCoroutine coroutine = new ParallelMultiStartCoroutine();
             foreach (var contentProvider in contentProviders)
             {
-                yield return null;
+                yield return new WaitForEndOfFrame();
                 coroutine.Add(contentProvider.LoadGameplayEventsAsync, loadedEvents);
             }
 
             coroutine.Start();
             while (!coroutine.isDone)
-                yield return null;
+                yield return new WaitForEndOfFrame();
 
             _nameToEventIndex.Clear();
 

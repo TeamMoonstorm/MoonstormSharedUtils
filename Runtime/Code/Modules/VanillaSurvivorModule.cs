@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using UnityEngine;
 
 namespace MSU
 {
@@ -75,7 +76,7 @@ namespace MSU
                 var enumerator = InitializeVanillaSurvivorContentPiecesFromProvider(plugin, provider);
                 while (enumerator.MoveNext())
                 {
-                    yield return null;
+                    yield return new WaitForEndOfFrame();
                 }
             }
             yield break;
@@ -86,7 +87,7 @@ namespace MSU
         {
             MSULog.Info("Initializing the VanillaSurvivor Module...");
 
-            yield return null;
+            yield return new WaitForEndOfFrame();
             moonstormVanillaSurvivorsContentPieces = new ReadOnlyDictionary<SurvivorDef, IVanillaSurvivorContentPiece[]>(_moonstormVanillaSurvivorsContentPieces);
             _moonstormVanillaSurvivorsContentPieces = null;
 
@@ -110,11 +111,11 @@ namespace MSU
 
             helper.Start();
             while (!helper.isDone)
-                yield return null;
+                yield return new WaitForEndOfFrame();
 
             var subroutine = InitializeVanillaSurvivorContentPieces(plugin, vanillaSurvivors, provider);
             while (!subroutine.IsDone())
-                yield return null;
+                yield return new WaitForEndOfFrame();
 
         }
 
@@ -170,7 +171,7 @@ namespace MSU
 
             initializeAsyncCoroutine.Start();
             while (!initializeAsyncCoroutine.isDone)
-                yield return null;
+                yield return new WaitForEndOfFrame();
         }
     }
 }

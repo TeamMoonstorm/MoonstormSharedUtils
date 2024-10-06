@@ -45,7 +45,7 @@ namespace MSU
             Type itemDefType = typeof(ItemDef);
             foreach (BaseItemMasterBehaviour.ItemDefAssociationAttribute itemDefAssociationAttribute in attributeList)
             {
-                yield return null;
+                yield return new WaitForEndOfFrame();
                 MethodInfo methodInfo;
                 if ((methodInfo = (itemDefAssociationAttribute.target as MethodInfo)) == null)
                 {
@@ -163,6 +163,14 @@ namespace MSU
             BaseItemMasterBehaviour._server.SetItemTypePairs(server);
             BaseItemMasterBehaviour._client.SetItemTypePairs(client);
             BaseItemMasterBehaviour._shared.SetItemTypePairs(shared);
+
+            if(_masterToItemBehaviors.Count == 0)
+            {
+#if DEBUG
+                MSULog.Info("Not doing BaseItemMasterBehaviour hooks since no BaseItemMasterBehaviours where found");
+#endif
+                yield break;
+            }
             On.RoR2.CharacterMaster.Awake += CharacterMaster_Awake;
             On.RoR2.CharacterMaster.OnDestroy += CharacterMaster_OnDestroy;
             On.RoR2.CharacterMaster.OnInventoryChanged += CharacterMaster_OnInventoryChanged;

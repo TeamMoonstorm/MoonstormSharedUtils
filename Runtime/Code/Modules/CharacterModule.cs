@@ -82,7 +82,7 @@ namespace MSU
                 var enumerator = InitializeCharactersFromProvider(plugin, provider);
                 while (enumerator.MoveNext())
                 {
-                    yield return null;
+                    yield return new WaitForEndOfFrame();
                 }
             }
             yield break;
@@ -93,14 +93,22 @@ namespace MSU
         {
             MSULog.Info("Initializing the Character Module...");
 
-            yield return null;
+            yield return new WaitForEndOfFrame();
 
-            DirectorAPI.MonsterActions += AddCustomMonsters;
 
             moonstormCharacters = new ReadOnlyDictionary<CharacterBody, ICharacterContentPiece>(_moonstormCharacters);
             _moonstormCharacters = null;
 
             moduleAvailability.MakeAvailable();
+
+            if(moonstormCharacters.Count == 0)
+            {
+#if DEBUG
+                MSULog.Info("Not doing CharacterModule hooks since there are no characters registered.");
+#endif
+                yield break;
+            }
+            DirectorAPI.MonsterActions += AddCustomMonsters;
         }
 
         private static IEnumerator InitializeCharactersFromProvider(BaseUnityPlugin plugin, IContentPieceProvider<GameObject> provider)
@@ -121,7 +129,7 @@ namespace MSU
 
             helper.Start();
             while (!helper.IsDone())
-                yield return null;
+                yield return new WaitForEndOfFrame();
 
             InitializeCharacters(plugin, characters, provider);
         }

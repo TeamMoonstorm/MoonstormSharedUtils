@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using UnityEngine;
 using UnityEngine.Networking;
 
 namespace MSU
@@ -79,7 +80,7 @@ namespace MSU
                 var enumerator = InitializeArtifactsFromProvider(plugin, provider);
                 while (enumerator.MoveNext())
                 {
-                    yield return null;
+                    yield return new WaitForEndOfFrame();
                 }
             }
             yield break;
@@ -90,14 +91,22 @@ namespace MSU
         {
             MSULog.Info("Initializing the Artifact Module...");
 
-            yield return null;
+            yield return new WaitForEndOfFrame();
 
             moonstormArtifacts = new ReadOnlyDictionary<ArtifactDef, IArtifactContentPiece>(_moonstormArtifacts);
             _moonstormArtifacts = null;
+            moduleAvailability.MakeAvailable();
+
+            if (moonstormArtifacts.Count == 0)
+            {
+#if DEBUG
+                MSULog.Info("Not doing ArtifactModule hooks since no artifacts are registered.");
+#endif
+                yield break;
+            }
 
             RunArtifactManager.onArtifactEnabledGlobal += OnArtifactEnabled;
             RunArtifactManager.onArtifactDisabledGlobal += OnArtifactDisabled; ;
-            moduleAvailability.MakeAvailable();
         }
 
         private static void OnArtifactDisabled(RunArtifactManager runArtifactManager, ArtifactDef artifactDef)
@@ -145,7 +154,7 @@ namespace MSU
 
             helper.Start();
             while (!helper.IsDone())
-                yield return null;
+                yield return new WaitForEndOfFrame();
 
             InitializeArtifacts(plugin, artifacts, provider);
         }

@@ -56,7 +56,7 @@ namespace MSU
             var languageNameToJSONPaths = GetLanguageNameToJSONPaths(directory);
             var subroutine = ReadTextAndAddTokensAsync(languageNameToJSONPaths);
             while (!subroutine.IsDone())
-                yield return null;
+                yield return new WaitForEndOfFrame();
 
         }
 
@@ -140,7 +140,7 @@ namespace MSU
                 }
                 coroutine.Start();
                 while (!coroutine.isDone)
-                    yield return null;
+                    yield return new WaitForEndOfFrame();
 
                 var jsonTexts = containers.Select(c => c.value).ToArray();
                 for(int i = 0; i < jsonTexts.Length; i++)
@@ -173,7 +173,7 @@ namespace MSU
             {
                 var task = File.ReadAllTextAsync(path);
                 while (!task.IsCompleted)
-                    yield return null;
+                    yield return new WaitForEndOfFrame();
 
                 output.value = task.Result;
                 yield break;

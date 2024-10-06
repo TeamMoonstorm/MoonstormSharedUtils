@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using UnityEngine;
 using UnityEngine.AddressableAssets;
 
 namespace MSU
@@ -79,7 +80,7 @@ namespace MSU
                 var enumerator = InitializeItemsFromProvider(plugin, provider);
                 while (enumerator.MoveNext())
                 {
-                    yield return null;
+                    yield return new WaitForEndOfFrame();
                 }
             }
             yield break;
@@ -90,7 +91,7 @@ namespace MSU
         {
             MSULog.Info("Initializing the Item Module...");
 
-            yield return null;
+            yield return new WaitForEndOfFrame();
 
             moonstormItems = new ReadOnlyDictionary<ItemDef, IItemContentPiece>(_moonstormItems);
             _moonstormItems = null;
@@ -115,7 +116,7 @@ namespace MSU
 
             helper.Start();
             while (!helper.IsDone())
-                yield return null;
+                yield return new WaitForEndOfFrame();
 
             InitializeItems(plugin, items, provider);
         }
@@ -225,6 +226,8 @@ namespace MSU
             existingInfections1 = existingInfections1.Union(bossVoidPairs).ToArray();
             ItemCatalog.itemRelationships[contagiousItem] = existingInfections1;
             orig();
+
+            On.RoR2.Items.ContagiousItemManager.Init -= AddVoidItems;
         }
 
         static ItemModule()
