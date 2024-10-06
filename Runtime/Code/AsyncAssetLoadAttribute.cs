@@ -20,11 +20,7 @@ namespace MSU
         /// </summary>
         public MethodInfo targetMethodInfo => target as MethodInfo;
 
-        /// <summary>
-        /// Creates a <see cref="ParallelMultiStartCoroutine"/> that contains all of your mod's instances of <see cref="AsyncAssetLoadAttribute"/>, which then can be called using <see cref="ParallelMultiStartCoroutine.Start"/> and all the methods decorated with the attribute will execute, which then can be awaited as needed.
-        /// </summary>
-        /// <param name="plugin">The plugin to use for the scanning process</param>
-        /// <returns>A ParallelMultiStartCoroutine that can be started and then Awaited.</returns>
+        [Obsolete("Use \"CreateParallelCoroutineForMod\"")]
         public static ParallelMultiStartCoroutine CreateCoroutineForMod(BaseUnityPlugin plugin)
         {
             var instances = SearchableAttribute.GetInstances<AsyncAssetLoadAttribute>();
@@ -41,12 +37,39 @@ namespace MSU
             return CreateMultiStartCoroutineForMod(attributesForMod);
         }
 
+        public static ParallelCoroutine CreateParallelCoroutineForMod(BaseUnityPlugin plugin)
+        {
+            var instances = SearchableAttribute.GetInstances<AsyncAssetLoadAttribute>();
+            if (instances == null)
+            {
+#if DEBUG
+                MSULog.Info($"No instances of AsyncAssetLoadAttribute found in the current runtime context.");
+#endif
+                return new ParallelCoroutine();
+            }
+
+            List<AsyncAssetLoadAttribute> attributesForMod = instances.Where(IsValid).Where(att => IsFromMod((AsyncAssetLoadAttribute)att, plugin)).Cast<AsyncAssetLoadAttribute>().ToList();
+
+            return CreateCoroutineForMod(attributesForMod);
+        }
+
+        [Obsolete]
         private static ParallelMultiStartCoroutine CreateMultiStartCoroutineForMod(List<AsyncAssetLoadAttribute> attributes)
         {
             var result = new ParallelMultiStartCoroutine();
             foreach (var attribute in attributes)
             {
                 result.Add((Func<IEnumerator>)attribute.targetMethodInfo.CreateDelegate(typeof(Func<IEnumerator>)));
+            }
+            return result;
+        }
+
+        private static ParallelCoroutine CreateCoroutineForMod(List<AsyncAssetLoadAttribute> attributes)
+        {
+            var result = new ParallelCoroutine();
+            foreach (var attribute in attributes)
+            {
+                result.Add((IEnumerator)attribute.targetMethodInfo.Invoke(null, null));
             }
             return result;
         }

@@ -112,7 +112,7 @@ namespace MSU
         [SystemInitializer]
         private static IEnumerator SystemInit()
         {
-            yield return new WaitForEndOfFrame();
+            yield return null;
 
             RoR2BepInExPack.VanillaFixes.SaferAchievementManager.OnCollectAchievementDefs += AddInstances;
         }

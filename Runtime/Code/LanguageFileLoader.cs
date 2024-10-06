@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 namespace MSU
@@ -56,7 +57,7 @@ namespace MSU
             var languageNameToJSONPaths = GetLanguageNameToJSONPaths(directory);
             var subroutine = ReadTextAndAddTokensAsync(languageNameToJSONPaths);
             while (!subroutine.IsDone())
-                yield return new WaitForEndOfFrame();
+                yield return null;
 
         }
 
@@ -132,15 +133,15 @@ namespace MSU
 
                 var dictForLang = _languageNameToRawTokenData[languageName];
                 StringContainer[] containers = new StringContainer[jsonFiles.Count];
-                ParallelMultiStartCoroutine coroutine = new ParallelMultiStartCoroutine();
+                ParallelCoroutine coroutine = new ParallelCoroutine();
                 for(int i = 0; i <  jsonFiles.Count; i++)
                 {
                     containers[i] = new StringContainer();
-                    coroutine.Add(ReadTextAsync, jsonFiles[i], containers[i]);
+                    coroutine.Add(ReadTextAsync(jsonFiles[i], containers[i]));
                 }
-                coroutine.Start();
+
                 while (!coroutine.isDone)
-                    yield return new WaitForEndOfFrame();
+                    yield return null;
 
                 var jsonTexts = containers.Select(c => c.value).ToArray();
                 for(int i = 0; i < jsonTexts.Length; i++)
@@ -173,7 +174,7 @@ namespace MSU
             {
                 var task = File.ReadAllTextAsync(path);
                 while (!task.IsCompleted)
-                    yield return new WaitForEndOfFrame();
+                    yield return null;
 
                 output.value = task.Result;
                 yield break;

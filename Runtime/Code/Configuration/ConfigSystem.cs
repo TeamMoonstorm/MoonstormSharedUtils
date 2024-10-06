@@ -96,7 +96,7 @@ namespace MSU.Config
         [SystemInitializer]
         private static IEnumerator Init()
         {
-            yield return new WaitForEndOfFrame();
+            yield return null;
 
             RoR2Application.onLoad += BindConfig;
         }

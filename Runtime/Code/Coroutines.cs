@@ -93,7 +93,7 @@ namespace MSU
 
         private IEnumerator InternalCoroutine()
         {
-            yield return new WaitForEndOfFrame();
+            yield return null;
 
             bool encounteredUnfinished = true;
             while (encounteredUnfinished)
@@ -144,26 +144,29 @@ namespace MSU
 
     /// <summary>
     /// A version of RoR2's <see cref="HG.Coroutines.ParallelProgressCoroutine"/> which does not have a progress receiver.
-    /// 
-    /// <para>See also <see cref="ParallelMultiStartCoroutine"/></para>
     /// </summary>
     public class ParallelCoroutine : IEnumerator
     {
         private readonly List<IEnumerator> _coroutinesList = new List<IEnumerator>();
 
-        private IEnumerator internalCoroutine;
+        private IEnumerator _internalCoroutine;
+
+        /// <summary>
+        /// returns true if all the coroutines have finished executing.
+        /// </summary>
+        public bool isDone => this.IsDone();
 
         /// <summary>
         /// The current object that was yielded
         /// </summary>
-        public object Current => internalCoroutine.Current;
+        public object Current => _internalCoroutine.Current;
 
         /// <summary>
         /// Constructor for Parallel Coroutine
         /// </summary>
         public ParallelCoroutine()
         {
-            internalCoroutine = InternalCoroutine();
+            _internalCoroutine = InternalCoroutine();
         }
 
         /// <summary>
@@ -181,7 +184,7 @@ namespace MSU
         /// <returns>True if the coroutines are NOT finished, false if the coroutines ARE finished</returns>
         public bool MoveNext()
         {
-            return internalCoroutine.MoveNext();
+            return _internalCoroutine.MoveNext();
         }
 
         /// <summary>
@@ -189,12 +192,12 @@ namespace MSU
         /// </summary>
         public void Reset()
         {
-            internalCoroutine.Reset();
+            _internalCoroutine.Reset();
         }
 
         private IEnumerator InternalCoroutine()
         {
-            yield return new WaitForEndOfFrame();
+            yield return null;
             bool encounteredUnfinished = true;
             while (encounteredUnfinished)
             {

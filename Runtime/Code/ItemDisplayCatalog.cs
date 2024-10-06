@@ -42,7 +42,7 @@ namespace MSU
         [SystemInitializer]
         private static IEnumerator SystemInitializer()
         {
-            yield return new WaitForEndOfFrame();
+            yield return null;
 
             RoR2Application.onLoad += () =>
             {

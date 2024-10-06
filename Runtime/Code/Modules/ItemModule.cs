@@ -80,7 +80,7 @@ namespace MSU
                 var enumerator = InitializeItemsFromProvider(plugin, provider);
                 while (enumerator.MoveNext())
                 {
-                    yield return new WaitForEndOfFrame();
+                    yield return null;
                 }
             }
             yield break;
@@ -91,7 +91,7 @@ namespace MSU
         {
             MSULog.Info("Initializing the Item Module...");
 
-            yield return new WaitForEndOfFrame();
+            yield return null;
 
             moonstormItems = new ReadOnlyDictionary<ItemDef, IItemContentPiece>(_moonstormItems);
             _moonstormItems = null;
@@ -104,19 +104,18 @@ namespace MSU
             IContentPiece<ItemDef>[] content = provider.GetContents();
             List<IContentPiece<ItemDef>> items = new List<IContentPiece<ItemDef>>();
 
-            var helper = new ParallelMultiStartCoroutine();
+            var helper = new ParallelCoroutine();
             foreach (var item in content)
             {
                 if (!item.IsAvailable(provider.contentPack))
                     continue;
 
                 items.Add(item);
-                helper.Add(item.LoadContentAsync);
+                helper.Add(item.LoadContentAsync());
             }
 
-            helper.Start();
             while (!helper.IsDone())
-                yield return new WaitForEndOfFrame();
+                yield return null;
 
             InitializeItems(plugin, items, provider);
         }

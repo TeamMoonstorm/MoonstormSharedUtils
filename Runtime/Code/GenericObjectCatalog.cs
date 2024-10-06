@@ -90,17 +90,16 @@ namespace MSU
 
             List<GenericObjectEntry> loadedObjects = new List<GenericObjectEntry>();
 
-            ParallelMultiStartCoroutine coroutine = new ParallelMultiStartCoroutine();
+            ParallelCoroutine coroutine = new ParallelCoroutine();
 
             foreach (var contentProvider in contentProviders)
             {
-                yield return new WaitForEndOfFrame();
-                coroutine.Add(contentProvider.LoadGenericObjectsAsync, loadedObjects);
+                yield return null;
+                coroutine.Add(contentProvider.LoadGenericObjectsAsync(loadedObjects));
             }
 
-            coroutine.Start();
             while (!coroutine.isDone)
-                yield return new WaitForEndOfFrame();
+                yield return null;
 
             _nameToGenericObjectIndex.Clear();
 

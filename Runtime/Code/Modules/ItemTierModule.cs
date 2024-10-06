@@ -78,7 +78,7 @@ namespace MSU
                 var enumerator = InitializeItemTiersFromProvider(plugin, provider);
                 while (enumerator.MoveNext())
                 {
-                    yield return new WaitForEndOfFrame();
+                    yield return null;
                 }
             }
         }
@@ -93,7 +93,7 @@ namespace MSU
 
             var subroutine = BuildItemListForEachItemTier();
             while (!subroutine.IsDone())
-                yield return new WaitForEndOfFrame();
+                yield return null;
 
             moduleAvailability.MakeAvailable();
 
@@ -142,11 +142,11 @@ namespace MSU
         {
             foreach (var (itemTierDef, itemTierContentPiece) in moonstormItemTiers)
             {
-                yield return new WaitForEndOfFrame();
+                yield return null;
                 itemTierContentPiece.itemsWithThisTier.Clear();
                 foreach (ItemDef itemDef in ItemCatalog.allItemDefs)
                 {
-                    yield return new WaitForEndOfFrame();
+                    yield return null;
                     if (itemDef.tier == itemTierDef.tier)
                     {
                         itemTierContentPiece.itemsWithThisTier.Add(itemDef.itemIndex);
@@ -160,19 +160,18 @@ namespace MSU
             IContentPiece<ItemTierDef>[] content = provider.GetContents();
             List<IContentPiece<ItemTierDef>> itemTiers = new List<IContentPiece<ItemTierDef>>();
 
-            var helper = new ParallelMultiStartCoroutine();
+            var helper = new ParallelCoroutine();
             foreach (var tier in content)
             {
                 if (!tier.IsAvailable(provider.contentPack))
                     continue;
 
                 itemTiers.Add(tier);
-                helper.Add(tier.LoadContentAsync);
+                helper.Add(tier.LoadContentAsync());
             }
 
-            helper.Start();
             while (!helper.IsDone())
-                yield return new WaitForEndOfFrame();
+                yield return null;
 
             InitializeItemTiers(plugin, itemTiers, provider);
         }

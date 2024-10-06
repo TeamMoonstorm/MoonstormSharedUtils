@@ -99,16 +99,15 @@ namespace MSU
 
             List<GameObject> loadedEvents = new List<GameObject>();
 
-            ParallelMultiStartCoroutine coroutine = new ParallelMultiStartCoroutine();
+            ParallelCoroutine coroutine = new ParallelCoroutine();
             foreach (var contentProvider in contentProviders)
             {
-                yield return new WaitForEndOfFrame();
-                coroutine.Add(contentProvider.LoadGameplayEventsAsync, loadedEvents);
+                yield return null;
+                coroutine.Add(contentProvider.LoadGameplayEventsAsync(loadedEvents));
             }
 
-            coroutine.Start();
             while (!coroutine.isDone)
-                yield return new WaitForEndOfFrame();
+                yield return null;
 
             _nameToEventIndex.Clear();
 

@@ -20,15 +20,14 @@ namespace MSU
         private static IEnumerator SystemInit()
         {
             MSULog.Info("Initializing the generalized MSU Content Management system...");
-            yield return new WaitForEndOfFrame();
+            yield return null;
 
-            ParallelMultiStartCoroutine coroutine = new ParallelMultiStartCoroutine();
-            coroutine.Add(InitMSUContentBehaviourSystem);
-            coroutine.Add(InitBuffBehaviourSystem);
+            ParallelCoroutine coroutine = new ParallelCoroutine();
+            coroutine.Add(InitMSUContentBehaviourSystem());
+            coroutine.Add(InitBuffBehaviourSystem());
 
-            coroutine.Start();
             while (!coroutine.isDone)
-                yield return new WaitForEndOfFrame();
+                yield return null;
 
             On.RoR2.CharacterBody.SetBuffCount += SetBuffBehaviourCount;
             CharacterBody.onBodyAwakeGlobal += OnBodyAwakeGlobal;
@@ -97,7 +96,7 @@ namespace MSU
         {
             for (int i = 0; i < BodyCatalog.bodyPrefabs.Length; i++)
             {
-                yield return new WaitForEndOfFrame();
+                yield return null;
                 try
                 {
                     GameObject bodyPrefab = BodyCatalog.bodyPrefabs[i];
@@ -131,7 +130,7 @@ namespace MSU
             Type buffDefType = typeof(BuffDef);
             foreach (BaseBuffBehaviour.BuffDefAssociation attribute in attributes)
             {
-                yield return new WaitForEndOfFrame();
+                yield return null;
                 MethodInfo methodInfo = (MethodInfo)attribute.target;
                 if (!methodInfo.IsStatic)
                     continue;

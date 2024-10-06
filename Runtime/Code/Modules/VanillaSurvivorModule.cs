@@ -76,7 +76,7 @@ namespace MSU
                 var enumerator = InitializeVanillaSurvivorContentPiecesFromProvider(plugin, provider);
                 while (enumerator.MoveNext())
                 {
-                    yield return new WaitForEndOfFrame();
+                    yield return null;
                 }
             }
             yield break;
@@ -87,7 +87,7 @@ namespace MSU
         {
             MSULog.Info("Initializing the VanillaSurvivor Module...");
 
-            yield return new WaitForEndOfFrame();
+            yield return null;
             moonstormVanillaSurvivorsContentPieces = new ReadOnlyDictionary<SurvivorDef, IVanillaSurvivorContentPiece[]>(_moonstormVanillaSurvivorsContentPieces);
             _moonstormVanillaSurvivorsContentPieces = null;
 
@@ -99,29 +99,28 @@ namespace MSU
             IVanillaSurvivorContentPiece[] content = provider.GetContents().OfType<IVanillaSurvivorContentPiece>().ToArray();
             List<IVanillaSurvivorContentPiece> vanillaSurvivors = new List<IVanillaSurvivorContentPiece>();
 
-            var helper = new ParallelMultiStartCoroutine();
+            var helper = new ParallelCoroutine();
             foreach (var addition in content)
             {
                 if (!addition.IsAvailable(provider.contentPack))
                     continue;
 
                 vanillaSurvivors.Add(addition);
-                helper.Add(addition.LoadContentAsync);
+                helper.Add(addition.LoadContentAsync());
             }
 
-            helper.Start();
             while (!helper.isDone)
-                yield return new WaitForEndOfFrame();
+                yield return null;
 
             var subroutine = InitializeVanillaSurvivorContentPieces(plugin, vanillaSurvivors, provider);
             while (!subroutine.IsDone())
-                yield return new WaitForEndOfFrame();
+                yield return null;
 
         }
 
         private static IEnumerator InitializeVanillaSurvivorContentPieces(BaseUnityPlugin plugin, List<IVanillaSurvivorContentPiece> contentPieces, IContentPieceProvider provider)
         {
-            ParallelMultiStartCoroutine initializeAsyncCoroutine = new ParallelMultiStartCoroutine();
+            ParallelCoroutine initializeAsyncCoroutine = new ParallelCoroutine();
             foreach (var piece in contentPieces)
             {
 #if DEBUG
@@ -129,7 +128,7 @@ namespace MSU
                 {
 #endif
                     piece.Initialize();
-                    initializeAsyncCoroutine.Add(piece.InitializeAsync);
+                    initializeAsyncCoroutine.Add(piece.InitializeAsync());
                     var survivorDef = piece.survivorDef;
 
                     if (piece is IContentPackModifier packModifier)
@@ -169,9 +168,8 @@ namespace MSU
 #endif
             }
 
-            initializeAsyncCoroutine.Start();
             while (!initializeAsyncCoroutine.isDone)
-                yield return new WaitForEndOfFrame();
+                yield return null;
         }
     }
 }

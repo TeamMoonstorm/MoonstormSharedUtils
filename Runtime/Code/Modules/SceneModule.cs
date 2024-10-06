@@ -77,7 +77,7 @@ namespace MSU
                 var enumerator = InitializeScenesFromProvider(plugin, provider);
                 while (enumerator.MoveNext())
                 {
-                    yield return new WaitForEndOfFrame();
+                    yield return null;
                 }
             }
             yield break;
@@ -88,7 +88,7 @@ namespace MSU
         {
             MSULog.Info("Initializing the Scene Module...");
 
-            yield return new WaitForEndOfFrame();
+            yield return null;
 
             moonstormScenes = new ReadOnlyDictionary<SceneDef, ISceneContentPiece>(_moonstormScenes);
             _moonstormScenes = null;
@@ -131,19 +131,18 @@ namespace MSU
             IContentPiece<SceneDef>[] content = provider.GetContents();
             List<IContentPiece<SceneDef>> _scenes = new List<IContentPiece<SceneDef>>();
 
-            var helper = new ParallelMultiStartCoroutine();
+            var helper = new ParallelCoroutine();
             foreach (var scene in content)
             {
                 if (!scene.IsAvailable(provider.contentPack))
                     continue;
 
                 _scenes.Add(scene);
-                helper.Add(scene.LoadContentAsync);
+                helper.Add(scene.LoadContentAsync());
             }
 
-            helper.Start();
             while (!helper.IsDone())
-                yield return new WaitForEndOfFrame();
+                yield return null;
 
             InitializeScenes(plugin, _scenes, provider);
         }

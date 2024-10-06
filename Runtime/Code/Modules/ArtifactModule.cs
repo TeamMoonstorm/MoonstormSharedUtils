@@ -80,7 +80,7 @@ namespace MSU
                 var enumerator = InitializeArtifactsFromProvider(plugin, provider);
                 while (enumerator.MoveNext())
                 {
-                    yield return new WaitForEndOfFrame();
+                    yield return null;
                 }
             }
             yield break;
@@ -91,7 +91,7 @@ namespace MSU
         {
             MSULog.Info("Initializing the Artifact Module...");
 
-            yield return new WaitForEndOfFrame();
+            yield return null;
 
             moonstormArtifacts = new ReadOnlyDictionary<ArtifactDef, IArtifactContentPiece>(_moonstormArtifacts);
             _moonstormArtifacts = null;
@@ -142,19 +142,18 @@ namespace MSU
             IContentPiece<ArtifactDef>[] content = provider.GetContents();
             List<IContentPiece<ArtifactDef>> artifacts = new List<IContentPiece<ArtifactDef>>();
 
-            var helper = new ParallelMultiStartCoroutine();
+            ParallelCoroutine helper = new ParallelCoroutine();
             foreach (var artifact in content)
             {
                 if (!artifact.IsAvailable(provider.contentPack))
                     continue;
 
                 artifacts.Add(artifact);
-                helper.Add(artifact.LoadContentAsync);
+                helper.Add(artifact.LoadContentAsync());
             }
 
-            helper.Start();
             while (!helper.IsDone())
-                yield return new WaitForEndOfFrame();
+                yield return null;
 
             InitializeArtifacts(plugin, artifacts, provider);
         }

@@ -109,7 +109,7 @@ namespace MSU
                 var enumerator = InitializeEquipmentsFromProvider(plugin, provider);
 
                 while (enumerator.MoveNext())
-                    yield return new WaitForEndOfFrame();
+                    yield return null;
             }
             yield break;
         }
@@ -127,7 +127,7 @@ namespace MSU
 
             foreach (var (eqpDef, eqp) in _moonstormEquipments)
             {
-                yield return new WaitForEndOfFrame();
+                yield return null;
                 allEquips.Add(eqpDef, eqp);
                 if (eqp is IEliteContentPiece eliteContent)
                 {
@@ -135,7 +135,7 @@ namespace MSU
                     eliteDefs.AddRange(eliteContent.eliteDefs);
                     foreach(var eliteDef in eliteContent.eliteDefs)
                     {
-                        yield return new WaitForEndOfFrame();
+                        yield return null;
                         if(eliteDef is ExtendedEliteDef eed && eed.effect)
                         {
                             eliteIndexToEffect.Add(eed.eliteIndex, eed.effect);
@@ -157,7 +157,7 @@ namespace MSU
             CombatDirector.EliteTierDef[] vanillaTiers = R2API.EliteAPI.VanillaEliteTiers;
             foreach (EliteDef eliteDef in moonstormEliteDefs)
             {
-                yield return new WaitForEndOfFrame();
+                yield return null;
 
                 if (eliteDef is not ExtendedEliteDef eed)
                     continue;
@@ -256,7 +256,7 @@ namespace MSU
             IContentPiece<EquipmentDef>[] content = provider.GetContents();
             List<IContentPiece<EquipmentDef>> equipments = new List<IContentPiece<EquipmentDef>>();
 
-            var helper = new ParallelMultiStartCoroutine();
+            var helper = new ParallelCoroutine();
 
             foreach (var equipment in content)
             {
@@ -264,12 +264,11 @@ namespace MSU
                     continue;
 
                 equipments.Add(equipment);
-                helper.Add(equipment.LoadContentAsync);
+                helper.Add(equipment.LoadContentAsync());
             }
 
-            helper.Start();
             while (!helper.IsDone())
-                yield return new WaitForEndOfFrame();
+                yield return null;
 
             InitializeEquipments(plugin, equipments, provider);
         }

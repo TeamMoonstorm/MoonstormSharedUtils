@@ -82,7 +82,7 @@ namespace MSU
                 var enumerator = InitializeInteractablesFromProvider(plugin, provider);
                 while (enumerator.MoveNext())
                 {
-                    yield return new WaitForEndOfFrame();
+                    yield return null;
                 }
             }
             yield break;
@@ -93,7 +93,7 @@ namespace MSU
         {
             MSULog.Info("Initializing the Interactable Module...");
 
-            yield return new WaitForEndOfFrame();
+            yield return null;
 
             moonstormInteractables = new ReadOnlyDictionary<IInteractable, IInteractableContentPiece>(_moonstormInteractables);
             _moonstormInteractables = null;
@@ -114,19 +114,18 @@ namespace MSU
             IGameObjectContentPiece<IInteractable>[] content = provider.GetContents().OfType<IGameObjectContentPiece<IInteractable>>().ToArray();
             List<IGameObjectContentPiece<IInteractable>> interactables = new List<IGameObjectContentPiece<IInteractable>>();
 
-            var helper = new ParallelMultiStartCoroutine();
+            var helper = new ParallelCoroutine();
             foreach (var interactable in content)
             {
                 if (!interactable.IsAvailable(provider.contentPack))
                     continue;
 
                 interactables.Add(interactable);
-                helper.Add(interactable.LoadContentAsync);
+                helper.Add(interactable.LoadContentAsync());
             }
 
-            helper.Start();
             while (!helper.IsDone())
-                yield return new WaitForEndOfFrame();
+                yield return null;
 
             InitializeInteractables(plugin, interactables, provider);
         }

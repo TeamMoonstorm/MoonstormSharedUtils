@@ -82,7 +82,7 @@ namespace MSU
                 var enumerator = InitializeCharactersFromProvider(plugin, provider);
                 while (enumerator.MoveNext())
                 {
-                    yield return new WaitForEndOfFrame();
+                    yield return null;
                 }
             }
             yield break;
@@ -93,7 +93,7 @@ namespace MSU
         {
             MSULog.Info("Initializing the Character Module...");
 
-            yield return new WaitForEndOfFrame();
+            yield return null;
 
 
             moonstormCharacters = new ReadOnlyDictionary<CharacterBody, ICharacterContentPiece>(_moonstormCharacters);
@@ -117,19 +117,18 @@ namespace MSU
 
             List<IGameObjectContentPiece<CharacterBody>> characters = new List<IGameObjectContentPiece<CharacterBody>>();
 
-            var helper = new ParallelMultiStartCoroutine();
+            var helper = new ParallelCoroutine();
             foreach (var character in content)
             {
                 if (!character.IsAvailable(provider.contentPack))
                     continue;
 
                 characters.Add(character);
-                helper.Add(character.LoadContentAsync);
+                helper.Add(character.LoadContentAsync());
             }
 
-            helper.Start();
             while (!helper.IsDone())
-                yield return new WaitForEndOfFrame();
+                yield return null;
 
             InitializeCharacters(plugin, characters, provider);
         }

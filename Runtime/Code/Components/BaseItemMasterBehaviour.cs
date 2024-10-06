@@ -45,7 +45,7 @@ namespace MSU
             Type itemDefType = typeof(ItemDef);
             foreach (BaseItemMasterBehaviour.ItemDefAssociationAttribute itemDefAssociationAttribute in attributeList)
             {
-                yield return new WaitForEndOfFrame();
+                yield return null;
                 MethodInfo methodInfo;
                 if ((methodInfo = (itemDefAssociationAttribute.target as MethodInfo)) == null)
                 {

@@ -73,7 +73,7 @@ namespace MSU
 
         private IEnumerator GetInterfaces()
         {
-            yield return new WaitForEndOfFrame();
+            yield return null;
             _statItemBehaviors = GetComponents<IStatItemBehavior>();
             _bodyStatArgModifiers = GetComponents<IBodyStatArgModifier>();
             body.healthComponent.onIncomingDamageReceivers = GetComponents<IOnIncomingDamageServerReceiver>();

@@ -23,7 +23,7 @@ namespace MSU
 
             while (!subroutine.IsDone())
             {
-                yield return new WaitForEndOfFrame();
+                yield return null;
             }
 
             foreach(var lang in Language.GetAllLanguages())
@@ -86,7 +86,7 @@ namespace MSU
         {
             while (!ConfigSystem.configsBound)
             {
-                yield return new WaitForEndOfFrame();
+                yield return null;
             }
 
             foreach (var (token, value) in tokenValuePair)
@@ -110,30 +110,29 @@ namespace MSU
 
             var subroutine = GetFormatTokenLists(propertyFormatTokens, fieldFormatTokens);
             while (!subroutine.IsDone())
-                yield return new WaitForEndOfFrame();
+                yield return null;
 
             Dictionary<string, FormatTokenAttribute[]> formattingDictionaryFromFields = new Dictionary<string, FormatTokenAttribute[]>();
             Dictionary<string, FormatTokenAttribute[]> formattingDictionaryFromProperties = new Dictionary<string, FormatTokenAttribute[]>();
 
-            var parallelSubroutine = new ParallelMultiStartCoroutine();
-            parallelSubroutine.Add(CreateFormattingDictionary, propertyFormatTokens, formattingDictionaryFromProperties);
-            parallelSubroutine.Add(CreateFormattingDictionary, fieldFormatTokens, formattingDictionaryFromFields);
+            var parallelSubroutine = new ParallelCoroutine();
+            parallelSubroutine.Add(CreateFormattingDictionary(propertyFormatTokens, formattingDictionaryFromProperties));
+            parallelSubroutine.Add(CreateFormattingDictionary(fieldFormatTokens, formattingDictionaryFromFields));
 
-            parallelSubroutine.Start();
-            while (!parallelSubroutine.isDone)
-                yield return new WaitForEndOfFrame();
+            while (!parallelSubroutine.IsDone())
+                yield return null;
 
             _cachedFormattingArray = new Dictionary<string, FormatTokenAttribute[]>();
 
             foreach (var (token, formattingArray) in formattingDictionaryFromFields)
             {
-                yield return new WaitForEndOfFrame();
+                yield return null;
                 //Add token from dictionary, this replaces the array, but that's ok as this dictionary is currently empty
                 _cachedFormattingArray[token] = Array.Empty<FormatTokenAttribute>();
                 var arrayFromCache = _cachedFormattingArray[token];
                 for (int i = 0; i < formattingArray.Length; i++)
                 {
-                    yield return new WaitForEndOfFrame();
+                    yield return null;
                     //Resize if needed
                     if (arrayFromCache.Length < i + 1)
                     {
@@ -148,7 +147,7 @@ namespace MSU
             }
             foreach (var (token, formattingArray) in formattingDictionaryFromProperties)
             {
-                yield return new WaitForEndOfFrame();
+                yield return null;
                 //We do not overwrite the array if the token is already in the dictionary.
                 //This is due to the fact that the kye may already be in the dictionary due to being created from fields with the token modifiers
 
@@ -159,7 +158,7 @@ namespace MSU
                 var arrayFromCache = _cachedFormattingArray[token];
                 for (int i = 0; i < formattingArray.Length; i++)
                 {
-                    yield return new WaitForEndOfFrame();
+                    yield return null;
                     if (arrayFromCache.Length < i + 1)
                     {
                         Array.Resize(ref arrayFromCache, i + 1);
@@ -177,7 +176,7 @@ namespace MSU
             var allTokenModifiers = SearchableAttribute.GetInstances<FormatTokenAttribute>() ?? new List<SearchableAttribute>();
             foreach (FormatTokenAttribute formatToken in allTokenModifiers.Cast<FormatTokenAttribute>())
             {
-                yield return new WaitForEndOfFrame();
+                yield return null;
                 if (formatToken.target is FieldInfo)
                 {
                     fieldFormatTokens.Add(formatToken);
@@ -196,7 +195,7 @@ namespace MSU
 
             foreach (FormatTokenAttribute formatToken in source)
             {
-                yield return new WaitForEndOfFrame();
+                yield return null;
                 try
                 {
                     var token = formatToken.languageToken;

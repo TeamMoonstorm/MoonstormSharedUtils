@@ -14,7 +14,7 @@ namespace MSU
         private static IEnumerator Init()
         {
             MSULog.Info("Setting up Interfaces");
-            yield return new WaitForEndOfFrame();
+            yield return null;
             IL.RoR2.HealthComponent.TakeDamageProcess += HealthComponent_TakeDamageProcess;
         }
 

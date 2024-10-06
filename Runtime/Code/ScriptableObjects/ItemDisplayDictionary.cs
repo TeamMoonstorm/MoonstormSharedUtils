@@ -30,7 +30,7 @@ namespace MSU
         [SystemInitializer]
         private static IEnumerator SystemInitializer()
         {
-            yield return new WaitForEndOfFrame();
+            yield return null;
             ItemDisplayCatalog.catalogAvailability.CallWhenAvailable(() =>
             {
                 MSULog.Info("Initializing ItemDdisplayDictionaries");

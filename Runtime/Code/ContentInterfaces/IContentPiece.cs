@@ -17,12 +17,12 @@ namespace MSU
         /// <summary>
         /// Method that's called during Module initialization that's used for loading a ContentPiece's Assets asynchronously.
         /// 
-        /// <br>To allow for proper paralellization of your mod's content loading, make sure to yield return new WaitForEndOfFrame(), do not yield other coroutines, instead do the following:</br>
+        /// <br>To allow for proper paralellization of your mod's content loading, make sure to yield return null, do not yield other coroutines, instead do the following:</br>
         /// 
         /// <code>
         ///     var enumerator = SomeOtherAsyncMethod();
         ///     while(enumerator.MoveNext())
-        ///         yield return new WaitForEndOfFrame();
+        ///         yield return null;
         /// </code>
         /// </summary>
         IEnumerator LoadContentAsync();

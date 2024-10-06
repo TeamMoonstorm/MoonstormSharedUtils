@@ -87,7 +87,7 @@ namespace MSU
             }
 
             while (!coroutine.IsDone())
-                yield return new WaitForEndOfFrame();
+                yield return null;
 
             var bodyPrefab = bodyAddressLoad.Result;
             var displayPrefab = displayAddressLoad.Result;
@@ -167,7 +167,7 @@ namespace MSU
 
                 var load = Addressables.LoadAssetAsync<SkinDef>(_skinAddress);
                 while (!load.IsDone)
-                    yield return new WaitForEndOfFrame();
+                    yield return null;
 
                 _skinDef = load.Result;
             }
@@ -357,7 +357,7 @@ namespace MSU
                 var load = Addressables.LoadAssetAsync<GameObject>(_projectilePrefabAddress);
 
                 while (!load.IsDone)
-                    yield return new WaitForEndOfFrame();
+                    yield return null;
 
                 projectileGhostReplacement = new ProjectileGhostReplacement
                 {
@@ -394,7 +394,7 @@ namespace MSU
             {
                 var load = Addressables.LoadAssetAsync<GameObject>(_minionPrefabAddress);
                 while (!load.IsDone)
-                    yield return new WaitForEndOfFrame();
+                    yield return null;
 
                 minionSkinReplacement = new MinionSkinReplacement
                 {

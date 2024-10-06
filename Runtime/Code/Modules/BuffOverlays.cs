@@ -31,7 +31,7 @@ namespace MSU
             Dictionary<BuffIndex, Material> readOnlyBase = new Dictionary<BuffIndex, Material>();
             foreach (var (bd, material) in _buffOverlays)
             {
-                yield return new WaitForEndOfFrame();
+                yield return null;
                 if (bd.buffIndex == BuffIndex.None)
                     continue;
 
