@@ -1,3 +1,30 @@
+# '2.2.0' - Material Variants
+
+## Runtime:
+
+* Added the ``MaterialVariant`` system
+    * A MaterialVariant is a custom ``ScriptableObject`` that allows you to create a Variant of an existing material.
+    * By supplying an original material, you're able to override specific shader properties of said material.
+    * Works with both regular shaders and the ``AddressableMaterialShader`` system
+* Added new features to ``ExtendedEliteDef``
+    * ``ExtendedEliteDef`` can now replace the light color of CharacterBodies.
+    * ``ExtendedEliteDef`` can now specify a material override for particle system renderers in a CharacterBody
+* Most modules will no longer apply hooks when there's no content ingame utilizing said modules.
+* Added a new method for adding a standalone ``SimpleSpriteAnimation`` in ``LoadingScreenSpriteUtility``
+    * The ``SimpleSpriteAnimation`` will get destroyed when the loading screen is over.
+* Marked ``ParallelMultiStartCoroutine`` as Obsolete.
+    * All usages of ``ParallelMultiStartCoroutine`` have been replaced by ``ParallelCoroutine``
+
+
+## Editor:
+
+* The ``ShaderDictionary`` system now exists in the main assembly alongside other shader related qualities
+    * This is due to the new ``MaterialVariant`` system
+
+## Legacy:
+
+* Marked all classes and structs as ``[Obsolete]``
+
 # '2.1.0' - Fixes and Async Additions
 
 ## Runtime:
