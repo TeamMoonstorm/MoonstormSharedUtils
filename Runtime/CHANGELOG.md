@@ -1,3 +1,9 @@
+# '2.2.1' - Hotfix
+
+## Runtime
+
+* Fixed an oversight which caused the ``BaseMasterItemBehaviour`` system to always be disabled.
+
 # '2.2.0' - Material Variants
 
 ## Runtime:

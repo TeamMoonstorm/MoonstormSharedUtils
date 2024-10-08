@@ -39,7 +39,7 @@ namespace MSU
         /// <summary>
         /// The version of MSU that's being used
         /// </summary>
-        public const string VERSION = "2.0.0";
+        public const string VERSION = "2.2.1";
 
         /// <summary>
         /// The plugin's PluginInfo

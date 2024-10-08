@@ -164,7 +164,7 @@ namespace MSU
             BaseItemMasterBehaviour._client.SetItemTypePairs(client);
             BaseItemMasterBehaviour._shared.SetItemTypePairs(shared);
 
-            if(_masterToItemBehaviors.Count == 0)
+            if(server.Count == 0 && client.Count == 0 && shared.Count == 0)
             {
 #if DEBUG
                 MSULog.Info("Not doing BaseItemMasterBehaviour hooks since no BaseItemMasterBehaviours where found");
