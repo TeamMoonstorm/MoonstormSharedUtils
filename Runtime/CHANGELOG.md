@@ -1,3 +1,12 @@
+# '2.2.2' - Loading Screen Sprite Changes
+
+## Runtime
+
+* Added dependency to ``LoadingScreenSpriteFix``
+* Marked the ``LoadingScreenSpriteUtility`` class as obsolete
+    * Using the LoadingScreenSpriteFix's API is encouraged instead of using this class
+    * Methods now just call the LoadingScreenSpriteFix methods to avoid backwards compat breaking
+
 # '2.2.1' - Hotfix
 
 ## Runtime

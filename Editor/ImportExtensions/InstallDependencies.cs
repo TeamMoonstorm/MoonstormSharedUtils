@@ -18,6 +18,7 @@ namespace MSU.Editor.Importers
         private const string TRANSIENT_STORE_NAME = "transient-store";
         private const string RISK_OF_OPTIONS = "Rune580-Risk_Of_Options";
         private const string SHADER_SWAPPER = "Smooth_Salad-ShaderSwapper";
+        private const string LOADING_SCREEN_FIX = "Nebby-LoadingScreenSpriteFix";
 
         private ThunderstoreSource _transientStore;
         public override bool Execute()
@@ -90,7 +91,8 @@ namespace MSU.Editor.Importers
             return new List<string>
             {
                 RISK_OF_OPTIONS,
-                SHADER_SWAPPER
+                SHADER_SWAPPER,
+                LOADING_SCREEN_FIX
             };
         }
 

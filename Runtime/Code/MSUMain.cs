@@ -23,6 +23,7 @@ namespace MSU
     [BepInDependency(R2API.Networking.NetworkingAPI.PluginGUID)]
     #endregion
     [BepInDependency("com.rune580.riskofoptions")]
+    [BepInDependency(LoadingScreenFix.LoadingScreenFix.PluginGUID)]
     [BepInDependency("xyz.yekoc.Holy", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("iHarbHD.DebugToolkit", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInPlugin(GUID, MODNAME, VERSION)]
@@ -39,7 +40,7 @@ namespace MSU
         /// <summary>
         /// The version of MSU that's being used
         /// </summary>
-        public const string VERSION = "2.2.1";
+        public const string VERSION = "2.2.2";
 
         /// <summary>
         /// The plugin's PluginInfo
