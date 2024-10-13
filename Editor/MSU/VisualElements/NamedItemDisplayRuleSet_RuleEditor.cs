@@ -174,20 +174,14 @@ namespace MSU.Editor.UIElements
             displayPrefabName.onGUIHandler = DrawIMGUI;
             pasteFromClipboardButton.clicked += PasteFromClipboard;
             ruleType.RegisterValueChangedCallback(OnRuleTypeChanged);
-            RegisterCallback<GeometryChangedEvent>(GeoChange);
         }
 
-        private void GeoChange(GeometryChangedEvent evt)
-        {
-            Debug.Log(style.display);
-        }
 
         private void OnDetach(DetachFromPanelEvent evt)
         {
             displayPrefabName.onGUIHandler = null;
             pasteFromClipboardButton.clicked -= PasteFromClipboard;
             ruleType.UnregisterValueChangedCallback(OnRuleTypeChanged);
-            UnregisterCallback<GeometryChangedEvent>(GeoChange);
         }
 
         public NamedItemDisplayRuleSet_RuleEditor()
