@@ -1,5 +1,6 @@
 {
     "name": "MoonstormSharedUtils",
+    "rootNamespace": "",
     "references": [
         "Unity.Postprocessing.Runtime",
         "com.unity.multiplayer-hlapi.Runtime",
@@ -42,7 +43,15 @@
         "R2API.Addressables.dll"
     ],
     "autoReferenced": true,
-    "defineConstraints": [],
-    "versionDefines": [],
+    "defineConstraints": [
+        "MSUL_GAME_IMPORTED"
+    ],
+    "versionDefines": [
+        {
+            "name": "riskofrain2",
+            "expression": "1.3.0",
+            "define": "MSUL_GAME_IMPORTED"
+        }
+    ],
     "noEngineReferences": false
 }
