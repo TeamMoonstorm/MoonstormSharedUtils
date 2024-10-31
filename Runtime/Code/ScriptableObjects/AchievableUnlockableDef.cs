@@ -45,13 +45,7 @@ namespace MSU
             {
                 if (!_preRequisiteAchievement.achievementIdentifier.IsNullOrWhiteSpace())
                 {
-                    var identifier = _preRequisiteAchievement.achievementIdentifier;
-                    var split = identifier.Split('.');
-
-                    if (split[split.Length - 1] != "Achievement")
-                        identifier += ".Achievement";
-
-                    return identifier;
+                    return _preRequisiteAchievement.achievementIdentifier;
                 }
                 else if (_preRequisiteAchievement.unlockableDef)
                 {
@@ -165,7 +159,7 @@ namespace MSU
             [Tooltip("The AchievableUnlockableDef that's required to be achieved before this one can be achieved.")]
             public AchievableUnlockableDef unlockableDef;
 
-            [Tooltip("The identifier for another achievement, usually these can be obtained by concatenating the Unlockable's name and \".Achievement\" (ie: using \"Characters.Bandit2.Achievement\" will make unlocking Bandit2 a pre-requisite for this unlockable to be unlocked.)")]
+            [Tooltip("The identifier for another achievement, this is usually used for VANILLA achievements. Say for example, you want to make this achievement require unlocking bandit first, you would set the identifier to \"CompleteThreeStages\", which is bandit's achievement unlock identifier.")]
             public string achievementIdentifier;
         }
 
