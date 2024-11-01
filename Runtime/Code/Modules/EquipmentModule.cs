@@ -166,15 +166,16 @@ namespace MSU
                 {
                     case ExtendedEliteDef.VanillaTier.HonorDisabled:
                         HG.ArrayUtils.ArrayAppend(ref vanillaTiers[1].eliteTypes, eliteDef);
+                        HG.ArrayUtils.ArrayAppend(ref vanillaTiers[3].eliteTypes, eliteDef);
                         break;
                     case ExtendedEliteDef.VanillaTier.HonorActive:
                         HG.ArrayUtils.ArrayAppend(ref vanillaTiers[2].eliteTypes, eliteDef);
                         break;
                     case ExtendedEliteDef.VanillaTier.PostLoop:
-                        HG.ArrayUtils.ArrayAppend(ref vanillaTiers[3].eliteTypes, eliteDef);
+                        HG.ArrayUtils.ArrayAppend(ref vanillaTiers[4].eliteTypes, eliteDef);
                         break;
                     case ExtendedEliteDef.VanillaTier.Lunar:
-                        HG.ArrayUtils.ArrayAppend(ref vanillaTiers[4].eliteTypes, eliteDef);
+                        HG.ArrayUtils.ArrayAppend(ref vanillaTiers[5].eliteTypes, eliteDef);
                         break;
                 }
                 R2API.EliteRamp.AddRamp(eed, eed.eliteRamp);
