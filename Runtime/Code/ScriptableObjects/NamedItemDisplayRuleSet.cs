@@ -11,6 +11,7 @@ namespace MSU
     /// A <see cref="NamedItemDisplayRuleSet"/> is a version of a <see cref="ItemDisplayRuleSet"/> which can be populated and serialized in the editor.
     /// <para>The values in <see cref="rules"/> will be appended to the IDRS set in <see cref="targetItemDisplayRuleSet"/></para>
     /// <para>The KeyAsset for the rule groups are loaded with their names</para>
+    /// <para>See also <see cref="ItemDisplayDictionary"/></para>
     /// </summary>
     [CreateAssetMenu(fileName = "New NamedItemDisplayRuleSet", menuName = "MSU/IDRS/NamedItemDisplayRuleSet")]
     public class NamedItemDisplayRuleSet : ScriptableObject

@@ -13,7 +13,7 @@ namespace MSU.Editor.Inspectors
             DrawDefaultInspector();
             if(GUILayout.Button("Open NamedItemDisplayRuleSet Editor Window"))
             {
-                ExtendedEditorWindow.Open<NamedItemDisplayRuleSetEditorWindow>(targetType);
+                ExtendedEditorWindow.Open<NamedItemDisplayRuleSetEditorWindow>(targetType).SetSourceObject();
             }
         }
     }

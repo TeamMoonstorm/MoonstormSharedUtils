@@ -1,6 +1,8 @@
 using MSU.Editor.UIElements;
 using RoR2.Editor;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.UIElements;
@@ -9,55 +11,51 @@ using UnityEngine.UIElements;
 
 namespace MSU.Editor.EditorWindows
 {
-    public class NamedItemDisplayRuleSetEditorWindow : MSObjectEditingEditorWindow<NamedItemDisplayRuleSet>
+    public class ItemDisplayDictionaryEditorWindow : MSObjectEditingEditorWindow<ItemDisplayDictionary>
     {
         private VisualElement _helpBoxContainer;
         private VisualElement _controlContainer;
         private ObjectField _currentlyInspected;
-        private NamedItemDisplayRuleSet_TargetRuleSet _targetRuleSet;
-        private NamedItemDisplayRuleSet_RuleGroupSelector _ruleGroupSelector;
-        private NamedItemDisplayRuleSet_KeyAssetRuleSelector _keyAssetRuleSelector;
-        private NamedItemDisplayRuleSet_RuleEditor _ruleEditor;
+        private ItemDisplayDictionary_KeyAssetDisplayPrefabsElement _keyAssetDisplayPrefabs;
+        private ItemDisplayDictionary_DictionaryEntryPicker _dictionaryEntryPicker;
 
         private ISerializedObjectBoundCallback[] _boundCallbacks;
         private IItemDisplayCatalogReceiver[] _catalogReceivers;
-
         private ItemDisplayCatalog _catalog;
+        private string _lastEditedIDDGuid;
 
-        private string _lastEditedNIDRSGUID;
         protected override void OnEnable()
         {
             base.OnEnable();
-            _lastEditedNIDRSGUID = windowProjectSettings.GetOrCreateSetting(nameof(_lastEditedNIDRSGUID), string.Empty);
+            _lastEditedIDDGuid = windowProjectSettings.GetOrCreateSetting(nameof(_lastEditedIDDGuid), string.Empty);
 
             LoadSerializedObject();
 
-            Selection.selectionChanged += CheckForNamedIDRS;
+            Selection.selectionChanged += CheckForIDD;
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
-            Selection.selectionChanged -= CheckForNamedIDRS;
+            Selection.selectionChanged -= CheckForIDD;
         }
-
 
         private void LoadSerializedObject()
         {
-            if (_sourceSerializedObject)
+            if(_sourceSerializedObject)
             {
-                if (_sourceSerializedObject is NamedItemDisplayRuleSet)
-                    windowProjectSettings.SetSettingValue(nameof(_lastEditedNIDRSGUID), AssetDatabaseUtil.GetAssetGUIDString(_sourceSerializedObject));
+                if (_sourceSerializedObject is ItemDisplayDictionary)
+                    windowProjectSettings.SetSettingValue(nameof(_lastEditedIDDGuid), AssetDatabaseUtil.GetAssetGUIDString(_sourceSerializedObject));
                 else
-                    _sourceSerializedObject = AssetDatabaseUtil.LoadAssetFromGUID(_lastEditedNIDRSGUID);
+                    _sourceSerializedObject = AssetDatabaseUtil.LoadAssetFromGUID(_lastEditedIDDGuid);
             }
-            else if (!_lastEditedNIDRSGUID.IsNullOrEmptyOrWhiteSpace())
+            else if(!_lastEditedIDDGuid.IsNullOrEmptyOrWhiteSpace())
             {
-                _sourceSerializedObject = AssetDatabaseUtil.LoadAssetFromGUID(_lastEditedNIDRSGUID);
+                _sourceSerializedObject = AssetDatabaseUtil.LoadAssetFromGUID(_lastEditedIDDGuid);
             }
         }
 
-        private void CheckForNamedIDRS()
+        private void CheckForIDD()
         {
             var obj = Selection.activeObject;
             if (!obj)
@@ -80,20 +78,20 @@ namespace MSU.Editor.EditorWindows
                 return;
             }
 
-            if (obj is NamedItemDisplayRuleSet nidrs)
+            if (obj is ItemDisplayDictionary idd)
             {
                 serializedObject?.ApplyModifiedProperties();
-                _currentlyInspected.value = nidrs;
-                serializedObject = new SerializedObject(nidrs);
-                _lastEditedNIDRSGUID = AssetDatabaseUtil.GetAssetGUIDString(nidrs);
-                windowProjectSettings.SetSettingValue(nameof(_lastEditedNIDRSGUID), _lastEditedNIDRSGUID);
+                _currentlyInspected.value = idd;
+                serializedObject = new SerializedObject(idd);
+                _lastEditedIDDGuid = AssetDatabaseUtil.GetAssetGUIDString(idd);
+                windowProjectSettings.SetSettingValue(nameof(_lastEditedIDDGuid), _lastEditedIDDGuid);
                 return;
             }
-            else if (!_lastEditedNIDRSGUID.IsNullOrEmptyOrWhiteSpace())
+            else if (!_lastEditedIDDGuid.IsNullOrEmptyOrWhiteSpace())
             {
-                nidrs = AssetDatabaseUtil.LoadAssetFromGUID<NamedItemDisplayRuleSet>(_lastEditedNIDRSGUID, null);
-                _currentlyInspected.value = nidrs;
-                serializedObject = new SerializedObject(nidrs);
+                idd = AssetDatabaseUtil.LoadAssetFromGUID<ItemDisplayDictionary>(_lastEditedIDDGuid, null);
+                _currentlyInspected.value = idd;
+                serializedObject = new SerializedObject(idd);
                 return;
             }
             serializedObject = null;
@@ -123,25 +121,18 @@ namespace MSU.Editor.EditorWindows
                 Debug.Log("No Serialized Object");
                 _helpBoxContainer.SetDisplay(true);
                 _controlContainer.SetDisplay(false);
-                _currentlyInspected.value = null;
-                return;
             }
-
-            if (serializedObject.targetObject is not NamedItemDisplayRuleSet)
+            else if (serializedObject.targetObject is not ItemDisplayDictionary)
             {
-                Debug.Log("Target object is not an NIDRS");
+                Debug.Log("Target object is not an IDD");
                 _helpBoxContainer.SetDisplay(true);
                 _controlContainer.SetDisplay(false);
-
-                _currentlyInspected.value = null;
             }
             else
             {
-                Debug.Log("Target object is NIDRS!");
+                Debug.Log("Target object is IDD!");
                 _helpBoxContainer.SetDisplay(false);
                 _controlContainer.SetDisplay(true);
-
-                _currentlyInspected.value = serializedObject.targetObject;
             }
         }
 
@@ -157,22 +148,18 @@ namespace MSU.Editor.EditorWindows
             _helpBoxContainer = rootVisualElement.Q<VisualElement>("NoValidSerializedObjectContainer");
             _controlContainer = rootVisualElement.Q<VisualElement>("Controls");
             _currentlyInspected = rootVisualElement.Q<ObjectField>("CurrentlyEditing");
-            _currentlyInspected.SetObjectType<NamedItemDisplayRuleSet>();
+            _currentlyInspected.SetObjectType<ItemDisplayDictionary>();
             _currentlyInspected.SetEnabled(false);
 
-            _targetRuleSet = rootVisualElement.Q<NamedItemDisplayRuleSet_TargetRuleSet>();
-            _ruleGroupSelector = rootVisualElement.Q<NamedItemDisplayRuleSet_RuleGroupSelector>();
-            _keyAssetRuleSelector = rootVisualElement.Q<NamedItemDisplayRuleSet_KeyAssetRuleSelector>();
-            _ruleEditor = rootVisualElement.Q<NamedItemDisplayRuleSet_RuleEditor>();
+            _keyAssetDisplayPrefabs = rootVisualElement.Q<ItemDisplayDictionary_KeyAssetDisplayPrefabsElement>();
+            _dictionaryEntryPicker = rootVisualElement.Q<ItemDisplayDictionary_DictionaryEntryPicker>();
 
-            _targetRuleSet.onTargetIDRSChanged += OnTargetIDRSChanged;
+            _keyAssetDisplayPrefabs.onDisplayPrefabsChanged += OnDisplayPrefabsChanged;
+            _keyAssetDisplayPrefabs.onKeyAssetChanged += OnKeyAssetChanged;
 
-            _ruleGroupSelector.onCatalogReloadRequessted += ReloadCatalog;
-            _ruleGroupSelector.buttonListView.itemsRemoved += OnRuleGroupsRemoved;
-            _ruleGroupSelector.onNamedRuleButtonClicked += OnRuleGroupButtonClicked;
-
-            _keyAssetRuleSelector.buttonListView.itemsRemoved += OnRulesRemoved;
-            _keyAssetRuleSelector.onNamedRuleButtonClicked += OnRuleButtonClicked;
+            _dictionaryEntryPicker.onCatalogReloadRequested += ReloadCatalog;
+            _dictionaryEntryPicker.buttonListView.itemsRemoved += OnDictionaryEntryRemoved;
+            _dictionaryEntryPicker.onDisplayDictionaryEntryButtonClicked += OnDisplayDictionaryEntryButtonClicked;
 
             _boundCallbacks = rootVisualElement.Query()
                 .Where(ve => ve is ISerializedObjectBoundCallback)
@@ -204,44 +191,12 @@ namespace MSU.Editor.EditorWindows
             }
         }
 
-        private void OnRuleButtonClicked(PropertySelectorButton button)
+        private void OnDictionaryEntryRemoved(IEnumerable<int> obj)
         {
-            if (_ruleEditor.currentlyInspectedEntry == button)
-                return;
-
-            _ruleEditor.currentlyInspectedEntry = button;
         }
 
-        private void OnRulesRemoved(System.Collections.Generic.IEnumerable<int> obj)
+        private void OnDisplayDictionaryEntryButtonClicked(PropertySelectorButton obj)
         {
-            if (_ruleEditor.currentlyInspectedEntry == null)
-                return;
-
-            if (obj.Contains(_ruleEditor.currentlyInspectedEntry.index))
-            {
-                _ruleEditor.currentlyInspectedEntry = null;
-            }
-        }
-
-        private void OnRuleGroupsRemoved(System.Collections.Generic.IEnumerable<int> obj)
-        {
-            if (_keyAssetRuleSelector.currentlyInspectedEntry == null)
-                return;
-
-            if (obj.Contains(_keyAssetRuleSelector.currentlyInspectedEntry.index))
-            {
-                _keyAssetRuleSelector.currentlyInspectedEntry = null;
-                _ruleEditor.currentlyInspectedEntry = null;
-            }
-        }
-
-        private void OnRuleGroupButtonClicked(PropertySelectorButton obj)
-        {
-            if (_keyAssetRuleSelector.currentlyInspectedEntry == obj)
-                return;
-
-            _keyAssetRuleSelector.currentlyInspectedEntry = obj;
-            _ruleEditor.currentlyInspectedEntry = null;
         }
 
         private void ReloadCatalog()
@@ -253,24 +208,25 @@ namespace MSU.Editor.EditorWindows
             }
         }
 
-        private void OnTargetIDRSChanged(RoR2.ItemDisplayRuleSet obj)
+        private void OnKeyAssetChanged(ScriptableObject obj)
         {
-            _ruleGroupSelector.SetEnabled(obj);
-            _keyAssetRuleSelector.SetEnabled(obj);
-            _ruleEditor.SetEnabled(obj);
         }
 
-        [MenuItem(MSUConstants.MSU_MENU_ROOT + "Windows/Named Item Display Rule Set Editor Window")]
+        private void OnDisplayPrefabsChanged(SerializedProperty obj)
+        {
+        }
+
+        [MenuItem(MSUConstants.MSU_MENU_ROOT + "Windows/Item Display Dictionary Editor Window")]
         private static void Open()
         {
             var selection = Selection.activeObject;
             UnityEngine.Object obj = null;
-            if (selection is NamedItemDisplayRuleSet)
+            if (selection is ItemDisplayDictionary)
             {
                 obj = selection;
             }
 
-            Open<NamedItemDisplayRuleSetEditorWindow>(obj).SetSourceObject();
+            Open<ItemDisplayDictionaryEditorWindow>(obj).SetSourceObject();
         }
     }
 }

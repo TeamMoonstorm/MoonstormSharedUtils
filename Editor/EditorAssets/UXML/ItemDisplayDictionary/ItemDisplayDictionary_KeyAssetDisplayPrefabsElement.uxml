@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <ui:VisualElement name="Root">
+        <RoR2.Editor.ExtendedHelpBox message-type="Info" message="No KeyAsset set, please assign either an ItemDef or EquipmentDef to the &quot;Key Asset&quot; field." name="NoKeyAsset" is-dismissable="false" tooltip="No KeyAsset set, please assign either an ItemDef or EquipmentDef to the &quot;Key Asset&quot; field." style="padding-bottom: 4px;" />
+        <RoR2.Editor.ExtendedHelpBox message-type="Info" message="No Display Prefabs set, please assign any number of GameObjects with ItemDisplay components to the &quot;Display Prefabs&quot; field" name="NoDisplayPrefabs" is-dismissable="false" tooltip="No Display Prefabs set, please assign any number of GameObjects with ItemDisplay components to the &quot;Display Prefabs&quot; field" />
+        <uie:ObjectField label="Key Asset" name="KeyAssetSelector" type="UnityEngine.ScriptableObject, UnityEngine.CoreModule" binding-path="keyAsset" />
+        <ui:ListView focusable="true" name="DisplayPrefabs" show-border="true" show-add-remove-footer="true" header-title="Display Prefabs" show-foldout-header="true" show-bound-collection-size="true" binding-path="displayPrefabs" />
+    </ui:VisualElement>
+</ui:UXML>

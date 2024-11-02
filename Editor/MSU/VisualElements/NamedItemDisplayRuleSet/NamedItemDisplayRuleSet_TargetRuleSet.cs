@@ -7,10 +7,6 @@ using UnityEngine.UIElements;
 
 namespace MSU.Editor.UIElements
 {
-    public interface ISerializedObjectBoundCallback
-    {
-        public void OnBoundSerializedObjectChange(SerializedObject so);
-    }
     public class NamedItemDisplayRuleSet_TargetRuleSet : VisualElement, IBindable, ISerializedObjectBoundCallback
     {
         public IBinding binding { get => targetIDRSObjectField.binding; set => targetIDRSObjectField.binding = value; }

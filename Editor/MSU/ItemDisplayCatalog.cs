@@ -12,6 +12,7 @@ namespace MSU.Editor
         public static bool catalogExists => jsonAsset;
         public static TextAsset jsonAsset => AssetDatabase.LoadAssetAtPath<TextAsset>("Assets/IDRSCatalog.json");
 
+        public ReadOnlyCollection<string> allItemDisplayRuleSets => new ReadOnlyCollection<string>(survivorItemDisplayRuleSets.Concat(enemyItemDisplayRuleSets).ToList());
         public ReadOnlyCollection<string> survivorItemDisplayRuleSets { get; private set; }
         public ReadOnlyCollection<string> enemyItemDisplayRuleSets { get; private set; }
         public ReadOnlyCollection<string> allKeyAssets { get; private set; }
