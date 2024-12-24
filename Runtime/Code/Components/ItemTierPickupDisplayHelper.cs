@@ -40,8 +40,7 @@ namespace MSU
 #endif
                         return;
                     }
-                    _vfxInstance = Instantiate(prefab, _display.transform);
-                    _vfxInstance.transform.position = Vector3.zero;
+                    _vfxInstance = Instantiate(prefab, _display.transform.parent);
                 }
             }
         }
