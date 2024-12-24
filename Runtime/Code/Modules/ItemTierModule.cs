@@ -212,7 +212,7 @@ namespace MSU
                         if (itemTierContentPiece.darkColorIndex)
                         {
                             ColorsAPI.AddSerializableColor(itemTierContentPiece.darkColorIndex);
-                            asset.colorIndex = itemTierContentPiece.darkColorIndex.value.ColorIndex;
+                            asset.darkColorIndex = itemTierContentPiece.darkColorIndex.value.ColorIndex;
                         }
                         _itemTierToPickupFX.Add(asset, itemTierContentPiece.pickupDisplayVFX);
                     }
