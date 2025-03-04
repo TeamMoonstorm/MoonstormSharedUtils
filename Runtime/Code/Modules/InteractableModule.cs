@@ -193,10 +193,8 @@ namespace MSU
         private static void AddCustomInteractable(InteractableCardProvider interactableCardProvider, DccsPool pool, DirectorAPI.StageInfo stageInfo)
         {
             var alwaysIncluded = pool.poolCategories.SelectMany(pc => pc.alwaysIncluded.Select(pe => pe.dccs));
-            var includedIfConditionsMet = pool.poolCategories.SelectMany(pc => pc.includedIfConditionsMet.Select(pe => pe.dccs));
-            var includedIfNoConditionsMet = pool.poolCategories.SelectMany(pc => pc.includedIfNoConditionsMet.Select(pe => pe.dccs));
 
-            DirectorCardCategorySelection[] selections = alwaysIncluded.Union(includedIfConditionsMet).Union(includedIfNoConditionsMet).ToArray();
+            DirectorCardCategorySelection selection = alwaysIncluded.First();
 
             DirectorCardHolderExtended cardHolder = null;
 
@@ -215,10 +213,7 @@ namespace MSU
             if (!cardHolder.IsAvailable())
                 return;
 
-            foreach (DirectorCardCategorySelection selection in selections)
-            {
-                selection.AddCard(cardHolder);
-            }
+            selection.AddCard(cardHolder);
         }
     }
 }

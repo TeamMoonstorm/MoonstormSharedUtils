@@ -225,10 +225,7 @@ namespace MSU
                 return;
             }
 
-            var dccsCollection = standardCategory.alwaysIncluded.Select(pe => pe.dccs)
-                .Concat(standardCategory.includedIfConditionsMet.Select(pe => pe.dccs))
-                .Concat(standardCategory.includedIfNoConditionsMet.Select(pe => pe.dccs))
-                .ToArray();
+            var alwaysIncluded = standardCategory.alwaysIncluded.Select(pe => pe.dccs).First();
 
             DirectorCardHolderExtended cardHolder = null;
             if (stageInfo.stage == DirectorAPI.Stage.Custom)
@@ -246,10 +243,7 @@ namespace MSU
             if (!cardHolder.IsAvailable())
                 return;
 
-            foreach (DirectorCardCategorySelection categorySelection in dccsCollection)
-            {
-                categorySelection.AddCard(cardHolder);
-            }
+            alwaysIncluded.AddCard(cardHolder);
         }
     }
 }
