@@ -5,6 +5,16 @@
 * Updated to BalancePatch2
 * Character and Interactable module now only add their Cards to the always available standard category rather than all categories
     * This was done to accomodate the new "DCCS Blender" system
+* Fixed the Prerequisite achievment system of AchievableUnlockableDef not working properly
+* Fixed the EquipmentCatalog adding elites to the wrong tiers
+* Fix ItemTierPickupDisplayHelper spawning the displays at position 0 and unparented
+* ItemTierModule should now properly assign the ItemTierDef's darkColorIndex to the correct value
+
+## Legacy Runtime
+
+* The legacy runtime assembly now only enables if the game has been imported
+
+## 
 
 # '2.2.2' - Loading Screen Sprite Changes
 
