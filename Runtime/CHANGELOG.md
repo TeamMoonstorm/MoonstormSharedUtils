@@ -6,6 +6,7 @@
 * Character and Interactable module now only add their Cards to the always available standard category rather than all categories
     * This was done to accomodate the new "DCCS Blender" system
 * Fixed the Prerequisite achievment system of AchievableUnlockableDef not working properly
+    * This however breaks achievement collection... oops, we recommend using realer cheat unlocks to re-unlock everything
 * Fixed the EquipmentCatalog adding elites to the wrong tiers
 * Fix ItemTierPickupDisplayHelper spawning the displays at position 0 and unparented
 * ItemTierModule should now properly assign the ItemTierDef's darkColorIndex to the correct value
