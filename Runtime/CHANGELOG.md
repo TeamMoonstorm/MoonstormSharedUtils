@@ -1,3 +1,11 @@
+# '2.2.3' - False Son if it was a fun boss
+
+## Runtime
+
+* Updated to BalancePatch2
+* Character and Interactable module now only add their Cards to the always available standard category rather than all categories
+    * This was done to accomodate the new "DCCS Blender" system
+
 # '2.2.2' - Loading Screen Sprite Changes
 
 ## Runtime
