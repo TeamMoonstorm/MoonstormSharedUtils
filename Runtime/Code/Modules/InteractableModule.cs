@@ -184,18 +184,29 @@ namespace MSU
 
         private static void AddCustomInteractables(DccsPool pool, DirectorAPI.StageInfo stageInfo)
         {
+            var standardCategory = pool.poolCategories.FirstOrDefault(category => category.name == DirectorAPI.Helpers.InteractablePoolCategories.Standard);
+
+            if(standardCategory == null)
+            {
+                MSULog.Warning($"Standard category was not found within pool {pool}. Not adding interactables.");
+                return;
+            }
+
+            var dccs = standardCategory.alwaysIncluded.Select(pe => pe.dccs).FirstOrDefault();
+            if(!dccs)
+            {
+                MSULog.Warning($"Standard category was found in {pool} but no DCCS exists within it. Not adding interactables.");
+                return;
+            }
+
             foreach (var interactableCardProvider in _interactableCardProviders)
             {
-                AddCustomInteractable(interactableCardProvider, pool, stageInfo);
+                AddCustomInteractable(interactableCardProvider, dccs, stageInfo);
             }
         }
 
-        private static void AddCustomInteractable(InteractableCardProvider interactableCardProvider, DccsPool pool, DirectorAPI.StageInfo stageInfo)
+        private static void AddCustomInteractable(InteractableCardProvider interactableCardProvider, DirectorCardCategorySelection dccs, DirectorAPI.StageInfo stageInfo)
         {
-            var alwaysIncluded = pool.poolCategories.SelectMany(pc => pc.alwaysIncluded.Select(pe => pe.dccs));
-
-            DirectorCardCategorySelection selection = alwaysIncluded.First();
-
             DirectorCardHolderExtended cardHolder = null;
 
             if (stageInfo.stage == DirectorAPI.Stage.Custom)
@@ -213,7 +224,7 @@ namespace MSU
             if (!cardHolder.IsAvailable())
                 return;
 
-            selection.AddCard(cardHolder);
+            dccs.AddCard(cardHolder);
         }
     }
 }

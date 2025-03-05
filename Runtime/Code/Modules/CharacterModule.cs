@@ -209,23 +209,27 @@ namespace MSU
                 return;
             }
 
-            foreach (var monsterCardProvider in _monsterCardProviders)
-            {
-                AddCustomMonster(monsterCardProvider, pool, stageInfo);
-            }
-        }
-
-        private static void AddCustomMonster(MonsterCardProvider monsterCardProvider, DccsPool pool, DirectorAPI.StageInfo stageInfo)
-        {
             var standardCategory = pool.poolCategories.FirstOrDefault(category => category.name == DirectorAPI.Helpers.MonsterPoolCategories.Standard);
-
-            if (standardCategory == null)
+            if(standardCategory == null)
             {
-                MSULog.Warning($"Couldn't find standard category for current stage! not adding {monsterCardProvider}.");
+                MSULog.Warning($"Standard category was not found within pool {pool}. Not adding monsters.");
+                return;
+            }
+            var dccs = standardCategory.alwaysIncluded.Select(pe => pe.dccs).FirstOrDefault();
+            if(!dccs)
+            {
+                MSULog.Warning($"Standard category was found in {pool} but no DCCS exists wtihin it. Not adding monsters.");
                 return;
             }
 
-            var alwaysIncluded = standardCategory.alwaysIncluded.Select(pe => pe.dccs).First();
+            foreach (var monsterCardProvider in _monsterCardProviders)
+            {
+                AddCustomMonster(monsterCardProvider, dccs, stageInfo);
+            }
+        }
+
+        private static void AddCustomMonster(MonsterCardProvider monsterCardProvider, DirectorCardCategorySelection dccs, DirectorAPI.StageInfo stageInfo)
+        {
 
             DirectorCardHolderExtended cardHolder = null;
             if (stageInfo.stage == DirectorAPI.Stage.Custom)
@@ -243,7 +247,7 @@ namespace MSU
             if (!cardHolder.IsAvailable())
                 return;
 
-            alwaysIncluded.AddCard(cardHolder);
+            dccs.AddCard(cardHolder);
         }
     }
 }
