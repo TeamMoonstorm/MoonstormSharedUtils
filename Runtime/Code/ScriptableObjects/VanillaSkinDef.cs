@@ -51,11 +51,6 @@ namespace MSU
 #endif
         }
 
-        private new void Bake()
-        {
-            //Do Nothing
-        }
-
         /// <summary>
         /// Method for initializing this VanillaSkinDef.
         /// <para>The Coroutine will load all the assets required for this skin to work (Base game skinDefs, gameObjects, addresses, etc). Afterwards it'll create runtime versions of <see cref="SkinDef"/>'s internal types, and then bake it.</para>
@@ -93,11 +88,11 @@ namespace MSU
             var displayPrefab = displayAddressLoad.Result;
 
             var modelObject = bodyPrefab.GetComponent<ModelLocator>().modelTransform.gameObject;
-
-            Bake(modelObject.GetComponent<CharacterModel>(), displayPrefab.GetComponentInChildren<CharacterModel>());
+            
+            AssignValuesToDeprecatedFields(modelObject.GetComponent<CharacterModel>(), displayPrefab.GetComponentInChildren<CharacterModel>());
         }
 
-        private void Bake(CharacterModel model, CharacterModel displayModel)
+        private void AssignValuesToDeprecatedFields(CharacterModel model, CharacterModel displayModel)
         {
             //Fills the unfilled base fields
             foreach (var item in _baseSkins)
@@ -127,7 +122,6 @@ namespace MSU
                 HG.ArrayUtils.ArrayAppend(ref minionSkinReplacements, item.minionSkinReplacement);
             }
 
-            base.Bake();
 
             //Adds the skindefs to the models
             ModelSkinController controller = model.GetComponent<ModelSkinController>();
