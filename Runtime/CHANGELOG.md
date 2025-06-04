@@ -1,3 +1,12 @@
+# '2.3.0' - Memory Optimization
+
+* Updated to 1.3.9 (Memopt)
+
+## Runtime
+
+* VanillaSkinDef no longer bakes on calling "initialize"
+    * Instead, it assigns the values to the deprecated fields.
+
 # '2.2.3' - False Son if it was a fun boss
 
 ## Runtime
