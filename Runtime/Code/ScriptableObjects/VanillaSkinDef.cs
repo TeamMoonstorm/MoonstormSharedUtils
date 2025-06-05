@@ -87,9 +87,10 @@ namespace MSU
             var bodyPrefab = bodyAddressLoad.Result;
             var displayPrefab = displayAddressLoad.Result;
 
-            var modelObject = bodyPrefab.GetComponent<ModelLocator>().modelTransform.gameObject;
-            
-            AssignValuesToDeprecatedFields(modelObject.GetComponent<CharacterModel>(), displayPrefab.GetComponentInChildren<CharacterModel>());
+            // TODO: Pissing Nebby off with this, but too bad nebby youre too busy crashing out!
+            //var modelObject = bodyPrefab.GetComponent<ModelLocator>().modelTransform.gameObject;
+
+            //AssignValuesToDeprecatedFields(modelObject.GetComponent<CharacterModel>(), displayPrefab.GetComponentInChildren<CharacterModel>());
         }
 
         private void AssignValuesToDeprecatedFields(CharacterModel model, CharacterModel displayModel)
