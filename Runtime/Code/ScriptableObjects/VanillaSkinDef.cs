@@ -11,6 +11,7 @@ namespace MSU
     /// The VanillaSkinDef is a subclass of <see cref="SkinDef"/> which is used for declaring custom SkinDefs for Vanilla survivors.
     /// <para>It avoids running the Awake method of SkinDef and its regular Bake method to ensure the end user chooses when to bake it. To bake the skin you must call <see cref="Initialize"/>, this is a coroutine, and as such its recommended to call it during your content loading routine of your ContentPackProvider.</para>
     /// </summary>
+    [Obsolete("VanillaSkinDefs are obsolete, and will be replaced by a new system using SkinDefParams.")]
     [CreateAssetMenu(fileName = "New VanillaSkinDef", menuName = "MSU/VanillaSkinDef")]
     public class VanillaSkinDef : SkinDef
     {
@@ -58,6 +59,7 @@ namespace MSU
         /// <returns>A Coroutine which can be awaited</returns>
         public IEnumerator Initialize()
         {
+            yield break;
 #if DEBUG
             MSULog.Debug($"Attempting to initialize and bake {this}");
 #endif
@@ -94,6 +96,7 @@ namespace MSU
 
         private void AssignValuesToDeprecatedFields(CharacterModel model, CharacterModel displayModel)
         {
+            return;
             //Fills the unfilled base fields
             foreach (var item in _baseSkins)
             {
@@ -153,6 +156,8 @@ namespace MSU
             /// <returns>A coroutine which can be awaited</returns>
             public IEnumerator GetSkin()
             {
+                yield break;
+
                 if (_skinDef)
                 {
                     skinDef = _skinDef;
@@ -196,6 +201,8 @@ namespace MSU
             /// <exception cref="IndexOutOfRangeException">When <see cref="rendererIndex"/> is out of bounds of the CharacterModel's BaseRendererInfos array.</exception>
             public CharacterModel.RendererInfo GetRendererInfo(CharacterModel model)
             {
+                yield break;
+
                 if (rendererIndex < 0 || rendererIndex > model.baseRendererInfos.Length)
                 {
                     throw new IndexOutOfRangeException($"Renderer Index of MSGameObjectActivation is out of bounds. (index: {rendererIndex})");
@@ -251,6 +258,7 @@ namespace MSU
             /// <returns>The GameObjectActivation</returns>
             public SkinDef.GameObjectActivation GetGameObjectActivation(CharacterModel model, CharacterModel displayModel)
             {
+                return default;
                 if (_activation.HasValue)
                     return _activation.Value;
 
@@ -260,6 +268,7 @@ namespace MSU
 
             private SkinDef.GameObjectActivation CreateCustomActivation(CharacterModel model, CharacterModel displayModel)
             {
+                return default;
                 Transform child = model.childLocator.FindChild(childName);
                 if (child)
                 {
@@ -283,6 +292,8 @@ namespace MSU
 
             private SkinDef.GameObjectActivation CreateActivationFromRendererIndex(CharacterModel model)
             {
+                return default;
+
                 if (rendererIndex < 0 || rendererIndex > model.baseRendererInfos.Length)
                 {
                     throw new IndexOutOfRangeException($"Renderer Index of MSGameObjectActivation is out of bounds. (index: {rendererIndex})");
@@ -314,6 +325,8 @@ namespace MSU
             /// <exception cref="IndexOutOfRangeException">When <see cref="rendererIndex"/> is out of bounts of the <paramref name="model"/>'s base renderer infos.</exception>
             public SkinDef.MeshReplacement GetMeshReplacement(CharacterModel model)
             {
+                return default;
+
                 if (rendererIndex < 0 || rendererIndex > model.baseRendererInfos.Length)
                 {
                     throw new IndexOutOfRangeException($"Renderer Index of MSGameObjectActivation is out of bounds. (index: {rendererIndex})");
@@ -348,6 +361,8 @@ namespace MSU
             /// <returns>A coroutine which can be awaited</returns>
             public IEnumerator GetProjectileGhostReplacement()
             {
+                yield break;
+
                 var load = Addressables.LoadAssetAsync<GameObject>(_projectilePrefabAddress);
 
                 while (!load.IsDone)
@@ -386,6 +401,8 @@ namespace MSU
             /// <returns>A coroutine which can be awaited</returns>
             public IEnumerator GetMinionSkinReplacement()
             {
+                yield break;
+
                 var load = Addressables.LoadAssetAsync<GameObject>(_minionPrefabAddress);
                 while (!load.IsDone)
                     yield return null;
