@@ -4,8 +4,10 @@
 
 ## Runtime
 
-* VanillaSkinDef no longer bakes on calling "initialize"
-    * Instead, it assigns the values to the deprecated fields.
+* Marked vanilla skin defs as deprecated.
+    * Stubbed the methods as a result.
+    * System will be replaced by a new one utilizing SkinDefParams.
+* The CharacterModule will now ensure that a survivor's DisplayPrefab and BodyPrefab have the same skins array.
 
 # '2.2.3' - False Son if it was a fun boss
 

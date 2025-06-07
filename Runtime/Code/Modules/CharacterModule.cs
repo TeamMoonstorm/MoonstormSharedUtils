@@ -33,7 +33,7 @@ namespace MSU
         private static Dictionary<BaseUnityPlugin, IContentPieceProvider<GameObject>> _pluginToContentProvider = new Dictionary<BaseUnityPlugin, IContentPieceProvider<GameObject>>();
         private static HashSet<MonsterCardProvider> _monsterCardProviders = new HashSet<MonsterCardProvider>();
         private static HashSet<DirectorCardHolderExtended> _dissonanceCards = new HashSet<DirectorCardHolderExtended>();
-
+        private static HashSet<SurvivorDef> _survivorDefs = new HashSet<SurvivorDef>();
         /// <summary>
         /// Adds a new provider to the CharacterModule.
         /// <br>For more info, see <see cref="IContentPieceProvider"/></br>
@@ -109,6 +109,22 @@ namespace MSU
                 yield break;
             }
             DirectorAPI.MonsterActions += AddCustomMonsters;
+
+            foreach (var survivorDef in _survivorDefs)
+            {
+                var displayPrefab = survivorDef.displayPrefab;
+                var bodyPrefab = survivorDef.bodyPrefab;
+
+                var displayPrefabModelSkinController = displayPrefab.GetComponentInChildren<ModelSkinController>();
+                var bodyPrefabModelSkinController = bodyPrefab.GetComponentInChildren<ModelSkinController>();
+
+                if(!(displayPrefabModelSkinController && bodyPrefabModelSkinController))
+                {
+                    continue;
+                }
+
+                displayPrefabModelSkinController.skins = HG.ArrayUtils.Clone(bodyPrefabModelSkinController.skins);
+            }
         }
 
         private static IEnumerator InitializeCharactersFromProvider(BaseUnityPlugin plugin, IContentPieceProvider<GameObject> provider)
@@ -171,6 +187,7 @@ namespace MSU
                     if (body is ISurvivorContentPiece survivorContentPiece)
                     {
                         provider.contentPack.survivorDefs.AddSingle(survivorContentPiece.survivorDef);
+                        _survivorDefs.Add(survivorContentPiece.survivorDef);
                     }
                     if (body is IMonsterContentPiece monsterContentPiece)
                     {

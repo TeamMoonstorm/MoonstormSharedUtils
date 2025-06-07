@@ -60,10 +60,11 @@ namespace MSU
         public IEnumerator Initialize()
         {
             yield break;
+/*
 #if DEBUG
             MSULog.Debug($"Attempting to initialize and bake {this}");
 #endif
-
+            
             ParallelCoroutine coroutine = new ParallelCoroutine();
             var bodyAddressLoad = Addressables.LoadAssetAsync<GameObject>(_bodyAddress);
             var displayAddressLoad = Addressables.LoadAssetAsync<GameObject>(_displayAddress);
@@ -91,12 +92,13 @@ namespace MSU
 
             var modelObject = bodyPrefab.GetComponent<ModelLocator>().modelTransform.gameObject;
             
-            AssignValuesToDeprecatedFields(modelObject.GetComponent<CharacterModel>(), displayPrefab.GetComponentInChildren<CharacterModel>());
+            AssignValuesToDeprecatedFields(modelObject.GetComponent<CharacterModel>(), displayPrefab.GetComponentInChildren<CharacterModel>());*/
         }
 
         private void AssignValuesToDeprecatedFields(CharacterModel model, CharacterModel displayModel)
         {
             return;
+            /*
             //Fills the unfilled base fields
             foreach (var item in _baseSkins)
             {
@@ -132,7 +134,7 @@ namespace MSU
                 HG.ArrayUtils.ArrayAppend(ref controller.skins, this);
             controller = displayModel.GetComponent<ModelSkinController>();
             if (controller)
-                HG.ArrayUtils.ArrayAppend(ref controller.skins, this);
+                HG.ArrayUtils.ArrayAppend(ref controller.skins, this);*/
         }
         #region internal types
         /// <summary>
@@ -157,7 +159,7 @@ namespace MSU
             public IEnumerator GetSkin()
             {
                 yield break;
-
+                /*
                 if (_skinDef)
                 {
                     skinDef = _skinDef;
@@ -168,7 +170,7 @@ namespace MSU
                 while (!load.IsDone)
                     yield return null;
 
-                _skinDef = load.Result;
+                _skinDef = load.Result;*/
             }
         }
 
@@ -202,7 +204,7 @@ namespace MSU
             public CharacterModel.RendererInfo GetRendererInfo(CharacterModel model)
             {
                 yield break;
-
+                /*
                 if (rendererIndex < 0 || rendererIndex > model.baseRendererInfos.Length)
                 {
                     throw new IndexOutOfRangeException($"Renderer Index of MSGameObjectActivation is out of bounds. (index: {rendererIndex})");
@@ -216,7 +218,7 @@ namespace MSU
                     hideOnDeath = hideOnDeath,
                     ignoreOverlays = ignoreOverlays,
                     renderer = baseRenderInfo.renderer
-                };
+                };*/
             }
         }
 
@@ -259,16 +261,18 @@ namespace MSU
             public SkinDef.GameObjectActivation GetGameObjectActivation(CharacterModel model, CharacterModel displayModel)
             {
                 return default;
+                /*
                 if (_activation.HasValue)
                     return _activation.Value;
 
                 _activation = isCustomActivation ? CreateCustomActivation(model, displayModel) : CreateActivationFromRendererIndex(model);
-                return _activation.Value;
+                return _activation.Value;*/
             }
 
             private SkinDef.GameObjectActivation CreateCustomActivation(CharacterModel model, CharacterModel displayModel)
             {
                 return default;
+                /*
                 Transform child = model.childLocator.FindChild(childName);
                 if (child)
                 {
@@ -287,13 +291,13 @@ namespace MSU
                     };
                 }
                 MSULog.Error($"Error: child {childName} to parent {gameObjectPrefab} to not found. Did you misspell the name?");
-                return new SkinDef.GameObjectActivation { };
+                return new SkinDef.GameObjectActivation { };*/
             }
 
             private SkinDef.GameObjectActivation CreateActivationFromRendererIndex(CharacterModel model)
             {
                 return default;
-
+                /*
                 if (rendererIndex < 0 || rendererIndex > model.baseRendererInfos.Length)
                 {
                     throw new IndexOutOfRangeException($"Renderer Index of MSGameObjectActivation is out of bounds. (index: {rendererIndex})");
@@ -301,7 +305,7 @@ namespace MSU
                 var goActivation = new SkinDef.GameObjectActivation();
                 goActivation.shouldActivate = shouldActivate;
                 goActivation.gameObject = model.baseRendererInfos[rendererIndex].renderer.gameObject;
-                return goActivation;
+                return goActivation;*/
             }
         }
 
@@ -326,7 +330,7 @@ namespace MSU
             public SkinDef.MeshReplacement GetMeshReplacement(CharacterModel model)
             {
                 return default;
-
+                /*
                 if (rendererIndex < 0 || rendererIndex > model.baseRendererInfos.Length)
                 {
                     throw new IndexOutOfRangeException($"Renderer Index of MSGameObjectActivation is out of bounds. (index: {rendererIndex})");
@@ -334,7 +338,7 @@ namespace MSU
                 var meshReplacement = new SkinDef.MeshReplacement();
                 meshReplacement.mesh = mesh;
                 meshReplacement.renderer = model.baseRendererInfos[rendererIndex].renderer;
-                return meshReplacement;
+                return meshReplacement;*/
             }
         }
 
@@ -362,7 +366,7 @@ namespace MSU
             public IEnumerator GetProjectileGhostReplacement()
             {
                 yield break;
-
+                /*
                 var load = Addressables.LoadAssetAsync<GameObject>(_projectilePrefabAddress);
 
                 while (!load.IsDone)
@@ -374,7 +378,7 @@ namespace MSU
                     projectilePrefab = load.Result
                 };
 
-                yield break;
+                yield break;*/
             }
         }
 
@@ -402,7 +406,7 @@ namespace MSU
             public IEnumerator GetMinionSkinReplacement()
             {
                 yield break;
-
+                /*
                 var load = Addressables.LoadAssetAsync<GameObject>(_minionPrefabAddress);
                 while (!load.IsDone)
                     yield return null;
@@ -413,7 +417,7 @@ namespace MSU
                     minionSkin = _minionSkin,
                 };
 
-                yield break;
+                yield break;*/
             }
         }
         #endregion
