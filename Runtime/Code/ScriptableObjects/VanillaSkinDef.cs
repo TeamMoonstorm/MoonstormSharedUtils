@@ -203,7 +203,7 @@ namespace MSU
             /// <exception cref="IndexOutOfRangeException">When <see cref="rendererIndex"/> is out of bounds of the CharacterModel's BaseRendererInfos array.</exception>
             public CharacterModel.RendererInfo GetRendererInfo(CharacterModel model)
             {
-                yield break;
+                return default;
                 /*
                 if (rendererIndex < 0 || rendererIndex > model.baseRendererInfos.Length)
                 {
