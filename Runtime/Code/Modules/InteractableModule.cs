@@ -184,24 +184,25 @@ namespace MSU
 
         private static void AddCustomInteractables(DccsPool pool, DirectorAPI.StageInfo stageInfo)
         {
-            var standardCategory = pool.poolCategories.FirstOrDefault(category => category.name == DirectorAPI.Helpers.InteractablePoolCategories.Standard);
-
-            if(standardCategory == null)
+            DirectorCardCategorySelection firstCategorySelection = null;
+            foreach(var poolCategory in pool.poolCategories)
             {
-                MSULog.Warning($"Standard category was not found within pool {pool}. Not adding interactables.");
-                return;
-            }
+                foreach(var alwaysIncluded in poolCategory.alwaysIncluded)
+                {
+                    if(alwaysIncluded.dccs)
+                    {
+                        firstCategorySelection = alwaysIncluded.dccs;
+                        break;
+                    }
+                }
 
-            var dccs = standardCategory.alwaysIncluded.Select(pe => pe.dccs).FirstOrDefault();
-            if(!dccs)
-            {
-                MSULog.Warning($"Standard category was found in {pool} but no DCCS exists within it. Not adding interactables.");
-                return;
+                if (firstCategorySelection)
+                    break;
             }
 
             foreach (var interactableCardProvider in _interactableCardProviders)
             {
-                AddCustomInteractable(interactableCardProvider, dccs, stageInfo);
+                AddCustomInteractable(interactableCardProvider, firstCategorySelection, stageInfo);
             }
         }
 
