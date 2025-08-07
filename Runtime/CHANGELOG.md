@@ -1,3 +1,7 @@
+# '2.3.1' - Interactables
+
+* Fix interactable module failing to add interactables
+
 # '2.3.0' - Memory Optimization
 
 * Updated to 1.3.9 (Memopt)
