@@ -1,6 +1,7 @@
 ﻿using R2API.AddressReferencedAssets;
 using RoR2;
 using System;
+using UnityEngine;
 
 namespace MSU.AddressReferencedAssets
 {
@@ -10,8 +11,11 @@ namespace MSU.AddressReferencedAssets
     [Serializable]
     public class AddressReferencedSkinDef : AddressReferencedAsset<SkinDef>
     {
+        public override bool CanLoadFromCatalog { get => _canLoadFromCatalog; protected set => _canLoadFromCatalog = value; }
+        [SerializeField] private bool _canLoadFromCatalog;
+
         /// <summary>
-        /// Operator for casting <see cref="AddressReferencedExpansionDef"/> to a boolean value
+        /// Operator for casting <see cref="AddressReferencedSkinDef"/> to a boolean value
         /// <br>Allows you to keep using the unity Syntax for checking if an object exists.</br>
         /// </summary>
         public static implicit operator bool(AddressReferencedSkinDef addressReferencedAsset)
@@ -20,7 +24,7 @@ namespace MSU.AddressReferencedAssets
         }
 
         /// <summary>
-        /// Operator for casting <see cref="AddressReferencedExpansionDef"/> to it's currently loaded <see cref="Asset"/> value
+        /// Operator for casting <see cref="AddressReferencedSkinDef"/> to it's currently loaded <see cref="Asset"/> value
         /// </summary>
         public static implicit operator SkinDef(AddressReferencedSkinDef addressReferencedAsset)
         {
