@@ -45,7 +45,8 @@
         "R2API.Stages.dll",
         "R2API.Networking.dll",
         "Newtonsoft.Json.dll",
-        "LoadingScreenFix.dll"
+        "LoadingScreenFix.dll",
+        "R2API.Skins.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [

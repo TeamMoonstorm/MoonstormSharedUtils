@@ -154,31 +154,24 @@ namespace MSU
             moonstormEliteDefs = new ReadOnlyCollection<EliteDef>(eliteDefs);
             eliteIndexToEffectPrefab = new ReadOnlyDictionary<EliteIndex, GameObject>(eliteIndexToEffect);
 
+            List<CombatDirector.EliteTierDef> tiersToModifyThisEnumeration = new List<CombatDirector.EliteTierDef>();
             CombatDirector.EliteTierDef[] vanillaTiers = R2API.EliteAPI.VanillaEliteTiers;
             foreach (EliteDef eliteDef in moonstormEliteDefs)
             {
                 yield return null;
 
+                tiersToModifyThisEnumeration.Clear();
+
                 if (eliteDef is not ExtendedEliteDef eed)
                     continue;
 
-                switch (eed.eliteTier)
+                GetTiersToModify(eed, vanillaTiers, tiersToModifyThisEnumeration);
+
+                foreach(var tier in tiersToModifyThisEnumeration)
                 {
-                    case ExtendedEliteDef.VanillaTier.HonorDisabled:
-                        HG.ArrayUtils.ArrayAppend(ref vanillaTiers[1].eliteTypes, eliteDef);
-                        HG.ArrayUtils.ArrayAppend(ref vanillaTiers[4].eliteTypes, eliteDef);
-                        break;
-                    case ExtendedEliteDef.VanillaTier.HonorActive:
-                        HG.ArrayUtils.ArrayAppend(ref vanillaTiers[2].eliteTypes, eliteDef);
-                        HG.ArrayUtils.ArrayAppend(ref vanillaTiers[3].eliteTypes, eliteDef);
-                        break;
-                    case ExtendedEliteDef.VanillaTier.PostLoop:
-                        HG.ArrayUtils.ArrayAppend(ref vanillaTiers[5].eliteTypes, eliteDef);
-                        break;
-                    case ExtendedEliteDef.VanillaTier.Lunar:
-                        HG.ArrayUtils.ArrayAppend(ref vanillaTiers[6].eliteTypes, eliteDef);
-                        break;
+                    HG.ArrayUtils.ArrayAppend(ref tier.eliteTypes, eliteDef);
                 }
+
                 R2API.EliteRamp.AddRamp(eed, eed.eliteRamp);
             }
 
@@ -194,6 +187,60 @@ namespace MSU
             On.RoR2.EquipmentSlot.PerformEquipmentAction += PerformAction;
             On.RoR2.CharacterBody.OnEquipmentLost += CallOnEquipmentLost;
             On.RoR2.CharacterBody.OnEquipmentGained += CallOnEquipmentGained;
+        }
+
+        private static void GetTiersToModify(ExtendedEliteDef extendedEliteDef, CombatDirector.EliteTierDef[] vanillaTiers, List<CombatDirector.EliteTierDef> tierOutput)
+        {
+            ExtendedEliteDef.VanillaTierFlags eliteTierFlags = extendedEliteDef.eliteTierFlags;
+            //Not using flags? use the deprecated version, if the deprecated version is also none then its not added anywhere.
+            if(eliteTierFlags.HasFlag(ExtendedEliteDef.VanillaTierFlags.None))
+            {
+#pragma warning disable CS0618 // Type or member is obsolete
+                switch (extendedEliteDef.eliteTier)
+                {
+                    case ExtendedEliteDef.VanillaTier.HonorDisabled:
+                        tierOutput.Add(vanillaTiers[1]);
+                        tierOutput.Add(vanillaTiers[4]);
+                        break;
+                    case ExtendedEliteDef.VanillaTier.HonorActive:
+                        tierOutput.Add(vanillaTiers[2]);
+                        tierOutput.Add(vanillaTiers[3]);
+                        break;
+                    case ExtendedEliteDef.VanillaTier.PostLoop:
+                        tierOutput.Add(vanillaTiers[5]);
+                        break;
+                    case ExtendedEliteDef.VanillaTier.Lunar:
+                        tierOutput.Add(vanillaTiers[6]);
+                        break;
+                }
+#pragma warning restore CS0618 // Type or member is obsolete
+                return;
+            }
+
+            if((eliteTierFlags & ExtendedEliteDef.VanillaTierFlags.Tier1) == ExtendedEliteDef.VanillaTierFlags.Tier1)
+            {
+                tierOutput.Add(vanillaTiers[1]);
+            }
+            if((eliteTierFlags & ExtendedEliteDef.VanillaTierFlags.Tier1Honor) == ExtendedEliteDef.VanillaTierFlags.Tier1Honor)
+            {
+                tierOutput.Add(vanillaTiers[2]);
+            }
+            if ((eliteTierFlags & ExtendedEliteDef.VanillaTierFlags.Tier1_5Honor) == ExtendedEliteDef.VanillaTierFlags.Tier1_5Honor)
+            {
+                tierOutput.Add(vanillaTiers[3]);
+            }
+            if((eliteTierFlags & ExtendedEliteDef.VanillaTierFlags.Tier1_5) == ExtendedEliteDef.VanillaTierFlags.Tier1_5)
+            {
+                tierOutput.Add(vanillaTiers[4]);
+            }
+            if((eliteTierFlags & ExtendedEliteDef.VanillaTierFlags.Tier2) == ExtendedEliteDef.VanillaTierFlags.Tier2)
+            {
+                tierOutput.Add(vanillaTiers[5]);
+            }
+            if((eliteTierFlags & ExtendedEliteDef.VanillaTierFlags.Lunar) == ExtendedEliteDef.VanillaTierFlags.Lunar)
+            {
+                tierOutput.Add(vanillaTiers[6]);
+            }
         }
 
         private static void HandleEliteOverrides(MonoMod.Cil.ILContext il)

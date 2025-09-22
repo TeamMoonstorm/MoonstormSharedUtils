@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace MSU
 {
-    [Obsolete("Use ParallelCoroutine instead, calling all the enumerator methods at the same frame makes no difference in terms of code execution")]
+    [Obsolete("Use HG.Coroutines.ParallelCoroutine instead, calling all the enumerator methods at the same frame makes no difference in terms of code execution")]
     public class ParallelMultiStartCoroutine : IEnumerator
     {
         private List<Wrapper> _wrappers = new List<Wrapper>();
@@ -142,54 +142,33 @@ namespace MSU
         }
     }
 
-    /// <summary>
-    /// A version of RoR2's <see cref="HG.Coroutines.ParallelProgressCoroutine"/> which does not have a progress receiver.
-    /// </summary>
+
+    [Obsolete("Utilize HG.Coroutines.ParallelCoroutine instead.")]
     public class ParallelCoroutine : IEnumerator
     {
         private readonly List<IEnumerator> _coroutinesList = new List<IEnumerator>();
 
         private IEnumerator _internalCoroutine;
 
-        /// <summary>
-        /// returns true if all the coroutines have finished executing.
-        /// </summary>
         public bool isDone => this.IsDone();
 
-        /// <summary>
-        /// The current object that was yielded
-        /// </summary>
         public object Current => _internalCoroutine.Current;
 
-        /// <summary>
-        /// Constructor for Parallel Coroutine
-        /// </summary>
         public ParallelCoroutine()
         {
             _internalCoroutine = InternalCoroutine();
         }
 
-        /// <summary>
-        /// Adds a new coroutine to process
-        /// </summary>
-        /// <param name="coroutine">The coroutine to process</param>
         public void Add(IEnumerator coroutine)
         {
             _coroutinesList.Add(coroutine);
         }
 
-        /// <summary>
-        /// Processes the coroutines
-        /// </summary>
-        /// <returns>True if the coroutines are NOT finished, false if the coroutines ARE finished</returns>
         public bool MoveNext()
         {
             return _internalCoroutine.MoveNext();
         }
 
-        /// <summary>
-        /// resets the internal coroutine
-        /// </summary>
         public void Reset()
         {
             _internalCoroutine.Reset();
