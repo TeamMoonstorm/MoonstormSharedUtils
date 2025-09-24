@@ -224,7 +224,8 @@ namespace MSU
             {
                 if (fieldInfo.FieldType.IsSameOrSubclassOf(typeof(TAsset)))
                 {
-                    string name = fieldInfo.Name;
+                    TargetAssetNameAttribute customAttribute = CustomAttributeExtensions.GetCustomAttribute<TargetAssetNameAttribute>(fieldInfo);
+                    string name = ((customAttribute != null) ? customAttribute.targetAssetName : fieldInfo.Name);
                     TAsset val = assets.Find(name);
                     if (val != null)
                     {
