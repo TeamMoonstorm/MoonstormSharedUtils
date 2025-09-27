@@ -1,4 +1,5 @@
 ﻿using RoR2;
+using System;
 using UnityEngine;
 
 namespace MSU
@@ -10,8 +11,7 @@ namespace MSU
     [CreateAssetMenu(fileName = "New ExtendedEliteDef", menuName = "MSU/ExtendedEliteDef")]
     public class ExtendedEliteDef : EliteDef
     {
-        [Tooltip("The tiers of this Elite, leave this to \"None\" if your Elite is part of a non vanilla tier.")]
-        public VanillaTier eliteTier;
+        public VanillaTierFlags eliteTierFlags;
 
         [Tooltip("A texture ramp for this elite, which will be applied to its model.")]
         public Texture2D eliteRamp;
@@ -28,35 +28,66 @@ namespace MSU
         [Tooltip("An effect to spawn on the Elite.")]
         public GameObject effect;
 
-        /// <summary>
-        /// Represents all of the game's vanilla elite tiers.
-        /// </summary>
+        [Header("Deprecated, check Context Menus for Upgrading.")]
+        [Obsolete("Utilize eliteTierFlags instead.")]
+        public VanillaTier eliteTier;
+
+        [Obsolete("Utilize VanillaTierFlags instead.")]
         public enum VanillaTier
         {
-            /// <summary>
-            /// None - The elite is not added to any vanilla tiers, useful if you're adding it to a custom tier.
-            /// </summary>
             None = 0,
 
-            /// <summary>
-            /// The elite is added to the "Tier 1" of elites, which include blazing, mending, overloading and glacial
-            /// </summary>
             HonorDisabled = 1,
 
-            /// <summary>
-            /// The elite is added to ther "Tier 1" of elites used when the Artifact of Honor is active.
-            /// </summary>
             HonorActive = 2,
 
-            /// <summary>
-            /// The elite is added to the "Tier 2" of elites, which include Malachite and Celestine elites
-            /// </summary>
             PostLoop = 3,
 
-            /// <summary>
-            /// The elite is added to the "Lunar" tier of elites, which only includes the Perfected elites.
-            /// </summary>
             Lunar = 4
+        }
+
+        [Flags]
+        public enum VanillaTierFlags : uint
+        {
+            None = 0u,
+            Tier1 = 1u,
+            Tier1Honor = 2u,
+            Tier1_5 = 4u,
+            Tier1_5Honor = 8u,
+            Tier2 = 16u,
+            Lunar = 32u,
+
+            GlobalTier1 = Tier1 | Tier1_5,
+            GlobalTier1Honor = Tier1Honor | Tier1_5Honor
+        }
+
+        [ContextMenu("Upgrade to Flags")]
+        private void UpgradeToFlags()
+        {
+#pragma warning disable CS0618 // Type or member is obsolete
+            switch (eliteTier)
+            {
+                case VanillaTier.None:
+                    break;
+                case VanillaTier.HonorDisabled:
+                    eliteTierFlags = VanillaTierFlags.GlobalTier1;
+                    break;
+                case VanillaTier.HonorActive:
+                    eliteTierFlags = VanillaTierFlags.GlobalTier1Honor;
+                    break;
+                case VanillaTier.PostLoop:
+                    eliteTierFlags = VanillaTierFlags.Tier2;
+                    break;
+                case VanillaTier.Lunar:
+                    eliteTierFlags = VanillaTierFlags.Lunar;
+                    break;
+            }
+
+            if (eliteTier != VanillaTier.None)
+            {
+                eliteTier = VanillaTier.None;
+            }
+#pragma warning restore CS0618 // Type or member is obsolete
         }
     }
 }
