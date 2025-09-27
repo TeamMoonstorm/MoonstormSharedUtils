@@ -193,7 +193,8 @@ namespace MSU
             Array.Sort(collection.assetInfos);
         }
 
-        public static void PopulateTypeFields<TAsset>(Type typeToPopulate, NamedAssetCollection<TAsset> assets)
+        [Obsolete("Utilize \"PopulateTypeFields<TAsset>(Type, NamedAssetCollection<TAsset>, Func<string, string> = null)\" instead")]
+        public static void PopulateTypeFields<TAsset>(Type typeToPopulate, NamedAssetCollection<TAsset> assets) where TAsset : UnityEngine.Object
         {
             PopulateTypeFields(typeToPopulate, assets, null);
         }
@@ -205,7 +206,7 @@ namespace MSU
         /// <param name="typeToPopulate">The actual type to populate.</param>
         /// <param name="assets">The AssetCollection to use for population.</param>
         /// <param name="fieldNameToAssetConverter">A Function to convert a field name to a specific asset, useful for making fields for BuffDefs without including the prefix bd</param>
-        public static void PopulateTypeFields<TAsset>(Type typeToPopulate, NamedAssetCollection<TAsset> assets, Func<string, string> fieldNameToAssetConverter ) where TAsset : UnityEngine.Object
+        public static void PopulateTypeFields<TAsset>(Type typeToPopulate, NamedAssetCollection<TAsset> assets, Func<string, string> fieldNameToAssetConverter = null) where TAsset : UnityEngine.Object
         {
 #if DEBUG
             MSULog.Info($"Attempting to populate {typeToPopulate.FullName} with {assets.Count} assets");
@@ -230,7 +231,7 @@ namespace MSU
                 if (fieldInfo.FieldType.IsSameOrSubclassOf(typeof(TAsset)))
                 {
                     TargetAssetNameAttribute customAttribute = CustomAttributeExtensions.GetCustomAttribute<TargetAssetNameAttribute>(fieldInfo);
-                    string name = ((customAttribute != null) ? customAttribute.targetAssetName : ((fieldNameToAssetConverter == null) ? fieldInfo.Name : fieldNameToAssetConverter(/fieldInfo.Name)));
+                    string name = ((customAttribute != null) ? customAttribute.targetAssetName : ((fieldNameToAssetConverter == null) ? fieldInfo.Name : fieldNameToAssetConverter(fieldInfo.Name)));
                     TAsset val = assets.Find(name);
                     if (val != null)
                     {
