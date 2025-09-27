@@ -1,4 +1,17 @@
+# '2.3.2' - Improvements
+
+## Runtime
+
+* Added ``TargetAssetNameAttribute``support to ``ContentUtil.PopulateTypeFields()``
+    * Thanks MysticalChicken 🐤
+* ``ContentUtil.PopulateTypeFields`` now has a prefered Overload that includes the base game ``Func<string, string> fieldNameToAssetNameConverter``
+* Updated the ExtendedEliteDef to support adding to multiple, or singular elite tiers from the base game.
+    * This is because ExtendedEliteDef only allowed you to add to both 1 and 1.5 tiers, instead of exclusively tier 1.5, making "1.5" elites more difficult to add than necesary.
+    * Fixes [#74](https://github.com/TeamMoonstorm/MoonstormSharedUtils/issues/74) as a result
+
 # '2.3.1' - Interactables
+
+## Runtime
 
 * Fix interactable module failing to add interactables
 

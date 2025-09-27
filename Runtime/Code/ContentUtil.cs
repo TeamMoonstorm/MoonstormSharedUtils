@@ -193,11 +193,6 @@ namespace MSU
             Array.Sort(collection.assetInfos);
         }
 
-        [Obsolete("Utilize \"PopulateTypeFields<TAsset>(Type, NamedAssetCollection<TAsset>, Func<string, string> = null)\" instead")]
-        public static void PopulateTypeFields<TAsset>(Type typeToPopulate, NamedAssetCollection<TAsset> assets) where TAsset : UnityEngine.Object
-        {
-            PopulateTypeFields(typeToPopulate, assets, null);
-        }
         /// <summary>
         /// Populates public static fields of type <typeparamref name="TAsset"/> that are found in <paramref name="typeToPopulate"/> utilizing the assets found in <paramref name="assets"/>.
         /// <br>Unlike the base game's <see cref="ContentLoadHelper.PopulateTypeFields{TAsset}(Type, NamedAssetCollection{TAsset}, Func{string, string})"/>. This version logs assets that did not have a corresponding field found in <paramref name="typeToPopulate"/></br>
@@ -205,6 +200,15 @@ namespace MSU
         /// <typeparam name="TAsset">The type of asset to populate</typeparam>
         /// <param name="typeToPopulate">The actual type to populate.</param>
         /// <param name="assets">The AssetCollection to use for population.</param>
+        public static void PopulateTypeFields<TAsset>(Type typeToPopulate, NamedAssetCollection<TAsset> assets) where TAsset : UnityEngine.Object
+        {
+            PopulateTypeFields(typeToPopulate, assets, null);
+        }
+        /// <summary>
+        /// <inheritdoc cref="PopulateTypeFields{TAsset}(Type, NamedAssetCollection{TAsset})"/>
+        /// </summary>
+        /// <typeparam name="TAsset">The type of asset to populate</typeparam>
+        /// <param name="typeToPopulate">The actual type to populate.</param>
         /// <param name="fieldNameToAssetConverter">A Function to convert a field name to a specific asset, useful for making fields for BuffDefs without including the prefix bd</param>
         public static void PopulateTypeFields<TAsset>(Type typeToPopulate, NamedAssetCollection<TAsset> assets, Func<string, string> fieldNameToAssetConverter = null) where TAsset : UnityEngine.Object
         {
