@@ -1,15 +1,14 @@
 using MSU.AddressReferencedAssets;
 using RoR2;
 using System;
-using System.Collections;
-using System.Collections.Generic;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using UnityEngine.Rendering;
 using R2API.AddressReferencedAssets;
-using RoR2BepInExPack.GameAssetPaths;
 using R2API;
+using System.Reflection;
 
 namespace MSU
 {
@@ -88,7 +87,7 @@ namespace MSU
         {
             [PrefabReference]
             public T reference;
-            [TransformPath(nameof(targetObject))]
+            [TransformPath(nameof(targetObject), siblingPropertyComponentTypeRequirement = nameof(reference))]
             public string transformPath;
         }
         #endregion
@@ -107,12 +106,6 @@ namespace MSU
         public MinionSkinReplacement[] minionSkinReplacements = Array.Empty<MinionSkinReplacement>();
         public LightInfo[] lightInfos = Array.Empty<LightInfo>();
         public VFXOverride[] vfxOverrides = Array.Empty<VFXOverride>();
-
-        [SerializableStaticMethod.MethodDetector]
-        private static void Test(GameObject instance)
-        {
-
-        }
     }
 
     [Serializable]
@@ -120,6 +113,14 @@ namespace MSU
     {
         public string typeName;
         public string methodName;
+
+        public bool TryGetMethod(out MethodInfo methodInfo)
+        {
+            Type t = Type.GetType(typeName);
+            methodInfo = t.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+            return methodInfo != null;
+        }
+
         public class RequiredArguments : PropertyAttribute
         {
             public Type returnType;
@@ -140,12 +141,24 @@ namespace MSU
         }
     }
 
-
-    public class TransformPath : PropertyAttribute
+    /// <summary>
+    /// Used to display a string as a transform path
+    /// </summary>
+    public class TransformPathAttribute : PropertyAttribute
     {
+        /// <summary>
+        /// The Root Object from which the paths are calculated.
+        /// <br></br>
+        /// Supports both a GameObject, an AssetReferenceT{GameObject} and a AdressReferencedPrefab
+        /// </summary>
         public string rootObjectProperty { get; }
 
-        public TransformPath(string rootObjectProperty)
+        /// <summary>
+        /// The name of a sibling property that can be used to inferr a required type within the Transform.
+        /// </summary>
+        public string siblingPropertyComponentTypeRequirement { get; set; }
+
+        public TransformPathAttribute(string rootObjectProperty)
         {
             this.rootObjectProperty = rootObjectProperty;
         }
