@@ -87,7 +87,7 @@ namespace MSU
         {
             [PrefabReference]
             public T reference;
-            [TransformPath(nameof(targetObject), siblingPropertyComponentTypeRequirement = nameof(reference))]
+            [TransformPath(nameof(targetObject), rootComponentType = typeof(CharacterModel), siblingPropertyComponentTypeRequirement = nameof(reference), allowSelectingRoot = false)]
             public string transformPath;
         }
         #endregion
@@ -111,12 +111,12 @@ namespace MSU
     [Serializable]
     public struct SerializableStaticMethod
     {
-        public string typeName;
+        public string assemblyQualifiedTypeName;
         public string methodName;
 
         public bool TryGetMethod(out MethodInfo methodInfo)
         {
-            Type t = Type.GetType(typeName);
+            Type t = Type.GetType(assemblyQualifiedTypeName);
             methodInfo = t.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
             return methodInfo != null;
         }
@@ -154,9 +154,16 @@ namespace MSU
         public string rootObjectProperty { get; }
 
         /// <summary>
-        /// The name of a sibling property that can be used to inferr a required type within the Transform.
+        /// The name of a sibling property that can be used to inferr a required type within the RootTransform's childrens
         /// </summary>
         public string siblingPropertyComponentTypeRequirement { get; set; }
+
+        /// <summary>
+        /// If specified, the RootTransform will be the _first_ object where this component is found.
+        /// </summary>
+        public Type rootComponentType { get; set; }
+
+        public bool allowSelectingRoot { get; set; }
 
         public TransformPathAttribute(string rootObjectProperty)
         {

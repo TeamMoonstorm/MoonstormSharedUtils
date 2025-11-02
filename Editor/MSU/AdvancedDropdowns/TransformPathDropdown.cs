@@ -9,9 +9,10 @@ namespace MSU.Editor
 {
     public class TransformPathDropdown : AdvancedDropdown
     {
-        public TransformPathDropdown(AdvancedDropdownState state, Transform rootTransform, bool useFullPathAsItemName, Rect displayRect, Type requiredComponentType = null) : base(state)
+        public TransformPathDropdown(AdvancedDropdownState state, Transform rootTransform, bool useFullPathAsItemName, bool allowSelectingRoot, Rect displayRect, Type requiredComponentType = null) : base(state)
         {
             this.rootItemKey = rootTransform.name;
+            this.allowSelectingRoot = allowSelectingRoot;
             this.rootTransform = rootTransform;
             this.useFullPathAsItemName = useFullPathAsItemName;
             this.requiredComponentType = requiredComponentType;
@@ -24,6 +25,7 @@ namespace MSU.Editor
         public event Action<Item> onItemSelected;
         private string rootItemKey;
 
+        public bool allowSelectingRoot { get; }
         public bool useFullPathAsItemName { get; }
         public Transform rootTransform { get; }
         public Type requiredComponentType { get; }
@@ -56,12 +58,19 @@ namespace MSU.Editor
             {
                 var item = items[key];
 
-                if (key == rootItemKey)
-                    continue;
 
                 //If we have a required component type, and the item's transform entry DOES NOT have a child that has the required component, skip it 
-                if(requiredComponentType != null && requiredComponentType.IsSameOrSubclassOf(typeof(Component)) && item.transform && !item.transform.GetComponentInChildren(requiredComponentType))
+                if(!HasRequiredComponent(item.transform, true))
                 {
+                    continue;
+                }
+
+                if (key == rootItemKey)
+                {
+                    if(allowSelectingRoot)
+                    {
+                        rootItem.AddChild(new Item("this", item.transform));
+                    }
                     continue;
                 }
 
@@ -73,10 +82,24 @@ namespace MSU.Editor
                 {
                     var parentName = key.Substring(0, key.LastIndexOf("/"));
                     items[parentName].AddChild(item);
+
+                    if(item.transform.childCount > 0 && HasRequiredComponent(item.transform, false))
+                    {
+                        item.AddChild(new Item("<b>this</b>", item.transform));
+                    }
                 }
             }
 
             return rootItem;
+        }
+
+        private bool HasRequiredComponent(Transform transform, bool inChildren)
+        {
+            if(requiredComponentType != null && requiredComponentType.IsSameOrSubclassOf(typeof(Component)) && transform)
+            {
+                return inChildren ? transform.GetComponentInChildren(requiredComponentType) : transform.TryGetComponent(requiredComponentType, out _);
+            }
+            return true;
         }
 
         private void AddTransformsInsideTransform(Transform parent, Dictionary<string, Item> items)

@@ -1,4 +1,4 @@
-﻿#if RISKOFTHUNDER_R2API_ADDRESSABLES
+﻿#if MSU_R2API_ADDRESSABLES
 using MSU.AddressReferencedAssets;
 using RoR2;
 using RoR2.Editor.PropertyDrawers;

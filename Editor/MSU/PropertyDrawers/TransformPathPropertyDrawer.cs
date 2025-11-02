@@ -1,4 +1,5 @@
 using R2API.AddressReferencedAssets;
+using RoR2;
 using RoR2.Editor;
 using System;
 using System.Collections;
@@ -20,26 +21,59 @@ namespace MSU.Editor.PropertyDrawers
         bool isRootTransformFromAddress;
         protected override void DrawIMGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            Transform rootTransform = GetRootTransform(propertyDrawerData.rootObjectProperty);
+            Transform rootTransform = GetRootTransform(propertyDrawerData.rootObjectProperty, propertyDrawerData.rootComponentType);
             if(!rootTransform)
             {
                 EditorGUI.LabelField(position, $"Could not find a valid Root Transform.");
             }
+            label.tooltip = $"The Transform that's being referenced";
             var prefixRect = EditorGUI.PrefixLabel(position, label);
 
-            if (EditorGUI.DropdownButton(prefixRect, label, FocusType.Passive))
+            if (EditorGUI.DropdownButton(prefixRect, CreateDropdownContent(property), FocusType.Passive, EditorStyles.text))
             {
                 Type componentType = GetRequiredComponentType(property, propertyDrawerData.siblingPropertyComponentTypeRequirement);
-                var dropdown = new TransformPathDropdown(new AdvancedDropdownState(), rootTransform, true, position, componentType);
+                bool allowSelectingRoot = propertyDrawerData.allowSelectingRoot;
+                var dropdown = new TransformPathDropdown(new AdvancedDropdownState(), rootTransform, true, allowSelectingRoot, position, componentType);
                 dropdown.onItemSelected += (item) =>
                 {
-                    Debug.Log(item.transform);
+                    if(!item.transform)
+                    {
+                        property.stringValue = string.Empty;
+                    }
+                    else
+                    {
+                        property.stringValue = Util.BuildPrefabTransformPath(rootTransform, item.transform, false, allowSelectingRoot);
+                    }
+                    property.serializedObject.ApplyModifiedProperties();
                 };
                 dropdown.Show(position);
             }
         }
 
-        private Transform GetRootTransform(string rootObjectPropertyName)
+        private GUIContent CreateDropdownContent(SerializedProperty property)
+        {
+            var result = new GUIContent();
+            if(property.stringValue.IsNullOrEmptyOrWhiteSpace())
+            {
+                result.text = "None";
+            }
+            else
+            {
+                string stringValue = property.stringValue;
+                string text = stringValue;
+                string tooltip = stringValue;
+                int lastIndexOfForwardSlash = stringValue.LastIndexOf('/');
+                if(lastIndexOfForwardSlash != -1)
+                {
+                    text = stringValue.Substring(lastIndexOfForwardSlash + 1);
+                }
+                result.text = text;
+                result.tooltip = tooltip;
+            }
+            return result;
+        }
+
+        private Transform GetRootTransform(string rootObjectPropertyName, Type rootComponentType)
         {
             if (_cachedRootTransform)
                 return _cachedRootTransform;
@@ -51,7 +85,7 @@ namespace MSU.Editor.PropertyDrawers
             //The Attribute is on a GameObject field
             if(rootObjectProperty.propertyType == SerializedPropertyType.ObjectReference && rootObjectProperty.objectReferenceValue && rootObjectProperty.objectReferenceValue is GameObject directReference0)
             {
-                _cachedRootTransform = directReference0.transform;
+                _cachedRootTransform = GetProperTransform(directReference0.transform, rootComponentType);
                 return _cachedRootTransform;
             }
 
@@ -62,7 +96,7 @@ namespace MSU.Editor.PropertyDrawers
                 && assetReferencePrefab_asset.objectReferenceValue
                 && assetReferencePrefab_asset.objectReferenceValue is GameObject directReference1)
             {
-                _cachedRootTransform= directReference1.transform;
+                _cachedRootTransform = GetProperTransform(directReference1.transform, rootComponentType);
                 return _cachedRootTransform;
             }
 
@@ -85,7 +119,7 @@ namespace MSU.Editor.PropertyDrawers
                     var asset = Addressables.LoadAssetAsync<GameObject>(guid).WaitForCompletion();
                     if(asset)
                     {
-                        _cachedRootTransform = asset.transform;
+                        _cachedRootTransform = GetProperTransform(asset.transform, rootComponentType);
                         return _cachedRootTransform;
                     }
                 }
@@ -102,7 +136,7 @@ namespace MSU.Editor.PropertyDrawers
                     var asset = Addressables.LoadAssetAsync<GameObject>($"{guid}[{subAssetNameProperty.stringValue}]").WaitForCompletion();
                     if(asset)
                     {
-                        _cachedRootTransform = asset.transform;
+                        _cachedRootTransform = GetProperTransform(asset.transform, rootComponentType);
                         return _cachedRootTransform;
                     }
                 }
@@ -111,6 +145,18 @@ namespace MSU.Editor.PropertyDrawers
             return null;
         }
 
+        private Transform GetProperTransform(Transform rootTransform, Type rootComponentType)
+        {
+            if(rootComponentType != null && rootComponentType.IsSameOrSubclassOf(typeof(Component)))
+            {
+                Component obtainedComponentForProperRoot = rootTransform.GetComponentInChildren(rootComponentType);
+                if(obtainedComponentForProperRoot != null)
+                {
+                    return obtainedComponentForProperRoot.transform;
+                }
+            }
+            return rootTransform;
+        }
         private Type GetRequiredComponentType(SerializedProperty stringProperty, string siblingPropertyName)
         {
             var parentProperty = FindParentProperty(stringProperty);
