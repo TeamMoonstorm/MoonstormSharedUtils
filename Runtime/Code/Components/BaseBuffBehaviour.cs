@@ -49,7 +49,7 @@ namespace MSU
 
         /// <summary>
         /// Gets the total stacks of the BuffDef associated with this BaseBuffBehaviour.
-        /// <br>This property is automatically updated whenever the Buff's count changes, once the value. Once the behaviour is added, it gets enabled or disabled as needed depending on the incoming value.</br>
+        /// <br>This property is automatically updated whenever the Buff's count changes. Once the behaviour is added, it gets enabled or disabled as needed depending on the incoming value.</br>
         /// </summary>
         public int buffCount
         {
@@ -109,6 +109,8 @@ namespace MSU
         /// Awake method for BaseBuffBehaviour
         /// 
         /// <br>Call the base method so that the <see cref="characterBody"/> property is properly initialized.</br>
+        /// <para></para>
+        /// Important Notice: The Awake method of a BuffBehaviour should not change state of the CharacterBody, it should be used exclusively for setting up needed components/load needed assets for the BuffBehaviour to work properly.
         /// </summary>
         protected virtual void Awake()
         {

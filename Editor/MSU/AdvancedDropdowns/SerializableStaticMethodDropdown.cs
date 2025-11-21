@@ -34,6 +34,9 @@ namespace RoR2.Editor
             {
                 var itemFullName = method.DeclaringType.FullName + "." + method.Name + "()";
 
+                if (!method.IsStatic)
+                    continue;
+
                 if (requiredReturnType != null && method.ReturnType != requiredReturnType)
                     continue;
 

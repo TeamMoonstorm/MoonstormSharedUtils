@@ -95,7 +95,11 @@ namespace MSU.Editor
 
         private bool HasRequiredComponent(Transform transform, bool inChildren)
         {
-            if(requiredComponentType != null && requiredComponentType.IsSameOrSubclassOf(typeof(Component)) && transform)
+            //Only check if we have the component if: We have a required component, the required component is NOT Transform, the required component IS a subclass of Component, and the transform value exists.
+            if(requiredComponentType != null && 
+                !requiredComponentType.IsSameOrSubclassOf(typeof(Transform)) && 
+                requiredComponentType.IsSameOrSubclassOf(typeof(Component)) && 
+                transform)
             {
                 return inChildren ? transform.GetComponentInChildren(requiredComponentType) : transform.TryGetComponent(requiredComponentType, out _);
             }

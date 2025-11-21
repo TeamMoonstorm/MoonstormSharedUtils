@@ -29,7 +29,7 @@ namespace MSU.Editor.PropertyDrawers
             label.tooltip = $"The Transform that's being referenced";
             var prefixRect = EditorGUI.PrefixLabel(position, label);
 
-            if (EditorGUI.DropdownButton(prefixRect, CreateDropdownContent(property), FocusType.Passive, EditorStyles.text))
+            if (EditorGUI.DropdownButton(prefixRect, CreateDropdownContent(property), FocusType.Passive))
             {
                 Type componentType = GetRequiredComponentType(property, propertyDrawerData.siblingPropertyComponentTypeRequirement);
                 bool allowSelectingRoot = propertyDrawerData.allowSelectingRoot;
