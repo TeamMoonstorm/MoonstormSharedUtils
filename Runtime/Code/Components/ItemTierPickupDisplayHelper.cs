@@ -23,7 +23,7 @@ namespace MSU
             if (!_display)
                 return;
 
-            PickupDef def = PickupCatalog.GetPickupDef(_display.pickupIndex);
+            PickupDef def = PickupCatalog.GetPickupDef(_display.GetPickupIndex());
             if (def == null)
                 return;
 

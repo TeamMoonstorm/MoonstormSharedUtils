@@ -1,6 +1,11 @@
 ﻿using BepInEx;
+using RoR2;
+using RoR2.ContentManagement;
+using System.Collections;
 using System.IO;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using Path = System.IO.Path;
 
 namespace MSU
 {
@@ -23,7 +28,7 @@ namespace MSU
     [BepInDependency(R2API.Networking.NetworkingAPI.PluginGUID)]
     #endregion
     [BepInDependency("com.rune580.riskofoptions")]
-    [BepInDependency(LoadingScreenFix.LoadingScreenFix.PluginGUID)]
+    [BepInDependency(LoadingScreenFix.LoadingScreenFix.PluginGUID, BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("xyz.yekoc.Holy", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("iHarbHD.DebugToolkit", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInPlugin(GUID, MODNAME, VERSION)]

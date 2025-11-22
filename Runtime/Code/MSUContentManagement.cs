@@ -173,9 +173,9 @@ namespace MSU
             if (!bodyBuffBehaviours.ContainsKey(buffType))
             {
                 var newBehaviour = (BaseBuffBehaviour)self.gameObject.AddComponent(_buffToBehaviour[buffType]);
+                bodyBuffBehaviours.Add(buffType, newBehaviour);
                 newBehaviour.buffIndex = buffType;
                 newBehaviour.buffCount = newCount;
-                bodyBuffBehaviours.Add(buffType, newBehaviour);
                 var manager = _bodyToContentBehaviour[self];
                 manager.StartGetInterfaces();
                 return;

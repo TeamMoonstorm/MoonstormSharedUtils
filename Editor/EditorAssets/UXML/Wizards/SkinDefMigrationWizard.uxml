@@ -1,0 +1,5 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <uie:PropertyField name="SkinsToMigrate" binding-path="skinsToMigrate" />
+    <uie:PropertyField name="VanillaSkinDefsToMigrate" binding-path="vanillaSkinDefsToMigrate" />
+    <ui:Button text="Load all Skin Types" display-tooltip-when-elided="true" name="LoadAllSkinTypes" />
+</ui:UXML>
