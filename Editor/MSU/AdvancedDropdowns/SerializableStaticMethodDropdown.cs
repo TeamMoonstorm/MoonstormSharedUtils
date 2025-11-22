@@ -22,7 +22,7 @@ namespace RoR2.Editor
 
         protected override AdvancedDropdownItem BuildRoot()
         {
-            List<MethodInfo> methods = TypeCache.GetMethodsWithAttribute<SerializableStaticMethod.MethodDetector>().OrderBy(methodInfo => methodInfo.DeclaringType.FullName + "." + methodInfo.Name).ToList();
+            List<MethodInfo> methods = TypeCache.GetMethodsWithAttribute<SerializableStaticMethod.MethodDetectorAttribute>().OrderBy(methodInfo => methodInfo.DeclaringType.FullName + "." + methodInfo.Name).ToList();
 
             var items = new Dictionary<string, Item>();
             var rootItem = new Item(rootItemKey, rootItemKey, rootItemKey);

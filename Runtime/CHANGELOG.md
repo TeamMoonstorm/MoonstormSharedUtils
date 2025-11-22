@@ -1,3 +1,27 @@
+# '2.4.1' - Alloyed Peaklective
+
+* Updated to Alloyed Collective (1.4.0)
+* Note: This is being released in this state due to the maintainer going on vacation for thanksgiving week, any errors will be fixed on 2.4.2
+
+## Runtime
+* Added the UberSkinDef, the all in one skin solution for both regular and vanilla characters
+  * Contains support for creating skins for both Vanilla characters and Custom characters utilizing the rootTransform field
+  * Has built-in support for R2API.Skin's SkinVFXInfo
+  * Meant to replace VanillaSkinDef
+* Added a SerializableStaticMethod, which can be utilized to Serialize a Static Method... duh
+  * Specify arguments utilizing the RequiredArguments attribute
+  * Decorate a method with the MethodDetector attribute so it can be detected by the editor scripts
+* Added a TransformPathAttribute, which can be utilize to serialize a transform path into a string field
+  * Specify the name of a property in the SerializedObject which contains teh reference to the root object itself.
+  * Supports GameObjects, AssetReferenceT<GameObject> and AddressReferencedPrefab
+* AddressReferencedSkinDef can now specify wether it can load a skin via the Catalog
+* Fixed a bug where buff behaviours could modify state prior to being added to the internal dictionary
+
+
+## Editor
+* Fix the AddressReferencedSkinDefDrawer checking for a nonexistent define
+* Added a SkinDefMigrationWizard... which doesnt work :D
+
 # '2.3.2' - Improvements
 
 ## Runtime

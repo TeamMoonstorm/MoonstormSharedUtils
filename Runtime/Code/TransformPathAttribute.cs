@@ -25,8 +25,15 @@ namespace MSU
         /// </summary>
         public Type rootComponentType { get; set; }
 
+        /// <summary>
+        /// If true, the RootObject can be selected
+        /// </summary>
         public bool allowSelectingRoot { get; set; }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="rootObjectProperty">assigns <see cref="rootObjectProperty"/></param>
         public TransformPathAttribute(string rootObjectProperty)
         {
             this.rootObjectProperty = rootObjectProperty;

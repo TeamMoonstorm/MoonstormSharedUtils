@@ -111,7 +111,7 @@ MSU provides the following ScriptableObjects that allows for the creation of "ru
 * ``ItemDisplayDictionary``, a ScriptableObject that works akin to ``R2API.Items``'s ItemDisplayDictionary system, it can be used for adding multiple RuleGroups to existing ``ItemDisplayRuleSets``, the key assets and display prefabs are powered by the ``ItemDisplayCatalog`` system within MSU.
 * ``NamedItemDisplayRuleSet``, a ScriptableObject that can be used for creating a complete ``ItemDisplayRuleSet`` for character models. the key assets and display prefabs are powered by the ``ItemDisplayCatalog``system within MSU.
 * ``SerializableEliteTierDef``, works as an Abstraction of the ``EliteTierDef`` system within the game, can assign a cost multiplier, addressable references to base game elite tiers and mode.
-* ``VanillaSkinDef``, works as an Extension of the ``SkinDef``system, its used for adding new skins to vanilla characters.
+* ``UberSkinDef``, works as a catch-all utility for SkinDefs, implementing support for R2API's SkinVFX system and adding skins to vanilla character
 
 #### Prebuilt CompossableObjects
 

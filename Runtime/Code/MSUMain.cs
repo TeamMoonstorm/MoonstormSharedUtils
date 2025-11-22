@@ -1,10 +1,5 @@
 ﻿using BepInEx;
-using RoR2;
-using RoR2.ContentManagement;
-using System.Collections;
-using System.IO;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using Path = System.IO.Path;
 
 namespace MSU
@@ -25,10 +20,11 @@ namespace MSU
     [BepInDependency(R2API.DotAPI.PluginGUID)]
     [BepInDependency(R2API.Networking.NetworkingAPI.PluginGUID)]
     [BepInDependency(R2API.StageRegistration.PluginGUID)]
-    [BepInDependency(R2API.Networking.NetworkingAPI.PluginGUID)]
+    [BepInDependency("com.bepis.r2api.extendedStringSerializer")]
+    [BepInDependency(R2API.Skins.PluginGUID)]
     #endregion
     [BepInDependency("com.rune580.riskofoptions")]
-    [BepInDependency(LoadingScreenFix.LoadingScreenFix.PluginGUID, BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency(LoadingScreenFix.LoadingScreenFix.PluginGUID)]
     [BepInDependency("xyz.yekoc.Holy", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("iHarbHD.DebugToolkit", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInPlugin(GUID, MODNAME, VERSION)]
@@ -45,7 +41,7 @@ namespace MSU
         /// <summary>
         /// The version of MSU that's being used
         /// </summary>
-        public const string VERSION = "2.3.1";
+        public const string VERSION = "2.4.1";
 
         /// <summary>
         /// The plugin's PluginInfo

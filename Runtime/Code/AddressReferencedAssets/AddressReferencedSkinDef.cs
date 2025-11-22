@@ -11,6 +11,9 @@ namespace MSU.AddressReferencedAssets
     [Serializable]
     public class AddressReferencedSkinDef : AddressReferencedAsset<SkinDef>
     {
+        /// <summary>
+        /// Wether the SkinDef can be loaded via the catalog utilizing the SkinDef's asset name
+        /// </summary>
         public override bool CanLoadFromCatalog { get => _canLoadFromCatalog; protected set => _canLoadFromCatalog = value; }
         [SerializeField] private bool _canLoadFromCatalog;
 

@@ -7,8 +7,8 @@ using UnityEngine;
 
 namespace MSU.Editor.PropertyDrawers
 {
-    [CustomPropertyDrawer(typeof(SerializableStaticMethod.RequiredArguments))]
-    public class SerializableStaticMethodDrawer : IMGUIPropertyDrawer<SerializableStaticMethod.RequiredArguments>
+    [CustomPropertyDrawer(typeof(SerializableStaticMethod.RequiredArgumentsAttribute))]
+    public class SerializableStaticMethodDrawer : IMGUIPropertyDrawer<SerializableStaticMethod.RequiredArgumentsAttribute>
     {
         StringBuilder argumentsStringBuilder = new StringBuilder();
         protected override void DrawIMGUI(Rect position, SerializedProperty property, GUIContent label)
