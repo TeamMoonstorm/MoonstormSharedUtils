@@ -1,3 +1,8 @@
+# '2.4.2' - I'm tired man
+
+* Updated because github version was pointing to the wrong commit hash :D
+* Erros will be fixed on 2.4.3 as a result.
+
 # '2.4.1' - Alloyed Peaklective
 
 * Updated to Alloyed Collective (1.4.0)
