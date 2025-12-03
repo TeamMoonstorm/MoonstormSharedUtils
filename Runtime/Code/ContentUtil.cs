@@ -61,6 +61,15 @@ namespace MSU
         }
 
         /// <summary>
+        /// Disables the provided DroneDef by setting it's required <see cref="DroneDef.requiredExpansion"/> to a Dummy ExpansionDef thats not added to the ExpansionCatalog
+        /// </summary>
+        /// <param name="droneDef">The Drone to Disable</param>
+        public static void DisableDrone(DroneDef droneDef)
+        {
+            droneDef.requiredExpansion = _dummyExpansion;
+        }
+
+        /// <summary>
         /// See also <see cref="IContentPieceProvider"/>
         /// <para>Creates a new, non generic ContentPieceProvider for the specified interface that inherits from <see cref="IContentPiece"/>, which is the typeParam <typeparamref name="TContentPieceType"/>. This is done by analyzing the assembly from <paramref name="plugin"/> and creating new instances of classes that implement <typeparamref name="TContentPieceType"/></para>
         /// <br>This is particularly useful for creating a ContentPieceProvider for the <see cref="VanillaSurvivorModule"/>, where you can just set <typeparamref name="TContentPieceType"/> to <see cref="IVanillaSurvivorContentPiece"/></br>
@@ -380,6 +389,8 @@ namespace MSU
                 case ExpansionDef __ed: contentPack.expansionDefs.AddSingle(__ed); break;
                 case EntitlementDef ___ed: contentPack.entitlementDefs.AddSingle(___ed); break;
                 case MiscPickupDef mpd: contentPack.miscPickupDefs.AddSingle(mpd); break;
+                case DroneDef dd: contentPack.droneDefs.AddSingle(dd); break;
+                case CraftableDef cd: contentPack.craftableDefs.AddSingle(cd); break;
                 case EntityStateTypeCollection estc: AddEntityStateTypes(estc, contentPack); break;
             }
         }
