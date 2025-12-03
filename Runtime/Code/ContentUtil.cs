@@ -390,6 +390,7 @@ namespace MSU
                 case EntitlementDef ___ed: contentPack.entitlementDefs.AddSingle(___ed); break;
                 case MiscPickupDef mpd: contentPack.miscPickupDefs.AddSingle(mpd); break;
                 case DroneDef dd: contentPack.droneDefs.AddSingle(dd); break;
+                case CraftableDef cd: contentPack.craftableDefs.AddSingle(cd); break;
                 case EntityStateTypeCollection estc: AddEntityStateTypes(estc, contentPack); break;
             }
         }
