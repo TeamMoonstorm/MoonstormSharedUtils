@@ -157,9 +157,14 @@ namespace MSU.Editor.PropertyDrawers
             }
             return rootTransform;
         }
+
         private Type GetRequiredComponentType(SerializedProperty stringProperty, string siblingPropertyName)
         {
-            var parentProperty = FindParentProperty(stringProperty);
+            if(!stringProperty.TryGetParentProperty(out var parentProperty))
+            {
+                return null;
+            }
+
             SerializedProperty objectReferenceProperty = null;
             if(parentProperty == null)
             {
@@ -170,52 +175,8 @@ namespace MSU.Editor.PropertyDrawers
                 objectReferenceProperty = parentProperty.FindPropertyRelative(siblingPropertyName);
             }
 
-            FieldInfo fieldInfo = GetFieldInfoFromProperty(objectReferenceProperty);
+            objectReferenceProperty.GetFieldInfoFromProperty(out var fieldInfo);
             return fieldInfo.FieldType;
-        }
-
-        private SerializedProperty FindParentProperty(SerializedProperty serializedProperty)
-        {
-            var propertyPaths = serializedProperty.propertyPath.Split('.');
-            if (propertyPaths.Length <= 1)
-            {
-                return default;
-            }
-
-            var parentSerializedProperty = serializedProperty.serializedObject.FindProperty(propertyPaths.First());
-            for (var index = 1; index < propertyPaths.Length - 1; index++)
-            {
-                if (propertyPaths[index] == "Array" && propertyPaths.Length > index + 1 && Regex.IsMatch(propertyPaths[index + 1], "^data\\[\\d+\\]$"))
-                {
-                    var match = Regex.Match(propertyPaths[index + 1], "^data\\[(\\d+)\\]$");
-                    var arrayIndex = int.Parse(match.Groups[1].Value);
-                    parentSerializedProperty = parentSerializedProperty.GetArrayElementAtIndex(arrayIndex);
-                    index++;
-                }
-                else
-                {
-                    parentSerializedProperty = parentSerializedProperty.FindPropertyRelative(propertyPaths[index]);
-                }
-            }
-
-            return parentSerializedProperty;
-        }
-
-        private static MethodInfo getFieldInfoFromProperty;
-        private FieldInfo GetFieldInfoFromProperty(SerializedProperty property)
-        {
-            if(getFieldInfoFromProperty == null)
-            {
-                var scriptAttributeUtilityType = typeof(UnityEditor.Editor).Assembly.GetType("UnityEditor.ScriptAttributeUtility");
-                getFieldInfoFromProperty = scriptAttributeUtilityType.GetMethod(nameof(GetFieldInfoFromProperty), BindingFlags.NonPublic | BindingFlags.Static);
-            }
-
-            var fieldInfo = (FieldInfo)getFieldInfoFromProperty.Invoke(null, new object[]
-            {
-                property,
-                null
-            });
-            return fieldInfo;
         }
     }
 }

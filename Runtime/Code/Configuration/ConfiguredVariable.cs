@@ -176,7 +176,7 @@ namespace MSU.Config
         /// <summary>
         /// Returns an unique hashcode for this ConfiguredVariable, using the HashCode of <see cref="key"/> and <see cref="section"/>
         /// </summary>
-        public int configHash => Convert.ToInt32(_key.GetHashCode() / 2) + (_section.GetHashCode() / 2);
+        public int configHash => HashCode.Combine(_key.GetHashCode(), _section.GetHashCode());
 
         /// <summary>
         /// Wether the Variable is actually Configurable by the <see cref="BepInEx.Configuration.TomlTypeConverter"/>
@@ -375,7 +375,7 @@ namespace MSU.Config
         /// <param name="key">The key value of the desired ConfigEntry</param>
         /// <param name="section">The desited section value of the desired ConfigEntry</param>
         /// <returns>The DelegateContainer for the ConfigEntry, if no DelegateContainer exists for said config it returns null.</returns>
-        public static DelegateContainer GetDelegateContainer(string key, string section) => GetDelegateContainer(Convert.ToInt32(key.GetHashCode() / 2) + (section.GetHashCode() / 2));
+        public static DelegateContainer GetDelegateContainer(string key, string section) => GetDelegateContainer(HashCode.Combine(key.GetHashCode(), section.GetHashCode()));
 
         /// <summary>
         /// Returns the <see cref="DelegateContainer"/> for the specified ConfiguredVariable

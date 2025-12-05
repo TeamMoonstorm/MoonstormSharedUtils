@@ -14,7 +14,7 @@ namespace MSU
     /// </summary>
     public static class LanguageFileLoader
     {
-        internal static Dictionary<string, Dictionary<string, string>> _languageNameToRawTokenData = new Dictionary<string, Dictionary<string, string>>();
+        internal static Dictionary<string, Dictionary<string, string>> _languageNameToRawTokenData = new Dictionary<string, Dictionary<string, string>>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
         /// Adds new language files from the specified mod to the LanguageFileLoader
