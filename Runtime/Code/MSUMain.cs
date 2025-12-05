@@ -51,7 +51,18 @@ namespace MSU
         /// <summary>
         /// Access to MSU's instance plugin.
         /// </summary>
-        public static MSUMain instance { get; private set; }
+        public static MSUMain instance
+        {
+            get
+            {
+                if(!_instance)
+                {
+                    Debug.LogError($"MSUFATAL: MSU INSTANCE DOES NOT EXIST, HOW THE !$%& DID THIS HAPPEN??? PLEASE SHARE THE LOG AND PROFILE WITH NEBBY!");
+                }
+                return _instance;
+            }
+        }
+        private static MSUMain _instance;
 
         /// <summary>
         /// The AssetBundle for MSU
