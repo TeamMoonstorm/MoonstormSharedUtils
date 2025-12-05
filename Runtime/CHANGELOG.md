@@ -1,3 +1,18 @@
+# '2.4.3' - Bugfixes
+
+* Thanks @MysticalChicken for the fixes regarding content addition of DroneDefs and CraftableDefs!
+
+## Runtime
+
+* ConfiguredVariable's configHash is now calculated using ``HashCode.Combine``
+* Added ability to Disable a drone in ``ContentUtil.cs``
+* ``ContentUtil.HandleAssetAddition`` now properly handles ``DroneDef`` and ``CraftableDef``
+* Fixed an issue with ProperSave where language loading could cause exceptions at runtime
+
+## Editor
+
+* Updated RoR2EditorKit dependency to at least 5.6.0
+
 # '2.4.2' - I'm tired man
 
 * Updated because github version was pointing to the wrong commit hash :D
@@ -9,6 +24,7 @@
 * Note: This is being released in this state due to the maintainer going on vacation for thanksgiving week, any errors will be fixed on 2.4.2
 
 ## Runtime
+
 * Added the UberSkinDef, the all in one skin solution for both regular and vanilla characters
   * Contains support for creating skins for both Vanilla characters and Custom characters utilizing the rootTransform field
   * Has built-in support for R2API.Skin's SkinVFXInfo

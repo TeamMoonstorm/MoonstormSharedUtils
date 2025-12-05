@@ -73,7 +73,7 @@ namespace MSU
 
         private void Awake()
         {
-            instance = this;
+            _instance = this;
             pluginInfo = Info;
             new MSULog(Logger);
             msuAssetBundle = AssetBundle.LoadFromFile(Path.Combine(assetBundleDir, "runtimemsuassetbundle"));
