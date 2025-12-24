@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using UnityEngine;
+using static RoR2.CombatDirector;
+using static MSU.ExtendedEliteDef;
 
 namespace MSU
 {
@@ -191,25 +193,26 @@ namespace MSU
 
         private static void GetTiersToModify(ExtendedEliteDef extendedEliteDef, CombatDirector.EliteTierDef[] vanillaTiers, List<CombatDirector.EliteTierDef> tierOutput)
         {
-            ExtendedEliteDef.VanillaTierFlags eliteTierFlags = extendedEliteDef.eliteTierFlags;
-            //Not using flags? use the deprecated version, if the deprecated version is also none then its not added anywhere.
-            if(eliteTierFlags.HasFlag(ExtendedEliteDef.VanillaTierFlags.None))
+            //Not using VanillaEliteTier? use the deprecated version, if the deprecated version is also none then its not added anywhere.
+            if(extendedEliteDef.vanillaEliteTier == VanillaEliteTierEntry.None)
             {
 #pragma warning disable CS0618 // Type or member is obsolete
                 switch (extendedEliteDef.eliteTier)
                 {
-                    case ExtendedEliteDef.VanillaTier.HonorDisabled:
+                    case VanillaTier.None:
+                        break;
+                    case VanillaTier.HonorDisabled:
                         tierOutput.Add(vanillaTiers[1]);
                         tierOutput.Add(vanillaTiers[4]);
                         break;
-                    case ExtendedEliteDef.VanillaTier.HonorActive:
+                    case VanillaTier.HonorActive:
                         tierOutput.Add(vanillaTiers[2]);
                         tierOutput.Add(vanillaTiers[3]);
                         break;
-                    case ExtendedEliteDef.VanillaTier.PostLoop:
+                    case VanillaTier.PostLoop:
                         tierOutput.Add(vanillaTiers[5]);
                         break;
-                    case ExtendedEliteDef.VanillaTier.Lunar:
+                    case VanillaTier.Lunar:
                         tierOutput.Add(vanillaTiers[6]);
                         break;
                 }
@@ -217,29 +220,34 @@ namespace MSU
                 return;
             }
 
-            if((eliteTierFlags & ExtendedEliteDef.VanillaTierFlags.Tier1) == ExtendedEliteDef.VanillaTierFlags.Tier1)
+            switch(extendedEliteDef.vanillaEliteTier)
             {
-                tierOutput.Add(vanillaTiers[1]);
-            }
-            if((eliteTierFlags & ExtendedEliteDef.VanillaTierFlags.Tier1Honor) == ExtendedEliteDef.VanillaTierFlags.Tier1Honor)
-            {
-                tierOutput.Add(vanillaTiers[2]);
-            }
-            if ((eliteTierFlags & ExtendedEliteDef.VanillaTierFlags.Tier1_5Honor) == ExtendedEliteDef.VanillaTierFlags.Tier1_5Honor)
-            {
-                tierOutput.Add(vanillaTiers[3]);
-            }
-            if((eliteTierFlags & ExtendedEliteDef.VanillaTierFlags.Tier1_5) == ExtendedEliteDef.VanillaTierFlags.Tier1_5)
-            {
-                tierOutput.Add(vanillaTiers[4]);
-            }
-            if((eliteTierFlags & ExtendedEliteDef.VanillaTierFlags.Tier2) == ExtendedEliteDef.VanillaTierFlags.Tier2)
-            {
-                tierOutput.Add(vanillaTiers[5]);
-            }
-            if((eliteTierFlags & ExtendedEliteDef.VanillaTierFlags.Lunar) == ExtendedEliteDef.VanillaTierFlags.Lunar)
-            {
-                tierOutput.Add(vanillaTiers[6]);
+                case VanillaEliteTierEntry.Tier1:
+                    tierOutput.Add(vanillaTiers[1]);
+                    break;
+                case VanillaEliteTierEntry.Tier1_5:
+                    tierOutput.Add(vanillaTiers[4]);
+                    break;
+                case VanillaEliteTierEntry.GlobalTier1:
+                    tierOutput.AddRange(new EliteTierDef[] { vanillaTiers[1], vanillaTiers[2] });
+                    break;
+
+                case VanillaEliteTierEntry.Tier1Honor:
+                    tierOutput.Add(vanillaTiers[2]);
+                    break;
+                case VanillaEliteTierEntry.Tier1_5Honor:
+                    tierOutput.Add(vanillaTiers[3]);
+                    break;
+                case VanillaEliteTierEntry.GlobalTier1Honor:
+                    tierOutput.AddRange(new EliteTierDef[] { vanillaTiers[2], vanillaTiers[3] });
+                    break;
+
+                case VanillaEliteTierEntry.Tier2:
+                    tierOutput.Add(vanillaTiers[5]);
+                    break;
+                case VanillaEliteTierEntry.Lunar:
+                    tierOutput.Add(vanillaTiers[6]);
+                    break;
             }
         }
 
