@@ -2,6 +2,9 @@
 using System;
 using System.Linq;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace MSU
 {
@@ -18,15 +21,31 @@ namespace MSU
         [ContextMenu("Add Selected Scripts")]
         private void AddSelectedScripts()
         {
-            var monoscripts = UnityEditor.Selection.assetGUIDs.Select(UnityEditor.AssetDatabase.GUIDToAssetPath).Select(UnityEditor.AssetDatabase.LoadAssetAtPath<UnityEngine.Object>)
-                .OfType<UnityEditor.MonoScript>();
+            var monoscripts = Selection.assetGUIDs.Select(AssetDatabase.GUIDToAssetPath).Select(AssetDatabase.LoadAssetAtPath<UnityEngine.Object>)
+                .OfType<MonoScript>();
 
             var entityStateTypes = monoscripts.Select(ms => ms.GetClass())
                 .Where(t => t.IsSubclassOf(typeof(EntityState)));
 
             stateTypes = stateTypes.Union(entityStateTypes.Select(t => new SerializableEntityStateType(t)).Where(t => !stateTypes.Contains(t))).ToArray();
 
-            UnityEditor.EditorUtility.SetDirty(this);
+            EditorUtility.SetDirty(this);
+        }
+
+        [ContextMenu("Add Scripts found on this Directory and Children")]
+        private void AddScriptsFoundOnThisDirectoryAndChildren()
+        {
+            var monoScripts = AssetDatabase.FindAssets("t:MonoScript", new string[] { System.IO.Path.GetDirectoryName(AssetDatabase.GetAssetPath(this))})
+                .Select(AssetDatabase.GUIDToAssetPath)
+                .Select(AssetDatabase.LoadAssetAtPath<UnityEngine.Object>)
+                .OfType<MonoScript>();
+
+            var entityStateTypes = monoScripts.Select(ms => ms.GetClass())
+                .Where(t => t.IsSameOrSubclassOf(typeof(EntityState)));
+
+            stateTypes = stateTypes.Union(entityStateTypes.Select(t => new SerializableEntityStateType(t))).ToArray();
+
+            EditorUtility.SetDirty(this);
         }
 #endif
     }
