@@ -7,6 +7,8 @@ using R2API.AddressReferencedAssets;
 using R2API;
 using System.Reflection;
 using System.Collections;
+using RoR2.Projectile;
+using System.Collections.Generic;
 
 namespace MSU
 {
@@ -190,6 +192,7 @@ namespace MSU
             /// <summary>
             /// The Projectile that we're going to replace it's ghost. Can be either a direct reference or an address reference.
             /// </summary>
+            [AddressableComponentRequirement(typeof(ProjectileController))]
             public AddressReferencedPrefab projectilePrefab;
 
             /// <summary>
@@ -219,6 +222,7 @@ namespace MSU
             /// <summary>
             /// The CharacterBody prefab that we're going to apply a specific skin. Can be either a direct reference or an address reference.
             /// </summary>
+            [AddressableComponentRequirement(typeof(CharacterBody))]
             public AddressReferencedPrefab minionBodyPrefab;
             /// <summary>
             /// The SkinDef to utilize
@@ -301,7 +305,7 @@ namespace MSU
             /// }
             /// </code>
             /// </summary>
-            [SerializableStaticMethod.RequiredArgumentsAttribute(typeof(void), typeof(GameObject))]
+            [SerializableStaticMethod.RequiredArguments(typeof(void), typeof(GameObject))]
             public SerializableStaticMethod serializedOnEffectSpawned;
 
             /// <summary>
@@ -410,11 +414,13 @@ namespace MSU
         /// <summary>
         /// An array of SkinDef references, which can be either direct or address references. Keep in mind that these Skins CANNOT be loaded from the catalog!
         /// </summary>
-        public AddressReferencedSkinDef[] baseSkins;
+        [NoCatalogLoad]
+        public AddressReferencedSkinDef[] baseSkins = Array.Empty<AddressReferencedSkinDef>();
 
         /// <summary>
         /// The TargetObject, which should be either a direct reference to the CharacterBody, or an address reference to the CharacterBody. The mod will resolve the CharacterModel reference automatically. 
         /// </summary>
+        [AddressableComponentRequirement(typeof(ModelSkinController), searchInChildren = true)]
         public AddressReferencedPrefab targetObject;
 
         /// <summary>
