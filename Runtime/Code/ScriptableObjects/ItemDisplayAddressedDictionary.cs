@@ -16,7 +16,7 @@ namespace MSU
     {
         #region SubTypes
         [Serializable]
-        public struct AddressableItemDisplayRule
+        public struct ItemAddressedDisplayRule
         {
             public ItemDisplayRuleType ruleType;
             [AddressableComponentRequirement(typeof(ItemDisplay))]
@@ -47,13 +47,13 @@ namespace MSU
         public struct DisplayDictionaryEntry
         {
             public AssetReferenceT<IDRS> targetIDRS;
-            public List<AddressableItemDisplayRule> rules;
+            public List<ItemAddressedDisplayRule> rules;
 
             public bool isEmpty => rules != null ? rules.Count == 0 : true;
 
-            public void AddDisplayRule(AddressableItemDisplayRule rule)
+            public void AddDisplayRule(ItemAddressedDisplayRule rule)
             {
-                rules ??= new List<AddressableItemDisplayRule>();
+                rules ??= new List<ItemAddressedDisplayRule>();
                 rules.Add(rule);
             }
 
