@@ -251,21 +251,33 @@ namespace MSU
             }
         }
 
+        /*
+         * We want to have custom handling of Elite Light and Particle Material Overrides for
+         * our ExtendedEliteDefs, we'll do this by matching right before the UpdateGoldAffix method call,
+         * and using AfterLabel to make the if-else chaining use our custom code instead of immediatly
+         * calling UpdateGoldAffix
+         * 
+         * else
+         * {
+         *     lightColorOverride = null;
+         *     particleMaterialOverride = null;
+         * }
+         * <----- ILHook code goes here
+         * UpdateGoldAffix();
+         */
         private static void HandleEliteOverrides(MonoMod.Cil.ILContext il)
         {
             ILCursor cursor = new ILCursor(il);
 
-            bool success = cursor.TryGotoNext(x => x.MatchLdarg(0),
-                x => x.MatchLdnull(),
-                x => x.MatchStfld<CharacterModel>(nameof(CharacterModel.particleMaterialOverride)));
-
-            if(!success)
+            if(!cursor.TryGotoNext(MoveType.AfterLabel, x => x.MatchLdarg(out _),
+                x => x.MatchCallOrCallvirt<CharacterModel>(nameof(CharacterModel.UpdateGoldAffix))))
             {
                 MSULog.Fatal("Failed to match the required instructions for Elite light and particle material replacements!");
                 IL.RoR2.CharacterModel.InstanceUpdate -= HandleEliteOverrides;
                 return;
             }
 
+            //Get the charactermodel instance we want to modify
             cursor.Emit(OpCodes.Ldarg_0);
             cursor.EmitDelegate<Action<CharacterModel>>(HandleEliteOverridesInternal);
 
