@@ -85,7 +85,7 @@ namespace MSU.Editor
 
                     if(item.transform.childCount > 0 && HasRequiredComponent(item.transform, false))
                     {
-                        item.AddChild(new Item("<b>this</b>", item.transform));
+                        item.AddChild(new Item("this", item.transform));
                     }
                 }
             }
