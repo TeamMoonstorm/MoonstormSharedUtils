@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <Style src="project://database/Packages/riskofthunder-ror2editorkit/Assets/VisualElements/R2EKGlobalStlye.uss?fileID=7433441132597879392&amp;guid=81861b4c6318b874391de872e1793059&amp;type=3#R2EKGlobalStlye" />
+    <uie:PropertyField name="KeyAsset" binding-path="keyAsset" />
+    <ui:TextField picking-mode="Ignore" label="IDRS Filter" name="IDRSFilter" is-delayed="true">
+        <ui:Button text="Force Refresh" display-tooltip-when-elided="true" name="ForceRefresh" />
+    </ui:TextField>
+    <ui:ListView focusable="true" name="DisplayEntries" virtualization-method="DynamicHeight" show-border="true" selection-type="None" show-alternating-row-backgrounds="All" show-foldout-header="true" header-title="Display Entries" show-add-remove-footer="true" reorderable="false" show-bound-collection-size="true" style="flex-grow: 1; max-height: 100%;" />
+</ui:UXML>

@@ -200,4 +200,82 @@ namespace MSU
             }
         }
     }
+
+    public class CoroutineWithResult : IEnumerator
+    {
+        object IEnumerator.Current => throw new NotImplementedException();
+
+        protected IEnumerator _runningCoroutine;
+
+        public object boxedResult { get; protected set; }
+
+        public virtual bool MoveNext()
+        {
+            bool moveNextValue = _runningCoroutine.MoveNext();
+            //Only retrieve the result if moveNext is true.
+            if (moveNextValue)
+            {
+                boxedResult = _runningCoroutine.Current;
+            }
+            return moveNextValue;
+        }
+
+        public void StartNew(IEnumerator coroutineThatEventuallyYieldsAResult)
+        {
+            _runningCoroutine = coroutineThatEventuallyYieldsAResult;
+        }
+
+        void IEnumerator.Reset()
+        {
+            throw new NotSupportedException();
+        }
+
+        public CoroutineWithResult(IEnumerator coroutineThatEventuallyYieldsAResult)
+        {
+            _runningCoroutine = coroutineThatEventuallyYieldsAResult;
+        }
+    }
+
+    public sealed class CoroutineWithResult<T> : CoroutineWithResult, IEnumerator<T>
+    {
+        T IEnumerator<T>.Current => throw new NotImplementedException();
+
+        object IEnumerator.Current => throw new NotImplementedException();
+
+        new private IEnumerator<T> _runningCoroutine;
+
+        public T result { get; private set; }
+        public override bool MoveNext()
+        {
+            bool moveNextValue = _runningCoroutine.MoveNext();
+            //Only retrieve the result if moveNext is true.
+            if(moveNextValue)
+            {
+                boxedResult = _runningCoroutine.Current;
+                result = _runningCoroutine.Current;
+            }
+            return moveNextValue;
+        }
+
+        public void StartNew(IEnumerator<T> coroutineThatEventuallyYieldsAResult)
+        {
+            _runningCoroutine = coroutineThatEventuallyYieldsAResult;
+            base._runningCoroutine = coroutineThatEventuallyYieldsAResult;
+        }
+
+        void IEnumerator.Reset()
+        {
+            throw new NotSupportedException();
+        }
+
+        void IDisposable.Dispose()
+        {
+            throw new NotSupportedException();
+        }
+
+        public CoroutineWithResult(IEnumerator<T> coroutineThatEventuallyYieldsAResult) : base(coroutineThatEventuallyYieldsAResult)
+        {
+            _runningCoroutine = coroutineThatEventuallyYieldsAResult;
+        }
+    }
 }
