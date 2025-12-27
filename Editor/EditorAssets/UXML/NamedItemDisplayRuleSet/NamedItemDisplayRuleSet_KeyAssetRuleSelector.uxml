@@ -1,9 +1,0 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
-    <ui:VisualElement style="flex-shrink: 0;">
-        <RoR2.Editor.ExtendedHelpBox message-type="Info" message="Please Select a NamedRuleGroup Entry from the SideBar" name="HelpBox" />
-    </ui:VisualElement>
-    <ui:VisualElement name="ControlContainer" style="flex-grow: 1;">
-        <ui:IMGUIContainer name="AdvancedDropdownContainer" />
-        <ui:ListView focusable="true" name="ButtonListView" show-border="true" show-foldout-header="true" header-title="Rule Groups" show-add-remove-footer="true" reorderable="true" fixed-item-height="48" style="flex-grow: 1;" />
-    </ui:VisualElement>
-</ui:UXML>
