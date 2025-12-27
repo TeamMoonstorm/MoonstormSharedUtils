@@ -234,12 +234,14 @@ namespace MSU.Editor.EditorWindows
 
         private IEnumerator FillDataFromNamedItemDisplayRuleSet(NamedItemDisplayRuleSet from, ItemDisplayRuleSet to)
         {
-            using var _ = ListPool<string>.RentCollection(out var displayPrefabNames);
+            var displayPrefabNames = ListPool<string>.RentCollection();
 
             to.keyAssetRuleGroups = Array.Empty<ItemDisplayRuleSet.KeyAssetRuleGroup>();
 
             for (int i = 0; i < from.rules.Count; i++)
             {
+                displayPrefabNames.Clear();
+
                 yield return R2EKMath.Remap(i, 0, from.rules.Count, 0, 1);
 
                 var ruleGroup = from.rules[i];
@@ -334,6 +336,7 @@ namespace MSU.Editor.EditorWindows
 
                 HG.ArrayUtils.ArrayAppend(ref to.keyAssetRuleGroups, keyAssetRuleGroup);
             }
+            ListPool<string>.ReturnCollection(displayPrefabNames);
         }
         #endregion
 
