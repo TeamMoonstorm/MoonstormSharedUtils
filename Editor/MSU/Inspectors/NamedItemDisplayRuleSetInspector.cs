@@ -10,11 +10,16 @@ namespace MSU.Editor.Inspectors
     {
         protected override void DrawIMGUI()
         {
-            DrawDefaultInspector();
-            if(GUILayout.Button("Open NamedItemDisplayRuleSet Editor Window"))
+            EditorGUILayout.HelpBox("NamedItemDisplayRuleSet is Obsolete, Click the button below to open the Upgrade Window.", MessageType.Info);
+            if (GUILayout.Button("Upgrade to ItemDisplayRuleSet"))
             {
-                ExtendedEditorWindow.Open<NamedItemDisplayRuleSetEditorWindow>(targetType).SetSourceObject();
+                var instance = ItemDisplayMigrationWizard.Open();
+                instance.itemsToUpgrade.Add(targetType);
             }
+
+            EditorGUI.BeginDisabledGroup(true);
+            DrawDefaultInspector();
+            EditorGUI.EndDisabledGroup();
         }
     }
 }

@@ -1,5 +1,6 @@
 using MSU.Editor.EditorWindows;
 using RoR2.Editor;
+using UnityEditor;
 using UnityEngine;
 
 namespace MSU.Editor.Inspectors
@@ -9,11 +10,16 @@ namespace MSU.Editor.Inspectors
     {
         protected override void DrawIMGUI()
         {
-            DrawDefaultInspector();
-            if (GUILayout.Button("Open ItemDisplayDictionary Editor Window"))
+            EditorGUILayout.HelpBox("ItemDisplayDictionary is Obsolete, Click the button below to open the Upgrade Window.", MessageType.Info);
+            if(GUILayout.Button("Upgrade to ItemDisplayAddressedDictionary"))
             {
-                ExtendedEditorWindow.Open<ItemDisplayDictionaryEditorWindow>(targetType).SetSourceObject();
+                var instance = ItemDisplayMigrationWizard.Open();
+                instance.itemsToUpgrade.Add(targetType);
             }
+
+            EditorGUI.BeginDisabledGroup(true);
+            DrawDefaultInspector();
+            EditorGUI.EndDisabledGroup();
         }
     }
 }

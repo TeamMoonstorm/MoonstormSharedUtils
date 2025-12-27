@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <Style src="project://database/Packages/riskofthunder-ror2editorkit/Assets/VisualElements/R2EKGlobalStlye.uss?fileID=7433441132597879392&amp;guid=81861b4c6318b874391de872e1793059&amp;type=3#R2EKGlobalStlye" />
+    <ui:Toggle label="Upgrade NIDRS" name="UpgradeNIDRS" binding-path="upgradeNamedItemDisplayRuleSet" />
+    <ui:Toggle label="Upgrade IDD" name="UpgradeIDD" text=" " binding-path="upgradeItemDisplayDictionary" />
+    <ui:VisualElement style="height: 16px;" />
+    <ui:TextField picking-mode="Ignore" label="Object Name Filter" name="ObjectFilter" />
+    <uie:PropertyField name="ItemsToUpgrade" binding-path="itemsToUpgrade" />
+</ui:UXML>
