@@ -438,8 +438,16 @@ public static class ScriptableObjectUpdater
 
     }
 
-    private static void UpgradeAsset(UnityEngine.Object originalAsset, UnityEngine.Object newVersion)
+    /// <summary>
+    /// Takes all the data within <paramref name="newVersion"/> and writes it to the file in <paramref name="originalAsset"/>.
+    /// <br></br>
+    /// Extreme caution should be taken when using this.
+    /// </summary>
+    /// <param name="originalAsset">The asset that we want to "upgrade" to <paramref name="newVersion"/></param>
+    /// <param name="newVersion">The new version of the asset.</param>
+    public static void UpgradeAsset(UnityEngine.Object originalAsset, UnityEngine.Object newVersion)
     {
+        string origAssetName = originalAsset.name;
         var origPath = AssetDatabase.GetAssetPath(originalAsset);
         var directory = Path.GetDirectoryName(origPath);
         var newPath = IOUtils.FormatPathForUnity(Path.Combine(directory, originalAsset.name + "_upgraded.asset"));
@@ -449,5 +457,12 @@ public static class ScriptableObjectUpdater
         File.WriteAllText(origPath, allTextUpgraded);
         AssetDatabase.DeleteAsset(newPath);
         UnityEngine.Object.DestroyImmediate(newVersion, true);
+
+        AssetDatabase.Refresh();
+
+        originalAsset = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(origPath);
+        originalAsset.name = origAssetName;
+        EditorUtility.SetDirty(originalAsset);
+        AssetDatabase.SaveAssetIfDirty(originalAsset);
     }
 }

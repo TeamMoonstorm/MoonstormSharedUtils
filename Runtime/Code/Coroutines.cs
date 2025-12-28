@@ -238,6 +238,15 @@ namespace MSU
 
     public sealed class CoroutineWithResult<T> : CoroutineWithResult, IEnumerator<T>
     {
+        public static CoroutineWithResult<T> CompletedResult(T result)
+        {
+            IEnumerator<T> YieldResultASAP(T result)
+            {
+                yield return result;
+            }
+
+            return new CoroutineWithResult<T>(YieldResultASAP(result));
+        }
         T IEnumerator<T>.Current => throw new NotImplementedException();
 
         object IEnumerator.Current => throw new NotImplementedException();
