@@ -175,11 +175,10 @@ namespace MSU
                     MSULog.Error($"Item {item.GetType().FullName} threw an exception while initializing.\n{ex}");
                 }
 #endif
-
-                while(!initializeAsyncCoroutine.isDone)
-                {
-                    yield return null;
-                }
+            }
+            while(!initializeAsyncCoroutine.isDone)
+            {
+                yield return null;
             }
         }
 

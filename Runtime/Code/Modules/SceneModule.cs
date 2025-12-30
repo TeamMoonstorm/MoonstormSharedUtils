@@ -233,10 +233,10 @@ namespace MSU
                     MSULog.Error($"Scene {scene.GetType().FullName} threw an exception while initializing.\n{ex}");
                 }
 #endif
-                while(!initializeAsyncCoroutine.isDone)
-                {
-                    yield return null;
-                }
+            }
+            while(!initializeAsyncCoroutine.isDone)
+            {
+                yield return null;
             }
         }
     }

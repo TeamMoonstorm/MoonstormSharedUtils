@@ -237,7 +237,6 @@ namespace MSU
                 }
 #endif
             }
-
             while(!initializeAsyncCoroutine.isDone)
             {
                 yield return null;
