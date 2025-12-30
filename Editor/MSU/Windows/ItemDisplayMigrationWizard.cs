@@ -31,6 +31,7 @@ namespace MSU.Editor.EditorWindows
         private ReadOnlyCollection<string> _availableIDRS;
         private ReadOnlyCollection<string> _availableKeyAssets;
         private ReadOnlyCollection<string> _availableDisplayPrefabs;
+        private List<UnityEngine.Object> _modifiedObjects = new List<UnityEngine.Object>();
 
         Dictionary<string, AssetMatchContainer<ScriptableObject>> _keyAssetNameToAssetMatch = new Dictionary<string, AssetMatchContainer<ScriptableObject>>();
         Dictionary<string, AssetMatchContainer<GameObject>> _displayPrefabNameToAssetMatch = new Dictionary<string, AssetMatchContainer<GameObject>>();
@@ -120,33 +121,46 @@ namespace MSU.Editor.EditorWindows
 
         protected override IEnumerator RunWizardCoroutine()
         {
-            _wizardLog.Clear();
-            _wizardCoroutineHelper = new WizardCoroutineHelper(this);
-
-            if (upgradeItemDisplayDictionary)
+            try
             {
-                _wizardCoroutineHelper.AddStep(FilterItemsToUpgrade<ItemDisplayDictionary>(), "Filtering ItemDisplayDictionaries");
-                _wizardCoroutineHelper.AddStep(QueryItemDisplayRuleSets(), "Querying ItemDisplayRuleSets");
-                _wizardCoroutineHelper.AddStep(UpgradeItemDisplayDictionaries(), "Upgrading ItemDisplayDictionaries");
-            }
+                AssetDatabase.StartAssetEditing();
+                _wizardLog.Clear();
+                _wizardCoroutineHelper = new WizardCoroutineHelper(this);
 
-            if (upgradeNamedItemDisplayRuleSet)
+                if (upgradeItemDisplayDictionary)
+                {
+                    _wizardCoroutineHelper.AddStep(FilterItemsToUpgrade<ItemDisplayDictionary>(), "Filtering ItemDisplayDictionaries");
+                    _wizardCoroutineHelper.AddStep(QueryItemDisplayRuleSets(), "Querying ItemDisplayRuleSets");
+                    _wizardCoroutineHelper.AddStep(UpgradeItemDisplayDictionaries(), "Upgrading ItemDisplayDictionaries");
+                }
+
+                if (upgradeNamedItemDisplayRuleSet)
+                {
+                    _wizardCoroutineHelper.AddStep(FilterItemsToUpgrade<NamedItemDisplayRuleSet>(), "Filtering ItemDisplayDictionaries");
+                    _wizardCoroutineHelper.AddStep(QueryKeyAssets(), "Querying KeyAssets");
+                    _wizardCoroutineHelper.AddStep(QueryDisplayPrefabs(), "Querying Display Prefabs");
+                    _wizardCoroutineHelper.AddStep(UpgradeNamedItemDisplayRuleSets(), "Upgrading NamedItemDisplayRuleSet");
+                }
+
+                _wizardCoroutineHelper.AddStep(WriteLog(), "Writing Log");
+
+                while (_wizardCoroutineHelper.MoveNext())
+                {
+                    yield return null;
+                }
+
+                string[] modifiedAssetPaths = new string[_modifiedObjects.Count];
+                for(int i = 0; i < modifiedAssetPaths.Length; i++)
+                {
+                    modifiedAssetPaths[i] = AssetDatabase.GetAssetPath(_modifiedObjects[i]);
+                }
+                AssetDatabase.SaveAssets();
+                yield break;
+            }
+            finally
             {
-                _wizardCoroutineHelper.AddStep(FilterItemsToUpgrade<NamedItemDisplayRuleSet>(), "Filtering ItemDisplayDictionaries");
-                _wizardCoroutineHelper.AddStep(QueryKeyAssets(), "Querying KeyAssets");
-                _wizardCoroutineHelper.AddStep(QueryDisplayPrefabs(), "Querying Display Prefabs");
-                _wizardCoroutineHelper.AddStep(UpgradeNamedItemDisplayRuleSets(), "Upgrading NamedItemDisplayRuleSet");
+                AssetDatabase.StopAssetEditing();
             }
-
-            _wizardCoroutineHelper.AddStep(WriteLog(), "Writing Log");
-
-            while (_wizardCoroutineHelper.MoveNext())
-            {
-                yield return null;
-            }
-
-            AssetDatabase.SaveAssets();
-            yield break;
         }
 
         private IEnumerator FilterItemsToUpgrade<T>() where T : ScriptableObject
@@ -240,11 +254,13 @@ namespace MSU.Editor.EditorWindows
             for (int i = 0; i < _validUpgradeCandidates.Count; i++)
             {
                 NamedItemDisplayRuleSet nidrs = (NamedItemDisplayRuleSet)_validUpgradeCandidates[i];
+
                 _wizardLog.AppendLine();
                 _wizardLog.AppendLine($"Upgrading {nidrs}");
 
                 //First we'll get the target IDRS, very very likely this is empty.
                 ItemDisplayRuleSet target = nidrs.targetItemDisplayRuleSet;
+
                 var subroutine = FillDataFromNamedItemDisplayRuleSet(nidrs, target);
                 while (subroutine.MoveNext())
                 {
@@ -261,11 +277,11 @@ namespace MSU.Editor.EditorWindows
                 }
                 else
                 {
-                    EditorUtil.SetDirty(nidrs);
+                    EditorUtility.SetDirty(nidrs);
                     AssetDatabase.SaveAssetIfDirty(nidrs);
                 }
 
-                EditorUtil.SetDirty(target);
+                EditorUtility.SetDirty(target);
                 AssetDatabase.SaveAssetIfDirty(target);
                 _wizardLog.AppendLine();
             }
@@ -438,10 +454,30 @@ namespace MSU.Editor.EditorWindows
                     var val = R2EKMath.Remap(subroutineProgress, 0, 1, i, Mathf.Min(i + 1, subroutineMaxProgress));
                     yield return R2EKMath.Remap(val, 0, _validUpgradeCandidates.Count, 0, 1);
                 }
-
-                //We've gotta seamlessly upgrade the asset, time to bust out that ScriptableObjectUpdater goodie.
-                ScriptableObjectUpdater.UpgradeAsset(idd, result);
                 _wizardLog.AppendLine($"{idd} Upgraded succesfully.");
+                string iddPath = AssetDatabase.GetAssetPath(idd);
+                if(idd.displayDictionaryEntries.Count <= 0)
+                {
+                    _wizardLog.AppendLine($"Destroying {idd} as it no longer contains any rules.");
+                    AssetDatabase.DeleteAsset(iddPath);
+                }
+                else
+                {
+                    EditorUtility.SetDirty(idd);
+                    AssetDatabase.SaveAssetIfDirty(idd);
+                }
+
+                //It's time to create the asset
+                string origAssetName = idd.name;
+                if(origAssetName.StartsWith("idd"))
+                {
+                    origAssetName = origAssetName.Replace("idd", "idad");
+                }
+                var directory = IOPath.GetDirectoryName(iddPath);
+                var newPath = IOUtils.FormatPathForUnity(IOUtils.GenerateUniqueFileName(directory, origAssetName, ".asset"));
+                AssetDatabase.CreateAsset(result, newPath);
+                AssetDatabase.ImportAsset(newPath);
+                _wizardLog.Append($"Created new ItemDisplayAddressedDictionary at {newPath}");
                 _wizardLog.AppendLine();
             }
         }

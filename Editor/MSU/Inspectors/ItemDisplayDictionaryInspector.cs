@@ -6,19 +6,23 @@ using UnityEngine;
 namespace MSU.Editor.Inspectors
 {
     [UnityEditor.CustomEditor(typeof(ItemDisplayDictionary))]
-    public class ItemDisplayDictionaryInspector : IMGUIScriptableObjectInspector<ItemDisplayDictionary>
+    public class ItemDisplayDictionaryInspector : UnityEditor.Editor
     {
-        protected override void DrawIMGUI()
+        public override void OnInspectorGUI()
         {
             EditorGUILayout.HelpBox("ItemDisplayDictionary is Obsolete, Click the button below to open the Upgrade Window.", MessageType.Info);
-            if(GUILayout.Button("Upgrade to ItemDisplayAddressedDictionary"))
+            if (GUILayout.Button("Upgrade to ItemDisplayAddressedDictionary"))
             {
                 var instance = ItemDisplayMigrationWizard.Open();
-                instance.itemsToUpgrade.Add(targetType);
+                ItemDisplayDictionary target = (ItemDisplayDictionary)serializedObject.targetObject;
+                if(!instance.itemsToUpgrade.Contains(target))
+                {
+                    instance.itemsToUpgrade.Add(target);
+                }
+                instance.upgradeItemDisplayDictionary = true;
             }
-
             EditorGUI.BeginDisabledGroup(true);
-            DrawDefaultInspector();
+            base.OnInspectorGUI();
             EditorGUI.EndDisabledGroup();
         }
     }
