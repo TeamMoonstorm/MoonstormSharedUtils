@@ -8,7 +8,6 @@ using UnityEngine;
 namespace MSU
 {
     [Obsolete("Utilize the regular ItemDisplayRuleSet instead")]
-    [CreateAssetMenu(fileName = "New NamedItemDisplayRuleSet", menuName = "MSU/IDRS/NamedItemDisplayRuleSet")]
     public class NamedItemDisplayRuleSet : ScriptableObject
     {
         private static readonly HashSet<NamedItemDisplayRuleSet> _instances = new HashSet<NamedItemDisplayRuleSet>();
@@ -20,10 +19,8 @@ namespace MSU
         private void OnDestroy() => _instances.Remove(this);
 
         [SystemInitializer]
-        private static IEnumerator SystemInitializer()
+        private static void SystemInitializer()
         {
-            yield return null;
-
             ItemDisplayCatalog.catalogAvailability.CallWhenAvailable(() =>
             {
                 MSULog.Info("Initializing NamedItemDisplayRuleSets");
@@ -31,12 +28,14 @@ namespace MSU
                 {
                     try
                     {
+                        bool anyAdded = false;
                         foreach (ItemDisplayRuleSet.KeyAssetRuleGroup keyAssetRuleGroup in nidrs.GetKeyAssetRuleGroups())
                         {
                             HG.ArrayUtils.ArrayAppend(ref nidrs.targetItemDisplayRuleSet.keyAssetRuleGroups, keyAssetRuleGroup);
+                            anyAdded = true;
                         }
-                        nidrs.targetItemDisplayRuleSet.GenerateRuntimeValues();
 
+                        ItemDisplayCatalog.SetIDRSDirty(nidrs.targetItemDisplayRuleSet);
 #if DEBUG
                         MSULog.Debug($"Finished appending values from {nidrs} to {nidrs.targetItemDisplayRuleSet}");
 #endif

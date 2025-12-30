@@ -52,7 +52,7 @@ namespace MSU
             for (int i = 0; i < ruleGroup.rules.Length; i++)
             {
                 ItemDisplayRule currentRule = ruleGroup.rules[i];
-                if(_model.childLocator && _model.childLocator.TryFindChild(currentRule.childName, out _))
+                if(_model.childLocator && !_model.childLocator.TryFindChild(currentRule.childName, out _))
                 {
                     ChildLocator childLocator = _model.childLocator;
                     var firstChild = childLocator.transformPairs.FirstOrDefault();

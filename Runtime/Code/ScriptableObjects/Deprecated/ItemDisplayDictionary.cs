@@ -93,7 +93,7 @@ namespace MSU
 
                 foreach (var idrs in modifiedIDRS)
                 {
-                    idrs.GenerateRuntimeValues();
+                    ItemDisplayCatalog.SetIDRSDirty(idrs);
 #if DEBUG
                     MSULog.Debug($"Regenerated runtime values for {idrs}");
 #endif

@@ -16,6 +16,13 @@ namespace MSU
         private static Dictionary<string, GameObject> _displayDictionary = new Dictionary<string, GameObject>(_comparer);
 
         public static ResourceAvailability catalogAvailability;
+        private static HashSet<ItemDisplayRuleSet> _dirtyIDRS = new HashSet<ItemDisplayRuleSet>();
+
+        public static void SetIDRSDirty(ItemDisplayRuleSet idrs)
+        {
+            _dirtyIDRS.Add(idrs);
+        }
+
         public static GameObject GetItemDisplay(string key)
         {
             if (!_displayDictionary.ContainsKey(key))
@@ -41,27 +48,42 @@ namespace MSU
         }
 
         [SystemInitializer]
-        private static IEnumerator SystemInitializer()
+        private static void SystemInitializer()
         {
-            yield return null;
-
             RoR2Application.onLoad += () =>
             {
-                MSULog.Info("Initializing the ItemDisplayCatalog...");
-                CreateIDRSDictionary();
-                CreateDisplayDictionary();
-                catalogAvailability.MakeAvailable();
-#if DEBUG
-                SerializeCatalog();
-                _itemToDisplayPrefabs.Clear();
-                _equipmentToDisplayPrefabs.Clear();
-                _eliteEquipmentToDisplayPrefabs.Clear();
-                _survivorRuleSets.Clear();
-                _enemyRuleSets.Clear();
-#endif
-                _idrsDictionary.Clear();
-                _displayDictionary.Clear();
+                MSUMain.instance.StartCoroutine(InitializePostLoad());
             };
+        }
+
+        private static IEnumerator InitializePostLoad()
+        {
+            MSULog.Info("Initializing the ItemDisplayCatalog...");
+            CreateIDRSDictionary();
+            CreateDisplayDictionary();
+            catalogAvailability.MakeAvailable();
+
+            var helper = new ParallelCoroutine();
+            foreach(var dirty in _dirtyIDRS)
+            {
+                helper.Add(dirty.GenerateRuntimeValuesAsync());
+            }
+
+            while(!helper.isDone)
+            {
+                yield return null;
+            }
+
+#if DEBUG
+            SerializeCatalog();
+            _itemToDisplayPrefabs.Clear();
+            _equipmentToDisplayPrefabs.Clear();
+            _eliteEquipmentToDisplayPrefabs.Clear();
+            _survivorRuleSets.Clear();
+            _enemyRuleSets.Clear();
+#endif
+            _idrsDictionary.Clear();
+            _displayDictionary.Clear();
         }
 
         private static void CreateIDRSDictionary()
