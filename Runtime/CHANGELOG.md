@@ -1,3 +1,14 @@
+# '2.5.1' - ItemDisplay Hotfix
+
+## Runtime
+
+* Deprecated ItemDisplay solution (``NamedItemDisplayRuleSet`` and ``ItemDisplayDictionary``) now regenerate the IDRS's runtime values in an async fashion.
+* Removed ``CreateAssetMenuAttribute`` from ``NamedItemDisplayRuleSet``
+* Added clarification to ``UberSkinDef`` that it does not append to the TargetObject's modelSkinController.
+* Fixed ``ItemModule``and ``SceneModule``processing ``IAsyncContentInitializer`` interfaces incorrectly.
+* DEBUG only:
+    * Fixed ItemDisplayHelper accidentally setting all rules with a valid child locator entry name to the first child locator entry name.
+    
 # '2.5.0' - ItemDisplay Replacement
 
 ## Runtime
