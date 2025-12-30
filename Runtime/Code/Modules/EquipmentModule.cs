@@ -9,8 +9,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using UnityEngine;
-using static RoR2.CombatDirector;
-using static MSU.ExtendedEliteDef;
 
 namespace MSU
 {
@@ -194,25 +192,25 @@ namespace MSU
         private static void GetTiersToModify(ExtendedEliteDef extendedEliteDef, CombatDirector.EliteTierDef[] vanillaTiers, List<CombatDirector.EliteTierDef> tierOutput)
         {
             //Not using VanillaEliteTier? use the deprecated version, if the deprecated version is also none then its not added anywhere.
-            if(extendedEliteDef.vanillaEliteTier == VanillaEliteTierEntry.None)
+            if(extendedEliteDef.vanillaEliteTier == ExtendedEliteDef.VanillaEliteTierEntry.None)
             {
 #pragma warning disable CS0618 // Type or member is obsolete
                 switch (extendedEliteDef.eliteTier)
                 {
-                    case VanillaTier.None:
+                    case ExtendedEliteDef.VanillaTier.None:
                         break;
-                    case VanillaTier.HonorDisabled:
+                    case ExtendedEliteDef.VanillaTier.HonorDisabled:
                         tierOutput.Add(vanillaTiers[1]);
                         tierOutput.Add(vanillaTiers[4]);
                         break;
-                    case VanillaTier.HonorActive:
+                    case ExtendedEliteDef.VanillaTier.HonorActive:
                         tierOutput.Add(vanillaTiers[2]);
                         tierOutput.Add(vanillaTiers[3]);
                         break;
-                    case VanillaTier.PostLoop:
+                    case ExtendedEliteDef.VanillaTier.PostLoop:
                         tierOutput.Add(vanillaTiers[5]);
                         break;
-                    case VanillaTier.Lunar:
+                    case ExtendedEliteDef.VanillaTier.Lunar:
                         tierOutput.Add(vanillaTiers[6]);
                         break;
                 }
@@ -222,30 +220,30 @@ namespace MSU
 
             switch(extendedEliteDef.vanillaEliteTier)
             {
-                case VanillaEliteTierEntry.Tier1:
+                case ExtendedEliteDef.VanillaEliteTierEntry.Tier1:
                     tierOutput.Add(vanillaTiers[1]);
                     break;
-                case VanillaEliteTierEntry.Tier1_5:
+                case ExtendedEliteDef.VanillaEliteTierEntry.Tier1_5:
                     tierOutput.Add(vanillaTiers[4]);
                     break;
-                case VanillaEliteTierEntry.GlobalTier1:
-                    tierOutput.AddRange(new EliteTierDef[] { vanillaTiers[1], vanillaTiers[2] });
+                case ExtendedEliteDef.VanillaEliteTierEntry.GlobalTier1:
+                    tierOutput.AddRange(new CombatDirector.EliteTierDef[] { vanillaTiers[1], vanillaTiers[2] });
                     break;
 
-                case VanillaEliteTierEntry.Tier1Honor:
+                case ExtendedEliteDef.VanillaEliteTierEntry.Tier1Honor:
                     tierOutput.Add(vanillaTiers[2]);
                     break;
-                case VanillaEliteTierEntry.Tier1_5Honor:
+                case ExtendedEliteDef.VanillaEliteTierEntry.Tier1_5Honor:
                     tierOutput.Add(vanillaTiers[3]);
                     break;
-                case VanillaEliteTierEntry.GlobalTier1Honor:
-                    tierOutput.AddRange(new EliteTierDef[] { vanillaTiers[2], vanillaTiers[3] });
+                case ExtendedEliteDef.VanillaEliteTierEntry.GlobalTier1Honor:
+                    tierOutput.AddRange(new CombatDirector.EliteTierDef[] { vanillaTiers[2], vanillaTiers[3] });
                     break;
 
-                case VanillaEliteTierEntry.Tier2:
+                case ExtendedEliteDef.VanillaEliteTierEntry.Tier2:
                     tierOutput.Add(vanillaTiers[5]);
                     break;
-                case VanillaEliteTierEntry.Lunar:
+                case ExtendedEliteDef.VanillaEliteTierEntry.Lunar:
                     tierOutput.Add(vanillaTiers[6]);
                     break;
             }

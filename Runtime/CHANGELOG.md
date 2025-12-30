@@ -1,3 +1,33 @@
+# '2.5.0' - ItemDisplay Replacement
+
+## Runtime
+
+* Removed the ``ExtendedEliteDef.VanillaTierFlags`` enum from ``ExtendedEliteDef``
+    * Note from Nebby: The VanillaTierFlags system was flawed as it did not make sense for it to be a flags enum. Since MSU adoption is still relatively small, i went ahead and checked if Starstorm2 utilized the feature. Since SS2 didn't use it, i went ahead and replaced it with a new Enum for elite tiers.
+* Added ``ExtendedEliteDef.VanillaEliteTierEntry``, which is used to reference the vanilla tiers of elites.
+    * Unlike ``VanillaTier``, the Tier1 and Tier1.5 are separate enum entries, the concept of ``HonorDisabled``and ``HonorActive`` (which are used to reference both Tier1 and Tier1.5) have been replaced by ``GlobalTier1`` and ``GlobalTier1Honor`` respectively.
+* UberSkinDef now utilizes ``AddressableComponentRequirementAttribute`` and ``NoCatalogLoadAttribute``, to ensure proper prefab selection and no BaseSkins loaded from the catalog.
+* Added the ``ItemDisplayAddressedDictionary``
+    * Replaces the ItemDisplayDictionary
+    * An ``ItemDisplayAddressedDictionary`` is utilized for adding new item display rules to multiple ``Vanilla Exclusive`` ItemDisplayRuleSets
+    * Display Prefab selection can be referenced via addressed, this was done to allow for new spike placements for Mithrix.
+    * Has a ContextMenu utilized to populate with vanilla references, utilizing the key asset's metadata as a template.
+    * Each ``ItemDisplayAddressedDictionary`` needs to be initialized using ``AddEntries()`` for the new entries to appear.
+* Deprecated ``ItemDisplayDictionary`` and ``NamedItemDisplayRuleSet``
+    * Note from Nebby: The memop update allowed the modding community to reference both Key Assets and Display Prefabs utilizing addressables, this in turn made the NamedItemDisplayRuleSet's main goal (serializing an IDRS at editor time) obsolete. The ItemDisplayDictionary was replaced with the ``ItemDisplayAddressedDictionary`` as a result. Both have a new wizard for upgrading to IDRS and IDAD respectively.
+* Improved the robustness of ILHooks in the API (Thanks MysticalChicken!)
+* Added a ``CoroutineWithResult`` Coroutine, which as it's name suggests, is a coroutine that eventually returns a value.
+* Added a new ContentPiece-addon interface, the ``IAsyncContentInitializer``
+    * The ``AsyncContentInitializer`` interface, as the name suggests, is used to initialize content in an asynchronous fashion.
+    * This can be utilized for example, to run ``UberSkinDef.PreBake()`` method on a ``VanillaSurvivorContentPiece`` to intialize the UberSkinDef. Or run ``ItemDisplayAddressedDictionary.AddEntries()`` on a ``ItemContentPiece`` to add said item's displays.
+
+## Editor
+
+* Fixed TransformPathDropdowns having a weird formatting for the "this" option
+* Removed old UberSkinDef related editor classes
+* EntityStateTypeCollection now has a ``Add Scripts found on this Directory and Children`` context menu.
+* Removed a large amount of classes related to ``ItemDisplayDictionary``, ``NamedItemDisplayRuleSet``and ``VanillaSkinDef``
+
 # '2.4.3' - Bugfixes
 
 * Thanks @MysticalChicken for the fixes regarding content addition of DroneDefs and CraftableDefs!
