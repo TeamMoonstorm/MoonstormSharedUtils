@@ -117,11 +117,14 @@ namespace MSU
             while (!helper.IsDone())
                 yield return null;
 
-            InitializeItems(plugin, items, provider);
+            var subroutine = InitializeItems(plugin, items, provider);
+            while (!subroutine.IsDone())
+                yield return null;
         }
 
-        private static void InitializeItems(BaseUnityPlugin plugin, List<IContentPiece<ItemDef>> items, IContentPieceProvider<ItemDef> provider)
+        private static IEnumerator InitializeItems(BaseUnityPlugin plugin, List<IContentPiece<ItemDef>> items, IContentPieceProvider<ItemDef> provider)
         {
+            ParallelCoroutine initializeAsyncCoroutine = new ParallelCoroutine();
             foreach (var item in items)
             {
 #if DEBUG
@@ -129,6 +132,11 @@ namespace MSU
                 {
 #endif
                     item.Initialize();
+
+                    if(item is IAsyncContentInitializer asyncContentInitializer)
+                    {
+                        initializeAsyncCoroutine.Add(asyncContentInitializer.InitializeAsync());
+                    }
 
                     var asset = item.asset;
                     provider.contentPack.itemDefs.AddSingle(asset);
@@ -166,6 +174,11 @@ namespace MSU
                     MSULog.Error($"Item {item.GetType().FullName} threw an exception while initializing.\n{ex}");
                 }
 #endif
+
+                while(!initializeAsyncCoroutine.isDone)
+                {
+                    yield return null;
+                }
             }
         }
 

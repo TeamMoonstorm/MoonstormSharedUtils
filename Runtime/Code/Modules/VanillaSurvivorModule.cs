@@ -128,7 +128,10 @@ namespace MSU
                 {
 #endif
                     piece.Initialize();
-                    initializeAsyncCoroutine.Add(piece.InitializeAsync());
+
+                    if(piece is IAsyncContentInitializer contentAsyncInitializer)
+                        initializeAsyncCoroutine.Add(contentAsyncInitializer.InitializeAsync());
+
                     var survivorDef = piece.survivorDef;
 
                     if (piece is IContentPackModifier packModifier)

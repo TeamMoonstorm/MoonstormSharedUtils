@@ -173,11 +173,14 @@ namespace MSU
             while (!helper.IsDone())
                 yield return null;
 
-            InitializeItemTiers(plugin, itemTiers, provider);
+            var subroutine = InitializeItemTiers(plugin, itemTiers, provider);
+            while(!subroutine.IsDone()) 
+                yield return null;
         }
 
-        private static void InitializeItemTiers(BaseUnityPlugin plugin, List<IContentPiece<ItemTierDef>> itemTiers, IContentPieceProvider<ItemTierDef> provider)
+        private static IEnumerator InitializeItemTiers(BaseUnityPlugin plugin, List<IContentPiece<ItemTierDef>> itemTiers, IContentPieceProvider<ItemTierDef> provider)
         {
+            ParallelCoroutine initializeAsyncCoroutine = new ParallelCoroutine();
             foreach (var tier in itemTiers)
             {
 #if DEBUG
@@ -185,6 +188,11 @@ namespace MSU
                 {
 #endif
                     tier.Initialize();
+
+                    if(tier is IAsyncContentInitializer asyncContentInitializer)
+                    {
+                        initializeAsyncCoroutine.Add(asyncContentInitializer.InitializeAsync());
+                    }
 
                     var asset = tier.asset;
                     provider.contentPack.itemTierDefs.AddSingle(asset);
@@ -228,6 +236,11 @@ namespace MSU
                     MSULog.Error($"ItemTier {tier.GetType().FullName} threw an exception while initializing.\n{ex}");
                 }
 #endif
+            }
+
+            while(!initializeAsyncCoroutine.isDone)
+            {
+                yield return null;
             }
         }
     }

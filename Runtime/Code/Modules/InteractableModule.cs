@@ -127,11 +127,16 @@ namespace MSU
             while (!helper.IsDone())
                 yield return null;
 
-            InitializeInteractables(plugin, interactables, provider);
+            var subroutine = InitializeInteractables(plugin, interactables, provider);
+            while(!subroutine.IsDone())
+            {
+                yield return null;
+            }
         }
 
-        private static void InitializeInteractables(BaseUnityPlugin plugin, List<IGameObjectContentPiece<IInteractable>> interactables, IContentPieceProvider<GameObject> provider)
+        private static IEnumerator InitializeInteractables(BaseUnityPlugin plugin, List<IGameObjectContentPiece<IInteractable>> interactables, IContentPieceProvider<GameObject> provider)
         {
+            ParallelCoroutine initializeAsyncCoroutine = new ParallelCoroutine();
             foreach (var interactable in interactables)
             {
 #if DEBUG
@@ -139,6 +144,11 @@ namespace MSU
                 {
 #endif
                     interactable.Initialize();
+
+                    if(interactable is IAsyncContentInitializer asyncContentInitializer)
+                    {
+                        initializeAsyncCoroutine.Add(asyncContentInitializer.InitializeAsync());
+                    }
 
                     var asset = interactable.asset;
                     if (asset.TryGetComponent<NetworkIdentity>(out _))
@@ -179,6 +189,11 @@ namespace MSU
                     MSULog.Error($"Interactable {interactable.GetType().FullName} threw an exception while initializing.\n{ex}");
                 }
 #endif
+            }
+
+            while(!initializeAsyncCoroutine.isDone)
+            {
+                yield return null;
             }
         }
 

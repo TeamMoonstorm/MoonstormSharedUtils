@@ -1,6 +1,8 @@
 ﻿using RoR2;
+using RoR2.Items;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 namespace MSU
 {
@@ -18,5 +20,15 @@ namespace MSU
         /// The ItemDisplayPrefabs for this Item, can be null.
         /// </summary>
         NullableRef<List<GameObject>> itemDisplayPrefabs { get; }
+
+        /// <summary>
+        /// <b>Optional Interface Implementation</b>
+        /// <br></br>
+        /// This method allows you to associate a <see cref="BaseItemBodyBehavior"/> with the <see cref="ItemDef"/> that's obtained via this instance of the interface.
+        /// <br></br>
+        /// Assuming that the returned Type inherits from <see cref="BaseItemBodyBehavior"/>, it gets added with the rest of the game's body behaviours, without logging errors associated with item availability.
+        /// </summary>
+        /// <returns>A Type, specifically the BaseItemBodyBehaviour associated with this item.</returns>
+        public Type GetBehaviourType() => null;
     }
 }

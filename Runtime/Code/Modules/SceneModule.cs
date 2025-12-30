@@ -144,11 +144,16 @@ namespace MSU
             while (!helper.IsDone())
                 yield return null;
 
-            InitializeScenes(plugin, _scenes, provider);
+            var subroutine = InitializeScenes(plugin, _scenes, provider);
+            while(!subroutine.IsDone())
+            {
+                yield return null;
+            }
         }
 
-        private static void InitializeScenes(BaseUnityPlugin plugin, List<IContentPiece<SceneDef>> scenes, IContentPieceProvider<SceneDef> provider)
+        private static IEnumerator InitializeScenes(BaseUnityPlugin plugin, List<IContentPiece<SceneDef>> scenes, IContentPieceProvider<SceneDef> provider)
         {
+            ParallelCoroutine initializeAsyncCoroutine = new ParallelCoroutine();
             foreach (var scene in scenes)
             {
 #if DEBUG
@@ -156,6 +161,12 @@ namespace MSU
                 {
 #endif
                     scene.Initialize();
+
+                    if(scene is IAsyncContentInitializer asyncContentInitializer)
+                    {
+                        initializeAsyncCoroutine.Add(asyncContentInitializer.InitializeAsync());
+                    }
+
                     var asset = scene.asset;
                     provider.contentPack.sceneDefs.AddSingle(asset);
 
@@ -222,6 +233,10 @@ namespace MSU
                     MSULog.Error($"Scene {scene.GetType().FullName} threw an exception while initializing.\n{ex}");
                 }
 #endif
+                while(!initializeAsyncCoroutine.isDone)
+                {
+                    yield return null;
+                }
             }
         }
     }

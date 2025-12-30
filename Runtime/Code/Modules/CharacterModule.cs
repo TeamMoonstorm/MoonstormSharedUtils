@@ -146,11 +146,14 @@ namespace MSU
             while (!helper.IsDone())
                 yield return null;
 
-            InitializeCharacters(plugin, characters, provider);
+            var subroutine = InitializeCharacters(plugin, characters, provider);
+            while (!subroutine.IsDone())
+                yield return null;
         }
 
-        private static void InitializeCharacters(BaseUnityPlugin plugin, List<IGameObjectContentPiece<CharacterBody>> bodies, IContentPieceProvider<GameObject> provider)
+        private static IEnumerator InitializeCharacters(BaseUnityPlugin plugin, List<IGameObjectContentPiece<CharacterBody>> bodies, IContentPieceProvider<GameObject> provider)
         {
+            ParallelCoroutine initializeAsyncCoroutine = new ParallelCoroutine();
             foreach (var body in bodies)
             {
 #if DEBUG
@@ -158,6 +161,11 @@ namespace MSU
                 {
 #endif
                     body.Initialize();
+
+                    if(body is IAsyncContentInitializer asyncContentInitializer)
+                    {
+                        initializeAsyncCoroutine.Add(asyncContentInitializer.InitializeAsync());
+                    }
 
                     var asset = body.asset;
                     provider.contentPack.bodyPrefabs.AddSingle(asset);
@@ -209,6 +217,11 @@ namespace MSU
                     MSULog.Error($"Character {body.GetType().FullName} threw an exception while initializing.\n{ex}");
                 }
 #endif
+            }
+
+            while(!initializeAsyncCoroutine.isDone)
+            {
+                yield return null;
             }
         }
 

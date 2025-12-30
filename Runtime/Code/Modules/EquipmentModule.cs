@@ -339,11 +339,14 @@ namespace MSU
             while (!helper.IsDone())
                 yield return null;
 
-            InitializeEquipments(plugin, equipments, provider);
+            var subroutine =InitializeEquipments(plugin, equipments, provider);
+            while (!subroutine.IsDone())
+                yield return null;
         }
 
-        private static void InitializeEquipments(BaseUnityPlugin plugin, List<IContentPiece<EquipmentDef>> equipments, IContentPieceProvider<EquipmentDef> provider)
+        private static IEnumerator InitializeEquipments(BaseUnityPlugin plugin, List<IContentPiece<EquipmentDef>> equipments, IContentPieceProvider<EquipmentDef> provider)
         {
+            ParallelCoroutine initializeAsyncCoroutine = new ParallelCoroutine();
             foreach (var equipment in equipments)
             {
 #if DEBUG
@@ -351,6 +354,11 @@ namespace MSU
                 {
 #endif
                     equipment.Initialize();
+
+                    if(equipment is IAsyncContentInitializer asyncContentInitializer)
+                    {
+                        initializeAsyncCoroutine.Add(asyncContentInitializer.InitializeAsync());
+                    }
 
                     var asset = equipment.asset;
                     provider.contentPack.equipmentDefs.AddSingle(asset);
@@ -399,6 +407,11 @@ namespace MSU
                     MSULog.Error($"Equipment {equipment.GetType().FullName} threw an exception while initializing.\n{ex}");
                 }
 #endif
+            }
+
+            while(!initializeAsyncCoroutine.isDone)
+            {
+                yield return null;
             }
         }
     }

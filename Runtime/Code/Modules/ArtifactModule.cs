@@ -155,11 +155,14 @@ namespace MSU
             while (!helper.IsDone())
                 yield return null;
 
-            InitializeArtifacts(plugin, artifacts, provider);
+            var subroutine = InitializeArtifacts(plugin, artifacts, provider);
+            while(!subroutine.IsDone()) 
+                yield return null;
         }
 
-        private static void InitializeArtifacts(BaseUnityPlugin plugin, List<IContentPiece<ArtifactDef>> artifacts, IContentPieceProvider<ArtifactDef> provider)
+        private static IEnumerator InitializeArtifacts(BaseUnityPlugin plugin, List<IContentPiece<ArtifactDef>> artifacts, IContentPieceProvider<ArtifactDef> provider)
         {
+            ParallelCoroutine initializeAsyncCoroutine = new ParallelCoroutine();
             foreach (var artifact in artifacts)
             {
 #if DEBUG
@@ -167,6 +170,12 @@ namespace MSU
                 {
 #endif
                     artifact.Initialize();
+
+                    if(artifact is IAsyncContentInitializer asyncContentInitializer)
+                    {
+                        initializeAsyncCoroutine.Add(asyncContentInitializer.InitializeAsync());
+                    }
+
                     var asset = artifact.asset;
                     provider.contentPack.artifactDefs.AddSingle(asset);
 
@@ -203,6 +212,10 @@ namespace MSU
                     MSULog.Error($"Artifact {artifact.GetType().FullName} threw an exception while initializing.\n{ex}");
                 }
 #endif
+            }
+            while(!initializeAsyncCoroutine.isDone)
+            {
+                yield return null;
             }
         }
     }
