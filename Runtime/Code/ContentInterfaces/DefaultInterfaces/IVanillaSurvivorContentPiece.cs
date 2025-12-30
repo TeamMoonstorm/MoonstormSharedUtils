@@ -19,7 +19,7 @@ namespace MSU
         SurvivorDef survivorDef { get; }
 
         /// <summary>
-        /// A Coroutine that can be utilized for initializing asynchronously, can be used to call <see cref="VanillaSkinDef.Initialize"/>
+        /// A Coroutine that can be utilized for initializing asynchronously, can be used to call <see cref="UberSkinDef.PreBake"/>
         /// </summary>
         /// <returns></returns>
         new IEnumerator InitializeAsync();

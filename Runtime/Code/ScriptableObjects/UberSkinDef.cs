@@ -460,8 +460,10 @@ namespace MSU
 
         /// <summary>
         /// Call this method to PreBake your VanillaSkinDef, this must be ran BEFORE <see cref="SkinCatalog"/> initializes!
+        /// <br></br>
+        /// Keep in mind that the Prebake method <b>Does not append the <see cref="targetSkinDef"/> to the model skin controller!</b>, it's up to you to append it.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A Coroutine which must be processed</returns>
         /// <exception cref="NullReferenceException">Thrown when no TargetSkinDef is specified</exception>
         public IEnumerator PreBake()
         {
