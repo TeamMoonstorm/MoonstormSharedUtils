@@ -8,6 +8,7 @@ using UnityEngine;
 
 namespace MSU
 {
+    [Obsolete("The ItemDisplayCatalog is obsolete.")]
     internal static class ItemDisplayCatalog
     {
         private static StringComparer _comparer = StringComparer.OrdinalIgnoreCase;

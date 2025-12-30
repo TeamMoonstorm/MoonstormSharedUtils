@@ -65,6 +65,7 @@ namespace MSU
                     }
                 }
             };
+
             if (MSUtil.debugToolkitInstalled)
                 GetNoEnemiesField();
         }

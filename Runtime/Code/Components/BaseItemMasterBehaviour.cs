@@ -46,118 +46,84 @@ namespace MSU
             foreach (BaseItemMasterBehaviour.ItemDefAssociationAttribute itemDefAssociationAttribute in attributeList)
             {
                 yield return null;
-                MethodInfo methodInfo;
-                if ((methodInfo = (itemDefAssociationAttribute.target as MethodInfo)) == null)
+
+                if (itemDefAssociationAttribute.target is not MethodInfo methodInfo)
                 {
-                    MSULog.Error("ItemDefAssociationAttribute cannot be applied to object of type '" + ((itemDefAssociationAttribute != null) ? itemDefAssociationAttribute.GetType().FullName : null) + "'");
+                    MSULog.Error($"ItemDefAssociationAttribute cannot be applied to object of type \"{((itemDefAssociationAttribute != null) ? itemDefAssociationAttribute.target.GetType().FullName : null)}\"");
+                    continue;
                 }
-                else if (!methodInfo.IsStatic)
+
+                if(!methodInfo.IsStatic)
                 {
-                    MSULog.Error(string.Concat(new string[]
-                    {
-                        "ItemDefAssociationAttribute cannot be applied to method ",
-                        methodInfo.DeclaringType.FullName,
-                        ".",
-                        methodInfo.Name,
-                        ": Method is not static."
-                    }));
+                    MSULog.Error($"ItemDefAssociationAttribute cannot be applied to method \"{itemDefAssociationAttribute.GetMethodName()}\", as the method is not static.");
+                    continue;
                 }
-                else
+
+                Type type = itemDefAssociationAttribute.behaviorTypeOverride ?? methodInfo.DeclaringType;
+                if(!masterBehaviourType.IsAssignableFrom(type))
                 {
-                    Type type = itemDefAssociationAttribute.behaviorTypeOverride ?? methodInfo.DeclaringType;
-                    if (!masterBehaviourType.IsAssignableFrom(type))
+                    MSULog.Error($"ItemDefAssociationAttribute cannot be applied to method \"{itemDefAssociationAttribute.GetMethodName()}\", as {type.FullName} does not derive from {masterBehaviourType.FullName}");
+                    continue;
+                }
+
+                if(type.IsAbstract)
+                {
+                    MSULog.Error($"ItemDefAssociationAttribute cannot be applied to method {itemDefAssociationAttribute.GetMethodName()}, as {type.FullName} is an abstract type.");
+                    continue;
+                }
+
+                if(!itemDefType.IsAssignableFrom(methodInfo.ReturnType))
+                {
+                    MSULog.Error($"ItemDefAssociationAttribute cannot be applied to method {itemDefAssociationAttribute.GetMethodName()}, as the method returns type {(methodInfo.ReturnType != null ? methodInfo.ReturnType.FullName : null) ?? "void"} instead of {itemDefType.FullName}");
+                    continue;
+                }
+
+                if(methodInfo.GetGenericArguments().Length != 0)
+                {
+                    MSULog.Error($"ItemDefASsociationAttribute cannot be applied to method {itemDefAssociationAttribute.GetMethodName()}, as the method must take no arguments.");
+                    continue;
+                }
+
+                ItemDef itemDef = (ItemDef)methodInfo.Invoke(null, Array.Empty<object>());
+                if(!itemDef)
+                {
+#if DEBUG
+                    MSULog.Info($"{itemDefAssociationAttribute.GetMethodName()} returned null.");
+#endif
+                    continue;
+                }
+
+                if(itemDef.itemIndex == ItemIndex.None)
+                {
+#if DEBUG
+                    MSULog.Error($"{itemDefAssociationAttribute.GetMethodName()} returned an ItemDef that's not registered in the ItemCatalog.");
+#endif
+                    continue;
+                }
+
+                if (itemDefAssociationAttribute.useOnServer)
+                {
+                    server.Add(new BaseItemBodyBehavior.ItemTypePair
                     {
-                        MSULog.Error(string.Concat(new string[]
-                        {
-                            "ItemDefAssociationAttribute cannot be applied to method ",
-                            methodInfo.DeclaringType.FullName,
-                            ".",
-                            methodInfo.Name,
-                            ": ",
-                            methodInfo.DeclaringType.FullName,
-                            " does not derive from ",
-                            masterBehaviourType.FullName,
-                            "."
-                        }));
-                    }
-                    else if (type.IsAbstract)
+                        itemIndex = itemDef.itemIndex,
+                        behaviorType = type
+                    });
+                }
+                if (itemDefAssociationAttribute.useOnClient)
+                {
+                    client.Add(new BaseItemBodyBehavior.ItemTypePair
                     {
-                        MSULog.Error(string.Concat(new string[]
-                        {
-                            "ItemDefAssociationAttribute cannot be applied to method ",
-                            methodInfo.DeclaringType.FullName,
-                            ".",
-                            methodInfo.Name,
-                            ": ",
-                            methodInfo.DeclaringType.FullName,
-                            " is an abstract type."
-                        }));
-                    }
-                    else if (!itemDefType.IsAssignableFrom(methodInfo.ReturnType))
+                        itemIndex = itemDef.itemIndex,
+                        behaviorType = type
+                    });
+                }
+                if (itemDefAssociationAttribute.useOnServer || itemDefAssociationAttribute.useOnClient)
+                {
+                    shared.Add(new BaseItemBodyBehavior.ItemTypePair
                     {
-                        string format = "{0} cannot be applied to method {1}.{2}: {3}.{4} returns type '{5}' instead of {6}.";
-                        object[] array = new object[7];
-                        array[0] = "ItemDefAssociationAttribute";
-                        array[1] = methodInfo.DeclaringType.FullName;
-                        array[2] = methodInfo.Name;
-                        array[3] = methodInfo.DeclaringType.FullName;
-                        array[4] = methodInfo;
-                        int num = 5;
-                        Type returnType = methodInfo.ReturnType;
-                        array[num] = (((returnType != null) ? returnType.FullName : null) ?? "void");
-                        array[6] = itemDefType.FullName;
-                        MSULog.Error(string.Format(format, array));
-                    }
-                    else if (methodInfo.GetGenericArguments().Length != 0)
-                    {
-                        MSULog.Error(string.Format("{0} cannot be applied to method {1}.{2}: {3}.{4} must take no arguments.", new object[]
-                        {
-                            "ItemDefAssociationAttribute",
-                            methodInfo.DeclaringType.FullName,
-                            methodInfo.Name,
-                            methodInfo.DeclaringType.FullName,
-                            methodInfo
-                        }));
-                    }
-                    else
-                    {
-                        ItemDef itemDef = (ItemDef)methodInfo.Invoke(null, Array.Empty<object>());
-                        if (!itemDef)
-                        {
-                            MSULog.Error(methodInfo.DeclaringType.FullName + "." + methodInfo.Name + " returned null.");
-                        }
-                        else if (itemDef.itemIndex < (ItemIndex)0)
-                        {
-                            MSULog.Error(string.Format("{0}.{1} returned an ItemDef that's not registered in the ItemCatalog. result={2}", methodInfo.DeclaringType.FullName, methodInfo.Name, itemDef));
-                        }
-                        else
-                        {
-                            if (itemDefAssociationAttribute.useOnServer)
-                            {
-                                server.Add(new BaseItemBodyBehavior.ItemTypePair
-                                {
-                                    itemIndex = itemDef.itemIndex,
-                                    behaviorType = type
-                                });
-                            }
-                            if (itemDefAssociationAttribute.useOnClient)
-                            {
-                                client.Add(new BaseItemBodyBehavior.ItemTypePair
-                                {
-                                    itemIndex = itemDef.itemIndex,
-                                    behaviorType = type
-                                });
-                            }
-                            if (itemDefAssociationAttribute.useOnServer || itemDefAssociationAttribute.useOnClient)
-                            {
-                                shared.Add(new BaseItemBodyBehavior.ItemTypePair
-                                {
-                                    itemIndex = itemDef.itemIndex,
-                                    behaviorType = type
-                                });
-                            }
-                        }
-                    }
+                        itemIndex = itemDef.itemIndex,
+                        behaviorType = type
+                    });
                 }
             }
             BaseItemMasterBehaviour._server.SetItemTypePairs(server);
@@ -328,6 +294,15 @@ namespace MSU
             public bool useOnServer = true;
 
             public bool useOnClient = true;
+
+            public string GetMethodName()
+            {
+                if(target is MethodInfo method)
+                {
+                    return $"{method.DeclaringType.FullName}.{method.Name}()";
+                }
+                return "NOT ON A METHOD";
+            }
         }
     }
 }
