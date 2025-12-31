@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Collections;
 using RoR2.Projectile;
 using System.Collections.Generic;
+using HG;
 
 namespace MSU
 {
@@ -640,6 +641,42 @@ namespace MSU
 
                 SkinVFX.AddSkinVFX(vfxOverrides[i].ToSkinVFXInfo(targetSkinDef));
             }
+        }
+
+        [SystemInitializer]
+        private static void InitHooks()
+        {
+            On.RoR2.ModelSkinController.ApplySkin += OnSkinApplied;
+        }
+
+        /*
+         * Custom GameObjectActivations (the ones that spawn new prefabs), do not have any capabilities of adding new RendererInfos to the CharacterModel.
+         * This in turn causes custom object activations to not respect certain charactermodel features (ie: elite ramps or becoming invisible).
+         * 
+         * Just get the CharacterModel from the model skin controller and add new rendererInfos based off the GenericRendererInfoContainer components.
+         */
+        private static void OnSkinApplied(On.RoR2.ModelSkinController.orig_ApplySkin orig, ModelSkinController self, int skinIndex)
+        {
+            CharacterModel characterModel = self.characterModel;
+            if (!characterModel)
+                return;
+
+            using var _ = ListPool<CharacterModel.RendererInfo>.RentCollection(out var retrievedRendererInfos);
+
+            foreach(var customGameObjectActivation in characterModel.customGameObjectActivationTransforms)
+            {
+                if(!customGameObjectActivation.TryGetComponent<GenericRendererInfoContainer>(out var genericRendererInfoContainer))
+                {
+                    continue;
+                }
+
+                retrievedRendererInfos.AddRange(genericRendererInfoContainer.rendererInfos);
+            }
+
+            if (retrievedRendererInfos.Count <= 0)
+                return;
+
+            characterModel.baseRendererInfos = HG.ArrayUtils.Join(characterModel.baseRendererInfos, retrievedRendererInfos.ToArray());
         }
     }
 }
