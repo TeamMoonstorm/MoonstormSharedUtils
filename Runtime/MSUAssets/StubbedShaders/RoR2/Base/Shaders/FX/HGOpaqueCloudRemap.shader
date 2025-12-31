@@ -28,7 +28,7 @@ Shader "StubbedRoR2/Base/Shaders/HGOpaqueCloudRemap" {
 		SubShader
 		{
 		LOD 0
-			Tags { "Queue"="Transparent" "IgnoreProjector"="True" "RenderType"="Transparent" "PreviewType"="Plane" }
+			Tags { "Queue"="AlphaTest" "IgnoreProjector"="True" "RenderType"="Transparent" "PreviewType"="Plane" }
 			Blend SrcAlpha OneMinusSrcAlpha
 			ColorMask RGB
 			Cull Off
