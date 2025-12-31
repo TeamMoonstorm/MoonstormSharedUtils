@@ -646,6 +646,7 @@ namespace MSU
         [SystemInitializer]
         private static void InitHooks()
         {
+            On.RoR2.ModelSkinController.ApplySkinAsync += OnSkinApplied;
             On.RoR2.ModelSkinController.ApplySkin += OnSkinApplied;
         }
 
@@ -655,17 +656,23 @@ namespace MSU
          * 
          * Just get the CharacterModel from the model skin controller and add new rendererInfos based off the GenericRendererInfoContainer components.
          */
-        private static void OnSkinApplied(On.RoR2.ModelSkinController.orig_ApplySkin orig, ModelSkinController self, int skinIndex)
+        private static IEnumerator OnSkinApplied(On.RoR2.ModelSkinController.orig_ApplySkinAsync orig, ModelSkinController self, int skinIndex, RoR2.ContentManagement.AsyncReferenceHandleUnloadType unloadType)
         {
+            var origSelf = orig(self, skinIndex, unloadType);
+            while(origSelf.MoveNext())
+            {
+                yield return null;
+            }
+
             CharacterModel characterModel = self.characterModel;
             if (!characterModel)
-                return;
+                yield break;
 
             using var _ = ListPool<CharacterModel.RendererInfo>.RentCollection(out var retrievedRendererInfos);
 
-            foreach(var customGameObjectActivation in characterModel.customGameObjectActivationTransforms)
+            foreach (var customGameObjectActivation in characterModel.customGameObjectActivationTransforms)
             {
-                if(!customGameObjectActivation.TryGetComponent<GenericRendererInfoContainer>(out var genericRendererInfoContainer))
+                if (!customGameObjectActivation.TryGetComponent<GenericRendererInfoContainer>(out var genericRendererInfoContainer))
                 {
                     continue;
                 }
@@ -674,7 +681,7 @@ namespace MSU
             }
 
             if (retrievedRendererInfos.Count <= 0)
-                return;
+                yield break;
 
             characterModel.baseRendererInfos = HG.ArrayUtils.Join(characterModel.baseRendererInfos, retrievedRendererInfos.ToArray());
         }
