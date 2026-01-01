@@ -647,7 +647,6 @@ namespace MSU
         private static void InitHooks()
         {
             On.RoR2.ModelSkinController.ApplySkinAsync += OnSkinApplied;
-            On.RoR2.ModelSkinController.ApplySkin += OnSkinApplied;
         }
 
         /*
