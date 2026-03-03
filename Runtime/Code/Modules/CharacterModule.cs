@@ -115,6 +115,22 @@ namespace MSU
                 var displayPrefab = survivorDef.displayPrefab;
                 var bodyPrefab = survivorDef.bodyPrefab;
 
+
+                if (!bodyPrefab)
+                {
+#if DEBUG
+                    MSULog.Error($"SurvivorDef {survivorDef.cachedName} has no body prefab.");
+#endif
+                    continue;
+                }
+                if (!displayPrefab)
+                {
+#if DEBUG
+                    MSULog.Error($"SurvivorDef {survivorDef.cachedName} has no display prefab.");
+#endif
+                    continue;
+                }
+
                 var displayPrefabModelSkinController = displayPrefab.GetComponentInChildren<ModelSkinController>();
                 var bodyPrefabModelSkinController = bodyPrefab.GetComponentInChildren<ModelSkinController>();
 
