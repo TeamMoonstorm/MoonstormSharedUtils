@@ -13,8 +13,8 @@ Shader "StubbedRoR2/Base/Shaders/HGDistortion" {
 	}
 	//DummyShaderTextExporter
 	SubShader{
-		Tags { "RenderType" = "Opaque" }
-		LOD 200
+		Tags { "Queue" = "Transparent+2000" "IgnoreProjector" = "True" "RenderType" = "Opaque" }
+		LOD 0
 		CGPROGRAM
 #pragma surface surf Standard
 #pragma target 3.0
