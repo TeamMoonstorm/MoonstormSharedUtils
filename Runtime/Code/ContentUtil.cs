@@ -363,7 +363,7 @@ namespace MSU
             }
         }
 
-        private static void HandleAssetAddition(UnityEngine.Object asset, ContentPack contentPack)
+        public static void HandleAssetAddition(UnityEngine.Object asset, ContentPack contentPack)
         {
             switch (asset)
             {
