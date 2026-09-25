@@ -667,7 +667,7 @@ namespace MSU
             if (!characterModel)
                 yield break;
 
-            using var _ = ListPool<CharacterModel.RendererInfo>.RentCollection(out var retrievedRendererInfos);
+            using var _ = HG.ListPool<CharacterModel.RendererInfo>.RentCollection(out var retrievedRendererInfos);
 
             foreach (var customGameObjectActivation in characterModel.customGameObjectActivationTransforms)
             {
