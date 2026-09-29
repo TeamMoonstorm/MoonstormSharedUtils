@@ -218,8 +218,21 @@ namespace MSU
         /// </summary>
         /// <typeparam name="TAsset">The type of asset to populate</typeparam>
         /// <param name="typeToPopulate">The actual type to populate.</param>
+        /// <param name="assets">The AssetCollection to use for population.</param>
         /// <param name="fieldNameToAssetConverter">A Function to convert a field name to a specific asset, useful for making fields for BuffDefs without including the prefix bd</param>
         public static void PopulateTypeFields<TAsset>(Type typeToPopulate, NamedAssetCollection<TAsset> assets, Func<string, string> fieldNameToAssetConverter = null) where TAsset : UnityEngine.Object
+        {
+            PopulateTypeFields(typeToPopulate, assets, t => t, fieldNameToAssetConverter);
+        }
+        /// <summary>
+        /// <inheritdoc cref="PopulateTypeFields{TAsset}(Type, NamedAssetCollection{TAsset}, Func{String, String)"/>
+        /// </summary>
+        /// <typeparam name="TAsset">The type of asset to populate</typeparam>
+        /// <param name="typeToPopulate">The actual type to populate.</param>
+        /// <param name="assets">The AssetCollection to use for population.</param>
+        /// <param name="sourceToDestinationConverter">A Function to convert the populated asset type name to a different type, useful for making fields for CharacterBodys using bodyPrefabs</param>
+        /// <param name="fieldNameToAssetConverter">A Function to convert a field name to a specific asset, useful for making fields for BuffDefs without including the prefix bd</param>
+        public static void PopulateTypeFields<TAsset, TField>(Type typeToPopulate, NamedAssetCollection<TAsset> assets, Func<TAsset, TField> sourceToDestinationConverter, Func<string, string> fieldNameToAssetConverter = null) where TAsset : UnityEngine.Object
         {
 #if DEBUG
             MSULog.Info($"Attempting to populate {typeToPopulate.FullName} with {assets.Count} assets");
@@ -241,19 +254,23 @@ namespace MSU
             FieldInfo[] fields = typeToPopulate.GetFields(BindingFlags.Static | BindingFlags.Public);
             foreach (FieldInfo fieldInfo in fields)
             {
-                if (fieldInfo.FieldType.IsSameOrSubclassOf(typeof(TAsset)))
+                if (fieldInfo.FieldType.IsSameOrSubclassOf(typeof(TField)))
                 {
                     TargetAssetNameAttribute customAttribute = CustomAttributeExtensions.GetCustomAttribute<TargetAssetNameAttribute>(fieldInfo);
                     string name = ((customAttribute != null) ? customAttribute.targetAssetName : ((fieldNameToAssetConverter == null) ? fieldInfo.Name : fieldNameToAssetConverter(fieldInfo.Name)));
                     TAsset val = assets.Find(name);
                     if (val != null)
                     {
+                        TField fieldVal = sourceToDestinationConverter(val);
+                        if (fieldVal != null)
+                        {
 #if DEBUG
-                        notAssignedAssets.Remove(val);
+                            notAssignedAssets.Remove(val);
 #endif
-                        fieldInfo.SetValue(null, val);
+                            fieldInfo.SetValue(null, fieldVal);
 
-                        continue;
+                            continue;
+                        }
                     }
 
                     missingAssets++;
@@ -281,7 +298,9 @@ namespace MSU
                 MSULog.Warning(failureLog);
             }
 #endif
+
         }
+
 
         /// <summary>
         /// Adds all and any Content pieces from the AssetCollection found in <paramref name="assetCollection"/> to the ContentPack specified in <paramref name="contentPack"/>.
