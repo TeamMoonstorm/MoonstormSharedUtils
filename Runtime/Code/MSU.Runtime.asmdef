@@ -46,7 +46,8 @@
         "R2API.Networking.dll",
         "Newtonsoft.Json.dll",
         "LoadingScreenFix.dll",
-        "R2API.Skins.dll"
+        "R2API.Skins.dll",
+        "AsyncManagement.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [

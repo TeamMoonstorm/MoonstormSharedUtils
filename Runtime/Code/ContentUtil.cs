@@ -202,103 +202,24 @@ namespace MSU
             Array.Sort(collection.assetInfos);
         }
 
-        /// <summary>
-        /// Populates public static fields of type <typeparamref name="TAsset"/> that are found in <paramref name="typeToPopulate"/> utilizing the assets found in <paramref name="assets"/>.
-        /// <br>Unlike the base game's <see cref="ContentLoadHelper.PopulateTypeFields{TAsset}(Type, NamedAssetCollection{TAsset}, Func{string, string})"/>. This version logs assets that did not have a corresponding field found in <paramref name="typeToPopulate"/></br>
-        /// </summary>
-        /// <typeparam name="TAsset">The type of asset to populate</typeparam>
-        /// <param name="typeToPopulate">The actual type to populate.</param>
-        /// <param name="assets">The AssetCollection to use for population.</param>
+
+        [Obsolete("Use ContentLoadHelper.PopulateTypeFields(Type, NamedAssetCollection<TAsset>, Func<TAsset, TField>, Func<string, string> = null) instead.")]
         public static void PopulateTypeFields<TAsset>(Type typeToPopulate, NamedAssetCollection<TAsset> assets) where TAsset : UnityEngine.Object
         {
             PopulateTypeFields(typeToPopulate, assets, null);
         }
-        /// <summary>
-        /// <inheritdoc cref="PopulateTypeFields{TAsset}(Type, NamedAssetCollection{TAsset})"/>
-        /// </summary>
-        /// <typeparam name="TAsset">The type of asset to populate</typeparam>
-        /// <param name="typeToPopulate">The actual type to populate.</param>
-        /// <param name="assets">The AssetCollection to use for population.</param>
-        /// <param name="fieldNameToAssetConverter">A Function to convert a field name to a specific asset, useful for making fields for BuffDefs without including the prefix bd</param>
+
+
+        [Obsolete("Use ContentLoadHelper.PopulateTypeFields(Type, NamedAssetCollection<TAsset>, Func<TAsset, TField>, Func<string, string> = null) instead.")]
         public static void PopulateTypeFields<TAsset>(Type typeToPopulate, NamedAssetCollection<TAsset> assets, Func<string, string> fieldNameToAssetConverter = null) where TAsset : UnityEngine.Object
         {
             PopulateTypeFields(typeToPopulate, assets, t => t, fieldNameToAssetConverter);
         }
-        /// <summary>
-        /// <inheritdoc cref="PopulateTypeFields{TAsset}(Type, NamedAssetCollection{TAsset}, Func{String, String)"/>
-        /// </summary>
-        /// <typeparam name="TAsset">The type of asset to populate</typeparam>
-        /// <param name="typeToPopulate">The actual type to populate.</param>
-        /// <param name="assets">The AssetCollection to use for population.</param>
-        /// <param name="sourceToDestinationConverter">A Function to convert the populated asset type name to a different type, useful for making fields for CharacterBodys using bodyPrefabs</param>
-        /// <param name="fieldNameToAssetConverter">A Function to convert a field name to a specific asset, useful for making fields for BuffDefs without including the prefix bd</param>
+
+        [Obsolete("Use ContentLoadHelper.PopulateTypeFields(Type, NamedAssetCollection<TAsset>, Func<TAsset, TField>, Func<string, string> = null) instead.")]
         public static void PopulateTypeFields<TAsset, TField>(Type typeToPopulate, NamedAssetCollection<TAsset> assets, Func<TAsset, TField> sourceToDestinationConverter, Func<string, string> fieldNameToAssetConverter = null) where TAsset : UnityEngine.Object
         {
-#if DEBUG
-            MSULog.Info($"Attempting to populate {typeToPopulate.FullName} with {assets.Count} assets");
-#endif
-
-            string[] array = new string[assets.Length];
-
-#if DEBUG
-            List<TAsset> notAssignedAssets = assets.assetInfos.Select(item => item.asset).ToList();
-            StringBuilder failureLog = new StringBuilder();
-#endif
-
-            for (int i = 0; i < assets.Length; i++)
-            {
-                array[i] = assets[i].name;
-            }
-
-            int missingAssets = 0;
-            FieldInfo[] fields = typeToPopulate.GetFields(BindingFlags.Static | BindingFlags.Public);
-            foreach (FieldInfo fieldInfo in fields)
-            {
-                if (fieldInfo.FieldType.IsSameOrSubclassOf(typeof(TField)))
-                {
-                    TargetAssetNameAttribute customAttribute = CustomAttributeExtensions.GetCustomAttribute<TargetAssetNameAttribute>(fieldInfo);
-                    string name = ((customAttribute != null) ? customAttribute.targetAssetName : ((fieldNameToAssetConverter == null) ? fieldInfo.Name : fieldNameToAssetConverter(fieldInfo.Name)));
-                    TAsset val = assets.Find(name);
-                    if (val != null)
-                    {
-                        TField fieldVal = sourceToDestinationConverter(val);
-                        if (fieldVal != null)
-                        {
-#if DEBUG
-                            notAssignedAssets.Remove(val);
-#endif
-                            fieldInfo.SetValue(null, fieldVal);
-
-                            continue;
-                        }
-                    }
-
-                    missingAssets++;
-#if DEBUG
-                    failureLog.AppendLine($"Failed to assign {fieldInfo.DeclaringType.FullName}.{fieldInfo.Name}: Asset Not Found.");
-#endif
-                }
-            }
-
-#if DEBUG
-            if (failureLog.Length > 1)
-            {
-                failureLog.Insert(0, $"Failed to assign {missingAssets} field(s), logging which ones have failed.");
-                MSULog.Warning(failureLog.ToString());
-                failureLog.Clear();
-            }
-
-            if (notAssignedAssets.Count > 0)
-            {
-                failureLog.AppendLine($"There where {notAssignedAssets} Assets that have not been assigned to fields inside {typeToPopulate.FullName}. Listing assets:");
-                foreach (var asset in notAssignedAssets)
-                {
-                    failureLog.AppendLine(asset.name);
-                }
-                MSULog.Warning(failureLog);
-            }
-#endif
-
+            ContentLoadHelper.PopulateTypeFields(typeToPopulate, assets, sourceToDestinationConverter, fieldNameToAssetConverter);
         }
 
 
