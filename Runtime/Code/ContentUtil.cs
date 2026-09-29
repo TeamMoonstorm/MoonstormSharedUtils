@@ -285,6 +285,15 @@ namespace MSU
             return result;
         }
 
+        /// <summary>
+        /// Tries to add the <paramref name="asset"/> to the <paramref name="contentPack"/>
+        /// <br></br>
+        /// This is done via PatternMatching, if the asset is a GameObject it'll be added to the respective catalogs based on component metadata.
+        /// </summary>
+        /// <param name="asset">The asset to add to the content pack</param>
+        /// <param name="contentPack">The content pack itself</param>
+        public static void AddAssetToContentPack(UnityEngine.Object asset, ContentPack contentPack) => HandleAssetAddition(asset, contentPack);
+
         private static void AddContentFromCollectionInternal(ContentPack contentPack, UnityEngine.Object[] assetCollection)
         {
             foreach (var asset in assetCollection)
@@ -331,6 +340,10 @@ namespace MSU
                 case MiscPickupDef mpd: contentPack.miscPickupDefs.AddSingle(mpd); break;
                 case DroneDef dd: contentPack.droneDefs.AddSingle(dd); break;
                 case CraftableDef cd: contentPack.craftableDefs.AddSingle(cd); break;
+                case KeyItemDef kd: contentPack.keyItemDefs.AddSingle(kd); break;
+                case ItemGroupProvider igp: contentPack.itemGroupProviders.AddSingle(igp); break;
+                case ItemGroupType igt: contentPack.itemGroupTypes.AddSingle(igt); break;
+                case CursedBookSpellDef cbsd: contentPack.cursedBookSpellDefs.AddSingle(cbsd); break;
                 case EntityStateTypeCollection estc: AddEntityStateTypes(estc, contentPack); break;
             }
         }
@@ -394,7 +407,7 @@ namespace MSU
             return notAbstract && implementsInterface;
         }
 
-        private class ContentPieceProvider : IContentPieceProvider
+        private sealed class ContentPieceProvider : IContentPieceProvider
         {
             public ContentPack contentPack => _contentPack;
 
@@ -413,7 +426,7 @@ namespace MSU
             }
         }
 
-        private class GenericContentPieceProvider<T> : IContentPieceProvider<T> where T : UnityEngine.Object
+        private sealed class GenericContentPieceProvider<T> : IContentPieceProvider<T> where T : UnityEngine.Object
         {
             public ContentPack contentPack => _contentPack;
 
