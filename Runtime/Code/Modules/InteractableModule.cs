@@ -139,10 +139,8 @@ namespace MSU
             ParallelCoroutine initializeAsyncCoroutine = new ParallelCoroutine();
             foreach (var interactable in interactables)
             {
-#if DEBUG
                 try
                 {
-#endif
                     interactable.Initialize();
 
                     if(interactable is IAsyncContentInitializer asyncContentInitializer)
@@ -181,14 +179,12 @@ namespace MSU
 #if DEBUG
                     MSULog.Info($"Interactable {interactable.GetType().FullName} initialized.");
 #endif
-
-#if DEBUG
                 }
                 catch (Exception ex)
                 {
-                    MSULog.Error($"Interactable {interactable.GetType().FullName} threw an exception while initializing.\n{ex}");
+                    MSULog.Fatal($"Interactable {interactable.GetType().FullName} threw an exception while initializing.\n{ex}");
+                    InitializationExceptionWatcher.AddException(ex, plugin);
                 }
-#endif
             }
 
             while(!initializeAsyncCoroutine.isDone)

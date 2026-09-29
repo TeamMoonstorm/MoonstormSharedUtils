@@ -11,7 +11,7 @@ namespace MSU
         private static LogLevel _breakableLevel = LogLevel.Fatal;
 #endif
 
-        private static ManualLogSource _log;
+        internal static ManualLogSource _logSource;
         public static void Message(object data, [CallerLineNumber] int i = 0, [CallerMemberName] string member = "") => Log(LogLevel.Message, data, i, member);
 
         public static void Info(object data, [CallerLineNumber] int i = 0, [CallerMemberName] string member = "") => Log(LogLevel.Info, data, i, member);
@@ -58,11 +58,11 @@ namespace MSU
         {
             object data2 = (level.HasFlag(LogLevel.Warning) || level.HasFlag(LogLevel.Error) || level.HasFlag(LogLevel.Fatal)) ? Format(data, i, member) : data;
 
-            _log.Log(level, data2);
+            _logSource.Log(level, data2);
 #if DEBUG
             if (MSUConfig._enableStackLogging && (level.HasFlag(LogLevel.Warning) || level.HasFlag(LogLevel.Error) || level.HasFlag(LogLevel.Fatal)))
             {
-                _log.LogMessage(new StackTrace());
+                _logSource.LogMessage(new StackTrace());
             }
 
             if (_breakableLevel.HasFlag(level))
@@ -90,7 +90,7 @@ namespace MSU
 #endif
         public MSULog(ManualLogSource log)
         {
-            _log = log;
+            _logSource = log;
         }
     }
 }

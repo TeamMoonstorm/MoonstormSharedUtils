@@ -165,10 +165,8 @@ namespace MSU
             ParallelCoroutine initializeAsyncCoroutine = new ParallelCoroutine();
             foreach (var artifact in artifacts)
             {
-#if DEBUG
                 try
                 {
-#endif
                     artifact.Initialize();
 
                     if(artifact is IAsyncContentInitializer asyncContentInitializer)
@@ -205,13 +203,12 @@ namespace MSU
                     MSULog.Info($"Artifact {artifact.GetType().FullName} initialized.");
 #endif
 
-#if DEBUG
                 }
                 catch (Exception ex)
                 {
-                    MSULog.Error($"Artifact {artifact.GetType().FullName} threw an exception while initializing.\n{ex}");
+                    MSULog.Fatal($"Artifact {artifact.GetType().FullName} threw an exception while initializing.\n{ex}");
+                    InitializationExceptionWatcher.AddException(ex, plugin);
                 }
-#endif
             }
             while(!initializeAsyncCoroutine.isDone)
             {

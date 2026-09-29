@@ -183,10 +183,8 @@ namespace MSU
             ParallelCoroutine initializeAsyncCoroutine = new ParallelCoroutine();
             foreach (var tier in itemTiers)
             {
-#if DEBUG
                 try
                 {
-#endif
                     tier.Initialize();
 
                     if(tier is IAsyncContentInitializer asyncContentInitializer)
@@ -228,14 +226,12 @@ namespace MSU
 #if DEBUG
                     MSULog.Info($"ItemTier {tier.GetType().FullName} initialized.");
 #endif
-
-#if DEBUG
                 }
                 catch (Exception ex)
                 {
-                    MSULog.Error($"ItemTier {tier.GetType().FullName} threw an exception while initializing.\n{ex}");
+                    MSULog.Fatal($"ItemTier {tier.GetType().FullName} threw an exception while initializing.\n{ex}");
+                    InitializationExceptionWatcher.AddException(ex, plugin);
                 }
-#endif
             }
             while(!initializeAsyncCoroutine.isDone)
             {
