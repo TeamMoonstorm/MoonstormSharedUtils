@@ -50,21 +50,20 @@ namespace MSU
 
         private static void GetStatsCoefficients(CharacterBody sender, RecalculateStatsAPI.StatHookEventArgs args)
         {
-            if (sender.bodyIndex == BodyIndex.None)
+            if (sender.bodyIndex == BodyIndex.None || !_bodyToContentBehaviour.TryGetValue(sender, out var behaviour))
                 return;
 
-            _bodyToContentBehaviour[sender].GetStatCoefficients(args);
+            behaviour.GetStatCoefficients(args);
         }
 
         private static void RecalculateStats(On.RoR2.CharacterBody.orig_RecalculateStats orig, CharacterBody self)
         {
-            if (self.bodyIndex == BodyIndex.None)
+            if (self.bodyIndex == BodyIndex.None || !_bodyToContentBehaviour.TryGetValue(self, out var behaviour))
             {
                 orig(self);
                 return;
             }
 
-            var behaviour = _bodyToContentBehaviour[self];
             behaviour.RecalculateStatsStart();
             orig(self);
             behaviour.RecalculateStatsEnd();
@@ -72,24 +71,23 @@ namespace MSU
 
         private static void Holy_GetStatsCoefficients(CharacterBody body, RecalculateStatsAPI.StatHookEventArgs args)
         {
-            if (body.bodyIndex == BodyIndex.None)
+            if (body.bodyIndex == BodyIndex.None || !_bodyToContentBehaviour.TryGetValue(body, out var behaviour))
                 return;
 
-            var behaviour = _bodyToContentBehaviour[body];
             behaviour.RecalculateStatsStart();
             behaviour.GetStatCoefficients(args);
         }
 
         private static void Holy_RecalculateStats(On.RoR2.CharacterBody.orig_RecalculateStats orig, CharacterBody self)
         {
-            if (self.bodyIndex == BodyIndex.None)
+            if (self.bodyIndex == BodyIndex.None || !_bodyToContentBehaviour.TryGetValue(self, out var behaviour))
             {
                 orig(self);
                 return;
             }
 
             orig(self);
-            _bodyToContentBehaviour[self].RecalculateStatsEnd();
+            behaviour.RecalculateStatsEnd();
         }
 
         private static IEnumerator InitMSUContentBehaviourSystem()
