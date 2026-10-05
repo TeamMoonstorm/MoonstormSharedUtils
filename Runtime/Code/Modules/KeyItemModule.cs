@@ -7,21 +7,43 @@ using System.Collections.ObjectModel;
 
 namespace MSU
 {
+    /// <summary>
+    /// The KeyItemModule is a Module that handles classes that implement <see cref="IKeyItemContentPiece"/>.
+    /// <para>The module's main job is to handle the proper addition of KeyItemDefs to the ContentPack.</para>
+    /// </summary>
     public static class KeyItemModule
     {
+        /// <summary>
+        /// A ReadOnlyDictionary that can be used for finding a KeyItem's IKeyItemContentPiece.
+        /// <para>Subscribe to <see cref="moduleAvailability"/> to ensure the Dictionary is not Empty.</para>
+        /// </summary>
         public static ReadOnlyDictionary<KeyItemDef, IKeyItemContentPiece> moonstormKeyItems { get; private set; }
         private static Dictionary<KeyItemDef, IKeyItemContentPiece> _moonstormKeyItems = new Dictionary<KeyItemDef, IKeyItemContentPiece>();
 
+        /// <summary>
+        /// Represents the Availability of this module.
+        /// </summary>
         public static ResourceAvailability moduleAvailability;
 
         private static Dictionary<BaseUnityPlugin, IKeyItemContentPiece[]> _pluginToKeyItems = new Dictionary<BaseUnityPlugin, IKeyItemContentPiece[]>();
         private static Dictionary<BaseUnityPlugin, IContentPieceProvider<KeyItemDef>> _pluginToContentProvider = new Dictionary<BaseUnityPlugin, IContentPieceProvider<KeyItemDef>>();
     
+        /// <summary>
+        /// Adds a new provider to the KeyItemModule.
+        /// <br>For more info, see <see cref="IContentPieceProvider"/></br>
+        /// </summary>
+        /// <param name="plugin">The plugin that's adding the new provider</param>
+        /// <param name="provider">The provider from the plugin, can be one created using <see cref="ContentUtil.CreateGenericContentPieceProvider{TUObjectType}(BaseUnityPlugin, RoR2.ContentManagement.ContentPack)"/></param>
         public static void AddProvider(BaseUnityPlugin plugin, IContentPieceProvider<KeyItemDef> provider)
         {
             _pluginToContentProvider.Add(plugin, provider);
         }
 
+        /// <summary>
+        /// Obtains all the KeyItemContentPieces that where added by a specified plugin
+        /// </summary>
+        /// <param name="plugin">The plugin to obtain it's Items</param>
+        /// <returns>An array of IKeyItemContentPieces, if the plugin has not added any items, it returns an empty Array</returns>
         public static IKeyItemContentPiece[] GetKeyItems(BaseUnityPlugin plugin)
         {
             if(_pluginToKeyItems.TryGetValue(plugin, out var keyItems))
@@ -35,6 +57,12 @@ namespace MSU
             return Array.Empty<IKeyItemContentPiece>();
         }
 
+        /// <summary>
+        /// Coroutine used to initialize the Items added by <paramref name="plugin"/>.
+        /// <br>The coroutine yield breaks if the plugin has not added a provider using <see cref="AddProvider(BaseUnityPlugin, IContentPieceProvider{KeyItemDef})"/></br>
+        /// </summary>
+        /// <param name="plugin">The plugin to initialize it's Items</param>
+        /// <returns>A Coroutine enumerator that can be Awaited or Yielded</returns>
         public static IEnumerator InitializeKeyItems(BaseUnityPlugin plugin)
         {
 #if DEBUG
