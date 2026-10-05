@@ -19,10 +19,15 @@ namespace MSU
     {
         /// <summary>
         /// A ReadOnlyDictionary that can be used for finding an Interactable's IInteractableContentPiece.
-        /// <br>The ReadOnlyDictionary has a special Key Evaluator that Evaluates keys based off the IInteractable's <see cref="NetworkIdentity.assetId"/> to check if two interactables are the same. This allows instances of the interactable to be used as keys.</br>
+        /// <br>The ReadOnlyDictionary has a special KeyEvaluator that Evaluates keys based off the Interactable's <see cref="NetworkIdentity.assetId"/> to check if two interactables are the same. This allows instances of the Interactable to be used as Keys.</br>
         /// <br>Subscribe to <see cref="moduleAvailability"/> to ensure the dictionary is not empty.</br>
         /// </summary>
+        public static ReadOnlyDictionary<NetworkIdentity, IInteractableContentPiece> networkIdentityToInteractable { get; private set; }
+        private static Dictionary<NetworkIdentity, IInteractableContentPiece> _networkIdentityToInteractable = new Dictionary<NetworkIdentity, IInteractableContentPiece>(new NetworkIdentityAssetIDComparer());
+
+        [Obsolete("This dictionary is obsolete as not all Interactables may implement IInteractable (example: Trishops).\r\nUtilize \"networkIdentityToInteractable\" instead.")]
         public static ReadOnlyDictionary<IInteractable, IInteractableContentPiece> moonstormInteractables { get; private set; }
+        [Obsolete]
         private static Dictionary<IInteractable, IInteractableContentPiece> _moonstormInteractables = new Dictionary<IInteractable, IInteractableContentPiece>(new IInteractableNetworkIdentityAssetIDComparer());
 
         /// <summary>
@@ -95,11 +100,19 @@ namespace MSU
 
             yield return null;
 
+            networkIdentityToInteractable = new ReadOnlyDictionary<NetworkIdentity, IInteractableContentPiece>(_networkIdentityToInteractable);
+            _networkIdentityToInteractable = null;
+
+#pragma warning disable CS0618 // Type or member is obsolete
+#pragma warning disable CS0612 // Type or member is obsolete
             moonstormInteractables = new ReadOnlyDictionary<IInteractable, IInteractableContentPiece>(_moonstormInteractables);
             _moonstormInteractables = null;
+#pragma warning restore CS0612 // Type or member is obsolete
+#pragma warning restore CS0618 // Type or member is obsolete
+
             moduleAvailability.MakeAvailable();
 
-            if(moonstormInteractables.Count == 0)
+            if(networkIdentityToInteractable.Count == 0)
             {
 #if DEBUG
                 MSULog.Info("Not doing InteractableModule hooks since no interactables are registered.");
@@ -149,7 +162,7 @@ namespace MSU
                     }
 
                     var asset = interactable.asset;
-                    if (asset.TryGetComponent<NetworkIdentity>(out _))
+                    if (asset.TryGetComponent<NetworkIdentity>(out var netID))
                     {
                         provider.contentPack.networkedObjectPrefabs.AddSingle(asset);
                     }
@@ -173,7 +186,16 @@ namespace MSU
                         {
                             _interactableCardProviders.Add(interactableContentPiece.cardProvider);
                         }
-                        _moonstormInteractables.Add(interactableContentPiece.component, interactableContentPiece);
+
+                        if(netID)
+                        {
+                            _networkIdentityToInteractable.Add(netID, interactableContentPiece);
+                        }
+
+                        if(interactableContentPiece.component != null)
+                        {
+                            _moonstormInteractables.Add(interactableContentPiece.component, interactableContentPiece);
+                        }
                     }
 
 #if DEBUG

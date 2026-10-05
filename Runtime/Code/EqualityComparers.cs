@@ -68,4 +68,32 @@ namespace MSU
             return obj?.GetHashCode() ?? -1;
         }
     }
+
+    /// <summary>
+    /// An Equality comparer for NetworkIdentities which compares the equality of each NetworkIdentity's assetID
+    /// </summary>
+    public struct NetworkIdentityAssetIDComparer : IEqualityComparer<NetworkIdentity>
+    {
+        /// <summary>
+        /// Returns true if both <paramref name="x"/> and <paramref name="y"/>'s <see cref="NetworkIdentity.assetId"/> are equal.
+        /// </summary>
+        public bool Equals(NetworkIdentity x, NetworkIdentity y)
+        {
+            if (x == null || y == null)
+                return false;
+
+            var xAssetID = x.assetId;
+            var yAssetID = y.assetId;
+
+            return xAssetID.Equals(yAssetID);
+        }
+
+        /// <summary>
+        /// Obtains the HashCode of <paramref name="obj"/>'s <see cref="NetworkIdentity.assetId"/>
+        /// </summary>
+        public int GetHashCode(NetworkIdentity obj)
+        {
+            return obj?.assetId.GetHashCode() ?? -1;
+        }
+    }
 }
