@@ -426,6 +426,14 @@ namespace MSU
             return (GenericObjectIndex)reader.ReadPackedIndex32();
         }
 
+        /// <summary>
+        /// Returns true if the Collection is null or Empty (Count == 0)
+        /// </summary>
+        public static bool IsCollectionEmptyOrNull(ICollection collection)
+        {
+            return collection == null || collection.Count == 0;
+        }
+
         static MSUtil()
         {
             Type configEntryType = typeof(ConfigEntry<object>);
