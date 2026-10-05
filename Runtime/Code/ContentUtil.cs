@@ -288,7 +288,7 @@ namespace MSU
         /// <summary>
         /// Tries to add the <paramref name="asset"/> to the <paramref name="contentPack"/>
         /// <br></br>
-        /// This is done via PatternMatching, if the asset is a GameObject it'll be added to the respective catalogs based on component metadata.
+        /// This is done via Pattern Matching, if the asset is a GameObject it'll be added to the respective catalogs based on component metadata.
         /// </summary>
         /// <param name="asset">The asset to add to the content pack</param>
         /// <param name="contentPack">The content pack itself</param>

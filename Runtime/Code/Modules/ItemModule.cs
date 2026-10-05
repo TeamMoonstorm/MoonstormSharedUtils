@@ -169,7 +169,7 @@ namespace MSU
                 }
                 catch (Exception ex)
                 {
-                    MSULog.Error($"Item {item.GetType().FullName} threw an exception while initializing.\n{ex}");
+                    MSULog.Fatal($"Item {item.GetType().FullName} threw an exception while initializing.\n{ex}");
                     InitializationExceptionWatcher.AddException(ex, plugin);
                 }
             }

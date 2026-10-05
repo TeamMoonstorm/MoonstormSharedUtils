@@ -9,6 +9,9 @@ using System.Collections.Generic;
 
 namespace MSU
 {
+    /// <summary>
+    /// The InitializationExceptionWatcher is a utility static class used to log important exceptions that happens during a mod's initialization coroutine.
+    /// </summary>
     public static class InitializationExceptionWatcher
     {
         static InitializationExceptionWatcher()
@@ -16,7 +19,14 @@ namespace MSU
             MainMenuController.OnMainMenuInitialised += ShowDialogBoxIfApplicable;
         }
 
+        /// <summary>
+        /// Returns true if any exception has been thrown
+        /// </summary>
         public static bool exceptionsThrown => _pluginToExceptions.Count > 0;
+
+        /// <summary>
+        /// Handy way of keeping track of exceptions thrown by a plugin during loading.
+        /// </summary>
         private static Dictionary<BaseUnityPlugin, List<Exception>> _pluginToExceptions = new Dictionary<BaseUnityPlugin, List<Exception>>();
 
         private static void ShowDialogBoxIfApplicable()
@@ -56,6 +66,12 @@ namespace MSU
             box.rootObject.transform.SetParent(RoR2Application.instance.mainCanvas.transform);
         }
 
+        /// <summary>
+        /// Runs the <paramref name="method"/> inside a TryCatch block, if an exception is thrown, it gets logged by <paramref name="logSource"/> and added to the watcher's detected exceptions.
+        /// </summary>
+        /// <param name="method">The method to execute</param>
+        /// <param name="baseUnityPlugin">The plugin that's requesting the method call</param>
+        /// <param name="logSource">A log source to log the exception, defaults to MSU's log source.</param>
         public static void TryCatch(Action method, BaseUnityPlugin baseUnityPlugin, ManualLogSource logSource = null)
         {
             logSource ??= MSULog._logSource;
@@ -71,6 +87,12 @@ namespace MSU
             }
         }
 
+        /// <summary>
+        /// Executes the <paramref name="coroutine"/>, TryCatching every MoveNext(), if an exception is thrown it gets logged by <paramref name="logSource"/>, added to the watcher's detected exceptions and the coroutine stops execution.
+        /// </summary>
+        /// <param name="coroutine">The coroutine to execute</param>
+        /// <param name="baseUnityPlugin">The plugin that's requesting the method call</param>
+        /// <param name="logSource">A log source to log the exception, defaults to MSU's log source.</param>
         public static IEnumerator TryCatch(IEnumerator coroutine, BaseUnityPlugin baseUnityPlugin, ManualLogSource logSource)
         {
             while(true)
@@ -119,6 +141,11 @@ namespace MSU
             };
         }
 
+        /// <summary>
+        /// Adds an exception manually to the Watcher's internal list of exceptions
+        /// </summary>
+        /// <param name="ex">The exception</param>
+        /// <param name="plugin">The plugin that threw the exception</param>
         public static void AddException(Exception ex, BaseUnityPlugin plugin)
         {
             OnExceptionThrown(ex, plugin);
