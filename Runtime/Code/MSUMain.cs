@@ -41,7 +41,7 @@ namespace MSU
         /// <summary>
         /// The version of MSU that's being used
         /// </summary>
-        public const string VERSION = "2.5.1";
+        public const string VERSION = "2.6.0";
 
         /// <summary>
         /// The plugin's PluginInfo
@@ -78,6 +78,7 @@ namespace MSU
             new MSULog(Logger);
             msuAssetBundle = AssetBundle.LoadFromFile(Path.Combine(assetBundleDir, "runtimemsuassetbundle"));
             new MSUConfig(this);
+            LanguageFileLoader.AddLanguageFilesFromMod(this, "languages");
 
 #if DEBUG
             gameObject.AddComponent<MSUDebug>();

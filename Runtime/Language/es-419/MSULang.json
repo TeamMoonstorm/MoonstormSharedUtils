@@ -1,0 +1,11 @@
+{
+    "strings":
+    {
+        "MSU_INIT_ERROR_DIALOG_BOX_HEADER": "Error durante la inicialización del juego",
+        "MSU_INIT_ERROR_DIALOG_BOX_DESC": "Un total de \"{0}\" Mod(s) tuvieron errores durante la inicialización del juego. El juego tal vez este en un estado inestable. Recomendamos contactar a los desarrolladores para resolver el problema.\r\n{1}",
+        "MSU_INIT_ERROR_DIALOG_BOX_CANCEL": "Continuar jugando",
+        "MSU_INIT_ERROR_DIALOG_BOX_QUIT": "Cerrar el juego",
+        "MSU_INIT_ERROR_DIALOG_BOX_EXCEPTION": "Error",
+        "MSU_INIT_ERROR_DIALOG_BOX_EXCEPTIONS": "Errores"
+    }
+}

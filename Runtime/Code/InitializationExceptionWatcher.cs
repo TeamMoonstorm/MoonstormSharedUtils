@@ -126,11 +126,13 @@ namespace MSU
 
                 if(exceptions.Count > 1)
                 {
-                    stringBuilder.AppendLine("Exceptions");
+                    //Exception
+                    stringBuilder.AppendLine(Language.GetString("MSU_INIT_ERROR_DIALOG_BOX_EXCEPTION"));
                 }
                 else
                 {
-                    stringBuilder.AppendLine("Exception");
+                    //Exceptions
+                    stringBuilder.AppendLine(Language.GetString("MSU_INIT_ERROR_DIALOG_BOX_EXCEPTIONS"));
                 }
             }
 

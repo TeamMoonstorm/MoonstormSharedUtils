@@ -12,6 +12,7 @@ namespace MSU.Editor
     public sealed class ChangeAssemblyBuildMode : PipelineJob
     {
         public AssemblyBuildMode buildMode = AssemblyBuildMode.Release;
+        public bool stageDebugDatabases = true;
 
         public override Task Execute(Pipeline pipeline)
         {
@@ -28,10 +29,12 @@ namespace MSU.Editor
             {
                 StageAssemblies stageAssemblies = stageAssembliesJobs[i];
                 AssemblyBuildMode previousBuildMode = stageAssemblies.releaseBuild ? AssemblyBuildMode.Release : AssemblyBuildMode.Debug;
+                bool previousStageDebugDatabases = stageAssemblies.stageDebugDatabases;
                 result.totalStageAssemblyJobs++;
                 stageAssemblies.releaseBuild = buildMode == AssemblyBuildMode.Release;
+                stageAssemblies.stageDebugDatabases = stageDebugDatabases;
                 EditorUtility.SetDirty(stageAssemblies);
-                result.context.Add($"Modified {MarkdownUtils.GenerateAssetLink(stageAssemblies)}'s StageAssemblies pipeline job (previous mode: {previousBuildMode}, new mode: {buildMode})");
+                result.context.Add($"Modified {MarkdownUtils.GenerateAssetLink(stageAssemblies)}'s StageAssemblies pipeline job Previous: (buildMode:{previousBuildMode}|stageDebugDatabases:{previousStageDebugDatabases}). New: (buildMode:{buildMode}|stageDebugDatabases:{stageDebugDatabases})");
             }
 
             ExecutePipeline[] executePipelineJobs = jobs.OfType<ExecutePipeline>().ToArray();
@@ -42,6 +45,7 @@ namespace MSU.Editor
                 FindAndSetBuildMode(executePipelinesPipelineJobs, result);
             }
         }
+
         public enum AssemblyBuildMode
         {
             Debug,

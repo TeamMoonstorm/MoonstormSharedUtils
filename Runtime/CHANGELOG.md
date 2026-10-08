@@ -1,3 +1,30 @@
+# '2.6.0' - Hallowed Concepts
+
+## Runtime
+
+* Updated to Hallowed Concepts (1.5.0)
+* The mod no longer ships with the PDB file.
+* Added the following types to support KeyItems:
+    * KeyItemModule
+    * IKeyItemContentPiece
+* Interactable Module now supports Interactables that don't implement ``IInteractable`` interface.
+    * This fixes #86
+        * Developer Note: This was done under the assumption that all interactables implement the interface, this is not the case for with Trishops which _spawns_ the interactables and itself doesnt have the interface. To remedy this the ``ReadOnlyDictionary<IInteractable, IInteractableContentPiece>`` dictionary has been replaced by a ``ReadOnlyDictionary<NetworkIdentity, IInteractableContentPiece>``, as all interactables _do need_ a Network Identity.
+        * Old dictionary will still be populated, but it'll miss any interactables that lack the ``IInteractable`` interface.
+* Added the ``InitializationExceptionWatcher`` class.
+    * When a mod throws an exception during initialization, instead of locking the game the game will continue loading and register the exception.
+    * When the main menu appears, a dialog box is shown, warning the user about the exceptions and the potential instability of the game.
+    * All modules in MSU support this new feature, the feature is public and has different ways to be accessed.
+    * Fixes (#84)
+* Added proper dictionary checking to MSUContentManagement (Fixes #83)
+* Added null checks to the addition of Monsters in the CharacterModule class (Fixes #85) 
+* Deprecated ``ContentUtil.PopulateTypeFields`` methods, they now redirect to ``ContentLoadHelper.PopulateTypeFields()`` instead, as the base game method now matches MSU's utility.
+* Exposed the private method ``ContentUtil.HandleAssetAddition`` with the method ``ContentUtil.AddAssetToContentPack()``. (Fixes #81)
+
+## Editor
+
+* Added a new field to ``ChangeAssemblyBuildMode`` to allow changing wether Debug Databases are staged or not.
+
 # '2.5.1' - ItemDisplay Hotfix
 
 ## Runtime

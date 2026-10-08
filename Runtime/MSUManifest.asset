@@ -18,7 +18,7 @@ MonoBehaviour:
   Name: MoonstormSharedUtils
   Description: An API focused with the intention of working in an editor enviroment
     using ThunderKit, MSU is a modular API system designed for ease of use and simplicity.
-  Version: 2.5.1
+  Version: 2.6.0
   Dependencies:
   - {fileID: 11400000, guid: 184f0fdf3edcd6bad171410f4e0fd947, type: 2}
   - {fileID: 11400000, guid: 1f1d261aeee91427ddd08b6378ec4e5a, type: 2}
@@ -54,6 +54,7 @@ MonoBehaviour:
   - {fileID: 426352536190054080}
   - {fileID: 4291155482398341959}
   - {fileID: 158583965153880286}
+  - {fileID: 4649120987606277147}
   - {fileID: 3240393688467726566}
   identity: {fileID: -2777874201675461593}
   QuickAccess: 1
@@ -101,12 +102,11 @@ MonoBehaviour:
   m_Name: Files
   m_EditorClassIdentifier: 
   StagingPaths:
-  - <MSUBuildPath>
+  - <MSUBuildPathStreamingLanguage>
   includeMetaFiles: 0
   files:
-  - {fileID: 4900000, guid: b3596cfdbadf835458f195bf3ef1afcc, type: 3}
-  - {fileID: 4900000, guid: 7b5c13544627a1742b94423a93eacc10, type: 3}
-  - {fileID: 2800000, guid: 60d63336a18f9f54a934a717dab4fc72, type: 3}
+  - {fileID: 102900000, guid: a22f56c067080b644938795af0fbd16a, type: 3}
+  - {fileID: 102900000, guid: 8770dd10c99731f4698648688816a349, type: 3}
 --- !u!114 &4291155482398341959
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -125,3 +125,22 @@ MonoBehaviour:
   - assetBundleName: runtimemsuassetbundle
     assets:
     - {fileID: 102900000, guid: c1895b7b41943e741ab6b390f9f4aa69, type: 3}
+--- !u!114 &4649120987606277147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b243ff405b33b94dbf5b6775dd9aa33, type: 3}
+  m_Name: Files
+  m_EditorClassIdentifier: 
+  StagingPaths:
+  - <MSUBuildPath>
+  includeMetaFiles: 0
+  files:
+  - {fileID: 4900000, guid: b3596cfdbadf835458f195bf3ef1afcc, type: 3}
+  - {fileID: 4900000, guid: 7b5c13544627a1742b94423a93eacc10, type: 3}
+  - {fileID: 2800000, guid: 60d63336a18f9f54a934a717dab4fc72, type: 3}

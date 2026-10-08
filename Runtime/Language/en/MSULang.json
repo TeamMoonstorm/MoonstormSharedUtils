@@ -1,0 +1,11 @@
+{
+    "strings":
+    {
+        "MSU_INIT_ERROR_DIALOG_BOX_HEADER": "Exception during Module Initialization",
+        "MSU_INIT_ERROR_DIALOG_BOX_DESC": "A total of \"{0}\" Mod(s) threw exceptions during MSU's module initialization procedure. The game may be in an unstable state, we'd recommend contacting the mod developers for a fix.\r\n{1}",
+        "MSU_INIT_ERROR_DIALOG_BOX_CANCEL": "Continue playing",
+        "MSU_INIT_ERROR_DIALOG_BOX_QUIT": "Quit game",
+        "MSU_INIT_ERROR_DIALOG_BOX_EXCEPTION": "Exception",
+        "MSU_INIT_ERROR_DIALOG_BOX_EXCEPTIONS": "Exceptions"
+    }
+}
