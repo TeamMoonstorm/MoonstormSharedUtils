@@ -347,10 +347,8 @@ namespace MSU
             ParallelCoroutine initializeAsyncCoroutine = new ParallelCoroutine();
             foreach (var equipment in equipments)
             {
-#if DEBUG
                 try
                 {
-#endif
                     equipment.Initialize();
 
                     if(equipment is IAsyncContentInitializer asyncContentInitializer)
@@ -398,13 +396,12 @@ namespace MSU
                     MSULog.Info($"Equipment {equipment.GetType().FullName} initialized.");
 #endif
 
-#if DEBUG
                 }
                 catch (Exception ex)
                 {
-                    MSULog.Error($"Equipment {equipment.GetType().FullName} threw an exception while initializing.\n{ex}");
+                    MSULog.Fatal($"Equipment {equipment.GetType().FullName} threw an exception while initializing.\n{ex}");
+                    InitializationExceptionWatcher.AddException(ex, plugin);
                 }
-#endif
             }
 
             while(!initializeAsyncCoroutine.isDone)

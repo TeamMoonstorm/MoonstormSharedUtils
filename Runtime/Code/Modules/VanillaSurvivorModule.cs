@@ -123,10 +123,8 @@ namespace MSU
             ParallelCoroutine initializeAsyncCoroutine = new ParallelCoroutine();
             foreach (var piece in contentPieces)
             {
-#if DEBUG
                 try
                 {
-#endif
                     piece.Initialize();
 
                     if(piece is IAsyncContentInitializer contentAsyncInitializer)
@@ -162,13 +160,12 @@ namespace MSU
 #if DEBUG
                     MSULog.Info($"VanillaSurvivorAddition {piece.GetType().FullName} initialized.");
 #endif
-#if DEBUG
                 }
                 catch (Exception ex)
                 {
-                    MSULog.Error($"VanillaSurvivorAddition {piece.GetType().FullName} threw an exception while initializing.\n{ex}");
+                    MSULog.Fatal($"VanillaSurvivorAddition {piece.GetType().FullName} threw an exception while initializing.\n{ex}");
+                    InitializationExceptionWatcher.AddException(ex, plugin);
                 }
-#endif
             }
 
             while (!initializeAsyncCoroutine.isDone)

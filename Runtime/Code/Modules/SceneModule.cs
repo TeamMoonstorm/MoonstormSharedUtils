@@ -156,10 +156,8 @@ namespace MSU
             ParallelCoroutine initializeAsyncCoroutine = new ParallelCoroutine();
             foreach (var scene in scenes)
             {
-#if DEBUG
                 try
                 {
-#endif
                     scene.Initialize();
 
                     if(scene is IAsyncContentInitializer asyncContentInitializer)
@@ -226,13 +224,12 @@ namespace MSU
                     MSULog.Info($"Scene {scene.GetType().FullName} initialized.");
 #endif
 
-#if DEBUG
                 }
                 catch (Exception ex)
                 {
-                    MSULog.Error($"Scene {scene.GetType().FullName} threw an exception while initializing.\n{ex}");
+                    MSULog.Fatal($"Scene {scene.GetType().FullName} threw an exception while initializing.\n{ex}");
+                    InitializationExceptionWatcher.AddException(ex, plugin);
                 }
-#endif
             }
             while(!initializeAsyncCoroutine.isDone)
             {

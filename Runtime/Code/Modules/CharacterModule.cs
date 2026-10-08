@@ -172,10 +172,8 @@ namespace MSU
             ParallelCoroutine initializeAsyncCoroutine = new ParallelCoroutine();
             foreach (var body in bodies)
             {
-#if DEBUG
                 try
                 {
-#endif
                     body.Initialize();
 
                     if(body is IAsyncContentInitializer asyncContentInitializer)
@@ -226,13 +224,12 @@ namespace MSU
                     MSULog.Info($"Body {body.GetType().FullName} initialized.");
 #endif
 
-#if DEBUG
                 }
                 catch (Exception ex)
                 {
-                    MSULog.Error($"Character {body.GetType().FullName} threw an exception while initializing.\n{ex}");
+                    MSULog.Fatal($"Character {body.GetType().FullName} threw an exception while initializing.\n{ex}");
+                    InitializationExceptionWatcher.AddException(ex, plugin);
                 }
-#endif
             }
 
             while(!initializeAsyncCoroutine.isDone)
@@ -255,13 +252,25 @@ namespace MSU
                 return;
             }
 
-            var standardCategory = pool.poolCategories.FirstOrDefault(category => category.name == DirectorAPI.Helpers.MonsterPoolCategories.Standard);
+
+            if (!pool || MSUtil.IsCollectionEmptyOrNull(pool.poolCategories))
+                return;
+
+            var standardCategory = pool.poolCategories.FirstOrDefault(category => category != null && category.name == DirectorAPI.Helpers.MonsterPoolCategories.Standard);
+
             if(standardCategory == null)
             {
                 MSULog.Warning($"Standard category was not found within pool {pool}. Not adding monsters.");
                 return;
             }
-            var dccs = standardCategory.alwaysIncluded.Select(pe => pe.dccs).FirstOrDefault();
+
+            if (standardCategory.alwaysIncluded == null)
+            {
+                MSULog.Warning($"Standard category was found in {pool}, but it's array is null. Not adding monsters.");
+                return;
+            }
+
+            var dccs = standardCategory.alwaysIncluded.Select(pe => pe.dccs).FirstOrDefault(dccs => dccs != null);
             if(!dccs)
             {
                 MSULog.Warning($"Standard category was found in {pool} but no DCCS exists wtihin it. Not adding monsters.");
@@ -276,7 +285,6 @@ namespace MSU
 
         private static void AddCustomMonster(MonsterCardProvider monsterCardProvider, DirectorCardCategorySelection dccs, DirectorAPI.StageInfo stageInfo)
         {
-
             DirectorCardHolderExtended cardHolder = null;
             if (stageInfo.stage == DirectorAPI.Stage.Custom)
             {
