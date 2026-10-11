@@ -10,7 +10,7 @@ using UnityEngine.UIElements;
 namespace MSU.Editor.Inspectors
 {
     [CustomEditor(typeof(ItemDisplayAddressedDictionary))]
-    public class ItemDisplayAddressedDictionaryInspector : VisualElementScriptableObjectInspector<ItemDisplayAddressedDictionary>
+    public class ItemDisplayAddressedDictionaryInspector : ScriptableObjectVisualElementEditor<ItemDisplayAddressedDictionary>
     {
         TextField _idrsFilterText;
         ListView _displayEntryListView;
@@ -189,7 +189,7 @@ namespace MSU.Editor.Inspectors
             _displayEntryListView.Rebuild();
         }
 
-        protected override bool ValidatePath(string path)
+        protected override bool ValidateVisualTreeAssetPath(string path)
         {
             return path.Contains(MSUConstants.PACKAGE_NAME);
         }
