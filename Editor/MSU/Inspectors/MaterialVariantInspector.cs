@@ -12,7 +12,7 @@ using static MSU.MaterialVariant;
 namespace MSU.Editor.Inspectors
 {
     [CustomEditor(typeof(MaterialVariant))]
-    public class MaterialVariantInspector : IMGUIScriptableObjectInspector<MaterialVariant>
+    public class MaterialVariantInspector : ScriptableObjectIMGUIEditor<MaterialVariant>
     {
         SerializedObject _originalMaterialSO;
         SerializedProperty _originalMaterialProperty;
@@ -33,9 +33,9 @@ namespace MSU.Editor.Inspectors
         bool _shouldApplyOverridesOnMaterialVariant = false;
         bool _initialCopy = false;
         bool _initialApplyOverrides = false;
-        protected override void OnInspectorEnabled()
+        protected override void OnEditorEnabled()
         {
-            base.OnInspectorEnabled();
+            base.OnEditorEnabled();
 
             _originalMaterialProperty = serializedObject.FindProperty("originalMaterial");
             if(_originalMaterialProperty.objectReferenceValue)
