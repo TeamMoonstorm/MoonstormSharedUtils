@@ -129,7 +129,7 @@ namespace MSU
         #endregion
 
         [Tooltip("The KeyAsset that is going to be used for the new entries in each IDRS")]
-        [TypeRestrictedReference(typeof(ItemDef), typeof(EquipmentDef))]
+        [TypeRestrictedReference(typeof(ItemDef), typeof(EquipmentDef), typeof(KeyItemDef))]
         public ScriptableObject keyAsset;
 
         [Space(10)]
