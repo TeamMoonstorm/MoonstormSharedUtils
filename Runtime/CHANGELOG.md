@@ -1,3 +1,13 @@
+# '2.6.1' - IDAD
+
+## Runtime
+
+* Added KeyItemDef to the list of acceptable ScriptableObject to the ``ItemDisplayAddressedDictionary`` 
+
+## Editor
+
+* Updated to utilize RoR2EditorKit version 6.0.0 or greater
+
 # '2.6.0' - Hallowed Concepts
 
 ## Runtime
@@ -48,7 +58,7 @@
 * Added the ``ItemDisplayAddressedDictionary``
     * Replaces the ItemDisplayDictionary
     * An ``ItemDisplayAddressedDictionary`` is utilized for adding new item display rules to multiple ``Vanilla Exclusive`` ItemDisplayRuleSets
-    * Display Prefab selection can be referenced via addressed, this was done to allow for new spike placements for Mithrix.
+    * Display Prefab selection can be referenced via addresses, this was done to allow for new spike placements for Mithrix.
     * Has a ContextMenu utilized to populate with vanilla references, utilizing the key asset's metadata as a template.
     * Each ``ItemDisplayAddressedDictionary`` needs to be initialized using ``AddEntries()`` for the new entries to appear.
 * Deprecated ``ItemDisplayDictionary`` and ``NamedItemDisplayRuleSet``

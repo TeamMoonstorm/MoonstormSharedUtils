@@ -23,13 +23,13 @@ MSU strifes for the following goals regarding mod development and management.
 
 While Code only mods create their Content (Prefabs, ScriptableObjects, etc) at Runtime and usually at Awake, this causes the issues known as "Forever Black Screen", where most of the mod's systems are initialized before the Loading Screen of the game starts. this gives the idea that the game is frozen and not responsive to oblivious users. And while this is true, managing the loading and interactions between custom made content from Assetbundles and the game's systems is difficult.
 
-MSU solves this by the triad of the ContentPiece, the ContentPiece Provider, and the Module framework. This triad is utilized to allow mods to Load their assets Asynchronously during the loading screen, and have them working properly with the base game's systems.
+MSU solves this via the trinity of the ContentPiece, the ContentPiece Provider, and the Module framework. This trinity is utilized to allow mods to Load their assets Asynchronously during the loading screen, and have them working properly with the base game's systems.
 
 #### IContentPiece
 
 * Represents some form of Content that a mod is adding
 * Each ContentPiece is tied to a specific Module which handles loading and the implementation of the Content.
-* ContentPieces have Availability systems, which the module uses to know what content to load and initialize.
+* ContentPieces have Availability methods, which the module uses to know what content to load and initialize.
 * A ContentPiece has an Asynchronous loading method which the module uses during initialization, which is used to Asynchronously load assets for your content.
 * Being an interface, the API provides further implementations:
     * ``IContentPiece<T>``, which represents a Content that's tied to a specific ``UnityEngine.Object``. 
@@ -40,7 +40,8 @@ MSU solves this by the triad of the ContentPiece, the ContentPiece Provider, and
             * ``IItemContentPiece`` for ``ItemDefs``.
                 * A sub-interface called ``IVoidItemContentPiece`` manages the Item Corruption system added in Survivors of the Void.
             * ``IItemTierContentPiece``for ``ItemTierDefs``
-            * ``ISceneContentPiece`` for ``SceneDefs``.
+            * ``ISceneContentPiece`` for ``SceneDefs``
+            * ``IKeyItemContentPiece`` for ``KeyItemDefs`` (Like the N'tormat)
     * ``IGameObjectContentPiece<TComponent>``, which represents a Content that's tied to a specific type of ``UnityEngine.MonoBehaviour``
         * MSU includes the following interfaces that implement ``IGameObjectContentPiece<TComponent>``
             * ``ICharacterContentPiece`` for ``CharacterBodies``
@@ -48,7 +49,9 @@ MSU solves this by the triad of the ContentPiece, the ContentPiece Provider, and
                 * The sub-interface called ``ISurvivorContentPiece``can be used for managing new Survivors.
             * ``IInteractableContentPiece`` for ``Interactables``.
     * ``IVanillaSurvivorContentPiece``, which represents modifications for a Vanilla survivor.
-* ``IContentPiece`` classes can also implement the ``IContentPackModifier``, which is used for directly interfacing with your mod's ContentPack.
+* ``IContentPiece`` classes also have helper interfaces that can be implemented to extend their functionality, such as:
+    * ``IContentPackModifier`` for adding extra assets to your mod's content pack
+    * ``IAsyncContentInitializer`` for initializing certain content in an asynchronous fashion
 
 #### Modules
 
@@ -65,6 +68,7 @@ MSU solves this by the triad of the ContentPiece, the ContentPiece Provider, and
     * ``IItemTierModule``, manages ``IItemTierContentPiece``, it automatically creates at run start collections of the available drop list for the tier.
     * ``SceneModule``, manages ``ISceneContentPiece``, it interfaces with ``R2API.Stages`` to handle the addition of a Stage to the game.
     * ``VanillaSurvivorModule``, manages ``IVanillaSurvivorContentPiece``. which is used to add new content to the base game's survivors (Skins, skills, etc.)
+    * ``KeyItemModule`` manager ``IKeyItemContentPiece``. which is used to add new KeyItems to the game.
 
 #### IContentPieceProvider
 
@@ -112,6 +116,11 @@ MSU provides the following ScriptableObjects that allows for the creation of "ru
 * ``SerializableEliteTierDef``, works as an Abstraction of the ``EliteTierDef`` system within the game, can assign a cost multiplier, addressable references to base game elite tiers and mode.
 * ``UberSkinDef``, works as a catch-all utility for SkinDefs, implementing support for R2API's SkinVFX system and adding skins to vanilla character
 
+It also comes with unique ScriptableObjects that are used for specific scenarios.
+
+* ``EntityStateTypeCollection``, stores an array of ``SerializableEntityStateTypes``, and can be added to the content pack easily.
+* ``MaterialVariant``, an ad-hoc implementation of Unity's "Material Variants", creates a duplicate Material and you can specify property overrides, it also accepts _base game materials_ via the AddressableMaterialShader. Allowing you to create variants of vanilla materials in the editor.
+
 #### Prebuilt CompossableObjects
 
 Since MSU was created with thunderkit in mind, MSU provides the following CompossableObjects to your project:
@@ -145,7 +154,7 @@ MSU provides the following abstraction of the BepInEx Config System:
 
 Tying Configuration changes to Token values is one of the best parts of creating tokens using code, however, translation of these tokens can be difficult to manage as it requires translators to code the translations directly into the C# source file.
 
-MSU provides the ``FormatToken`` system, you can now write your token's values utilizing the String Formatting system of C#. With this, you can properly levrage JSON langauge files, which translators can easily use for translations as long as they keep the proper order of indexing.
+MSU provides the ``FormatToken`` system, you can now write your token's values utilizing the String Formatting system of C#. With this, you can properly leverage JSON langauge files, which translators can easily use for translations as long as they keep the proper order of indexing.
 
 ## Documentation and Sourcecode
 
