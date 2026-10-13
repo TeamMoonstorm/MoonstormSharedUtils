@@ -77,6 +77,7 @@ namespace MSU
             pluginInfo = Info;
             new MSULog(Logger);
             msuAssetBundle = AssetBundle.LoadFromFile(Path.Combine(assetBundleDir, "runtimemsuassetbundle"));
+            new MSUContent();
             new MSUConfig(this);
             LanguageFileLoader.AddLanguageFilesFromMod(this, "languages");
 
