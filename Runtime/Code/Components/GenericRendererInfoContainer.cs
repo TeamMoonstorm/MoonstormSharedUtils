@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace MSU
 {
+    [Obsolete("This component is obsolete, it has been replaced by the base game component \"CustomGameObjectActivationInfoContainer\"")]
     public class GenericRendererInfoContainer : MonoBehaviour
     {
         public CharacterModel.RendererInfo[] rendererInfos = Array.Empty<CharacterModel.RendererInfo>();

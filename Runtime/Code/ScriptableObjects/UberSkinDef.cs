@@ -646,22 +646,15 @@ namespace MSU
         [SystemInitializer]
         private static void InitHooks()
         {
-            On.RoR2.ModelSkinController.ApplySkinAsync += OnSkinApplied;
+            On.RoR2.ModelSkinController.ApplySkinAsync += ModelSkinController_ApplySkinAsync;
         }
 
-        /*
-         * Custom GameObjectActivations (the ones that spawn new prefabs), do not have any capabilities of adding new RendererInfos to the CharacterModel.
-         * This in turn causes custom object activations to not respect certain charactermodel features (ie: elite ramps or becoming invisible).
-         * 
-         * Just get the CharacterModel from the model skin controller and add new rendererInfos based off the GenericRendererInfoContainer components.
-         */
-        private static IEnumerator OnSkinApplied(On.RoR2.ModelSkinController.orig_ApplySkinAsync orig, ModelSkinController self, int skinIndex, RoR2.ContentManagement.AsyncReferenceHandleUnloadType unloadType)
+        private static HashSet<SkinDef> _warnedSkins = new HashSet<SkinDef>();
+
+        [Obsolete("This hook is obsolete, should be removed if we ever remove \"GenericRendererInfoContainer\"")]
+        private static IEnumerator ModelSkinController_ApplySkinAsync(On.RoR2.ModelSkinController.orig_ApplySkinAsync orig, ModelSkinController self, int skinIndex, RoR2.ContentManagement.AsyncReferenceHandleUnloadType unloadType)
         {
-            var origSelf = orig(self, skinIndex, unloadType);
-            while(origSelf.MoveNext())
-            {
-                yield return null;
-            }
+            yield return orig(self, skinIndex, unloadType);
 
             CharacterModel characterModel = self.characterModel;
             if (!characterModel)
@@ -674,6 +667,11 @@ namespace MSU
                 if (!customGameObjectActivation.TryGetComponent<GenericRendererInfoContainer>(out var genericRendererInfoContainer))
                 {
                     continue;
+                }
+
+                if (_warnedSkins.Add(self.skins[skinIndex]))
+                {
+                    MSULog.Warning($"Skin {self.skins[skinIndex]} has game object activations that use MSU's \"GenericRendererInfoContainer\". This component is deprecated and has been replaced by the base game \"CustomGameObjectActivationInfoContainer\" and should be used instead. This log will only appear once for this skin.");
                 }
 
                 retrievedRendererInfos.AddRange(genericRendererInfoContainer.rendererInfos);
