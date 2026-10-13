@@ -142,36 +142,85 @@ namespace MSU
         }
     }
 
-
-    [Obsolete("Utilize HG.Coroutines.ParallelCoroutine instead.")]
+    /// <summary>
+    /// A Coroutine that's used to process multiple coroutines in parallel.
+    /// <para></para>
+    /// This is identical to <see cref="HG.Coroutines.ParallelCoroutine"/>, however this version is pooled, new instances can be requested via <see cref="ParallelCoroutine.Request"/> and they can be returned via <see cref="ParallelCoroutine.Return(ParallelCoroutine)"/>
+    /// </summary>
     public class ParallelCoroutine : IEnumerator
     {
+        private static Stack<ParallelCoroutine> _pool = new Stack<ParallelCoroutine>();
+
+        /// <summary>
+        /// Requests a ParallelCoroutine from the pool
+        /// </summary>
+        public static ParallelCoroutine Request()
+        {
+            if(_pool.TryPop(out var coroutine))
+            {
+                return coroutine;
+            }
+#pragma warning disable CS0618 // Type or member is obsolete
+            return new ParallelCoroutine();
+#pragma warning restore CS0618 // Type or member is obsolete
+        }
+
+        /// <summary>
+        /// Returns a ParallelCoroutine to the pool
+        /// </summary>
+        /// <param name="coroutine"></param>
+        public static void Return(ParallelCoroutine coroutine)
+        {
+            coroutine.Reset();
+            _pool.Push(coroutine);
+        }
+
         private readonly List<IEnumerator> _coroutinesList = new List<IEnumerator>();
 
         private IEnumerator _internalCoroutine;
 
+        /// <summary>
+        /// Returns true once all coroutines are completed
+        /// </summary>
         public bool isDone => this.IsDone();
 
+        /// <summary>
+        /// Returns the current object stored in the internal coroutine
+        /// </summary>
         public object Current => _internalCoroutine.Current;
 
+        /// <summary>
+        /// This method should not be called, call <see cref="ParallelCoroutine.Request"/> instead
+        /// </summary>
+        [Obsolete("Instances of ParallelCoroutine should not be created manually, utilize the pool instead")]
         public ParallelCoroutine()
         {
             _internalCoroutine = InternalCoroutine();
         }
 
+        /// <summary>
+        /// Adds a new coroutine to process
+        /// </summary>
         public void Add(IEnumerator coroutine)
         {
             _coroutinesList.Add(coroutine);
         }
 
+        /// <summary>
+        /// Processes the coroutine. Returns true if there's more work to be done
+        /// </summary>
         public bool MoveNext()
         {
             return _internalCoroutine.MoveNext();
         }
 
+        /// <summary>
+        /// Resets this class, resetting the internal coroutine and clearing it's internal coroutine list
+        /// </summary>
         public void Reset()
         {
-            _internalCoroutine.Reset();
+            _internalCoroutine = InternalCoroutine();
+            _coroutinesList.Clear();
         }
 
         private IEnumerator InternalCoroutine()

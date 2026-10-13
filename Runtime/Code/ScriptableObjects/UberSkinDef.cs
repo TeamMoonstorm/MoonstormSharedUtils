@@ -483,7 +483,8 @@ namespace MSU
                 yield return null;
             }
 
-            HG.Coroutines.ParallelCoroutine parallelCoroutine = new HG.Coroutines.ParallelCoroutine();
+            ParallelCoroutine parallelCoroutine = ParallelCoroutine.Request();
+
             parallelCoroutine.Add(ResolveBaseSkins());
             parallelCoroutine.Add(ResolveRendererInfos());
             parallelCoroutine.Add(ResolveGameObjectActivations());
@@ -497,6 +498,8 @@ namespace MSU
             {
                 yield return null;
             }
+
+            ParallelCoroutine.Return(parallelCoroutine);
         }
 
         private IEnumerator ResolveRootObject()

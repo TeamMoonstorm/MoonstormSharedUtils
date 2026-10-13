@@ -131,7 +131,8 @@ namespace MSU
             IContentPiece<SceneDef>[] content = provider.GetContents();
             List<IContentPiece<SceneDef>> _scenes = new List<IContentPiece<SceneDef>>();
 
-            var helper = new ParallelCoroutine();
+            var helper = ParallelCoroutine.Request();
+
             foreach (var scene in content)
             {
                 if (!scene.IsAvailable(provider.contentPack))
@@ -144,6 +145,8 @@ namespace MSU
             while (!helper.IsDone())
                 yield return null;
 
+            ParallelCoroutine.Return(helper);
+
             var subroutine = InitializeScenes(plugin, _scenes, provider);
             while(!subroutine.IsDone())
             {
@@ -153,7 +156,8 @@ namespace MSU
 
         private static IEnumerator InitializeScenes(BaseUnityPlugin plugin, List<IContentPiece<SceneDef>> scenes, IContentPieceProvider<SceneDef> provider)
         {
-            ParallelCoroutine initializeAsyncCoroutine = new ParallelCoroutine();
+            ParallelCoroutine initializeAsyncCoroutine = ParallelCoroutine.Request();
+
             foreach (var scene in scenes)
             {
                 try
@@ -235,6 +239,8 @@ namespace MSU
             {
                 yield return null;
             }
+
+            ParallelCoroutine.Return(initializeAsyncCoroutine);
         }
     }
 }

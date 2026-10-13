@@ -115,12 +115,14 @@ namespace MSU
             Dictionary<string, FormatTokenAttribute[]> formattingDictionaryFromFields = new Dictionary<string, FormatTokenAttribute[]>();
             Dictionary<string, FormatTokenAttribute[]> formattingDictionaryFromProperties = new Dictionary<string, FormatTokenAttribute[]>();
 
-            var parallelSubroutine = new ParallelCoroutine();
+            var parallelSubroutine = ParallelCoroutine.Request();
+
             parallelSubroutine.Add(CreateFormattingDictionary(propertyFormatTokens, formattingDictionaryFromProperties));
             parallelSubroutine.Add(CreateFormattingDictionary(fieldFormatTokens, formattingDictionaryFromFields));
-
             while (!parallelSubroutine.IsDone())
                 yield return null;
+
+            ParallelCoroutine.Return(parallelSubroutine);
 
             _cachedFormattingArray = new Dictionary<string, FormatTokenAttribute[]>();
 

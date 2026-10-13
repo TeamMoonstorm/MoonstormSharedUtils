@@ -21,7 +21,7 @@ namespace MSU
         /// <returns>A Coroutine which can be yielded or awaited</returns>
         public static IEnumerator LoadAddressableMaterialShadersAsync(AssetBundle[] assetBundles)
         {
-            ParallelCoroutine helper = new ParallelCoroutine();
+            ParallelCoroutine helper = ParallelCoroutine.Request();
 
             var list = new List<Material>();
             foreach (var bundle in assetBundles)
@@ -31,6 +31,8 @@ namespace MSU
 
             while (!helper.IsDone())
                 yield return null;
+
+            ParallelCoroutine.Return(helper);
 
             var addressableMaterialLoadingRoutine = LoadAddressableMaterialShadersAsync(list);
             while (addressableMaterialLoadingRoutine.MoveNext())
@@ -63,7 +65,7 @@ namespace MSU
         /// <returns>A Coroutine which can be yielded or awaited</returns>
         public static IEnumerator LoadAddressableMaterialShadersAsync(List<Material> materials)
         {
-            var helper = new ParallelCoroutine();
+            var helper = ParallelCoroutine.Request();
 
             foreach (var material in materials)
             {
@@ -72,6 +74,8 @@ namespace MSU
 
             while (!helper.IsDone())
                 yield return null;
+
+            ParallelCoroutine.Return(helper);
         }
 
         /// <summary>
@@ -88,16 +92,18 @@ namespace MSU
         /// <returns>A Coroutine which can be yielded or awaited</returns>
         public static IEnumerator SwapStubbedShadersAsync(AssetBundle[] bundles)
         {
-            ParallelCoroutine helper1 = new ParallelCoroutine();
+            ParallelCoroutine helper = ParallelCoroutine.Request();
 
             List<Material> materials = new List<Material>();
             foreach (var bundle in bundles)
             {
-                helper1.Add(LoadMaterialsFromBundle(bundle, materials, IsShaderStubbedShader));
+                helper.Add(LoadMaterialsFromBundle(bundle, materials, IsShaderStubbedShader));
             }
 
-            while (!helper1.IsDone())
+            while (!helper.IsDone())
                 yield return null;
+
+            ParallelCoroutine.Return(helper);
 
             var enumerator = SwapStubbedShadersAsync(materials);
 
@@ -121,7 +127,7 @@ namespace MSU
         /// <returns>A Coroutine which can be yielded or awaited</returns>
         public static IEnumerator SwapStubbedShadersAsync(List<Material> materials)
         {
-            ParallelCoroutine helper = new ParallelCoroutine();
+            ParallelCoroutine helper = ParallelCoroutine.Request();
 
             foreach (var material in materials)
             {
@@ -130,6 +136,8 @@ namespace MSU
 
             while (!helper.IsDone())
                 yield return null;
+
+            ParallelCoroutine.Return(helper);
         }
 
         /// <summary>

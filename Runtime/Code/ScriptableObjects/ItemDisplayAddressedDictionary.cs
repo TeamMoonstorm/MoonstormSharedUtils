@@ -6,7 +6,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using HGParallelCoroutine = HG.Coroutines.ParallelCoroutine;
 using IDRS = RoR2.ItemDisplayRuleSet;
 
 namespace MSU
@@ -143,7 +142,8 @@ namespace MSU
         public IEnumerator AddEntries()
         {
             yield return null;
-            HGParallelCoroutine perEntryCoroutine = new HGParallelCoroutine();
+
+            ParallelCoroutine perEntryCoroutine = ParallelCoroutine.Request();
 
             foreach(var entry in displayEntries)
             {
@@ -154,6 +154,8 @@ namespace MSU
             {
                 yield return null;
             }
+
+            ParallelCoroutine.Return(perEntryCoroutine);
         }
     }
 }
