@@ -133,7 +133,7 @@ namespace MSU
                 var dictForLang = _languageNameToRawTokenData[languageName];
                 StringContainer[] containers = new StringContainer[jsonFiles.Count];
 
-                ParallelCoroutine coroutine = ParallelCoroutine.Request();
+                ParallelCoroutine coroutine = ParallelCoroutine.RequestFromPool();
 
                 for(int i = 0; i <  jsonFiles.Count; i++)
                 {
@@ -144,7 +144,7 @@ namespace MSU
                 while (!coroutine.isDone)
                     yield return null;
 
-                ParallelCoroutine.Return(coroutine);
+                ParallelCoroutine.ReturnToPool(coroutine);
 
                 var jsonTexts = containers.Select(c => c.value).ToArray();
                 for(int i = 0; i < jsonTexts.Length; i++)

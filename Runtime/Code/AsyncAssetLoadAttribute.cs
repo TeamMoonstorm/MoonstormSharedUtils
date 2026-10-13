@@ -52,7 +52,7 @@ namespace MSU
 #if DEBUG
                 MSULog.Info($"No instances of AsyncAssetLoadAttribute found in the current runtime context.");
 #endif
-                return ParallelCoroutine.Request();
+                return ParallelCoroutine.RequestFromPool();
             }
 
             List<AsyncAssetLoadAttribute> attributesForMod = instances.Where(IsValid).Where(att => IsFromMod((AsyncAssetLoadAttribute)att, plugin)).Cast<AsyncAssetLoadAttribute>().ToList();
@@ -73,7 +73,7 @@ namespace MSU
 
         private static ParallelCoroutine CreateCoroutineForMod(List<AsyncAssetLoadAttribute> attributes)
         {
-            var result = ParallelCoroutine.Request();
+            var result = ParallelCoroutine.RequestFromPool();
             foreach (var attribute in attributes)
             {
                 result.Add((IEnumerator)attribute.targetMethodInfo.Invoke(null, null));

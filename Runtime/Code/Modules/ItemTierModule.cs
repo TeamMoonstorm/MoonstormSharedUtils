@@ -160,7 +160,7 @@ namespace MSU
             IContentPiece<ItemTierDef>[] content = provider.GetContents();
             List<IContentPiece<ItemTierDef>> itemTiers = new List<IContentPiece<ItemTierDef>>();
 
-            var helper = ParallelCoroutine.Request();
+            var helper = ParallelCoroutine.RequestFromPool();
 
             foreach (var tier in content)
             {
@@ -174,7 +174,7 @@ namespace MSU
             while (!helper.IsDone())
                 yield return null;
 
-            ParallelCoroutine.Return(helper);
+            ParallelCoroutine.ReturnToPool(helper);
 
             var subroutine = InitializeItemTiers(plugin, itemTiers, provider);
             while(!subroutine.IsDone()) 
@@ -183,7 +183,7 @@ namespace MSU
 
         private static IEnumerator InitializeItemTiers(BaseUnityPlugin plugin, List<IContentPiece<ItemTierDef>> itemTiers, IContentPieceProvider<ItemTierDef> provider)
         {
-            ParallelCoroutine initializeAsyncCoroutine = ParallelCoroutine.Request();
+            ParallelCoroutine initializeAsyncCoroutine = ParallelCoroutine.RequestFromPool();
 
             foreach (var tier in itemTiers)
             {
@@ -242,7 +242,7 @@ namespace MSU
                 yield return null;
             }
 
-            ParallelCoroutine.Return(initializeAsyncCoroutine);
+            ParallelCoroutine.ReturnToPool(initializeAsyncCoroutine);
         }
     }
 }

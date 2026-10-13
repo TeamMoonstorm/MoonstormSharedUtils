@@ -145,7 +145,7 @@ namespace MSU
     /// <summary>
     /// A Coroutine that's used to process multiple coroutines in parallel.
     /// <para></para>
-    /// This is identical to <see cref="HG.Coroutines.ParallelCoroutine"/>, however this version is pooled, new instances can be requested via <see cref="ParallelCoroutine.Request"/> and they can be returned via <see cref="ParallelCoroutine.Return(ParallelCoroutine)"/>
+    /// This is identical to <see cref="HG.Coroutines.ParallelCoroutine"/>, however this version is pooled, new instances can be requested via <see cref="ParallelCoroutine.RequestFromPool"/> and they can be returned via <see cref="ParallelCoroutine.ReturnToPool(ParallelCoroutine)"/>
     /// </summary>
     public class ParallelCoroutine : IEnumerator
     {
@@ -154,7 +154,7 @@ namespace MSU
         /// <summary>
         /// Requests a ParallelCoroutine from the pool
         /// </summary>
-        public static ParallelCoroutine Request()
+        public static ParallelCoroutine RequestFromPool()
         {
             if(_pool.TryPop(out var coroutine))
             {
@@ -169,7 +169,7 @@ namespace MSU
         /// Returns a ParallelCoroutine to the pool
         /// </summary>
         /// <param name="coroutine"></param>
-        public static void Return(ParallelCoroutine coroutine)
+        public static void ReturnToPool(ParallelCoroutine coroutine)
         {
             coroutine.Reset();
             _pool.Push(coroutine);
@@ -190,7 +190,7 @@ namespace MSU
         public object Current => _internalCoroutine.Current;
 
         /// <summary>
-        /// This method should not be called, call <see cref="ParallelCoroutine.Request"/> instead
+        /// This method should not be called, call <see cref="ParallelCoroutine.RequestFromPool"/> instead
         /// </summary>
         [Obsolete("Instances of ParallelCoroutine should not be created manually, utilize the pool instead")]
         public ParallelCoroutine()
