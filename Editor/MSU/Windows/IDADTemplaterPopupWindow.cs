@@ -13,6 +13,7 @@ using Unity.EditorCoroutines.Editor;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using CoroutineWithResult = HG.Coroutines.CoroutineWithResult;
 
 namespace MSU.Editor.EditorWindows
 {
@@ -212,13 +213,17 @@ namespace MSU.Editor.EditorWindows
             Undo.RecordObject(_targetIDAD, "Add Entries in Bulk");
 
             using var progressBar = new DisposableProgressBar("Adding IDRS Entries in Bulk", "Fetching IDRS", 0);
-            CoroutineWithResult getItemDisplaysToAddSubroutine = new CoroutineWithResult(GetItemDisplaysToAdd(progressBar));
+
+            HG.Coroutines.CoroutineWithResult<ReadOnlyCollection<string>> getItemDisplaysToAddSubroutine = HG.Coroutines.CoroutineWithResult<ReadOnlyCollection<string>>.Rent(GetItemDisplaysToAdd(progressBar));
+
             while(getItemDisplaysToAddSubroutine.MoveNext())
             {
                 yield return null;
             }
 
             ReadOnlyCollection<string> itemDisplayRuleSetsToAdd = getItemDisplaysToAddSubroutine.boxedResult as ReadOnlyCollection<string>;
+
+            HG.Coroutines.CoroutineWithResult<ReadOnlyCollection<string>>.Return(getItemDisplaysToAddSubroutine);
 
             for (int i = 0; i < itemDisplayRuleSetsToAdd.Count; i++)
             {
@@ -342,22 +347,25 @@ namespace MSU.Editor.EditorWindows
             progressBar.Update(0.01f, null, "Querying IDRS GUIDS");
 
             HashSet<string> allIDRSGUIDs = new HashSet<string>(lookup.results);
+
             //We're going to immediatly get the "survivor like" body prefabs, these kinds of prefabs are ones from SurvivorDefs, but includes Engi's turrets.
             //This is because we dont want to add said survivor's idrs if the only thing the used selected was Monsters, since the Monsters enum option works off CharacterMaster.
-            var bodyPrefabCoroutine = new CoroutineWithResult<List<GameObject>>(GetSurvivorLikeBodyPrefabs(progressBar));
+            var bodyPrefabCoroutine = HG.Coroutines.CoroutineWithResult<List<GameObject>>.Rent(GetSurvivorLikeBodyPrefabs(progressBar));
             while(bodyPrefabCoroutine.MoveNext())
             {
                 yield return null;
             }
             var survivorLikeBodyPrefabs = bodyPrefabCoroutine.result;
+            HG.Coroutines.CoroutineWithResult<List<GameObject>>.Return(bodyPrefabCoroutine);
 
             //Same logic as above, we dont want to include drones for monster prefabs.
-            bodyPrefabCoroutine = new CoroutineWithResult<List<GameObject>>(GetDroneDefBodyPrefabs(progressBar));
+            bodyPrefabCoroutine = HG.Coroutines.CoroutineWithResult<List<GameObject>>.Rent(GetDroneDefBodyPrefabs(progressBar));
             while(bodyPrefabCoroutine.MoveNext())
             {
                 yield return null;
             }
             var droneDefBodyPrefabs = bodyPrefabCoroutine.result;
+            HG.Coroutines.CoroutineWithResult<List<GameObject>>.Return(bodyPrefabCoroutine);
 
             List<string> result = new List<string>();
             if((_bodyKindType & BodyKindType.SurvivorLike) != 0)
