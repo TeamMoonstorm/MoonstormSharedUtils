@@ -118,6 +118,12 @@ namespace MSU
 
         private static void DestroyCustomModel(On.RoR2.PickupDisplay.orig_DestroyModel orig, PickupDisplay self)
         {
+            if(!self || !self.gameObject)
+            {
+                orig(self);
+                return;
+            }
+
             var component = self.gameObject.EnsureComponent<ItemTierPickupDisplayHelper>();
             orig(self);
             component.DestroyCustomModel();
