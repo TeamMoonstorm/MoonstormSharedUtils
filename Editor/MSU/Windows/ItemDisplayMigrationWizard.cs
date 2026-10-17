@@ -303,7 +303,7 @@ namespace MSU.Editor.EditorWindows
                 var ruleGroup = from.rules[i];
 
                 //We need to match the key asset by name AssetMatchContainer helps with that.
-                var keyAssetSubroutine = new CoroutineWithResult<AssetMatchContainer<ScriptableObject>>(MatchAsset(_availableKeyAssets, ruleGroup.keyAssetName, _keyAssetNameToAssetMatch));
+                var keyAssetSubroutine = HG.Coroutines.CoroutineWithResult<AssetMatchContainer<ScriptableObject>>.Rent(MatchAsset(_availableKeyAssets, ruleGroup.keyAssetName, _keyAssetNameToAssetMatch));
                 while (keyAssetSubroutine.MoveNext())
                 {
                     yield return progress;
@@ -311,6 +311,8 @@ namespace MSU.Editor.EditorWindows
 
                 //If there was no match, continue.
                 AssetMatchContainer<ScriptableObject> scrobjMatchCointainer = keyAssetSubroutine.result;
+                HG.Coroutines.CoroutineWithResult<AssetMatchContainer<ScriptableObject>>.Return(keyAssetSubroutine);
+
                 if (scrobjMatchCointainer.matchResult == MatchResult.NoMatch)
                 {
                     _wizardLog.AppendLine($"WARN: No match for key asset with name {ruleGroup.keyAssetName} found. It was probably retrieved at runtime from the IDRS catalog. Not adding entry.");
@@ -335,13 +337,15 @@ namespace MSU.Editor.EditorWindows
                 {
                     displayPrefabNames.Add(rule.displayPrefabName);
                 }
-                var displayPrefabSubroutine = new CoroutineWithResult<AssetMatchContainer<GameObject>[]>(MatchAssets(_availableDisplayPrefabs, displayPrefabNames, _displayPrefabNameToAssetMatch));
+                var displayPrefabSubroutine = HG.Coroutines.CoroutineWithResult<AssetMatchContainer<GameObject>[]>.Rent(MatchAssets(_availableDisplayPrefabs, displayPrefabNames, _displayPrefabNameToAssetMatch));
                 while (displayPrefabSubroutine.MoveNext())
                 {
                     yield return progress;
                 }
 
                 var displayPrefabMatches = displayPrefabSubroutine.result;
+                HG.Coroutines.CoroutineWithResult<AssetMatchContainer<GameObject>[]>.Return(displayPrefabSubroutine);
+
                 for (int matchIndex = 0; matchIndex < displayPrefabMatches.Length; matchIndex++)
                 {
                     AssetMatchContainer<GameObject> prefabMatchContainer = displayPrefabMatches[matchIndex];
@@ -496,7 +500,7 @@ namespace MSU.Editor.EditorWindows
                 var displayDictionaryEntry = displayDictionaryEntries[i];
 
                 //We need to find the main IDRS, so use AssetMatchContainer for that.
-                var idrsSubroutine = new CoroutineWithResult<AssetMatchContainer<ItemDisplayRuleSet>>(MatchAsset(_availableIDRS, displayDictionaryEntry.idrsName, _idrsNameToAssetMatch));
+                var idrsSubroutine = HG.Coroutines.CoroutineWithResult<AssetMatchContainer<ItemDisplayRuleSet>>.Rent(MatchAsset(_availableIDRS, displayDictionaryEntry.idrsName, _idrsNameToAssetMatch));
                 while (idrsSubroutine.MoveNext())
                 {
                     yield return progress;
@@ -504,6 +508,7 @@ namespace MSU.Editor.EditorWindows
 
                 //No asset match? continue and log it.
                 AssetMatchContainer<ItemDisplayRuleSet> idrsMatchContainer = idrsSubroutine.result;
+                HG.Coroutines.CoroutineWithResult<AssetMatchContainer<ItemDisplayRuleSet>>.Return(idrsSubroutine);
 
                 if (idrsMatchContainer.matchResult == MatchResult.NoMatch)
                 {
@@ -611,7 +616,7 @@ namespace MSU.Editor.EditorWindows
         private static IEnumerator<AssetMatchContainer<T>[]> MatchAssets<T>(ICollection<string> potentialMatches, List<string> stringsToMatch, Dictionary<string, AssetMatchContainer<T>> cache) where T : UnityEngine.Object
         {
             AssetMatchContainer<T>[] results = new AssetMatchContainer<T>[stringsToMatch.Count];
-            CoroutineWithResult<AssetMatchContainer<T>> coroutine = new CoroutineWithResult<AssetMatchContainer<T>>(null);
+            var coroutine =  HG.Coroutines.CoroutineWithResult<AssetMatchContainer<T>>.Rent(null);
             for (int i = 0; i < stringsToMatch.Count; i++)
             {
                 string toMatch = stringsToMatch[i];

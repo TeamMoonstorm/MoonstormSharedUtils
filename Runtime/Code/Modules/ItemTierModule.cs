@@ -118,6 +118,12 @@ namespace MSU
 
         private static void DestroyCustomModel(On.RoR2.PickupDisplay.orig_DestroyModel orig, PickupDisplay self)
         {
+            if(!self || !self.gameObject)
+            {
+                orig(self);
+                return;
+            }
+
             var component = self.gameObject.EnsureComponent<ItemTierPickupDisplayHelper>();
             orig(self);
             component.DestroyCustomModel();
@@ -160,7 +166,8 @@ namespace MSU
             IContentPiece<ItemTierDef>[] content = provider.GetContents();
             List<IContentPiece<ItemTierDef>> itemTiers = new List<IContentPiece<ItemTierDef>>();
 
-            var helper = new ParallelCoroutine();
+            var helper = ParallelCoroutine.RequestFromPool();
+
             foreach (var tier in content)
             {
                 if (!tier.IsAvailable(provider.contentPack))
@@ -173,6 +180,8 @@ namespace MSU
             while (!helper.IsDone())
                 yield return null;
 
+            ParallelCoroutine.ReturnToPool(helper);
+
             var subroutine = InitializeItemTiers(plugin, itemTiers, provider);
             while(!subroutine.IsDone()) 
                 yield return null;
@@ -180,7 +189,8 @@ namespace MSU
 
         private static IEnumerator InitializeItemTiers(BaseUnityPlugin plugin, List<IContentPiece<ItemTierDef>> itemTiers, IContentPieceProvider<ItemTierDef> provider)
         {
-            ParallelCoroutine initializeAsyncCoroutine = new ParallelCoroutine();
+            ParallelCoroutine initializeAsyncCoroutine = ParallelCoroutine.RequestFromPool();
+
             foreach (var tier in itemTiers)
             {
                 try
@@ -237,6 +247,8 @@ namespace MSU
             {
                 yield return null;
             }
+
+            ParallelCoroutine.ReturnToPool(initializeAsyncCoroutine);
         }
     }
 }

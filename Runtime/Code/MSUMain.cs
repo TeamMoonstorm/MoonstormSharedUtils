@@ -41,7 +41,7 @@ namespace MSU
         /// <summary>
         /// The version of MSU that's being used
         /// </summary>
-        public const string VERSION = "2.6.1";
+        public const string VERSION = "2.6.2";
 
         /// <summary>
         /// The plugin's PluginInfo
@@ -77,6 +77,7 @@ namespace MSU
             pluginInfo = Info;
             new MSULog(Logger);
             msuAssetBundle = AssetBundle.LoadFromFile(Path.Combine(assetBundleDir, "runtimemsuassetbundle"));
+            new MSUContent();
             new MSUConfig(this);
             LanguageFileLoader.AddLanguageFilesFromMod(this, "languages");
 

@@ -1,3 +1,39 @@
+# '2.6.2' - Beginning of the End
+
+* This is a **Transitory Release** for MSU, unless a new patch is released, the next big version will be MSU 3.0.0
+  * MSU comes bundled with the StubbedShaders from Risk of Thunder, however, for a long time, there have been duplicate stubbed shaders in the mod. This issue is rectified in 3.0.0 and since its a breaking change it'll result on a new major version.
+  * It is extremely recommended to use this version to _migrate from deprecated solutions_ to new solutions, as deprecated solutions will be **deleted** on 3.0.0; This includes:
+    * ``ParallelMultiStartCoroutine`` -> ``ParallelCoroutine``
+    * ``ContentUtil.PopulateTypeFields`` -> ``ContentLoadHelper.PopulateTypefields``
+    * ``MSU.CoroutineWithResult`` -> ``HG.Coroutines.CoroutineWithResult``
+    * ``LoadingScreenSpriteUtility`` -> Interaction with ``LoadingScreenFix`` directly
+    * ``GenericRendererInfoContainer`` -> ``CustomGameObjectActivationInfoContainer``
+    * ``InteractableModule.moonstormInteractables`` will become a ``ReadOnlyDictionary<NetworkIdentity, IInteractableContentPiece>`` dictionary
+    * ``ExtendedEliteDef.VanillaTier`` -> ``ExtendedEliteDef.VanillaEliteTierEntry``
+    * ``ItemDisplayDictionary`` -> ``ItemDisplayAddressedDictionary``
+    * ``NamedItemDisplayRuleSet`` -> ``ItemDisplayRuleSet```
+    * ``VanillaSkinDef`` -> ``UberSkinDef``
+* All scriptable objects have migration tools to make the process less of a hassle
+* The Legacy (MSU 1.0.0) code will be _removed_ from the github repository as well.
+* Thanks for your continued support
+
+## Runtime
+
+* Fixed False Son and Alloy Hunter having no animations
+* Deprecated ``GenericRendererInfoContainer``, replaced by the base game ``CustomGameObjectActivationInfoContainer``
+* Fixed MSU not registering Entity States to the game
+* MSU's ParallelCoroutine is no longer deprecated
+    * This version is still accurate to ``HG.Coroutines.ParallelCoroutine``, however, it has built in pooling functionality
+    * It is recommended to use MSU's Parallel Coroutine as oposed to ``HG.Coroutines.ParallelCoroutine``
+* ``TransformPathAttribute`` can now specify a component type requirement rather than getting it from a sibling property
+* ``CoroutineWithResult`` and it's child class has been deprecated, replaced by the base game ``HG.Coroutines.CoroutineWithResult``
+* Fixed an NRE during ItemTier custom model destruction
+
+## Editor
+
+* Added a ``MaterialEditorFixer`` editor ScriptableObject, which is used to fix Stubbed Shader materials from MSU 2.0 to MSU 3.0
+* Fixed situations where the ``TransformPathAttributePropertyDrawer`` would fail to draw properties properly
+
 # '2.6.1' - IDAD
 
 ## Runtime

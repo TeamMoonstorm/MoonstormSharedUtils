@@ -26,27 +26,31 @@ namespace MSU.Editor.PropertyDrawers
             {
                 EditorGUI.LabelField(position, $"Could not find a valid Root Transform.");
             }
-            label.tooltip = $"The Transform that's being referenced";
-            var prefixRect = EditorGUI.PrefixLabel(position, label);
 
-            if (EditorGUI.DropdownButton(prefixRect, CreateDropdownContent(property), FocusType.Passive))
+            using(new EditorGUI.DisabledGroupScope(rootTransform == null))
             {
-                Type componentType = GetRequiredComponentType(property, propertyDrawerData.siblingPropertyComponentTypeRequirement);
-                bool allowSelectingRoot = propertyDrawerData.allowSelectingRoot;
-                var dropdown = new TransformPathDropdown(new AdvancedDropdownState(), rootTransform, true, allowSelectingRoot, position, componentType);
-                dropdown.onItemSelected += (item) =>
+                label.tooltip = $"The Transform that's being referenced";
+                var prefixRect = EditorGUI.PrefixLabel(position, label);
+
+                if (EditorGUI.DropdownButton(prefixRect, CreateDropdownContent(property), FocusType.Passive))
                 {
-                    if(!item.transform)
+                    Type componentType = GetRequiredComponentType(property, propertyDrawerData.siblingPropertyComponentTypeRequirement, propertyDrawerData.componentTypeRequirement);
+                    bool allowSelectingRoot = propertyDrawerData.allowSelectingRoot;
+                    var dropdown = new TransformPathDropdown(new AdvancedDropdownState(), rootTransform, true, allowSelectingRoot, position, componentType);
+                    dropdown.onItemSelected += (item) =>
                     {
-                        property.stringValue = string.Empty;
-                    }
-                    else
-                    {
-                        property.stringValue = Util.BuildPrefabTransformPath(rootTransform, item.transform, false, allowSelectingRoot);
-                    }
-                    property.serializedObject.ApplyModifiedProperties();
-                };
-                dropdown.Show(position);
+                        if(!item.transform)
+                        {
+                            property.stringValue = string.Empty;
+                        }
+                        else
+                        {
+                            property.stringValue = Util.BuildPrefabTransformPath(rootTransform, item.transform, false, allowSelectingRoot);
+                        }
+                        property.serializedObject.ApplyModifiedProperties();
+                    };
+                    dropdown.Show(position);
+                }
             }
         }
 
@@ -158,24 +162,23 @@ namespace MSU.Editor.PropertyDrawers
             return rootTransform;
         }
 
-        private Type GetRequiredComponentType(SerializedProperty stringProperty, string siblingPropertyName)
+        private Type GetRequiredComponentType(SerializedProperty targetProperty, string siblingPropertyName, Type typeFromAttribute)
         {
-            if(!stringProperty.TryGetParentProperty(out var parentProperty))
-            {
-                return null;
-            }
+            if (typeFromAttribute != null)
+                return typeFromAttribute;
 
-            SerializedProperty objectReferenceProperty = null;
-            if(parentProperty == null)
+            SerializedProperty siblingProperty = null;
+            if(!targetProperty.TryGetParentProperty(out var parentProperty))
             {
-                objectReferenceProperty = stringProperty.serializedObject.FindProperty(siblingPropertyName);
+                //no parent, sibling must be found on the serializedObject
+                siblingProperty = serializedObject.FindProperty(siblingPropertyName);
             }
             else
             {
-                objectReferenceProperty = parentProperty.FindPropertyRelative(siblingPropertyName);
+                siblingProperty = parentProperty.FindPropertyRelative(siblingPropertyName);
             }
 
-            objectReferenceProperty.GetFieldInfoFromProperty(out var fieldInfo);
+            siblingProperty.GetFieldInfoFromProperty(out var fieldInfo);
             return fieldInfo.FieldType;
         }
     }

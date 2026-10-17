@@ -16,9 +16,14 @@ namespace MSU
         public string rootObjectProperty { get; }
 
         /// <summary>
-        /// The name of a sibling property that can be used to inferr a required type within the RootTransform's childrens
+        /// The name of a sibling property that can be used to inferr a required type within the RootTransform's children
         /// </summary>
         public string siblingPropertyComponentTypeRequirement { get; set; }
+
+        /// <summary>
+        /// A type required for the RootTransform's children to be considered a valid option
+        /// </summary>
+        public Type componentTypeRequirement { get; set; }
 
         /// <summary>
         /// If specified, the RootTransform will be the _first_ object where this component is found.

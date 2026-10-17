@@ -63,7 +63,8 @@ namespace MSU
             CreateDisplayDictionary();
             catalogAvailability.MakeAvailable();
 
-            var helper = new ParallelCoroutine();
+            var helper = ParallelCoroutine.RequestFromPool();
+
             foreach(var dirty in _dirtyIDRS)
             {
                 helper.Add(dirty.GenerateRuntimeValuesAsync());
@@ -73,6 +74,8 @@ namespace MSU
             {
                 yield return null;
             }
+
+            ParallelCoroutine.ReturnToPool(helper);
 
 #if DEBUG
             SerializeCatalog();

@@ -142,36 +142,85 @@ namespace MSU
         }
     }
 
-
-    [Obsolete("Utilize HG.Coroutines.ParallelCoroutine instead.")]
+    /// <summary>
+    /// A Coroutine that's used to process multiple coroutines in parallel.
+    /// <para></para>
+    /// This is identical to <see cref="HG.Coroutines.ParallelCoroutine"/>, however this version is pooled, new instances can be requested via <see cref="ParallelCoroutine.RequestFromPool"/> and they can be returned via <see cref="ParallelCoroutine.ReturnToPool(ParallelCoroutine)"/>
+    /// </summary>
     public class ParallelCoroutine : IEnumerator
     {
+        private static Stack<ParallelCoroutine> _pool = new Stack<ParallelCoroutine>();
+
+        /// <summary>
+        /// Requests a ParallelCoroutine from the pool
+        /// </summary>
+        public static ParallelCoroutine RequestFromPool()
+        {
+            if(_pool.TryPop(out var coroutine))
+            {
+                return coroutine;
+            }
+#pragma warning disable CS0618 // Type or member is obsolete
+            return new ParallelCoroutine();
+#pragma warning restore CS0618 // Type or member is obsolete
+        }
+
+        /// <summary>
+        /// Returns a ParallelCoroutine to the pool
+        /// </summary>
+        /// <param name="coroutine"></param>
+        public static void ReturnToPool(ParallelCoroutine coroutine)
+        {
+            coroutine.Reset();
+            _pool.Push(coroutine);
+        }
+
         private readonly List<IEnumerator> _coroutinesList = new List<IEnumerator>();
 
         private IEnumerator _internalCoroutine;
 
+        /// <summary>
+        /// Returns true once all coroutines are completed
+        /// </summary>
         public bool isDone => this.IsDone();
 
+        /// <summary>
+        /// Returns the current object stored in the internal coroutine
+        /// </summary>
         public object Current => _internalCoroutine.Current;
 
+        /// <summary>
+        /// This method should not be called, call <see cref="ParallelCoroutine.RequestFromPool"/> instead
+        /// </summary>
+        [Obsolete("Instances of ParallelCoroutine should not be created manually, utilize the pool instead")]
         public ParallelCoroutine()
         {
             _internalCoroutine = InternalCoroutine();
         }
 
+        /// <summary>
+        /// Adds a new coroutine to process
+        /// </summary>
         public void Add(IEnumerator coroutine)
         {
             _coroutinesList.Add(coroutine);
         }
 
+        /// <summary>
+        /// Processes the coroutine. Returns true if there's more work to be done
+        /// </summary>
         public bool MoveNext()
         {
             return _internalCoroutine.MoveNext();
         }
 
+        /// <summary>
+        /// Resets this class, resetting the internal coroutine and clearing it's internal coroutine list
+        /// </summary>
         public void Reset()
         {
-            _internalCoroutine.Reset();
+            _internalCoroutine = InternalCoroutine();
+            _coroutinesList.Clear();
         }
 
         private IEnumerator InternalCoroutine()
@@ -201,22 +250,9 @@ namespace MSU
         }
     }
 
-    /// <summary>
-    /// A <see cref="CoroutineWithResult"/> is a Coroutine that, upon completion, yield returns a result.
-    /// <br></br>
-    /// It's utilized as a way to retrieve values asynchronously using a Coroutine. Once the coroutine passed on <see cref="CoroutineWithResult.CoroutineWithResult(IEnumerator)"/> completes, the final yield return value will be stored in <see cref="boxedResult"/>.
-    /// <br></br>
-    /// See also <see cref="CoroutineWithResult{T}"/>
-    /// </summary>
+    [Obsolete("Utilize HG.Coroutines.CoroutineWithResult instead", error: true)]
     public class CoroutineWithResult : IEnumerator
     {
-        /// <summary>
-        /// Special method for returning an instance of <see cref="CoroutineWithResult"/> with a computed result.
-        /// <br></br>
-        /// This can be useful in scenarios where a result was cached and as such there's nothing to wait.
-        /// </summary>
-        /// <param name="result">The result itself.</param>
-        /// <returns>An instance of <see cref="CoroutineWithResult"/>, that immediatly returns <paramref name="result"/></returns>
         public static CoroutineWithResult CompletedResult(object result)
         {
             IEnumerator YieldResultASAP(object result)
@@ -230,15 +266,8 @@ namespace MSU
 
         protected IEnumerator _runningCoroutine;
 
-        /// <summary>
-        /// The result of the internal coroutine, you should only access this once <see cref="MoveNext"/> returns false.
-        /// </summary>
         public object boxedResult { get; protected set; }
 
-        /// <summary>
-        /// Processes the running coroutine
-        /// </summary>
-        /// <returns>True if there's still more work to be done, otherwise false.</returns>
         public virtual bool MoveNext()
         {
             bool moveNextValue = _runningCoroutine.MoveNext();
@@ -250,10 +279,6 @@ namespace MSU
             return moveNextValue;
         }
 
-        /// <summary>
-        /// Reutilizes this CoroutineWithResult instance, by running <paramref name="coroutineThatEventuallyYieldsAResult"/>
-        /// </summary>
-        /// <param name="coroutineThatEventuallyYieldsAResult">A Coroutine, that eventually yields a result.</param>
         public void StartNew(IEnumerator coroutineThatEventuallyYieldsAResult)
         {
             _runningCoroutine = coroutineThatEventuallyYieldsAResult;
@@ -264,32 +289,15 @@ namespace MSU
             throw new NotSupportedException();
         }
 
-        /// <summary>
-        /// Constructor for <see cref="CoroutineWithResult"/>
-        /// </summary>
-        /// <param name="coroutineThatEventuallyYieldsAResult">The coroutine, which on the last yield return, returns the result of the operation.</param>
         public CoroutineWithResult(IEnumerator coroutineThatEventuallyYieldsAResult)
         {
             _runningCoroutine = coroutineThatEventuallyYieldsAResult;
         }
     }
 
-    /// <summary>
-    /// Generic version of <see cref="CoroutineWithResult"/>
-    /// <inheritdoc cref="CoroutineWithResult"/>
-    /// </summary>
-    /// <typeparam name="T">The type of result</typeparam>
+    [Obsolete("Utilize HG.Coroutines.CoroutineWithResult<T> instead", error: true)]
     public sealed class CoroutineWithResult<T> : CoroutineWithResult, IEnumerator<T>
     {
-        /// <summary>
-        /// Generic version of <see cref="CoroutineWithResult.CompletedResult(object)"/>
-        /// <br></br>
-        /// Special method for returning an instance of <see cref="CoroutineWithResult{T}"/> with a computed result.
-        /// <br></br>
-        /// This can be useful in scenarios where a result was cached and as such there's nothing to wait.
-        /// </summary>
-        /// <param name="result">The result itself.</param>
-        /// <returns>An instance of <see cref="CoroutineWithResult{T}"/>, that immediatly returns <paramref name="result"/></returns>
         public static CoroutineWithResult<T> CompletedResult(T result)
         {
             IEnumerator<T> YieldResultASAP(T result)
@@ -305,15 +313,8 @@ namespace MSU
 
         new private IEnumerator<T> _runningCoroutine;
 
-        /// <summary>
-        /// <inheritdoc cref="CoroutineWithResult.boxedResult"/>
-        /// </summary>
         public T result { get; private set; }
 
-        /// <summary>
-        /// <inheritdoc cref="CoroutineWithResult.MoveNext"/>
-        /// </summary>
-        /// <returns><inheritdoc cref="CoroutineWithResult.MoveNext"/></returns>
         public override bool MoveNext()
         {
             bool moveNextValue = _runningCoroutine.MoveNext();
@@ -326,10 +327,6 @@ namespace MSU
             return moveNextValue;
         }
 
-        /// <summary>
-        /// <inheritdoc cref="CoroutineWithResult.StartNew(IEnumerator)"/>
-        /// </summary>
-        /// <param name="coroutineThatEventuallyYieldsAResult"></param>
         public void StartNew(IEnumerator<T> coroutineThatEventuallyYieldsAResult)
         {
             _runningCoroutine = coroutineThatEventuallyYieldsAResult;
@@ -346,10 +343,6 @@ namespace MSU
             throw new NotSupportedException();
         }
 
-        /// <summary>
-        /// <inheritdoc cref="CoroutineWithResult.CoroutineWithResult(IEnumerator)"/>
-        /// </summary>
-        /// <param name="coroutineThatEventuallyYieldsAResult"><inheritdoc cref="CoroutineWithResult.CoroutineWithResult(IEnumerator)"/></param>
         public CoroutineWithResult(IEnumerator<T> coroutineThatEventuallyYieldsAResult) : base(coroutineThatEventuallyYieldsAResult)
         {
             _runningCoroutine = coroutineThatEventuallyYieldsAResult;
