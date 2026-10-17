@@ -39,24 +39,6 @@ namespace MSU
         [Tooltip("An effect to spawn on the Elite.")]
         public GameObject effect;
 
-        [Header("Deprecated, check Context Menus for Upgrading.")]
-        [Obsolete("Utilize eliteTierFlags instead.")]
-        public VanillaTier eliteTier;
-
-        [Obsolete("Utilize VanillaEliteTierEntry instead.")]
-        public enum VanillaTier
-        {
-            None = 0,
-
-            HonorDisabled = 1,
-
-            HonorActive = 2,
-
-            PostLoop = 3,
-
-            Lunar = 4
-        }
-
         /// <summary>
         /// An enum representing the base game's Elite Tiers
         /// </summary>
@@ -106,24 +88,6 @@ namespace MSU
             /// Tier which includes Perfected elites
             /// </summary>
             Lunar = 8
-        }
-
-        [ContextMenu("Upgrade to VanillaEliteTierEntry")]
-        private void UpgradeToVanillaEliteTierEntry()
-        {
-#pragma warning disable CS0618 // Type or member is obsolete
-            vanillaEliteTier = eliteTier switch
-            {
-                VanillaTier.None => VanillaEliteTierEntry.None,
-                VanillaTier.HonorDisabled => VanillaEliteTierEntry.GlobalTier1,
-                VanillaTier.HonorActive => VanillaEliteTierEntry.GlobalTier1Honor,
-                VanillaTier.PostLoop => VanillaEliteTierEntry.Tier2,
-                VanillaTier.Lunar => VanillaEliteTierEntry.Lunar,
-                _ => VanillaEliteTierEntry.None
-            };
-
-            eliteTier = VanillaTier.None;
-#pragma warning restore CS0618 // Type or member is obsolete
         }
     }
 }

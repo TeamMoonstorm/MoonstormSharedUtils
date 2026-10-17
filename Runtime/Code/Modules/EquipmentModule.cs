@@ -191,33 +191,6 @@ namespace MSU
 
         private static void GetTiersToModify(ExtendedEliteDef extendedEliteDef, CombatDirector.EliteTierDef[] vanillaTiers, List<CombatDirector.EliteTierDef> tierOutput)
         {
-            //Not using VanillaEliteTier? use the deprecated version, if the deprecated version is also none then its not added anywhere.
-            if(extendedEliteDef.vanillaEliteTier == ExtendedEliteDef.VanillaEliteTierEntry.None)
-            {
-#pragma warning disable CS0618 // Type or member is obsolete
-                switch (extendedEliteDef.eliteTier)
-                {
-                    case ExtendedEliteDef.VanillaTier.None:
-                        break;
-                    case ExtendedEliteDef.VanillaTier.HonorDisabled:
-                        tierOutput.Add(vanillaTiers[1]);
-                        tierOutput.Add(vanillaTiers[4]);
-                        break;
-                    case ExtendedEliteDef.VanillaTier.HonorActive:
-                        tierOutput.Add(vanillaTiers[2]);
-                        tierOutput.Add(vanillaTiers[3]);
-                        break;
-                    case ExtendedEliteDef.VanillaTier.PostLoop:
-                        tierOutput.Add(vanillaTiers[5]);
-                        break;
-                    case ExtendedEliteDef.VanillaTier.Lunar:
-                        tierOutput.Add(vanillaTiers[6]);
-                        break;
-                }
-#pragma warning restore CS0618 // Type or member is obsolete
-                return;
-            }
-
             switch(extendedEliteDef.vanillaEliteTier)
             {
                 case ExtendedEliteDef.VanillaEliteTierEntry.Tier1:

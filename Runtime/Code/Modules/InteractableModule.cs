@@ -25,11 +25,6 @@ namespace MSU
         public static ReadOnlyDictionary<NetworkIdentity, IInteractableContentPiece> networkIdentityToInteractable { get; private set; }
         private static Dictionary<NetworkIdentity, IInteractableContentPiece> _networkIdentityToInteractable = new Dictionary<NetworkIdentity, IInteractableContentPiece>(new NetworkIdentityAssetIDComparer());
 
-        [Obsolete("This dictionary is obsolete as not all Interactables may implement IInteractable (example: Trishops).\r\nUtilize \"networkIdentityToInteractable\" instead.")]
-        public static ReadOnlyDictionary<IInteractable, IInteractableContentPiece> moonstormInteractables { get; private set; }
-        [Obsolete]
-        private static Dictionary<IInteractable, IInteractableContentPiece> _moonstormInteractables = new Dictionary<IInteractable, IInteractableContentPiece>(new IInteractableNetworkIdentityAssetIDComparer());
-
         /// <summary>
         /// Represents the Availability of this Module.
         /// </summary>
@@ -102,13 +97,6 @@ namespace MSU
 
             networkIdentityToInteractable = new ReadOnlyDictionary<NetworkIdentity, IInteractableContentPiece>(_networkIdentityToInteractable);
             _networkIdentityToInteractable = null;
-
-#pragma warning disable CS0618 // Type or member is obsolete
-#pragma warning disable CS0612 // Type or member is obsolete
-            moonstormInteractables = new ReadOnlyDictionary<IInteractable, IInteractableContentPiece>(_moonstormInteractables);
-            _moonstormInteractables = null;
-#pragma warning restore CS0612 // Type or member is obsolete
-#pragma warning restore CS0618 // Type or member is obsolete
 
             moduleAvailability.MakeAvailable();
 
@@ -194,11 +182,6 @@ namespace MSU
                         if(netID)
                         {
                             _networkIdentityToInteractable.Add(netID, interactableContentPiece);
-                        }
-
-                        if(interactableContentPiece.component != null)
-                        {
-                            _moonstormInteractables.Add(interactableContentPiece.component, interactableContentPiece);
                         }
                     }
 

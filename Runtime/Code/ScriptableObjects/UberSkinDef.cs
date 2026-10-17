@@ -645,45 +645,5 @@ namespace MSU
                 SkinVFX.AddSkinVFX(vfxOverrides[i].ToSkinVFXInfo(targetSkinDef));
             }
         }
-
-        [SystemInitializer]
-        private static void InitHooks()
-        {
-            On.RoR2.ModelSkinController.ApplySkinAsync += ModelSkinController_ApplySkinAsync;
-        }
-
-        private static HashSet<SkinDef> _warnedSkins = new HashSet<SkinDef>();
-
-        [Obsolete("This hook is obsolete, should be removed if we ever remove \"GenericRendererInfoContainer\"")]
-        private static IEnumerator ModelSkinController_ApplySkinAsync(On.RoR2.ModelSkinController.orig_ApplySkinAsync orig, ModelSkinController self, int skinIndex, RoR2.ContentManagement.AsyncReferenceHandleUnloadType unloadType)
-        {
-            yield return orig(self, skinIndex, unloadType);
-
-            CharacterModel characterModel = self.characterModel;
-            if (!characterModel)
-                yield break;
-
-            using var _ = HG.ListPool<CharacterModel.RendererInfo>.RentCollection(out var retrievedRendererInfos);
-
-            foreach (var customGameObjectActivation in characterModel.customGameObjectActivationTransforms)
-            {
-                if (!customGameObjectActivation.TryGetComponent<GenericRendererInfoContainer>(out var genericRendererInfoContainer))
-                {
-                    continue;
-                }
-
-                if (_warnedSkins.Add(self.skins[skinIndex]))
-                {
-                    MSULog.Warning($"Skin {self.skins[skinIndex]} has game object activations that use MSU's \"GenericRendererInfoContainer\". This component is deprecated and has been replaced by the base game \"CustomGameObjectActivationInfoContainer\" and should be used instead. This log will only appear once for this skin.");
-                }
-
-                retrievedRendererInfos.AddRange(genericRendererInfoContainer.rendererInfos);
-            }
-
-            if (retrievedRendererInfos.Count <= 0)
-                yield break;
-
-            characterModel.baseRendererInfos = HG.ArrayUtils.Join(characterModel.baseRendererInfos, retrievedRendererInfos.ToArray());
-        }
     }
 }
