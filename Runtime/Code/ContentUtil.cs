@@ -202,27 +202,6 @@ namespace MSU
             Array.Sort(collection.assetInfos);
         }
 
-
-        [Obsolete("Use ContentLoadHelper.PopulateTypeFields(Type, NamedAssetCollection<TAsset>, Func<TAsset, TField>, Func<string, string> = null) instead.")]
-        public static void PopulateTypeFields<TAsset>(Type typeToPopulate, NamedAssetCollection<TAsset> assets) where TAsset : UnityEngine.Object
-        {
-            PopulateTypeFields(typeToPopulate, assets, null);
-        }
-
-
-        [Obsolete("Use ContentLoadHelper.PopulateTypeFields(Type, NamedAssetCollection<TAsset>, Func<TAsset, TField>, Func<string, string> = null) instead.")]
-        public static void PopulateTypeFields<TAsset>(Type typeToPopulate, NamedAssetCollection<TAsset> assets, Func<string, string> fieldNameToAssetConverter = null) where TAsset : UnityEngine.Object
-        {
-            PopulateTypeFields(typeToPopulate, assets, t => t, fieldNameToAssetConverter);
-        }
-
-        [Obsolete("Use ContentLoadHelper.PopulateTypeFields(Type, NamedAssetCollection<TAsset>, Func<TAsset, TField>, Func<string, string> = null) instead.")]
-        public static void PopulateTypeFields<TAsset, TField>(Type typeToPopulate, NamedAssetCollection<TAsset> assets, Func<TAsset, TField> sourceToDestinationConverter, Func<string, string> fieldNameToAssetConverter = null) where TAsset : UnityEngine.Object
-        {
-            ContentLoadHelper.PopulateTypeFields(typeToPopulate, assets, sourceToDestinationConverter, fieldNameToAssetConverter);
-        }
-
-
         /// <summary>
         /// Adds all and any Content pieces from the AssetCollection found in <paramref name="assetCollection"/> to the ContentPack specified in <paramref name="contentPack"/>.
         /// <br>This is ideal to store a Content's required assets. For example, you can have a <see cref="ISurvivorContentPiece"/> that calls this method inside <see cref="IContentPackModifier.ModifyContentPack(ContentPack)"/> to add the survivor's states, skillDefs, that are found inside the survivor's AssetCollection.</br>
