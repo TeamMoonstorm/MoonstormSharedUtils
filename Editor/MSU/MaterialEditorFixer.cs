@@ -20,41 +20,62 @@ namespace MSU.Editor
 
         public MaterialToShaderName[] materialsToFix;
 
-        public void SearchForMaterialsAndSaveMetadata()
+        public void FixMaterials()
         {
+            using var _0 = new AssetDatabaseUtil.AssetEditingSaveScope();
+            using var _ = HG.StringBuilderPool.RentStringBuilder(out var sb);
+
+            //Get the stubbed shaders, have a list of materials that need to be made dirty
             Shader[] stubbedShaders = GetStubbedShaders();
+            List<Material> dirtyMaterials = new List<Material>();
 
-            using var progressBar = new DisposableProgressBar("Material Fixer Searching", "Searching for Materials with stubbed shaders", 0);
-
-            string[] guids = AssetDatabase.FindAssets("t:material");
-            List<Material> foundMaterials = new List<Material>();
-            for(int i = 0; i < guids.Length; i++)
+            //Iterate backwards
+            for (int i = materialsToFix.Length - 1; i >= 0; i--)
             {
-                progressBar.Update(R2EKMath.Remap(i, 0, guids.Length, 0, 0.5f), null, $"Searching for materials with stubbed shaders ({i + 1}/{guids.Length})");
-                foundMaterials.Add(AssetDatabase.LoadAssetAtPath<Material>(AssetDatabase.GUIDToAssetPath(guids[i])));
-            }
+                var materialToFix = materialsToFix[i];
 
-            List<MaterialToShaderName> materialToShaderNames = new List<MaterialToShaderName>();
-            for(int i = 0; i < foundMaterials.Count; i++)
-            {
-                progressBar.Update(R2EKMath.Remap(i, 0, foundMaterials.Count, 0, 1f), null, $"Processing material {i + 1} out of {foundMaterials.Count}");
-                var material = foundMaterials[i];
+                //Get material asset and the stubbed shader name to find
+                var materialAsset = materialToFix.materialAsset;
+                var stubbedShaderName = materialToFix.shaderName;
 
-                if(stubbedShaders.Contains(material.shader))
+                //Find the shader
+                Shader shaderMatch = null;
+                for(int j = 0; j < stubbedShaders.Length; j++)
                 {
-                    materialToShaderNames.Add(new MaterialToShaderName
+                    Shader potentialShader = stubbedShaders[j];
+                    if(string.Equals(potentialShader.name, stubbedShaderName))
                     {
-                        materialAsset = material,
-                        shaderName = material.shader.name
-                    });
+                        shaderMatch = potentialShader;
+                        break;
+                    }
+                }
+
+                //Found a match, fix it, remove from the materialsToFix array, and add it to the dirty materials list
+                if(shaderMatch)
+                {
+                    sb.AppendLine($"Fixing {materialAsset}, assigning {shaderMatch}");
+                    
+                    materialAsset.shader = shaderMatch;
+                    HG.ArrayUtils.ArrayRemoveAtAndResize(ref materialsToFix, i);
+
+                    dirtyMaterials.Add(materialAsset);
+                }
+                else
+                { //No match found, log
+                    sb.AppendLine($"Warn: Unable to fix {materialAsset}, it's stored shader name is {stubbedShaderName} yet there's no stubbed shader with that name.");
                 }
             }
 
-            materialsToFix = materialToShaderNames.ToArray();
+            //Set dirty
+            foreach(var material in dirtyMaterials)
+            {
+                EditorUtility.SetDirty(material);
+            }
 
             EditorUtility.SetDirty(this);
-            AssetDatabase.SaveAssetIfDirty(this);
-            MSULog.Info($"Saved a total of {materialToShaderNames.Count} materials to fix in MSU 3.0");
+
+            //Log
+            MSULog.Info(sb.ToString());
         }
 
         private Shader[] GetStubbedShaders()
@@ -82,9 +103,13 @@ namespace MSU.Editor
                 DrawDefaultInspector();
                 EditorGUI.EndDisabledGroup();
 
-                if(GUILayout.Button("Find materials to fix") && target is MaterialEditorFixer instance)
+                if(GUILayout.Button("Fix Materials") && target is MaterialEditorFixer instance)
                 {
-                    instance.SearchForMaterialsAndSaveMetadata();
+                    instance.FixMaterials();
+                    if(instance.materialsToFix.Length > 0)
+                    {
+                        EditorUtility.DisplayDialog("Issue with MaterialEditorFixer", $"It seems like {instance.materialsToFix.Length} materials where unable to be fixed. The array of materials to fix now contains materials that don't have stubbed shaders assigned.", "Ok");
+                    }
                 }
             }
         }
