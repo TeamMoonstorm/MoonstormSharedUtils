@@ -99,7 +99,7 @@ namespace MSU
             IVanillaSurvivorContentPiece[] content = provider.GetContents().OfType<IVanillaSurvivorContentPiece>().ToArray();
             List<IVanillaSurvivorContentPiece> vanillaSurvivors = new List<IVanillaSurvivorContentPiece>();
 
-            var helper = ParallelCoroutine.RequestFromPool();
+            using var helper = ParallelCoroutine.RequestFromPool();
 
             foreach (var addition in content)
             {
@@ -113,8 +113,6 @@ namespace MSU
             while (!helper.isDone)
                 yield return null;
 
-            ParallelCoroutine.ReturnToPool(helper);
-
             var subroutine = InitializeVanillaSurvivorContentPieces(plugin, vanillaSurvivors, provider);
             while (!subroutine.IsDone())
                 yield return null;
@@ -123,7 +121,7 @@ namespace MSU
 
         private static IEnumerator InitializeVanillaSurvivorContentPieces(BaseUnityPlugin plugin, List<IVanillaSurvivorContentPiece> contentPieces, IContentPieceProvider provider)
         {
-            ParallelCoroutine initializeAsyncCoroutine = ParallelCoroutine.RequestFromPool();
+            using ParallelCoroutine initializeAsyncCoroutine = ParallelCoroutine.RequestFromPool();
 
             foreach (var piece in contentPieces)
             {
@@ -174,8 +172,6 @@ namespace MSU
 
             while (!initializeAsyncCoroutine.isDone)
                 yield return null;
-
-            ParallelCoroutine.ReturnToPool(initializeAsyncCoroutine);
         }
     }
 }

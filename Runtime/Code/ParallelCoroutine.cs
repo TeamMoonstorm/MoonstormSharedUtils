@@ -10,7 +10,7 @@ namespace MSU
     /// <para></para>
     /// This is identical to <see cref="HG.Coroutines.ParallelCoroutine"/>, however this version is pooled, new instances can be requested via <see cref="ParallelCoroutine.RequestFromPool"/> and they can be returned via <see cref="ParallelCoroutine.ReturnToPool(ParallelCoroutine)"/>
     /// </summary>
-    public class ParallelCoroutine : IEnumerator
+    public class ParallelCoroutine : IEnumerator, IDisposable
     {
         private static Stack<ParallelCoroutine> _pool = new Stack<ParallelCoroutine>();
 
@@ -54,6 +54,14 @@ namespace MSU
         private ParallelCoroutine()
         {
             _internalCoroutine = InternalCoroutine();
+        }
+
+        ~ParallelCoroutine()
+        {
+            if(_coroutinesList.Count > 0)
+            {
+                MSULog.Error($"A ParallelCoroutine with coroutines in it has been collected by the GarbageCollector. This means it wasnt disposed. Consider disposing your ParallelCoroutine once you're done with it to have less strain on the GarbageCollector");
+            }
         }
 
         /// <summary>
@@ -105,6 +113,14 @@ namespace MSU
                     i = num;
                 }
             }
+        }
+
+        /// <summary>
+        /// Returns this parallel coroutine to the pool
+        /// </summary>
+        public void Dispose()
+        {
+            ReturnToPool(this);
         }
     }
 }
