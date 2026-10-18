@@ -90,7 +90,7 @@ namespace MSU
 
             List<GenericObjectEntry> loadedObjects = new List<GenericObjectEntry>();
 
-            var coroutine = ParallelCoroutine.RequestFromPool();
+            using var coroutine = ParallelCoroutine.RequestFromPool();
 
             foreach (var contentProvider in contentProviders)
             {
@@ -100,8 +100,6 @@ namespace MSU
 
             while (!coroutine.isDone)
                 yield return null;
-
-            ParallelCoroutine.ReturnToPool(coroutine);
             
             _nameToGenericObjectIndex.Clear();
 

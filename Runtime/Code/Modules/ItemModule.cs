@@ -105,7 +105,7 @@ namespace MSU
             IContentPiece<ItemDef>[] content = provider.GetContents();
             List<IContentPiece<ItemDef>> items = new List<IContentPiece<ItemDef>>();
 
-            var helper = ParallelCoroutine.RequestFromPool();
+            using var helper = ParallelCoroutine.RequestFromPool();
 
             foreach (var item in content)
             {
@@ -119,8 +119,6 @@ namespace MSU
             while (!helper.IsDone())
                 yield return null;
 
-            ParallelCoroutine.ReturnToPool(helper);
-
             var subroutine = InitializeItems(plugin, items, provider);
             while (!subroutine.IsDone())
                 yield return null;
@@ -128,7 +126,7 @@ namespace MSU
 
         private static IEnumerator InitializeItems(BaseUnityPlugin plugin, List<IContentPiece<ItemDef>> items, IContentPieceProvider<ItemDef> provider)
         {
-            ParallelCoroutine initializeAsyncCoroutine = ParallelCoroutine.RequestFromPool();
+            using ParallelCoroutine initializeAsyncCoroutine = ParallelCoroutine.RequestFromPool();
 
             foreach (var item in items)
             {
@@ -182,8 +180,6 @@ namespace MSU
             {
                 yield return null;
             }
-
-            ParallelCoroutine.ReturnToPool(initializeAsyncCoroutine);
         }
 
         private static void AddVoidItems(On.RoR2.Items.ContagiousItemManager.orig_Init orig)

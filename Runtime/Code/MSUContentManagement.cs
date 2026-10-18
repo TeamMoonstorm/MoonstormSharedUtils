@@ -22,7 +22,7 @@ namespace MSU
             MSULog.Info("Initializing the generalized MSU Content Management system...");
             yield return null;
 
-            ParallelCoroutine coroutine = ParallelCoroutine.RequestFromPool();
+            using ParallelCoroutine coroutine = ParallelCoroutine.RequestFromPool();
 
             coroutine.Add(InitMSUContentBehaviourSystem());
             coroutine.Add(InitBuffBehaviourSystem());
@@ -30,7 +30,6 @@ namespace MSU
             while (!coroutine.isDone)
                 yield return null;
 
-            ParallelCoroutine.ReturnToPool(coroutine);
 
             On.RoR2.CharacterBody.SetBuffCount += SetBuffBehaviourCount;
             CharacterBody.onBodyAwakeGlobal += OnBodyAwakeGlobal;

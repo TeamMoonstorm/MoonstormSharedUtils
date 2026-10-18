@@ -101,7 +101,7 @@ namespace MSU
             IContentPiece<KeyItemDef>[] content = provider.GetContents();
             List<IContentPiece<KeyItemDef>> keyItems = new List<IContentPiece<KeyItemDef>>();
 
-            var helper = ParallelCoroutine.RequestFromPool();
+            using var helper = ParallelCoroutine.RequestFromPool();
 
             foreach(var keyItem in content)
             {
@@ -115,8 +115,6 @@ namespace MSU
             while (!helper.IsDone())
                 yield return null;
 
-            ParallelCoroutine.ReturnToPool(helper);
-
             var subroutine = InitializeKeyItems(plugin, keyItems, provider);
 
             while (!subroutine.IsDone())
@@ -125,7 +123,7 @@ namespace MSU
 
         private static IEnumerator InitializeKeyItems(BaseUnityPlugin plugin, List<IContentPiece<KeyItemDef>> keyItems, IContentPieceProvider<KeyItemDef> provider)
         {
-            var initializeAsyncCoroutine = ParallelCoroutine.RequestFromPool();
+            using var initializeAsyncCoroutine = ParallelCoroutine.RequestFromPool();
 
             foreach(var keyItem in keyItems)
             {
@@ -173,8 +171,6 @@ namespace MSU
             {
                 yield return null;
             }
-
-            ParallelCoroutine.ReturnToPool(initializeAsyncCoroutine);
         }
     }
 }

@@ -149,7 +149,7 @@ namespace MSU
 
             List<IGameObjectContentPiece<CharacterBody>> characters = new List<IGameObjectContentPiece<CharacterBody>>();
 
-            var helper = ParallelCoroutine.RequestFromPool();
+            using var helper = ParallelCoroutine.RequestFromPool();
 
             foreach (var character in content)
             {
@@ -163,8 +163,6 @@ namespace MSU
             while (!helper.IsDone())
                 yield return null;
 
-            ParallelCoroutine.ReturnToPool(helper);
-
             var subroutine = InitializeCharacters(plugin, characters, provider);
             while (!subroutine.IsDone())
                 yield return null;
@@ -172,7 +170,7 @@ namespace MSU
 
         private static IEnumerator InitializeCharacters(BaseUnityPlugin plugin, List<IGameObjectContentPiece<CharacterBody>> bodies, IContentPieceProvider<GameObject> provider)
         {
-            ParallelCoroutine initializeAsyncCoroutine = ParallelCoroutine.RequestFromPool();
+            using ParallelCoroutine initializeAsyncCoroutine = ParallelCoroutine.RequestFromPool();
 
             foreach (var body in bodies)
             {
@@ -240,8 +238,6 @@ namespace MSU
             {
                 yield return null;
             }
-
-            ParallelCoroutine.ReturnToPool(initializeAsyncCoroutine);
         }
 
         private static void AddCustomMonsters(DccsPool pool, List<DirectorAPI.DirectorCardHolder> cardList, DirectorAPI.StageInfo stageInfo)

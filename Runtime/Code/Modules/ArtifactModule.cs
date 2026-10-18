@@ -142,7 +142,7 @@ namespace MSU
             IContentPiece<ArtifactDef>[] content = provider.GetContents();
             List<IContentPiece<ArtifactDef>> artifacts = new List<IContentPiece<ArtifactDef>>();
 
-            ParallelCoroutine helper = ParallelCoroutine.RequestFromPool();
+            using ParallelCoroutine helper = ParallelCoroutine.RequestFromPool();
 
             foreach (var artifact in content)
             {
@@ -156,8 +156,6 @@ namespace MSU
             while (!helper.IsDone())
                 yield return null;
 
-            ParallelCoroutine.ReturnToPool(helper);
-
             var subroutine = InitializeArtifacts(plugin, artifacts, provider);
             while(!subroutine.IsDone()) 
                 yield return null;
@@ -165,7 +163,7 @@ namespace MSU
 
         private static IEnumerator InitializeArtifacts(BaseUnityPlugin plugin, List<IContentPiece<ArtifactDef>> artifacts, IContentPieceProvider<ArtifactDef> provider)
         {
-            ParallelCoroutine initializeAsyncCoroutine = ParallelCoroutine.RequestFromPool();
+            using ParallelCoroutine initializeAsyncCoroutine = ParallelCoroutine.RequestFromPool();
 
             foreach (var artifact in artifacts)
             {
@@ -219,8 +217,6 @@ namespace MSU
             {
                 yield return null;
             }
-
-            ParallelCoroutine.ReturnToPool(initializeAsyncCoroutine);
         }
     }
 }

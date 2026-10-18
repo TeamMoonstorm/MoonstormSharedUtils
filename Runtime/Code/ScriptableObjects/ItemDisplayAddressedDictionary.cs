@@ -143,7 +143,7 @@ namespace MSU
         {
             yield return null;
 
-            ParallelCoroutine perEntryCoroutine = ParallelCoroutine.RequestFromPool();
+            using ParallelCoroutine perEntryCoroutine = ParallelCoroutine.RequestFromPool();
 
             foreach(var entry in displayEntries)
             {
@@ -154,8 +154,6 @@ namespace MSU
             {
                 yield return null;
             }
-
-            ParallelCoroutine.ReturnToPool(perEntryCoroutine);
         }
     }
 }
