@@ -16,7 +16,7 @@ namespace MSU
     /// <br>When the original material is present, you'll be able to specify Shader Property Overrides, which in turn are applied to the material variant.</br>
     /// <para>It has complete support for any and all shaders used within the project, if the original material is using MSU's AddressableMaterialShader, said addressable material's shader will be used to obtain the overridable properties, and the property overrides will be applied at runtime using the method <see cref="ApplyOverrides"/></para>
     /// </summary>
-    public class MaterialVariant : ScriptableObject
+    public sealed class MaterialVariant : ScriptableObject
     {
 #if UNITY_EDITOR
         /// <summary>

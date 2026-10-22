@@ -157,7 +157,7 @@ namespace MSU.Config
     /// <para>The RiskOfOptionsConfigureFieldAttribute is an extended version of a <see cref="ConfigureFieldAttribute"/>. Unlike the regular ConfigueFieldAttribute, this attribute will also create a RiskOfOption's option for the field so it can be configured ingame using Risk of Options.</para>
     /// <para>Due to the limitations of Attributes, its not possible to specify OptionConfigs for the RiskOfOptions Options, instead you might want to use a <see cref="ConfiguredVariable"/></para>
     /// </summary>
-    public class RiskOfOptionsConfigureFieldAttribute : ConfigureFieldAttribute
+    public sealed class RiskOfOptionsConfigureFieldAttribute : ConfigureFieldAttribute
     {
         /// <summary>
         /// The GUID of the mod that owns this ConfigurableField, Set automatically by the <see cref="ConfigSystem"/>.

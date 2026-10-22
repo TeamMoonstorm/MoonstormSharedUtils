@@ -10,7 +10,7 @@ namespace MSU
     /// <br>In case you're using vanilla DamageColors or BuffDefs, you can call <see cref="Init"/> and then manually modify the DotDef stored in <see cref="dotDef"/></br>
     /// </summary>
     [CreateAssetMenu(fileName = "New DotBuffDef", menuName = "MSU/DotBuffDef")]
-    public class DotBuffDef : BuffDef
+    public sealed class DotBuffDef : BuffDef
     {
         [Header("DOT Metadata")]
         [Tooltip("The time between damage ticks")]

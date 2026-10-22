@@ -13,7 +13,7 @@ namespace MSU
     /// <para>Utilizing <see cref="CreateCoroutineForMod(BaseUnityPlugin)"/>, you can then collect all of your mod's AsyncASsetLoadAttributes that will be added to a <see cref="ParallelMultiStartCoroutine"/>, which then will be able to Start and await, running all the methods decorated with this attribute as a Parallelized Coroutine.</para>
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-    public class AsyncAssetLoadAttribute : SearchableAttribute
+    public sealed class AsyncAssetLoadAttribute : SearchableAttribute
     {
         /// <summary>
         /// The MethodInfo that's attached to this Attribute

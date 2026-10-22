@@ -11,7 +11,7 @@ namespace MSU.Config
     /// <br>Also contains necesary info for implementing the Config with Risk of Options.</br>
     /// <br>T is string</br>
     /// </summary>
-    public class ConfiguredString : ConfiguredVariable<string>
+    public sealed class ConfiguredString : ConfiguredVariable<string>
     {
         /// <summary>
         /// An optional InputFieldConfig for this ConfiguredString's <see cref="RiskOfOptions.Options.StringInputFieldOption"/>

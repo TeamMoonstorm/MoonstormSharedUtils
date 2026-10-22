@@ -6,7 +6,7 @@ namespace MSU
     /// <summary>
     /// Used to display a string as a transform path
     /// </summary>
-    public class TransformPathAttribute : PropertyAttribute
+    public sealed class TransformPathAttribute : PropertyAttribute
     {
         /// <summary>
         /// The Root Object from which the paths are calculated.

@@ -6,7 +6,7 @@ namespace MSU
     /// <summary>
     /// A class utilized to display custom Pickup VFX for new ItemTiers added using MSU's Systems.
     /// </summary>
-    public class ItemTierPickupDisplayHelper : MonoBehaviour
+    public sealed class ItemTierPickupDisplayHelper : MonoBehaviour
     {
         private PickupDisplay _display;
         private GameObject _vfxInstance;

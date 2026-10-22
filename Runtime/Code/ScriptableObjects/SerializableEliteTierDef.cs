@@ -11,7 +11,7 @@ namespace MSU
     /// Represents a Serialized version of a <see cref="CombatDirector.EliteTierDef"/>
     /// </summary>
     [CreateAssetMenu(fileName = "New SerializableEliteTierDef", menuName = "MSU/SerializableEliteTierDef")]
-    public class SerializableEliteTierDef : ScriptableObject
+    public sealed class SerializableEliteTierDef : ScriptableObject
     {
         [Tooltip("The cost multiplier applied to a monster's cost when it tries to spawn as an elite from this tier.")]
         public float costMultiplier;

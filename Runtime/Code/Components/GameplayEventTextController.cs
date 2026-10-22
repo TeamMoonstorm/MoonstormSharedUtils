@@ -318,7 +318,7 @@ namespace MSU
         /// <summary>
         /// State used for EventTexts where the Text fades in
         /// </summary>
-        public class FadeInState : EventTextState
+        public sealed class FadeInState : EventTextState
         {
             /// <inheritdoc/>
             public override void OnEnter()
@@ -348,7 +348,7 @@ namespace MSU
         /// <summary>
         /// State used for EventTexts where the text has faded in completely and is now waiting
         /// </summary>
-        public class WaitState : EventTextState
+        public sealed class WaitState : EventTextState
         {
             /// <inheritdoc/>
             public override void Update()
@@ -367,7 +367,7 @@ namespace MSU
         /// <summary>
         /// State used for EventTexts where the text has finished waiting and is now fading out
         /// </summary>
-        public class FadeOutState : EventTextState
+        public sealed class FadeOutState : EventTextState
         {
             /// <inheritdoc/>
             public override void OnEnter()
@@ -388,7 +388,7 @@ namespace MSU
             }
         }
 
-        internal class SendEventTextRequestToClientsMessage : INetMessage
+        internal sealed class SendEventTextRequestToClientsMessage : INetMessage
         {
             public EventTextRequest request;
 

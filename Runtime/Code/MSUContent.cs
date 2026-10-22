@@ -4,7 +4,7 @@ using System.Collections;
 
 namespace MSU
 {
-    internal class MSUContent : IContentPackProvider
+    internal sealed class MSUContent : IContentPackProvider
     {
         public string identifier => MSUMain.GUID;
 

@@ -9,13 +9,13 @@ using UnityEngine;
 
 namespace MSU
 {
-    internal class DebugCommandBinding
+    internal sealed class DebugCommandBinding
     {
         public string description;
         public ConfiguredKeyBind tiedKeyBind;
         public Command[] tiedCommands;
 
-        public class Command
+        public sealed class Command
         {
             public string commandName;
             public string[] parameters => _parameters == null ? generateParameters() : _parameters;
@@ -37,7 +37,7 @@ namespace MSU
         }
     }
 
-    internal class MSUDebug : MonoBehaviour
+    internal sealed class MSUDebug : MonoBehaviour
     {
         private FieldInfo _noEnemiesField;
 

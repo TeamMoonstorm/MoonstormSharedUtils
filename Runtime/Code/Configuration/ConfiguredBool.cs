@@ -11,7 +11,7 @@ namespace MSU.Config
     /// <br>Also contains necesary info for implementing the Config with Risk of Options.</br>
     /// <br>T is bool</br>
     /// </summary>
-    public class ConfiguredBool : ConfiguredVariable<bool>
+    public sealed class ConfiguredBool : ConfiguredVariable<bool>
     {
         /// <summary>
         /// An optional CheckBoxConfig for this ConfiguredBool's <see cref="RiskOfOptions.Options.CheckBoxOption"/>

@@ -21,7 +21,7 @@ namespace MSU
     /// It comes built in with R2API.Skins' SkinVFX Info, allowing you to serialize VFX replacements based on skins.
     /// </summary>
     [CreateAssetMenu(menuName = "MSU/UberSkinDef")]
-    public class UberSkinDef : ScriptableObject
+    public sealed class UberSkinDef : ScriptableObject
     {
         #region SubTypes
         /// <summary>

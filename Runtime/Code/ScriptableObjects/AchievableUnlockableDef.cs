@@ -13,7 +13,7 @@ namespace MSU
     /// An AchievableUnlockableDef is an extension of <see cref="UnlockableDef"/> which allows for easy creation of Unlockables that are unlocked via Achievements, unlike unlocks that are unlocked via other methods (IE: Obtaining a LogBook for a monster)
     /// </summary>
     [CreateAssetMenu(fileName = "New AchievableUnlockableDef", menuName = "MSU/AchievableUnlockableDef")]
-    public class AchievableUnlockableDef : UnlockableDef
+    public sealed class AchievableUnlockableDef : UnlockableDef
     {
         private static HashSet<AchievableUnlockableDef> _instances = new HashSet<AchievableUnlockableDef>();
         [Header("Achievement Metadata")]
