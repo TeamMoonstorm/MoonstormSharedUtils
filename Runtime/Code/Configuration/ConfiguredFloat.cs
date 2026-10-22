@@ -11,7 +11,7 @@ namespace MSU.Config
     /// <br>Also contains necesary info for implementing the Config with Risk of Options.</br>
     /// <br>T is float</br>
     /// </summary>
-    public class ConfiguredFloat : ConfiguredVariable<float>
+    public sealed class ConfiguredFloat : ConfiguredVariable<float>
     {
         /// <summary>
         /// The type of slider used for this ConfiguredFloat.

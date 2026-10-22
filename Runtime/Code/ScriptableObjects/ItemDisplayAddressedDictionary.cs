@@ -17,7 +17,7 @@ namespace MSU
     /// For example, you can utilize the <see cref="ItemDisplayAddressedDictionary"/> to add Elite displays to all vanilla survivors and monsters inside the editor.
     /// </summary>
     [CreateAssetMenu(fileName = "New ItemDisplayAddressedDictionary", menuName = "MSU/ItemDisplayAddressedDictionary")]
-    public class ItemDisplayAddressedDictionary : ScriptableObject
+    public sealed class ItemDisplayAddressedDictionary : ScriptableObject
     {
         #region SubTypes
         /// <summary>

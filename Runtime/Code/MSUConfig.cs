@@ -13,7 +13,7 @@ namespace MSU
     /// <summary>
     /// The config class for MSU
     /// </summary>
-    public class MSUConfig
+    public sealed class MSUConfig
     {
         /// <summary>
         /// Identifier for MSU's General config file

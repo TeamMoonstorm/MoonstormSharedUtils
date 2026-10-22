@@ -44,7 +44,7 @@ namespace MSU
         /// <summary>
         /// An attribute utilized on fields of <see cref="SerializableStaticMethod"/> that can specify what kind of Arguments the method must have
         /// </summary>
-        public class RequiredArgumentsAttribute : PropertyAttribute
+        public sealed class RequiredArgumentsAttribute : PropertyAttribute
         {
             /// <summary>
             /// The return type of the method
@@ -71,7 +71,7 @@ namespace MSU
         /// <summary>
         /// This is used in combination with the TypeCache to easily find methods.
         /// </summary>
-        public class MethodDetectorAttribute : Attribute
+        public sealed class MethodDetectorAttribute : Attribute
         {
 
         }

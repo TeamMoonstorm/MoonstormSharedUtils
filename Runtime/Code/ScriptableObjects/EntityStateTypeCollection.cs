@@ -12,7 +12,7 @@ namespace MSU
     /// An EntityStateTypeCollection is a ScriptableObject which is used to contain a collection of <see cref="SerializableEntityStateType"/>, which can be then added to ContentPacks.
     /// </summary>
     [CreateAssetMenu(fileName = "New EntityStateTypeCollection", menuName = "MSU/EntityStateTypeCollection")]
-    public class EntityStateTypeCollection : ScriptableObject
+    public sealed class EntityStateTypeCollection : ScriptableObject
     {
         [Tooltip("The StateTypes stored in this EntityStateTypeCollection.")]
         public SerializableEntityStateType[] stateTypes = Array.Empty<SerializableEntityStateType>();

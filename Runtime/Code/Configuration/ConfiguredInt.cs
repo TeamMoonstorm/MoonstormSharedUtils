@@ -11,7 +11,7 @@ namespace MSU.Config
     /// <br>Also contains necesary info for implementing the Config with Risk of Options.</br>
     /// <br>T is int</br>
     /// </summary>
-    public class ConfiguredInt : ConfiguredVariable<int>
+    public sealed class ConfiguredInt : ConfiguredVariable<int>
     {
         /// <summary>
         /// An optional IntSliderConfig for this ConfiguredInt's <see cref="RiskOfOptions.Options.IntSliderOption"/>

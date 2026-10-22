@@ -12,7 +12,7 @@ namespace MSU.Config
     /// <br>Also contains necesary info for implementing the Config with Risk of Options.</br>
     /// <br>T is Color</br>
     /// </summary>
-    public class ConfiguredColor : ConfiguredVariable<Color>
+    public sealed class ConfiguredColor : ConfiguredVariable<Color>
     {
         /// <summary>
         /// An optional ColorOptionConfig for this ConfiguredColor's <see cref="RiskOfOptions.Options.ColorOption"/>

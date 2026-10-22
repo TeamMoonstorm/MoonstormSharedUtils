@@ -9,7 +9,7 @@ namespace MSU.AddressReferencedAssets
     /// A type of AddressReferencedAsset used to reference SkinDefs.
     /// </summary>
     [Serializable]
-    public class AddressReferencedSkinDef : AddressReferencedAsset<SkinDef>
+    public sealed class AddressReferencedSkinDef : AddressReferencedAsset<SkinDef>
     {
         /// <summary>
         /// Wether the SkinDef can be loaded via the catalog utilizing the SkinDef's asset name

@@ -11,7 +11,7 @@ namespace MSU.Config
     /// <br>Also contains necesary info for implementing the Config with Risk of Options.</br>
     /// <br>T is <see cref="KeyboardShortcut"/></br>
     /// </summary>
-    public class ConfiguredKeyBind : ConfiguredVariable<KeyboardShortcut>
+    public sealed class ConfiguredKeyBind : ConfiguredVariable<KeyboardShortcut>
     {
         /// <summary>
         /// An optional KeyBindConfig for this ConfiguredKeyBind's <see cref="RiskOfOptions.Options.KeyBindOption"/>

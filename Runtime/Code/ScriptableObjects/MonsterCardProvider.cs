@@ -15,7 +15,7 @@ namespace MSU
     /// A MonsterCardProvider is a ScriptableObject which is used to contain all of a Monster's DirectorCards, which then will be added to the game's stages using <see cref="DirectorAPI"/>
     /// </summary>
     [CreateAssetMenu(fileName = "New MonsterCardProvider", menuName = "MSU/DirectorCardProviders/MonsterCardProvider")]
-    public class MonsterCardProvider : ScriptableObject
+    public sealed class MonsterCardProvider : ScriptableObject
     {
         /// <summary>
         /// A Dictionary that contains this Monster's <see cref="DirectorCardHolderExtended"/> for vanilla stages, which can be accessed by giving the corresponding key of type <see cref="DirectorAPI.Stage"/>

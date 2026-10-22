@@ -15,7 +15,7 @@ namespace MSU
     /// An InteractableCardProvider is a ScriptableObject which is used to contain all of an Interactable's DirectorCards, which then will be added to the game's stages using <see cref="DirectorAPI"/>
     /// </summary>
     [CreateAssetMenu(fileName = "New InteractableCardProvider", menuName = "MSU/DirectorCardProviders/InteractableCardProvider")]
-    public class InteractableCardProvider : ScriptableObject
+    public sealed class InteractableCardProvider : ScriptableObject
     {
         /// <summary>
         /// A Dictionary that contains this Interactable's <see cref="DirectorCardHolderExtended"/> for vanilla stages, which can be accessed by giving the corresponding key of type <see cref="DirectorAPI.Stage"/>.

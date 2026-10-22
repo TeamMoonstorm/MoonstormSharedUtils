@@ -9,7 +9,7 @@ namespace MSU.Config
     /// The ConfigFactory is a class that can be used to simplify the management of Configuration options from BepInEx.
     /// <br>It can create new config files that can be stored in a separate subfolder for easy management, as well as easily creating new instances of <see cref="ConfiguredVariable{T}"/></br>
     /// </summary>
-    public class ConfigFactory
+    public sealed class ConfigFactory
     {
         /// <summary>
         /// Returns the path to the folder that contains a mod's Config Folder.

@@ -9,7 +9,7 @@ namespace MSU
     /// <br>This in turn allows you to easily implement elites that fit into the existing EliteTiers of Lunar, Tier 1 and Tier 2</br>
     /// </summary>
     [CreateAssetMenu(fileName = "New ExtendedEliteDef", menuName = "MSU/ExtendedEliteDef")]
-    public class ExtendedEliteDef : EliteDef
+    public sealed class ExtendedEliteDef : EliteDef
     {
         [Header("Extended Elite Def specifics")]
         [Tooltip("An enum utilized to add this EliteDef to a vanilla game, each entry represents a different Tier in-game. If you need to handle the addition in a more specific manner, set this to none and add the tier manually on your IEliteContentPiece\n\n" +

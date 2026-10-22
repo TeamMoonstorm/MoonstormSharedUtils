@@ -10,7 +10,7 @@ namespace MSU
     /// <para></para>
     /// This is identical to <see cref="HG.Coroutines.ParallelCoroutine"/>, however this version is pooled, new instances can be requested via <see cref="ParallelCoroutine.RequestFromPool"/> and they can be returned via <see cref="ParallelCoroutine.ReturnToPool(ParallelCoroutine)"/>
     /// </summary>
-    public class ParallelCoroutine : IEnumerator, IDisposable
+    public sealed class ParallelCoroutine : IEnumerator, IDisposable
     {
         private static Stack<ParallelCoroutine> _pool = new Stack<ParallelCoroutine>();
 

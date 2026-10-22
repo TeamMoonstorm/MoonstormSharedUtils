@@ -28,7 +28,7 @@ namespace MSU
     [BepInDependency("xyz.yekoc.Holy", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("iHarbHD.DebugToolkit", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInPlugin(GUID, MODNAME, VERSION)]
-    public class MSUMain : BaseUnityPlugin
+    public sealed class MSUMain : BaseUnityPlugin
     {
         /// <summary>
         /// The GUID for MSU

@@ -11,7 +11,7 @@ namespace MSU
     /// The FormatTokenAttribute is a <see cref="SearchableAttribute"/> that can be used for obtaning values for a Token, which then said token will be formated using said values.
     /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = true)]
-    public class FormatTokenAttribute : SearchableAttribute
+    public sealed class FormatTokenAttribute : SearchableAttribute
     {
         /// <summary>
         /// The language token to be formatted

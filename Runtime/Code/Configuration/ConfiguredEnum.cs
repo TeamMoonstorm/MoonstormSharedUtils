@@ -13,7 +13,7 @@ namespace MSU.Config
     /// <br>T is <typeparamref name="TEnum"/></br>
     /// </summary>
     /// <typeparam name="TEnum">The type of enum this ConfiguredEnum uses</typeparam>
-    public class ConfiguredEnum<TEnum> : ConfiguredVariable<TEnum> where TEnum : Enum
+    public sealed class ConfiguredEnum<TEnum> : ConfiguredVariable<TEnum> where TEnum : Enum
     {
         /// <summary>
         /// An optional ChoiceConfig for this ConfiguredEnum's <see cref="RiskOfOptions.Options.ChoiceOption"/>

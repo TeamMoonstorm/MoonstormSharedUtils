@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace MSU
 {
-    internal class ItemDisplayHelper : MonoBehaviour
+    internal sealed class ItemDisplayHelper : MonoBehaviour
     {
         private CharacterModel _model;
         private ItemDisplayRuleSet _idrs;
