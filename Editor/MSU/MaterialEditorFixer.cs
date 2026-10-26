@@ -22,8 +22,6 @@ namespace MSU.Editor
 
         public void SearchForMaterialsAndSaveMetadata()
         {
-            Shader[] stubbedShaders = GetStubbedShaders();
-
             using var progressBar = new DisposableProgressBar("Material Fixer Searching", "Searching for Materials with stubbed shaders", 0);
 
             string[] guids = AssetDatabase.FindAssets("t:material");
@@ -40,13 +38,20 @@ namespace MSU.Editor
                 progressBar.Update(R2EKMath.Remap(i, 0, foundMaterials.Count, 0, 1f), null, $"Processing material {i + 1} out of {foundMaterials.Count}");
                 var material = foundMaterials[i];
 
-                if(stubbedShaders.Contains(material.shader))
+                //Ignore subasset materials
+                if(AssetDatabase.IsSubAsset(material))
+                {
+                    continue;
+                }
+
+                if(material.shader && material.shader.name.StartsWith("Stubbed"))
                 {
                     materialToShaderNames.Add(new MaterialToShaderName
                     {
                         materialAsset = material,
                         shaderName = material.shader.name
                     });
+
                 }
             }
 
