@@ -1,3 +1,8 @@
+# '2.6.3' - Hotfix
+
+* Fixed an issue where sometimes cards added by the ``MonsterCardProvider``and the ``InteractableCardProvider`` would create cateogires with weight 0 under specific circumstances.
+* 3.0.0 is still planned to be the next major version.
+
 # '2.6.2' - Beginning of the End
 
 * This is a **Transitory Release** for MSU, unless a new patch is released, the next big version will be MSU 3.0.0
