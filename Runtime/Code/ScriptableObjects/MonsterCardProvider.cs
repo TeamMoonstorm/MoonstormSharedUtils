@@ -190,7 +190,7 @@ namespace MSU
                     },
                     MonsterCategory = other.monsterCategory,
                     CustomMonsterCategory = other.monsterCategory == DirectorAPI.MonsterCategory.Custom ? other.customCategoryName : null,
-                    MonsterCategorySelectionWeight = other.monsterCategory == DirectorAPI.MonsterCategory.Custom ? other.customCategoryWeight : 0,
+                    MonsterCategorySelectionWeight = other.monsterCategory == DirectorAPI.MonsterCategory.Custom ? other.customCategoryWeight : 1,
 
                     InteractableCategorySelectionWeight = 0,
                     CustomInteractableCategory = null,
