@@ -402,7 +402,6 @@ namespace MSU.Editor.Inspectors
             serializedObject.ApplyModifiedProperties();
         }
 
-        [MenuItem("Assets/Create/MSU/Material Variant")]
         private static void CreateInstance()
         {
             var path = AssetDatabase.GetAssetPath(Selection.activeObject);

@@ -17,6 +17,7 @@ namespace MSU.Editor
         [SerializeField]
         private List<ShaderPair> _shaderPairs = new List<ShaderPair>();
 
+        [Obsolete("The yaml to hlsl is deprecated as there's no method of obtaining valid YAML shaders anymore")]
         public static Dictionary<Shader, Shader> yamlToHlsl
         {
             get
@@ -45,6 +46,8 @@ namespace MSU.Editor
             }
         }
         private static Dictionary<Shader, Shader> _yamlToHlsl;
+
+        [Obsolete("The yaml to hlsl is deprecated as there's no method of obtaining valid YAML shaders anymore")]
         public static Dictionary<Shader, Shader> hlslToYaml
         {
             get
