@@ -12,8 +12,24 @@ using UnityEditor;
 
 namespace MSU
 {
+    /// <summary>
+    /// A <see cref="MaterialDefinition"/> is a <see cref="ScriptableObject"/> that allows you to define and create materials via custom properties. It is a replacement for <see cref="MaterialVariant"/> and the "AddressableMaterialShader" system in MSU 2.0
+    /// <br></br>
+    /// When created in the editor, the MaterialDefinition will create a sub-asset material, which will be marked as not editable, this sub-asset is the material itself, selecting the ScriptableObject allows you to define an original material via either a direct material reference (<see cref="originalMaterialAsset"/>), or via an addressable material reference (<see cref="originalMaterialAddress"/>). Once assigned, all it's values will be copied over to the MAterial Definition's sub-asset material.
+    /// <br></br>
+    /// When the original material is present, you'll be able to specify Shader Property Overrides, which in turn are applied to the material variant.
+    /// <para></para>
+    /// To migrate from the old deprecated systems to a material definition, you can do the following for each type:
+    /// <list type="bullet">
+    /// <item>Material Variant: Create a Material Definition, assign <see cref="originalMaterialAsset"/> or <see cref="originalMaterialAddress"/>, and apply properties.</item>
+    /// <item>AddressableMaterialShader: Create a Material Definition, and assign <see cref="originalMaterialAddress"/></item>
+    /// </list>
+    /// </summary>
     public sealed class MaterialDefinition : ScriptableObject
-    {
+    {        
+        /// <summary>
+        /// Represents a Shader Property that can be serialized within a <see cref="MaterialVariant"/>
+        /// </summary>
         [Serializable]
         public struct SerializedMaterialProperty
         {
@@ -148,20 +164,23 @@ namespace MSU
             Int
         }
 
-#if UNITY_EDITOR
-        public static readonly List<MaterialDefinition> _materialDefinitionInstances = new List<MaterialDefinition>();
-#endif
-
+        [Tooltip("A direct reference to the original material, when assigned, all of it's properties will be assigned to the material instance field.")]
         public Material originalMaterialAsset;
+        [Tooltip("An addressable reference to the original material, when assigned, all of it's properties except texture references will be assigned to the material instance field.")]
         public AssetReferenceT<Material> originalMaterialAddress = new AssetReferenceT<Material>("");
 
+        /// <summary>
+        /// Access to the defined material by the MaterialDefinition
+        /// </summary>
         public Material material => _material;
         [Tooltip("The material variant itself, cannot be overriden or edited directly, utilize the \"Property Overrides\" field instead.")]
         [SerializeField, ReadOnly]
         internal Material _material;
 
         [Space(10)]
+        [Tooltip("Used to override the render queue of the original material.")]
         public int renderQueue;
+        [Tooltip("An array of SerializedMaterialProperties, used to override shader properties for the material definition")]
         public SerializedMaterialProperty[] propertyOverrides = Array.Empty<SerializedMaterialProperty>();
 
         private void OnValidate()
@@ -184,11 +203,6 @@ namespace MSU
 #endif
             }
         }
-
-#if UNITY_EDITOR
-        private void OnEnable() => _materialDefinitionInstances.Add(this);
-        private void OnDisable() => _materialDefinitionInstances.Remove(this);
-#endif
 
         public IEnumerator ApplyOverrides()
         {

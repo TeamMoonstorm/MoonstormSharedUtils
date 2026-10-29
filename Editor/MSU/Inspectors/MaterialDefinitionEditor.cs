@@ -42,7 +42,7 @@ namespace MSU.Editor.Inspectors
         ObjectField materialInstanceField;
         SerializedProperty materialInstanceProperty;
 
-        IntegerField renderQueueField;
+        //IntegerField renderQueueField;
         SerializedProperty renderQueueProperty;
 
         IMGUIContainer propertyOverridesIMGUIContainer;
@@ -64,8 +64,8 @@ namespace MSU.Editor.Inspectors
             materialInstanceField.SetEnabled(false);
 
             renderQueueProperty = serializedObject.FindProperty("renderQueue");
-            renderQueueField = root.Q<IntegerField>("RenderQueue");
-            renderQueueField.bindingPath = renderQueueProperty.propertyPath;
+            //renderQueueField = root.Q<IntegerField>("RenderQueue");
+            //renderQueueField.bindingPath = renderQueueProperty.propertyPath;
 
             propertyOverridesIMGUIContainer = root.Q<IMGUIContainer>();
             propertyOverridesIMGUIContainer.onGUIHandler = DrawPropertyOverrides;
@@ -136,6 +136,7 @@ namespace MSU.Editor.Inspectors
 
         private void OnOriginalMaterialReferenceChanged(object reference)
         {
+            int baseRenderQueue = -1;
             if(reference is null)
             {
                 propertyOverridesIMGUIContainer.onGUIHandler = NoReferenceSetHelpBox;
@@ -147,10 +148,11 @@ namespace MSU.Editor.Inspectors
             else if(reference is Material material)
             {
                 propertyOverridesIMGUIContainer.onGUIHandler = DrawPropertyOverrides;
+                baseRenderQueue = material.renderQueue;
             }
 
             //Apply the editor
-            ApplyEditor((MaterialDefinition)serializedObject.targetObject);
+            ApplyEditor((MaterialDefinition)serializedObject.targetObject, updateRenderQueue: true);
 
             //Retrieve shader metadata, which will let us use the dropdowns
             RetrieveShaderMetadata(materialInstanceProperty.objectReferenceValue as Material);
@@ -220,6 +222,18 @@ namespace MSU.Editor.Inspectors
         private void DrawPropertyOverrides()
         {
             serializedObject.Update();
+
+            EditorGUI.BeginChangeCheck();
+            _materialEditorForCopy.RenderQueueField();
+            if(EditorGUI.EndChangeCheck())
+            {
+                //Store the new render queue from the copy
+                renderQueueProperty.intValue = _materialInstanceCopy.renderQueue;
+                //Apply modified properties
+                serializedObject.ApplyModifiedProperties();
+                //Apply editor
+                ApplyEditor(serializedObject.targetObject as MaterialDefinition);
+            }
 
             propertyOverridesProperty.isExpanded = EditorGUILayout.Foldout(propertyOverridesProperty.isExpanded, propertyOverridesProperty.GetGUIContent(), true);
 
@@ -402,7 +416,7 @@ namespace MSU.Editor.Inspectors
             EditorGUIUtility.PingObject(instance);
         }
 
-        public static void ApplyEditor(MaterialDefinition instance)
+        public static void ApplyEditor(MaterialDefinition instance, bool updateRenderQueue = false)
         {
             if (!instance.originalMaterialAsset && instance.originalMaterialAddress.RuntimeKeyIsValid() == false)
             {
@@ -435,13 +449,22 @@ namespace MSU.Editor.Inspectors
                 }
             }
 
-            MSULog.Info($"Applying overrides to {instance}");
-
             //Copy the shader, if its an addressable material, store the stubbed shader.
             if(isUsingAddressableMaterial)
             {
                 if (ShaderDictionary.addressableShaderNameToStubbed.TryGetValue(materialToUse.shader.name, out var stubbed) == false)
                 {
+                    if (ShaderDictionary.IsEmpty())
+                    {
+                        bool takeMeThere = EditorUtility.DisplayDialog("Shader Dictionary Empty", "It seems you're trying to use an addressable material in a Material Definition but the shader dictionary is empty. Consider opening the Shader Dictionary, clicking \"Add Default Stubbed Shaders\", followed by \"Reload Internal Dictionary\" and \"Save\". This will let you use the Addressable Material Shader in the editor", "Take me There", "Get me out of this material.");
+
+                        if(takeMeThere)
+                        {
+                            ShaderDictionary.OpenSettings();
+                        }
+                        Selection.activeObject = null;
+                        return;
+                    }
                     MSULog.Warning($"Cannot apply overrides to {instance}. The loaded addressable material's shader doesnt have a stubbed counterpart in the project. You should file a bug report so the stubbed shaders are updated.");
                     return;
                 }
@@ -474,6 +497,13 @@ namespace MSU.Editor.Inspectors
             {
                 instance.material.CopyPropertiesFromMaterial(materialToUse);
             }
+
+            //this is set to true by the editor when the material reference changes.
+            if(updateRenderQueue)
+            {
+                instance.renderQueue = materialToUse.renderQueue;
+            }
+
             instance.material.renderQueue = instance.renderQueue;
 
             foreach (var propOverride in instance.propertyOverrides)

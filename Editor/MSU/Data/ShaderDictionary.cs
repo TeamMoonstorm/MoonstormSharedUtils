@@ -220,8 +220,10 @@ namespace MSU.Editor
             }
         }
 
+        public static bool IsEmpty() => instance._shaderPairs.Count == 0;
+
         [MenuItem(MSUConstants.MSU_MENU_ROOT + "Shaders/Shader Dictionary", priority = -1000000)]
-        public static void OpenSettings() => SettingsService.OpenProjectSettings("Project/R2EK Editor Settings");
+        public static void OpenSettings() => SettingsService.OpenProjectSettings("Shader Dictionary");
 
         [Serializable]
         public class ShaderPair
