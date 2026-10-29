@@ -191,7 +191,7 @@ namespace MSU
                     },
                     InteractableCategory = other.interactableCategory,
                     CustomInteractableCategory = other.interactableCategory == DirectorAPI.InteractableCategory.Custom ? other.customCategoryName : null,
-                    InteractableCategorySelectionWeight = other.interactableCategory == DirectorAPI.InteractableCategory.Custom ? other.customCategoryWeight : 0,
+                    InteractableCategorySelectionWeight = other.interactableCategory == DirectorAPI.InteractableCategory.Custom ? other.customCategoryWeight : 1,
 
                     MonsterCategorySelectionWeight = 0,
                     CustomMonsterCategory = null,
