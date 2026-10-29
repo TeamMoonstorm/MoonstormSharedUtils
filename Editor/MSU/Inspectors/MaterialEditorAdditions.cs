@@ -39,7 +39,13 @@ namespace MSU.Editor.Inspectors
                 _objectInstances.Add(targetMaterial.GetInstanceID());
                 if(AssetDatabase.GetMainAssetTypeAtPath(AssetDatabase.GetAssetPath(targetMaterial)) == typeof(MaterialVariant))
                 {
+                    EditorGUILayout.HelpBox($"Material Variants are deprecated, migrate to MaterialDefinition", MessageType.Warning);
+
                     AssetDatabase.LoadAssetAtPath<MaterialVariant>(AssetDatabase.GetAssetPath(targetMaterial)).ApplyEditor();
+                }
+                if (AssetDatabase.GetMainAssetTypeAtPath(AssetDatabase.GetAssetPath(targetMaterial)) == typeof(MaterialDefinition))
+                {
+                    MaterialDefinitionEditor.ApplyEditor(AssetDatabase.LoadAssetAtPath<MaterialDefinition>(AssetDatabase.GetAssetPath(targetMaterial)));
                 }
                 return;
             }
@@ -112,6 +118,8 @@ namespace MSU.Editor.Inspectors
 
         private static void ShowAboutLabel()
         {
+            EditorGUILayout.HelpBox($"The AddressableMaterialShader system is deprecated as it is too unstable in the editor. It is extremely recommended to update it to a MaterialDefintion instead.", MessageType.Warning);
+
             EditorGUILayout.LabelField(new GUIContent("About the AddressableMaterialShader (Hover me!)", "The AddressableMaterialShader is a custom addressable material solution from MSU, it stores the Addressable Material's address in the \"Address\" field.\n" +
                 "Later at Runtime, calling your AssetsLoader's FinalizeMaterialsWithAddressableMaterialShader() method will copy the properties and shader of the addressable material to this isntance, effectively allowing you to reference it ingame."));
         }

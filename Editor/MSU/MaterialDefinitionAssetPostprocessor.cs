@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using MSU.Editor.Inspectors;
 using UnityEditor;
@@ -5,7 +6,8 @@ using UnityEngine;
 
 namespace MSU.Editor
 {
-    public class MaterialVariantAssetPostprocessor : AssetModificationProcessor
+    [Obsolete]
+    public class MaterialDefinitionAssetPostprocessor : AssetModificationProcessor
     {
         static string[] OnWillSaveAssets(string[] paths)
         {
@@ -18,7 +20,8 @@ namespace MSU.Editor
                 }
 
                 var material = AssetDatabase.LoadAssetAtPath<Material>(path);
-                foreach(var matVariant in MaterialVariant.instances)
+                //deprecated
+                foreach (var matVariant in MaterialVariant.instances)
                 {
                     if(matVariant.originalMaterial != material)
                     {
