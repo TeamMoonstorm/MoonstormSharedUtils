@@ -116,22 +116,18 @@ namespace MSU.Editor.Inspectors
             });
             materialAssetField.SetDisplay(GetMaterialAddress().IsEmpty() == true);
 
-            //Apply the editor
-            ApplyEditor((MaterialDefinition)serializedObject.targetObject);
-
-            //Retrieve shader metadata, which will let us use the dropdowns
-            RetrieveShaderMetadata(materialInstanceProperty.objectReferenceValue as Material);
-
-            if(_materialInstanceCopy)
+            var materialAddress = GetMaterialAddress();
+            object value = null;
+            if(!materialAddress.IsEmpty())
             {
-                DestroyImmediate(_materialInstanceCopy);
+                value = materialAddress;
             }
-            _materialInstanceCopy = new Material((Material)materialInstanceProperty.objectReferenceValue);
-            if(_materialEditorForCopy)
+            else if(materialAssetProperty.objectReferenceValue)
             {
-                DestroyImmediate(_materialEditorForCopy);
+                value = materialAssetProperty.objectReferenceValue;
             }
-            _materialEditorForCopy = (MaterialEditor)MaterialEditor.CreateEditor(_materialInstanceCopy);
+
+            OnOriginalMaterialReferenceChanged(value);
         }
 
         private void OnOriginalMaterialReferenceChanged(object reference)
@@ -405,15 +401,10 @@ namespace MSU.Editor.Inspectors
 
             AssetDatabase.AddObjectToAsset(material, instance);
 
-            AssetDatabase.SaveAssets();
-
             instance._material = material;
 
             EditorUtility.SetDirty(instance);
             AssetDatabase.SaveAssetIfDirty(instance);
-
-            Selection.activeObject = instance;
-            EditorGUIUtility.PingObject(instance);
         }
 
         public static void ApplyEditor(MaterialDefinition instance, bool updateRenderQueue = false)
