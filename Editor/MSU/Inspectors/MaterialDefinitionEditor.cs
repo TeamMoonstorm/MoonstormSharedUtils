@@ -90,7 +90,7 @@ namespace MSU.Editor.Inspectors
                     serializedObject.FindProperty("originalMaterialAsset").objectReferenceValue = null;
                 }
 
-                OnOriginalMaterialReferenceChanged(materialAddress.IsEmpty() ? null : materialAddress);
+                OnOriginalMaterialReferenceChanged();
             });
             materialAddressField.SetDisplay(materialAssetProperty.objectReferenceValue == null);
 
@@ -112,26 +112,25 @@ namespace MSU.Editor.Inspectors
                 }
 
                 materialAssetField.MarkDirtyRepaint();
-                OnOriginalMaterialReferenceChanged(asset);
+                OnOriginalMaterialReferenceChanged();
             });
             materialAssetField.SetDisplay(GetMaterialAddress().IsEmpty() == true);
-
-            var materialAddress = GetMaterialAddress();
-            object value = null;
-            if(!materialAddress.IsEmpty())
-            {
-                value = materialAddress;
-            }
-            else if(materialAssetProperty.objectReferenceValue)
-            {
-                value = materialAssetProperty.objectReferenceValue;
-            }
-
-            OnOriginalMaterialReferenceChanged(value);
+            OnOriginalMaterialReferenceChanged();
         }
 
-        private void OnOriginalMaterialReferenceChanged(object reference)
+        private void OnOriginalMaterialReferenceChanged()
         {
+            object reference = null;
+            var materialAddress = GetMaterialAddress();
+            if (!materialAddress.IsEmpty())
+            {
+                reference = materialAddress;
+            }
+            else if (materialAssetProperty.objectReferenceValue)
+            {
+                reference = materialAssetProperty.objectReferenceValue;
+            }
+
             int baseRenderQueue = -1;
             if(reference is null)
             {
