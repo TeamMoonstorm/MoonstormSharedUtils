@@ -14,11 +14,7 @@ namespace MSU
     {
         private static HashSet<Material> _addressableMaterials = new HashSet<Material>();
 
-        /// <summary>
-        /// A Coroutine that's used to finalize the AddressableMaterialShaders found inside the assetbundles specified in <paramref name="assetBundles"/>
-        /// </summary>
-        /// <param name="assetBundles">The assetbundles to check</param>
-        /// <returns>A Coroutine which can be yielded or awaited</returns>
+        [Obsolete("AddressableMaterialShader is obsolete and should not be used. Migrate them to MaterialDefinitions instead.")]
         public static IEnumerator LoadAddressableMaterialShadersAsync(AssetBundle[] assetBundles)
         {
             using ParallelCoroutine helper = ParallelCoroutine.RequestFromPool();
@@ -26,7 +22,7 @@ namespace MSU
             var list = new List<Material>();
             foreach (var bundle in assetBundles)
             {
-                helper.Add(LoadMaterialsFromBundle(bundle, list, IsShaderAddressableShader));
+                helper.Add(LoadAssetsFromBundle(bundle, list, IsShaderAddressableShader));
             }
 
             while (!helper.IsDone())
@@ -38,16 +34,12 @@ namespace MSU
 
         }
 
-        /// <summary>
-        /// A Coroutine that's used to finalize the AddressableMaterialShaders found inside the specified AssetBundle in <paramref name="bundle"/>
-        /// </summary>
-        /// <param name="bundle">The assetbundle to check</param>
-        /// <returns>A Coroutine which can be yielded or awaited</returns>
+        [Obsolete("AddressableMaterialShader is obsolete and should not be used. Migrate them to MaterialDefinitions instead.")]
         public static IEnumerator LoadAddressableMaterialShadersAsync(AssetBundle bundle)
         {
             var list = new List<Material>();
 
-            var enumerator = LoadMaterialsFromBundle(bundle, list, IsShaderAddressableShader);
+            var enumerator = LoadAssetsFromBundle(bundle, list, IsShaderAddressableShader);
             while (enumerator.MoveNext())
                 yield return null;
 
@@ -56,11 +48,7 @@ namespace MSU
                 yield return null;
         }
 
-        /// <summary>
-        /// A Coroutine that's used to finalize the AddressableMaterialShaders found inside the specified List in <paramref name="materials"/>
-        /// </summary>
-        /// <param name="materials">The materials to check</param>
-        /// <returns>A Coroutine which can be yielded or awaited</returns>
+        [Obsolete("AddressableMaterialShader is obsolete and should not be used. Migrate them to MaterialDefinitions instead.")]
         public static IEnumerator LoadAddressableMaterialShadersAsync(List<Material> materials)
         {
             using var helper = ParallelCoroutine.RequestFromPool();
@@ -75,12 +63,89 @@ namespace MSU
 
         }
 
-        /// <summary>
-        /// A Coroutine that's used to finalize the material <paramref name="material"/> which has an AddressableMaterialShader
-        /// </summary>
-        /// <param name="material">The material to finalize</param>
-        /// <returns>A Coroutine which can be yielded or awaited</returns>
+        [Obsolete("AddressableMaterialShader is obsolete and should not be used. Migrate them to MaterialDefinitions instead.")]
         public static IEnumerator LoadAddressableMaterialShadersAsync(Material material) => LoadRealMaterialAndCopyProperties(material);
+
+        /// <summary>
+        /// A Coroutine that's used to initialize all <see cref="MaterialDefinition"/>s inside <paramref name="assetBundles"/>, and storing the material instances in a hash set so it doesnt get lost.
+        /// </summary>
+        /// <param name="bundle">The asset bundles to finalize all of their MaterialDefinitions</param>
+        /// <returns>A coroutine which can be yielded or awaited</returns>
+        public static IEnumerator InitializeMaterialDefinitionsAsync(AssetBundle[] assetBundles)
+        {
+            using ParallelCoroutine helper = ParallelCoroutine.RequestFromPool();
+
+            var materialDefinitions = new List<MaterialDefinition>();
+            foreach (var bundle in assetBundles)
+            {
+                helper.Add(LoadAssetsFromBundle(bundle, materialDefinitions, null));
+            }
+
+            while (!helper.isDone)
+            {
+                yield return null;
+            }
+
+            var finalizeMaterialDefinitionsAsync = InitializeMaterialDefinitionsAsync(materialDefinitions);
+            while (finalizeMaterialDefinitionsAsync.MoveNext())
+            {
+                yield return null;
+            }
+        }
+
+        /// <summary>
+        /// A Coroutine that's used to initialize all <see cref="MaterialDefinition"/>s inside <paramref name="bundle"/>, and storing the material instances in a hash set so it doesnt get lost.
+        /// </summary>
+        /// <param name="bundle">The asset bundle to finalize all of it's MaterialDefinitions</param>
+        /// <returns>A coroutine which can be yielded or awaited</returns>
+        public static IEnumerator InitializeMaterialDefinitionsAsync(AssetBundle bundle)
+        {
+            List<MaterialDefinition> materialDefinitions = new List<MaterialDefinition>();
+
+            var enumerator = LoadAssetsFromBundle(bundle, materialDefinitions, null);
+
+            while(enumerator.MoveNext())
+            {
+                yield return null;
+            }
+
+            var finalizeMaterialDefinitionsAsync = InitializeMaterialDefinitionsAsync(materialDefinitions);
+            while(finalizeMaterialDefinitionsAsync.MoveNext())
+            {
+                yield return null;
+            }
+        }
+
+        /// <summary>
+        /// A Coroutine that's used to initialize the <paramref name="materialDefinitions"/>, and storing the material instances in a hash set so it doesnt get lost.
+        /// </summary>
+        /// <param name="materialDefinitions">The material definitions to finalize</param>
+        /// <returns>A coroutine which can be yielded or awaited</returns>
+        public static IEnumerator InitializeMaterialDefinitionsAsync(List<MaterialDefinition> materialDefinitions)
+        {
+            using var helper = ParallelCoroutine.RequestFromPool();
+
+            foreach(var material in materialDefinitions)
+            {
+                helper.Add(InitializeMaterialDefinitionsAsync(material));
+            }
+
+            while(!helper.isDone)
+            {
+                yield return null;
+            }
+        }
+
+        /// <summary>
+        /// A Coroutine that's used to initialize the <paramref name="materialDefinition"/>, and storing the material instance in a hash set so it doesnt get lost.
+        /// </summary>
+        /// <param name="materialDefinition">The material definition to finalize</param>
+        /// <returns>A coroutine which can be yielded or awaited</returns>
+        public static IEnumerator InitializeMaterialDefinitionsAsync(MaterialDefinition materialDefinition)
+        {
+            _addressableMaterials.Add(materialDefinition._material);
+            return materialDefinition.InitializeDefinition();
+        }
 
         /// <summary>
         /// A Coroutine that's used to swap the stubbed shaders found in the AssetBundles specified in <paramref name="bundles"/>
@@ -94,7 +159,7 @@ namespace MSU
             List<Material> materials = new List<Material>();
             foreach (var bundle in bundles)
             {
-                helper.Add(LoadMaterialsFromBundle(bundle, materials, IsShaderStubbedShader));
+                helper.Add(LoadAssetsFromBundle(bundle, materials, IsShaderStubbedShader));
             }
 
             while (!helper.IsDone())
@@ -140,16 +205,22 @@ namespace MSU
         /// <returns>A Coroutine which can be yielded or awaited</returns>
         public static IEnumerator SwapStubbedShadersAsync(Material material) => ShaderSwapper.ShaderSwapper.UpgradeStubbedShaderAsync(material);
 
-        private static IEnumerator LoadMaterialsFromBundle(AssetBundle bundle, List<Material> materials, Func<Material, bool> filter = null)
+        private static IEnumerator LoadAssetsFromBundle<T>(AssetBundle bundle, List<T> loadedAssets, Func<T, bool> filter = null)
         {
             if (bundle.isStreamedSceneAssetBundle)
                 yield break;
 
-            var request = bundle.LoadAllAssetsAsync<Material>();
+            var request = bundle.LoadAllAssetsAsync<T>();
             while (!request.isDone)
                 yield return null;
 
-            materials.AddRange(request.allAssets.OfType<Material>().Where(filter));
+            foreach (var asset in request.allAssets)
+            {
+                if (asset is T tAsset && (filter?.Invoke(tAsset) ?? true))
+                {
+                    loadedAssets.Add(tAsset);
+                }
+            }
         }
 
         private static IEnumerator LoadRealMaterialAndCopyProperties(Material material)

@@ -86,37 +86,6 @@ namespace MSU
             {
                 return (T)GetValue();
             }
-
-            /// <summary>
-            /// Assigns the value <paramref name="value"/> to this <see cref="SerializedMaterialProperty"/>
-            /// <para>This does not set the <see cref="propertyType"/>, if the <see cref="propertyType"/> does not match the value of <typeparamref name="T"/>, no value will be set.</para>
-            /// </summary>
-            /// <typeparam name="T">The type of value to set</typeparam>
-            /// <param name="value">The value itself</param>
-            public void SetValue<T>(T value)
-            {
-                switch (value)
-                {
-                    case Color c when propertyType == ShaderPropertyType.Color:
-                        _colorValue = c;
-                        break;
-                    case Vector4 v when propertyType == ShaderPropertyType.Vector:
-                        _vectorValue = v;
-                        break;
-                    case float f when propertyType == ShaderPropertyType.Range:
-                        _floatValue = f;
-                        break;
-                    case float f when propertyType == ShaderPropertyType.Float:
-                        _floatValue = f;
-                        break;
-                    case int f when propertyType == ShaderPropertyType.Int:
-                        _floatValue = f;
-                        break;
-                    case TextureReference tr when propertyType == ShaderPropertyType.TexEnv:
-                        _textureReference = tr;
-                        break;
-                }
-            }
         }
 
         /// <summary>
@@ -204,9 +173,22 @@ namespace MSU
             }
         }
 
-        public IEnumerator ApplyOverrides()
+        /// <summary>
+        /// Initializes the definition by doing the following steps inside a coroutine:
+        /// <list type="number">
+        /// <item>Retrieving the Original Material, which can be from <see cref="originalMaterialAsset"/> or <see cref="originalMaterialAddress"/></item>
+        /// <item>Assining the shader from the original material to <see cref="material"/></item>
+        /// <item>Copying over all the properties from the original material to <see cref="material"/></item>
+        /// <item>Assigning the <see cref="renderQueue"/> to <see cref="material"/></item>
+        /// <item>Applying any <see cref="propertyOverrides"/> to <see cref="material"/></item>
+        /// </list>
+        /// <para></para>
+        /// It is recommended to utilize the methods for <see cref="MaterialDefinition"/> in <see cref="ShaderUtil"/>, as those methods can initialize them in bulk easily.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator InitializeDefinition()
         {
-            if(!originalMaterialAsset || originalMaterialAddress.RuntimeKeyIsValid() == false)
+            if(!originalMaterialAsset && originalMaterialAddress.RuntimeKeyIsValid() == false)
             {
                 MSULog.Warning($"Cannot apply overrides to {this} as there's no original material asset or address!");
             }
@@ -222,7 +204,10 @@ namespace MSU
                 }
 
                 loadHandle = Addressables.LoadAssetAsync<Material>(originalMaterialAddress.RuntimeKey);
-                yield return loadHandle;
+                while(!loadHandle.Value.IsDone)
+                {
+                    yield return null;
+                }
 
                 if(loadHandle.Value.Status == AsyncOperationStatus.Succeeded)
                 {
