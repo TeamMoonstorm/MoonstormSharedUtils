@@ -439,6 +439,15 @@ namespace MSU.Editor.Inspectors
                 }
             }
 
+            if(!materialToUse)
+            {
+                if(EditorUtility.DisplayDialog("MaterialDefinition Broken", "MaterialDefinition is broken as the addressables system got borked (did you rebuild assetbundles via the AssetbundleBrowser?).\r\nYou can fix it by triggering a domain reload.", "Trigger domain reload", "Get me out of here"))
+                {
+                    EditorUtility.RequestScriptReload();
+                }
+                return;
+            }
+
             //Copy the shader, if its an addressable material, store the stubbed shader.
             if(isUsingAddressableMaterial)
             {
