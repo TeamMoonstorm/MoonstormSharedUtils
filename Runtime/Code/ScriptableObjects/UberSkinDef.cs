@@ -483,7 +483,7 @@ namespace MSU
                 yield return null;
             }
 
-            ParallelCoroutine parallelCoroutine = ParallelCoroutine.RequestFromPool();
+            using MSUParallelCoroutine parallelCoroutine = MSUParallelCoroutine.RequestFromPool();
 
             parallelCoroutine.Add(ResolveBaseSkins());
             parallelCoroutine.Add(ResolveRendererInfos());
@@ -498,8 +498,6 @@ namespace MSU
             {
                 yield return null;
             }
-
-            ParallelCoroutine.ReturnToPool(parallelCoroutine);
         }
 
         private IEnumerator ResolveRootObject()

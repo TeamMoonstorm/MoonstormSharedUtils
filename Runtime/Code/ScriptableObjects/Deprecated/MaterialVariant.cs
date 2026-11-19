@@ -62,7 +62,7 @@ namespace MSU
 
         /// <summary>
         /// Applies any and all overrides found within the <see cref="MaterialVariant"/>'s property voerrides.
-        /// <para>This is a Coroutine, as it awaits until the <see cref="material"/>'s shader is not MSU's Addressable Shader, this method should be called either after you load all your materials to swap them using <see cref="ShaderUtil.LoadAddressableMaterialShadersAsync(AssetBundle)"/>'s methods, or on a <see cref="ParallelCoroutine"/>/<see cref="ParallelMultiStartCoroutine"/> to ensure the while condition eventually returns false.</para>
+        /// <para>This is a Coroutine, as it awaits until the <see cref="material"/>'s shader is not MSU's Addressable Shader, this method should be called either after you load all your materials to swap them using <see cref="ShaderUtil.LoadAddressableMaterialShadersAsync(AssetBundle)"/>'s methods, or on a <see cref="MSUParallelCoroutine"/>/<see cref="ParallelMultiStartCoroutine"/> to ensure the while condition eventually returns false.</para>
         /// </summary>
         /// <returns>A Coroutine that can be awaited.</returns>
         public IEnumerator ApplyOverrides()

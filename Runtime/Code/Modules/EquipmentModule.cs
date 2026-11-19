@@ -323,7 +323,7 @@ namespace MSU
             IContentPiece<EquipmentDef>[] content = provider.GetContents();
             List<IContentPiece<EquipmentDef>> equipments = new List<IContentPiece<EquipmentDef>>();
 
-            var helper = ParallelCoroutine.RequestFromPool();
+            using var helper = MSUParallelCoroutine.RequestFromPool();
 
             foreach (var equipment in content)
             {
@@ -337,7 +337,6 @@ namespace MSU
             while (helper.MoveNext())
                 yield return null;
 
-            ParallelCoroutine.ReturnToPool(helper);
 
             var subroutine =InitializeEquipments(plugin, equipments, provider);
             while (subroutine.MoveNext())
@@ -346,7 +345,7 @@ namespace MSU
 
         private static IEnumerator InitializeEquipments(BaseUnityPlugin plugin, List<IContentPiece<EquipmentDef>> equipments, IContentPieceProvider<EquipmentDef> provider)
         {
-            ParallelCoroutine initializeAsyncCoroutine = ParallelCoroutine.RequestFromPool();
+            using MSUParallelCoroutine initializeAsyncCoroutine = MSUParallelCoroutine.RequestFromPool();
 
             foreach (var equipment in equipments)
             {
@@ -412,7 +411,6 @@ namespace MSU
                 yield return null;
             }
 
-            ParallelCoroutine.ReturnToPool(initializeAsyncCoroutine);
         }
     }
 }

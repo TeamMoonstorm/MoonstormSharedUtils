@@ -38,13 +38,13 @@ namespace MSU
         }
 
         /// <summary>
-        /// Creates a <see cref="MSU.ParallelCoroutine"/> for the provided mod. The ParallelCoroutine will have each <see cref="AsyncAssetLoadAttribute"/> method called and added to it.
+        /// Creates a <see cref="MSU.MSUParallelCoroutine"/> for the provided mod. The ParallelCoroutine will have each <see cref="AsyncAssetLoadAttribute"/> method called and added to it.
         /// <para></para>
         /// Be sure to return it to the pool once youre done with it
         /// </summary>
         /// <param name="plugin">The plugin requesting the call</param>
         /// <returns></returns>
-        public static ParallelCoroutine CreateParallelCoroutineForMod(BaseUnityPlugin plugin)
+        public static MSUParallelCoroutine CreateParallelCoroutineForMod(BaseUnityPlugin plugin)
         {
             var instances = SearchableAttribute.GetInstances<AsyncAssetLoadAttribute>();
             if (instances == null)
@@ -52,7 +52,7 @@ namespace MSU
 #if DEBUG
                 MSULog.Info($"No instances of AsyncAssetLoadAttribute found in the current runtime context.");
 #endif
-                return ParallelCoroutine.RequestFromPool();
+                return MSUParallelCoroutine.RequestFromPool();
             }
 
             List<AsyncAssetLoadAttribute> attributesForMod = instances.Where(IsValid).Where(att => IsFromMod((AsyncAssetLoadAttribute)att, plugin)).Cast<AsyncAssetLoadAttribute>().ToList();
@@ -71,9 +71,9 @@ namespace MSU
             return result;
         }
 
-        private static ParallelCoroutine CreateCoroutineForMod(List<AsyncAssetLoadAttribute> attributes)
+        private static MSUParallelCoroutine CreateCoroutineForMod(List<AsyncAssetLoadAttribute> attributes)
         {
-            var result = ParallelCoroutine.RequestFromPool();
+            var result = MSUParallelCoroutine.RequestFromPool();
             foreach (var attribute in attributes)
             {
                 result.Add((IEnumerator)attribute.targetMethodInfo.Invoke(null, null));

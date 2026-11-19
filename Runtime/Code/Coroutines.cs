@@ -142,18 +142,11 @@ namespace MSU
         }
     }
 
-    /// <summary>
-    /// A Coroutine that's used to process multiple coroutines in parallel.
-    /// <para></para>
-    /// This is identical to <see cref="HG.Coroutines.ParallelCoroutine"/>, however this version is pooled, new instances can be requested via <see cref="ParallelCoroutine.RequestFromPool"/> and they can be returned via <see cref="ParallelCoroutine.ReturnToPool(ParallelCoroutine)"/>
-    /// </summary>
+    [Obsolete("This class has been renamed to \"MSUParallelCoroutine\" to give it a different name compared to the base game ParallelCoroutine. Replace any usages of MSU.ParallelCoroutine with MSUParallelCoroutine", error: true)]
     public class ParallelCoroutine : IEnumerator
     {
         private static Stack<ParallelCoroutine> _pool = new Stack<ParallelCoroutine>();
 
-        /// <summary>
-        /// Requests a ParallelCoroutine from the pool
-        /// </summary>
         public static ParallelCoroutine RequestFromPool()
         {
             if(_pool.TryPop(out var coroutine))
@@ -165,11 +158,99 @@ namespace MSU
 #pragma warning restore CS0618 // Type or member is obsolete
         }
 
+        public static void ReturnToPool(ParallelCoroutine coroutine)
+        {
+            coroutine.Reset();
+            _pool.Push(coroutine);
+        }
+
+        private readonly List<IEnumerator> _coroutinesList = new List<IEnumerator>();
+
+        private IEnumerator _internalCoroutine;
+
+        public bool isDone => this.MoveNext() == false;
+
+        public object Current => _internalCoroutine.Current;
+
+        [Obsolete("Instances of ParallelCoroutine should not be created manually, utilize the pool instead")]
+        public ParallelCoroutine()
+        {
+            _internalCoroutine = InternalCoroutine();
+        }
+
+        public void Add(IEnumerator coroutine)
+        {
+            _coroutinesList.Add(coroutine);
+        }
+
+        public bool MoveNext()
+        {
+            return _internalCoroutine.MoveNext();
+        }
+
+        public void Reset()
+        {
+            _internalCoroutine = InternalCoroutine();
+            _coroutinesList.Clear();
+        }
+
+        private IEnumerator InternalCoroutine()
+        {
+            yield return null;
+            bool encounteredUnfinished = true;
+            while (encounteredUnfinished)
+            {
+                encounteredUnfinished = false;
+                int i = _coroutinesList.Count - 1;
+                while (i >= 0)
+                {
+                    IEnumerator coroutine = _coroutinesList[i];
+                    if (coroutine.MoveNext())
+                    {
+                        encounteredUnfinished = true;
+                        yield return coroutine.Current;
+                    }
+                    else
+                    {
+                        _coroutinesList.RemoveAt(i);
+                    }
+                    int num = i - 1;
+                    i = num;
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// A Coroutine that's used to process multiple coroutines in parallel.
+    /// <para></para>
+    /// This is identical to <see cref="HG.Coroutines.ParallelCoroutine"/>, however this version is pooled, new instances can be requested via <see cref="MSUParallelCoroutine.RequestFromPool"/> and they can be returned via <see cref="MSUParallelCoroutine.ReturnToPool(MSUParallelCoroutine)"/>.
+    /// <br></br>
+    /// This class also implements the IDisposable interface to dispose of instances with the "using()" clause.
+    /// </summary>
+    public class MSUParallelCoroutine : IEnumerator, IDisposable
+    {
+        private static Stack<MSUParallelCoroutine> _pool = new Stack<MSUParallelCoroutine>();
+
         /// <summary>
-        /// Returns a ParallelCoroutine to the pool
+        /// Requests an MSUParallelCoroutine from the pool
+        /// </summary>
+        public static MSUParallelCoroutine RequestFromPool()
+        {
+            if (_pool.TryPop(out var coroutine))
+            {
+                return coroutine;
+            }
+#pragma warning disable CS0618 // Type or member is obsolete
+            return new MSUParallelCoroutine();
+#pragma warning restore CS0618 // Type or member is obsolete
+        }
+
+        /// <summary>
+        /// Returns an MSUParallelCoroutine to the pool
         /// </summary>
         /// <param name="coroutine"></param>
-        public static void ReturnToPool(ParallelCoroutine coroutine)
+        public static void ReturnToPool(MSUParallelCoroutine coroutine)
         {
             coroutine.Reset();
             _pool.Push(coroutine);
@@ -189,11 +270,15 @@ namespace MSU
         /// </summary>
         public object Current => _internalCoroutine.Current;
 
-        /// <summary>
-        /// This method should not be called, call <see cref="ParallelCoroutine.RequestFromPool"/> instead
-        /// </summary>
-        [Obsolete("Instances of ParallelCoroutine should not be created manually, utilize the pool instead")]
-        public ParallelCoroutine()
+        ~MSUParallelCoroutine()
+        {
+            if (_coroutinesList.Count > 0)
+            {
+                MSULog.Error($"A MSUParallelCoroutine with coroutines in it has been collected by the GarbageCollector. This means it wasnt disposed. Consider disposing your ParallelCoroutine once you're done with it to have less strain on the GarbageCollector");
+            }
+        }
+
+        private MSUParallelCoroutine()
         {
             _internalCoroutine = InternalCoroutine();
         }
@@ -247,6 +332,14 @@ namespace MSU
                     i = num;
                 }
             }
+        }
+
+        /// <summary>
+        /// Returns this MSUParallelCoroutine to the pool
+        /// </summary>
+        public void Dispose()
+        {
+            ReturnToPool(this);
         }
     }
 

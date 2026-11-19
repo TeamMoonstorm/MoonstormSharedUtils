@@ -99,7 +99,7 @@ namespace MSU
 
             List<GameObject> loadedEvents = new List<GameObject>();
 
-            ParallelCoroutine coroutine = ParallelCoroutine.RequestFromPool();
+            using MSUParallelCoroutine coroutine = MSUParallelCoroutine.RequestFromPool();
 
             foreach (var contentProvider in contentProviders)
             {
@@ -109,8 +109,6 @@ namespace MSU
 
             while (!coroutine.isDone)
                 yield return null;
-
-            ParallelCoroutine.ReturnToPool(coroutine);
 
             _nameToEventIndex.Clear();
 
