@@ -7,7 +7,7 @@ namespace MSU
     [Obsolete(OBSOLETE_MESSAGE)]
     public struct NullableRef<T> where T : class
     {
-        public const string OBSOLETE_MESSAGE = "NullableRef is no longer supported and will be removed on MSU 3.0, Replace any usages of this struct with just the Reference Type as is. (IE: NullableRef<GameObject> -> GameObject)";
+        public const string OBSOLETE_MESSAGE = "NullableRef is no longer supported and will be removed on MSU 3.0, Replace any usages of this struct with just the Reference Type as is. (IE: NullableRef<GameObject> -> GameObject)\r\nIf this is NullableRef is part of one of MSU's ContentPiece interfaces then you cant fix this until you begin upgrading to MSU 3.0";
         public T value
         {
             get

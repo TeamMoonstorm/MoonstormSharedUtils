@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Xml.Linq;
 
 namespace MSU
 {
@@ -37,6 +38,28 @@ namespace MSU
             return CreateMultiStartCoroutineForMod(attributesForMod);
         }
 
+        [Obsolete("Use CreateMSUParallelCoroutineForMod instead", error: true)]
+        public static ParallelCoroutine CreateParallelCoroutineForMod(BaseUnityPlugin plugin)
+        {
+            var instances = SearchableAttribute.GetInstances<AsyncAssetLoadAttribute>();
+            if (instances == null)
+            {
+#if DEBUG
+                MSULog.Info($"No instances of AsyncAssetLoadAttribute found in the current runtime context.");
+#endif
+                return ParallelCoroutine.RequestFromPool();
+            }
+
+            List<AsyncAssetLoadAttribute> attributesForMod = instances.Where(IsValid).Where(att => IsFromMod((AsyncAssetLoadAttribute)att, plugin)).Cast<AsyncAssetLoadAttribute>().ToList();
+
+            var result = ParallelCoroutine.RequestFromPool();
+            foreach (var attribute in attributesForMod)
+            {
+                result.Add((IEnumerator)attribute.targetMethodInfo.Invoke(null, null));
+            }
+            return result;
+        }
+
         /// <summary>
         /// Creates a <see cref="MSU.MSUParallelCoroutine"/> for the provided mod. The ParallelCoroutine will have each <see cref="AsyncAssetLoadAttribute"/> method called and added to it.
         /// <para></para>
@@ -44,7 +67,7 @@ namespace MSU
         /// </summary>
         /// <param name="plugin">The plugin requesting the call</param>
         /// <returns></returns>
-        public static MSUParallelCoroutine CreateParallelCoroutineForMod(BaseUnityPlugin plugin)
+        public static MSUParallelCoroutine CreateMSUParallelCoroutineForMod(BaseUnityPlugin plugin)
         {
             var instances = SearchableAttribute.GetInstances<AsyncAssetLoadAttribute>();
             if (instances == null)

@@ -142,9 +142,10 @@ namespace MSU
         }
     }
 
-    [Obsolete("This class has been renamed to \"MSUParallelCoroutine\" to give it a different name compared to the base game ParallelCoroutine. Replace any usages of MSU.ParallelCoroutine with MSUParallelCoroutine", error: true)]
+    [Obsolete(OBSOLETE_MESSAGE, error: true)]
     public class ParallelCoroutine : IEnumerator
     {
+        public const string OBSOLETE_MESSAGE = "This class has been renamed to \"MSUParallelCoroutine\" to give it a different name compared to the base game ParallelCoroutine. Replace any usages of MSU.ParallelCoroutine with MSUParallelCoroutine";
         private static Stack<ParallelCoroutine> _pool = new Stack<ParallelCoroutine>();
 
         public static ParallelCoroutine RequestFromPool()
