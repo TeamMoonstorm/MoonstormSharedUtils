@@ -153,6 +153,7 @@ namespace MSU
         /// <summary>
         /// The GameplayEventRequirement attached to this GameplayEvent, this value can be null.
         /// </summary>
+        [Obsolete(NullableRef<GameplayEventRequirement>.OBSOLETE_MESSAGE)]
         public NullableRef<GameplayEventRequirement> gameplayEventRequirement { get; private set; }
 
         private float _eventDurationStopwatch;
@@ -160,7 +161,7 @@ namespace MSU
         private void Awake()
         {
             InstanceTracker.Add(this);
-            gameplayEventRequirement = GetComponent<GameplayEventRequirement>();
+            gameplayEventRequirement = GetComponent<GameplayEventRequirement>(); ;
         }
 
         private void Start()

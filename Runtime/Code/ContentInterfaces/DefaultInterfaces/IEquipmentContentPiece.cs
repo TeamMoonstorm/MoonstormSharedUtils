@@ -1,4 +1,5 @@
 ﻿using RoR2;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,6 +18,7 @@ namespace MSU
         /// <summary>
         /// The ItemDisplayPrefabs for this Equipment, can be null.
         /// </summary>
+        [Obsolete(NullableRef<List<GameObject>>.OBSOLETE_MESSAGE)]
         NullableRef<List<GameObject>> itemDisplayPrefabs { get; }
 
         /// <summary>

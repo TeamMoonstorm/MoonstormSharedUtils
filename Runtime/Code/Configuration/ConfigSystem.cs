@@ -258,8 +258,8 @@ namespace MSU.Config
                 configuredVariable.configFile = file;
             }
 
-            configuredVariable.section = configuredVariable.section.IsNullOrWhiteSpace() ? MSUtil.NicifyString(memberInfo.DeclaringType.Name) : configuredVariable.section;
-            configuredVariable.key = configuredVariable.key.IsNullOrWhiteSpace() ? MSUtil.NicifyString(memberInfo.Name) : configuredVariable.key;
+            configuredVariable.section = configuredVariable.section.IsNullOrWhiteSpace() ? Util.TryNicifyString(memberInfo.DeclaringType.Name) : configuredVariable.section;
+            configuredVariable.key = configuredVariable.key.IsNullOrWhiteSpace() ? Util.TryNicifyString(memberInfo.Name) : configuredVariable.key;
             if (configuredVariable.description.IsNullOrWhiteSpace() || !instance.descriptionOverride.IsNullOrWhiteSpace())
             {
                 configuredVariable.description = instance.descriptionOverride;

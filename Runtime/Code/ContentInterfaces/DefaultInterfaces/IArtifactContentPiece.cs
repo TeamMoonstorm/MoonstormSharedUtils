@@ -1,5 +1,6 @@
 ﻿using R2API.ScriptableObjects;
 using RoR2;
+using System;
 
 namespace MSU
 {
@@ -13,9 +14,11 @@ namespace MSU
     public interface IArtifactContentPiece : IContentPiece<ArtifactDef>
     {
         /// <summary>
-        /// An <see cref="artifactCode"/> used to reach the Bulwark's Ambry stage to unlock this Artifact, Can be null
+        /// An <see cref="ArtifactCode"/> used to reach the Bulwark's Ambry stage to unlock this Artifact, Can be null
         /// </summary>
+        [Obsolete(NullableRef<ArtifactCode>.OBSOLETE_MESSAGE)]
         NullableRef<ArtifactCode> artifactCode { get; }
+
         /// <summary>
         /// Method that's ran when this Artifact becomes Enabled, it is recommended to Hook any methods you may need for this artifact to work.
         /// </summary>

@@ -112,14 +112,14 @@ namespace MSU
                 helper.Add(keyItem.LoadContentAsync());
             }
 
-            while (!helper.IsDone())
+            while (helper.MoveNext())
                 yield return null;
 
             ParallelCoroutine.ReturnToPool(helper);
 
             var subroutine = InitializeKeyItems(plugin, keyItems, provider);
 
-            while (!subroutine.IsDone())
+            while (subroutine.MoveNext())
                 yield return null;
         }
 
@@ -169,7 +169,7 @@ namespace MSU
                 }
             }
 
-            while(!initializeAsyncCoroutine.IsDone())
+            while(initializeAsyncCoroutine.MoveNext())
             {
                 yield return null;
             }

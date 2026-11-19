@@ -1,4 +1,5 @@
 ﻿using RoR2;
+using System;
 using UnityEngine;
 
 namespace MSU
@@ -14,6 +15,7 @@ namespace MSU
         /// <summary>
         /// The Character's Master Prefab, this is added to your ContentPack's CharacterMasters array. Can be null.
         /// </summary>
+        [Obsolete(NullableRef<GameObject>.OBSOLETE_MESSAGE)]
         NullableRef<GameObject> masterPrefab { get; }
     }
 }

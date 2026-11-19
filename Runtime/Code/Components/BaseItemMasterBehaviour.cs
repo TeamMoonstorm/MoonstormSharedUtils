@@ -215,7 +215,7 @@ namespace MSU
                 {
                     BaseItemBodyBehavior.ItemTypePair itemTypePair = itemTypePairs[i];
                     ref BaseItemMasterBehaviour behavior = ref arr[i];
-                    BaseItemMasterBehaviour.SetItemStack(master, ref behavior, itemTypePair.behaviorType, inventory.GetItemCount(itemTypePair.itemIndex));
+                    BaseItemMasterBehaviour.SetItemStack(master, ref behavior, itemTypePair.behaviorType, inventory.GetItemCountEffective(itemTypePair.itemIndex));
                 }
                 return;
             }

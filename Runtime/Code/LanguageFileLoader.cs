@@ -55,7 +55,7 @@ namespace MSU
 
             var languageNameToJSONPaths = GetLanguageNameToJSONPaths(directory);
             var subroutine = ReadTextAndAddTokensAsync(languageNameToJSONPaths);
-            while (!subroutine.IsDone())
+            while (subroutine.MoveNext())
                 yield return null;
 
         }

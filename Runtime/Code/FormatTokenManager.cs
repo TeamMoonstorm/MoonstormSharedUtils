@@ -21,7 +21,7 @@ namespace MSU
             MSULog.Info("Initializing FormatTokenManager");
             var subroutine = CreateFormattingArray();
 
-            while (!subroutine.IsDone())
+            while (subroutine.MoveNext())
             {
                 yield return null;
             }
@@ -109,7 +109,7 @@ namespace MSU
             List<FormatTokenAttribute> fieldFormatTokens = new List<FormatTokenAttribute>();
 
             var subroutine = GetFormatTokenLists(propertyFormatTokens, fieldFormatTokens);
-            while (!subroutine.IsDone())
+            while (subroutine.MoveNext())
                 yield return null;
 
             Dictionary<string, FormatTokenAttribute[]> formattingDictionaryFromFields = new Dictionary<string, FormatTokenAttribute[]>();
@@ -119,7 +119,7 @@ namespace MSU
 
             parallelSubroutine.Add(CreateFormattingDictionary(propertyFormatTokens, formattingDictionaryFromProperties));
             parallelSubroutine.Add(CreateFormattingDictionary(fieldFormatTokens, formattingDictionaryFromFields));
-            while (!parallelSubroutine.IsDone())
+            while (parallelSubroutine.MoveNext())
                 yield return null;
 
             ParallelCoroutine.ReturnToPool(parallelSubroutine);

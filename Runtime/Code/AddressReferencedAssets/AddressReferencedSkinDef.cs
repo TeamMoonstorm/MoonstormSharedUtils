@@ -17,6 +17,11 @@ namespace MSU.AddressReferencedAssets
         public override bool CanLoadFromCatalog { get => _canLoadFromCatalog; protected set => _canLoadFromCatalog = value; }
         [SerializeField] private bool _canLoadFromCatalog;
 
+        protected override bool IsCatalogAvailable()
+        {
+            return SkinCatalog.availability.available;
+        }
+
         /// <summary>
         /// Operator for casting <see cref="AddressReferencedSkinDef"/> to a boolean value
         /// <br>Allows you to keep using the unity Syntax for checking if an object exists.</br>

@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using RoR2.Editor;
 using UnityEditor;
+using System;
 
 namespace MSU.Editor.PropertyDrawers
 {
+    [Obsolete(NullableRef<object>.OBSOLETE_MESSAGE)]
     [CustomPropertyDrawer(typeof(NullableRef<>), true)]
     public class NullableRefPropertyDrawer : PropertyDrawer
     {

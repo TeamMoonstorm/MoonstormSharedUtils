@@ -142,13 +142,13 @@ namespace MSU
                 helper.Add(scene.LoadContentAsync());
             }
 
-            while (!helper.IsDone())
+            while (helper.MoveNext())
                 yield return null;
 
             ParallelCoroutine.ReturnToPool(helper);
 
             var subroutine = InitializeScenes(plugin, _scenes, provider);
-            while(!subroutine.IsDone())
+            while(subroutine.MoveNext())
             {
                 yield return null;
             }
@@ -187,14 +187,17 @@ namespace MSU
                         HG.ArrayUtils.ArrayAppend(ref array, sceneContentPiece);
                         _pluginToScenes[plugin] = array;
 
-                        if (sceneContentPiece.mainTrack.hasValue)
-                            provider.contentPack.musicTrackDefs.AddSingle(sceneContentPiece.mainTrack.value);
+                        MusicTrackDef mainMusicTrack = MSUtil.GetValueFromNullableRefOrRegularField(sceneContentPiece.mainTrack);
+                        if (mainMusicTrack)
+                            provider.contentPack.musicTrackDefs.AddSingle(mainMusicTrack);
 
-                        if (sceneContentPiece.bossTrack.hasValue)
-                            provider.contentPack.musicTrackDefs.AddSingle(sceneContentPiece.bossTrack.value);
+                        MusicTrackDef bossMusicTrack = MSUtil.GetValueFromNullableRefOrRegularField(sceneContentPiece.bossTrack);
+                        if (bossMusicTrack)
+                            provider.contentPack.musicTrackDefs.AddSingle(bossMusicTrack);
 
-                        if (sceneContentPiece.bazaarTextureBase.hasValue)
-                            sceneContentPiece.asset.portalMaterial = StageRegistration.MakeBazaarSeerMaterial(sceneContentPiece.bazaarTextureBase);
+                        Texture2D bazaarSeerTextureBase = MSUtil.GetValueFromNullableRefOrRegularField(sceneContentPiece.bazaarTextureBase);
+                        if (bazaarSeerTextureBase)
+                            sceneContentPiece.asset.portalMaterial = StageRegistration.MakeBazaarSeerMaterial(bazaarSeerTextureBase);
 
 
                         if (sceneContentPiece.asset.sceneType == SceneType.Stage)

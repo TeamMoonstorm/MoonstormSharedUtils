@@ -1,5 +1,6 @@
 ﻿using BepInEx;
 using R2API;
+using R2API.ScriptableObjects;
 using RoR2;
 using System;
 using System.Collections;
@@ -92,7 +93,7 @@ namespace MSU
             _moonstormItemTiers = null;
 
             var subroutine = BuildItemListForEachItemTier();
-            while (!subroutine.IsDone())
+            while (subroutine.MoveNext())
                 yield return null;
 
             moduleAvailability.MakeAvailable();
@@ -111,7 +112,7 @@ namespace MSU
 
         private static void RebuildCustomModel(On.RoR2.PickupDisplay.orig_RebuildModel orig, PickupDisplay self, GameObject modelObjectOverride)
         {
-            var component = self.gameObject.EnsureComponent<ItemTierPickupDisplayHelper>();
+            var component = HG.UnityObjectExtensions.EnsureComponent<ItemTierPickupDisplayHelper>(self);
             orig(self, modelObjectOverride);
             component.RebuildCustomModel();
         }
@@ -124,7 +125,7 @@ namespace MSU
                 return;
             }
 
-            var component = self.gameObject.EnsureComponent<ItemTierPickupDisplayHelper>();
+            var component = HG.UnityObjectExtensions.EnsureComponent<ItemTierPickupDisplayHelper>(self);
             orig(self);
             component.DestroyCustomModel();
         }
@@ -177,13 +178,13 @@ namespace MSU
                 helper.Add(tier.LoadContentAsync());
             }
 
-            while (!helper.IsDone())
+            while (helper.MoveNext())
                 yield return null;
 
             ParallelCoroutine.ReturnToPool(helper);
 
             var subroutine = InitializeItemTiers(plugin, itemTiers, provider);
-            while(!subroutine.IsDone()) 
+            while(subroutine.MoveNext()) 
                 yield return null;
         }
 
@@ -220,15 +221,17 @@ namespace MSU
 
                         _moonstormItemTiers.Add(asset, itemTierContentPiece);
 
-                        if (itemTierContentPiece.colorIndex)
+                        SerializableColorCatalogEntry tierColor = MSUtil.GetValueFromNullableRefOrRegularField(itemTierContentPiece.colorIndex);
+                        if (tierColor)
                         {
-                            ColorsAPI.AddSerializableColor(itemTierContentPiece.colorIndex);
-                            asset.colorIndex = itemTierContentPiece.colorIndex.value.ColorIndex;
+                            ColorsAPI.AddSerializableColor(tierColor);
+                            asset.colorIndex = tierColor.ColorIndex;
                         }
-                        if (itemTierContentPiece.darkColorIndex)
+                        SerializableColorCatalogEntry tierDarkColor = MSUtil.GetValueFromNullableRefOrRegularField(itemTierContentPiece.darkColorIndex);
+                        if (tierDarkColor)
                         {
-                            ColorsAPI.AddSerializableColor(itemTierContentPiece.darkColorIndex);
-                            asset.darkColorIndex = itemTierContentPiece.darkColorIndex.value.ColorIndex;
+                            ColorsAPI.AddSerializableColor(tierDarkColor);
+                            asset.darkColorIndex = tierDarkColor.ColorIndex;
                         }
                         _itemTierToPickupFX.Add(asset, itemTierContentPiece.pickupDisplayVFX);
                     }

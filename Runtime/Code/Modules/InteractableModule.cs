@@ -138,13 +138,13 @@ namespace MSU
                 helper.Add(interactable.LoadContentAsync());
             }
 
-            while (!helper.IsDone())
+            while (helper.MoveNext())
                 yield return null;
 
             ParallelCoroutine.ReturnToPool(helper);
 
             var subroutine = InitializeInteractables(plugin, interactables, provider);
-            while(!subroutine.IsDone())
+            while(subroutine.MoveNext())
             {
                 yield return null;
             }
@@ -186,9 +186,10 @@ namespace MSU
                         HG.ArrayUtils.ArrayAppend(ref array, interactableContentPiece);
                         _pluginToInteractables[plugin] = array;
 
-                        if (interactableContentPiece.cardProvider)
+                        InteractableCardProvider cardProvider = MSUtil.GetValueFromNullableRefOrRegularField(interactableContentPiece.cardProvider);
+                        if (cardProvider)
                         {
-                            _interactableCardProviders.Add(interactableContentPiece.cardProvider);
+                            _interactableCardProviders.Add(cardProvider);
                         }
 
                         if(netID)

@@ -160,13 +160,13 @@ namespace MSU
                 helper.Add(character.LoadContentAsync());
             }
 
-            while (!helper.IsDone())
+            while (helper.MoveNext())
                 yield return null;
 
             ParallelCoroutine.ReturnToPool(helper);
 
             var subroutine = InitializeCharacters(plugin, characters, provider);
-            while (!subroutine.IsDone())
+            while (subroutine.MoveNext())
                 yield return null;
         }
 
@@ -203,7 +203,8 @@ namespace MSU
                         HG.ArrayUtils.ArrayAppend(ref array, characterContentPiece);
                         _pluginToCharacters[plugin] = array;
 
-                        if (characterContentPiece.masterPrefab)
+                        GameObject masterPrefab = MSUtil.GetValueFromNullableRefOrRegularField(characterContentPiece.masterPrefab);
+                        if (masterPrefab)
                         {
                             provider.contentPack.masterPrefabs.AddSingle(characterContentPiece.masterPrefab);
                         }
@@ -217,10 +218,12 @@ namespace MSU
                     }
                     if (body is IMonsterContentPiece monsterContentPiece)
                     {
-                        if (monsterContentPiece.cardProvider)
-                            _monsterCardProviders.Add(monsterContentPiece.cardProvider);
+                        MonsterCardProvider cardProvider = MSUtil.GetValueFromNullableRefOrRegularField(monsterContentPiece.cardProvider);
+                        if (cardProvider)
+                            _monsterCardProviders.Add(cardProvider);
 
-                        if (monsterContentPiece.dissonanceCard)
+                        DirectorCardHolderExtended dissonanceDirectorCard = MSUtil.GetValueFromNullableRefOrRegularField(monsterContentPiece.dissonanceCard);
+                        if (dissonanceDirectorCard != null)
                             _dissonanceCards.Add(monsterContentPiece.dissonanceCard);
                     }
 

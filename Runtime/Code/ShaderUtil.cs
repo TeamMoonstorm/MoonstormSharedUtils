@@ -29,7 +29,7 @@ namespace MSU
                 helper.Add(LoadMaterialsFromBundle(bundle, list, IsShaderAddressableShader));
             }
 
-            while (!helper.IsDone())
+            while (helper.MoveNext())
                 yield return null;
 
             ParallelCoroutine.ReturnToPool(helper);
@@ -72,7 +72,7 @@ namespace MSU
                 helper.Add(LoadRealMaterialAndCopyProperties(material));
             }
 
-            while (!helper.IsDone())
+            while (helper.MoveNext())
                 yield return null;
 
             ParallelCoroutine.ReturnToPool(helper);
@@ -100,7 +100,7 @@ namespace MSU
                 helper.Add(LoadMaterialsFromBundle(bundle, materials, IsShaderStubbedShader));
             }
 
-            while (!helper.IsDone())
+            while (helper.MoveNext())
                 yield return null;
 
             ParallelCoroutine.ReturnToPool(helper);
@@ -134,7 +134,7 @@ namespace MSU
                 helper.Add(ShaderSwapper.ShaderSwapper.UpgradeStubbedShaderAsync(material));
             }
 
-            while (!helper.IsDone())
+            while (helper.MoveNext())
                 yield return null;
 
             ParallelCoroutine.ReturnToPool(helper);

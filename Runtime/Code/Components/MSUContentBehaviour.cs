@@ -30,7 +30,7 @@ namespace MSU
         private void Start()
         {
             hasMaster = body.master;
-            body.onInventoryChanged += CheckEquipmentAndStartGetInterfaces; ;
+            body.onInventoryChanged += CheckEquipmentAndStartGetInterfaces;
 
             //This is done to ensure whatever "OnEquipmentObtained" logic runs when the body starts. since OnEquipmentObtained only gets called when the inventory changes, which doesnt happen at this time.
             var eqpDef = EquipmentCatalog.GetEquipmentDef(body.inventory ? body.inventory.GetEquipmentIndex() : EquipmentIndex.None);

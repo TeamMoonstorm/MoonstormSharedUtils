@@ -1,5 +1,6 @@
 ﻿using R2API.ScriptableObjects;
 using RoR2;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,11 +19,13 @@ namespace MSU
         /// <summary>
         /// The ColorIndex for this ItemTier, If provided, the <see cref="ItemTierModule"/> will set the ItemTier's <see cref="ItemTierDef.colorIndex"/> to the index assigned by this <see cref="SerializableColorCatalogEntry"/>. Can be Null
         /// </summary>
+        [Obsolete(NullableRef<SerializableColorCatalogEntry>.OBSOLETE_MESSAGE)]
         NullableRef<SerializableColorCatalogEntry> colorIndex { get; }
 
         /// <summary>
         /// The DarkColorIndex for this ItemTier, If provided, the <see cref="ItemTierModule"/> will set the ItemTier's <see cref="ItemTierDef.darkColorIndex"/> to the index assigned by this <see cref="SerializableColorCatalogEntry"/>. Can be Null
         /// </summary>
+        [Obsolete(NullableRef<SerializableColorCatalogEntry>.OBSOLETE_MESSAGE)]
         NullableRef<SerializableColorCatalogEntry> darkColorIndex { get; }
 
         /// <summary>

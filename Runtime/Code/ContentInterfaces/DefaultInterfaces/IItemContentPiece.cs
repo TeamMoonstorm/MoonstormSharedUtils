@@ -19,6 +19,7 @@ namespace MSU
         /// <summary>
         /// The ItemDisplayPrefabs for this Item, can be null.
         /// </summary>
+        [Obsolete(NullableRef<List<GameObject>>.OBSOLETE_MESSAGE)]
         NullableRef<List<GameObject>> itemDisplayPrefabs { get; }
     }
 }

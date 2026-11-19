@@ -182,7 +182,7 @@ namespace MSU
         /// <summary>
         /// Returns true once all coroutines are completed
         /// </summary>
-        public bool isDone => this.IsDone();
+        public bool isDone => this.MoveNext() == false;
 
         /// <summary>
         /// Returns the current object stored in the internal coroutine

@@ -185,12 +185,12 @@ namespace MSU
 
         private static void PopulateDisplaysFromItems(IItemContentPiece item)
         {
-            if (!item.itemDisplayPrefabs)
+            List<GameObject> displayPrefabs = MSUtil.GetValueFromNullableRefOrRegularField(item.itemDisplayPrefabs);
+            if (displayPrefabs == null)
             {
                 return;
             }
 
-            List<GameObject> displayPrefabs = item.itemDisplayPrefabs;
             ItemDef itemDef = item.asset;
 
             for (int i = 0; i < displayPrefabs.Count; i++)
@@ -229,12 +229,12 @@ namespace MSU
 
         private static void PopulateDisplaysFromEquips(IEquipmentContentPiece equipment)
         {
-            if (!equipment.itemDisplayPrefabs)
+            List<GameObject> displayPrefabs = MSUtil.GetValueFromNullableRefOrRegularField(equipment.itemDisplayPrefabs);
+            if (displayPrefabs == null)
             {
                 return;
             }
 
-            List<GameObject> displayPrefabs = equipment.itemDisplayPrefabs;
             EquipmentDef itemDef = equipment.asset;
 
             for (int i = 0; i < displayPrefabs.Count; i++)

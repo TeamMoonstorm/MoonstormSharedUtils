@@ -1,4 +1,5 @@
 ﻿using RoR2;
+using System;
 using UnityEngine;
 
 namespace MSU
@@ -15,16 +16,19 @@ namespace MSU
         /// <summary>
         /// An optional MusicTrackDef used to adding your stage's main music track to your ContentPack. Leave this null if you're reusing the game's music tracks
         /// </summary>
+        [Obsolete(NullableRef<MusicTrackDef>.OBSOLETE_MESSAGE)]
         NullableRef<MusicTrackDef> mainTrack { get; }
 
         /// <summary>
         /// An optional MusicTrackDef used to adding your stage's boss music track to your ContentPack. Leave this null if you're reusing the game's music tracks
         /// </summary>
+        [Obsolete(NullableRef<MusicTrackDef>.OBSOLETE_MESSAGE)]
         NullableRef<MusicTrackDef> bossTrack { get; }
 
         /// <summary>
         /// A texture that will be used to create the Bazaar material for your SceneDef.
         /// </summary>
+        [Obsolete(NullableRef<Texture2D>.OBSOLETE_MESSAGE)]
         NullableRef<Texture2D> bazaarTextureBase { get; }
 
         /// <summary>

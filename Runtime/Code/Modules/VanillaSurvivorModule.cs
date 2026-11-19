@@ -116,7 +116,7 @@ namespace MSU
             ParallelCoroutine.ReturnToPool(helper);
 
             var subroutine = InitializeVanillaSurvivorContentPieces(plugin, vanillaSurvivors, provider);
-            while (!subroutine.IsDone())
+            while (subroutine.MoveNext())
                 yield return null;
 
         }

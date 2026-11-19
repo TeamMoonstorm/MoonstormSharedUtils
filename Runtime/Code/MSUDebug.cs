@@ -57,7 +57,7 @@ namespace MSU
                         if (!charModel.itemDisplayRuleSet)
                             continue;
 
-                        charModel.gameObject.EnsureComponent<ItemDisplayHelper>();
+                        HG.UnityObjectExtensions.EnsureComponent<ItemDisplayHelper>(charModel);
                     }
                     catch (Exception e)
                     {

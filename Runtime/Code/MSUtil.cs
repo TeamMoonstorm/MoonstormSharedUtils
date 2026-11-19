@@ -109,86 +109,96 @@ namespace MSU
             return _currentRunExpansionDefs;
         }
 
-        /// <summary>
-        /// Ensures that the component of type <typeparamref name="T"/> is in the specified GameObject.
-        /// </summary>
-        /// <typeparam name="T">The type of component to ensure it exists</typeparam>
-        /// <param name="obj">The GameObject that'll have the component ensured</param>
-        /// <returns>A new instance of T if it wasnt found in the GameObject, otherwise it returns an existing instance</returns>
+        [Obsolete("Use HG.UnityObjectExtensions.EnsureComponent<T>(this GameObject) instead.", error: true)]
         public static T EnsureComponent<T>(this GameObject obj) where T : MonoBehaviour
         {
-            if (obj.TryGetComponent<T>(out var t))
+            return HG.UnityObjectExtensions.EnsureComponent<T>(obj);
+        }
+
+
+        [Obsolete("Use HasItem(CharacterBody, ItemDef, ItemStorageType storageType) instead", error: true)]
+        public static bool HasItem(this CharacterBody body, ItemDef def) => HasItem(body, def, ItemStorageType.Effective);
+
+        /// <summary>
+        /// Returns true if <paramref name="body"/> has at least one stack of <paramref name="itemDef"/>. By default it checks the Effective Item Stacks, but this can be changed by setting <paramref name="storageType"/> to a value that's not <see cref="ItemStorageType.Count"/> or <see cref="ItemStorageType.None"/>
+        /// </summary>
+        public static bool HasItem(this CharacterBody body, ItemDef itemDef, ItemStorageType storageType = ItemStorageType.Effective) => HasItem(body, itemDef ? itemDef.itemIndex : ItemIndex.None, storageType);
+
+        [Obsolete("Use HasItem(CharacterBody, ItemIndex, ItemStorageType) instead", error: true)]
+        public static bool HasItem(this CharacterBody body, ItemIndex index) => HasItem(body, index, ItemStorageType.Effective);
+
+        /// <summary>
+        /// Returns true if <paramref name="body"/> has at least one stack of <paramref name="itemIndex"/>. By default it checks the Effective Item Stacks, but this can be changed by setting <paramref name="storageType"/> to a value that's not <see cref="ItemStorageType.Count"/> or <see cref="ItemStorageType.None"/>
+        /// </summary>
+        public static bool HasItem(this CharacterBody body, ItemIndex itemIndex, ItemStorageType storageType = ItemStorageType.Effective) => GetItemCount(body, itemIndex, storageType) > 0;
+
+        [Obsolete("Use TryGetItemCount(CharacterBody, ItemDef, out int, ItemStorageType) instead", error: true)]
+        public static bool TryGetItemCount(this CharacterBody body, ItemDef itemDef, out int itemCount) => TryGetItemCount(body, itemDef, out itemCount, ItemStorageType.Effective);
+
+        /// <summary>
+        /// Method used to attempt to retrieve the Item Count of <paramref name="itemDef"/> in the inventory of <paramref name="body"/>. The count is outputted on <paramref name="itemCount"/>. By default it checks the Effective Item Stacks, but this can be changed by setting <paramref name="storageType"/> to a value that's not <see cref="ItemStorageType.Count"/> or <see cref="ItemStorageType.None"/>.
+        /// <para></para>
+        /// This method returns false if the body has no inventory, if <paramref name="storageType"/> is an invalid value, or if the body has no item stacks for <paramref name="index"/>
+        /// </summary>
+        public static bool TryGetItemCount(this CharacterBody body, ItemDef itemDef, out int itemCount, ItemStorageType storageType = ItemStorageType.Effective) => TryGetItemCount(body, itemDef ? itemDef.itemIndex : ItemIndex.None, out itemCount, storageType);
+
+        [Obsolete("Use TryGetItemCount(CharacterBody, ItemIndex, out int, ItemStorageType) instead", error: true)]
+        public static bool TryGetItemCount(this CharacterBody body, ItemIndex index, out int itemCount) => TryGetItemCount(body, index, out itemCount, ItemStorageType.Effective);
+
+        /// <summary>
+        /// Method used to attempt to retrieve the Item Count of <paramref name="index"/> in the inventory of <paramref name="body"/>. The count is outputted on <paramref name="itemCount"/>. By default it checks the Effective Item Stacks, but this can be changed by setting <paramref name="storageType"/> to a value that's not <see cref="ItemStorageType.Count"/> or <see cref="ItemStorageType.None"/>.
+        /// <para></para>
+        /// This method returns false if the body has no inventory, if <paramref name="storageType"/> is an invalid value, or if the body has no item stacks for <paramref name="index"/>
+        /// </summary>
+        public static bool TryGetItemCount(this CharacterBody body, ItemIndex index, out int itemCount, ItemStorageType storageType = ItemStorageType.Effective)
+        {
+            itemCount = 0;
+            if(body && body.inventory)
             {
-                return t;
+                Inventory inventory = body.inventory;
+
+                switch(storageType)
+                {
+                    case ItemStorageType.None:
+                    case ItemStorageType.Count:
+#if DEBUG
+                        MSULog.Warning($"Invalid ItemStorageType used in TryGetItemCount(). StorageType used: {storageType}");
+#endif
+                        itemCount = 0;
+                        return false;
+                    default:
+                        itemCount = inventory.GetStorageItemCount(index, storageType);
+                        return itemCount > 0;
+                }
             }
-            return obj.AddComponent<T>();
+            return false;
         }
 
-        /// <summary>
-        /// Checks if a Body has a specific item
-        /// </summary>
-        /// <returns>True if the body has the specified item, false otherwise</returns>
-        public static bool HasItem(this CharacterBody body, ItemDef def)
-        {
-            return body.HasItem(def.itemIndex);
-        }
+        [Obsolete("Use GetItemCount(CharacterBody, ItemDef, ItemStorageType) instead", error: true)]
+        public static int GetItemCount(this CharacterBody body, ItemDef itemDef) => GetItemCount(body, itemDef, ItemStorageType.Effective);
 
         /// <summary>
-        /// Checks if a Body has a specific item
+        /// Retrieves the item count of <paramref name="itemDef"/> in the inventory of <paramref name="body"/>. By default it checks the Effective Item Stacks, but this can be changed by setting <paramref name="storageType"/> to a value that's not <see cref="ItemStorageType.Count"/> or <see cref="ItemStorageType.None"/>.
+        /// <para></para>
+        /// If the body's inventory doesnt have a stack of <paramref name="itemDef"/>, the value returned is 0.
         /// </summary>
-        /// <returns>True if the body has the specified item, false otherwise</returns>
-        public static bool HasItem(this CharacterBody body, ItemIndex index)
-        {
-            return body.GetItemCount(index) > 0;
-        }
+        public static int GetItemCount(this CharacterBody body, ItemDef itemDef, ItemStorageType storageType = ItemStorageType.Effective) => GetItemCount(body, itemDef ? itemDef.itemIndex : ItemIndex.None, storageType);
+
+        [Obsolete("Use GetItemCount(CharacterBody, ItemIndex, ItemStorageType) instead", error: true)]
+        public static int GetItemCount(this CharacterBody body, ItemIndex index) => GetItemCount(body, index, ItemStorageType.Effective);
 
         /// <summary>
-        /// Attempts to obtain the item count of <paramref name="itemDef"/> from <paramref name="body"/>'s inventory.
-        /// <para>In case the body does not have an Inventory, it'll return false.</para>
+        /// Retrieves the item count of <paramref name="index"/> in the inventory of <paramref name="body"/>. By default it checks the Effective Item Stacks, but this can be changed by setting <paramref name="storageType"/> to a value that's not <see cref="ItemStorageType.Count"/> or <see cref="ItemStorageType.None"/>.
+        /// <para></para>
+        /// If the body's inventory doesnt have a stack of <paramref name="index"/>, the value returned is 0.
         /// </summary>
-        /// <param name="body">The body to check it's item count</param>
-        /// <param name="itemDef">The type of item to count</param>
-        /// <param name="itemCount">An outgoing variable that'll have the item's count</param>
-        /// <returns>True if the item count was retrieved succesfully, false otherwise</returns>
-        public static bool TryGetItemCount(this CharacterBody body, ItemDef itemDef, out int itemCount)
+        public static int GetItemCount(this CharacterBody body, ItemIndex index, ItemStorageType storageType = ItemStorageType.Effective)
         {
-            return body.TryGetItemCount(itemDef.itemIndex, out itemCount);
-        }
-
-        /// <summary>
-        /// Attempts to obtain the item count of <paramref name="index"/> from <paramref name="body"/>'s inventory.
-        /// <para>In case the body does not have an Inventory, it'll return false.</para>
-        /// </summary>
-        /// <param name="body">The body to check it's item count</param>
-        /// <param name="index">The type of item to count</param>
-        /// <param name="itemCount">An outgoing variable that'll have the item's count</param>
-        /// <returns>True if the item count was retrieved succesfully, false otherwise</returns>
-        public static bool TryGetItemCount(this CharacterBody body, ItemIndex index, out int itemCount)
-        {
-            itemCount = body.GetItemCount(index);
-            return itemCount > 0;
-        }
-
-        /// <summary>
-        /// Obtains the item count of <paramref name="itemDef"/> from <paramref name="body"/>
-        /// </summary>
-        /// <param name="body">The body to check it's item count</param>
-        /// <param name="itemDef">The type of item to count</param>
-        /// <returns>The item's count, 0 if the body does not have an inventory</returns>
-        public static int GetItemCount(this CharacterBody body, ItemDef itemDef)
-        {
-            return body.GetItemCount(itemDef.itemIndex);
-        }
-
-        /// <summary>
-        /// Obtains the item count of <paramref name="index"/> from <paramref name="body"/>
-        /// </summary>
-        /// <param name="body">The body to check it's item count</param>
-        /// <param name="index">The type of item to count</param>
-        /// <returns>The item's count, 0 if the body does not have an inventory</returns>
-        public static int GetItemCount(this CharacterBody body, ItemIndex index)
-        {
-            return body.inventory ? body.inventory.GetItemCount(index) : 0;
+            if(body.TryGetItemCount(index, out int count, storageType))
+            {
+                return count;
+            }
+            return 0;
         }
 
         /// <summary>
@@ -200,65 +210,10 @@ namespace MSU
             value = kvp.Value;
         }
 
-        /// <summary>
-        /// "Nicifies" a string into a readable format
-        /// </summary>
-        /// <param name="text">The string to "Nicify"</param>
-        /// <returns>The "Nicified" string, if an exception is thrown it returns <paramref name="text"/></returns>
+        [Obsolete("Use \"Util.TryNicifyString(string)\" instead", error: true)]
         public static string NicifyString(string text)
         {
-            string origName = new string(text.ToCharArray());
-            try
-            {
-                if (string.IsNullOrEmpty(text))
-                    return text;
-
-                List<char> nameAsChar = null;
-                if (text.StartsWith("m_", System.StringComparison.OrdinalIgnoreCase) || text.StartsWith("k_", System.StringComparison.OrdinalIgnoreCase))
-                {
-                    nameAsChar = text.Substring("m_".Length).ToList();
-                }
-                else
-                {
-                    nameAsChar = text.ToList();
-                }
-
-                while (nameAsChar.First() == '_')
-                {
-                    nameAsChar.RemoveAt(0);
-                }
-                List<char> newText = new List<char>();
-                for (int i = 0; i < nameAsChar.Count; i++)
-                {
-                    char character = nameAsChar[i];
-                    if (i == 0)
-                    {
-                        if (char.IsLower(character))
-                        {
-                            newText.Add(char.ToUpper(character));
-                        }
-                        else
-                        {
-                            newText.Add(character);
-                        }
-                        continue;
-                    }
-
-                    if (char.IsUpper(character))
-                    {
-                        newText.Add(' ');
-                        newText.Add(character);
-                        continue;
-                    }
-                    newText.Add(character);
-                }
-                return new String(newText.ToArray());
-            }
-            catch (Exception e)
-            {
-                MSULog.Error($"Failed to nicify {origName}: {e}");
-                return origName;
-            }
+            return Util.TryNicifyString(text);
         }
 
         /// <summary>
@@ -272,13 +227,10 @@ namespace MSU
             return selection.choices.Select(x => x.value).Where(x => x != null);
         }
 
-        /// <summary>
-        /// Checks wether the specified unity object is valid. otherwise it returns null.
-        /// <para>Allows for the usage of the .? and ?? operators with unity objects</para>
-        /// </summary>
+        [Obsolete("Use HG.UnityObjectExtensions.AsValidOrNull(this T) instead")]
         public static T AsValidOrNull<T>(this T obj) where T : UnityEngine.Object
         {
-            return obj ? obj : null;
+            return HG.UnityObjectExtensions.AsValidOrNull(obj);
         }
 
         /// <summary>
@@ -349,11 +301,7 @@ namespace MSU
             return true;
         }
 
-        /// <summary>
-        /// Checks if an InteractableGameObject can spawn extra objects.
-        /// <para>This can be used to achieve a similar effect that interacting with interactables while holding Fireworks does.</para>
-        /// </summary>
-        /// <returns>True if the interactable can spawn extra objects, false otherwise</returns>
+        [Obsolete("Call \"GlobalEventManager.InteractableIsPermittedForSpawn(MonoBehaviour, InteractionProcFilter)\" instead")]
         public static bool IsInteractableValidForSpawns(GameObject interactableGameObject)
         {
             if (!interactableGameObject)
@@ -374,12 +322,7 @@ namespace MSU
             return true;
         }
 
-        /// <summary>
-        /// Extension method used for checking if a coroutine enumerator has finished executing.
-        /// <para>The extension technically only calls <paramref name="coroutineEnumerator"/>'s MoveNext() method and negates the result. but this is mainly for syntactic sugar.</para>
-        /// </summary>
-        /// <param name="coroutineEnumerator">The coroutine enumerator to check</param>
-        /// <returns>True if the coroutine has finished executing, false otherwise</returns>
+        [Obsolete("This method can easily conflict with PascalCase properties. Replace this call with a \"MoveNext()\" and remove the negation", error: true)]
         public static bool IsDone(this IEnumerator coroutineEnumerator)
         {
             return !coroutineEnumerator.MoveNext();
@@ -432,6 +375,16 @@ namespace MSU
         public static bool IsCollectionEmptyOrNull(ICollection collection)
         {
             return collection == null || collection.Count == 0;
+        }
+
+        [Obsolete(NullableRef<object>.OBSOLETE_MESSAGE)]
+        internal static T GetValueFromNullableRefOrRegularField<T>(NullableRef<T> nullableRefValue) where T : class
+        {
+            if(nullableRefValue.hasValue)
+            {
+                return nullableRefValue.value;
+            }
+            return null;
         }
 
         static MSUtil()

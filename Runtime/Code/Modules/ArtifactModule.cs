@@ -1,5 +1,6 @@
 ﻿using BepInEx;
 using R2API;
+using R2API.ScriptableObjects;
 using RoR2;
 using System;
 using System.Collections;
@@ -153,13 +154,13 @@ namespace MSU
                 helper.Add(artifact.LoadContentAsync());
             }
 
-            while (!helper.IsDone())
+            while (helper.MoveNext())
                 yield return null;
 
             ParallelCoroutine.ReturnToPool(helper);
 
             var subroutine = InitializeArtifacts(plugin, artifacts, provider);
-            while(!subroutine.IsDone()) 
+            while(subroutine.MoveNext()) 
                 yield return null;
         }
 
@@ -196,10 +197,13 @@ namespace MSU
                         HG.ArrayUtils.ArrayAppend(ref array, artifactContentPiece);
                         _pluginToArtifacts[plugin] = array;
 
-                        if (artifactContentPiece.artifactCode)
+                        ArtifactCode artifactCode = MSUtil.GetValueFromNullableRefOrRegularField(artifactContentPiece.artifactCode);
+
+                        if (artifactCode)
                         {
-                            ArtifactCodeAPI.AddCode(artifactContentPiece.asset, artifactContentPiece.artifactCode);
+                            ArtifactCodeAPI.AddCode(artifactContentPiece.asset, artifactCode);
                         }
+
                         _moonstormArtifacts.Add(asset, artifactContentPiece);
                     }
 

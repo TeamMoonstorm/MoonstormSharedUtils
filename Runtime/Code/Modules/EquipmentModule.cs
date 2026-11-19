@@ -334,13 +334,13 @@ namespace MSU
                 helper.Add(equipment.LoadContentAsync());
             }
 
-            while (!helper.IsDone())
+            while (helper.MoveNext())
                 yield return null;
 
             ParallelCoroutine.ReturnToPool(helper);
 
             var subroutine =InitializeEquipments(plugin, equipments, provider);
-            while (!subroutine.IsDone())
+            while (subroutine.MoveNext())
                 yield return null;
         }
 

@@ -478,7 +478,7 @@ namespace MSU
             }
 
             IEnumerator coroutine = ResolveRootObject();
-            while(!coroutine.IsDone())
+            while(coroutine.MoveNext())
             {
                 yield return null;
             }
@@ -494,7 +494,7 @@ namespace MSU
             parallelCoroutine.Add(ResolveLightInfos());
             parallelCoroutine.Add(AssignVFXOverrides());
 
-            while(!parallelCoroutine.IsDone())
+            while(parallelCoroutine.MoveNext())
             {
                 yield return null;
             }

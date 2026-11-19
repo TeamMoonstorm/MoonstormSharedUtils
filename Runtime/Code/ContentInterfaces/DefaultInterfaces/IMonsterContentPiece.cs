@@ -1,4 +1,6 @@
-﻿namespace MSU
+﻿using System;
+
+namespace MSU
 {
     /// <summary>
     /// See <see cref="IGameObjectContentPiece{T}"/>, <see cref="IContentPiece"/> and <see cref="IContentPiece{T}"/> for more information regarding Content Pieces
@@ -12,11 +14,13 @@
         /// <summary>
         /// The <see cref="MonsterCardProvider"/> for this Monster. Can be Null.
         /// </summary>
+        [Obsolete(NullableRef<MonsterCardProvider>.OBSOLETE_MESSAGE)]
         NullableRef<MonsterCardProvider> cardProvider { get; }
 
         /// <summary>
         /// The DirectorCard used for this Monster when <see cref="RoR2.RoR2Content.Artifacts.mixEnemyArtifactDef"/> is enabled. Can be Null
         /// </summary>
+        [Obsolete(NullableRef<DirectorCardHolderExtended>.OBSOLETE_MESSAGE)]
         NullableRef<DirectorCardHolderExtended> dissonanceCard { get; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using RoR2;
+using System;
 
 namespace MSU
 {
@@ -14,6 +15,7 @@ namespace MSU
         /// <summary>
         /// The <see cref="InteractableCardProvider"/> for this Interactable.
         /// </summary>
+        [Obsolete(NullableRef<InteractableCardProvider>.OBSOLETE_MESSAGE)]
         NullableRef<InteractableCardProvider> cardProvider { get; }
     }
 }

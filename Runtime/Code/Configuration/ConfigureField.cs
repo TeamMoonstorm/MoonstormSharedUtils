@@ -2,10 +2,12 @@
 using HG.Reflection;
 using RiskOfOptions;
 using RiskOfOptions.Options;
+using RoR2;
 using System;
 using System.IO;
 using System.Reflection;
 using UnityEngine;
+using IOPath = System.IO.Path;
 
 namespace MSU.Config
 {
@@ -121,7 +123,7 @@ namespace MSU.Config
             {
                 return configSectionOverride;
             }
-            return MSUtil.NicifyString(type.Name);
+            return Util.TryNicifyString(type.Name);
         }
 
         private string GetName()
@@ -130,7 +132,7 @@ namespace MSU.Config
             {
                 return configNameOverride;
             }
-            return MSUtil.NicifyString(attachedMemberInfo.Name);
+            return Util.TryNicifyString(attachedMemberInfo.Name);
         }
 
         private string GetDescription()
@@ -172,7 +174,7 @@ namespace MSU.Config
         protected override void OnConfigured(ConfigFile configFile, object value)
         {
             bool separateEntry = ConfigSystem.ShouldCreateSeparateRiskOfOptionsEntry(configFile);
-            string fileName = Path.GetFileNameWithoutExtension(configFile.ConfigFilePath);
+            string fileName = IOPath.GetFileNameWithoutExtension(configFile.ConfigFilePath);
             var guid = separateEntry ? modGUID + "." + fileName : modGUID;
             var name = separateEntry ? modGUID + "." + fileName : modName;
 
